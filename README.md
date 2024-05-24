@@ -11,7 +11,7 @@ so far has been to get to sleep on on time, and remembering to take breaks from 
 Mutant Mayhem
 
 This is going to be a fairly simple game, where you try to survive endless waves of mutants.  You must defend your base and 'Quantum Cube'
-fromt he mutants while you collect samples from the vanquished foes to sell back to Mission Control for credits that can be used to 
+from the mutants while you collect samples from the vanquished foes to sell back to Mission Control for credits that can be used to 
 expand your base, upgrade structures, upgrade your character and weapons, and buy ammo and grenades.
 
 I have a few ideas for a more linear game experience, but right now I'm just focussed on getting the core mechanics into the game.  If I 
