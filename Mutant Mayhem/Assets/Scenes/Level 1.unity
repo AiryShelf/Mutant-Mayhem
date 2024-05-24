@@ -1152,6 +1152,37 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &225084263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 225084264}
+  m_Layer: 0
+  m_Name: EnemySM Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &225084264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225084263}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &225660261
 GameObject:
   m_ObjectHideFlags: 0
@@ -2878,7 +2909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec72ac3390be592408a20e0ec872a805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1
+  health: 1000
   hitEffects: {fileID: 1553367506}
   corpsePrefab: {fileID: 3246120828009000940, guid: faec62a3480e22041925d4784d0e1d5c, type: 3}
   deathTorque: 60
@@ -4088,7 +4119,7 @@ Transform:
   m_GameObject: {fileID: 543858365}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4345,7 +4376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 595.4955, y: 351.35132}
+  m_AnchoredPosition: {x: 590.09, y: 350.45044}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1.1, y: 1.1}
 --- !u!114 &562144389
@@ -4494,11 +4525,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 287810755401260313, guid: 80511c64cceb7ce4e8a2c5bae12ced00, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.8
       objectReference: {fileID: 0}
     - target: {fileID: 287810755401260313, guid: 80511c64cceb7ce4e8a2c5bae12ced00, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.97
+      value: -11.82
       objectReference: {fileID: 0}
     - target: {fileID: 287810755401260313, guid: 80511c64cceb7ce4e8a2c5bae12ced00, type: 3}
       propertyPath: m_LocalPosition.z
@@ -11227,7 +11258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   data:
-    dataString: UEsDBBQAAAgIAACAn+tzzWXabAIAACMFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFlVE1z2jAU/CuMzoUxsSFxb60hpIckTGgnF1+E9Yw1yJJHkgMkw3/vk2xj1z0h9n3trp78Rbg0FWRW6Y3m7FkxIN8nxJ3Jt0kffIIzPSi545/Q5bxzZguXRH3OG7VcIT53ZUaVYDXPfsiDcMkBgrXkudLlmh0gUcYahHMqDGBIK+uqJUJfE3LGn2nsSi54urt3p088xcHkiscMpAU9SF3M4mUQLaPoYT0N7tuyrqipqWUmaFkBcwL60kWXHS58mkRpbYaTkSkhuGl5EXupvO6EVqZGVZjAOEWdnsx8FiJQAD8U1rEelr/muQHbktL0suIaDWv6kp+qcbGk5tgw+6CidpOiIF56Wk3X5/8SpnMfzrUqn7rB88ANsQXPjm/0klFjBz4P4dWAu3foRMWR7gW8FyBf1EarWjIMWl270trA3ar/e9OWFJAde7yhOgLrqrc8GN2P03D18s+J4OXehWZRA+yE8pb7XQCNl/MLCftNMW0LRB2LPwZ+08NwpdrAI9fGYqhVKR29vaq1SyVr75lTU9tEaQkebklXIKmwly22seM7HMUGY0eRR+oeTzu8jXVvYlTi4T4/CEahrTrdLssU6vQMpnitreASetIu8II+JUrKZsWGnnRlu1rnNBuUHWrO/l0tEoeLaMlYTkMW7MPFcvoQhkEWxxBFLNvH+3vid49L1EnFtiHa2oO3JvvmEves+6ZMNppWft2ZpqcN/yzVwHIuc7XLNIB8bTrciIPGIfgw2ZpxNGgH1nLp75t8pUSo7AgsvTVKvdL12Wqa9l1SUvEPZR2SksR/RFLi4NsubzV8cDi54V2zK7n+BVBLAwQUAAAICAAAgJ/rsc6fm20AAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IzNNdRUEovSizIKAaKGII4pZkpIHa0kqWxqYlZSkpaonGKQZKxqZmuhbGxQbKlZaqJSUpykmWSuVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAAgJ/rc81l2mwCAAAjBQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAgJ/rsc6fm20AAAB4AAAACQAkAAAAAAAAAAAAAAC5AgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAHEDAAAAAA==
+    dataString: UEsDBBQAAAgIAACAn+seNaePZQIAACcFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQF1VE1z2jAQ/SuMziVjYkLi3lpDSA8kTEgnF1+EtcYaZMmjjwDJ8N+7km3s0ikX5Lfv7b5drf1FuDQ15FbppeZspRiQ7yPiz+TbqA8+wZHulNzwT+g475zZ0pNo4LxSyxXiEy8zqgKref5D7oQnRwg6yQulqwXbQaqMNQgXVBjAkFbWqyVCXyNyxL9x4iUnPN3e+9MnnpJodMZjDtKC7qkdsaM1LCdzQasamLfck2fRTeR/8UOr6oEgk9hcq4huYl9NCcFN643YUx16T2ltHHaGBMYp9hoMTYKiBL4rrXc+lL8UhQHb2tT0NOcah9bkJT9VM8mKmn3j9YMK5ytNo2QWjDVZV/8QxpMQLrSqnrrCk8gXsSXP96/0lFNjB7MewvOB9zCzAxV7uhXwXoJ8VkutnGQYtNp5qTNwO+8fL72lJeT7Hm+sXoGu/v+N+R7Oof1jKni1DcOfNsBGqDDysA+g8Xp+oeGwLaZNgah38dvAG90N16oNPHJtLIbaLqW3t1VOeypZhJn5bpxNlZYQ4NZ0DZIKe1pjGnt9h1exQdmryCP1L1BbvI1178WVJMA9P4quQmt1uFyWKdVhBaZ8cVZwCb1pH3jGOaVKymbFhjPpZBunC5oPZDvH2d+rRZL4bjpjrKAxi7bx3Wz8EMdRniQwnbJ8m2zvSdg9LrFPKtaN0XY8eGuyTy5xz7rvymipaR3WnWl6WPLPSg1GzmWhNrkGkC9Nhotx0FgEX022YBwHtAFruQz3Tb4yIlS+B5ZdEmWh08XRapr1WTJS8w9lPZKRNHxIMuLhyy6vNXxwOPjiXbIzOf8BUEsDBBQAAAgIAACAn+uxzp+bbQAAAHgAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM011FQSi9KLMgoBooYgjilmSkgdrSSpbGpiVlKSlqicYpBkrGpma6FsbFBsqVlqolJSnKSZZK5UixQfUllQapfYm4qRE9AYklGWmZeSmZeup57UWaKO8hopdhaAFBLAQItABQAAAgIAACAn+seNaePZQIAACcFAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAACAn+uxzp+bbQAAAHgAAAAJACQAAAAAAAAAAAAAALICAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAAagMAAAAA
     upgradeData: 
     file_cachedStartup: {fileID: 0}
     data_cachedStartup: 
@@ -11240,7 +11271,7 @@ MonoBehaviour:
   manualDebugFloorRoof: 0
   showSearchTree: 0
   unwalkableNodeDebugSize: 0.3
-  logPathResults: 1
+  logPathResults: 0
   maxNearestNodeDistance: 100
   scanOnStartup: 1
   fullGetNearestSearch: 0
@@ -11259,7 +11290,7 @@ MonoBehaviour:
   heuristic: 2
   heuristicScale: 1
   threadCount: 1
-  maxFrameTime: 1
+  maxFrameTime: 10
   batchGraphUpdates: 0
   graphUpdateBatchingInterval: 0.2
   euclideanEmbedding:
@@ -11477,7 +11508,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 419796359}
   speed: 200
-  nextWaypointDistance: 3
+  nextWaypointDistance: 1
+  enemyGFX: {fileID: 0}
 --- !u!1 &924163530
 GameObject:
   m_ObjectHideFlags: 0
@@ -15405,7 +15437,7 @@ MonoBehaviour:
   - {fileID: 5106837686337348397, guid: 1f5dec6f2cbe54e4487d6f1a125dc0ce, type: 3}
   enemySpawnChance: 
   spawnTime: 0.5
-  spawnAmount: 0
+  spawnAmount: 1
   hide: 1
   maxEnemies: 100
   GLOBAL_enemyCount: 0
@@ -25846,3 +25878,4 @@ SceneRoots:
   - {fileID: 851411480}
   - {fileID: 736619205}
   - {fileID: 568896708}
+  - {fileID: 225084264}
