@@ -1,0 +1,1146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 53
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07c9b2c97f84356bb2bfac29363e611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StyleTrainerData:
+    rid: 5426449541335089152
+  m_DefaultStyleData:
+    rid: 5426449541335089153
+  m_DefaultStyleVersion: 2023111600
+  m_DefaultStyles:
+  - rid: 5426449541335089251
+  m_AssetPath: 
+  m_PreviousProjectIDs: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 5426449541335089152
+      type: {class: StyleTrainerData, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: d66255ab-dcce-467d-8d53-958e05a653e9
+        m_State: 1
+        m_Disposing: 0
+        m_Styles:
+        - rid: 5426449541335089253
+        - rid: 5426449541335089260
+        m_Version: 202231001
+    - rid: 5426449541335089153
+      type: {class: StyleTrainerData, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 11000000-0000-0000-0000-000000000011
+        m_State: 1
+        m_Disposing: 0
+        m_Styles:
+        - rid: 5426449553484677444
+        m_Version: 202231001
+    - rid: 5426449541335089251
+      type: {class: StyleData, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 00000000-0000-0000-0000-000000000000
+        m_State: 1
+        m_Disposing: 0
+        m_IsFallback: 1
+        m_Thumbnail:
+          rid: -2
+        m_Visible: 0
+        selectedCheckPointGUID: 00000000-0000-0000-0000-000000000000
+        m_FavoriteCheckPointGUID: active
+        parentID: 00000000-0000-0000-0000-000000000000
+        m_ProjectID: 00000000-0000-0000-0000-000000000000
+        m_TrainingSteps: 2000
+        m_CheckPoints:
+        - m_Guid: 00000000-0000-0000-0000-000000000000
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: 00000000-0000-0000-0000-000000000000
+          m_Name: Default
+          m_Description: Default style.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 
+            m_State: 0
+            m_Disposing: 0
+            m_TrainingSet: []
+            m_ProjectID: 
+          m_ValidationImagesData: []
+          m_TrainingSteps: 2000
+        m_SampleOutputPrompts: []
+        m_TrainingSetData: []
+        m_Name: Default
+        m_Description: Default style.
+    - rid: 5426449541335089253
+      type: {class: StyleData, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 77e5d8d8-564b-4176-bbce-a1df4789eddd
+        m_State: 1
+        m_Disposing: 0
+        m_IsFallback: 0
+        m_Thumbnail:
+          rid: 5426449541335089254
+        m_Visible: 1
+        selectedCheckPointGUID: 3e53eeeb-1e1a-4956-9e1b-fbfc0e56c77f
+        m_FavoriteCheckPointGUID: active
+        parentID: 00000000-0000-0000-0000-000000000000
+        m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+        m_TrainingSteps: 2000
+        m_CheckPoints:
+        - m_Guid: c2231fea-5277-4764-b557-3143531e8f03
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 2509f4e7-6562-4824-ae67-7ffcce6ba7d0
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 2509f4e7-6562-4824-ae67-7ffcce6ba7d0
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: aecb4603-140a-43c8-8360-909068ed3c55
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: aecb4603-140a-43c8-8360-909068ed3c55
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: 5637c892-6b74-4f50-aafe-6dbd80f8e6a2
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 5637c892-6b74-4f50-aafe-6dbd80f8e6a2
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 200
+        - m_Guid: 337e7c4f-5aba-4aa2-af5f-540dbb8bf00f
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 23c6b753-8348-4edc-9f4e-af01831866a9
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 23c6b753-8348-4edc-9f4e-af01831866a9
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: a2650951-9b71-4a94-8e52-f6dfb7a659e5
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: a2650951-9b71-4a94-8e52-f6dfb7a659e5
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: 549cdf4a-9a1f-451b-8323-8c32fbadb15d
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 549cdf4a-9a1f-451b-8323-8c32fbadb15d
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 400
+        - m_Guid: 077b8ead-9bb7-4978-9e5c-6aef03d94558
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: ec0e7c13-a460-4384-af2b-3f20df1338da
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: ec0e7c13-a460-4384-af2b-3f20df1338da
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: 6d94d3b7-d0c2-4a27-9cc0-0cfc827200c0
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 6d94d3b7-d0c2-4a27-9cc0-0cfc827200c0
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: ca18c447-c5de-45b5-b844-2b1bf92114e1
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: ca18c447-c5de-45b5-b844-2b1bf92114e1
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 600
+        - m_Guid: 0b9be030-c4b6-4564-ab86-639dbdb33b77
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 62dc9dae-1f70-463f-9450-62958df87626
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 62dc9dae-1f70-463f-9450-62958df87626
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: b4826a33-d317-4974-8f54-8f540b62907d
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: b4826a33-d317-4974-8f54-8f540b62907d
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: 301aaa3b-c162-45da-ac79-a7182638429b
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 301aaa3b-c162-45da-ac79-a7182638429b
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 800
+        - m_Guid: 39b58bef-4f59-4afd-88ab-8c202b936e90
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: f2a1177d-89da-4408-8ff8-1b1ca46456eb
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: f2a1177d-89da-4408-8ff8-1b1ca46456eb
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: d4c3485a-3835-4934-a8c5-f2c30af61a61
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: d4c3485a-3835-4934-a8c5-f2c30af61a61
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: 53dfd73e-5d61-477d-8f98-4a3989ee3f1b
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 53dfd73e-5d61-477d-8f98-4a3989ee3f1b
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 1000
+        - m_Guid: 57834b51-0347-4d89-9a93-111c7768f526
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 68d2b210-6020-427d-bf50-9966d79b07f4
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 68d2b210-6020-427d-bf50-9966d79b07f4
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: 7952b7c3-6b77-40d7-8a37-f30465eff249
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 7952b7c3-6b77-40d7-8a37-f30465eff249
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: 49786f38-aef7-447c-816b-5c5d61c5f870
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 49786f38-aef7-447c-816b-5c5d61c5f870
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 1200
+        - m_Guid: 04de43ac-c88d-443b-9419-affef0866a3b
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: a6bd3995-123c-4b13-873f-a068e754e9d6
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: a6bd3995-123c-4b13-873f-a068e754e9d6
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: dcce719b-7ce4-444e-a341-a61f0c8d6385
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: dcce719b-7ce4-444e-a341-a61f0c8d6385
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: cea5a23b-39cd-4a0e-b521-ffcc0cbbba16
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: cea5a23b-39cd-4a0e-b521-ffcc0cbbba16
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 1400
+        - m_Guid: a5290fb6-545c-4889-b464-78373cbcb36e
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 3a1ebd80-257f-40d3-9545-6e54701c8c02
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 3a1ebd80-257f-40d3-9545-6e54701c8c02
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: a67fa00a-78d2-4a6d-b68f-3df079a4fe6b
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: a67fa00a-78d2-4a6d-b68f-3df079a4fe6b
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: cb638479-1f49-4bc0-aa46-490849f295c7
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: cb638479-1f49-4bc0-aa46-490849f295c7
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 1600
+        - m_Guid: 3a74ffab-57d0-444d-9f32-902cc9fcb3be
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: ce02ee5b-e5d6-47b1-9f99-1f053aa5c81b
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: ce02ee5b-e5d6-47b1-9f99-1f053aa5c81b
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: 04a2de23-4915-4950-ae70-cfe5673ceaea
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 04a2de23-4915-4950-ae70-cfe5673ceaea
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: e43585e2-9843-4755-a06a-5756ada0e4d7
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: e43585e2-9843-4755-a06a-5756ada0e4d7
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 1800
+        - m_Guid: 3e53eeeb-1e1a-4956-9e1b-fbfc0e56c77f
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: First Style
+          m_Description: Trying it out for the first time.
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 493273f9-27a3-488d-8a7b-6cd285780f47
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 493273f9-27a3-488d-8a7b-6cd285780f47
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: draw sprites that are viewed from directly above
+          - m_Guid: a090a44a-98b9-496e-bbaa-a8c47924ec8a
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: a090a44a-98b9-496e-bbaa-a8c47924ec8a
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: ill need seperate sprites for the character holding a pistol
+              as well as a rifle
+          - m_Guid: 8bef776e-3bcf-47fb-a2c1-442c8a255dc2
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 8bef776e-3bcf-47fb-a2c1-442c8a255dc2
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: make it slightly pixel graphic style, with realistic atmosphere.
+          m_TrainingSteps: 2000
+        m_SampleOutputPrompts:
+        - draw sprites that are viewed from directly above
+        - ill need seperate sprites for the character holding a pistol as well as
+          a rifle
+        - make it slightly pixel graphic style, with realistic atmosphere.
+        m_TrainingSetData:
+        - m_Guid: f963e494-b5b5-4abb-a446-81730fc4baf0
+          m_State: 1
+          m_Disposing: 0
+          m_TrainingSet:
+          - m_Guid: ee9de9f4-63e3-471a-92d2-4eebe7ebc373
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089261
+          - m_Guid: ddaf0fa4-61d0-463a-b192-943048e20f45
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089262
+          - m_Guid: 9512775b-2731-4cb4-819e-3e9657846c5c
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089263
+          - m_Guid: deb2175e-fbbc-45dd-a6c6-cabd3f1a317b
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089264
+          - m_Guid: e89396a0-29eb-43f5-b6e8-39e04cc94f80
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089265
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+        m_Name: First Style
+        m_Description: Trying it out for the first time.
+    - rid: 5426449541335089254
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 00000000-0000-0000-0000-000000000000
+        m_State: 3
+        m_Disposing: 1
+    - rid: 5426449541335089260
+      type: {class: StyleData, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 158a990a-1ab6-47f8-aea2-f2b7f78a6bb2
+        m_State: 1
+        m_Disposing: 0
+        m_IsFallback: 0
+        m_Thumbnail:
+          rid: 5426449541335089266
+        m_Visible: 1
+        selectedCheckPointGUID: 01f1fb2e-0ada-40da-a048-acea27f12a27
+        m_FavoriteCheckPointGUID: dffc9152-2ac3-4a94-9ef2-0478dbaf76f7
+        parentID: 00000000-0000-0000-0000-000000000000
+        m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+        m_TrainingSteps: 2000
+        m_CheckPoints:
+        - m_Guid: 0c6f9653-1906-4a6a-8240-429bce6f77bd
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: f13ff0e4-a0b6-40b9-83eb-2be026a9b7d8
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: f13ff0e4-a0b6-40b9-83eb-2be026a9b7d8
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 5eeea8a2-d2d2-424a-b09e-12845952ab4f
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 5eeea8a2-d2d2-424a-b09e-12845952ab4f
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: b93aebf0-e9c9-4cfc-9064-088a86c1fcfe
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: b93aebf0-e9c9-4cfc-9064-088a86c1fcfe
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 200
+        - m_Guid: 8464d1c7-deda-4ff9-bcbe-a234df1317c0
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 5379b1da-4005-42da-ada1-e4de8c1a5f89
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 5379b1da-4005-42da-ada1-e4de8c1a5f89
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 7ee8e383-84de-4ce7-a34a-0d81d70f379e
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 7ee8e383-84de-4ce7-a34a-0d81d70f379e
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: a6d6fea5-0c87-497a-9480-9272060f382b
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: a6d6fea5-0c87-497a-9480-9272060f382b
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 400
+        - m_Guid: 9733ee8d-2758-48c5-9f11-51f8fc07e441
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 2e3ef81b-4101-4384-b115-c6da3bb72b3d
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 2e3ef81b-4101-4384-b115-c6da3bb72b3d
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 290f2492-88b5-45b6-94f2-d177c9f50fe6
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 290f2492-88b5-45b6-94f2-d177c9f50fe6
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: 1cf72d8a-8ce3-47a8-a892-d986eca8dd19
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 1cf72d8a-8ce3-47a8-a892-d986eca8dd19
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 600
+        - m_Guid: 09be90a1-9145-4abe-8b22-69feab0f8f53
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 7bdd5697-1c5c-4685-a101-7d56287112cd
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 7bdd5697-1c5c-4685-a101-7d56287112cd
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 5bf47244-192a-47a6-be9f-9f2ffe4d7ab4
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 5bf47244-192a-47a6-be9f-9f2ffe4d7ab4
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: caed26bd-05bf-4edb-bf29-aa77f9c942b3
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: caed26bd-05bf-4edb-bf29-aa77f9c942b3
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 800
+        - m_Guid: 5710356c-3f46-440f-afcc-c2276551427c
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 1f416217-3335-4ee5-9148-c0256b90ade1
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 1f416217-3335-4ee5-9148-c0256b90ade1
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: d43ab81c-5925-4cf7-b903-1966e5024cc9
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: d43ab81c-5925-4cf7-b903-1966e5024cc9
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: 7fc35318-70a6-4974-a61e-14f8883bdf28
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 7fc35318-70a6-4974-a61e-14f8883bdf28
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 1000
+        - m_Guid: dffc9152-2ac3-4a94-9ef2-0478dbaf76f7
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 1b8022f7-b4ab-45b1-9a7c-4e3191eeb657
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 1b8022f7-b4ab-45b1-9a7c-4e3191eeb657
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 6b9c4c4c-ca8c-4c87-ad0a-16997a95875c
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 6b9c4c4c-ca8c-4c87-ad0a-16997a95875c
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: 2fe60fb5-3af5-4c9a-8a6e-9db70880e3bf
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 2fe60fb5-3af5-4c9a-8a6e-9db70880e3bf
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 1200
+        - m_Guid: b020dcbe-bbb6-4a14-8c65-adce95f2fc5f
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 111d5b82-aceb-4087-8f63-b0afa09e539d
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 111d5b82-aceb-4087-8f63-b0afa09e539d
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 63eba562-0a0f-4e8f-8e68-88e0e7255605
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 63eba562-0a0f-4e8f-8e68-88e0e7255605
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: b179f7ef-5e99-463d-b1e2-89d3878ded94
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: b179f7ef-5e99-463d-b1e2-89d3878ded94
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 1400
+        - m_Guid: 77979b3e-9beb-468d-9aac-5b86ec96a38c
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 1e2918fc-0389-4521-9367-e0558a2a6219
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 1e2918fc-0389-4521-9367-e0558a2a6219
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 70fa5704-ad38-413d-bd55-8c7e9a9dccc1
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 70fa5704-ad38-413d-bd55-8c7e9a9dccc1
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: b717053e-3923-418e-a7bd-563a9c18b036
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: b717053e-3923-418e-a7bd-563a9c18b036
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 1600
+        - m_Guid: 278f3fc9-09bb-4b90-82d5-59f9269880fa
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 01902a04-95cd-4361-96c6-0dd33415a15e
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 01902a04-95cd-4361-96c6-0dd33415a15e
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 620268bb-2234-45ef-8da5-f96cf67e7fdb
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 620268bb-2234-45ef-8da5-f96cf67e7fdb
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: 543063a5-05f8-4261-a233-0aea69e09e90
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 543063a5-05f8-4261-a233-0aea69e09e90
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 1800
+        - m_Guid: 01f1fb2e-0ada-40da-a048-acea27f12a27
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_Name: TopDownCharacter
+          m_Description: Take 2 at top down characters
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+            m_State: 5
+            m_Disposing: 1
+            m_TrainingSet: []
+            m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+          m_ValidationImagesData:
+          - m_Guid: 08a15e2a-f1df-456d-bdc6-bb44b54f7fdb
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 08a15e2a-f1df-456d-bdc6-bb44b54f7fdb
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a man with a gun, viewed from directly above, with a realistic
+              look
+          - m_Guid: 7f0f3851-2b12-40b4-b5a5-d0fec141c9c6
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 7f0f3851-2b12-40b4-b5a5-d0fec141c9c6
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: a woman with a gun viewed from directly above
+          - m_Guid: 3c81880b-2a78-42c7-9988-3306dfad86de
+            m_State: 5
+            m_Disposing: 1
+            m_ImageArtifact:
+              m_Guid: 3c81880b-2a78-42c7-9988-3306dfad86de
+              m_State: 1
+              m_Disposing: 1
+            m_Prompt: top down view of a person holding a gun
+          m_TrainingSteps: 2000
+        m_SampleOutputPrompts:
+        - a man with a gun, viewed from directly above, with a realistic look
+        - a woman with a gun viewed from directly above
+        - top down view of a person holding a gun
+        m_TrainingSetData:
+        - m_Guid: 9deb51b4-2144-483a-94f1-528db36d847b
+          m_State: 1
+          m_Disposing: 0
+          m_TrainingSet:
+          - m_Guid: ca2d8686-b1bb-40e6-a348-bdef1423de2f
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089671
+          - m_Guid: f215112a-3f2c-41e0-a279-931f7077c4bd
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089672
+          - m_Guid: d99af01a-ef6b-4561-ad89-02309e29d629
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089673
+          - m_Guid: c8cd2872-eb60-45ca-93df-ed76a4204250
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089674
+          - m_Guid: 3db0dc0e-2819-4104-bcf2-34ba427507fa
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              rid: 5426449541335089675
+          m_ProjectID: d66255ab-dcce-467d-8d53-958e05a653e9
+        m_Name: TopDownCharacter
+        m_Description: Take 2 at top down characters
+    - rid: 5426449541335089261
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: ee9de9f4-63e3-471a-92d2-4eebe7ebc373
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089262
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: ddaf0fa4-61d0-463a-b192-943048e20f45
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089263
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 9512775b-2731-4cb4-819e-3e9657846c5c
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089264
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: deb2175e-fbbc-45dd-a6c6-cabd3f1a317b
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089265
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: e89396a0-29eb-43f5-b6e8-39e04cc94f80
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089266
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 00000000-0000-0000-0000-000000000000
+        m_State: 3
+        m_Disposing: 1
+    - rid: 5426449541335089671
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: ca2d8686-b1bb-40e6-a348-bdef1423de2f
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089672
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: f215112a-3f2c-41e0-a279-931f7077c4bd
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089673
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: d99af01a-ef6b-4561-ad89-02309e29d629
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089674
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: c8cd2872-eb60-45ca-93df-ed76a4204250
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449541335089675
+      type: {class: ImageArtifact, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 3db0dc0e-2819-4104-bcf2-34ba427507fa
+        m_State: 1
+        m_Disposing: 1
+    - rid: 5426449553484677444
+      type: {class: StyleData, ns: Unity.Muse.StyleTrainer, asm: Unity.Muse.StyleTrainer}
+      data:
+        m_Guid: 5cc104e0-423a-473e-8034-b9d346cb2357
+        m_State: 1
+        m_Disposing: 0
+        m_IsFallback: 0
+        m_Thumbnail:
+          rid: -2
+        m_Visible: 1
+        selectedCheckPointGUID: 00000000-0000-0000-0000-000000000000
+        m_FavoriteCheckPointGUID: active
+        parentID: 00000000-0000-0000-0000-000000000000
+        m_ProjectID: 11000000-0000-0000-0000-000000000011
+        m_TrainingSteps: 2000
+        m_CheckPoints:
+        - m_Guid: 03fa404b-39fc-4979-9272-deb5d8c4b24c
+          m_State: 1
+          m_Disposing: 0
+          m_ProjectID: 11000000-0000-0000-0000-000000000011
+          m_Name: Happy Harvest [Orion V4 2000]
+          m_Description: 8 Nov 2023
+          parent_id: 00000000-0000-0000-0000-000000000000
+          m_TrainingSetData:
+            m_Guid: 3e758588-960f-44f5-865a-d5eaa1b1dec4
+            m_State: 5
+            m_Disposing: 0
+            m_TrainingSet: []
+            m_ProjectID: 11000000-0000-0000-0000-000000000011
+          m_ValidationImagesData:
+          - m_Guid: 96b39a19-2d3e-4bc5-aa3c-38667ed6eba5
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              m_Guid: 96b39a19-2d3e-4bc5-aa3c-38667ed6eba5
+              m_State: 5
+              m_Disposing: 0
+            m_Prompt: A chicken
+          - m_Guid: 05de072c-ebbc-43d7-886b-7ac4f9cbd079
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              m_Guid: 05de072c-ebbc-43d7-886b-7ac4f9cbd079
+              m_State: 5
+              m_Disposing: 0
+            m_Prompt: A cow
+          - m_Guid: 2dbfc212-f87b-45f9-a05a-06368e190ca1
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              m_Guid: 2dbfc212-f87b-45f9-a05a-06368e190ca1
+              m_State: 5
+              m_Disposing: 0
+            m_Prompt: A dog
+          - m_Guid: e0139464-a868-402a-95b8-b4c26685a97b
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              m_Guid: e0139464-a868-402a-95b8-b4c26685a97b
+              m_State: 5
+              m_Disposing: 0
+            m_Prompt: A farmer
+          - m_Guid: 4421bead-a3ff-4c09-9514-61e127eb470e
+            m_State: 5
+            m_Disposing: 0
+            m_ImageArtifact:
+              m_Guid: 4421bead-a3ff-4c09-9514-61e127eb470e
+              m_State: 5
+              m_Disposing: 0
+            m_Prompt: A pine tree
+          m_TrainingSteps: 1200
+        m_SampleOutputPrompts:
+        - A chicken
+        - A cow
+        - A dog
+        - A farmer
+        - A pine tree
+        m_TrainingSetData:
+        - m_Guid: 3e758588-960f-44f5-865a-d5eaa1b1dec4
+          m_State: 5
+          m_Disposing: 0
+          m_TrainingSet: []
+          m_ProjectID: 11000000-0000-0000-0000-000000000011
+        m_Name: Default
+        m_Description: Default Style

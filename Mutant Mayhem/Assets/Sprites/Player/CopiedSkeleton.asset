@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec8da9418a6bf493e93ef4c7b7575847, type: 3}
+  m_Name: CopiedSkeleton
+  m_EditorClassIdentifier: 
+  m_SpriteBones:
+  - m_Name: Body
+    m_Guid: ba1b67e2eeef0fa4db3648a91b20278b
+    m_Position: {x: 189.8706, y: 201.1218, z: 0}
+    m_Rotation: {x: 0, y: 0, z: -0.0012084343, w: 0.9999993}
+    m_Length: 14.58296
+    m_ParentId: -1
+    m_Color:
+      serializedVersion: 2
+      rgba: 4278190335
+  - m_Name: LeftArm
+    m_Guid: c23eccf27d6cca64991a76b31e81bfb4
+    m_Position: {x: 10.797187, y: 52.237545, z: 0}
+    m_Rotation: {x: 0, y: 0, z: 0.20332035, w: 0.97911227}
+    m_Length: 54.116882
+    m_ParentId: 0
+    m_Color:
+      serializedVersion: 2
+      rgba: 4278255615
+  - m_Name: LeftForearm
+    m_Guid: 962f19f3664bbd140bd3b54b2dc89f11
+    m_Position: {x: 54.11683, y: -0.000023126106, z: 0}
+    m_Rotation: {x: 0, y: 0, z: -0.28012058, w: 0.9599649}
+    m_Length: 47.90862
+    m_ParentId: 1
+    m_Color:
+      serializedVersion: 2
+      rgba: 4278255360
+  - m_Name: LeftHand
+    m_Guid: d6093db3527fee246905d98d20bda214
+    m_Position: {x: 47.908615, y: 0.000003911113, z: 0}
+    m_Rotation: {x: 0, y: 0, z: -0.017281612, w: 0.9998507}
+    m_Length: 25.618767
+    m_ParentId: 2
+    m_Color:
+      serializedVersion: 2
+      rgba: 4294967040
+  - m_Name: RightArm
+    m_Guid: 85a5cfdbb078b5c47a2dff05535447d6
+    m_Position: {x: 12.054966, y: -51.483223, z: 0}
+    m_Rotation: {x: 0, y: 0, z: -0.2355773, w: 0.97185564}
+    m_Length: 53.96712
+    m_ParentId: 0
+    m_Color:
+      serializedVersion: 2
+      rgba: 4294901760
+  - m_Name: RightForearm
+    m_Guid: 28687073d360f7e46b4a87d305eb2dda
+    m_Position: {x: 53.96711, y: 0.0000041460453, z: 0}
+    m_Rotation: {x: 0, y: 0, z: 0.29704553, w: 0.95486337}
+    m_Length: 46.925632
+    m_ParentId: 4
+    m_Color:
+      serializedVersion: 2
+      rgba: 4294902015
+  - m_Name: RightHand
+    m_Guid: 4020e832a2d273641ab77ef71b94213a
+    m_Position: {x: 46.92564, y: -0.0000021668002, z: 0}
+    m_Rotation: {x: 0, y: 0, z: 0.056745037, w: 0.99838877}
+    m_Length: 26.163353
+    m_ParentId: 5
+    m_Color:
+      serializedVersion: 2
+      rgba: 4278223103
+  - m_Name: Head
+    m_Guid: 283cc98dd68b31e4a991ff3d69c09dad
+    m_Position: {x: 12.012689, y: -0.062158797, z: 0}
+    m_Rotation: {x: 0, y: 0, z: 0.00388713, w: 0.99999243}
+    m_Length: 9.429487
+    m_ParentId: 0
+    m_Color:
+      serializedVersion: 2
+      rgba: 4278255488

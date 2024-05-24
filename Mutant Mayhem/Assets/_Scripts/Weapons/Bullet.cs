@@ -1,0 +1,86 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public class Bullet : MonoBehaviour
+{
+    public LayerMask hitLayers;
+    [SerializeField] TileManager tileManager;
+    [SerializeField] float damage = 10;
+    [SerializeField] float knockback = 1f;
+
+    [SerializeField] Rigidbody2D myRb;
+    [SerializeField] BulletTrails bulletTrail;
+    
+    void Awake()
+    {
+
+    }
+
+    void Start()
+    {
+        // Check origin point for collision
+        Collider2D other = Physics2D.OverlapPoint(transform.position, hitLayers);
+        if (other)
+        {
+            Hit(other, transform.position);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        CheckCollisions();
+    }
+
+    void Update()
+    {
+        
+    }
+
+    void CheckCollisions()
+    {
+        // Check with raycast
+        Vector2 raycastDir = myRb.velocity;
+        RaycastHit2D raycast = Physics2D.Raycast(transform.position, raycastDir, 
+                                                 raycastDir.magnitude * Time.deltaTime, hitLayers);
+        if (raycast.collider)
+        {
+            Hit(raycast.collider, raycast.point + raycastDir/10 * Time.deltaTime);
+        }
+    }
+
+    void Hit(Collider2D otherCollider, Vector2 point)
+    {
+        // Enemies
+        Enemy enemy = otherCollider.GetComponent<Enemy>();
+        if (enemy)
+        {
+            Health health = otherCollider.GetComponent<Health>();
+            if (health)
+            {
+                enemy.IsHit();
+                health.Knockback(transform.right, knockback);
+                health.BulletHitEffect(point, transform.right);
+                health.ModifyHealth(-damage);
+            }
+        }
+        // Structures Layer #12
+        else if (otherCollider.gameObject.layer == 12)
+        { 
+            tileManager.BulletHitEffectAt(point, transform.right);
+            tileManager.ModifyHealthAt(point, -damage);
+            Debug.Log("TILE HIT");
+        }
+
+        // Delay bullet trail destroy
+        if (bulletTrail != null)
+        {
+            bulletTrail.DestroyAfterSeconds();
+            bulletTrail.transform.parent = null;
+        }
+
+        gameObject.SetActive(false);
+        Destroy(gameObject);
+    }
+}

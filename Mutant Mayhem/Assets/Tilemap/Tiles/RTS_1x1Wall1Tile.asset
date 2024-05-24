@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
+  m_Name: RTS_1x1Wall1Tile
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: 7e3f15f0e992d8b48a32589b9bbfa432, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 21300000, guid: 7e3f15f0e992d8b48a32589b9bbfa432, type: 3}
+    m_GameObject: {fileID: 6099283326055610884, guid: 8a798cb57d84ee544b5fd2f2b8183acb, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 2
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions: []
+    m_RuleTransform: 1
+  structureTilemap: {fileID: 5266878040768263630, guid: 360d1b1bf31dac241af1635c43585c9b, type: 3}
+  structureSO: {fileID: 11400000, guid: 9edf2ada6d9e43c4199956e12c9cc199, type: 2}
+  cellPositions:
+  - {x: 0, y: 0, z: 0}
+  transparentSprite: {fileID: 21300000, guid: 4cf7ecb1909848c48b0f01e08b875fe4, type: 3}
+  damagedTiles:
+  - {fileID: 11400000, guid: a79acf887a81f904689df0a86dde76ab, type: 2}
+  - {fileID: 11400000, guid: 018d127daca3ea94db81509c54643946, type: 2}
+  - {fileID: 11400000, guid: 68e2b204da3821b40bcdcdbde3a6efe5, type: 2}
+  - {fileID: 11400000, guid: 48b9e571073b6894290b610f3d55c342, type: 2}
+  corpsePrefab: {fileID: 3246120828009000940, guid: faec62a3480e22041925d4784d0e1d5c, type: 3}
+  hitEffectsPrefab: {fileID: 1682317847907704817, guid: 6cafa6edc653bce418cc43786f8ea1fb, type: 3}

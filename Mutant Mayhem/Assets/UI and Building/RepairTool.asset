@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
+  m_Name: RepairTool
+  m_EditorClassIdentifier: 
+  uiImage: {fileID: 21300000, guid: b4d19ec8621dad74db07953029e4bb79, type: 3}
+  tileName: Repair Tool
+  description: Used to repair damage to structures
+  tileCost: 0
+  maxHealth: 0
+  health: 0
+  ruleTileStructure: {fileID: 11400000, guid: 9c0c4aec31f432e429064bd2a9a65414, type: 2}
+  structureType: 1
+  actionType: 0
+  range: {x: 50, y: 50}
