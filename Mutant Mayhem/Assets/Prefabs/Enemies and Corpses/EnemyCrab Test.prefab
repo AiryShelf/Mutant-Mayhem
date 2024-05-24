@@ -17,10 +17,11 @@ GameObject:
   - component: {fileID: 4499177705198824523}
   - component: {fileID: 1394917227638007789}
   - component: {fileID: 5832035766319159551}
-  - component: {fileID: 7012324004100119033}
-  - component: {fileID: 3195736509789325336}
+  - component: {fileID: 1137308106325975685}
+  - component: {fileID: 6021156971597764999}
+  - component: {fileID: 861043110583215542}
   m_Layer: 7
-  m_Name: EnemyCrab
+  m_Name: EnemyCrab Test
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -271,11 +272,11 @@ MonoBehaviour:
   - {x: 0.029058954, y: -0.030161737, z: 0}
   m_ShapePathHash: 1304846700
   m_Mesh: {fileID: 0}
-  m_InstanceId: 53098
+  m_InstanceId: 53456
   m_LocalBounds:
     m_Center: {x: -0.0014459305, y: 0, z: 0}
     m_Extent: {x: 0.03055749, y: 0.030161737, z: 0}
---- !u!114 &7012324004100119033
+--- !u!114 &1137308106325975685
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,7 +304,7 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &3195736509789325336
+--- !u!114 &6021156971597764999
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -316,10 +317,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 5
-  radius: 0.5
+  radius: 0.07
   height: 2
   canMove: 1
-  maxSpeed: 1
+  maxSpeed: 3
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -327,7 +328,7 @@ MonoBehaviour:
   centerOffsetCompatibility: NaN
   repathRateCompatibility: NaN
   canSearchCompability: 0
-  orientation: 0
+  orientation: 1
   enableRotation: 1
   autoRepath:
     mode: 2
@@ -339,12 +340,26 @@ MonoBehaviour:
   maxAcceleration: -2.5
   rotationSpeed: 360
   slowdownDistance: 0.6
-  pickNextWaypointDist: 2
+  pickNextWaypointDist: 1.2
   endReachedDistance: 0.2
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
   constrainInsideGraph: 0
+--- !u!114 &861043110583215542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5106837686337348397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9679e68a0f1144e79c664d9a11ca121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  target: {fileID: 0}
 --- !u!1001 &5282694530549401143
 PrefabInstance:
   m_ObjectHideFlags: 0
