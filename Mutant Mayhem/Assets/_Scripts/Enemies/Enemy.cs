@@ -121,7 +121,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForEndOfFrame();
         // Find initial moveDir
         moveDir = (Vector2)playerTrans.position - (Vector2)transform.position;
-        moveDir.Normalize();
+        //moveDir.Normalize();
 
         // Get honing normal value
         float accuracyHoning;

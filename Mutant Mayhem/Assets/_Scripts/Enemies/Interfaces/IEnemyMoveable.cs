@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
-public class I : MonoBehaviour
+public interface IEnemyMoveable
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Rigidbody2D RB { get; set; }
+    Vector2 FacingDirection { get; set; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void MoveEnemy(Vector2 velocity);
+    void CheckFacingDirection(Vector2 velocity);
 }
