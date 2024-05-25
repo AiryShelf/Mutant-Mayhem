@@ -62,6 +62,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            Debug.Log("Player was detected by enemy Melee");
             Hit(other, other.ClosestPoint(transform.position));
         }
     }

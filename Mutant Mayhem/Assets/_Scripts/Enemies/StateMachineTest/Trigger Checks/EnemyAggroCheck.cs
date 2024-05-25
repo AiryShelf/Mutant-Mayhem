@@ -15,15 +15,17 @@ public class EnemyAggroCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        if (other.gameObject == PlayerTarget)
+        if (other.gameObject.layer == LayerMask.NameToLayer("AITriggers"))
         {
+            Debug.Log("collision detected");
             _enemyBase.SetAggroStatus(true);
         }
+        // could do another check for turrets, so that enemyBase can decide player over turret
     }
 
     private void OnTriggerExit2D(Collider2D other) 
     {
-        if (other.gameObject == PlayerTarget)
+        if (other.gameObject.layer == LayerMask.GetMask("AITriggers"))
         {
             _enemyBase.SetAggroStatus(false);
         }

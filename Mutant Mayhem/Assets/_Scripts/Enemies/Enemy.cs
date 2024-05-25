@@ -68,7 +68,7 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
-        CheckDistance();
+        
         Rotate();
         Move(); 
     }
@@ -118,6 +118,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator Retarget()
     {
+        CheckDistance();
         yield return new WaitForEndOfFrame();
         // Find initial moveDir
         moveDir = (Vector2)playerTrans.position - (Vector2)transform.position;

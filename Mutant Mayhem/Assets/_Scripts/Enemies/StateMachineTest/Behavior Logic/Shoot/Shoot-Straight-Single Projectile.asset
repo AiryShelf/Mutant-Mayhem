@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 008a8832beb0a0d4c98e004ce1a88f69, type: 3}
-  m_Name: Melee-Single Forward
+  m_Script: {fileID: 11500000, guid: ed9fad06ea0e20d4eb0b65511b524ea9, type: 3}
+  m_Name: Shoot-Straight-Single Projectile
   m_EditorClassIdentifier: 
-  meleeControllerEnemy: {fileID: 0}
-  _timeBetweenAttack: 1
+  BulletPrefab: {fileID: 7625088445697106208, guid: edd73f34f40109a46a64eaf13b9aef78, type: 3}
+  _timeBetweenShots: 1
   _timeTillExit: 3
+  _distanceToExit: 3
+  _bulletSpeed: 10

@@ -7,7 +7,7 @@ public class EnemyChaseSOBase : ScriptableObject
     protected EnemyBase enemyBase;
     protected Transform transform;
     protected GameObject gameObject;
-
+    
     protected Transform playerTransform;
 
     public virtual void Initialize(GameObject gameObject, EnemyBase enemyBase)
@@ -31,4 +31,5 @@ public class EnemyChaseSOBase : ScriptableObject
     public virtual void DoPhysicsUpdateLogic() { }
     public virtual void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) { }
     public virtual void ResetValues() { }
+
 }

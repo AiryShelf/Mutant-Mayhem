@@ -22,7 +22,5 @@ public class RuleTileStructure : RuleTile
         base.GetTileData(location, tilemap, ref tileData);
         tileData.colliderType = Tile.ColliderType.Sprite;
         tileData.sprite = transparentSprite;
-
-
     }
 }

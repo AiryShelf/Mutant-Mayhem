@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyShootingDistanceCheck : MonoBehaviour
+public class EnemyShootCheck : MonoBehaviour
 {
     public GameObject PlayerTarget { get; set; }
     public EnemyBase _enemyBase;
@@ -17,7 +17,7 @@ public class EnemyShootingDistanceCheck : MonoBehaviour
     {
         if (other.gameObject == PlayerTarget)
         {
-            _enemyBase.SetShootingDistanceBool(true);
+            _enemyBase.SetShootDistanceBool(true);
         }
     }
 
@@ -25,7 +25,7 @@ public class EnemyShootingDistanceCheck : MonoBehaviour
     {
         if (other.gameObject == PlayerTarget)
         {
-            _enemyBase.SetShootingDistanceBool(false);
+            _enemyBase.SetShootDistanceBool(false);
         }
     }
 }

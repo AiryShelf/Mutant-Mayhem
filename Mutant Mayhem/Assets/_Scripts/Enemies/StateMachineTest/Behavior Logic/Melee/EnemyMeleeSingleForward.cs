@@ -37,10 +37,7 @@ public class EnemyMelee : EnemyMeleeSOBase
 
             Vector2 dir = (playerTransform.position - enemyBase.transform.position).normalized;
             meleeControllerEnemy.isAttacking = true;
-            
         }
-
-        
         
         if (_exitTimer >= _timeTillExit)
         {

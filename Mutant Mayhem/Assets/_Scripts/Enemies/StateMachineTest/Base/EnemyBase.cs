@@ -43,14 +43,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
         EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
         EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
-        EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
+        //EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
 
         StateMachine = new EnemyStateMachine();
 
         IdleState = new EnemyIdleState(this, StateMachine);
         ChaseState = new EnemyChaseState(this, StateMachine);
         ShootState = new EnemyShootState(this, StateMachine);
-        MeleeState = new EnemyMeleeState(this, StateMachine);
+        //MeleeState = new EnemyMeleeState(this, StateMachine);
     }
 
     void Start()
@@ -61,7 +61,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         EnemyIdleSOBaseInstance.Initialize(gameObject, this);
         EnemyChaseSOBaseInstance.Initialize(gameObject, this);
         EnemyShootSOBaseInstance.Initialize(gameObject, this);
-        EnemyMeleeSOBaseInstance.Initialize(gameObject, this);
+        //EnemyMeleeSOBaseInstance.Initialize(gameObject, this);
 
         StateMachine.Initialze(IdleState);
     }
@@ -125,7 +125,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         IsWithinMeleeDistance = isWithinMeleeDistance;
     }
 
-    public void SetShootingDistanceBool(bool isWithinShootDistance)
+    public void SetShootDistanceBool(bool isWithinShootDistance)
     {
         IsWithinShootDistance = isWithinShootDistance;
     }

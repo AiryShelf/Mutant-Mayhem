@@ -13,11 +13,13 @@ public class TileStats
 
 public class TileManager : MonoBehaviour
 {
-    // This stores the TileStats for each tile in the Structures Tilemap (on "Structures" layer)
+    // This stores the TileStats for each tile in 
+    // the Structures Tilemap (on "Structures" layer)
     private static Dictionary<Vector3Int, TileStats> _TileStatsDict = 
                                             new Dictionary<Vector3Int, TileStats>();
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
+    public LayerMask layersForGridClearCheck;
 
     // For debugging
     Vector2 boxPos;
@@ -27,7 +29,7 @@ public class TileManager : MonoBehaviour
 
 
 
-    void Start()
+    void Awake()
     {
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
@@ -52,7 +54,8 @@ public class TileManager : MonoBehaviour
         {
             if (AddToTileStatsDict(gridPos, rts))
             {
-                AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+                AnimatedTilemap.SetTile(gridPos, 
+                    _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
                 StructureTilemap.SetTile(gridPos, rts);
                 Debug.Log("Added a Tile");
                 return true;
@@ -272,10 +275,7 @@ public class TileManager : MonoBehaviour
             newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
             boxSize = StructureTilemap.cellSize * 0.9f;
 
-            //boxPos.x = worldPos.x - boxSize.x/2;
-            //boxPos.y = worldPos.y + boxSize.y/2;
-
-            Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0);
+            Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
             
             if (hit != null)
             {
