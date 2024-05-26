@@ -19,7 +19,7 @@ public class Explosion : MonoBehaviour
         // Find objects in range
         Vector2 pos = transform.position;
         Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(pos, radius, 
-                                                                 LayerMask.GetMask("Enemies", "Player", "Corpses"));
+                                        LayerMask.GetMask("Enemies", "Player", "Corpses"));
         // Loop through findings
         foreach (Collider2D collider in objectsInRange)
         {
@@ -46,9 +46,7 @@ public class Explosion : MonoBehaviour
                 {
                     health.ModifyHealth(-damage / dist);
                 }
-            }
-
-            
+            }           
         }
     }
 }

@@ -9,5 +9,5 @@ public interface IEnemyMoveable
     Vector2 FacingDirection { get; set; }
 
     void MoveEnemy(Vector2 velocity);
-    void CheckFacingDirection(Vector2 velocity);
+    void ChangeFacingDirection(Vector2 velocity, float speed);
 }

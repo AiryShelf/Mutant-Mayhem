@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyIdleSOBase : ScriptableObject
 {
+    [SerializeField] protected float rotateSpeed = 2f;
     protected EnemyBase enemyBase;
     protected Transform transform;
     protected GameObject gameObject;

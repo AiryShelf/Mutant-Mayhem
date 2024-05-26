@@ -5,8 +5,8 @@ using UnityEngine;
 public interface ITriggerCheckable
 {
     bool IsAggroed { get; set; }
-    bool IsWithinMeleeDistance { get; set; }
+    bool IsWithinShootDistance { get; set; }
 
-    void SetAggroStatus(bool isAggroed);
-    void SetMeleeDistanceBool(bool IsWithinMeleeDistance);
+    void SetAggroToPlayerStatus(bool isAggroed);
+    void SetShootDistanceBool(bool IsWithinShootDistance);
 }

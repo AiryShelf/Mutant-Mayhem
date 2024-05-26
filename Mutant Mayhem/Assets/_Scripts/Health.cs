@@ -5,7 +5,7 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] float health = 100f;
-    [SerializeField] HitEffects hitEffects;
+    [SerializeField] HitEffects hitEffectsChild;
     [SerializeField] GameObject corpsePrefab;
     [SerializeField] float deathTorque = 20;
 
@@ -58,12 +58,12 @@ public class Health : MonoBehaviour
 
     public void BulletHitEffect(Vector2 hitPos, Vector2 hitDir)
     {
-        hitEffects.PlayBulletHitEffect(hitPos, hitDir);
+        hitEffectsChild.PlayBulletHitEffect(hitPos, hitDir);
     }
 
     public void MeleeHitEffect(Vector2 hitPos, Vector2 hitDir)
     {
-        hitEffects.PlayMeleeHitEffect(hitPos, hitDir);
+        hitEffectsChild.PlayMeleeHitEffect(hitPos, hitDir);
     }
 
     public void Knockback(Vector2 dir, float knockback)
@@ -85,8 +85,8 @@ public class Health : MonoBehaviour
         {
             corpsePrefab.GetComponentInChildren<SpriteRenderer>().color = 
                                                     GetComponent<SpriteRenderer>().color;
-            hitEffects.transform.parent = null;
-            hitEffects.DestroyAfterSeconds();
+            hitEffectsChild.transform.parent = null;
+            hitEffectsChild.DestroyAfterSeconds();
             
             FindObjectOfType<EnemySpawner>().GLOBAL_enemyCount--;
             Destroy(gameObject);

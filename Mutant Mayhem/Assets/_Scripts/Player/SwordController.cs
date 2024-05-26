@@ -20,6 +20,19 @@ public class SwordController : MonoBehaviour
 
     void FixedUpdate()
     {
+        DrawSwordCollider();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) 
+    {
+        if (other.tag == "Enemy")
+        {
+            meleeControllerPlayer.Hit(other, other.ClosestPoint(meleeControllerPlayer.transform.position));
+        }
+    }
+
+    void DrawSwordCollider()
+    {
         Vector2 handlePos = transform.InverseTransformPoint(handleTrans.position);
         Vector2 tipPos = transform.InverseTransformPoint(tipTrans.position);
         Vector2 meleeControllerPos = transform.InverseTransformPoint(meleeControllerPlayer.transform.position);
@@ -30,13 +43,5 @@ public class SwordController : MonoBehaviour
 
         previousHandlePos = handlePos;
         previousTipPos = tipPos;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other) 
-    {
-        if (other.tag == "Enemy")
-        {
-            meleeControllerPlayer.Hit(other, other.ClosestPoint(meleeControllerPlayer.transform.position));
-        }
     }
 }

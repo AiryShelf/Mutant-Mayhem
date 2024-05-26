@@ -4,10 +4,16 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    void Damage(float damageAmount);
+    Health health { get; set; }
+
+    void ModifyHealth(float amount);
+
+    void Knockback(Vector2 dir, float knockback);
+
+    void BulletHitEffect(Vector2 hitPos, Vector2 hitDir);
+
+    void MeleeHitEffect(Vector2 hitPos, Vector2 hitDir);
 
     void Die();
 
-    float MaxHealth { get; set; }
-    float CurrentHealth { get; set; }
 }

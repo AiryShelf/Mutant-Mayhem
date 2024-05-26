@@ -12,11 +12,9 @@ public class Bullet : MonoBehaviour
 
     [SerializeField] Rigidbody2D myRb;
     [SerializeField] BulletTrails bulletTrail;
-    
-    void Awake()
-    {
 
-    }
+    [SerializeField] GameObject AiTrggerPrefabOptional;
+    [SerializeField] float AITriggerSizeOptional;
 
     void Start()
     {
@@ -31,11 +29,6 @@ public class Bullet : MonoBehaviour
     void FixedUpdate()
     {
         CheckCollisions();
-    }
-
-    void Update()
-    {
-        
     }
 
     void CheckCollisions()
@@ -53,17 +46,19 @@ public class Bullet : MonoBehaviour
     void Hit(Collider2D otherCollider, Vector2 point)
     {
         // Enemies
-        Enemy enemy = otherCollider.GetComponent<Enemy>();
+        EnemyBase enemy = otherCollider.GetComponent<EnemyBase>();
         if (enemy)
         {
-            Health health = otherCollider.GetComponent<Health>();
-            if (health)
+            //enemy.IsHit();
+            enemy.Knockback(transform.right, knockback);
+            enemy.BulletHitEffect(point, transform.right);
+            enemy.ModifyHealth(-damage);
+            if (AiTrggerPrefabOptional != null)
             {
-                enemy.IsHit();
-                health.Knockback(transform.right, knockback);
-                health.BulletHitEffect(point, transform.right);
-                health.ModifyHealth(-damage);
-            }
+                Debug.Log("AiTrigger instantiated");
+                GameObject trigger = Instantiate(AiTrggerPrefabOptional, transform.position, Quaternion.identity);
+                trigger.transform.localScale = new Vector3(AITriggerSizeOptional, AITriggerSizeOptional, 1);
+            } 
         }
         // Structures Layer #12
         else if (otherCollider.gameObject.layer == 12)

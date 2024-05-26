@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAggroCheck : MonoBehaviour
+public class EnemyAggroTrigger : MonoBehaviour
 {
     public GameObject PlayerTarget { get; set; }
     public EnemyBase _enemyBase;
@@ -10,24 +10,31 @@ public class EnemyAggroCheck : MonoBehaviour
     private void Awake()
     {
         PlayerTarget = GameObject.FindGameObjectWithTag("Player");
-        _enemyBase = GetComponentInParent<EnemyBase>();
     }
 
-    private void OnTriggerEnter2D(Collider2D other) 
+    private void OnTriggerStay2D(Collider2D other) 
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("AITriggers"))
-        {
-            Debug.Log("collision detected");
-            _enemyBase.SetAggroStatus(true);
+        Debug.Log("enemy trigger enter");
+        if (other.gameObject.layer == LayerMask.NameToLayer("AiTriggers"))
+        {               
+            if (other.tag == "PlayerTrigger")
+            {
+                //Debug.Log("Aggro triggered");
+                _enemyBase.SetAggroToPlayerStatus(true);
+            }
+            else if (other.tag == "TurretTrigger")
+            {
+                // Do Turret logic.
+            }
         }
-        // could do another check for turrets, so that enemyBase can decide player over turret
     }
 
     private void OnTriggerExit2D(Collider2D other) 
     {
         if (other.gameObject.layer == LayerMask.GetMask("AITriggers"))
         {
-            _enemyBase.SetAggroStatus(false);
+            //Debug.Log("Aggro Un-triggered");
+            _enemyBase.SetAggroToPlayerStatus(false);
         }
     }
 }

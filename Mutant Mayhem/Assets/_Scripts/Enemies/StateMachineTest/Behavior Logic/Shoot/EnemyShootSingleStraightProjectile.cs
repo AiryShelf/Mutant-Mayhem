@@ -8,11 +8,10 @@ public class EnemyAttackSingleStraightProjectile : EnemyShootSOBase
     [SerializeField] private Rigidbody2D BulletPrefab;  
     [SerializeField] private float _timeBetweenShots = 1f;   
     [SerializeField] private float _timeTillExit = 3f;
-    [SerializeField] private float _distanceToExit = 3f;
     [SerializeField] private float _bulletSpeed = 10f;
 
     private float _timer;
-    private float _exitTimer;
+    Coroutine WaitToExit;
 
     public override void Initialize(GameObject gameObject, EnemyBase enemy)
     {
@@ -22,14 +21,25 @@ public class EnemyAttackSingleStraightProjectile : EnemyShootSOBase
     public override void DoEnterLogic() 
     {
         base.DoEnterLogic();
+
+        WaitToExit = enemyBase.StartCoroutine(StateChangeCheck());
+        // Shoot next physicsUpdate
+        _timer = _timeBetweenShots;
     }
     public override void DoExitLogic() 
     {
         base.DoExitLogic();
+
+        enemyBase.StopCoroutine(WaitToExit);
     }
     public override void DoFrameUpdateLogic() 
     { 
         base.DoFrameUpdateLogic();
+    }
+
+    public override void DoPhysicsUpdateLogic() 
+    {
+        base.DoPhysicsUpdateLogic();
 
         enemyBase.MoveEnemy(Vector2.zero);
 
@@ -42,20 +52,8 @@ public class EnemyAttackSingleStraightProjectile : EnemyShootSOBase
             Rigidbody2D bullet = GameObject.Instantiate(BulletPrefab, 
                                             enemyBase.transform.position, Quaternion.identity);
             bullet.velocity = dir * _bulletSpeed;
-
-            if (Vector2.Distance(playerTransform.position, enemyBase.transform.position) 
-                > _distanceToExit)
-            {
-                enemyBase.StateMachine.ChangeState(enemyBase.ChaseState);
-            }
-
         }
-        _timer += Time.deltaTime;
-    }
-
-    public override void DoPhysicsUpdateLogic() 
-    {
-        base.DoPhysicsUpdateLogic();
+        _timer += Time.deltaTime;  
     }
     
     public override void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) 
@@ -66,6 +64,20 @@ public class EnemyAttackSingleStraightProjectile : EnemyShootSOBase
     public override void ResetValues() 
     {
         base.ResetValues();
+    }
+
+    IEnumerator StateChangeCheck()
+    {
+        while (true)
+        {
+            Debug.Log("State change coroutine running");
+            yield return new WaitForSeconds(_timeTillExit);
+            
+            if (!enemyBase.IsWithinShootDistance)
+            {
+                enemyBase.StateMachine.ChangeState(enemyBase.ChaseState);
+            }
+        }
     }
 }
 

@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerCheckable
 {
-    [field: SerializeField] public float MaxHealth { get; set; } = 100f;
+    [field: SerializeField] public Health health { get; set; }
+    //public float MaxHealth { get; set; } = 100f;
     public float CurrentHealth { get; set; }
     public Rigidbody2D RB { get; set; }
+    public MeleeControllerEnemyNew meleeController;
     public Vector2 FacingDirection { get; set; }
-    public float rotateSpeed { get; set; }
 
     public bool IsAggroed { get; set; }
     public bool IsWithinMeleeDistance { get; set; }
@@ -55,7 +56,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     void Start()
     {
-        CurrentHealth = MaxHealth;
+        //CurrentHealth = MaxHealth;
         RB = GetComponent<Rigidbody2D>();
 
         EnemyIdleSOBaseInstance.Initialize(gameObject, this);
@@ -77,9 +78,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #region Health / Die Functions
 
-    public void Damage(float damageAmount)
+    public void ModifyHealth(float amount)
     {
-        CurrentHealth -= damageAmount;
+        health.ModifyHealth(amount);
+        CurrentHealth -= amount;
 
         if (CurrentHealth <= 0)
         {
@@ -87,9 +89,24 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         }
     }
 
+    public void Knockback(Vector2 dir, float knockback)
+    {
+        health.Knockback(dir, knockback);
+    }
+
+    public void BulletHitEffect(Vector2 hitPos, Vector2 hitDir)
+    {
+        health.BulletHitEffect(hitPos, hitDir);
+    }
+
+    public void MeleeHitEffect(Vector2 hitPos, Vector2 hitDir)
+    {
+        health.MeleeHitEffect(hitPos, hitDir);
+    }
+
     public void Die()
     {
-        
+        health.Die();
     }
 
     #endregion
@@ -98,24 +115,23 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     public void MoveEnemy(Vector2 velocity)
     {
-        RB.velocity = velocity;
-        CheckFacingDirection(velocity);
+        RB.AddForce(velocity);        
     }
 
-    public void CheckFacingDirection(Vector2 velocity)
+    public void ChangeFacingDirection(Vector2 velocity, float speed)
     {
        float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
        Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y,
-                         Mathf.LerpAngle(RB.rotation, angle, Time.deltaTime * rotateSpeed));
+                         Mathf.LerpAngle(RB.rotation, angle, Time.deltaTime * speed));
        transform.rotation = Quaternion.Euler(rotator);
        FacingDirection = velocity.normalized;
     }
 
     #endregion
 
-    #region Distance Checks
+    #region Status Checks
 
-    public void SetAggroStatus(bool isAggroed)
+    public void SetAggroToPlayerStatus(bool isAggroed)
     {
         IsAggroed = isAggroed;
     }

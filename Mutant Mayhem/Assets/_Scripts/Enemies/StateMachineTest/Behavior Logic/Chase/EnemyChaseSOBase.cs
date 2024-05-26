@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyChaseSOBase : ScriptableObject
 {
+    [SerializeField] protected float rotateSpeed = 10f;
+    protected float moveSpeedBase = 1f;
     protected EnemyBase enemyBase;
     protected Transform transform;
     protected GameObject gameObject;
@@ -23,12 +25,15 @@ public class EnemyChaseSOBase : ScriptableObject
     public virtual void DoExitLogic() { }
     public virtual void DoFrameUpdateLogic() 
     { 
+        
+    }
+    public virtual void DoPhysicsUpdateLogic() 
+    {
         if (enemyBase.IsWithinShootDistance)
         {
             enemyBase.StateMachine.ChangeState(enemyBase.ShootState);
         }
     }
-    public virtual void DoPhysicsUpdateLogic() { }
     public virtual void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) { }
     public virtual void ResetValues() { }
 

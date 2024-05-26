@@ -17,14 +17,13 @@ public class EnemyIdleStandStill : EnemyIdleSOBase
     public override void DoFrameUpdateLogic() 
     { 
         base.DoFrameUpdateLogic();
-
-        enemyBase.MoveEnemy(Vector2.zero);
-
     }
 
     public override void DoPhysicsUpdateLogic() 
     {
         base.DoPhysicsUpdateLogic();
+
+        enemyBase.MoveEnemy(Vector2.zero);
     }
 
     public override void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) 

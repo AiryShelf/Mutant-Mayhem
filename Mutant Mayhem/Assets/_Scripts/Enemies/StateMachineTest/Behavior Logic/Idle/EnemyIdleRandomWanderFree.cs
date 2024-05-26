@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Idle-Random Wander", menuName = "Enemy Logic/Idle Logic/Random Wander")]
-public class EnemyIdleRandomWander : EnemyIdleSOBase
+[CreateAssetMenu(fileName = "Idle-Random Wander Free", menuName = "Enemy Logic/Idle Logic/Random Wander Free")]
+public class EnemyIdleRandomWanderFree : EnemyIdleSOBase
 {
     [SerializeField] private float RandomMovementRange = 5f;
     [SerializeField] private float RandomMovementSpeed = 1f;
     
-    private Vector3 _startPos;
     private Vector3 _targetPos;
     private Vector3 _direction;
 
@@ -21,7 +20,6 @@ public class EnemyIdleRandomWander : EnemyIdleSOBase
     {
         base.DoEnterLogic();
 
-        _startPos = transform.position;
         _targetPos = GetRandomPointInCircle();
     }
 
@@ -63,7 +61,7 @@ public class EnemyIdleRandomWander : EnemyIdleSOBase
 
     private Vector3 GetRandomPointInCircle()
     {
-        return _startPos + (Vector3)UnityEngine.Random.insideUnitCircle * RandomMovementRange;
+        return (Vector3)UnityEngine.Random.insideUnitCircle * RandomMovementRange;
     }
 }
 

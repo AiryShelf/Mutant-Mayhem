@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform leftHandTrans;
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] MeleeControllerPlayer meleeController;
+    [SerializeField] Health myHealth;
     
     
     float sprintSpeedAmount;
@@ -194,6 +195,16 @@ public class Player : MonoBehaviour
 
         moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;
         myRb.AddForce(moveDir);
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        // Enemy Melee Hit *can serialize the layer for performance
+        if (other.gameObject.layer == LayerMask.NameToLayer("EnemyMeleeTrigger"))
+        {
+            Vector2 point = other.ClosestPoint(transform.position);
+            other.GetComponentInChildren<MeleeControllerEnemyNew>().Hit(myHealth, point);
+        }
     }
 
 

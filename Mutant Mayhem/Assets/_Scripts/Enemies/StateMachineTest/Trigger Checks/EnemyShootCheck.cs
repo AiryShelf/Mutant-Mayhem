@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyShootCheck : MonoBehaviour
+public class EnemyShootTrigger : MonoBehaviour
 {
     public GameObject PlayerTarget { get; set; }
     public EnemyBase _enemyBase;

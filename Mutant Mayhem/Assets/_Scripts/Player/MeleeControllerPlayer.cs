@@ -50,17 +50,17 @@ public class MeleeControllerPlayer : MonoBehaviour
         myStamina.ModifyStamina(-meleeStaminaUse);
     }
 
-    public void Hit(Collider2D enemyCollider, Vector2 point)
+    public void Hit(Collider2D other, Vector2 point)
     {
-        Enemy enemy = enemyCollider.GetComponent<Enemy>();
+        EnemyBase enemy = other.GetComponent<EnemyBase>();
         if (enemy != null)
         {
-            Health health = enemyCollider.GetComponent<Health>();
+            Health health = other.GetComponent<Health>();
             if (health != null)
             {
-                enemy.IsHit();
+                //enemy.IsHit();
                 health.Knockback((Vector2)health.transform.position - point, knockback);
-                health.GetComponentInChildren<HitEffects>().PlayMeleeHitEffect(point, transform.right);
+                health.MeleeHitEffect(point, transform.right);
                 health.ModifyHealth(-damage);
             }
         }

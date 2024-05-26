@@ -11,7 +11,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     [SerializeField] Button button;
     [SerializeField] Image image;
     public GameObject textPrefab;
-    public GameObject textInstance;
+    [HideInInspector] public GameObject textInstance;
     [SerializeField] RectTransform myRectTransform;
     ScrollRectController scrollRectController;
     BuildingSystem buildingSystemController;

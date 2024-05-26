@@ -10,7 +10,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     public float selfKnockback = 5f;
     public float meleeAttackSpeed = 0.5f;
     public float meleeAttackRange = 0.1f;
-    [SerializeField] float meleeTileDotProduct;
+    [SerializeField] float meleeTileDotProdRange;
     [SerializeField] PolygonCollider2D meleeCollider;
     [SerializeField] Animator meleeAnimator;
     [SerializeField] Health myHealth;
@@ -92,7 +92,7 @@ public class MeleeControllerEnemy : MonoBehaviour
             float dotProduct = Vector2.Dot(myHealth.transform.right, dir);
             point += dir / 10;
 
-            if (dotProduct > meleeTileDotProduct)
+            if (dotProduct > meleeTileDotProdRange)
             {
                 myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback / 2);
                 tileManager.ModifyHealthAt(point, -meleeDamage);
