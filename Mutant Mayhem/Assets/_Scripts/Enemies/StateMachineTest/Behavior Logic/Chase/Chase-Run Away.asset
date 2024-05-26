@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3217b8c674ee914085e4f3c987a4aea, type: 3}
   m_Name: Chase-Run Away
   m_EditorClassIdentifier: 
-  _runAwaySpeed: 1.75
+  rotateSpeed: 5
+  _sprintFactor: 1
+  TimeToCheckDistance: 0.3
+  DistToStartSprint: 8
+  SprintSpeedMultiplier: 2
+  TimeToFullSprint: 1
+  TimeToStopSprint: 3
+  isSprinting: 0
+  runAwaySpeedMultiplier: 1

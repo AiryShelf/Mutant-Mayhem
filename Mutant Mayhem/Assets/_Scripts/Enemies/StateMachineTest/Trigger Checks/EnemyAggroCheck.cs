@@ -12,10 +12,12 @@ public class EnemyAggroTrigger : MonoBehaviour
         PlayerTarget = GameObject.FindGameObjectWithTag("Player");
     }
 
-    private void OnTriggerStay2D(Collider2D other) 
+    private void OnTriggerEnter2D(Collider2D other) 
     {
-        Debug.Log("enemy trigger enter");
-        if (other.gameObject.layer == LayerMask.NameToLayer("AiTriggers"))
+        //Debug.Log("enemy AiTrigger enter");
+
+        // Layer# 13 - "AiTriggers"
+        if (other.gameObject.layer == 13)
         {               
             if (other.tag == "PlayerTrigger")
             {

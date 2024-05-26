@@ -289,7 +289,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     {
         if (playing)
         {
-            Debug.Log("SwithcGuns called in animControllerPlayer");
+            //Debug.Log("SwithcGuns called in animControllerPlayer");
             playerShooter.isSwitchingGuns = true;
             switchGunsAnimPlaying = true;
         }
@@ -306,7 +306,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     {
         if (playing)
         {
-            Debug.Log("RelodAnim called");
+            //Debug.Log("RelodAnim called");
             reloadAnimPlaying = true;
             bodyAnim.SetBool("isReloading", false);
             playerShooter.isReloading = true;

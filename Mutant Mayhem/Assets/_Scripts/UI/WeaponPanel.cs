@@ -14,8 +14,8 @@ public class WeaponPanel : MonoBehaviour
     [SerializeField] float radialAlpha = 0.2f;
     [SerializeField] TextMeshProUGUI ammoCountText;
     [SerializeField] int fontSize = 12;
-    [SerializeField] string infinityTextSymbol = "♾️";
-    [SerializeField] int infinityFontSize = 20;
+    //[SerializeField] string infinityTextSymbol = "♾️";
+    //[SerializeField] int infinityFontSize = 20;
 
     //"♾️" "∞"
 

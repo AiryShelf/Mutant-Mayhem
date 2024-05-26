@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Chase-Run Away", menuName = "Enemy Logic/Chase Logic/Run Away")]
+[CreateAssetMenu(fileName = "Chase-Run Away", 
+                 menuName = "Enemy Logic/Chase Logic/Run Away")]
 public class EnemyChaseRunAway : EnemyChaseSOBase
 {
     public override void Initialize(GameObject gameObject, EnemyBase enemy)
@@ -10,7 +11,7 @@ public class EnemyChaseRunAway : EnemyChaseSOBase
         base.Initialize(gameObject, enemy);
     }
     
-    [SerializeField] private float _runAwaySpeed = 1f;
+    [SerializeField] private float runAwaySpeedMultiplier = 1f;
 
     public override void DoEnterLogic() 
     {
@@ -31,9 +32,10 @@ public class EnemyChaseRunAway : EnemyChaseSOBase
     {
         base.DoPhysicsUpdateLogic();
 
+        // Run away from Player
         Vector2 targetDir = -(playerTransform.position - transform.position).normalized;
         enemyBase.ChangeFacingDirection(targetDir, rotateSpeed);
-        enemyBase.MoveEnemy(enemyBase.FacingDirection * _runAwaySpeed);
+        enemyBase.MoveEnemy(enemyBase.FacingDirection * (runAwaySpeedMultiplier * _sprintFactor));
     }
 
     public override void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) 

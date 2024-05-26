@@ -6,7 +6,17 @@ public interface IDamageable
 {
     Health health { get; set; }
 
+    bool isHit { get; set; }
+
+    float unfreezeTime { get; set; }
+
+    Coroutine unfreezeAfterTime { get; set; }
+
     void ModifyHealth(float amount);
+
+    void StartFreeze();
+
+    IEnumerator UnfreezeAfterTime();
 
     void Knockback(Vector2 dir, float knockback);
 

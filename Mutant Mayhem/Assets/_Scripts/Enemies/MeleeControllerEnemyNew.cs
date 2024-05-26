@@ -5,7 +5,7 @@ using UnityEngine;
 public class MeleeControllerEnemyNew : MonoBehaviour
 {
     public float meleeDamage = 20f;
-    [SerializeField] float knockback = 10f;
+    public float knockback = 10f;
     [SerializeField] float selfKnockback = 5f;
     [SerializeField] float timeBetweenAttacks = 1f;
     [SerializeField] float meleeTileDotProdRange = 0.5f;

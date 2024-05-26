@@ -10,11 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9bb2c804816cc3d49a63e20689ece047, type: 3}
-  m_Name: Chase-Direct Chase
+  m_Name: Chase-Direct Chase To Player
   m_EditorClassIdentifier: 
-  rotateSpeed: 10
-  _movementSpeed: 1.75
+  rotateSpeed: 5
+  _sprintFactor: 1
   TimeToCheckDistance: 0.3
   DistToStartSprint: 10
   SprintSpeedMultiplier: 2
   TimeToFullSprint: 2
+  TimeToStopSprint: 3
+  isSprinting: 0
+  moveSpeedMultiplier: 1.2

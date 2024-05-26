@@ -8,7 +8,6 @@ public class AnimationControllerEnemy : MonoBehaviour
     public float animSpeedFactor = 1f;
     [SerializeField] float switchToRunBuffer = 1.1f;
     [SerializeField] float maxAnimSpeed = 10;
-    [SerializeField] float speed;
 
     Animator myAnimator;
     Enemy enemy;
@@ -36,7 +35,7 @@ public class AnimationControllerEnemy : MonoBehaviour
     {
         if (enemy != null)
         {
-            speed = enemyRb.velocity.magnitude;
+            float speed = 1; //enemyRb.velocity.magnitude;
 
             if (speed > baseSpeed * switchToRunBuffer)
             {

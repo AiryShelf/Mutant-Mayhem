@@ -37,7 +37,6 @@ public class Enemy : MonoBehaviour
 
     Transform playerTrans;
     CircleCollider2D playerCollider;
-    float randomSizeFactor;
     bool proximityTrigger;
     [HideInInspector] public float moveAmount;
     float moveSpeed;
@@ -217,7 +216,7 @@ public class Enemy : MonoBehaviour
         
         // Randomize size
         GaussianRandom _gaussianRandomm = new GaussianRandom();
-        randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
+        float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
         randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
         transform.localScale *= randomSizeFactor;
 

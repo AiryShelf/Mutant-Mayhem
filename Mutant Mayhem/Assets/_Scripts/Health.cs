@@ -22,11 +22,6 @@ public class Health : MonoBehaviour
         maxHealth = health;
     }
 
-    void Start()
-    {
-        
-    }
-
     public float GetHealth()
     {
         return health;

@@ -53,9 +53,12 @@ public class Bullet : MonoBehaviour
             enemy.Knockback(transform.right, knockback);
             enemy.BulletHitEffect(point, transform.right);
             enemy.ModifyHealth(-damage);
+            enemy.StartFreeze();
+            enemy.EnemyChaseSOBaseInstance.StartSprint();
+
             if (AiTrggerPrefabOptional != null)
             {
-                Debug.Log("AiTrigger instantiated");
+                //Debug.Log("AiTrigger instantiated");
                 GameObject trigger = Instantiate(AiTrggerPrefabOptional, transform.position, Quaternion.identity);
                 trigger.transform.localScale = new Vector3(AITriggerSizeOptional, AITriggerSizeOptional, 1);
             } 

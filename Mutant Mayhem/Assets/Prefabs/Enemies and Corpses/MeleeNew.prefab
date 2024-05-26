@@ -48,12 +48,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meleeDamage: 10
-  knockback: 10
-  selfKnockback: 5
+  knockback: 20
+  selfKnockback: 2
   timeBetweenAttacks: 1
   meleeTileDotProdRange: 0.5
-  meleeCollider: {fileID: 0}
-  meleeAnim: {fileID: 0}
+  meleeCollider: {fileID: 10070538269960853}
+  meleeAnim: {fileID: 1899956248810806691}
   layersForTrigger:
     serializedVersion: 2
     m_Bits: 4160
@@ -119,7 +119,7 @@ Animator:
   m_GameObject: {fileID: 6206577042995397695}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 394d659ebc42b3444b458de5526b6a92, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3b345fd4778b96b4199de4f16336408e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -162,16 +162,16 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.025, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.32, y: 0.32}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.0001, y: 0.0001}
+  m_Size: {x: 0.08, y: 0.19}
   m_EdgeRadius: 0

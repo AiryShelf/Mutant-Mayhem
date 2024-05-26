@@ -70,7 +70,7 @@ public class EnemyAttackSingleStraightProjectile : EnemyShootSOBase
     {
         while (true)
         {
-            Debug.Log("State change coroutine running");
+            //Debug.Log("State change coroutine running");
             yield return new WaitForSeconds(_timeTillExit);
             
             if (!enemyBase.IsWithinShootDistance)

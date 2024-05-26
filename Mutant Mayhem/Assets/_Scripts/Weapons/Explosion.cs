@@ -32,19 +32,14 @@ public class Explosion : MonoBehaviour
                 dir.Normalize();
                 rb.AddForce(-dir * (force / dist), ForceMode2D.Impulse);
 
-                // Apply isHit for freezing
-                Enemy enemy = collider.GetComponent<Enemy>();
+                // Apply effects
+                EnemyBase enemy = collider.GetComponent<EnemyBase>();
                 if (enemy != null)
                 {
-                    Debug.Log("HIT");
-                    enemy.IsHit();
-                }
-
-                // Apply damage
-                Health health = collider.GetComponent<Health>();
-                if (health != null)
-                {
-                    health.ModifyHealth(-damage / dist);
+                    enemy.ModifyHealth(-damage / dist);
+                    enemy.StartFreeze();
+                    enemy.SetAggroToPlayerStatus(true);
+                    enemy.EnemyChaseSOBaseInstance.StartSprint();
                 }
             }           
         }

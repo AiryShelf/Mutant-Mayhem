@@ -1,22 +1,42 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerCheckable
 {
-    [field: SerializeField] public Health health { get; set; }
-    //public float MaxHealth { get; set; } = 100f;
-    public float CurrentHealth { get; set; }
-    public Rigidbody2D RB { get; set; }
+    public AnimationControllerEnemy animControllerEnemy;
     public MeleeControllerEnemyNew meleeController;
+    public SpriteRenderer SR;
+    public Rigidbody2D RB { get; set; }
     public Vector2 FacingDirection { get; set; }
+    public float moveSpeedBase = 1f;
 
     public bool IsAggroed { get; set; }
     public bool IsWithinMeleeDistance { get; set; }
     public bool IsWithinShootDistance { get; set; }
 
+    #region Randomize Variables
+
+    [Header("Randomize Variables")]
+    public bool randomize;
+    public float minSize;
+    public float randomColorFactor;
+    public float gaussMeanSize;
+    public float gaussStdDev;
+
+    #endregion 
+
+    #region Health Variables
+
+    [field: SerializeField] public Health health { get; set; }
+    public bool isHit { get; set; }
+    [field: SerializeField] public float unfreezeTime { get; set; }
+    public Coroutine unfreezeAfterTime { get; set; }
+
+    #endregion
+
     #region State Machine Variables
 
+    [SerializeField] string CurrentSMStateDebug;
     public EnemyStateMachine StateMachine { get; set; }
     public EnemyIdleState IdleState { get; set; }
     public EnemyChaseState ChaseState { get; set; }
@@ -65,6 +85,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         //EnemyMeleeSOBaseInstance.Initialize(gameObject, this);
 
         StateMachine.Initialze(IdleState);
+
+        RandomizeStats();
     }
 
     void Update()
@@ -74,19 +96,72 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
     void FixedUpdate() 
     {
         StateMachine.CurrentEnemyState.PhysicsUpdate();
+        //CurrentSMStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
-    #region Health / Die Functions
+    #region Randomize Function
+
+    void RandomizeStats()
+    {
+        // Randomize color
+        float randomColorRed = Random.Range(-randomColorFactor, randomColorFactor);
+        float randomColorGreen = Random.Range(-randomColorFactor, randomColorFactor);
+        float randomColorBlue = Random.Range(-randomColorFactor, randomColorFactor);
+        SR.color = new Color(SR.color.r + randomColorRed,
+                               SR.color.g + randomColorGreen,
+                               SR.color.b + randomColorBlue);
+        
+        // Randomize size
+        GaussianRandom _gaussianRandomm = new GaussianRandom();
+        float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
+        randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
+        transform.localScale *= randomSizeFactor;
+
+        // Randomize stats by size
+        moveSpeedBase *= randomSizeFactor;
+        health.SetMaxHealth(health.GetMaxHealth() * randomSizeFactor);
+        health.SetHealth(health.GetMaxHealth());
+        meleeController.meleeDamage *= randomSizeFactor;
+        meleeController.knockback *= randomSizeFactor;
+        //meleeController.selfKnockback *= randomSizeFactor; no good*
+        RB.mass *= randomSizeFactor;
+
+        animControllerEnemy.animSpeedFactor /= randomSizeFactor;
+    }
+
+    void OnCollisionStay2D(Collision2D other)
+    {
+        // Structures layer# 12
+        if (other.gameObject.layer == 12)
+        {
+            meleeController.HitStructure(other.GetContact(0).point);
+        }
+    }
+
+    #endregion
+
+    #region Health / Hit Functions
 
     public void ModifyHealth(float amount)
     {
         health.ModifyHealth(amount);
-        CurrentHealth -= amount;
-
-        if (CurrentHealth <= 0)
+    }
+    public void StartFreeze()
+    {
+        isHit = true;
+        if (unfreezeAfterTime == null)
+            unfreezeAfterTime = StartCoroutine(UnfreezeAfterTime());
+        else
         {
-            Die();
+            StopCoroutine(unfreezeAfterTime);
+            unfreezeAfterTime = StartCoroutine(UnfreezeAfterTime());
         }
+    }
+
+    public IEnumerator UnfreezeAfterTime()
+    {
+        yield return new WaitForSeconds(unfreezeTime);
+        isHit = false;
     }
 
     public void Knockback(Vector2 dir, float knockback)
@@ -115,16 +190,33 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     public void MoveEnemy(Vector2 velocity)
     {
-        RB.AddForce(velocity);        
+        //Debug.Log("checking isSprinting: " + EnemyChaseSOBaseInstance.isSprinting);
+        if (!isHit)
+        {
+            if (EnemyChaseSOBaseInstance.isSprinting)
+                RB.AddForce(moveSpeedBase * velocity); 
+            else 
+            {
+                Vector2 force = moveSpeedBase * velocity;
+                Vector2 acc = force / RB.mass;
+                Vector2 deltaV = acc * Time.fixedDeltaTime;
+                RB.velocity += deltaV;  
+            }
+        }
+
+        
     }
 
     public void ChangeFacingDirection(Vector2 velocity, float speed)
     {
-       float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
-       Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y,
-                         Mathf.LerpAngle(RB.rotation, angle, Time.deltaTime * speed));
-       transform.rotation = Quaternion.Euler(rotator);
-       FacingDirection = velocity.normalized;
+        if (!isHit)
+        {
+            float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+            Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y,
+                                Mathf.LerpAngle(RB.rotation, angle, Time.fixedDeltaTime * speed));
+            transform.rotation = Quaternion.Euler(rotator);
+            FacingDirection = velocity.normalized;
+        }
     }
 
     #endregion

@@ -54,15 +54,12 @@ public class MeleeControllerPlayer : MonoBehaviour
     {
         EnemyBase enemy = other.GetComponent<EnemyBase>();
         if (enemy != null)
-        {
-            Health health = other.GetComponent<Health>();
-            if (health != null)
-            {
-                //enemy.IsHit();
-                health.Knockback((Vector2)health.transform.position - point, knockback);
-                health.MeleeHitEffect(point, transform.right);
-                health.ModifyHealth(-damage);
-            }
+        {     
+            enemy.Knockback((Vector2)enemy.transform.position - point, knockback);
+            enemy.MeleeHitEffect(point, transform.right);
+            enemy.ModifyHealth(-damage);
+            enemy.StartFreeze();
+            
         }
     }
 
