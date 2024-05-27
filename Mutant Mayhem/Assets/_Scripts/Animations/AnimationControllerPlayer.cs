@@ -353,7 +353,6 @@ public class AnimationControllerPlayer : MonoBehaviour
         {
             if (playerShooter.isBuilding)
                 ToggleBuildMode();
-            //bodyAnim.SetBool("isBuilding", false);
             bodyAnim.SetBool("isAiming", true);
             isFireInput = true;
         }
@@ -367,6 +366,8 @@ public class AnimationControllerPlayer : MonoBehaviour
     {
         if (yes && hasMeleeStamina && !throwAnimPlaying)
         {
+            if (playerShooter.isBuilding)
+                ToggleBuildMode();
             bodyAnim.SetBool("isMeleeing", true);
             if (waitToLowerWeaponCoroutine != null)
             {
@@ -391,6 +392,8 @@ public class AnimationControllerPlayer : MonoBehaviour
         
         if (pressed && !meleeAnimPlaying && player.grenadeAmmo > 0)
         {
+            if (playerShooter.isBuilding)
+                ToggleBuildMode();
             isThrowInput = true;
             bodyAnim.SetBool("isThrowing", true);
             if (waitToLowerWeaponCoroutine != null)

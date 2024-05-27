@@ -12,12 +12,15 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] bool hide = true;
     [SerializeField] int maxEnemies;
 
-    public int GLOBAL_enemyCount;
+    public static int GLOBAL_enemyCount;
+    SpriteRenderer SR;
 
 
     void Start()
     {
+        SR = GetComponent<SpriteRenderer>();
         StartCoroutine(SpawnCycle());
+
     }
 
     void FixedUpdate()
@@ -25,12 +28,12 @@ public class EnemySpawner : MonoBehaviour
         // Keep outside the screen, center right.
         if (hide)
         {
-            GetComponent<SpriteRenderer>().enabled = false;
+            SR.enabled = false;
             transform.position = Camera.main.ViewportToWorldPoint(new Vector2(1.1f, 0.5f));
         }
         else
         {
-            GetComponent<SpriteRenderer>().enabled = true;
+            SR.enabled = true;
             transform.position = Camera.main.ViewportToWorldPoint(new Vector2(0.7f, 0.5f));
         }
     }

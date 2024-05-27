@@ -36,10 +36,11 @@ public class Explosion : MonoBehaviour
                 EnemyBase enemy = collider.GetComponent<EnemyBase>();
                 if (enemy != null)
                 {
-                    enemy.ModifyHealth(-damage / dist);
+                    enemy.ModifyHealth(-damage / dist, gameObject);
                     enemy.StartFreeze();
                     enemy.SetAggroToPlayerStatus(true);
                     enemy.EnemyChaseSOBaseInstance.StartSprint();
+
                 }
             }           
         }

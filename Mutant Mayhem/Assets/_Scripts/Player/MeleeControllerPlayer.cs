@@ -48,6 +48,7 @@ public class MeleeControllerPlayer : MonoBehaviour
     public void UseStamina()
     {
         myStamina.ModifyStamina(-meleeStaminaUse);
+        StatsCounterPlayer.MeleeAttacksByPlayer++;
     }
 
     public void Hit(Collider2D other, Vector2 point)
@@ -57,9 +58,11 @@ public class MeleeControllerPlayer : MonoBehaviour
         {     
             enemy.Knockback((Vector2)enemy.transform.position - point, knockback);
             enemy.MeleeHitEffect(point, transform.right);
-            enemy.ModifyHealth(-damage);
+            enemy.ModifyHealth(-damage, gameObject);
             enemy.StartFreeze();
-            
+
+            StatsCounterPlayer.MeleeDamageByPlayer += damage;
+            StatsCounterPlayer.MeleeHitsByPlayer++;
         }
     }
 

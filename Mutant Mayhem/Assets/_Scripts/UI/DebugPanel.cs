@@ -23,7 +23,7 @@ public class DebugPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        enemyCountText.text = "EnemyCount: " + enemySpawner.GLOBAL_enemyCount.ToString();
+        enemyCountText.text = "EnemyCount: " + EnemySpawner.GLOBAL_enemyCount.ToString();
 
         if (Input.GetKeyDown("p"))
         {

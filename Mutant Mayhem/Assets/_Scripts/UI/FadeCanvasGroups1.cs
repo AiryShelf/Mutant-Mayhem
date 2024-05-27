@@ -140,6 +140,6 @@ public class FadeCanvasGroups1 : MonoBehaviour
         fadeIn = null;
         fadeOut = null;
         
-        Debug.Log("Finished fade out");
+        //Debug.Log("Finished fade out");
     }
 }

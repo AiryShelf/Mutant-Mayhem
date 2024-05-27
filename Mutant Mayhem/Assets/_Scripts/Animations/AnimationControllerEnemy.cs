@@ -10,13 +10,13 @@ public class AnimationControllerEnemy : MonoBehaviour
     [SerializeField] float maxAnimSpeed = 10;
 
     Animator myAnimator;
-    Enemy enemy;
+    OLDEnemy enemy;
     Rigidbody2D enemyRb;
     float baseSpeed;
 
     void Start()
     {
-        enemy = GetComponent<Enemy>();
+        enemy = GetComponent<OLDEnemy>();
         myAnimator = GetComponentInChildren<Animator>();
 
         if (enemy != null)
@@ -35,7 +35,7 @@ public class AnimationControllerEnemy : MonoBehaviour
     {
         if (enemy != null)
         {
-            float speed = 1; //enemyRb.velocity.magnitude;
+            float speed = enemyRb.velocity.magnitude;
 
             if (speed > baseSpeed * switchToRunBuffer)
             {

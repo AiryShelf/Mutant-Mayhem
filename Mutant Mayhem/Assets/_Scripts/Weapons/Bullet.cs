@@ -52,9 +52,14 @@ public class Bullet : MonoBehaviour
             //enemy.IsHit();
             enemy.Knockback(transform.right, knockback);
             enemy.BulletHitEffect(point, transform.right);
-            enemy.ModifyHealth(-damage);
+            enemy.ModifyHealth(-damage, gameObject);
             enemy.StartFreeze();
             enemy.EnemyChaseSOBaseInstance.StartSprint();
+
+
+            // Layer# 8 - PlayerProjectiles
+            if (this.gameObject.layer == 8)
+                StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damage;
 
             if (AiTrggerPrefabOptional != null)
             {
@@ -68,6 +73,9 @@ public class Bullet : MonoBehaviour
         { 
             tileManager.BulletHitEffectAt(point, transform.right);
             tileManager.ModifyHealthAt(point, -damage);
+
+            StatsCounterPlayer.DamageToStructures += damage;
+
             Debug.Log("TILE HIT");
         }
 

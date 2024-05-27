@@ -57,6 +57,8 @@ public class TileManager : MonoBehaviour
                 AnimatedTilemap.SetTile(gridPos, 
                     _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
                 StructureTilemap.SetTile(gridPos, rts);
+
+                StatsCounterPlayer.StructuresBuilt++;
                 Debug.Log("Added a Tile");
                 return true;
             }
@@ -97,8 +99,7 @@ public class TileManager : MonoBehaviour
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         AnimatedTilemap.SetTile(rootPos, null);
 
-        int length = positions.Count;
-        for (int x = length - 1; x >= 0; x--)
+        for (int x = positions.Count - 1; x >= 0; x--)
         {
             _TileStatsDict.Remove(rootPos + positions[x]);
             StructureTilemap.SetTile(rootPos + positions[x], null);           
@@ -106,6 +107,8 @@ public class TileManager : MonoBehaviour
        
         //StructureTilemap.SetTile(rootPos, null);
         AnimatedTilemap.SetTile(rootPos, null);
+
+        StatsCounterPlayer.StructuresLost++;
         Debug.Log("DESTROYED A TILE");
     }
 
@@ -302,7 +305,7 @@ public class TileManager : MonoBehaviour
         newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
         boxSize = StructureTilemap.cellSize * 0.9f;
 
-        Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0);
+        Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
         
         if (hit != null)
         {

@@ -38,7 +38,6 @@ public class Player : MonoBehaviour
     Stamina myStamina;
     PlayerShooter playerShooter;
     [HideInInspector] public bool isDead;  
-    [HideInInspector] public bool isMeleePressed;
     Throw itemToThrow;
 
     void Start()
@@ -64,7 +63,6 @@ public class Player : MonoBehaviour
         }
         else
         {
-            isMeleePressed = false;
             playerShooter.isShooting = false; 
         }
     }
@@ -105,21 +103,7 @@ public class Player : MonoBehaviour
         itemToThrow.transform.parent = null;
         itemToThrow.StartFly();
         grenadeAmmo--;
-    }
-
-    void OnMelee(InputValue value)
-    {
-        if (meleeController != null && !isDead)
-        {
-            if (value.isPressed)
-            {
-                isMeleePressed = true;
-            }
-            else if (!value.isPressed)
-            {
-                isMeleePressed = false;
-            }
-        }
+        StatsCounterPlayer.GrenadesThrownByPlayer++;
     }
 
     void OnMove(InputValue value)
@@ -166,6 +150,7 @@ public class Player : MonoBehaviour
         {
             if (sprintStaminaUse <= myStamina.GetStamina())
             {
+                StatsCounterPlayer.TimeSprintingPlayer += Time.fixedDeltaTime;
                 sprintSpeedAmount = sprintFactor;
                 myStamina.ModifyStamina(-sprintStaminaUse);
             }
@@ -196,16 +181,4 @@ public class Player : MonoBehaviour
         moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;
         myRb.AddForce(moveDir);
     }
-
-    void OnTriggerStay2D(Collider2D other)
-    {
-        // Enemy Melee Hit *can serialize the layer for performance
-        if (other.gameObject.layer == LayerMask.NameToLayer("EnemyMeleeTrigger"))
-        {
-            Vector2 point = other.ClosestPoint(transform.position);
-            other.GetComponentInChildren<MeleeControllerEnemyNew>().Hit(myHealth, point);
-        }
-    }
-
-
 }

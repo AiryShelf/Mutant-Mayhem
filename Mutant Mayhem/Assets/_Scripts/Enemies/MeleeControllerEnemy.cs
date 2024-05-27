@@ -1,95 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 
 public class MeleeControllerEnemy : MonoBehaviour
 {
-    public float meleeDamage = 10f;
+    public float meleeDamage = 20f;
     public float knockback = 10f;
-    public float selfKnockback = 5f;
-    public float meleeAttackSpeed = 0.5f;
-    public float meleeAttackRange = 0.1f;
-    [SerializeField] float meleeTileDotProdRange;
-    [SerializeField] PolygonCollider2D meleeCollider;
-    [SerializeField] Animator meleeAnimator;
-    [SerializeField] Health myHealth;
-    
-    TileManager tileManager;
-    [HideInInspector] public Coroutine attackingCoroutine = null;
-    [HideInInspector] public bool isAttacking;
-    bool waitToAttackTile;
+    [SerializeField] float selfKnockback = 5f;
+    [SerializeField] float timeBetweenAttacks = 1f;
+    [SerializeField] float meleeTileDotProdRange = 0.5f;
+    [SerializeField] Collider2D meleeCollider;
+    [SerializeField] Animator meleeAnim;
 
-    void Start()
+    Health myHealth;
+    TileManager tileManager;
+    bool waitToAttack;
+
+    void Awake()
     {
+        myHealth = GetComponentInParent<Health>();
         tileManager = FindObjectOfType<TileManager>();
     }
 
-    void Update()
-    {
-        Attack();
-    }
-
-    public void Attack()
-    {
-        if (isAttacking && attackingCoroutine == null)
+    public void Hit(Health otherHealth, Vector2 point)
+    {   
+        if (!waitToAttack)
         {
-            attackingCoroutine = StartCoroutine(AttackContinuously());
-        }
-    }
+            waitToAttack = true;
+            StartCoroutine(AttackTimer());
+            meleeAnim.SetTrigger("Melee");   
+            myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback);
+            otherHealth.Knockback((Vector2)otherHealth.transform.position - point, knockback);
+            otherHealth.MeleeHitEffect(point, transform.right);
+            otherHealth.ModifyHealth(-meleeDamage, gameObject);
 
-    // Triggered by animation
-    public void MeleeAnimationAttackToggle(int isOn)
-    {
-        if (isOn == 1)
-        {
-            meleeCollider.enabled = true;
-        }
-        else if (isOn == 0)
-        {
-            meleeCollider.enabled = false;
-        }
-    }
-
-    IEnumerator AttackContinuously()
-    {
-        meleeAnimator.SetTrigger("Melee");
-        yield return new WaitForSeconds(meleeAttackSpeed);;
-        attackingCoroutine = null;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other) 
-    {
-        if (other.tag == "Player")
-        {
-            Debug.Log("Player was detected by enemy Melee");
-            Hit(other, other.ClosestPoint(transform.position));
-        }
-    }
-
-    void Hit(Collider2D other, Vector2 point)
-    {      
-        // Player
-        Player player = other.GetComponent<Player>();
-        if (player != null)
-        {
-            Health otherHealth = other.GetComponent<Health>();
-            if (otherHealth != null)
-            {
-                myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback);
-                otherHealth.Knockback((Vector2)otherHealth.transform.position - point, knockback);
-                otherHealth.MeleeHitEffect(point, transform.right);
-                otherHealth.ModifyHealth(-meleeDamage);
-            }
+            StatsCounterPlayer.MeleeAttacksByEnemies++;
+            StatsCounterPlayer.MeleeDamageByEnemies += meleeDamage;
         }
     }
 
     public void HitStructure(Vector2 point)
     {
-        if (!waitToAttackTile)
+        if (!waitToAttack)
         {
+            waitToAttack = true;
+            StartCoroutine(AttackTimer());
+
+            // Find dotProdcut
             Vector2 dir = (point - (Vector2)myHealth.transform.position).normalized;
             float dotProduct = Vector2.Dot(myHealth.transform.right, dir);
+
+            // Move the point "inside" the tile for tileManager dictionary detection.
+            // The could be improved to avoid the odd tile miss on corners.
             point += dir / 10;
 
             if (dotProduct > meleeTileDotProdRange)
@@ -97,15 +59,32 @@ public class MeleeControllerEnemy : MonoBehaviour
                 myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback / 2);
                 tileManager.ModifyHealthAt(point, -meleeDamage);
                 tileManager.MeleeHitEffectAt(point, transform.right);
-            }  
-            waitToAttackTile = true;
-            StartCoroutine(WaitToAttackTile()); 
-        }     
+
+                StatsCounterPlayer.MeleeAttacksByEnemies++;
+                StatsCounterPlayer.DamageToStructures += meleeDamage;
+            }
+        }
     }
 
-    IEnumerator WaitToAttackTile()
+    void OnTriggerStay2D(Collider2D other)
     {
-        yield return new WaitForSeconds(meleeAttackSpeed);
-        waitToAttackTile = false;
+        //  Attack "Structures" layer# 12
+        if (other.gameObject.layer == 12)
+        {
+            HitStructure(other.ClosestPoint(transform.position));           
+        }
+
+        // Attack Player
+        else if (other.tag == "Player")
+        {
+            Vector2 point = other.ClosestPoint(transform.position);
+            Hit(other.GetComponent<Health>(), point);
+        }
+    }
+
+    IEnumerator AttackTimer()
+    {
+        yield return new WaitForSeconds(timeBetweenAttacks);
+        waitToAttack = false;
     }
 }

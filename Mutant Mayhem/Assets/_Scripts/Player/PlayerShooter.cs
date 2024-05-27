@@ -58,7 +58,7 @@ public class PlayerShooter : MonoBehaviour
         {
             Vector2 worldPos = gunTrans.position;
             Quaternion worldRot = gunTrans.rotation;
-            Debug.Log("worlPos: " + worldPos + " worldRot: " + worldRot);
+            //Debug.Log("worlPos: " + worldPos + " worldRot: " + worldRot);
             gunTrans.parent = null;
             SpriteRenderer sR = gunTrans.GetComponent<SpriteRenderer>();
             sR.sortingLayerName = "Structures";
@@ -92,37 +92,6 @@ public class PlayerShooter : MonoBehaviour
         currentGunSO = gunList[i];
     }
 
-    void Shoot()
-    {
-        if (gunAmmoInClips[currentGunIndex] < 1)
-        {
-            if (gunAmmoTotals[currentGunIndex] > 0)
-            {
-                animControllerPlayer.IsReloadInput();
-            }
-            if (shootingCoroutine != null)
-            {
-                StopCoroutine(shootingCoroutine);
-                shootingCoroutine = null;
-            }
-            return;
-        }
-
-
-        if (isShooting && shootingCoroutine == null && !waitToShoot && 
-            isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
-        {
-            shootingCoroutine = StartCoroutine(ShootContinuously());
-            StartCoroutine(WaitToShoot());
-            waitToShoot = true;
-        }
-        else if (shootingCoroutine != null)
-        {
-            StopCoroutine(shootingCoroutine);
-            shootingCoroutine = null;
-        }
-    }
-
     public void Reload()
     {
         if (currentGunIndex != 0)
@@ -151,6 +120,55 @@ public class PlayerShooter : MonoBehaviour
         }
     }
 
+    public void StartAiming()
+    {
+        isAiming = true;
+    }
+
+    public void StopAiming()
+    {
+        isAiming = false;
+    }
+
+    void Shoot()
+    {
+        // If no ammo
+        if (gunAmmoInClips[currentGunIndex] < 1)
+        {
+            // Reload?
+            if (gunAmmoTotals[currentGunIndex] > 0)
+            {
+                animControllerPlayer.IsReloadInput();
+            }
+            // Stop shooting coroutine and return
+            if (shootingCoroutine != null)
+            {
+                StopCoroutine(shootingCoroutine);
+                shootingCoroutine = null;
+            }
+            return;
+        }
+
+        #region State Check for Firing
+
+        if (isShooting && shootingCoroutine == null && !waitToShoot && 
+            isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
+        {
+            shootingCoroutine = StartCoroutine(ShootContinuously());
+            StartCoroutine(WaitToShoot());
+            waitToShoot = true;
+        }
+        else if (shootingCoroutine != null)
+        {
+            StopCoroutine(shootingCoroutine);
+            shootingCoroutine = null;
+        }
+
+        #endregion
+    }
+
+    #region Coroutines
+
     IEnumerator WaitToShoot()
     {
         yield return new WaitForSeconds(currentGunSO.shootSpeed);
@@ -172,6 +190,7 @@ public class PlayerShooter : MonoBehaviour
 
             // Use ammo
             gunAmmoInClips[currentGunIndex]--;
+            StatsCounterPlayer.ShotsFiredByPlayer++;
             
             // Apply physics
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
@@ -225,16 +244,6 @@ public class PlayerShooter : MonoBehaviour
                       currentGunSO.kickback, ForceMode2D.Impulse);
     }
 
-    public void StartAiming()
-    {
-        isAiming = true;
-    }
-
-    public void StopAiming()
-    {
-        isAiming = false;
-    }
-
     IEnumerator LaserCharge()
     {
         while (true)
@@ -245,5 +254,5 @@ public class PlayerShooter : MonoBehaviour
         }  
     }
 
-
+    #endregion
 }

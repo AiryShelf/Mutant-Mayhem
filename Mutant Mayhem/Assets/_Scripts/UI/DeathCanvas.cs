@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class DeathCanvas : MonoBehaviour
 {
     [SerializeField] Player player;
+    [SerializeField] StatsCounterPlayer statsCounterPlayer;
     [SerializeField] FadeCanvasGroups fadeCanvasGroups;
+    [SerializeField] TextMeshProUGUI statsText;
 
-    void Update()
+
+    void FixedUpdate()
     {
         if (player.isDead)
         {
             fadeCanvasGroups.triggered = true;
+            statsText.text = statsCounterPlayer.PrintStats();
         }
     }
 

@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class BuildingSystem : MonoBehaviour
 {
+    public static float PlayerCredits;
+    [SerializeField] float playerStartingCredits;
     public StructureSO structureInHand;
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
@@ -36,7 +38,8 @@ public class BuildingSystem : MonoBehaviour
     void Awake()
     {
         BuildStructsAvailDict();    
-        player = FindObjectOfType<Player>();   
+        player = FindObjectOfType<Player>();
+        PlayerCredits = playerStartingCredits; 
     }
 
     void OnEnable()
@@ -78,6 +81,8 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
+    #region Controls
+
     public void ToggleBuildMenu(bool on)
     {
         Debug.Log("ToggleBuildMenu Called");
@@ -86,8 +91,6 @@ public class BuildingSystem : MonoBehaviour
         {
             inBuildMode = true;
             buildMenuController.OpenPanel(true);
-            //firstButton = uIBuildMenuController.structureButtonInstances[0];
-            //EventSystem.current.SetSelectedGameObject(firstButton);
         }
         else
         {
@@ -124,7 +127,7 @@ public class BuildingSystem : MonoBehaviour
 
     public void SwitchTools(StructureType structure)
     {
-        // if the bool in the dict is true, avialable to use
+        // if the bool in the dict is true, its avialable to use
         if (_StructsAvailDict[structure])
         {
             RemoveBuildHighlight();
@@ -133,11 +136,46 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    // needs rework
-    public void OnStructureSelect(StructureType type)
+    #endregion
+
+    #region Build and Destroy
+
+    void Build(Vector3Int gridPos, StructureSO structureSO)
     {
-        structureInHand = AllStructureSOs[(int)type];
+        if (PlayerCredits >= structureSO.tileCost)
+        {
+            if (tileManager.AddTileAt(gridPos, structureSO.ruleTileStructure))
+            {
+                RemoveBuildHighlight();
+                PlayerCredits -= structureSO.tileCost;
+            }
+        }
     }
+
+    void DestroyTile(Vector3Int gridPos)
+    {
+        RemoveBuildHighlight();
+        tileManager.DestroyTileAt(gridPos);
+    }
+
+    void BuildStructsAvailDict()
+    {
+        int available = numStructuresAvailAtStart;
+        foreach(StructureSO structure in AllStructureSOs)
+        {           
+            if (available != 0)
+            {
+                _StructsAvailDict.Add(structure.structureType, true);
+                available--;
+            }
+            else
+                _StructsAvailDict.Add(structure.structureType, false);
+        }
+    }
+
+    #endregion
+
+    #region Highlights and Preview Image
 
     void RemoveBuildHighlight()
     {
@@ -232,7 +270,7 @@ public class BuildingSystem : MonoBehaviour
                 else if (currentAction == ActionType.Select ||
                          currentAction == ActionType.Interact)
                 {
-                    
+                    // Do stuff
                 }
             }
             else
@@ -246,6 +284,24 @@ public class BuildingSystem : MonoBehaviour
         }    
     }
 
+    void HighlightForDestroy(Vector3Int gridPos)
+    {
+        // Find cells for destroying
+        destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(gridPos));
+        if (destroyPositions.Count > 0)
+        {
+            foreach (Vector3Int pos in destroyPositions)
+            {
+                tempTilemap.SetTile(pos, destroyTileAsset);
+            }
+            allHighlited = true;
+        }
+        else
+        {
+            allHighlited = false;
+        }
+    }
+
     void SetPreviewImage(Vector3Int gridPos, AnimatedTile tile, Color color)
     {
         Vector3Int imageTilePos = new Vector3Int(
@@ -255,6 +311,10 @@ public class BuildingSystem : MonoBehaviour
         tempTilemap.SetTileFlags(imageTilePos, TileFlags.None);
         tempTilemap.SetColor(imageTilePos, color);
     }
+
+    #endregion
+
+    #region Checks
 
     private Vector3Int GetMouseToGridPos()
     {
@@ -292,51 +352,6 @@ public class BuildingSystem : MonoBehaviour
         return false;
     }
 
-    void HighlightForDestroy(Vector3Int gridPos)
-    {
-        // Find cells for destroying
-        destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(gridPos));
-        if (destroyPositions.Count > 0)
-        {
-            foreach (Vector3Int pos in destroyPositions)
-            {
-                tempTilemap.SetTile(pos, destroyTileAsset);
-            }
-            allHighlited = true;
-        }
-        else
-        {
-            allHighlited = false;
-        }
-    }
-
-    void Build(Vector3Int gridPos, StructureSO structureSO)
-    {
-        if (tileManager.AddTileAt(gridPos, structureSO.ruleTileStructure))
-        {
-            RemoveBuildHighlight();            
-        }
-    }
-
-    void DestroyTile(Vector3Int gridPos)
-    {
-        RemoveBuildHighlight();
-        tileManager.DestroyTileAt(gridPos);
-    }
-
-    void BuildStructsAvailDict()
-    {
-        int available = numStructuresAvailAtStart;
-        foreach(StructureSO structure in AllStructureSOs)
-        {           
-            if (available != 0)
-            {
-                _StructsAvailDict.Add(structure.structureType, true);
-                available--;
-            }
-            else
-                _StructsAvailDict.Add(structure.structureType, false);
-        }
-    }
+    #endregion
 }
 
