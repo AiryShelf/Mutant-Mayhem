@@ -32,7 +32,7 @@ public class Explosion : MonoBehaviour
                 dir.Normalize();
                 rb.AddForce(-dir * (force / dist), ForceMode2D.Impulse);
 
-                // Apply effects
+                // Apply Enemy Damage and AITrigger
                 EnemyBase enemy = collider.GetComponent<EnemyBase>();
                 if (enemy != null)
                 {
@@ -41,7 +41,21 @@ public class Explosion : MonoBehaviour
                     enemy.SetAggroToPlayerStatus(true);
                     enemy.EnemyChaseSOBaseInstance.StartSprint();
 
+                    StatsCounterPlayer.TotalDamageByPlayerExplosions += damage / dist;
                 }
+                else
+                {
+                    // Apply Player damage
+                    Player player = collider.GetComponent<Player>();
+                    if (player != null)
+                    {
+                        Health pHealth = player.GetComponent<Health>();
+                        pHealth.ModifyHealth(-damage / dist, gameObject);                   
+                        StatsCounterPlayer.TotalDamageByPlayerExplosions += damage / dist;
+                    }
+                }
+
+                
             }           
         }
     }

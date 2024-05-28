@@ -11,8 +11,6 @@ using UnityEngine.UIElements;
 [ExecuteInEditMode()]
 public class Tooltip : MonoBehaviour
 {
-    // Might need this:
-    InputSystemUIInputModule inputModule;
     public TextMeshProUGUI headerField;
     public TextMeshProUGUI contentField;
     public LayoutElement layoutElement;

@@ -1,34 +1,66 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class MouseLooker : MonoBehaviour
 {
     [SerializeField] float distDivisor;
+    [SerializeField] Player player;
+    [SerializeField] QCubeController qCubeController;
+    [SerializeField] float timeToLerpOnDeath;
+    [SerializeField] CinemachineMixingCamera mixingCamera;
     public Transform playerTrans;
     Vector3 mousePos;
 
+    bool deathTriggered;
+
     void Start()
     {
-        //player = FindObjectOfType<Player>();
         gameObject.transform.parent = null;
     }
 
 
     void FixedUpdate()
     {
-        if (playerTrans.GetComponent<Player>().isDead)
+        if (!deathTriggered)
         {
-            transform.position = playerTrans.position;
-        }
-        else
-        {
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (QCubeController.IsDead)
+            {
+                deathTriggered = true;
+                mixingCamera.m_Weight0 = 1;
+                mixingCamera.m_Weight1 = 0;
+                StartCoroutine(LerpToPosition(qCubeController.transform.position));
+            }
+            else if (player.isDead)
+            {
+                deathTriggered = true;
+                mixingCamera.m_Weight0 = 1;
+                mixingCamera.m_Weight1 = 0;
+                StartCoroutine(LerpToPosition(player.transform.position));
+            }
+            else
+            {
+                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            Vector3 difference = mousePos - playerTrans.position;
-            difference /= distDivisor;
-            Vector3 newPos = playerTrans.position + difference;
+                Vector3 difference = mousePos - playerTrans.position;
+                difference /= distDivisor;
+                Vector3 newPos = playerTrans.position + difference;
+                transform.position = newPos;
+            }
+        }
+    }
+
+    IEnumerator LerpToPosition(Vector3 pos)
+    {
+        Vector2 startPos = transform.position;
+        float timeElapsed = 0;
+        while (timeElapsed < timeToLerpOnDeath)
+        {
+            timeElapsed += Time.deltaTime;
+            Vector2 newPos = Vector3.Lerp(startPos, pos, timeElapsed / timeToLerpOnDeath);
             transform.position = newPos;
+            yield return new WaitForEndOfFrame();
         }
     }
 }

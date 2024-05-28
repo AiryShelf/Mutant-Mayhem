@@ -7,10 +7,14 @@ public class EnemySpawner : MonoBehaviour
     
     public List<GameObject> enemyList;
     [SerializeField] int[] enemySpawnChance;
-    [SerializeField] float spawnTime;
+    [SerializeField] float spawnDelay;
     [SerializeField] int spawnAmount;
     [SerializeField] bool hide = true;
     [SerializeField] int maxEnemies;
+    [SerializeField] LayerMask layersForSpawnCollision;
+    [SerializeField] float radiusForCollisionCheck = 0.25f;
+    [SerializeField] float maxTimeToTryToSpawn = 10;
+
 
     public static int GLOBAL_enemyCount;
     SpriteRenderer SR;
@@ -29,12 +33,16 @@ public class EnemySpawner : MonoBehaviour
         if (hide)
         {
             SR.enabled = false;
-            transform.position = Camera.main.ViewportToWorldPoint(new Vector2(1.1f, 0.5f));
+            Vector3 position = Camera.main.ViewportToWorldPoint(new Vector2(1.1f, 0.5f));
+            position.z = 1;
+            transform.position = position;
         }
         else
         {
             SR.enabled = true;
-            transform.position = Camera.main.ViewportToWorldPoint(new Vector2(0.7f, 0.5f));
+            Vector3 position = Camera.main.ViewportToWorldPoint(new Vector2(0.7f, 0.5f));
+            position.z = 1;
+            transform.position = position;
         }
     }
 
@@ -42,27 +50,48 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(spawnTime);
+            yield return new WaitForSeconds(spawnDelay);
             yield return new WaitForEndOfFrame();
             if (GLOBAL_enemyCount < maxEnemies)
-                SpawnEnemy();
+                StartCoroutine(SpawnEnemy());
         }
     }
 
-    void SpawnEnemy()
+    IEnumerator SpawnEnemy()
     {
+        Bounds bounds = GetComponent<SpriteRenderer>().bounds;
         
         for (int i = 0; i < spawnAmount; i++)
         {
-            // Random spot within bounds
-            Bounds bounds = GetComponent<SpriteRenderer>().bounds;
-            Vector2 spawnPos = new Vector2(Random.Range(bounds.min.x, bounds.max.x), 
-                                           Random.Range(bounds.min.y, bounds.max.y));
-        
-            // Random enemy Prefab from list
-            GameObject enemyPrefab = enemyList[Random.Range(0, enemyList.Count)];
-            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-            GLOBAL_enemyCount++;  
+            float timeElapsed = 0;
+            bool spawned = false;
+            while (!spawned)
+            {
+                // Random spot within bounds
+                timeElapsed += Time.deltaTime; 
+                Vector2 spawnPos = new Vector2(Random.Range(bounds.min.x, bounds.max.x), 
+                                            Random.Range(bounds.min.y, bounds.max.y));
+
+                Collider2D hit = Physics2D.OverlapCircle(spawnPos, radiusForCollisionCheck, layersForSpawnCollision);
+                if (!hit)
+                {
+                    // Random enemy Prefab from list
+                    GameObject enemyPrefab = enemyList[Random.Range(0, enemyList.Count)];
+                    Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+                    GLOBAL_enemyCount++;
+                    spawned = true;
+                }
+                else 
+                    Debug.Log ("overlap detected by spawner");
+
+                if (timeElapsed > maxTimeToTryToSpawn)
+                {
+                    spawned = true;
+                    Debug.Log("Could not spawn an enemy, no clear area");
+                }
+
+                yield return new WaitForEndOfFrame();   
+            }  
         }
     }
 }

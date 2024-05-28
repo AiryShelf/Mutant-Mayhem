@@ -38,13 +38,13 @@ public class PlayerShooter : MonoBehaviour
 
     void Awake()
     {
-        myRb = GetComponent<Rigidbody2D>();
-        SwitchGuns(0);
+        myRb = GetComponent<Rigidbody2D>();  
     }
 
     void Start()
     {
         StartCoroutine(LaserCharge());
+        SwitchGuns(0);
     }
 
     void Update()
@@ -138,7 +138,7 @@ public class PlayerShooter : MonoBehaviour
             // Reload?
             if (gunAmmoTotals[currentGunIndex] > 0)
             {
-                animControllerPlayer.IsReloadInput();
+                animControllerPlayer.ReloadTrigger();
             }
             // Stop shooting coroutine and return
             if (shootingCoroutine != null)

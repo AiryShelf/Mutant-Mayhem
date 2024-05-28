@@ -18,6 +18,7 @@ public class Health : MonoBehaviour
     void Awake()
     {
         player = GetComponent<Player>();
+
         myRb = GetComponent<Rigidbody2D>();
         maxHealth = health;
     }
@@ -46,18 +47,23 @@ public class Health : MonoBehaviour
     {
         health += value;
 
-        // Layer# 8 - PlayerProjectiles, player, enemies
+        // Stats counting
+        // Layer# 8 - PlayerProjectiles, player, enemy
         if (obj.layer == 8)
             StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
-        if (this.tag == "Player")
-            StatsCounterPlayer.DamageToPlayer -= value;
-        if (this.tag == "Enemy")
+        else if (this.tag == "Enemy")
             StatsCounterPlayer.DamageToEnemies -= value;
-
+        else if (this.tag == "Player")
+            StatsCounterPlayer.DamageToPlayer -= value;
+        
         if (health <= 0 && !hasDied)
         {
-            if (obj.layer == 8 || obj.tag == "PlayerExplosion")
+            // Structure layer 13
+            if (obj.layer == 13)
+                StatsCounterPlayer.EnemiesKilledByTurrets++;
+            else if (obj.tag == "Player" || obj.tag == "PlayerExplosion" || obj.layer == 8)
                 StatsCounterPlayer.EnemiesKilledByPlayer++;
+
             Die();
         }
     }
@@ -77,15 +83,18 @@ public class Health : MonoBehaviour
         myRb.AddForce(dir * knockback, ForceMode2D.Impulse);
     }
 
-    public void Die()
+    public virtual void Die()
     {
-        hasDied = true;
-        // Create corpse and pass inhertance
-        corpsePrefab = Instantiate(corpsePrefab, transform.position, transform.rotation);
-        corpsePrefab.transform.localScale = transform.localScale;
-        Rigidbody2D corpseRb = corpsePrefab.GetComponent<Rigidbody2D>();
-        corpseRb.velocity = myRb.velocity;
-        corpseRb.angularVelocity = myRb.angularVelocity;
+        if (corpsePrefab)
+        {
+            hasDied = true;
+            // Create corpse and pass inhertance
+            corpsePrefab = Instantiate(corpsePrefab, transform.position, transform.rotation);
+            corpsePrefab.transform.localScale = transform.localScale;
+            Rigidbody2D corpseRb = corpsePrefab.GetComponent<Rigidbody2D>();
+            corpseRb.velocity = myRb.velocity;
+            corpseRb.angularVelocity = myRb.angularVelocity;
+        }
         
         if (player == null)
         {

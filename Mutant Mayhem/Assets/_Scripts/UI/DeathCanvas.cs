@@ -8,17 +8,36 @@ public class DeathCanvas : MonoBehaviour
 {
     [SerializeField] Player player;
     [SerializeField] StatsCounterPlayer statsCounterPlayer;
-    [SerializeField] FadeCanvasGroups fadeCanvasGroups;
-    [SerializeField] TextMeshProUGUI statsText;
+    [SerializeField] FadeCanvasGroupsWave fadeCanvasGroupsWave;
+    [SerializeField] StatsListBuilder statsListBuilder;
+    [SerializeField] PauseMenuController pauseMenuController;
+    [SerializeField] TextMeshProUGUI deathTitleText;
+    [SerializeField] TextMeshProUGUI deathSubtitleText;
+    [SerializeField] List<string> deathTitles;
+    [SerializeField] List<string> deathSubtitles;
 
+       
+    bool triggered;
+
+    void Start()
+    {
+        RandomizeDeathMessages();
+    }
 
     void FixedUpdate()
     {
         if (player.isDead)
-        {
-            fadeCanvasGroups.triggered = true;
-            statsText.text = statsCounterPlayer.PrintStats();
+        {          
+            TransitionToDeathPanel();
         }
+    }
+    void RandomizeDeathMessages()
+    {
+        int randomIndex = Random.Range(0, deathTitles.Count);
+        deathTitleText.text = deathTitles[randomIndex];
+
+        randomIndex = Random.Range(0, deathSubtitles.Count);
+        deathSubtitleText.text = deathSubtitles[randomIndex];
     }
 
     public void QuitGame()
@@ -33,5 +52,16 @@ public class DeathCanvas : MonoBehaviour
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void TransitionToDeathPanel()
+    {
+        if (triggered == false)
+        {
+            pauseMenuController.isPaused = true;
+            triggered = true;
+            statsListBuilder.RebuildList();
+            fadeCanvasGroupsWave.isTriggered = true;           
+        }
     }
 }

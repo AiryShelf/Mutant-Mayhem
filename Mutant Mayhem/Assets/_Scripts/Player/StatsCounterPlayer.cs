@@ -32,9 +32,26 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int StructuresBuilt;
     public static int StructuresLost;
 
-    public static Dictionary<string, float> StatsNameValue =
-        new Dictionary<string, float>
+    public static Dictionary<string, float> StatsDict =
+        new Dictionary<string, float>();
+        
+
+    void Awake()
     {
+
+    }
+
+    void FixedUpdate()
+    {
+        TimeGameTotalScaled += Time.fixedDeltaTime;
+    }
+
+    public static void RebuildStatsDict()
+    {
+        StatsDict.Clear();
+
+        StatsDict = new Dictionary<string, float>
+        {
         {"Survival Time:", TimeGameTotalScaled},
         {"Sprinting Time:", TimeSprintingPlayer},
 
@@ -43,7 +60,7 @@ public class StatsCounterPlayer : MonoBehaviour
 
         {"Shots Fired by Player:", ShotsFiredByPlayer},
         {"Shot Hits by Player:", ShotsHitByPlayer},
-        {"Shots Fired by Turrets:",ShotsFiredByTurrets },
+        {"Shots Fired by Turrets:", ShotsFiredByTurrets },
         {"Shots Fired by Enemies:", ShotsFiredByEnemies},
         {"Grenades Thrown by Player:", GrenadesThrownByPlayer},
 
@@ -61,20 +78,10 @@ public class StatsCounterPlayer : MonoBehaviour
 
         {"Structures Built:", StructuresBuilt},
         {"Structures Lost:", StructuresLost}
-    };
-        
-
-    void Awake()
-    {
-
+        };
     }
 
-    void FixedUpdate()
-    {
-        TimeGameTotalScaled += Time.fixedDeltaTime;
-    }
-
-    public string PrintStats()
+    public string GetStatsString()
     {
         // Maybe make this a dictionary to populate the 2 aligned
         // TMP elements

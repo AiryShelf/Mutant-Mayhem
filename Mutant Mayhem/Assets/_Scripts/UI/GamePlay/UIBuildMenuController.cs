@@ -9,7 +9,7 @@ public class UIBuildMenuController : MonoBehaviour
     public GridLayoutGroup textLayoutGroup;
     [SerializeField] List<GameObject> structureButtonPrefabs;
     [HideInInspector] public List<GameObject> structureButtonInstances;
-    public FadeCanvasGroups1 fadeCanvasGroups;
+    public FadeCanvasGroupsWave fadeCanvasGroups;
 
 
     void Awake()
@@ -47,11 +47,11 @@ public class UIBuildMenuController : MonoBehaviour
     {
         if (active)
         {
-            fadeCanvasGroups.triggered = true;
+            fadeCanvasGroups.isTriggered = true;
         }
         else
         {
-            fadeCanvasGroups.triggered = false;
+            fadeCanvasGroups.isTriggered = false;
         }
     }
 

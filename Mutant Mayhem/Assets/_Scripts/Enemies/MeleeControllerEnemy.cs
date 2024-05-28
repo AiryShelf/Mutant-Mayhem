@@ -43,20 +43,20 @@ public class MeleeControllerEnemy : MonoBehaviour
     {
         if (!waitToAttack)
         {
-            waitToAttack = true;
-            StartCoroutine(AttackTimer());
-
             // Find dotProdcut
             Vector2 dir = (point - (Vector2)myHealth.transform.position).normalized;
             float dotProduct = Vector2.Dot(myHealth.transform.right, dir);
 
             // Move the point "inside" the tile for tileManager dictionary detection.
             // The could be improved to avoid the odd tile miss on corners.
-            point += dir / 10;
+            point += dir / 20;
 
             if (dotProduct > meleeTileDotProdRange)
             {
-                myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback / 2);
+                waitToAttack = true;
+                StartCoroutine(AttackTimer());
+                meleeAnim.SetTrigger("Melee"); 
+                myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback * 0.8f);
                 tileManager.ModifyHealthAt(point, -meleeDamage);
                 tileManager.MeleeHitEffectAt(point, transform.right);
 
@@ -68,14 +68,15 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        //  Attack "Structures" layer# 12
-        if (other.gameObject.layer == 12)
+        // Attack Player
+        if (other.tag == "Player")
         {
-            HitStructure(other.ClosestPoint(transform.position));           
+            Vector2 point = other.ClosestPoint(transform.position);
+            Hit(other.GetComponent<Health>(), point);
         }
 
-        // Attack Player
-        else if (other.tag == "Player")
+        // Attack Cube
+        if (other.tag == "QCube")
         {
             Vector2 point = other.ClosestPoint(transform.position);
             Hit(other.GetComponent<Health>(), point);

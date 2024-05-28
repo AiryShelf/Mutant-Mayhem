@@ -46,13 +46,14 @@ public class BuildingSystem : MonoBehaviour
     {
         playerActionMap = player.inputAsset.FindActionMap("Player");
         toolbarAction = playerActionMap.FindAction("Toolbar");
-        toolbarAction.performed += ctx => OnToolbarUsed();
+        toolbarAction.performed += OnToolbarUsed;
         //buildMenuAction = playerActionMap.FindAction("BuildMenu");
         //buildMenuAction.performed += ctx => ToggleBuildMenu();
     }
 
     void OnDisable()
     {
+        toolbarAction.performed -= OnToolbarUsed;
         _StructsAvailDict.Clear();
     }
 
@@ -101,7 +102,7 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    void OnToolbarUsed()
+    void OnToolbarUsed(InputAction.CallbackContext context)
     {
         if (inBuildMode)
         {

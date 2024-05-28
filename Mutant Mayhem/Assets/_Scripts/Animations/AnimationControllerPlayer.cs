@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class AnimationControllerPlayer : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class AnimationControllerPlayer : MonoBehaviour
     [SerializeField] BuildingSystem buildingSystemController;
 
 
-    public Animator bodyAnim;
-    public Animator feetAnim;
+    [HideInInspector] public Animator bodyAnim;
+    [HideInInspector] public Animator legsAnim;
     [SerializeField] float speedForNotMoving = 0.2f;
     Player player;
     Rigidbody2D playerRb;
@@ -38,49 +39,70 @@ public class AnimationControllerPlayer : MonoBehaviour
     InputAction reloadAction;
     
 
-    void Start()
+    void OnEnable()
     {
+        Debug.Log("OnEnable ran");
         player = FindObjectOfType<Player>();
         playerRb = player.GetComponent<Rigidbody2D>();
         playerShooter = player.GetComponent<PlayerShooter>(); 
+        bodyAnim = GameObject.FindGameObjectWithTag("PlayerBody").GetComponent<Animator>();
+        legsAnim = GameObject.FindGameObjectWithTag("PlayerLegs").GetComponent<Animator>();
 
+        //bodyAnim.Rebind();
+        //legsAnim.Rebind();
+
+        //buildAction.performed += ctx => null;
+        
         actionMap = player.inputAsset.FindActionMap("Player");
         fireAction = actionMap.FindAction("Fire");
         moveAction = actionMap.FindAction("Move");
         buildAction = actionMap.FindAction("BuildMenu");
         meleeAction = actionMap.FindAction("Melee");
         throwAction = actionMap.FindAction("Throw");
-        reloadAction = actionMap.FindAction("Reload");       
+        reloadAction = actionMap.FindAction("Reload"); 
 
+        // Reset
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
+            
+
+        //SceneManager.sceneLoaded += OnSceneLoaded;
         // Lambda expression seperates the input parameters 
         // on left from the lambda body on the right.
         // It allows to subscribe methods which contain parameters.
-        buildAction.performed += ctx => ToggleBuildMode();
-        moveAction.performed += ctx => IsMoveInput(true);
-        moveAction.canceled += ctx => IsMoveInput(false);
-        meleeAction.performed += ctx => IsMeleeInput(true);
-        meleeAction.canceled += ctx => IsMeleeInput(false);
-        fireAction.performed += ctx => IsFireInput(true);
-        fireAction.canceled += ctx => IsFireInput(false);
-        throwAction.performed += ctx => IsThrowInput(true);
-        throwAction.canceled += ctx => IsThrowInput(false);
-        reloadAction.performed += ctx => IsReloadInput();
+        // moveAction.performed += ctx => IsMoveInput(true);
+
+        // AAAnnd then I found out I couldn't get the lambda abstract
+        // method to go away so switch to named methods
+        buildAction.performed += BuildInput_Toggle;
+        //buildAction.canceled += BuildInput_Toggle;
+        moveAction.performed += MoveInput_Performed;
+        // moveAction.canceled += ctx => 
+        meleeAction.performed += MeleeInput_Performed;
+        meleeAction.canceled += MeleeInput_Cancelled;
+        fireAction.performed += FireInput_Performed;
+        fireAction.canceled += FireInput_Cancelled;
+        throwAction.performed += ThrowInput_Performed;
+        throwAction.canceled += ThrowInput_Cancelled;
+        reloadAction.performed += IsReloadInput;
 
         bodyAnimStartSpeed = bodyAnim.speed;
     }
 
     void OnDisable()
     {
-        buildAction.performed -= ctx => ToggleBuildMode();
-        moveAction.performed -= ctx => IsMoveInput(true);
-        moveAction.canceled -= ctx => IsMoveInput(false);
-        meleeAction.performed -= ctx => IsMeleeInput(true);
-        meleeAction.canceled -= ctx => IsMeleeInput(false);
-        fireAction.performed -= ctx => IsFireInput(true);
-        fireAction.canceled -= ctx => IsFireInput(false);
-        throwAction.performed -= ctx => IsThrowInput(true);
-        throwAction.canceled -= ctx => IsThrowInput(false);
-        reloadAction.performed -= ctx => IsReloadInput();
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        buildAction.performed -= BuildInput_Toggle;
+        //buildAction.canceled -= BuildInput_Toggle;
+        moveAction.performed -= MoveInput_Performed;
+        //moveAction.canceled -= Move;
+        meleeAction.performed -= MeleeInput_Performed;
+        meleeAction.canceled -= MeleeInput_Cancelled;
+        fireAction.performed -= FireInput_Performed;
+        fireAction.canceled -= FireInput_Cancelled;
+        throwAction.performed -= ThrowInput_Performed;
+        throwAction.canceled -= ThrowInput_Cancelled;
+        reloadAction.performed -= IsReloadInput;
     }
 
     void Update()
@@ -98,10 +120,10 @@ public class AnimationControllerPlayer : MonoBehaviour
             if (!hasDied)
             {
                 bodyAnim.SetTrigger("isDead");
-                feetAnim.SetBool("isDead", true);
-                feetAnim.transform.rotation = bodyAnim.transform.rotation;
+                legsAnim.SetBool("isDead", true);
+                legsAnim.transform.rotation = bodyAnim.transform.rotation;
                 bodyAnim.speed = bodyAnimStartSpeed;
-                feetAnim.speed = bodyAnimStartSpeed;
+                legsAnim.speed = bodyAnimStartSpeed;
                 hasDied = true;
             }
             
@@ -142,10 +164,10 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
         
         float speed = playerRb.velocity.magnitude;
-        feetAnim.speed = speed * animSpeedFactor * Time.deltaTime;
+        legsAnim.speed = speed * animSpeedFactor * Time.deltaTime;
         float normalizedSpeed = speed / player.moveSpeed;
 
-        feetAnim.SetFloat("BlendSpeed", normalizedSpeed);
+        legsAnim.SetFloat("BlendSpeed", normalizedSpeed);
         
         bodyAnim.SetFloat("BlendSpeed", normalizedSpeed);
 
@@ -177,7 +199,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             }
 
             // Lerp feet back to forward-facing direction
-            feetAnim.transform.rotation = Quaternion.Lerp(feetAnim.transform.rotation, 
+            legsAnim.transform.rotation = Quaternion.Lerp(legsAnim.transform.rotation, 
                                           bodyAnim.transform.rotation, feetReturnSpeed);
         }
         // if moving
@@ -196,7 +218,7 @@ public class AnimationControllerPlayer : MonoBehaviour
 
             // Rotate feet to movement direction
             float angle = Mathf.Atan2(playerRb.velocity.y, playerRb.velocity.x) * Mathf.Rad2Deg;
-            feetAnim.transform.rotation = Quaternion.Euler(0, 0, angle);
+            legsAnim.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
 
         // Set body Animation Speed
@@ -206,7 +228,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             bodyAnim.speed = speed * animSpeedFactor * Time.deltaTime;
             AnimatorStateInfo bodyState = bodyAnim.GetCurrentAnimatorStateInfo(0);
             float bodyNormalizedTime = bodyState.normalizedTime;
-            feetAnim.Play("Idle_Walk_Run BLEND TREE", 0, bodyNormalizedTime);
+            legsAnim.Play("Idle_Walk_Run BLEND TREE", 0, bodyNormalizedTime);
         }
         else
         {
@@ -224,7 +246,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
 
-    void ToggleBuildMode()
+    public void ToggleBuildMode()
     {
         if (!playerShooter.isBuilding)
         {
@@ -257,7 +279,6 @@ public class AnimationControllerPlayer : MonoBehaviour
         waitToLowerWeaponCoroutine = null;
     }
 
-    // THERES A BUNCH OF STUFF COLLAPSED IN THESE REGIONS
     #region Animations
 
     public void MeleeAnimationPlaying(bool playing)
@@ -327,44 +348,41 @@ public class AnimationControllerPlayer : MonoBehaviour
     public void DeathAnimEnd()
     {       
         bodyAnim.enabled = false;
-        feetAnim.enabled = false;
+        legsAnim.enabled = false;
     }
     #endregion Animations
 
-
-
     #region Inputs
 
-    public void IsMoveInput(bool yes)
+    public void BuildInput_Toggle(InputAction.CallbackContext context)
     {
-        if (yes)
+        ToggleBuildMode();
+    }
+
+    public void MoveInput_Performed(InputAction.CallbackContext context)
+    {    
+        if (waitToLowerWeaponCoroutine != null)
         {
-            if (waitToLowerWeaponCoroutine != null)
-            {
-                StopCoroutine(waitToLowerWeaponCoroutine);
-                waitToLowerWeaponCoroutine = null;
-            }
+            StopCoroutine(waitToLowerWeaponCoroutine);
+            waitToLowerWeaponCoroutine = null;
         }
     }
 
-    void IsFireInput(bool pressed)
+    void FireInput_Performed(InputAction.CallbackContext context)
     {
-        if (pressed)
-        {
-            if (playerShooter.isBuilding)
-                ToggleBuildMode();
-            bodyAnim.SetBool("isAiming", true);
-            isFireInput = true;
-        }
-        else
-        {
-            isFireInput = false;
-        }
+        if (playerShooter.isBuilding)
+            ToggleBuildMode();
+        bodyAnim.SetBool("isAiming", true);
+        isFireInput = true;
+    }
+    void FireInput_Cancelled(InputAction.CallbackContext context)
+    {   
+        isFireInput = false;       
     }
 
-    void IsMeleeInput(bool yes)
+    void MeleeInput_Performed(InputAction.CallbackContext context)
     {
-        if (yes && hasMeleeStamina && !throwAnimPlaying)
+        if (hasMeleeStamina && !throwAnimPlaying)
         {
             if (playerShooter.isBuilding)
                 ToggleBuildMode();
@@ -374,23 +392,21 @@ public class AnimationControllerPlayer : MonoBehaviour
                 StopCoroutine(waitToLowerWeaponCoroutine);
                 waitToLowerWeaponCoroutine = null;
             }
-        }
-        else
+        }   
+    }
+    void MeleeInput_Cancelled(InputAction.CallbackContext context)
+    {
+        bodyAnim.SetBool("isMeleeing", false);
+        bodyAnim.SetBool("isAiming", true);
+        if (waitToLowerWeaponCoroutine == null)
         {
-            bodyAnim.SetBool("isMeleeing", false);
-            bodyAnim.SetBool("isAiming", true);
-            if (waitToLowerWeaponCoroutine == null)
-            {
-                waitToLowerWeaponCoroutine = StartCoroutine(WaitToLowerWeapon());
-            }
-
+            waitToLowerWeaponCoroutine = StartCoroutine(WaitToLowerWeapon());
         }
     }
 
-    public void IsThrowInput(bool pressed)
-    {
-        
-        if (pressed && !meleeAnimPlaying && player.grenadeAmmo > 0)
+    public void ThrowInput_Performed(InputAction.CallbackContext context)
+    {  
+        if (!meleeAnimPlaying && player.grenadeAmmo > 0)
         {
             if (playerShooter.isBuilding)
                 ToggleBuildMode();
@@ -402,16 +418,16 @@ public class AnimationControllerPlayer : MonoBehaviour
                 waitToLowerWeaponCoroutine = null;
             }
         }
-        else
+    }
+    public void ThrowInput_Cancelled(InputAction.CallbackContext context)
+    {       
+        isThrowInput = false;
+        bodyAnim.SetBool("isThrowing", false);
+        bodyAnim.SetBool("isAiming", true);
+        if (waitToLowerWeaponCoroutine == null)
         {
-            isThrowInput = false;
-            bodyAnim.SetBool("isThrowing", false);
-            bodyAnim.SetBool("isAiming", true);
-            if (waitToLowerWeaponCoroutine == null)
-            {
-                waitToLowerWeaponCoroutine = StartCoroutine(WaitToLowerWeapon());
-            }
-        }
+            waitToLowerWeaponCoroutine = StartCoroutine(WaitToLowerWeapon());
+        }       
     }
 
     public void SwitchGunsStart(int index)
@@ -426,7 +442,11 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
 
-    public void IsReloadInput()
+    public void IsReloadInput(InputAction.CallbackContext context)
+    {
+        ReloadTrigger();        
+    }
+    public void ReloadTrigger()
     {
         if (!reloadAnimPlaying && playerShooter.gunAmmoTotals[playerShooter.currentGunIndex] > 0 &&
             playerShooter.currentGunIndex != 0)
@@ -444,5 +464,6 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
     #endregion Inputs
-
+    
+    
 }

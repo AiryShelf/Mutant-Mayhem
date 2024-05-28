@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     Rigidbody2D myRb;
     Stamina myStamina;
     PlayerShooter playerShooter;
-    [HideInInspector] public bool isDead;  
+    public bool isDead;  
     Throw itemToThrow;
 
     void Start()

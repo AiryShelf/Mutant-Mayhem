@@ -7,22 +7,17 @@ using UnityEngine.Tilemaps;
 
 public class BackgroundGenerator : MonoBehaviour
 {
+    [SerializeField] GameObject EditorObjectToClear;
     [SerializeField] Tilemap tilemap;
     [SerializeField] List<Tile> tiles;
     [SerializeField] Vector2Int startPos;
     [SerializeField] CinemachineVirtualCamera followCamera;
     [SerializeField] int chunkSizeX;
     [SerializeField] int chunkSizeY;
-    
-
-    void Awake()
-    {
-
-    }
 
     void Start()
     {
-
+        EditorObjectToClear.SetActive(false);
     }
 
     void Update()

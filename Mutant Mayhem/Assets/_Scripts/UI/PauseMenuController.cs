@@ -22,7 +22,7 @@ public class PauseMenuController : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !player.isDead)
         {
             if (!isPaused)
                 OpenPanel(true);
@@ -35,10 +35,10 @@ public class PauseMenuController : MonoBehaviour
     {
         if (active)
         {
-            if (uIBuildMenuController.fadeCanvasGroups.triggered == true)
+            if (uIBuildMenuController.fadeCanvasGroups.isTriggered == true)
             {
                 wasBuildPanelOpen = true;
-                uIBuildMenuController.fadeCanvasGroups.triggered = false;
+                uIBuildMenuController.fadeCanvasGroups.isTriggered = false;
             }
 
             fadeCanvasGroups.triggered = true;
@@ -49,7 +49,7 @@ public class PauseMenuController : MonoBehaviour
             if (wasBuildPanelOpen)
             {
                 wasBuildPanelOpen = false;
-                uIBuildMenuController.fadeCanvasGroups.triggered = true;
+                uIBuildMenuController.fadeCanvasGroups.isTriggered = true;
             }
 
             fadeCanvasGroups.triggered = false;
