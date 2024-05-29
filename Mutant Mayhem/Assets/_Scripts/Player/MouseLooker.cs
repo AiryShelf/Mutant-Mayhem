@@ -10,6 +10,9 @@ public class MouseLooker : MonoBehaviour
     [SerializeField] QCubeController qCubeController;
     [SerializeField] float timeToLerpOnDeath;
     [SerializeField] CinemachineMixingCamera mixingCamera;
+    [SerializeField] float startCamera0MouseWeight = 0.4f;
+    [SerializeField] float startCamera1PlayerWeight = 0.8f;
+
     public Transform playerTrans;
     Vector3 mousePos;
 
@@ -18,6 +21,10 @@ public class MouseLooker : MonoBehaviour
     void Start()
     {
         gameObject.transform.parent = null;
+
+        // Reset Camera weights
+        mixingCamera.m_Weight0 = startCamera0MouseWeight;
+        mixingCamera.m_Weight1 = startCamera1PlayerWeight;
     }
 
 

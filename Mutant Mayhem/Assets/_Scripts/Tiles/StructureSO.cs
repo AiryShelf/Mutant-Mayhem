@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "Structure")]
+[CreateAssetMenu(menuName = "StructureSO")]
 public class StructureSO : ScriptableObject
 {
-    [Header("UI Info")]
+    [Header("Tile Info")]
     public Sprite uiImage;
     public String tileName;
     [TextArea(3,10)]

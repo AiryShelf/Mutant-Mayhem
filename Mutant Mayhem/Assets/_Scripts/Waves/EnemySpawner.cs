@@ -3,28 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
-{
-    
+{  
     public List<GameObject> enemyList;
     [SerializeField] int[] enemySpawnChance;
     [SerializeField] float spawnDelay;
     [SerializeField] int spawnAmount;
-    [SerializeField] bool hide = true;
     [SerializeField] int maxEnemies;
     [SerializeField] LayerMask layersForSpawnCollision;
     [SerializeField] float radiusForCollisionCheck = 0.25f;
     [SerializeField] float maxTimeToTryToSpawn = 10;
-
+    [SerializeField] bool hide = true;
 
     public static int GLOBAL_enemyCount;
     SpriteRenderer SR;
-
 
     void Start()
     {
         SR = GetComponent<SpriteRenderer>();
         StartCoroutine(SpawnCycle());
-
     }
 
     void FixedUpdate()
@@ -93,5 +89,16 @@ public class EnemySpawner : MonoBehaviour
                 yield return new WaitForEndOfFrame();   
             }  
         }
+    }
+
+    Vector2 GetPointOnCircumference(float radius, float radAngle, float radSpread)
+    {
+        radAngle += Random.Range(-radSpread * Mathf.PI, radSpread * Mathf.PI);
+        Vector2 centerPoint = new Vector2(0, 0);
+
+        float x = centerPoint.x + radius * Mathf.Cos(radAngle);
+        float y = centerPoint.y + radius * Mathf.Sin(radAngle);
+    
+        return new Vector2(x, y);
     }
 }

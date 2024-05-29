@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "CustomRuleTile")]
+[CreateAssetMenu(menuName = "RuleTileStructure")]
 public class RuleTileStructure : RuleTile
 {
     [Header("Tile Settings")]
