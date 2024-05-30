@@ -91,6 +91,7 @@ public class Health : MonoBehaviour
             // Create corpse and pass inhertance
             corpsePrefab = Instantiate(corpsePrefab, transform.position, transform.rotation);
             corpsePrefab.transform.localScale = transform.localScale;
+            // Pass physics
             Rigidbody2D corpseRb = corpsePrefab.GetComponent<Rigidbody2D>();
             corpseRb.velocity = myRb.velocity;
             corpseRb.angularVelocity = myRb.angularVelocity;
@@ -103,7 +104,7 @@ public class Health : MonoBehaviour
             hitEffectsChild.transform.parent = null;
             hitEffectsChild.DestroyAfterSeconds();
             
-            EnemySpawner.GLOBAL_enemyCount--;
+            WaveSpawner.EnemyCount--;
             Destroy(gameObject);
         }
         else

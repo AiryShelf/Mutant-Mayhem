@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc5551c89943e394fa28c5120f890be6, type: 3}
+  m_Name: 10 by 0.1 in 0.05, 2sec to 0.1 Random
+  m_EditorClassIdentifier: 
+  selectionType: 0
+  batchAmount: 10
+  timeToNextSpawn: 0.1
+  spreadForBatch: 0.05
+  timeToNextBatch: 2
+  spreadForNextBatch: 0.1
+  randomizeNextBatchSpread: 1

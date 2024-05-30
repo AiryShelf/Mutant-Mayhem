@@ -15,7 +15,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     [SerializeField] CanvasGroup myGroup;
     [SerializeField] FadeCanvasGroupsWave nextCanvasGroupsWave;
     [SerializeField] GameObject deactivateGroup;
-    public List<CanvasGroup> individualGroups;
+    public List<CanvasGroup> individualElements;
 
     [SerializeField] float fadeStartDelay = 0f;
     [SerializeField] float delayBetweenElements = 0.3f;
@@ -34,7 +34,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         // Fade everything out
         if (myGroup)
             myGroup.alpha = 0;
-        foreach (CanvasGroup group in individualGroups)
+        foreach (CanvasGroup group in individualElements)
         {
             group.alpha = 0;
             if (deactivateIndivsWithFade)
@@ -70,7 +70,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     IEnumerator FadeMainIn()
     {
         // Refresh
-        foreach (CanvasGroup group in individualGroups)
+        foreach (CanvasGroup group in individualElements)
         {
             group.alpha = 0;
             if (deactivateIndivsWithFade)
@@ -108,7 +108,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
         // Fades in 'batchSize' number of elements simultaneously
         int batch = batchSize;
-        foreach (CanvasGroup group in individualGroups)
+        foreach (CanvasGroup group in individualElements)
         {       
             StartCoroutine(FadeInIndividual(group));
             batch--;
@@ -151,7 +151,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     {
         // Fades out 'batchSize' number of elements simultaneously
         int batch = batchSize;
-        foreach (CanvasGroup group in individualGroups)
+        foreach (CanvasGroup group in individualElements)
         {       
             StartCoroutine(FadeOutIndividual(group));
             batch--;
@@ -224,7 +224,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             }
 
             // Fade individuals out
-            foreach (CanvasGroup group in individualGroups)
+            foreach (CanvasGroup group in individualElements)
             {
                 group.alpha = value;
                 if (stop)
@@ -253,7 +253,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
         // Deactivate
         if (deactivateIndivsWithFade)
-        foreach (CanvasGroup group in individualGroups)
+        foreach (CanvasGroup group in individualElements)
             {
                 group.gameObject.SetActive(false);
             }

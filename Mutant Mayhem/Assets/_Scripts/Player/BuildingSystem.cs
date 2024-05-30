@@ -86,7 +86,7 @@ public class BuildingSystem : MonoBehaviour
 
     public void ToggleBuildMenu(bool on)
     {
-        Debug.Log("ToggleBuildMenu Called");
+        //Debug.Log("ToggleBuildMenu Called");
 
         if (on)
         {

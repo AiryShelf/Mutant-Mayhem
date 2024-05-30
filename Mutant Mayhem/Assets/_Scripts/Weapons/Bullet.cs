@@ -76,7 +76,7 @@ public class Bullet : MonoBehaviour
 
             StatsCounterPlayer.DamageToStructures += damage;
 
-            Debug.Log("TILE HIT");
+            //Debug.Log("TILE HIT");
         }
 
         // Delay bullet trail destroy

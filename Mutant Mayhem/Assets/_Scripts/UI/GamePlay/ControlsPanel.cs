@@ -28,7 +28,7 @@ public class ControlsPanel : MonoBehaviour
         {
             GameObject obj = Instantiate(controlsTextPrefab, gridLayoutGroup.transform);
             obj.GetComponent<TextMeshProUGUI>().text = str;
-            fadeCanvasGroupsWave.individualGroups.Add(obj.GetComponent<CanvasGroup>());
+            fadeCanvasGroupsWave.individualElements.Add(obj.GetComponent<CanvasGroup>());
         }
     }
 

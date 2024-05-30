@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e752e8fb088c6dd449087b81249014ce, type: 3}
+  m_Name: Wave Crabs
+  m_EditorClassIdentifier: 
+  subWaves:
+  - {fileID: 11400000, guid: e04a8aac1f6acfc4781102339dde90d4, type: 2}
+  - {fileID: 11400000, guid: e04a8aac1f6acfc4781102339dde90d4, type: 2}
+  subWaveStyles:
+  - {fileID: 11400000, guid: bc8c51d6a02b5b14dbf3f0dcb7e5672b, type: 2}
+  - {fileID: 11400000, guid: bc8c51d6a02b5b14dbf3f0dcb7e5672b, type: 2}
+  subWaveMultipliers: 0a0000000a000000
+  timesToTriggerSubWaves: 010000000a000000
+  constantWaves:
+  - {fileID: 11400000, guid: 09d6054541e2f81489d2c183d9ddd250, type: 2}
+  constantWaveStyles:
+  - {fileID: 11400000, guid: b3948586d81ef1047ad9d65e3e67047d, type: 2}
+  constantWaveMultipliers: 0a000000
+  timesToTriggerConstantWaves: 01000000
+  minEnemiesToNextWave: 0

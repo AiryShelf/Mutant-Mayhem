@@ -21,6 +21,9 @@ public class TileManager : MonoBehaviour
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForGridClearCheck;
 
+    public int numberOfTilesHit;
+    public int numberofTilesMissed;
+
     // For debugging
     Vector2 boxPos;
     Vector2 boxSize;
@@ -59,7 +62,7 @@ public class TileManager : MonoBehaviour
                 StructureTilemap.SetTile(gridPos, rts);
 
                 StatsCounterPlayer.StructuresBuilt++;
-                Debug.Log("Added a Tile");
+                //Debug.Log("Added a Tile");
                 return true;
             }
             else
@@ -109,7 +112,7 @@ public class TileManager : MonoBehaviour
         AnimatedTilemap.SetTile(rootPos, null);
 
         StatsCounterPlayer.StructuresLost++;
-        Debug.Log("DESTROYED A TILE");
+        //Debug.Log("DESTROYED A TILE");
     }
 
     public void ModifyHealthAt(Vector2 point, float amount)
@@ -118,6 +121,7 @@ public class TileManager : MonoBehaviour
         //Debug.Log("modify health called");
         if (_TileStatsDict.ContainsKey(gridPos))
         {
+            numberOfTilesHit++;
             Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
             _TileStatsDict[rootPos].health += amount;
             _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 
@@ -133,7 +137,8 @@ public class TileManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Key not found: " + gridPos);
+            numberofTilesMissed++;
+            //Debug.Log("Key not found: " + gridPos);
         }
     }
 
@@ -153,7 +158,7 @@ public class TileManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Key not found: " + gridPos + " when shooting a tile");
+            //Debug.Log("Key not found: " + gridPos + " when shooting a tile");
         }
     }
     public void MeleeHitEffectAt(Vector2 point, Vector2 hitDir)
@@ -172,7 +177,7 @@ public class TileManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Key not found: " + gridPos + " when meleeing a tile");
+            //Debug.Log("Key not found: " + gridPos + " when meleeing a tile");
         }
     }
 
@@ -309,7 +314,7 @@ public class TileManager : MonoBehaviour
         
         if (hit != null)
         {
-            Debug.Log("Collider detected when trying to build");
+            //Debug.Log("Collider detected when trying to build");
             return false;
         }
 

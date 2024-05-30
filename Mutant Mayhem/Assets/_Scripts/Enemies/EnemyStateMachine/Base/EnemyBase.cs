@@ -76,13 +76,17 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         ChaseState = new EnemyChaseState(this, StateMachine);
         ShootState = new EnemyShootState(this, StateMachine);
         //MeleeState = new EnemyMeleeState(this, StateMachine);
+
+        RB = GetComponent<Rigidbody2D>();
+    }
+
+    void OnEnable()
+    {
+        
     }
 
     void Start()
     {
-        //CurrentHealth = MaxHealth;
-        RB = GetComponent<Rigidbody2D>();
-
         EnemyIdleSOBaseInstance.Initialize(gameObject, this);
         EnemyChaseSOBaseInstance.Initialize(gameObject, this);
         EnemyShootSOBaseInstance.Initialize(gameObject, this);
@@ -103,42 +107,50 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         CurrentSMStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
-    #region Randomize Function
-
-    void RandomizeStats()
-    {
-        // Randomize color
-        float randomColorRed = Random.Range(-randomColorFactor, randomColorFactor);
-        float randomColorGreen = Random.Range(-randomColorFactor, randomColorFactor);
-        float randomColorBlue = Random.Range(-randomColorFactor, randomColorFactor);
-        SR.color = new Color(SR.color.r + randomColorRed,
-                               SR.color.g + randomColorGreen,
-                               SR.color.b + randomColorBlue);
-        
-        // Randomize size
-        GaussianRandom _gaussianRandomm = new GaussianRandom();
-        float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
-        randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
-        transform.localScale *= randomSizeFactor;
-
-        // Randomize stats by size
-        moveSpeedBase *= randomSizeFactor;
-        health.SetMaxHealth(health.GetMaxHealth() * randomSizeFactor);
-        health.SetHealth(health.GetMaxHealth());
-        meleeController.meleeDamage *= randomSizeFactor;
-        meleeController.knockback *= randomSizeFactor;
-        //meleeController.selfKnockback *= randomSizeFactor; no good*
-        RB.mass *= randomSizeFactor;
-
-        animControllerEnemy.animSpeedFactor /= randomSizeFactor;
-    }
-
     void OnCollisionStay2D(Collision2D other)
     {
         // Structures layer# 12
         if (other.gameObject.layer == 12)
         {
             meleeController.HitStructure(other.GetContact(0).point);
+        }
+    }
+
+    #region Randomize Stats
+
+    public void RandomizeStats()
+    {
+        if (randomize)
+        {
+            // Randomize color
+            float randomColorRed = Random.Range(-randomColorFactor, randomColorFactor);
+            float randomColorGreen = Random.Range(-randomColorFactor, randomColorFactor);
+            float randomColorBlue = Random.Range(-randomColorFactor, randomColorFactor);
+            SR.color = new Color(SR.color.r + randomColorRed,
+                                SR.color.g + randomColorGreen,
+                                SR.color.b + randomColorBlue);
+            
+            // Randomize size with multipliers
+            GaussianRandom _gaussianRandomm = new GaussianRandom();
+            float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
+            randomSizeFactor *= WaveController.sizeMultiplier;
+            randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
+            transform.localScale *= randomSizeFactor;
+
+            // Randomize stats by size and multipliers
+            moveSpeedBase *= randomSizeFactor * WaveController.speedMultiplier;
+
+            health.SetMaxHealth(health.GetMaxHealth() 
+                * randomSizeFactor * WaveController.healthMultiplier);
+            health.SetHealth(health.GetMaxHealth());
+
+            meleeController.meleeDamage *= randomSizeFactor * WaveController.sizeMultiplier;
+            meleeController.knockback *= randomSizeFactor;
+            //meleeController.selfKnockback *= randomSizeFactor; no good?
+
+            RB.mass *= randomSizeFactor;
+
+            animControllerEnemy.animSpeedFactor /= randomSizeFactor;
         }
     }
 

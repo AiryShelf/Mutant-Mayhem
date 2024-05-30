@@ -41,17 +41,11 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("OnEnable ran");
         player = FindObjectOfType<Player>();
         playerRb = player.GetComponent<Rigidbody2D>();
         playerShooter = player.GetComponent<PlayerShooter>(); 
         bodyAnim = GameObject.FindGameObjectWithTag("PlayerBody").GetComponent<Animator>();
         legsAnim = GameObject.FindGameObjectWithTag("PlayerLegs").GetComponent<Animator>();
-
-        //bodyAnim.Rebind();
-        //legsAnim.Rebind();
-
-        //buildAction.performed += ctx => null;
         
         actionMap = player.inputAsset.FindActionMap("Player");
         fireAction = actionMap.FindAction("Fire");

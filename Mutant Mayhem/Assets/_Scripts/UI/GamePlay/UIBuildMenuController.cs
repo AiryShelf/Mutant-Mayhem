@@ -38,8 +38,8 @@ public class UIBuildMenuController : MonoBehaviour
                                                    textLayoutGroup.transform);
 
             // Initialize FadeCanvasGroup list
-            fadeCanvasGroups.individualGroups.Add(uIStructure.textInstance.GetComponent<CanvasGroup>());
-            fadeCanvasGroups.individualGroups.Add(newButton.GetComponent<CanvasGroup>());
+            fadeCanvasGroups.individualElements.Add(uIStructure.textInstance.GetComponent<CanvasGroup>());
+            fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
         }       
     }
 

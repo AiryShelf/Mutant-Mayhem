@@ -11,7 +11,7 @@ public class BackgroundGenerator : MonoBehaviour
     [SerializeField] Tilemap tilemap;
     [SerializeField] List<Tile> tiles;
     [SerializeField] Vector2Int startPos;
-    [SerializeField] CinemachineVirtualCamera followCamera;
+    [SerializeField] Transform followCamera;
     [SerializeField] int chunkSizeX;
     [SerializeField] int chunkSizeY;
 
@@ -22,7 +22,7 @@ public class BackgroundGenerator : MonoBehaviour
 
     void Update()
     {
-        startPos = (Vector2Int)tilemap.WorldToCell(followCamera.transform.position);
+        startPos = (Vector2Int)tilemap.WorldToCell(followCamera.position);
         GenerateWorld(startPos);
     }
 

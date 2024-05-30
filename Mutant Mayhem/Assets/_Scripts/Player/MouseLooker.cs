@@ -27,6 +27,12 @@ public class MouseLooker : MonoBehaviour
         mixingCamera.m_Weight1 = startCamera1PlayerWeight;
     }
 
+    void OnDisable()
+    {
+        mixingCamera.m_Weight0 = startCamera0MouseWeight;
+        mixingCamera.m_Weight1 = startCamera1PlayerWeight;
+    }
+
 
     void FixedUpdate()
     {
@@ -35,16 +41,14 @@ public class MouseLooker : MonoBehaviour
             if (QCubeController.IsDead)
             {
                 deathTriggered = true;
-                mixingCamera.m_Weight0 = 1;
-                mixingCamera.m_Weight1 = 0;
                 StartCoroutine(LerpToPosition(qCubeController.transform.position));
+                StartCoroutine(LerpCameras(false));
             }
             else if (player.isDead)
             {
                 deathTriggered = true;
-                mixingCamera.m_Weight0 = 1;
-                mixingCamera.m_Weight1 = 0;
-                StartCoroutine(LerpToPosition(player.transform.position));
+                //StartCoroutine(LerpToPosition(player.transform.position));
+                StartCoroutine(LerpCameras(true));
             }
             else
             {
@@ -62,11 +66,43 @@ public class MouseLooker : MonoBehaviour
     {
         Vector2 startPos = transform.position;
         float timeElapsed = 0;
+        
         while (timeElapsed < timeToLerpOnDeath)
         {
+            // Lerp to position
             timeElapsed += Time.deltaTime;
             Vector2 newPos = Vector3.Lerp(startPos, pos, timeElapsed / timeToLerpOnDeath);
             transform.position = newPos;
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        
+    }
+
+    IEnumerator LerpCameras(bool player)
+    {
+        float weight0 = mixingCamera.m_Weight0;
+        float weight1 = mixingCamera.m_Weight1;
+        float timeElapsed = 0;
+
+        while (timeElapsed < timeToLerpOnDeath)
+        {
+            timeElapsed += Time.deltaTime;
+            
+            if (player)
+            {
+                // Lerp cameraMix to Player
+                mixingCamera.m_Weight0 = Mathf.Lerp(weight0, 0, timeElapsed / timeToLerpOnDeath);
+                mixingCamera.m_Weight1 = Mathf.Lerp(weight1, 1, timeElapsed / timeToLerpOnDeath);
+            }
+            else
+            {
+                // Lerp cameraMix to mouseLooker
+                mixingCamera.m_Weight0 = Mathf.Lerp(weight0, 1, timeElapsed / timeToLerpOnDeath);
+                mixingCamera.m_Weight1 = Mathf.Lerp(weight1, 0, timeElapsed / timeToLerpOnDeath);
+            }
+
             yield return new WaitForEndOfFrame();
         }
     }
