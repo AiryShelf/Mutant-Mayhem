@@ -3,17 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[System.Serializable]
+public class PlayerStats
+{
+    [Header("Movement stats")]
+    public float moveSpeed = 9;
+    public float strafeSpeed = 6;
+    public float sprintFactor = 2;
+    public float lookSpeed = 0.05f;
+
+    [Header("Melee Stats")]
+    public float meleeDamage = 80;
+    public float knockback = 10;
+    public float meleeAttackRate = 0.5f;
+
+    [Header("Shooting Stats")]
+    public float reloadFactor = 1f;
+}
 
 public class Player : MonoBehaviour
 {
+    public PlayerStats stats;
+
     [Header("Movement")]
-    public float moveSpeed;
-    [SerializeField] float strafeSpeed;
-    public float sprintFactor;
     [SerializeField] float forceFactor = 1.5f;
     [SerializeField] float sprintStaminaUse = 0.1f;
-    [SerializeField] float lookSpeed;
-    [SerializeField] float headTurnSpeed;
+    [SerializeField] float headTurnSpeed = 0.1f;
+
     [Header("Other")]
     public InputActionAsset inputAsset;
     [SerializeField] GameObject grenadePrefab;
@@ -45,12 +61,14 @@ public class Player : MonoBehaviour
         playerShooter = GetComponent<PlayerShooter>();
         myRb = GetComponent<Rigidbody2D>();
         myStamina = GetComponent<Stamina>();
-        
 
-        // Use these for force-based movements
-        moveForce = moveSpeed * myRb.mass * forceFactor;
-        strafeForce = strafeSpeed * myRb.mass * forceFactor;
+        // Initialize stats
+        stats = new PlayerStats();
+        meleeController.stats = stats;
         
+        // Use these for force-based movements
+        moveForce = stats.moveSpeed * myRb.mass * forceFactor;
+        strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
     }
 
     void FixedUpdate()
@@ -95,7 +113,7 @@ public class Player : MonoBehaviour
     public void OnThrowGrab()
     {
         itemToThrow = Instantiate(grenadePrefab, transform.position, 
-                      Quaternion.identity, leftHandTrans).gameObject.GetComponent<Throw>();    
+            Quaternion.identity, leftHandTrans).gameObject.GetComponent<Throw>();    
     }
 
     public void OnThrowFly()
@@ -133,15 +151,18 @@ public class Player : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0, 0, angleToMouse);
 
         //Apply rotations       
-        playerMainTrans.rotation = Quaternion.Lerp(playerMainTrans.rotation, targetRotation, lookSpeed);
-        headImageTrans.rotation = Quaternion.Lerp(headImageTrans.rotation, targetRotation, headTurnSpeed);
+        playerMainTrans.rotation = Quaternion.Lerp(
+            playerMainTrans.rotation, targetRotation, stats.lookSpeed);
+        headImageTrans.rotation = Quaternion.Lerp(
+            headImageTrans.rotation, targetRotation, headTurnSpeed);
 
         // ** TO ADD DRUNKEN BEHAVIOUR **
         //rotAngle += Random.Range(-moveAccuracy, moveAccuracy); 
         //float radians = rotAngle * Mathf.Deg2Rad;
         //mouseDir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
         
-        //myRb.rotation = Mathf.LerpAngle(myRb.rotation, angleToMouse, Time.deltaTime * lookSpeed);
+        //myRb.rotation = Mathf.LerpAngle(myRb.rotation, 
+            //angleToMouse, Time.deltaTime * lookSpeed);
     }
 
     void Sprint()
@@ -151,7 +172,7 @@ public class Player : MonoBehaviour
             if (sprintStaminaUse <= myStamina.GetStamina())
             {
                 StatsCounterPlayer.TimeSprintingPlayer += Time.fixedDeltaTime;
-                sprintSpeedAmount = sprintFactor;
+                sprintSpeedAmount = stats.sprintFactor;
                 myStamina.ModifyStamina(-sprintStaminaUse);
             }
             else
@@ -171,11 +192,13 @@ public class Player : MonoBehaviour
         // Move x moveSpeed forward but strafeSpeed backwards and sideways
         if (rawInput.y > 0)
         {
-            moveDir = new Vector2 (rawInput.y * moveForce, -rawInput.x * strafeForce) * sprintSpeedAmount;
+            moveDir = new Vector2 (rawInput.y * moveForce, 
+                                   -rawInput.x * strafeForce) * sprintSpeedAmount;
         }
         else
         {
-            moveDir = new Vector2 (rawInput.y * strafeForce, -rawInput.x * strafeForce) * sprintSpeedAmount;
+            moveDir = new Vector2 (rawInput.y * strafeForce, 
+                                   -rawInput.x * strafeForce) * sprintSpeedAmount;
         }
 
         moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;

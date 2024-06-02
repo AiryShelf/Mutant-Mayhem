@@ -41,6 +41,14 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 group.gameObject.SetActive(false);
         }
 
+        // Refresh
+        foreach (CanvasGroup group in individualElements)
+        {
+            group.alpha = 0;
+            if (deactivateIndivsWithFade)
+                group.gameObject.SetActive(false);
+        }
+
         // Turn the main child off, which contains all the individuals
         if (deactivateGroup)
             deactivateGroup.SetActive(false);
@@ -50,6 +58,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     {
         if (isTriggered && fadeIn == null)
         {
+            StopAllCoroutines();
             if (deactivateGroup)
                 deactivateGroup.gameObject.SetActive(true);
     
@@ -69,13 +78,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     IEnumerator FadeMainIn()
     {
-        // Refresh
-        foreach (CanvasGroup group in individualElements)
-        {
-            group.alpha = 0;
-            if (deactivateIndivsWithFade)
-                group.gameObject.SetActive(false);
-        }
+        fadeOut = null; // test migh tneed check and stop first
         
         if (initialGroup != null)
             initialGroup.interactable = false;
@@ -149,6 +152,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     IEnumerator FadeOutWave()
     {
+        fadeIn = null; // test **might need to check and stop coroutines before nullifying
+
         // Fades out 'batchSize' number of elements simultaneously
         int batch = batchSize;
         foreach (CanvasGroup group in individualElements)
@@ -162,6 +167,9 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 batch = batchSize;
             }
         }
+
+        StartCoroutine(FadeOutMain());
+        yield return new WaitForSecondsRealtime(fadeIndivTime);
        
         if (deactivateGroup)
             deactivateGroup.SetActive(false);
@@ -197,8 +205,54 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             group.gameObject.SetActive(false);
     }
 
+    IEnumerator FadeOutMain()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        selectedFirst = false;
+
+        if (initialGroup != null)
+            initialGroup.interactable = true;
+
+        float timeElapsed = 0;
+        while (timeElapsed < fadeIndivTime)
+        {
+            timeElapsed += Time.unscaledDeltaTime;
+            float value = Mathf.Lerp(1, 0, timeElapsed / fadeOutAllTime);
+
+            bool stop = value <= lerpOutStopThreshold;
+
+            // Fade myGroup out
+            if (myGroup)
+            {
+                myGroup.alpha = value;
+                if (stop)
+                {
+                    myGroup.alpha = 0;
+                }
+            }
+
+            // Fade initial canvas back in
+            if (initialGroup != null)
+            {
+                initialGroup.alpha = 1 - value;
+                if (stop)
+                {
+                    initialGroup.alpha = 0;
+                }   
+            }
+
+            if (stop)
+            {
+                timeElapsed = fadeIndivTime;
+            }       
+
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
     IEnumerator FadeOutAll()
     {
+        fadeIn = null;
         EventSystem.current.SetSelectedGameObject(null);
         selectedFirst = false;
 
@@ -245,7 +299,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
             if (stop)
             {
-                timeElapsed = fadeIndivTime;
+                timeElapsed = fadeOutAllTime;
             }       
 
             yield return new WaitForEndOfFrame();

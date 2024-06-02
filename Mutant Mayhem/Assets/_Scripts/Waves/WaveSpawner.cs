@@ -50,7 +50,12 @@ public class WaveSpawner : MonoBehaviour
 
         // Find max length of time, add 5 seconds
         int maxTime1 = currentWave.timesToTriggerSubWaves.Max();
-        int maxTime2 = currentWave.timesToTriggerConstantWaves.Max();
+        int maxTime2 = 1;
+        if (currentWave.constantWaves.Count > 0)
+        {
+            maxTime2 = currentWave.timesToTriggerConstantWaves.Max();
+        }
+
         int maxTime = Mathf.Max(maxTime1, maxTime2) + 5;
         //Debug.Log("MaxTime for wave: " + maxTime);
 

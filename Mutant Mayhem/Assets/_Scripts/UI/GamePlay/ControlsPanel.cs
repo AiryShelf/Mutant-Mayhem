@@ -32,12 +32,22 @@ public class ControlsPanel : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        TogglePanel();
+    }
+
     void OnDisable()
     {
         helpAction.performed -= OnHelpPressed;
     }
 
     void OnHelpPressed(InputAction.CallbackContext context)
+    {
+        TogglePanel();   
+    }
+
+    void TogglePanel()
     {
         if (!player.isDead)
         {

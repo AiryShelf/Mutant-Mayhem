@@ -8,7 +8,8 @@ public class PlayerShooter : MonoBehaviour
 {
     [SerializeField] Transform gunTrans;
     [SerializeField] SpriteRenderer gunSR;
-    [SerializeField] List<GunSO> gunList;
+    [SerializeField] List<GunSO> gunListSource;
+    public List<GunSO> gunListRT;
     [SerializeField] Transform muzzleTrans;
     [SerializeField] ParticleSystem bulletCasingsPS;
     [SerializeField] float casingToGroundTime;
@@ -39,6 +40,13 @@ public class PlayerShooter : MonoBehaviour
     void Awake()
     {
         myRb = GetComponent<Rigidbody2D>();  
+
+        // Make a working copy of the gun list
+        foreach (GunSO gun in gunListSource)
+        {
+            GunSO g = Instantiate(gun);
+            gunListRT.Add(g);
+        }
     }
 
     void Start()
@@ -74,22 +82,22 @@ public class PlayerShooter : MonoBehaviour
 
     public void SwitchGuns(int i)
     {
-        gunSR.sprite = gunList[i].sprite;
-        muzzleTrans.localPosition = gunList[i].muzzleLocalPos;
-        casingEjectorTrans.localPosition = gunList[i].casingLocalPos;
+        gunSR.sprite = gunListRT[i].sprite;
+        muzzleTrans.localPosition = gunListRT[i].muzzleLocalPos;
+        casingEjectorTrans.localPosition = gunListRT[i].casingLocalPos;
 
         if (currentMuzzleFlash != null)
             Destroy(currentMuzzleFlash);
-        currentMuzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, 
+        currentMuzzleFlash = Instantiate(gunListRT[i].muzzleFlashPrefab, 
                                          muzzleTrans.transform);
         currentMuzzleFlash.SetActive(false);
 
         // This could be removed and gunIndex used instead for animation transitions
-        bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
-        bodyAnim.SetBool(gunList[i].animatorHasString, true);
+        bodyAnim.SetBool(gunListRT[currentGunIndex].animatorHasString, false);
+        bodyAnim.SetBool(gunListRT[i].animatorHasString, true);
 
         currentGunIndex = i;
-        currentGunSO = gunList[i];
+        currentGunSO = gunListRT[i];
     }
 
     public void Reload()

@@ -159,7 +159,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         
         float speed = playerRb.velocity.magnitude;
         legsAnim.speed = speed * animSpeedFactor * Time.deltaTime;
-        float normalizedSpeed = speed / player.moveSpeed;
+        float normalizedSpeed = speed / player.stats.moveSpeed;
 
         legsAnim.SetFloat("BlendSpeed", normalizedSpeed);
         

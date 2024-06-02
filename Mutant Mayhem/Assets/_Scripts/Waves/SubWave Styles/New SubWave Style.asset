@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5048820a1e26fa04585ca53dc5d474be, type: 3}
-  m_Name: Subwave 10 Dog1
+  m_Script: {fileID: 11500000, guid: dc5551c89943e394fa28c5120f890be6, type: 3}
+  m_Name: New SubWave Style
   m_EditorClassIdentifier: 
-  enemyPrefabList:
-  - {fileID: 5437049528478583412, guid: 6bf7466768df9d649b054f2f863aed6d, type: 3}
-  numberToSpawn: 0a000000
+  selectionType: 0
+  batchAmount: 10
+  timeToNextSpawn: 0.01
+  spreadForBatch: 0.05
+  timeToNextBatch: 3
+  spreadForNextBatch: 1
+  randomizeNextBatchSpread: 0

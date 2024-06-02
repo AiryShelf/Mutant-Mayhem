@@ -8,12 +8,13 @@ public class WaveController : MonoBehaviour
 {
     public List<WaveSOBase> waveBases;
     [SerializeField] WaveSpawner waveSpawner;
+    [SerializeField] FadeCanvasGroupsWave nextWaveFadeGroup;
     [SerializeField] FadeCanvasGroupsWave waveInfoFadeGroup;
     [SerializeField] TextMeshProUGUI enemyCountText;
-    [SerializeField] TextMeshProUGUI currentWaveText;
+    [SerializeField] TextMeshProUGUI currentNightText;
     [SerializeField] TextMeshProUGUI nextWaveText;
     public int currentWave = 0;
-    public float timeBetweenWaves = 30f;
+    public float timeBetweenWaves = 60f;
     public float spawnRadius = 60;
     public int wavesPerBase = 3;
 
@@ -31,6 +32,8 @@ public class WaveController : MonoBehaviour
     Player player;
 
     Coroutine nextWaveTimer;
+    public bool isNight;
+
 
     void Awake()
     {
@@ -78,15 +81,16 @@ public class WaveController : MonoBehaviour
     {
         waveInfoFadeGroup.isTriggered = false;
         nextWaveText.enabled = true;
+        nextWaveFadeGroup.isTriggered = true;
         float countdown = timeBetweenWaves;
 
         while (countdown >= 0)
         {
-            nextWaveText.text = "Time until wave " 
-                + currentWave + ":  " + countdown + "s.  Press 'Enter' to skip";
+            nextWaveText.text = "Time until night " 
+                + currentWave + ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";
             
-            yield return new WaitForSeconds(1);
-            countdown--;        
+            yield return new WaitForEndOfFrame();
+            countdown -= Time.deltaTime;        
         }
 
         StartCoroutine(StartWave());
@@ -94,6 +98,8 @@ public class WaveController : MonoBehaviour
 
     IEnumerator StartWave()
     {
+        isNight = true;
+
         // Switch Spawner to new WaveBase
         int index = (int)Mathf.Floor(currentWave / wavesPerBase);
         index = Mathf.Clamp(index, 0, waveBases.Count - 1);
@@ -109,20 +115,28 @@ public class WaveController : MonoBehaviour
 
         // Set wave UI text
         waveInfoFadeGroup.isTriggered = true;
+        nextWaveFadeGroup.isTriggered = false;
         nextWaveText.enabled = false;
-        enemyCountText.text = "Enemies Detected: " + WaveSpawner.EnemyCount;
-        currentWaveText.text = "Night " + currentWave;
-                            
 
+        // Wait 5 seconds before checking wave complete
+        float timeElapsed = 0;
+        while (timeElapsed < 5)
+        {
+            enemyCountText.text = "Enemies Detected: " + WaveSpawner.EnemyCount;
+            currentNightText.text = "Night " + currentWave;
 
-        // Wait for 5 seconds before checking
-        yield return new WaitForSeconds(5);
+            yield return new WaitForEndOfFrame();
+            timeElapsed += Time.deltaTime; 
+        }
 
+        // Check for end of wave
         while (!waveSpawner.waveComplete)
         {
-            yield return new WaitForSeconds(1);
+            
             enemyCountText.text = "Enemies Detected: " + WaveSpawner.EnemyCount;
-            currentWaveText.text = "Night " + currentWave;
+            currentNightText.text = "Night " + currentWave;
+
+            yield return new WaitForEndOfFrame(); 
         }
         
         EndWave();
@@ -130,15 +144,17 @@ public class WaveController : MonoBehaviour
 
     void EndWave()
     {
+        isNight = false;
+
         Debug.Log("End Wave");
         currentWave++;
 
-        UpdateMultipliers();
+        UpdateWaveMultipliers();
 
         StartCoroutine(NextWaveTimer());
     }
 
-    void UpdateMultipliers()
+    void UpdateWaveMultipliers()
     {
         batchMultiplier = MultiplierStart 
                           + (int)Mathf.Floor((currentWave - 1) / 10);
