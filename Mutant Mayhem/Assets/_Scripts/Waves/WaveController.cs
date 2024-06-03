@@ -110,7 +110,6 @@ public class WaveController : MonoBehaviour
         if (nextWaveTimer != null)
             StopCoroutine(nextWaveTimer);
         
-        Debug.Log("Start Wave");
         waveSpawner.StartWave();
 
         // Set wave UI text

@@ -43,6 +43,7 @@ public class Tooltip : MonoBehaviour
 
     void Update()
     {
+        // Allows updating tooltip size while running editor
         if (Application.isEditor)
         {
             int headerLength = headerField.text.Length;
@@ -51,6 +52,7 @@ public class Tooltip : MonoBehaviour
             layoutElement.enabled = (headerLength > characterWrapLimit || contentLength > characterWrapLimit) ? true : false;
         }
 
+        // Calculate which quatrant
         Vector2 pos = Input.mousePosition;
         var normalizedPosition = new Vector2(pos.x / Screen.width, pos.y / Screen.height);
         var pivot = CalculatePivot(normalizedPosition);
@@ -67,11 +69,13 @@ public class Tooltip : MonoBehaviour
 
     private Vector2 CalculatePivot(Vector2 normalizedPosition)
 {
+    // Set position for each quadrant
 	var pivotTopLeft = new Vector2(-0.1f, 1.1f);
 	var pivotTopRight = new Vector2(1.1f, 1.1f);
 	var pivotBottomLeft = new Vector2(-0.1f, -0.1f);
 	var pivotBottomRight = new Vector2(1.1f, -0.1f);
 
+    // Check quadrants
 	if (normalizedPosition.x < 0.5f && normalizedPosition.y >= 0.5f)
 	{
 		return pivotTopLeft;

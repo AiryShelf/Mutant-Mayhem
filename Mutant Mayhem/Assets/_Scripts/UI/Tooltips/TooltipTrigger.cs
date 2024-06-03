@@ -13,15 +13,40 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     Coroutine delay;
     
-
-    void Awake()
+    void OnDisable()
     {
+        TooltipSystem.Hide();
+        if (delay != null)
+        {
+            StopCoroutine(delay);
+            delay = null;
+        }
+    }
+
+    void Start()
+    {
+        
+        UIUpgrade uIUpgrade = GetComponent<UIUpgrade>();
         UIStructure uIStructure = GetComponent<UIStructure>();
-        if (uIStructure != null)
+
+        // UIUpgrade descriptions
+        if (uIUpgrade != null)
+        {
+            content = uIUpgrade.tooltipDescription;
+            header = "";
+        }
+
+        // Use UIStructure description if is UIStructure
+        else if (uIStructure != null)
         {
             content = uIStructure.structureSO.description;
             header = "";
         }
+        else
+        {
+            // Uses 'content' input from inspector
+        }
+        
     }
     
     public void OnPointerEnter(PointerEventData eventData)

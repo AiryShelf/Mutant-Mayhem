@@ -16,15 +16,35 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     ScrollRectController scrollRectController;
     BuildingSystem buildingSystemController;
 
+    bool initialized;
+
     void Awake()
     {
         image.sprite = structureSO.uiImage;
         scrollRectController = GetComponentInParent<ScrollRectController>();
         buildingSystemController = FindObjectOfType<BuildingSystem>();
+
+    }
+
+    void OnEnable()
+    {
+        if (initialized)
+        {
+            // If unlocked to player
+            if (BuildingSystem._StructsAvailDict[structureSO.structureType])
+            {
+                MakeInteractable();
+            }
+            else
+            {
+                button.interactable = false;
+            }
+        }
     }
 
     void Start()
     {
+        initialized = true;
         // If unlocked to player
         if (BuildingSystem._StructsAvailDict[structureSO.structureType])
         {
@@ -34,7 +54,6 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         {
             button.interactable = false;
         }
-
     }
 
     public void OnSelect(BaseEventData data)

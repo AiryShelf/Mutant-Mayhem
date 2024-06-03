@@ -4,35 +4,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-
-
 public class UpgradeSystem : MonoBehaviour
 {
     public Player player;
     public TileManager tileManager;
 
-    private Dictionary<UpgradeType, int> upgradeLevels = new Dictionary<UpgradeType, int>();
-    private Dictionary<UpgradeType, int> upgradeBaseCosts = new Dictionary<UpgradeType, int>();
+    public Dictionary<UpgradeType, int> upgradeLevels = 
+        new Dictionary<UpgradeType, int>();
+    private Dictionary<UpgradeType, int> upgradeBaseCosts = 
+        new Dictionary<UpgradeType, int>();
+    public Dictionary<UpgradeType, int> upgradeCurrentCosts = 
+        new Dictionary<UpgradeType, int>();
 
     void Awake()
     {
-        // Upgrade Costs
+        // Base Upgrade Costs
         upgradeBaseCosts[UpgradeType.MoveSpeed] = 100;
         upgradeBaseCosts[UpgradeType.StrafeSpeed] = 100;
         upgradeBaseCosts[UpgradeType.SprintFactor] = 100;
         upgradeBaseCosts[UpgradeType.ReloadSpeed] = 100;
         upgradeBaseCosts[UpgradeType.MeleeDamage] = 100;
-        upgradeBaseCosts[UpgradeType.Knockback] = 100;
+        upgradeBaseCosts[UpgradeType.MeleeKnockback] = 100;
         upgradeBaseCosts[UpgradeType.MeleeAttackRate] = 100;
         upgradeBaseCosts[UpgradeType.StaminaMax] = 100;
         upgradeBaseCosts[UpgradeType.StaminaRegen] = 100;
         upgradeBaseCosts[UpgradeType.HealthMax] = 100;
         upgradeBaseCosts[UpgradeType.HealthRegen] = 100;
         upgradeBaseCosts[UpgradeType.Accuracy] = 100;
-    }
 
-    void Start()
-    {
+        // Initialize currentCosts
+        foreach (KeyValuePair<UpgradeType, int> kvp in upgradeBaseCosts)
+        {
+            upgradeCurrentCosts.Add(kvp.Key, kvp.Value);
+        }
+
         // Initialize upgrade levels
         foreach(UpgradeType type in Enum.GetValues(typeof(UpgradeType)))
         {
@@ -54,7 +59,7 @@ public class UpgradeSystem : MonoBehaviour
                 return new ReloadSpeedUpgrade();
             case UpgradeType.MeleeDamage:
                 return new MeleeDamageUpgrade();
-            case UpgradeType.Knockback:
+            case UpgradeType.MeleeKnockback:
                 return new KnockbackUpgrade();
             case UpgradeType.MeleeAttackRate:
                 return new MeleeAttackRateUpgrade();
@@ -83,26 +88,28 @@ public class UpgradeSystem : MonoBehaviour
             return;
         }
 
-        // Check if player can afford upgrade
-        int currentLevel = upgradeLevels[upgradeType];
-        int baseCost = upgradeBaseCosts[upgradeType];
-        int cost = upgrade.CalculateCost(baseCost, currentLevel);
-
+        // Check if player can afford upgrade 
+        int cost = upgradeCurrentCosts[upgradeType];
         if (BuildingSystem.PlayerCredits >= cost)
         {
+            // Buy upgrade
             BuildingSystem.PlayerCredits -= cost;
-
             upgradeLevels[upgradeType]++;
 
+            // Apply the upgrade to stats
+            int currentLevel = upgradeLevels[upgradeType];
             upgrade.Apply(player.stats, upgradeLevels[upgradeType]);
+            
+            // Set cost to next level
+            int baseCost = upgradeBaseCosts[upgradeType];
+            upgradeCurrentCosts[upgradeType] = 
+                upgrade.CalculateCost(baseCost, currentLevel + 1);
+
+            Debug.Log("Upgrade Applied of type: " + upgradeType);
         }
         else
         {
             Debug.Log("Not enough Credits");
         }
-        
-
-        // Apply the upgrade
-
     }
 }

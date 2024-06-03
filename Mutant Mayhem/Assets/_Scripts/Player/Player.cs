@@ -7,13 +7,13 @@ using UnityEngine.InputSystem;
 public class PlayerStats
 {
     [Header("Movement stats")]
-    public float moveSpeed = 9;
-    public float strafeSpeed = 6;
-    public float sprintFactor = 2;
+    public float moveSpeed = 8;
+    public float strafeSpeed = 5;
+    public float sprintFactor = 1.5f;
     public float lookSpeed = 0.05f;
 
     [Header("Melee Stats")]
-    public float meleeDamage = 80;
+    public float meleeDamage = 60;
     public float knockback = 10;
     public float meleeAttackRate = 0.5f;
 
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
         myStamina = GetComponent<Stamina>();
 
         // Initialize stats
-        stats = new PlayerStats();
+        //stats = new PlayerStats();
         meleeController.stats = stats;
         
         // Use these for force-based movements

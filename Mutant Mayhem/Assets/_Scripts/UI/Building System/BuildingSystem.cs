@@ -35,26 +35,29 @@ public class BuildingSystem : MonoBehaviour
     InputAction toolbarAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
 
+    
+
     void Awake()
     {
         BuildStructsAvailDict();    
         player = FindObjectOfType<Player>();
-        PlayerCredits = playerStartingCredits; 
+        PlayerCredits = playerStartingCredits;
     }
 
     void OnEnable()
     {
         playerActionMap = player.inputAsset.FindActionMap("Player");
         toolbarAction = playerActionMap.FindAction("Toolbar");
-        toolbarAction.performed += OnToolbarUsed;
+        toolbarAction.started += OnToolbarUsed;
         //buildMenuAction = playerActionMap.FindAction("BuildMenu");
         //buildMenuAction.performed += ctx => ToggleBuildMenu();
     }
 
     void OnDisable()
     {
-        toolbarAction.performed -= OnToolbarUsed;
-        _StructsAvailDict.Clear();
+        toolbarAction.started -= OnToolbarUsed;
+   
+        _StructsAvailDict.Clear();   
     }
 
     void FixedUpdate()

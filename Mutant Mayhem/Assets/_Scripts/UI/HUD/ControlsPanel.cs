@@ -22,7 +22,6 @@ public class ControlsPanel : MonoBehaviour
     {
         playerActionMap = player.inputAsset.FindActionMap("Player");
         helpAction = playerActionMap.FindAction("Help");
-        helpAction.performed += OnHelpPressed;
 
         foreach (string str in controlStrings)
         {
@@ -32,14 +31,19 @@ public class ControlsPanel : MonoBehaviour
         }
     }
 
-    void Start()
+    void OnEnable()
     {
-        TogglePanel();
+        helpAction.performed += OnHelpPressed;
     }
 
     void OnDisable()
     {
         helpAction.performed -= OnHelpPressed;
+    }
+
+    void Start()
+    {
+        TogglePanel();
     }
 
     void OnHelpPressed(InputAction.CallbackContext context)

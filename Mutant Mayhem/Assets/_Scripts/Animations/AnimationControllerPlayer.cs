@@ -10,11 +10,10 @@ public class AnimationControllerPlayer : MonoBehaviour
     [SerializeField] float feetReturnSpeed = 0.03f;
     [SerializeField] float lowerWeaponTime = 2f;
     [SerializeField] BuildingSystem buildingSystemController;
-
-
     [HideInInspector] public Animator bodyAnim;
     [HideInInspector] public Animator legsAnim;
     [SerializeField] float speedForNotMoving = 0.2f;
+
     Player player;
     Rigidbody2D playerRb;
     PlayerShooter playerShooter;
@@ -37,6 +36,9 @@ public class AnimationControllerPlayer : MonoBehaviour
     InputAction meleeAction;
     InputAction throwAction;
     InputAction reloadAction;
+
+    InputActionMap uIActionMap;
+    InputAction escapeAction;
     
 
     void OnEnable()
@@ -54,6 +56,9 @@ public class AnimationControllerPlayer : MonoBehaviour
         meleeAction = actionMap.FindAction("Melee");
         throwAction = actionMap.FindAction("Throw");
         reloadAction = actionMap.FindAction("Reload"); 
+
+        uIActionMap = player.inputAsset.FindActionMap("UI");
+        escapeAction = uIActionMap.FindAction("Escape"); 
 
         // Reset
         //SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -79,6 +84,8 @@ public class AnimationControllerPlayer : MonoBehaviour
         throwAction.canceled += ThrowInput_Cancelled;
         reloadAction.performed += IsReloadInput;
 
+        escapeAction.started += OnEscapePressed;
+
         bodyAnimStartSpeed = bodyAnim.speed;
     }
 
@@ -97,6 +104,8 @@ public class AnimationControllerPlayer : MonoBehaviour
         throwAction.performed -= ThrowInput_Performed;
         throwAction.canceled -= ThrowInput_Cancelled;
         reloadAction.performed -= IsReloadInput;
+
+        escapeAction.started -= OnEscapePressed;
     }
 
     void Update()
@@ -347,6 +356,21 @@ public class AnimationControllerPlayer : MonoBehaviour
     #endregion Animations
 
     #region Inputs
+
+    void OnEscapePressed(InputAction.CallbackContext context)
+    {
+        if (playerShooter.isBuilding)
+        {
+            StartCoroutine(WaitToCheckForPause());
+        }
+    }
+
+    IEnumerator WaitToCheckForPause()
+    {
+        yield return new WaitForSecondsRealtime(0.05f);
+
+        ToggleBuildMode();
+    }
 
     public void BuildInput_Toggle(InputAction.CallbackContext context)
     {

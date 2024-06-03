@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UIStatsPanel : MonoBehaviour
+public class HUDStatsPanel : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI creditsText;
     [SerializeField] Slider healthSlider;

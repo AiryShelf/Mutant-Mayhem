@@ -6,6 +6,6 @@ public class QCubeHealth : Health
 {
     public override void Die()
     {
-        QCubeController.IsDead = true;
+        QCubeController.IsDestroyed = true;
     }   
 }

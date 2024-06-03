@@ -7,23 +7,53 @@ using UnityEngine.SceneManagement;
 public class PauseMenuController : MonoBehaviour
 {
     [SerializeField] UIBuildMenuController uIBuildMenuController;
-    [SerializeField] FadeCanvasGroups fadeCanvasGroups;
+    [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
 
     Player player;
+    QCubeController qCubeController;
+    BuildingSystem buildingSystem;
     InputActionMap playerActionMap;
+    InputActionMap uIActionMap;
+    InputAction escapeAction;
     public bool isPaused;
     bool wasBuildPanelOpen;
 
-    void Start()
+    void Awake()
     {
         player = FindObjectOfType<Player>();
+        qCubeController = FindObjectOfType<QCubeController>();
+        buildingSystem = FindObjectOfType<BuildingSystem>();
+
         playerActionMap = player.inputAsset.FindActionMap("Player");
+
+        uIActionMap = player.inputAsset.FindActionMap("UI");
+        escapeAction = uIActionMap.FindAction("Escape");
+
+        uIActionMap.Enable();
     }
-    
-    void Update()
+
+    void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !player.isDead)
+        escapeAction.started += EscapePressed;
+    }
+
+    void OnDisable()
+    {
+        escapeAction.started -= EscapePressed;
+    }
+
+    void Start()
+    {
+        
+    }
+
+    void EscapePressed(InputAction.CallbackContext context)
+    {
+        Debug.Log("escape pressed");
+        if (!player.isDead && !buildingSystem.inBuildMode 
+            && !qCubeController.isUpgradesOpen)
         {
+            Debug.Log("Pause passed checks");
             if (!isPaused)
                 OpenPanel(true);
             else
@@ -31,9 +61,9 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
-    public void OpenPanel(bool active)
+    public void OpenPanel(bool open)
     {
-        if (active)
+        if (open)
         {
             if (uIBuildMenuController.fadeCanvasGroups.isTriggered == true)
             {
@@ -41,7 +71,7 @@ public class PauseMenuController : MonoBehaviour
                 uIBuildMenuController.fadeCanvasGroups.isTriggered = false;
             }
 
-            fadeCanvasGroups.triggered = true;
+            fadeCanvasGroups.isTriggered = true;
             Pause(true);
         }
         else
@@ -52,7 +82,7 @@ public class PauseMenuController : MonoBehaviour
                 uIBuildMenuController.fadeCanvasGroups.isTriggered = true;
             }
 
-            fadeCanvasGroups.triggered = false;
+            fadeCanvasGroups.isTriggered = false;
             Pause(false);
         }
     }

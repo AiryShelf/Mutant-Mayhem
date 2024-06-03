@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
 {
-    public GridLayoutGroup buttonLayoutGroup;
-    public GridLayoutGroup textLayoutGroup;
+    public GridLayoutGroup buttonLayoutGrid;
+    public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
     [HideInInspector] public List<GameObject> structureButtonInstances;
     public FadeCanvasGroupsWave fadeCanvasGroups;
@@ -15,32 +15,33 @@ public class UIBuildMenuController : MonoBehaviour
     void Awake()
     {
         // Clear objects in layout groups
-        for (int i = buttonLayoutGroup.transform.childCount - 1; i >= 0; i--)
+        for (int i = buttonLayoutGrid.transform.childCount - 1; i >= 0; i--)
         {
-            Destroy(buttonLayoutGroup.transform.GetChild(i).gameObject);
+            Destroy(buttonLayoutGrid.transform.GetChild(i).gameObject);
         }
 
-        for (int i = textLayoutGroup.transform.childCount - 1; i >= 0; i--)
+        for (int i = textLayoutGrid.transform.childCount - 1; i >= 0; i--)
         {
-            Destroy(textLayoutGroup.transform.GetChild(i).gameObject);
+            Destroy(textLayoutGrid.transform.GetChild(i).gameObject);
         }
 
         // Initialize structures list and fade groups list
         foreach (GameObject obj in structureButtonPrefabs)
         {
             // Create button in button layout group
-            GameObject newButton = Instantiate(obj, buttonLayoutGroup.transform);
+            GameObject newButton = Instantiate(obj, buttonLayoutGrid.transform);
             structureButtonInstances.Add(newButton);
 
             // Create text in text layout group
             UIStructure uIStructure = newButton.GetComponent<UIStructure>();
             uIStructure.textInstance = Instantiate(uIStructure.textPrefab, 
-                                                   textLayoutGroup.transform);
+                                                   textLayoutGrid.transform);
 
             // Initialize FadeCanvasGroup list
             fadeCanvasGroups.individualElements.Add(uIStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
-        }       
+        }  
+        fadeCanvasGroups.Initialize();     
     }
 
     public void OpenPanel(bool active)

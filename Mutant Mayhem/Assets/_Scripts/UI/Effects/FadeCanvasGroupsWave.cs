@@ -29,7 +29,32 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     
     bool selectedFirst;
 
-    void OnEnable()
+    void Start()
+    {
+        // Fade everything out
+        if (myGroup)
+            myGroup.alpha = 0;
+        foreach (CanvasGroup group in individualElements)
+        {
+            group.alpha = 0;
+            if (deactivateIndivsWithFade)
+                group.gameObject.SetActive(false);
+        }
+
+        // Refresh
+        foreach (CanvasGroup group in individualElements)
+        {
+            group.alpha = 0;
+            if (deactivateIndivsWithFade)
+                group.gameObject.SetActive(false);
+        }
+
+        // Turn the main child off, which contains all the individuals
+        if (deactivateGroup)
+            deactivateGroup.SetActive(false);
+    }
+
+    public void Initialize()
     {
         // Fade everything out
         if (myGroup)
@@ -81,7 +106,9 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         fadeOut = null; // test migh tneed check and stop first
         
         if (initialGroup != null)
+        {
             initialGroup.interactable = false;
+        }
 
         yield return new WaitForSecondsRealtime(fadeStartDelay);  
 
@@ -101,6 +128,12 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
+
+        if (initialGroup != null)
+        {
+            initialGroup.gameObject.SetActive(false);
+        }
+        
 
         // Start next Wave
         if (nextCanvasGroupsWave)
@@ -211,7 +244,10 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         selectedFirst = false;
 
         if (initialGroup != null)
-            initialGroup.interactable = true;
+        {
+            initialGroup.gameObject.SetActive(true);
+            initialGroup.interactable = true;    
+        }
 
         float timeElapsed = 0;
         while (timeElapsed < fadeIndivTime)
@@ -244,6 +280,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             if (stop)
             {
                 timeElapsed = fadeIndivTime;
+                myGroup.alpha = 0;
             }       
 
             yield return new WaitForEndOfFrame();
@@ -257,7 +294,10 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         selectedFirst = false;
 
         if (initialGroup != null)
-            initialGroup.interactable = true;
+        {
+            initialGroup.gameObject.SetActive(true);
+            initialGroup.interactable = true;           
+        }
 
         float timeElapsed = 0;
         while (timeElapsed < fadeOutAllTime)
@@ -293,7 +333,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 initialGroup.alpha = 1 - value;
                 if (stop)
                 {
-                    initialGroup.alpha = 0;
+                    initialGroup.alpha = 1;
                 }   
             }
 

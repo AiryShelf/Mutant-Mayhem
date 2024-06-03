@@ -10,14 +10,14 @@ public enum UpgradeType
     StrafeSpeed,
     SprintFactor,
     ReloadSpeed,
+    Accuracy,
     MeleeDamage,
-    Knockback,
+    MeleeKnockback,
     MeleeAttackRate,
     StaminaMax,
     StaminaRegen,
     HealthMax,
-    HealthRegen,
-    Accuracy,
+    HealthRegen
 }
 
 public abstract class Upgrade
@@ -46,6 +46,7 @@ public class MoveSpeedUpgrade : Upgrade
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.moveSpeed += 0.1f;
+        playerStats.lookSpeed += 0.002f;
     }
 }
 
@@ -91,7 +92,7 @@ public class MeleeDamageUpgrade : Upgrade
 
 public class KnockbackUpgrade : Upgrade
 {
-    public KnockbackUpgrade() : base(UpgradeType.Knockback) { }
+    public KnockbackUpgrade() : base(UpgradeType.MeleeKnockback) { }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
@@ -115,7 +116,7 @@ public class StaminaMaxUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        // Do something
+        
     }
 }
 

@@ -38,7 +38,7 @@ public class MouseLooker : MonoBehaviour
     {
         if (!deathTriggered)
         {
-            if (QCubeController.IsDead)
+            if (QCubeController.IsDestroyed)
             {
                 deathTriggered = true;
                 StartCoroutine(LerpToPosition(qCubeController.transform.position));

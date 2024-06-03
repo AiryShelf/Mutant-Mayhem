@@ -42,6 +42,8 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator WaveTimer()
     {
+        Debug.Log("Start Wave");
+
         currentSubWaveIndex = 0;
         currentConstantWaveIndex = 0;
         waveComplete = false;
@@ -67,7 +69,7 @@ public class WaveSpawner : MonoBehaviour
                 currentSubWaveIndex = 
                     currentWave.timesToTriggerSubWaves.IndexOf(waveSeconds);
                 StartCoroutine(SpawnSubWave(currentSubWaveIndex, true));
-                Debug.Log("Start SubWave");
+                //Debug.Log("Start SubWave");
             }
             // If current wave seconds has constantWave trigger
             if (currentWave.timesToTriggerConstantWaves.Contains(waveSeconds))
@@ -75,7 +77,7 @@ public class WaveSpawner : MonoBehaviour
                 currentConstantWaveIndex = 
                     currentWave.timesToTriggerConstantWaves.IndexOf(waveSeconds);
                 StartCoroutine(SpawnSubWave(currentConstantWaveIndex, false));
-                Debug.Log("Start ConstantWave");
+                //Debug.Log("Start ConstantWave");
             }
 
             yield return new WaitForSeconds(1);
@@ -102,7 +104,7 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnSubWave(int subWaveIndex, bool isSubWave)
     {
-        Debug.Log("Spawn SubWave Started");
+        //Debug.Log("Spawn SubWave Started");
         // Set up for subwave or constant wave
         SubWaveSO subWave;
         SubWaveStyleSO subWaveStyle;
@@ -140,7 +142,7 @@ public class WaveSpawner : MonoBehaviour
         int listIndex = 0;
         while (_enemyPrefabList.Count > 0)
         {
-            Debug.Log("Start spawning batch");
+            //Debug.Log("Start spawning batch");
 
             // Next new batch point 
             spawnPos = GetPointOnCircumference(
@@ -157,14 +159,14 @@ public class WaveSpawner : MonoBehaviour
                 // Clear empty items
                 while (_numberToSpawn.Count > 0 && _numberToSpawn[listIndex] <= 0)
                 {
-                    Debug.Log("Removed List Items");
+                    //Debug.Log("Removed List Items");
                     _numberToSpawn.RemoveAt(listIndex);
                     _enemyPrefabList.RemoveAt(listIndex);
 
                     // Exit if all empty
                     if (_numberToSpawn.Count <= 0)
                     {
-                        Debug.Log("Finished SubWave");
+                        //Debug.Log("Finished SubWave");
                         yield break;
                     }
                     // Check index reset
@@ -196,7 +198,7 @@ public class WaveSpawner : MonoBehaviour
         }
         
 
-        Debug.Log("Finished SubWave");
+        //Debug.Log("Finished SubWave");
     }
 
     void SpawnEnemy(Vector2 spawnPos, SubWaveSO subWave, int index)

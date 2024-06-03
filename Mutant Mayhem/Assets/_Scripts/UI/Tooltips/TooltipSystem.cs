@@ -28,20 +28,8 @@ public class TooltipSystem : MonoBehaviour
 
     public static void Hide()
     {
-        //current.tooltipAnim.SetBool("isOn", false);
-        current.StartFadeOut();
-        //current.tooltip.gameObject.SetActive(false);
-    }
-
-    void Update()
-    {
-        // Not sure if using the animator is a good idea or not.
-        /*
-        if (tooltipAnim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "TooltipOn")
-        {
-            tooltip.gameObject.SetActive()
-        }
-        */
+        if (current != null)
+            current.StartFadeOut();
     }
 
     void StartFadeIn()
