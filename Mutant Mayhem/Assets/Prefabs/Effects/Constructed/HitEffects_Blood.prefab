@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletHitEffect: {fileID: 9159561748519982332}
   meleeHitEffect: {fileID: 2683471897960533731}
-  EffectsDestroyTime: 60
+  EffectsDestroyTime: 120
 --- !u!1001 &2545562775560149409
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -57,6 +57,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5532741471656220240}
     m_Modifications:
+    - target: {fileID: 720254837651057080, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 720254837651057080, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 39321
+      objectReference: {fileID: 0}
+    - target: {fileID: 720254837651057080, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[1].time
+      value: 0.00119
+      objectReference: {fileID: 0}
+    - target: {fileID: 720254837651057080, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[2].time
+      value: 0.0015
+      objectReference: {fileID: 0}
+    - target: {fileID: 5179790477354968260, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 5179790477354968260, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 39321
+      objectReference: {fileID: 0}
+    - target: {fileID: 5179790477354968260, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[1].time
+      value: 0.00271
+      objectReference: {fileID: 0}
+    - target: {fileID: 5179790477354968260, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[2].time
+      value: 0.0035
+      objectReference: {fileID: 0}
     - target: {fileID: 5246808911843546403, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -97,6 +129,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5990368227026535426, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 39321
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651512334020922717, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651512334020922717, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 39321
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651512334020922717, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651512334020922717, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[1].time
+      value: 0.00123
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651512334020922717, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[2].time
+      value: 0.0025
+      objectReference: {fileID: 0}
     - target: {fileID: 8955077679732588313, guid: c84b89ffd08346c4f88e68904d71db21, type: 3}
       propertyPath: m_Name
       value: FX_BulletBlood
@@ -135,6 +191,22 @@ PrefabInstance:
     - target: {fileID: 7157409401131426495, guid: 82d5ae5786f89704db44e542f7fac8e6, type: 3}
       propertyPath: InitialModule.startSize.minScalar
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7157409401131426495, guid: 82d5ae5786f89704db44e542f7fac8e6, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 7157409401131426495, guid: 82d5ae5786f89704db44e542f7fac8e6, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 39321
+      objectReference: {fileID: 0}
+    - target: {fileID: 7157409401131426495, guid: 82d5ae5786f89704db44e542f7fac8e6, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[1].time
+      value: 0.00119
+      objectReference: {fileID: 0}
+    - target: {fileID: 7157409401131426495, guid: 82d5ae5786f89704db44e542f7fac8e6, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[2].time
+      value: 0.0015
       objectReference: {fileID: 0}
     - target: {fileID: 8746817496947456025, guid: 82d5ae5786f89704db44e542f7fac8e6, type: 3}
       propertyPath: m_LocalScale.x

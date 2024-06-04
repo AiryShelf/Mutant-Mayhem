@@ -27,7 +27,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     Coroutine fadeOut;
     public bool isTriggered;
     
-    bool selectedFirst;
+    bool hasSelectedFirst;
 
     void Start()
     {
@@ -83,7 +83,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     {
         if (isTriggered && fadeIn == null)
         {
-            StopAllCoroutines();
+            //StopAllCoroutines();
             if (deactivateGroup)
                 deactivateGroup.gameObject.SetActive(true);
     
@@ -91,7 +91,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         }
         else if (!isTriggered && fadeIn != null && fadeOut == null)
         {
-            StopAllCoroutines();
+            //StopAllCoroutines();
             if (!fadeOutInWave)
                 fadeOut = StartCoroutine(FadeOutAll());
             else
@@ -103,7 +103,11 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     IEnumerator FadeMainIn()
     {
-        fadeOut = null; // test migh tneed check and stop first
+        if (fadeOut != null)
+        {
+            StopCoroutine(fadeOut);
+            fadeOut = null;
+        }
         
         if (initialGroup != null)
         {
@@ -164,10 +168,10 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             group.gameObject.SetActive(true);
 
         // Select first button
-        if (!selectedFirst && autoSelectFirstElement && group.GetComponent<Button>())
+        if (!hasSelectedFirst && autoSelectFirstElement && group.GetComponent<Button>())
         {
             EventSystem.current.SetSelectedGameObject(group.gameObject);
-            selectedFirst = true;
+            hasSelectedFirst = true;
         }
 
         // Fade In
@@ -185,7 +189,12 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     IEnumerator FadeOutWave()
     {
-        fadeIn = null; // test **might need to check and stop coroutines before nullifying
+        if (fadeIn != null)
+        {
+            StopCoroutine(fadeIn);
+            fadeIn = null;
+        }
+         // test **might need to check and stop coroutines before nullifying
 
         // Fades out 'batchSize' number of elements simultaneously
         int batch = batchSize;
@@ -241,7 +250,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     IEnumerator FadeOutMain()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        selectedFirst = false;
+        hasSelectedFirst = false;
 
         if (initialGroup != null)
         {
@@ -289,9 +298,14 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     IEnumerator FadeOutAll()
     {
-        fadeIn = null;
+        //if (fadeIn != null)
+        //{
+           // StopCoroutine(fadeIn);
+           // fadeIn = null;
+        //}
+        
         EventSystem.current.SetSelectedGameObject(null);
-        selectedFirst = false;
+        hasSelectedFirst = false;
 
         if (initialGroup != null)
         {
@@ -340,6 +354,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             if (stop)
             {
                 timeElapsed = fadeOutAllTime;
+                myGroup.alpha = 0;
+                Debug.Log("Stop happened");
             }       
 
             yield return new WaitForEndOfFrame();

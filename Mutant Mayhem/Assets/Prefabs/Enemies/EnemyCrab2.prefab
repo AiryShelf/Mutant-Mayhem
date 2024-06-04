@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8299610102731463758}
   - component: {fileID: 1437740919546126437}
   - component: {fileID: 6454006096251346839}
+  - component: {fileID: -5261145602264135151}
   m_Layer: 7
   m_Name: EnemyCrab2
   m_TagString: Enemy
@@ -144,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec72ac3390be592408a20e0ec872a805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
+  maxHealth: 100
   hitEffectsChild: {fileID: 853075169137754596}
   corpsePrefab: {fileID: 3246120828009000940, guid: 9144ac51e65349742a12fc9ba99a1aef, type: 3}
   deathTorque: 30
@@ -236,6 +237,36 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-5261145602264135151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5437049528478583412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000473099c06959b35277918778bb1f0873f33c0f815d220d4faf41a11b0ba2f4fbe91bfeef
+  m_ShapePath:
+  - {x: -0.038378652, y: -0.046566136, z: 0}
+  - {x: -0.038486198, y: 0.047625996, z: 0}
+  - {x: 0.03912366, y: 0.04837102, z: 0}
+  - {x: 0.039231207, y: -0.04582111, z: 0}
+  m_ShapePathHash: 1377517957
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 139438
+  m_LocalBounds:
+    m_Center: {x: 0.00037250668, y: 0.0009024441, z: 0}
+    m_Extent: {x: 0.038858704, y: 0.04746858, z: 0}
 --- !u!1001 &8146104825269962604
 PrefabInstance:
   m_ObjectHideFlags: 0

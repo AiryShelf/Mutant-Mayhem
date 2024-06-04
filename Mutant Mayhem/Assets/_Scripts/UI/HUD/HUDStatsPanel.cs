@@ -11,6 +11,7 @@ public class HUDStatsPanel : MonoBehaviour
     [SerializeField] Slider staminaSlider;
 
     Player player;
+    PlayerStats playerStats;
     Health playerHealthScript;
     Stamina playerStaminaScript;
     float playerHealth;
@@ -21,6 +22,7 @@ public class HUDStatsPanel : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
+        playerStats = player.stats;
         playerHealthScript = player.GetComponent<Health>();
         playerStaminaScript = player.GetComponent<Stamina>();
     }
@@ -28,12 +30,14 @@ public class HUDStatsPanel : MonoBehaviour
     void FixedUpdate()
     {
         maxHealth = playerHealthScript.GetMaxHealth();
-        maxStamina = playerStaminaScript.GetMaxStamina();
+        maxStamina = playerStats.staminaMax;
         playerHealth = playerHealthScript.GetHealth();
         playerStamina = playerStaminaScript.GetStamina();
+
         healthSlider.value = playerHealth / maxHealth;
         staminaSlider.value = playerStamina / maxStamina;
-        creditsText.text = "Credits: " + BuildingSystem.PlayerCredits.ToString();
+
+        creditsText.text = "Credits: " + BuildingSystem.PlayerCredits.ToString("#0");
     }
 
 }

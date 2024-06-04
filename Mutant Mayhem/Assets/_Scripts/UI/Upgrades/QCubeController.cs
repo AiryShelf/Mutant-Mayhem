@@ -15,10 +15,10 @@ public class QCubeController : MonoBehaviour
     [SerializeField] List<string> deathSubtitles;
     public static bool IsDestroyed;
 
-    [Header("Upgrades")]
+    [Header("Interaction")]
+    [SerializeField] PanelSwitcher panelSwitcher;
     [SerializeField] float interactRadius = 1.5f;
     [SerializeField] float leaveRadius = 2f;
-    [SerializeField] FadeCanvasGroupsWave fadeCanvasGroupsMainPanel;
     public bool isUpgradesOpen;
     [SerializeField] PauseMenuController pauseMenuController;
 
@@ -27,6 +27,8 @@ public class QCubeController : MonoBehaviour
     InputAction fireAction;
     InputActionMap uIActionMap;
     InputAction escapeAction;
+
+    MessagePanel messagePanel;
 
 
     void Awake()
@@ -39,6 +41,7 @@ public class QCubeController : MonoBehaviour
         uIActionMap = player.inputAsset.FindActionMap("UI");
         escapeAction = uIActionMap.FindAction("Escape");
 
+        messagePanel = FindObjectOfType<MessagePanel>();
     }
 
     void OnEnable()
@@ -109,24 +112,30 @@ public class QCubeController : MonoBehaviour
                 //Pause(false);
             }
         }
-        else
+        else if (!isUpgradesOpen)
         {
+            messagePanel.ShowMessage("Not close enough to access the " +
+                                     "Quantum Cube. Get closer!", Color.gray);
             // Player is not in range, show UI message to the player
             //Debug.Log("Player NOT in QCube Range!");
+        }
+        else
+        {
+            CloseUpgradeWindow();
         }
     }
 
     void OpenUpgradeWindow()
     {
         fireAction.Disable();
-        fadeCanvasGroupsMainPanel.isTriggered = true;
+        panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
     }
 
     void CloseUpgradeWindow()
     {
         fireAction.Enable();
-        fadeCanvasGroupsMainPanel.isTriggered = false;
+        panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;
     }
 

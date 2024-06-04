@@ -5,6 +5,7 @@ using UnityEngine;
 public class TooltipSystem : MonoBehaviour
 {
     private static TooltipSystem current;
+    public static bool fadedOut;
 
     public Tooltip tooltip;
     public float fadeTime;
@@ -16,6 +17,7 @@ public class TooltipSystem : MonoBehaviour
     {
         tooltipCanvasGroup.alpha = 0;
         current = this;
+        fadedOut = true;
     }
 
     public static void Show(string content, string header = "")
@@ -41,9 +43,15 @@ public class TooltipSystem : MonoBehaviour
         }
 
         if (fadeIn == null)
+        {
             fadeIn = StartCoroutine(FadeIn());
+        }
         else
-            Debug.Log("Did not StartFadeIn");
+        {
+            StopCoroutine(fadeIn);
+            fadeIn = StartCoroutine(FadeIn());
+            //Debug.Log("Tooltip did not StartFadeIn");
+        }
     }
 
     void StartFadeOut()
@@ -53,18 +61,23 @@ public class TooltipSystem : MonoBehaviour
             StopCoroutine(fadeIn);
             fadeIn = null;
         }
+
         if (fadeOut == null)
         {
             fadeOut = StartCoroutine(FadeOut());
         }
         else
         {
-            Debug.Log("Did not StartFadeOut");
+            StopCoroutine(fadeOut);
+            fadeOut = StartCoroutine(FadeOut());
+            //Debug.Log("Did not StartFadeOut");
         }
     }
 
     IEnumerator FadeIn()
     {
+        fadedOut = false;
+
         float timeElapsed = 0;
         float currentAlpha = tooltipCanvasGroup.alpha;
         while (currentAlpha * fadeTime + timeElapsed < fadeTime)
@@ -92,6 +105,7 @@ public class TooltipSystem : MonoBehaviour
         tooltipCanvasGroup.alpha = 0;
         //current.tooltip.gameObject.SetActive(false);
         fadeOut = null;
+        fadedOut = true;
     }
 
 }

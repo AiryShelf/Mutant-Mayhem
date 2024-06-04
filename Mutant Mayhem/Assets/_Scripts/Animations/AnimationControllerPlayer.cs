@@ -137,6 +137,7 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     void UpdatePlayerStates()
     {
+        // Stop trowing when out of grenades
         if (player.grenadeAmmo < 1 && isThrowInput)
         {
             bodyAnim.SetBool("isThrowing", false);
@@ -147,6 +148,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             }
         }
 
+        // Initial checks
         hasMeleeStamina = bodyAnim.GetBool("hasMeleeStamina");
         bool isBuilding = bodyAnim.GetBool("isBuilding");
         bool isMeleeing;
@@ -166,8 +168,9 @@ public class AnimationControllerPlayer : MonoBehaviour
             bodyAnim.SetBool("isAiming", false);
         }
         
+        // Legs anim speed
         float speed = playerRb.velocity.magnitude;
-        legsAnim.speed = speed * animSpeedFactor * Time.deltaTime;
+        legsAnim.speed = speed * animSpeedFactor * Time.fixedDeltaTime;
         float normalizedSpeed = speed / player.stats.moveSpeed;
 
         legsAnim.SetFloat("BlendSpeed", normalizedSpeed);
@@ -184,8 +187,8 @@ public class AnimationControllerPlayer : MonoBehaviour
             playerShooter.isShooting = false;
         }
 
-        bool isMotion = false;
-        // Check if not moving   
+        // Check if not moving 
+        bool isMotion = false; 
         if (speed <= speedForNotMoving)
         {
             isMotion = false;
@@ -228,7 +231,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         if (isMotion && !meleeAnimPlaying && !isMeleeing && !throwAnimPlaying && 
             !switchGunsAnimPlaying && !reloadAnimPlaying)
         {
-            bodyAnim.speed = speed * animSpeedFactor * Time.deltaTime;
+            bodyAnim.speed = speed * animSpeedFactor * Time.fixedDeltaTime;
             AnimatorStateInfo bodyState = bodyAnim.GetCurrentAnimatorStateInfo(0);
             float bodyNormalizedTime = bodyState.normalizedTime;
             legsAnim.Play("Idle_Walk_Run BLEND TREE", 0, bodyNormalizedTime);
@@ -238,7 +241,24 @@ public class AnimationControllerPlayer : MonoBehaviour
             bodyAnim.speed = bodyAnimStartSpeed;
         }
 
-        // Set extra gun collider
+        // Apply reload speed upgrade multiplier
+        AnimatorStateInfo state = bodyAnim.GetCurrentAnimatorStateInfo(0);
+        if (state.IsTag("Reload"))
+        {
+            bodyAnim.speed = animSpeedFactor * Time.fixedDeltaTime
+                             * player.stats.reloadFactor;
+        }
+
+        // Apply melee attack speed upgrade multiplier, might not use this
+        /*
+        if (state.IsTag("Melee"))
+        {
+            bodyAnim.speed = animSpeedFactor * Time.deltaTime
+                             * player.stats.meleeSpeedFactor;
+        }
+        */
+
+        // Set extra gun collider for walls
         if ((!isMotion && !bodyAnim.GetBool("isAiming")) || isBuilding)
         {
             player.gunCollider.enabled = false;

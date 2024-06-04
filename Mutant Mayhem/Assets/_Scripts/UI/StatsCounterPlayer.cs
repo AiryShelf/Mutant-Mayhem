@@ -52,8 +52,8 @@ public class StatsCounterPlayer : MonoBehaviour
 
         StatsDict = new Dictionary<string, float>
         {
-        {"Survival Time:", TimeGameTotalScaled},
-        {"Sprinting Time:", TimeSprintingPlayer},
+        {"Survival Time (sec):", TimeGameTotalScaled},
+        {"Sprinting Time (sec):", TimeSprintingPlayer},
 
         {"Enemies Killed by Player:", EnemiesKilledByPlayer},
         {"Enemies Killed by Turrets:", EnemiesKilledByTurrets},

@@ -76,7 +76,7 @@ public class ReloadSpeedUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.reloadFactor -= 0.05f;
+        playerStats.reloadFactor += 0.1f;
     }
 }
 
@@ -106,7 +106,7 @@ public class MeleeAttackRateUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        // Do something
+        playerStats.meleeSpeedFactor += 0.02f;
     }
 }
 
@@ -116,7 +116,7 @@ public class StaminaMaxUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        
+        playerStats.staminaMax += 5;
     }
 }
 
@@ -126,7 +126,7 @@ public class StaminaRegenUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        // Do something
+        playerStats.staminaRegen += 0.2f;
     }
 }
 
@@ -136,7 +136,7 @@ public class HealthMaxUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        // Do something
+        playerStats.healthMax += 100;
     }
 }
 
@@ -146,7 +146,7 @@ public class HealthRegenUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        // Do something
+        playerStats.healthRegen += 0.05f;
     }
 }
 
@@ -156,6 +156,17 @@ public class AccuracyUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        // Do something
+        playerStats.accuracy -= 0.1f;
+        playerStats.accuracy = Mathf.Clamp(playerStats.accuracy, 0, 1);
+    }
+
+    public override int CalculateCost(int baseCost, int level)
+    {
+        int newCost = baseCost;
+        for (int i = 1; i < level; i ++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
     }
 }

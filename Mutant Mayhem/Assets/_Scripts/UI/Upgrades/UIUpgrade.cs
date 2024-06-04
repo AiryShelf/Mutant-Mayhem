@@ -26,7 +26,7 @@ public class UIUpgrade : MonoBehaviour
     // This allows the enum to be referenced via UI button OnClick
     public void InvokeOnClick(UIUpgrade u)
     {
-        Debug.Log("OnClick called");
+        //Debug.Log("OnClick called");
         upgradeSystem.OnUpgradeButtonClicked(u.type);
 
         UpdateText();

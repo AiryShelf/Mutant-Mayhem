@@ -51,8 +51,20 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (!TooltipSystem.fadedOut)
+        {
+            TooltipSystem.Show(content, header);
+            return;
+        }
         if (delay == null)
+        {
             delay = StartCoroutine(DelayedCall());
+        }
+        else
+        {
+            StopCoroutine(delay);
+            delay = StartCoroutine(DelayedCall());
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)

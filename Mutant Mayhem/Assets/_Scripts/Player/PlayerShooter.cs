@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerShooter : MonoBehaviour
 {
+    public PlayerStats playerStats;
     [SerializeField] Transform gunTrans;
     [SerializeField] SpriteRenderer gunSR;
     [SerializeField] List<GunSO> gunListSource;
@@ -34,6 +35,7 @@ public class PlayerShooter : MonoBehaviour
     [HideInInspector] public bool isSwitchingGuns;
     bool droppedGun;
     Rigidbody2D myRb;
+    
 
     
 
@@ -128,6 +130,28 @@ public class PlayerShooter : MonoBehaviour
         }
     }
 
+    void Kickback()
+    {
+        myRb.AddForce(-myRb.transform.right * 
+                      currentGunSO.kickback, ForceMode2D.Impulse);
+    }
+
+    Vector2 ApplyAccuracy(Vector2 dir)
+    {
+        // Vector to radians to degrees
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        // Implement accuracy randomness
+        angle += Random.Range(-currentGunSO.accuracy * playerStats.accuracy, 
+                              currentGunSO.accuracy * playerStats.accuracy);
+
+        // Convert back to radians to vector
+        float radians = angle * Mathf.Deg2Rad;
+        dir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
+
+        return dir;
+    }
+
     public void StartAiming()
     {
         isAiming = true;
@@ -200,9 +224,9 @@ public class PlayerShooter : MonoBehaviour
             gunAmmoInClips[currentGunIndex]--;
             StatsCounterPlayer.ShotsFiredByPlayer++;
             
-            // Apply physics
+            // Apply physics and effects
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-            Vector2 dir = ApplyAccuracy(gunTrans.right);
+            Vector2 dir = ApplyAccuracy(muzzleTrans.right);
             rb.velocity = dir * currentGunSO.bulletSpeed;
             Kickback();
             StartCoroutine(MuzzleFlash());
@@ -225,31 +249,12 @@ public class PlayerShooter : MonoBehaviour
         }
     }
 
-    Vector2 ApplyAccuracy(Vector2 dir)
-    {
-        // Vector to radians to degrees
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        // Implement accuracy randomness
-        angle += Random.Range(-currentGunSO.accuracy, currentGunSO.accuracy);
-        // Convert back to radians to vector
-        float radians = angle * Mathf.Deg2Rad;
-        dir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
-
-        return dir;
-    }
-
     IEnumerator MuzzleFlash()
     {
         currentMuzzleFlash.SetActive(true);
         yield return new WaitForSeconds(currentGunSO.muzzleFlashTime);
         currentMuzzleFlash.SetActive(false);
         //currentGun.muzzleFlash.enabled = false;
-    }
-
-    void Kickback()
-    {
-        myRb.AddForce(-myRb.transform.right * 
-                      currentGunSO.kickback, ForceMode2D.Impulse);
     }
 
     IEnumerator LaserCharge()

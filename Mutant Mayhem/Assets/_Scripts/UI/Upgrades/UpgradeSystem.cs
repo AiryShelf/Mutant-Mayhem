@@ -9,6 +9,8 @@ public class UpgradeSystem : MonoBehaviour
     public Player player;
     public TileManager tileManager;
 
+    private Dictionary<UpgradeType, int> upgradeMaxLevels = 
+        new Dictionary<UpgradeType, int>();
     public Dictionary<UpgradeType, int> upgradeLevels = 
         new Dictionary<UpgradeType, int>();
     private Dictionary<UpgradeType, int> upgradeBaseCosts = 
@@ -16,21 +18,39 @@ public class UpgradeSystem : MonoBehaviour
     public Dictionary<UpgradeType, int> upgradeCurrentCosts = 
         new Dictionary<UpgradeType, int>();
 
+    MessagePanel messagePanel;
+
     void Awake()
     {
-        // Base Upgrade Costs
+        messagePanel = FindObjectOfType<MessagePanel>();
+
+        // Max upgrade levels
+        upgradeMaxLevels[UpgradeType.MoveSpeed] = 100;
+        upgradeMaxLevels[UpgradeType.StrafeSpeed] = 100;
+        upgradeMaxLevels[UpgradeType.SprintFactor] = 100;
+        upgradeMaxLevels[UpgradeType.ReloadSpeed] = 100;
+        upgradeMaxLevels[UpgradeType.MeleeDamage] = 100;
+        upgradeMaxLevels[UpgradeType.MeleeKnockback] = 100;
+        upgradeMaxLevels[UpgradeType.MeleeAttackRate] = 100;
+        upgradeMaxLevels[UpgradeType.StaminaMax] = 100;
+        upgradeMaxLevels[UpgradeType.StaminaRegen] = 100;
+        upgradeMaxLevels[UpgradeType.HealthMax] = 100;
+        upgradeMaxLevels[UpgradeType.HealthRegen] = 100;
+        upgradeMaxLevels[UpgradeType.Accuracy] = 10;
+
+        // Base upgrade costs
         upgradeBaseCosts[UpgradeType.MoveSpeed] = 100;
         upgradeBaseCosts[UpgradeType.StrafeSpeed] = 100;
-        upgradeBaseCosts[UpgradeType.SprintFactor] = 100;
-        upgradeBaseCosts[UpgradeType.ReloadSpeed] = 100;
+        upgradeBaseCosts[UpgradeType.SprintFactor] = 150;
+        upgradeBaseCosts[UpgradeType.ReloadSpeed] = 150;
         upgradeBaseCosts[UpgradeType.MeleeDamage] = 100;
-        upgradeBaseCosts[UpgradeType.MeleeKnockback] = 100;
+        upgradeBaseCosts[UpgradeType.MeleeKnockback] = 150;
         upgradeBaseCosts[UpgradeType.MeleeAttackRate] = 100;
         upgradeBaseCosts[UpgradeType.StaminaMax] = 100;
-        upgradeBaseCosts[UpgradeType.StaminaRegen] = 100;
+        upgradeBaseCosts[UpgradeType.StaminaRegen] = 200;
         upgradeBaseCosts[UpgradeType.HealthMax] = 100;
-        upgradeBaseCosts[UpgradeType.HealthRegen] = 100;
-        upgradeBaseCosts[UpgradeType.Accuracy] = 100;
+        upgradeBaseCosts[UpgradeType.HealthRegen] = 200;
+        upgradeBaseCosts[UpgradeType.Accuracy] = 200;
 
         // Initialize currentCosts
         foreach (KeyValuePair<UpgradeType, int> kvp in upgradeBaseCosts)
@@ -88,28 +108,38 @@ public class UpgradeSystem : MonoBehaviour
             return;
         }
 
-        // Check if player can afford upgrade 
-        int cost = upgradeCurrentCosts[upgradeType];
-        if (BuildingSystem.PlayerCredits >= cost)
+        // Check if max level
+        if (upgradeMaxLevels[upgradeType] > upgradeLevels[upgradeType])
         {
-            // Buy upgrade
-            BuildingSystem.PlayerCredits -= cost;
-            upgradeLevels[upgradeType]++;
+            // Check if player can afford upgrade 
+            int cost = upgradeCurrentCosts[upgradeType];
+            if (BuildingSystem.PlayerCredits >= cost)
+            {
+                // Buy upgrade
+                BuildingSystem.PlayerCredits -= cost;
+                upgradeLevels[upgradeType]++;
 
-            // Apply the upgrade to stats
-            int currentLevel = upgradeLevels[upgradeType];
-            upgrade.Apply(player.stats, upgradeLevels[upgradeType]);
-            
-            // Set cost to next level
-            int baseCost = upgradeBaseCosts[upgradeType];
-            upgradeCurrentCosts[upgradeType] = 
-                upgrade.CalculateCost(baseCost, currentLevel + 1);
+                // Apply the upgrade to stats
+                int currentLevel = upgradeLevels[upgradeType];
+                upgrade.Apply(player.stats, upgradeLevels[upgradeType]);
+                
+                // Set cost to next level
+                int baseCost = upgradeBaseCosts[upgradeType];
+                upgradeCurrentCosts[upgradeType] = 
+                    upgrade.CalculateCost(baseCost, currentLevel + 1);
 
-            Debug.Log("Upgrade Applied of type: " + upgradeType);
+                Debug.Log("Upgrade Applied of type: " + upgradeType);
+            }
+            else
+            {
+                messagePanel.ShowMessage("Not enough Credits!", Color.yellow);
+                Debug.Log("Not enough Credits");
+            }
         }
         else
         {
-            Debug.Log("Not enough Credits");
+            messagePanel.ShowMessage("Max level has been reached!", Color.yellow);
+            Debug.Log("MaxLevel Reached");
         }
     }
 }

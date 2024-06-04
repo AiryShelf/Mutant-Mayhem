@@ -20,6 +20,7 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForGridClearCheck;
+    [SerializeField] ShadowCaster2DTileMap shadowCaster2DTileMap;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -51,6 +52,8 @@ public class TileManager : MonoBehaviour
         return gridPos;
     }
 
+    #region Alter Tiles
+
     public bool AddTileAt(Vector3Int gridPos, RuleTileStructure rts)
     {
         if (CheckGridIsClear(gridPos, rts))
@@ -60,6 +63,8 @@ public class TileManager : MonoBehaviour
                 AnimatedTilemap.SetTile(gridPos, 
                     _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
                 StructureTilemap.SetTile(gridPos, rts);
+                
+                shadowCaster2DTileMap.Generate();
 
                 StatsCounterPlayer.StructuresBuilt++;
                 //Debug.Log("Added a Tile");
@@ -78,24 +83,6 @@ public class TileManager : MonoBehaviour
         }       
     }
 
-    public bool ContainsTileDictKey(Vector3Int gridPos)
-    {
-        if (_TileStatsDict.ContainsKey(gridPos))
-            return true;
-        else
-            return false;
-    }
-
-    public Vector3Int GetRootPos(Vector3Int gridPos)
-    {
-        return _TileStatsDict[gridPos].rootGridPos;
-    }
-
-    public AnimatedTile GetRootAnimTile(Vector3Int gridPos)
-    {
-        return _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0];
-    }
-
     public void DestroyTileAt(Vector3Int gridPos)
     {
         List<Vector3Int> positions = _TileStatsDict[gridPos].ruleTileStructure.cellPositions;
@@ -110,6 +97,7 @@ public class TileManager : MonoBehaviour
        
         //StructureTilemap.SetTile(rootPos, null);
         AnimatedTilemap.SetTile(rootPos, null);
+        shadowCaster2DTileMap.Generate();
 
         StatsCounterPlayer.StructuresLost++;
         //Debug.Log("DESTROYED A TILE");
@@ -141,6 +129,132 @@ public class TileManager : MonoBehaviour
             //Debug.Log("Key not found: " + gridPos);
         }
     }
+
+    void UpdateAnimatedTile(Vector3Int rootPos)
+    {
+        // AnimatedTilemap.GetTile(rootPos);
+        float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
+                                 _TileStatsDict[rootPos].maxHealth);
+        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+
+        int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
+        index = Mathf.Clamp(index, 0, dTiles.Count - 1);
+
+        if (AnimatedTilemap.GetTile(rootPos) != null)
+        {
+            AnimatedTilemap.SetTile(rootPos, null);
+        }
+        AnimatedTilemap.SetTile(rootPos, 
+            _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+    }
+
+    #endregion
+
+    #region Checks and Getters
+
+    public bool ContainsTileDictKey(Vector3Int gridPos)
+    {
+        if (_TileStatsDict.ContainsKey(gridPos))
+            return true;
+        else
+            return false;
+    }
+
+    public Vector3Int GetRootPos(Vector3Int gridPos)
+    {
+        return _TileStatsDict[gridPos].rootGridPos;
+    }
+
+    public AnimatedTile GetRootAnimTile(Vector3Int gridPos)
+    {
+        return _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0];
+    }
+
+    public bool CheckGridIsClear(Vector3Int rootPos, RuleTileStructure rts)
+    {
+        foreach (Vector3Int pos in rts.cellPositions)
+        {   
+            // Check tile dictionary
+            if (_TileStatsDict.ContainsKey(rootPos + pos))
+            {
+                return false;
+            }
+
+            // Check for colliders
+            worldPos = StructureTilemap.CellToWorld(rootPos + pos);
+                   
+            boxSize = StructureTilemap.cellSize;
+            newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
+            boxSize = StructureTilemap.cellSize * 0.9f;
+
+            Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
+            
+            if (hit != null)
+            {
+                Debug.Log("Collider detected when trying to build");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool CheckGridIsClear(Vector3Int gridPos)
+    {
+        // Check tile dictionary
+        if (_TileStatsDict.ContainsKey(gridPos))
+        {
+            return false;
+        }
+
+        // Check for colliders
+        worldPos = StructureTilemap.CellToWorld(gridPos);
+                   
+        boxSize = StructureTilemap.cellSize;
+        newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
+        boxSize = StructureTilemap.cellSize * 0.9f;
+
+        Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
+        
+        if (hit != null)
+        {
+            //Debug.Log("Collider detected when trying to build");
+            return false;
+        }
+
+        return true;
+    }
+
+    public List<Vector3Int> GetStructurePositions(Vector3Int gridPos)
+    {
+        if (_TileStatsDict.ContainsKey(gridPos))
+        {
+            Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
+            RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
+            
+            // Get grid cell positions for the structure
+            List<Vector3Int> positions = new List<Vector3Int>(rts.cellPositions);
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                positions[i] += rootPos;
+            }
+
+            return positions;
+        }
+        else
+        {
+            List<Vector3Int> positions = new List<Vector3Int>();
+        
+            return positions;
+        }
+
+        
+    }
+
+    #endregion
+
+    #region Effects
 
     public void BulletHitEffectAt(Vector2 point, Vector2 hitDir)
     {
@@ -180,6 +294,10 @@ public class TileManager : MonoBehaviour
             //Debug.Log("Key not found: " + gridPos + " when meleeing a tile");
         }
     }
+
+    #endregion
+
+    #region Tile Dictionary
 
     bool ReadTilemapToDict()
     {
@@ -248,104 +366,9 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    void UpdateAnimatedTile(Vector3Int rootPos)
-    {
-        // AnimatedTilemap.GetTile(rootPos);
-        float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
-                                 _TileStatsDict[rootPos].maxHealth);
-        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+    #endregion
 
-        int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
-        index = Mathf.Clamp(index, 0, dTiles.Count - 1);
-
-        if (AnimatedTilemap.GetTile(rootPos) != null)
-        {
-            AnimatedTilemap.SetTile(rootPos, null);
-        }
-        AnimatedTilemap.SetTile(rootPos, 
-            _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
-    }
-
-    public bool CheckGridIsClear(Vector3Int rootPos, RuleTileStructure rts)
-    {
-        foreach (Vector3Int pos in rts.cellPositions)
-        {   
-            // Check tile dictionary
-            if (_TileStatsDict.ContainsKey(rootPos + pos))
-            {
-                return false;
-            }
-
-            // Check for colliders
-            worldPos = StructureTilemap.CellToWorld(rootPos + pos);
-                   
-            boxSize = StructureTilemap.cellSize;
-            newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
-            boxSize = StructureTilemap.cellSize * 0.9f;
-
-            Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
-            
-            if (hit != null)
-            {
-                Debug.Log("Collider detected when trying to build");
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public bool CheckGridIsClear(Vector3Int gridPos)
-    {
-        // Check tile dictionary
-        if (_TileStatsDict.ContainsKey(gridPos))
-        {
-            return false;
-        }
-
-        // Check for colliders
-        worldPos = StructureTilemap.CellToWorld(gridPos);
-                   
-        boxSize = StructureTilemap.cellSize;
-        newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
-        boxSize = StructureTilemap.cellSize * 0.9f;
-
-        Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
-        
-        if (hit != null)
-        {
-            //Debug.Log("Collider detected when trying to build");
-            return false;
-        }
-
-        return true;
-    }
-
-    public List<Vector3Int> GetStructurePositions(Vector3Int gridPos)
-    {
-        if (_TileStatsDict.ContainsKey(gridPos))
-        {
-            Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
-            RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
-            
-            List<Vector3Int> positions = new List<Vector3Int>(rts.cellPositions);
-
-            for (int i = 0; i < positions.Count; i++)
-            {
-                positions[i] += rootPos;
-            }
-
-            return positions;
-        }
-        else
-        {
-            List<Vector3Int> positions = new List<Vector3Int>();
-        
-            return positions;
-        }
-
-        
-    }
+    #region Debug
 
     private void OnDrawGizmos() 
     {
@@ -367,9 +390,8 @@ public class TileManager : MonoBehaviour
 
         Gizmos.color = Color.blue;
 
-        Gizmos.DrawWireCube(newWorldPos, boxSize);   
-
-        
+        Gizmos.DrawWireCube(newWorldPos, boxSize);      
     }
-}
 
+    #endregion
+}

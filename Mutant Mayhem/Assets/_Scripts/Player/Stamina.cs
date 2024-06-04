@@ -4,23 +4,18 @@ using UnityEngine;
 
 public class Stamina : MonoBehaviour
 {
+    public PlayerStats stats;
     [SerializeField] float stamina = 100f;
     [SerializeField] float staminaRegen = 5f;
 
-    float maxStamina;
 
-
-    void Awake()
-    {
-        maxStamina = stamina;
-    }
 
     void Start()
     {
-        
+        stamina = stats.staminaMax;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         StaminaRegen();
         //Debug.Log(stamina);
@@ -28,10 +23,10 @@ public class Stamina : MonoBehaviour
 
     void StaminaRegen()
     {
-        stamina += staminaRegen * Time.deltaTime;
-        if (stamina > maxStamina)
+        stamina += staminaRegen * Time.fixedDeltaTime;
+        if (stamina > stats.staminaMax)
         {
-            stamina = maxStamina;
+            stamina = stats.staminaMax;
         }
     }
 
@@ -43,10 +38,5 @@ public class Stamina : MonoBehaviour
     public float GetStamina()
     {
         return stamina;
-    }
-
-    public float GetMaxStamina()
-    {
-        return maxStamina;
     }
 }

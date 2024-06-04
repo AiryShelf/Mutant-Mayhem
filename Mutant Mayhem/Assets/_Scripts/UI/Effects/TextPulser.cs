@@ -6,7 +6,7 @@ using UnityEngine;
 public class TextPulser : MonoBehaviour
 {
     public TextMeshProUGUI textToPulse;
-    public Color pulseColor = Color.black;
+    public Color pulseToColor = Color.black;
     public float pulseTime = 1f;
 
     Color startColor;
@@ -31,7 +31,7 @@ public class TextPulser : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < pulseTime)
         {
-            Color newColor = Color.Lerp(startColor, pulseColor, timeElapsed / pulseTime);
+            Color newColor = Color.Lerp(startColor, pulseToColor, timeElapsed / pulseTime);
             textToPulse.color = newColor;
             yield return new WaitForFixedUpdate();
             timeElapsed += Time.fixedDeltaTime;
@@ -44,7 +44,7 @@ public class TextPulser : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < pulseTime)
         {
-            Color newColor = Color.Lerp(pulseColor, startColor, timeElapsed / pulseTime);
+            Color newColor = Color.Lerp(pulseToColor, startColor, timeElapsed / pulseTime);
             textToPulse.color = newColor;
             yield return new WaitForFixedUpdate();
             timeElapsed += Time.fixedDeltaTime;

@@ -37,11 +37,6 @@ public class QCubePanel : MonoBehaviour
 
             // Create text obj and give text instance to uIUpgrade
             uIUpgrade.upgradeTextInstance = Instantiate(textPrefab, textGrid.transform);
-            /* int upgLvl = upgradeSystem.upgradeLevels[uIUpgrade.type];
-            int upgCost = upgradeSystem.upgradeCurrentCosts[uIUpgrade.type];
-            uIUpgrade.upgradeTextInstance.text = 
-                uIUpgrade.upgName + " Lvl " + upgLvl + "\n"
-                + "$" + upgCost; */
 
             // Add to fade canvas groups
             fadeCanvasGroups.individualElements.Add(

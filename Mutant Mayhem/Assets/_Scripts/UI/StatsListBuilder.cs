@@ -37,7 +37,7 @@ public class StatsListBuilder : MonoBehaviour
             name.GetComponent<TextMeshProUGUI>().text = kvp.Key;
 
             GameObject value = Instantiate(statsValueTextPrefab, valuesGrid.transform);
-            value.GetComponent<TextMeshProUGUI>().text = kvp.Value.ToString("#");
+            value.GetComponent<TextMeshProUGUI>().text = kvp.Value.ToString("#0");
 
             fadeCanvasGroups.individualElements.Add(name.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(value.GetComponent<CanvasGroup>());

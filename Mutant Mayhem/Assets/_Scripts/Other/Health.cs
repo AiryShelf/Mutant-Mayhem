@@ -3,24 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour
-{
-    [SerializeField] float health = 100f;
+{   
+    [SerializeField] protected float maxHealth = 100f;
     [SerializeField] HitEffects hitEffectsChild;
     [SerializeField] GameObject corpsePrefab;
-    [SerializeField] float deathTorque = 20;
+    public float deathTorque = 20;
 
-    float maxHealth;
-    Rigidbody2D myRb;
-    Player player;
-    bool hasDied;
-
+    protected float health;
+    protected Rigidbody2D myRb;
+    protected bool hasDied;
 
     void Awake()
     {
-        player = GetComponent<Player>();
 
         myRb = GetComponent<Rigidbody2D>();
-        maxHealth = health;
+        health = maxHealth;
     }
 
     public float GetHealth()
@@ -38,18 +35,18 @@ public class Health : MonoBehaviour
         return maxHealth;
     }
 
-    public void SetMaxHealth(float value)
+    public virtual void SetMaxHealth(float value)
     {
         maxHealth = value;
     }
 
-    public void ModifyHealth(float value, GameObject obj)
+    public void ModifyHealth(float value, GameObject other)
     {
         health += value;
 
         // Stats counting
         // Layer# 8 - PlayerProjectiles, player, enemy
-        if (obj.layer == 8)
+        if (other.layer == 8)
             StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
         else if (this.tag == "Enemy")
             StatsCounterPlayer.DamageToEnemies -= value;
@@ -59,9 +56,9 @@ public class Health : MonoBehaviour
         if (health <= 0 && !hasDied)
         {
             // Structure layer 13
-            if (obj.layer == 13)
+            if (other.layer == 13)
                 StatsCounterPlayer.EnemiesKilledByTurrets++;
-            else if (obj.tag == "Player" || obj.tag == "PlayerExplosion" || obj.layer == 8)
+            else if (other.tag == "Player" || other.tag == "PlayerExplosion" || other.layer == 8)
                 StatsCounterPlayer.EnemiesKilledByPlayer++;
 
             Die();
@@ -97,24 +94,15 @@ public class Health : MonoBehaviour
             corpseRb.angularVelocity = myRb.angularVelocity;
         }
         
-        if (player == null)
-        {
-            corpsePrefab.GetComponentInChildren<SpriteRenderer>().color = 
-                                                    GetComponent<SpriteRenderer>().color;
-            hitEffectsChild.transform.parent = null;
-            hitEffectsChild.DestroyAfterSeconds();
-            
-            WaveSpawner.EnemyCount--;
-            Destroy(gameObject);
-        }
-        else
-        {
-            Debug.Log("PLAYER IS DEAD");
-            player.isDead = true;
-            myRb.freezeRotation = false;
-            // Random flip 
-            int sign = Random.Range(0, 2) * 2 - 1; // Randomly 1 or -1
-            myRb.AddTorque(sign * deathTorque);
-        }   
+        corpsePrefab.GetComponentInChildren<SpriteRenderer>().color = 
+                                                GetComponent<SpriteRenderer>().color;
+        hitEffectsChild.transform.parent = null;
+        hitEffectsChild.DestroyAfterSeconds();
+        
+        WaveSpawner.EnemyCount--;
+        BuildingSystem.PlayerCredits += Mathf.Floor(maxHealth / 10);
+        Destroy(gameObject);
+        
+           
     }
 }

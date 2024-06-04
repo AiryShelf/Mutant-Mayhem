@@ -12,13 +12,22 @@ public class PlayerStats
     public float sprintFactor = 1.5f;
     public float lookSpeed = 0.05f;
 
+    [Header("Health Stats")]
+    public float healthMax = 1000;
+    public float healthRegen = 0.5f;
+
+    [Header("Stamina Stats")]
+    public float staminaMax = 100;
+    public float staminaRegen = 4f;
+
     [Header("Melee Stats")]
     public float meleeDamage = 60;
     public float knockback = 10;
-    public float meleeAttackRate = 0.5f;
+    public float meleeSpeedFactor = 1f;
 
     [Header("Shooting Stats")]
     public float reloadFactor = 1f;
+    public float accuracy = 1f;
 }
 
 public class Player : MonoBehaviour
@@ -36,12 +45,13 @@ public class Player : MonoBehaviour
     public int grenadeAmmo = 12;
     [SerializeField] Transform headImageTrans;
     [SerializeField] Transform playerMainTrans;
-    [SerializeField] Transform gunTrans;
+    [SerializeField] Transform muzzleTrans;
     public CapsuleCollider2D gunCollider;
     [SerializeField] Transform leftHandTrans;
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] MeleeControllerPlayer meleeController;
-    [SerializeField] Health myHealth;
+    [SerializeField] PlayerHealth myHealth;
+    [SerializeField] PlayerShooter myShooter;
     
     
     float sprintSpeedAmount;
@@ -56,7 +66,7 @@ public class Player : MonoBehaviour
     public bool isDead;  
     Throw itemToThrow;
 
-    void Start()
+    void Awake()
     {
         playerShooter = GetComponent<PlayerShooter>();
         myRb = GetComponent<Rigidbody2D>();
@@ -65,10 +75,19 @@ public class Player : MonoBehaviour
         // Initialize stats
         //stats = new PlayerStats();
         meleeController.stats = stats;
+        myStamina.stats = stats;
+        myHealth.playerStats = stats;
+        myShooter.playerStats = stats;
         
+    }
+
+    void Start()
+    { 
         // Use these for force-based movements
         moveForce = stats.moveSpeed * myRb.mass * forceFactor;
         strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
+
+        StartCoroutine(RefreshForceRepeat());
     }
 
     void FixedUpdate()
@@ -82,6 +101,23 @@ public class Player : MonoBehaviour
         else
         {
             playerShooter.isShooting = false; 
+        }
+    }
+
+    void RefreshForce()
+    {
+        moveForce = stats.moveSpeed * myRb.mass * forceFactor;
+        strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
+    }
+
+    IEnumerator RefreshForceRepeat()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(2);
+
+            // Update force values
+            RefreshForce();
         }
     }
 
@@ -135,9 +171,9 @@ public class Player : MonoBehaviour
         Vector3 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
         
         if ((transform.position - mousePos).magnitude > 
-            (transform.position - gunTrans.position).magnitude)
+            (transform.position - muzzleTrans.position).magnitude)
         {
-            dirToMouse = mousePos - gunTrans.transform.position;
+            dirToMouse = mousePos - muzzleTrans.transform.position;
         }
         else
         {

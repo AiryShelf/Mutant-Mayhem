@@ -66,7 +66,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.13057828
   m_TransitionOffset: 0
-  m_ExitTime: 0.93443674
+  m_ExitTime: 0.90178263
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -385,7 +385,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: e99d96c9f1497c74bb2a660510a6aa79, type: 2}
-  m_Tag: 
+  m_Tag: Reload
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
@@ -498,7 +498,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 346433a383d11d24e8197f4d986d66c5, type: 2}
-  m_Tag: 
+  m_Tag: Melee
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
@@ -561,7 +561,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Player_Body_Rifle_Reload
-  m_Speed: 1
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7996812385174958503}
@@ -575,7 +575,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: c45bc9ad17de8f549b04c413e76ee0e9, type: 2}
-  m_Tag: 
+  m_Tag: Reload
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
@@ -1302,7 +1302,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 49c3dfb2e31673045b9df14188957c37, type: 2}
-  m_Tag: 
+  m_Tag: Melee
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 

@@ -40,8 +40,12 @@ public class UIBuildMenuController : MonoBehaviour
             // Initialize FadeCanvasGroup list
             fadeCanvasGroups.individualElements.Add(uIStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
-        }  
-        fadeCanvasGroups.Initialize();     
+        }      
+    }
+
+    void Start()
+    {
+        fadeCanvasGroups.Initialize(); 
     }
 
     public void OpenPanel(bool active)
