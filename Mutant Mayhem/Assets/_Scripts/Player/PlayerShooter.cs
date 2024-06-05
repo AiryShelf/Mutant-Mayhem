@@ -6,11 +6,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerShooter : MonoBehaviour
 {
-    public PlayerStats playerStats;
+    [SerializeField] List<GunSO> _gunListSource;
+    public List<GunSO> gunList;
     [SerializeField] Transform gunTrans;
     [SerializeField] SpriteRenderer gunSR;
-    [SerializeField] List<GunSO> gunListSource;
-    public List<GunSO> gunListRT;
     [SerializeField] Transform muzzleTrans;
     [SerializeField] ParticleSystem bulletCasingsPS;
     [SerializeField] float casingToGroundTime;
@@ -19,24 +18,29 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] Animator bodyAnim;
     public int currentGunIndex = 0;
+
     [SerializeField] float laserChargeDelay = 0.5f;
     [SerializeField] int laserChargeMax = 50;
 
-    public int[] gunAmmoTotals;
-    public int[] gunAmmoInClips;
+    public int[] gunsAmmo;
+    public int[] gunsAmmoInClips;
+
     [HideInInspector] public GunSO currentGunSO;
     GameObject currentMuzzleFlash;
     Coroutine shootingCoroutine;
+    Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
     bool waitToShoot;
     [HideInInspector] public bool isShooting;
     [HideInInspector] public bool isAiming;
-    public bool isBuilding;
+    [HideInInspector] public bool isBuilding;
     [HideInInspector] public bool isReloading;
     [HideInInspector] public bool isSwitchingGuns;
     bool droppedGun;
     Rigidbody2D myRb;
     
+    [HideInInspector]public PlayerStats playerStats;
 
+    [SerializeField] float showDamage;
     
 
     void Awake()
@@ -44,22 +48,23 @@ public class PlayerShooter : MonoBehaviour
         myRb = GetComponent<Rigidbody2D>();  
 
         // Make a working copy of the gun list
-        foreach (GunSO gun in gunListSource)
+        foreach (GunSO gun in _gunListSource)
         {
             GunSO g = Instantiate(gun);
-            gunListRT.Add(g);
+            gunList.Add(g);
         }
     }
 
     void Start()
     {
-        StartCoroutine(LaserCharge());
+        RefreshChargeGuns();
         SwitchGuns(0);
     }
 
     void Update()
     {
             Shoot();
+            Debug.Log("Current gun damage: " + currentGunSO.damage);
     }
 
     public void DropGun()
@@ -84,39 +89,57 @@ public class PlayerShooter : MonoBehaviour
 
     public void SwitchGuns(int i)
     {
-        gunSR.sprite = gunListRT[i].sprite;
-        muzzleTrans.localPosition = gunListRT[i].muzzleLocalPos;
-        casingEjectorTrans.localPosition = gunListRT[i].casingLocalPos;
+        gunSR.sprite = gunList[i].sprite;
+        muzzleTrans.localPosition = gunList[i].muzzleLocalPos;
+        casingEjectorTrans.localPosition = gunList[i].casingLocalPos;
 
         if (currentMuzzleFlash != null)
             Destroy(currentMuzzleFlash);
-        currentMuzzleFlash = Instantiate(gunListRT[i].muzzleFlashPrefab, 
+        currentMuzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, 
                                          muzzleTrans.transform);
         currentMuzzleFlash.SetActive(false);
 
         // This could be removed and gunIndex used instead for animation transitions
-        bodyAnim.SetBool(gunListRT[currentGunIndex].animatorHasString, false);
-        bodyAnim.SetBool(gunListRT[i].animatorHasString, true);
+        bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
+        bodyAnim.SetBool(gunList[i].animatorHasString, true);
 
         currentGunIndex = i;
-        currentGunSO = gunListRT[i];
+        currentGunSO = gunList[i];
     }
 
     public void Reload()
     {
         if (currentGunIndex != 0)
         {
-            int numBullets = currentGunSO.clipSize - gunAmmoInClips[currentGunIndex];
+            int numBullets = currentGunSO.clipSize - gunsAmmoInClips[currentGunIndex];
 
-            if (gunAmmoTotals[currentGunIndex] < numBullets)
+            if (gunsAmmo[currentGunIndex] < numBullets)
             {
-                gunAmmoInClips[currentGunIndex] += gunAmmoTotals[currentGunIndex];
-                gunAmmoTotals[currentGunIndex] = 0;
+                gunsAmmoInClips[currentGunIndex] += gunsAmmo[currentGunIndex];
+                gunsAmmo[currentGunIndex] = 0;
             }
             else
             {
-                gunAmmoInClips[currentGunIndex] += numBullets;
-                gunAmmoTotals[currentGunIndex] -= numBullets;
+                gunsAmmoInClips[currentGunIndex] += numBullets;
+                gunsAmmo[currentGunIndex] -= numBullets;
+            }
+        }
+    }
+
+    // Call this whenever adding new charging weapon 
+    // or charging ability to non-charge weapon
+    void RefreshChargeGuns()
+    {
+        for (int i = 0; i < gunList.Count; i++)
+        {
+            // Only start ChargeGun for chargeables
+            if (gunList[i].chargeDelay != 0)
+            {
+                if (chargeCoroutines.ContainsKey(i) && chargeCoroutines[i] != null)
+                {
+                    StopCoroutine(chargeCoroutines[i]);
+                }
+                chargeCoroutines[i] = StartCoroutine(ChargeGun(i));
             }
         }
     }
@@ -133,7 +156,7 @@ public class PlayerShooter : MonoBehaviour
     void Kickback()
     {
         myRb.AddForce(-myRb.transform.right * 
-                      currentGunSO.kickback, ForceMode2D.Impulse);
+                      currentGunSO.recoil, ForceMode2D.Impulse);
     }
 
     Vector2 ApplyAccuracy(Vector2 dir)
@@ -165,10 +188,10 @@ public class PlayerShooter : MonoBehaviour
     void Shoot()
     {
         // If no ammo
-        if (gunAmmoInClips[currentGunIndex] < 1)
+        if (gunsAmmoInClips[currentGunIndex] < 1)
         {
             // Reload?
-            if (gunAmmoTotals[currentGunIndex] > 0)
+            if (gunsAmmo[currentGunIndex] > 0)
             {
                 animControllerPlayer.ReloadTrigger();
             }
@@ -221,7 +244,7 @@ public class PlayerShooter : MonoBehaviour
             }
 
             // Use ammo
-            gunAmmoInClips[currentGunIndex]--;
+            gunsAmmoInClips[currentGunIndex]--;
             StatsCounterPlayer.ShotsFiredByPlayer++;
             
             // Apply physics and effects
@@ -257,13 +280,14 @@ public class PlayerShooter : MonoBehaviour
         //currentGun.muzzleFlash.enabled = false;
     }
 
-    IEnumerator LaserCharge()
+    IEnumerator ChargeGun(int index)
     {
         while (true)
         {
-            if (gunAmmoInClips[0] < laserChargeMax)
-                gunAmmoInClips[0]++;
-            yield return new WaitForSeconds(laserChargeDelay); 
+            if (gunsAmmoInClips[index] < gunList[index].clipSize)
+                gunsAmmoInClips[index]++;
+
+            yield return new WaitForSeconds(gunList[index].chargeDelay); 
         }  
     }
 

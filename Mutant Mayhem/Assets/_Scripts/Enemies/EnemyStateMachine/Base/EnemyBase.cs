@@ -63,8 +63,13 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #endregion
 
+    WaveController waveController;
+
     void Awake()
     {
+        waveController = FindObjectOfType<WaveController>();
+
+        // Logic machine linked to state machine
         EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
         EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
         EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
@@ -78,11 +83,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         //MeleeState = new EnemyMeleeState(this, StateMachine);
 
         RB = GetComponent<Rigidbody2D>();
-    }
-
-    void OnEnable()
-    {
-        
     }
 
     void Start()
@@ -133,18 +133,18 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
             // Randomize size with multipliers
             GaussianRandom _gaussianRandomm = new GaussianRandom();
             float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
-            randomSizeFactor *= WaveController.sizeMultiplier;
+            randomSizeFactor *= waveController.sizeMultiplier;
             randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
             transform.localScale *= randomSizeFactor;
 
             // Randomize stats by size and multipliers
-            moveSpeedBase *= randomSizeFactor * WaveController.speedMultiplier;
+            moveSpeedBase *= randomSizeFactor * waveController.speedMultiplier;
 
             health.SetMaxHealth(health.GetMaxHealth() 
-                * randomSizeFactor * WaveController.healthMultiplier);
+                * randomSizeFactor * waveController.healthMultiplier);
             health.SetHealth(health.GetMaxHealth());
 
-            meleeController.meleeDamage *= randomSizeFactor * WaveController.sizeMultiplier;
+            meleeController.meleeDamage *= randomSizeFactor * waveController.damageMultiplier;
             meleeController.knockback *= randomSizeFactor;
             //meleeController.selfKnockback *= randomSizeFactor; no good?
 

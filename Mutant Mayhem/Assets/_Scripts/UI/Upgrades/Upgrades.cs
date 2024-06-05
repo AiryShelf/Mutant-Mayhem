@@ -5,19 +5,30 @@ using UnityEngine;
 
 public enum UpgradeType
 {
+    [Header("Test enum header")]
+    // PlayerStats
     MoveSpeed,
-    //LookSpeed,  lookSpeed should be combined with MoveSpeed
     StrafeSpeed,
     SprintFactor,
-    ReloadSpeed,
-    Accuracy,
+    PlayerReloadSpeed,
+    PlayerAccuracy,
     MeleeDamage,
     MeleeKnockback,
     MeleeAttackRate,
     StaminaMax,
     StaminaRegen,
     HealthMax,
-    HealthRegen
+    HealthRegen,
+
+    // GunStats
+    GunDamage,
+    GunKnockback,
+    ShootSpeed,
+    ClipSize,
+    ChargeDelay,
+    GunAccuracy,
+    GunRange,
+    Recoil 
 }
 
 public abstract class Upgrade
@@ -32,12 +43,15 @@ public abstract class Upgrade
     public virtual void Apply(PlayerStats playerStats, int level) { }
     //public virtual void Apply(WeaponStats weaponStats, int level) { }
     public virtual void Apply(TileStats tileStats, int level) { }
+    public virtual void Apply(GunSO gunSO, int level) { }
 
     public virtual int CalculateCost(int baseCost, int level)
     {
         return baseCost * level;
     }
 }
+
+#region PlayerStats Upgrades
 
 public class MoveSpeedUpgrade : Upgrade
 {
@@ -72,7 +86,7 @@ public class SprintFactorUpgrade : Upgrade
 
 public class ReloadSpeedUpgrade : Upgrade
 {
-    public ReloadSpeedUpgrade() : base(UpgradeType.ReloadSpeed) { }
+    public ReloadSpeedUpgrade() : base(UpgradeType.PlayerReloadSpeed) { }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
@@ -150,9 +164,9 @@ public class HealthRegenUpgrade : Upgrade
     }
 }
 
-public class AccuracyUpgrade : Upgrade
+public class PlayerAccuracyUpgrade : Upgrade
 {
-    public AccuracyUpgrade() : base(UpgradeType.Accuracy) { }
+    public PlayerAccuracyUpgrade() : base(UpgradeType.PlayerAccuracy) { }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
@@ -162,6 +176,7 @@ public class AccuracyUpgrade : Upgrade
 
     public override int CalculateCost(int baseCost, int level)
     {
+        // Double the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i ++)
         {
@@ -170,3 +185,122 @@ public class AccuracyUpgrade : Upgrade
         return newCost;
     }
 }
+
+#endregion
+
+#region Gun Stats Upgrades
+
+public class GunDamageUpgrade : Upgrade
+{
+    public GunDamageUpgrade() : base(UpgradeType.GunDamage) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.damage += gunSO.damageUpgAmt + level;
+    }
+}
+
+public class GunKnockbackUpgrade : Upgrade
+{
+    public GunKnockbackUpgrade() : base(UpgradeType.GunKnockback) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.knockback += gunSO.knockbackUpgAmt;
+    }
+}
+
+public class ShootSpeedUpgrade : Upgrade
+{
+    public ShootSpeedUpgrade() : base(UpgradeType.ShootSpeed) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.shootSpeed += gunSO.shootSpeedUpgNegAmt;
+    }
+}
+
+public class ClipSizeUpgrade : Upgrade
+{
+    public ClipSizeUpgrade() : base(UpgradeType.ClipSize) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.clipSize += gunSO.clipSizeUpgAmt;
+    }
+}
+
+public class ChargeDelayUpgrade : Upgrade
+{
+    public ChargeDelayUpgrade() : base(UpgradeType.ChargeDelay) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.chargeDelay += gunSO.chargeDelayUpgNegAmt;
+    }
+}
+
+public class GunAccuracyUpgrade : Upgrade
+{
+    public GunAccuracyUpgrade() : base(UpgradeType.GunAccuracy) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.accuracy += gunSO.accuracyUpgNegAmt;
+    }
+
+    public override int CalculateCost(int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i ++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
+    }
+}
+
+public class RangeUpgrade : Upgrade
+{
+    public RangeUpgrade() : base(UpgradeType.GunRange) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.bulletLifeTime += gunSO.bulletRangeUpgAmt;
+    }
+
+    public override int CalculateCost(int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i ++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
+    }
+}
+
+public class RecoilUpgrade : Upgrade
+{
+    public RecoilUpgrade() : base(UpgradeType.Recoil) { }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.recoil += gunSO.recoilUpgNegAmt;
+    }
+
+    public override int CalculateCost(int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i ++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
+    }
+}
+
+#endregion

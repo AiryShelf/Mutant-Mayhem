@@ -131,7 +131,7 @@ public class WaveSpawner : MonoBehaviour
         // Apply batch multipliers
         for (int i = 0; i < _numberToSpawn.Count; i++)
         {
-            _numberToSpawn[i] *= batchMult;
+            _numberToSpawn[i] *= batchMult * waveController.batchMultiplier;
         }
 
         // Get starting point, angle, radius
@@ -191,13 +191,12 @@ public class WaveSpawner : MonoBehaviour
                     spawnRadius, batchAngle, subWaveStyle.spreadForBatch, false);
                 spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
 
-                yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn);
+                yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn * waveController.spawnSpeedMultiplier);
             }
 
-            yield return new WaitForSeconds(subWaveStyle.timeToNextBatch);
+            yield return new WaitForSeconds(subWaveStyle.timeToNextBatch * waveController.spawnSpeedMultiplier);
         }
         
-
         //Debug.Log("Finished SubWave");
     }
 
@@ -212,13 +211,11 @@ public class WaveSpawner : MonoBehaviour
         int batchMult;
         if (isSubWave)
         {
-            batchMult = currentWave.subWaveMultipliers[subWaveIndex] 
-                            * WaveController.batchMultiplier;
+            batchMult = currentWave.subWaveMultipliers[subWaveIndex];
         }
         else
         {
-            batchMult = currentWave.constantWaveMultipliers[subWaveIndex] 
-                            * WaveController.batchMultiplier;
+            batchMult = currentWave.constantWaveMultipliers[subWaveIndex];
         }
 
         return batchMult;

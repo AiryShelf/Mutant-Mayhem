@@ -104,8 +104,8 @@ public class PanelSwitcher : MonoBehaviour
         {
             transform.localPosition = Vector2.Lerp(startPosition, endPosition, timeElapsed / swipeDuration);
             // Fade in and out
-            targCanv.alpha = Mathf.Lerp(0, 1, timeElapsed / swipeDuration);
-            prevCanv.alpha = Mathf.Lerp(1, 0, timeElapsed / swipeDuration);
+            //targCanv.alpha = Mathf.Lerp(0, 1, timeElapsed / swipeDuration);
+            //prevCanv.alpha = Mathf.Lerp(1, 0, timeElapsed / swipeDuration);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

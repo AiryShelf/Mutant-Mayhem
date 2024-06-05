@@ -486,7 +486,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     }
     public void ReloadTrigger()
     {
-        if (!reloadAnimPlaying && playerShooter.gunAmmoTotals[playerShooter.currentGunIndex] > 0 &&
+        if (!reloadAnimPlaying && playerShooter.gunsAmmo[playerShooter.currentGunIndex] > 0 &&
             playerShooter.currentGunIndex != 0)
         {
             bodyAnim.SetBool("isReloading", true);

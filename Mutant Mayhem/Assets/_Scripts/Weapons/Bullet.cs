@@ -7,14 +7,14 @@ public class Bullet : MonoBehaviour
 {
     public LayerMask hitLayers;
     [SerializeField] TileManager tileManager;
-    [SerializeField] float damage = 10;
-    [SerializeField] float knockback = 1f;
+    public float damage = 10;
+    public float knockback = 1f;
 
     [SerializeField] Rigidbody2D myRb;
     [SerializeField] BulletTrails bulletTrail;
 
     [SerializeField] GameObject AiTrggerPrefabOptional;
-    [SerializeField] float AITriggerSizeOptional;
+    [SerializeField] float AITriggerSize;
 
     void Start()
     {
@@ -65,7 +65,7 @@ public class Bullet : MonoBehaviour
             {
                 //Debug.Log("AiTrigger instantiated");
                 GameObject trigger = Instantiate(AiTrggerPrefabOptional, transform.position, Quaternion.identity);
-                trigger.transform.localScale = new Vector3(AITriggerSizeOptional, AITriggerSizeOptional, 1);
+                trigger.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
             } 
         }
         // Structures Layer #12

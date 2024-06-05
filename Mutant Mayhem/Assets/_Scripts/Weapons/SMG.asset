@@ -17,14 +17,25 @@ MonoBehaviour:
   animatorHasString: hasRifle
   bulletPrefab: {fileID: 145518261742128944, guid: 2f34aec5bd679f64e81317a4522430ea, type: 3}
   emptyClipPrefab: {fileID: 3812386894870190738, guid: 60a00ee6bfd8cc34e851221a4baa97c5, type: 3}
-  clipSize: 30
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: f378eb9fe298cff4e8028b2aeb9a4bd2, type: 3}
   muzzleLocalPos: {x: 0.022, y: 0}
   bulletCasingPrefab: {fileID: 4080447890916436050, guid: cba583d53adb8f340927905d88e1af40, type: 3}
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.05
-  shootSpeed: 0.075
+  damage: 30
+  damageUpgAmt: 2
+  knockback: 1
+  knockbackUpgAmt: 0.2
+  clipSize: 30
+  clipSizeUpgAmt: 5
+  chargeDelay: 0
+  chargeDelayUpgNegAmt: 0
+  shootSpeed: 0.15
+  shootSpeedUpgNegAmt: -0.007
   accuracy: 10
+  accuracyUpgNegAmt: -0.4
   bulletSpeed: 60
-  bulletLifeTime: 0.5
-  kickback: 1.5
+  bulletLifeTime: 0.4
+  bulletRangeUpgAmt: 0.04
+  recoil: 1.5
+  recoilUpgNegAmt: 0.1

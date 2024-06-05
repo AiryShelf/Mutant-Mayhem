@@ -36,8 +36,8 @@ public class WeaponPanel : MonoBehaviour
             return;
         }
 
-        ammoTotal = playerShooter.gunAmmoTotals[playerShooter.currentGunIndex];
-        ammoInClip = playerShooter.gunAmmoInClips[playerShooter.currentGunIndex];
+        ammoTotal = playerShooter.gunsAmmo[playerShooter.currentGunIndex];
+        ammoInClip = playerShooter.gunsAmmoInClips[playerShooter.currentGunIndex];
         
         ammoCountText.text =  (ammoTotal + ammoInClip).ToString();
         ammoCountText.fontSize = fontSize;

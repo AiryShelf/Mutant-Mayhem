@@ -11,16 +11,15 @@ public class DebugPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI enemyCountText;
     [SerializeField] List<Transform> buttonTransforms;
 
-    EnemySpawner enemySpawner;
+    OLDEnemySpawner enemySpawner;
 
     
     void Start()
     {
-        enemySpawner = FindObjectOfType<EnemySpawner>();
+        enemySpawner = FindObjectOfType<OLDEnemySpawner>();
         debugPanel.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         enemyCountText.text = "EnemyCount: " + WaveSpawner.EnemyCount.ToString();

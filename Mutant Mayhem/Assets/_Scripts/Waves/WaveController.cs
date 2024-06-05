@@ -20,12 +20,12 @@ public class WaveController : MonoBehaviour
 
 
     public int MultiplierStart = 1;
-    public static int batchMultiplier = 1;
-    public static float damageMultiplier = 1;
-    public static float healthMultiplier = 1;
-    public static float speedMultiplier = 1;
-    public static float sizeMultiplier = 1;
-    public static float spawnSpeedMultiplier = 1;
+    public int batchMultiplier = 1;
+    public float damageMultiplier = 1;
+    public float healthMultiplier = 1;
+    public float speedMultiplier = 1;
+    public float sizeMultiplier = 1;
+    public float spawnSpeedMultiplier = 1;
 
     InputActionMap playerActionMap;
     InputAction nextWaveAction;
@@ -40,13 +40,6 @@ public class WaveController : MonoBehaviour
         player = FindObjectOfType<Player>();
         playerActionMap = player.inputAsset.FindActionMap("Player");
         nextWaveAction = playerActionMap.FindAction("NextWave");
-
-        batchMultiplier = MultiplierStart;
-        damageMultiplier = MultiplierStart;
-        healthMultiplier = MultiplierStart;
-        speedMultiplier = MultiplierStart;
-        sizeMultiplier = MultiplierStart;
-        spawnSpeedMultiplier = MultiplierStart;
     }
 
     void OnEnable()
@@ -99,6 +92,7 @@ public class WaveController : MonoBehaviour
     IEnumerator StartWave()
     {
         isNight = true;
+        UpdateWaveMultipliers();
 
         // Switch Spawner to new WaveBase
         int index = (int)Mathf.Floor(currentWave / wavesPerBase);
@@ -148,18 +142,17 @@ public class WaveController : MonoBehaviour
         Debug.Log("End Wave");
         currentWave++;
 
-        UpdateWaveMultipliers();
-
         StartCoroutine(NextWaveTimer());
     }
 
     void UpdateWaveMultipliers()
     {
         batchMultiplier = MultiplierStart 
-                          + (int)Mathf.Floor((currentWave - 1) / 10);
-        damageMultiplier = MultiplierStart + (currentWave - 1) / 10;
-        healthMultiplier = MultiplierStart + (currentWave - 1) / 10;
-        sizeMultiplier = MultiplierStart + (currentWave - 1) / 20;
+                          + (int)Mathf.Floor(currentWave / 10);
+        damageMultiplier = MultiplierStart + currentWave / 10;
+        healthMultiplier = MultiplierStart + currentWave / 10;
+        speedMultiplier = MultiplierStart + currentWave / 10;
+        sizeMultiplier = MultiplierStart + currentWave / 20;
         spawnSpeedMultiplier = Mathf.Clamp(MultiplierStart 
                                - (currentWave - 1) / 100, 0.1f, 100);
     }

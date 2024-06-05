@@ -12,6 +12,10 @@ public class UIUpgrade : MonoBehaviour
     
     public GameObject upgradeTextPrefab;
 
+    [Header("For Gun Upgrades:")]
+    public bool isGunUpg;
+    public GunType gunType;
+
     [HideInInspector] public GameObject upgradeTextInstance;
     TextMeshProUGUI upgradeText;
     UpgradeSystem upgradeSystem;
@@ -27,15 +31,27 @@ public class UIUpgrade : MonoBehaviour
     public void InvokeOnClick(UIUpgrade u)
     {
         //Debug.Log("OnClick called");
-        upgradeSystem.OnUpgradeButtonClicked(u.type);
 
+        upgradeSystem.OnUpgradeButtonClicked(u.type, isGunUpg, 0);
+        
         UpdateText();
     }
 
     void UpdateText()
     {
-        int upgLvl = upgradeSystem.upgradeLevels[type];
-        int upgCost = upgradeSystem.upgradeCurrentCosts[type];
+        int upgLvl;
+        int upgCost;
+
+        if (isGunUpg)
+        {
+            upgLvl = upgradeSystem.playerStatsUpgLevels[type];
+            upgCost = upgradeSystem.playerStatsUpgCurrCosts[type];
+        }
+        else
+        {
+            upgLvl = upgradeSystem.playerStatsUpgLevels[type];
+            upgCost = upgradeSystem.playerStatsUpgCurrCosts[type];
+        }
 
         upgradeText.text = 
             UiName + " Lvl " + (upgLvl + 1) + "\n" + "$" + upgCost;       
