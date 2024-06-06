@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 public class BuildingSystem : MonoBehaviour
 {
@@ -20,7 +17,9 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] UIBuildMenuController buildMenuController;
     public List<StructureSO> AllStructureSOs;
     [SerializeField] int numStructuresAvailAtStart;
-    [SerializeField] UIBuildMenuController uIBuildMenuController;
+
+    [SerializeField] QCubeController qCubeController;
+
     public bool inBuildMode;
     
     // needs to actually be created
@@ -35,7 +34,7 @@ public class BuildingSystem : MonoBehaviour
     InputAction toolbarAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
 
-    
+    Coroutine clearSelection;
 
     void Awake()
     {
@@ -94,15 +93,34 @@ public class BuildingSystem : MonoBehaviour
         if (on)
         {
             inBuildMode = true;
-            buildMenuController.OpenPanel(true);
+            buildMenuController.TriggerFadeGroups(true);
+            qCubeController.CloseUpgradeWindow();
+            //Debug.Log("Opened Build Panel");
         }
         else
         {
             inBuildMode = false;
-            buildMenuController.OpenPanel(false);
+            buildMenuController.TriggerFadeGroups(false);
+            
+            float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
+
+            if (clearSelection != null)
+                StopCoroutine(clearSelection);
+            clearSelection = StartCoroutine(ClearSelection(time));
+
             RemoveBuildHighlight();
             structureInHand = AllStructureSOs[0];
+            
+            //Debug.Log("Closed Build Panel");
         }
+    }
+
+    IEnumerator ClearSelection(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        RemoveBuildHighlight();
+        structureInHand = AllStructureSOs[0];
     }
 
     void OnToolbarUsed(InputAction.CallbackContext context)

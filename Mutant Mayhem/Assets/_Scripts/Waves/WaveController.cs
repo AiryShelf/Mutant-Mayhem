@@ -6,19 +6,24 @@ using UnityEngine.InputSystem;
 
 public class WaveController : MonoBehaviour
 {
-    public List<WaveSOBase> waveBases;
+    [SerializeField] List<WaveSOBase> allWaveBases;
     [SerializeField] WaveSpawner waveSpawner;
+
+    [Header("UI Wave Info")]
     [SerializeField] FadeCanvasGroupsWave nextWaveFadeGroup;
     [SerializeField] FadeCanvasGroupsWave waveInfoFadeGroup;
     [SerializeField] TextMeshProUGUI enemyCountText;
     [SerializeField] TextMeshProUGUI currentNightText;
     [SerializeField] TextMeshProUGUI nextWaveText;
+
+    [Header("Wave Properties")]
     public int currentWave = 0;
     public float timeBetweenWaves = 60f;
     public float spawnRadius = 60;
     public int wavesPerBase = 3;
+    public int wavesTillExtraWaveAdd = 2;
 
-
+    [Header("Enemy Multipliers")]
     public int MultiplierStart = 1;
     public int batchMultiplier = 1;
     public float damageMultiplier = 1;
@@ -32,6 +37,7 @@ public class WaveController : MonoBehaviour
     Player player;
 
     Coroutine nextWaveTimer;
+    Coroutine endWave;
     public bool isNight;
 
 
@@ -58,7 +64,7 @@ public class WaveController : MonoBehaviour
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
 
-        waveSpawner.currentWave = waveBases[0];
+        waveSpawner.currentWave = allWaveBases[0];
     }
 
     void OnNextWaveInput(InputAction.CallbackContext context)
@@ -66,6 +72,17 @@ public class WaveController : MonoBehaviour
         if (nextWaveText.enabled)
         {
             StopAllCoroutines();
+            TriggerWaves();
+        }
+    }
+
+    void TriggerWaves()
+    {
+        int wavesToTrigger = 1 + (int)Mathf.Floor(currentWave / wavesTillExtraWaveAdd);
+
+        // ** NEED TO FINISHT THIS FOR MULTI-WAVE SPAWNING ** //
+        for (int w = 0; w < wavesToTrigger; w++)
+        {
             StartCoroutine(StartWave());
         }
     }
@@ -86,7 +103,7 @@ public class WaveController : MonoBehaviour
             countdown -= Time.deltaTime;        
         }
 
-        StartCoroutine(StartWave());
+        TriggerWaves();
     }
 
     IEnumerator StartWave()
@@ -96,8 +113,8 @@ public class WaveController : MonoBehaviour
 
         // Switch Spawner to new WaveBase
         int index = (int)Mathf.Floor(currentWave / wavesPerBase);
-        index = Mathf.Clamp(index, 0, waveBases.Count - 1);
-        waveSpawner.currentWave = waveBases[index];
+        index = Mathf.Clamp(index, 0, allWaveBases.Count - 1);
+        waveSpawner.currentWave = allWaveBases[index];
         // Need to add logic to handle the end of the list.
         // Maybe restart with larger multipliers?  Or a random new list?
 
@@ -110,13 +127,14 @@ public class WaveController : MonoBehaviour
         waveInfoFadeGroup.isTriggered = true;
         nextWaveFadeGroup.isTriggered = false;
         nextWaveText.enabled = false;
+        currentNightText.text = "Night " + currentWave;
 
         // Wait 5 seconds before checking wave complete
         float timeElapsed = 0;
         while (timeElapsed < 5)
         {
             enemyCountText.text = "Enemies Detected: " + WaveSpawner.EnemyCount;
-            currentNightText.text = "Night " + currentWave;
+            
 
             yield return new WaitForEndOfFrame();
             timeElapsed += Time.deltaTime; 
@@ -124,36 +142,39 @@ public class WaveController : MonoBehaviour
 
         // Check for end of wave
         while (!waveSpawner.waveComplete)
-        {
-            
+        {      
             enemyCountText.text = "Enemies Detected: " + WaveSpawner.EnemyCount;
-            currentNightText.text = "Night " + currentWave;
 
             yield return new WaitForEndOfFrame(); 
         }
         
-        EndWave();
+        // Let one wave initiate ending
+        if (endWave == null)
+            endWave = StartCoroutine(EndWave());
     }
 
-    void EndWave()
+    IEnumerator EndWave()
     {
-        isNight = false;
+        yield return new WaitForSeconds(1);
 
-        Debug.Log("End Wave");
+        isNight = false;
         currentWave++;
 
         StartCoroutine(NextWaveTimer());
+
+        endWave = null;
+        Debug.Log("End Wave");
     }
 
     void UpdateWaveMultipliers()
     {
         batchMultiplier = MultiplierStart 
-                          + (int)Mathf.Floor(currentWave / 10);
+                          + (int)Mathf.Floor(currentWave / 5);
         damageMultiplier = MultiplierStart + currentWave / 10;
         healthMultiplier = MultiplierStart + currentWave / 10;
         speedMultiplier = MultiplierStart + currentWave / 10;
         sizeMultiplier = MultiplierStart + currentWave / 20;
         spawnSpeedMultiplier = Mathf.Clamp(MultiplierStart 
-                               - (currentWave - 1) / 100, 0.1f, 100);
+                               - currentWave / 100, 0.1f, 100);
     }
 }

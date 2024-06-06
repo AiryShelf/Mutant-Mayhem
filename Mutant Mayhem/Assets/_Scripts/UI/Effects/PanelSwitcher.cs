@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PanelSwitcher : MonoBehaviour
 {
     public FadeCanvasGroupsWave backgroundGroupWave;
-    public RectTransform[] panels; // Array to hold your panels
-    public float swipeDuration = 0.5f; // Duration for the swipe animation
+    public RectTransform[] panels;
+    public float swipeDuration = 0.5f;
+    public FadeCanvasGroupsWave prevButton;
+    public FadeCanvasGroupsWave nextButton;
     public bool isTriggered;
     bool isOpen;
 
@@ -19,8 +23,11 @@ public class PanelSwitcher : MonoBehaviour
     void Start()
     {
         myRect = GetComponent<RectTransform>();
-        // Set the original position for the parent
+        
         originalPosition = transform.localPosition;
+
+        UpdateNavButtons();
+
         //UpdatePanelVisibility();
     }
 
@@ -39,13 +46,16 @@ public class PanelSwitcher : MonoBehaviour
 
         if (isSwiping) return;
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (isOpen)
         {
-            SwipeLeft();
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            SwipeRight();
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                SwipeLeft();
+            }
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                SwipeRight();
+            }
         }
     }
 
@@ -56,6 +66,7 @@ public class PanelSwitcher : MonoBehaviour
         currentPanelIndex = 0;
         panels[0].GetComponent<FadeCanvasGroupsWave>().isTriggered = true;
         backgroundGroupWave.isTriggered = true;
+        UpdateNavButtons();
     }
 
     void FadeOut()
@@ -63,27 +74,56 @@ public class PanelSwitcher : MonoBehaviour
         isOpen = false;
         isSwiping = false;
         backgroundGroupWave.isTriggered = false;
+        currentPanelIndex = 0;
 
         foreach (RectTransform panel in panels)
         {
             panel.GetComponent<FadeCanvasGroupsWave>().isTriggered = false;
         }
+
+        UpdateNavButtons();
     }
 
-    void SwipeLeft()
+    void UpdateNavButtons()
+    {
+        if (isOpen)
+        {
+            // Update prev/next buttons
+            if (currentPanelIndex >= panels.Length - 1)
+                nextButton.isTriggered = false;
+            else
+                nextButton.isTriggered = true;
+            if (currentPanelIndex <= 0)
+                prevButton.isTriggered = false;
+            else
+                prevButton.isTriggered = true;
+        }
+        else
+        {
+            // Fade out
+            prevButton.isTriggered = false;
+            nextButton.isTriggered = false;
+        }
+    }
+
+    public void SwipeLeft()
     {
         if (currentPanelIndex <= 0) return;
 
         currentPanelIndex--;
         StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex + 1));
+
+        UpdateNavButtons();
     }
 
-    void SwipeRight()
+    public void SwipeRight()
     {
         if (currentPanelIndex >= panels.Length - 1) return;
 
         currentPanelIndex++;
         StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex - 1));
+
+        UpdateNavButtons();
     }
 
     IEnumerator SwipeToPanel(int targetIndex, int prevIndex)
@@ -103,7 +143,7 @@ public class PanelSwitcher : MonoBehaviour
         while (timeElapsed < swipeDuration)
         {
             transform.localPosition = Vector2.Lerp(startPosition, endPosition, timeElapsed / swipeDuration);
-            // Fade in and out
+            // Fade in and out ** Handled by fade groups **  Could add functionality to this
             //targCanv.alpha = Mathf.Lerp(0, 1, timeElapsed / swipeDuration);
             //prevCanv.alpha = Mathf.Lerp(1, 0, timeElapsed / swipeDuration);
             timeElapsed += Time.deltaTime;

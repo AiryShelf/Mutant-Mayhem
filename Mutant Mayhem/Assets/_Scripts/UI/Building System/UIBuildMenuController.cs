@@ -9,7 +9,10 @@ public class UIBuildMenuController : MonoBehaviour
     public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
     [HideInInspector] public List<GameObject> structureButtonInstances;
+    [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
+
+    
 
 
     void Awake()
@@ -46,18 +49,20 @@ public class UIBuildMenuController : MonoBehaviour
     void Start()
     {
         fadeCanvasGroups.Initialize(); 
+        myCanvasGroup.blocksRaycasts = false;
     }
 
-    public void OpenPanel(bool active)
+    public void TriggerFadeGroups(bool active)
     {
         if (active)
         {
             fadeCanvasGroups.isTriggered = true;
+            myCanvasGroup.blocksRaycasts = true;
         }
         else
         {
             fadeCanvasGroups.isTriggered = false;
+            myCanvasGroup.blocksRaycasts = false;
         }
     }
-
 }

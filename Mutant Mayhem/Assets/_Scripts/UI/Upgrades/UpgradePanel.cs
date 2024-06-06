@@ -4,12 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QCubePanel : MonoBehaviour
+public class UpgradePanel : MonoBehaviour
 {
     public List<GameObject> UIUpgradePrefabs;
     public GridLayoutGroup buttonsGrid;
     public GridLayoutGroup textGrid;
-
+    [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
 
     void Awake()

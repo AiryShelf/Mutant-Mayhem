@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class UpgradeSystem2 : MonoBehaviour
+public class UpgradeSystem : MonoBehaviour
 {
+    [SerializeField] ParticleSystem playerUpgAppliedFX;
+    [SerializeField] ParticleSystem uiUpgAppliedFX;
     [SerializeField] List<UpgradeType> playerStatsEnums;
     [SerializeField] List<UpgradeType> laserPistolEnums;
     [SerializeField] List<UpgradeType> SMGEnums;
@@ -210,9 +212,10 @@ public class UpgradeSystem2 : MonoBehaviour
         }
     }
 
-    public void OnUpgradeButtonClicked(UpgradeType upgradeType)
+    #region Apply Upgrades
+
+    public void OnUpgradeButtonClicked(UpgradeType upgradeType, bool isGunUpgrade, int gunIndex)
     {
-        // Null check
         Upgrade upgrade = CreateUpgrade(upgradeType);
         if (upgrade == null)
         {
@@ -220,86 +223,126 @@ public class UpgradeSystem2 : MonoBehaviour
             return;
         }
 
-        // Check if max level
-        if (playerStatsUpgMaxLevels[upgradeType] > playerStatsUpgLevels[upgradeType])
+        if (isGunUpgrade)
         {
-            // Check if player can afford upgrade 
-            int cost = playerStatsUpgCurrCosts[upgradeType];
-            if (BuildingSystem.PlayerCredits >= cost)
-            {
-                // Buy upgrade
-                BuildingSystem.PlayerCredits -= cost;
-
-                // Apply the upgrade to stats
-                int currentLevel = playerStatsUpgLevels[upgradeType];
-                upgrade.Apply(player.stats, playerStatsUpgLevels[upgradeType]);
-                playerStatsUpgLevels[upgradeType]++;
-
-                // Set cost to next level
-                int baseCost = playerStatsUpgBaseCosts[upgradeType];
-                playerStatsUpgCurrCosts[upgradeType] = 
-                    upgrade.CalculateCost(baseCost, currentLevel + 1);
-
-                Debug.Log("Upgrade Applied of type: " + upgradeType);
-            }
-            else
-            {
-                messagePanel.ShowMessage("Not enough Credits for exosuit upgrade!", Color.yellow);
-                Debug.Log("Not enough Credits");
-            }
+            ApplyGunUpgrade(upgrade, upgradeType, gunIndex);
         }
         else
         {
-            messagePanel.ShowMessage("Max level has been reached!", Color.yellow);
-            Debug.Log("MaxLevel Reached");
+            ApplyPlayerUpgrade(upgrade, upgradeType);
         }
     }
 
-    public void OnUpgradeButtonClicked(UpgradeType upgradeType, GunSO placeholder, int index)
+    private void ApplyPlayerUpgrade(Upgrade upgrade, UpgradeType upgradeType)
     {
-        // Null check
-        Upgrade upgrade = CreateUpgrade(upgradeType);
-        if (upgrade == null)
+        // Check max level
+        if (playerStatsUpgLevels[upgradeType] >= playerStatsUpgMaxLevels[upgradeType])
         {
-            Debug.LogError("Upgrade not found for type: " + upgradeType);
+            Debug.Log("Max level reached for: " + upgradeType);
+            messagePanel.ShowMessage("Max level reached!", Color.yellow);
             return;
         }
 
-        // Get gun index reference
-        GunSO gun = playerShooter.gunList[index];
-
-        // Check if max level
-        if (playerStatsUpgMaxLevels[upgradeType] > playerStatsUpgLevels[upgradeType])
+        // Buy and apply
+        int cost = playerStatsUpgCurrCosts[upgradeType];
+        if (BuildingSystem.PlayerCredits >= cost)
         {
-            // Check if player can afford upgrade 
-            int cost = playerStatsUpgCurrCosts[upgradeType];
-            if (BuildingSystem.PlayerCredits >= cost)
-            {
-                // Buy upgrade
-                BuildingSystem.PlayerCredits -= cost;
-                
-                int currentLevel = playerStatsUpgLevels[upgradeType];
-                upgrade.Apply(player.stats, playerStatsUpgLevels[upgradeType]);
-                playerStatsUpgLevels[upgradeType]++;
+            BuildingSystem.PlayerCredits -= cost;
+            playerStatsUpgLevels[upgradeType]++;
 
-                // Set cost to next level
-                int baseCost = playerStatsUpgBaseCosts[upgradeType];
-                playerStatsUpgCurrCosts[upgradeType] = 
-                    upgrade.CalculateCost(baseCost, currentLevel + 1);
+            upgrade.Apply(player.stats, playerStatsUpgLevels[upgradeType]);
+            PlayUpgradeEffects();
+            
+            playerStatsUpgCurrCosts[upgradeType] = upgrade.CalculateCost(
+                playerStatsUpgBaseCosts[upgradeType], playerStatsUpgLevels[upgradeType] + 1);
 
-                Debug.Log("Upgrade Applied of type: " + upgradeType);
-            }
-            else
-            {
-                messagePanel.ShowMessage("Not enough Credits for gun upgrade!", Color.yellow);
-                Debug.Log("Not enough Credits");
-            }
+            Debug.Log("PlayerStats upgrade applied: " + upgradeType);
+            messagePanel.ShowMessage("Exosuit stat upgraded to level " + 
+                                     playerStatsUpgLevels[upgradeType], Color.cyan);
         }
         else
         {
-            messagePanel.ShowMessage("Max level has been reached!", Color.yellow);
-            Debug.Log("MaxLevel Reached");
+            Debug.Log("Not enough credits for: " + upgradeType);
+            messagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
+    }
+
+    private void ApplyGunUpgrade(Upgrade upgrade, UpgradeType upgradeType, int gunIndex)
+    {
+        // Null check
+        if (gunIndex < 0 || gunIndex >= playerShooter.gunList.Count)
+        {
+            Debug.LogError("Invalid gun index: " + gunIndex);
+            return;
+        }
+
+        GunSO gun = playerShooter.gunList[gunIndex];
+        Dictionary<UpgradeType, int> gunUpgLevels;
+        Dictionary<UpgradeType, int> gunUpgMaxLevels;
+        Dictionary<UpgradeType, int> gunUpgCurrCosts;
+        Dictionary<UpgradeType, int> gunUpgBaseCosts;
+
+        // Determine which gun's dictionaries to use
+        if (gun.gunType == GunType.LaserPistol)
+        {
+            gunUpgLevels = laserPistolUpgLevels;
+            gunUpgMaxLevels = laserPistolUpgMaxLevels;
+            gunUpgCurrCosts = laserPistolUpgCurrCosts;
+            gunUpgBaseCosts = laserPistolUpgBaseCosts;
+        }
+        else if (gun.gunType == GunType.SMG)
+        {
+            gunUpgLevels = SMGUpgLevels;
+            gunUpgMaxLevels = SMGUpgMaxLevels;
+            gunUpgCurrCosts = SMGUpgCurrCosts;
+            gunUpgBaseCosts = SMGUpgBaseCosts;
+        }
+        else
+        {
+            Debug.LogError("Unsupported gun type: " + gun.gunType);
+            return;
+        }
+
+        if (gunUpgLevels[upgradeType] >= gunUpgMaxLevels[upgradeType])
+        {
+            Debug.Log("Max level reached for: " + upgradeType);
+            messagePanel.ShowMessage("Max level reached!", Color.yellow);
+            return;
+        }
+
+        // Buy and apply
+        int cost = gunUpgCurrCosts[upgradeType];
+        if (BuildingSystem.PlayerCredits >= cost)
+        {
+            BuildingSystem.PlayerCredits -= cost;
+            gunUpgLevels[upgradeType]++;
+
+            upgrade.Apply(gun, gunUpgLevels[upgradeType]);
+            PlayUpgradeEffects();
+            
+            gunUpgCurrCosts[upgradeType] = upgrade.CalculateCost(
+                gunUpgBaseCosts[upgradeType], gunUpgLevels[upgradeType] + 1);
+
+            Debug.Log("Gun upgrade applied: " + upgradeType);
+            messagePanel.ShowMessage(gun.uiName + " stat upgraded to level " + 
+                                     gunUpgLevels[upgradeType], Color.cyan);
+        }
+        else
+        {
+            Debug.Log("Not enough credits for: " + upgradeType);
+            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+        }
+    }
+
+    #endregion
+
+    void PlayUpgradeEffects()
+    {
+        playerUpgAppliedFX.transform.position = player.transform.position + new Vector3(0, -0.5f, 0);
+
+        playerUpgAppliedFX.Play();
+
+        uiUpgAppliedFX.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        uiUpgAppliedFX.Play();
     }
 }
-

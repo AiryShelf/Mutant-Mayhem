@@ -62,6 +62,10 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         scrollRectController.SnapTo(myRectTransform);
         buildingSystemController.SwitchTools(structureSO.structureType);
     }
+    public void OnDeselect(BaseEventData data)
+    {
+        buildingSystemController.structureInHand = buildingSystemController.AllStructureSOs[0];
+    }
     
     public void MakeInteractable()
     {

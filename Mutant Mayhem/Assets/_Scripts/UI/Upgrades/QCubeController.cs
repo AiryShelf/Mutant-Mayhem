@@ -21,6 +21,7 @@ public class QCubeController : MonoBehaviour
     [SerializeField] float leaveRadius = 2f;
     public bool isUpgradesOpen;
     [SerializeField] PauseMenuController pauseMenuController;
+    [SerializeField] BuildingSystem buildingSystem;
 
     InputActionMap playerActionMap;
     InputAction qCubeAction;
@@ -104,12 +105,10 @@ public class QCubeController : MonoBehaviour
             if (!isUpgradesOpen)
             {
                 OpenUpgradeWindow();
-                //Pause(true);
             }
             else
             {
                 CloseUpgradeWindow();
-                //Pause(false);
             }
         }
         else if (!isUpgradesOpen)
@@ -127,32 +126,17 @@ public class QCubeController : MonoBehaviour
 
     void OpenUpgradeWindow()
     {
+        buildingSystem.ToggleBuildMenu(false);
         fireAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
     }
 
-    void CloseUpgradeWindow()
+    public void CloseUpgradeWindow()
     {
         fireAction.Enable();
         panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;
-    }
-
-    public void Pause(bool pause)
-    {
-        if (pause)
-        {
-            playerActionMap.Disable();
-            Time.timeScale = 0;
-            pauseMenuController.isPaused = true;
-        }
-        else
-        {
-            playerActionMap.Enable();
-            Time.timeScale = 1;
-            pauseMenuController.isPaused = false;
-        }
     }
 
     void RandomizeDeathMessages()

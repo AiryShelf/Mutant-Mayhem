@@ -45,9 +45,12 @@ public class Health : MonoBehaviour
         health += value;
 
         // Stats counting
-        // Layer# 8 - PlayerProjectiles, player, enemy
+        // Layer# 8 - PlayerProjectiles.  player, enemy
         if (other.layer == 8)
+        {
             StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
+            Debug.Log("Player prjectile damage: " + value);
+        }
         else if (this.tag == "Enemy")
             StatsCounterPlayer.DamageToEnemies -= value;
         else if (this.tag == "Player")

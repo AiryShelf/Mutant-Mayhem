@@ -58,6 +58,8 @@ MonoBehaviour:
   tooltipDescription: More melee damage.  Higher frequency intensity lets the energy
     sword cut deeper
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
+  isGunUpg: 0
+  playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &8298879057332789805
 CanvasRenderer:
@@ -109,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a9b72b3090b65408cd83094b1f246d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolTipDelay: 0.3
+  toolTipDelay: 1
   header: 
   content: 
 --- !u!225 &8501905965174573032

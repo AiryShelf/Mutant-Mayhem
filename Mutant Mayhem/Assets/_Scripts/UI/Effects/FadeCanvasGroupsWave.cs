@@ -21,7 +21,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     [SerializeField] float delayBetweenElements = 0.3f;
     [SerializeField] float fadeStartTime = 1f;
     [SerializeField] float fadeIndivTime = 0.5f;
-    [SerializeField] float fadeOutAllTime = 1f;
+    public float fadeOutAllTime = 1f;
     [SerializeField] float lerpOutStopThreshold = 0.1f;
     Coroutine fadeIn;
     Coroutine fadeOut;
@@ -83,7 +83,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     {
         if (isTriggered && fadeIn == null)
         {
-            //StopAllCoroutines();
+            StopAllCoroutines();
             if (deactivateGroup)
                 deactivateGroup.gameObject.SetActive(true);
     
@@ -91,7 +91,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         }
         else if (!isTriggered && fadeIn != null && fadeOut == null)
         {
-            //StopAllCoroutines();
+            StopAllCoroutines();
             if (!fadeOutInWave)
                 fadeOut = StartCoroutine(FadeOutAll());
             else
@@ -289,7 +289,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             if (stop)
             {
                 timeElapsed = fadeIndivTime;
-                myGroup.alpha = 0;
+                //myGroup.alpha = 0;
             }       
 
             yield return new WaitForEndOfFrame();
@@ -354,8 +354,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             if (stop)
             {
                 timeElapsed = fadeOutAllTime;
-                myGroup.alpha = 0;
-                Debug.Log("Stop happened");
+                //myGroup.alpha = 0;
+                //Debug.Log("Stop happened");
             }       
 
             yield return new WaitForEndOfFrame();

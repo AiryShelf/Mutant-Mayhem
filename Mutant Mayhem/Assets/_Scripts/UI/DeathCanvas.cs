@@ -8,6 +8,7 @@ public class DeathCanvas : MonoBehaviour
 {
     [SerializeField] Player player;
     [SerializeField] StatsCounterPlayer statsCounterPlayer;
+    [SerializeField] CanvasGroup myCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroupsWave;
     [SerializeField] StatsListBuilder statsListBuilder;
     [SerializeField] PauseMenuController pauseMenuController;
@@ -16,11 +17,11 @@ public class DeathCanvas : MonoBehaviour
     [SerializeField] List<string> deathTitles;
     [SerializeField] List<string> deathSubtitles;
 
-       
-    bool triggered;
+    bool isTriggered;
 
     void Start()
     {
+        myCanvasGroup.blocksRaycasts = false;
         RandomizeDeathMessages();
     }
 
@@ -56,10 +57,11 @@ public class DeathCanvas : MonoBehaviour
 
     public void TransitionToDeathPanel()
     {
-        if (triggered == false)
+        if (isTriggered == false)
         {
+            myCanvasGroup.blocksRaycasts = true;
             pauseMenuController.isPaused = true;
-            triggered = true;
+            isTriggered = true;
             statsListBuilder.RebuildList();
             fadeCanvasGroupsWave.isTriggered = true;           
         }

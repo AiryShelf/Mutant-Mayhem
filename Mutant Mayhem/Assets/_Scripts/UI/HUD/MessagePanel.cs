@@ -10,6 +10,8 @@ public class MessagePanel : MonoBehaviour
     [SerializeField] TextPulser textPulser;
     [SerializeField] float timeToDisplay = 4f;
 
+    Coroutine flashMessage;
+
     void Start()
     {
         messageCanvasGroup.alpha = 0;
@@ -19,7 +21,10 @@ public class MessagePanel : MonoBehaviour
     {
         messageText.text = message;
         textPulser.pulseToColor = color;
-        StartCoroutine(FlashMessage());
+        
+        if (flashMessage != null)
+            StopCoroutine(flashMessage);
+        flashMessage = StartCoroutine(FlashMessage());
     }
 
     IEnumerator FlashMessage()

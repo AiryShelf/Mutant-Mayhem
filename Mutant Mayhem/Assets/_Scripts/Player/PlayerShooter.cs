@@ -30,11 +30,11 @@ public class PlayerShooter : MonoBehaviour
     Coroutine shootingCoroutine;
     Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
     bool waitToShoot;
-    [HideInInspector] public bool isShooting;
-    [HideInInspector] public bool isAiming;
-    [HideInInspector] public bool isBuilding;
-    [HideInInspector] public bool isReloading;
-    [HideInInspector] public bool isSwitchingGuns;
+    public bool isShooting;
+    public bool isAiming;
+    public bool isBuilding;
+    public bool isReloading;
+    public bool isSwitchingGuns;
     bool droppedGun;
     Rigidbody2D myRb;
     
@@ -64,7 +64,7 @@ public class PlayerShooter : MonoBehaviour
     void Update()
     {
             Shoot();
-            Debug.Log("Current gun damage: " + currentGunSO.damage);
+            //Debug.Log("Current gun damage: " + currentGunSO.damage);
     }
 
     public void DropGun()
@@ -235,7 +235,7 @@ public class PlayerShooter : MonoBehaviour
         while (true)
         {
             // Create bullet and casing
-            GameObject bullet = Instantiate(currentGunSO.bulletPrefab, 
+            GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
                                             muzzleTrans.position, muzzleTrans.rotation);
             if (currentGunSO.bulletCasingPrefab != null)
             {
@@ -247,15 +247,18 @@ public class PlayerShooter : MonoBehaviour
             gunsAmmoInClips[currentGunIndex]--;
             StatsCounterPlayer.ShotsFiredByPlayer++;
             
-            // Apply physics and effects
-            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            // Apply stats and effects
+            Bullet bullet = bulletObj.GetComponent<Bullet>();
+            bullet.damage = currentGunSO.damage;
+            bullet.knockback = currentGunSO.knockback;
+            Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();
             Vector2 dir = ApplyAccuracy(muzzleTrans.right);
             rb.velocity = dir * currentGunSO.bulletSpeed;
             Kickback();
             StartCoroutine(MuzzleFlash());
 
-            StartCoroutine(ManageBulletTrails(bullet, currentGunSO.bulletLifeTime));
-            Destroy(bullet, currentGunSO.bulletLifeTime);
+            StartCoroutine(ManageBulletTrails(bulletObj, currentGunSO.bulletLifeTime));
+            Destroy(bulletObj, currentGunSO.bulletLifeTime);
 
             yield return new WaitForSeconds(currentGunSO.shootSpeed);
         }

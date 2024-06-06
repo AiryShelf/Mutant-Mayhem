@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
 public enum UpgradeType
 {
-    [Header("Test enum header")]
     // PlayerStats
     MoveSpeed,
     StrafeSpeed,
@@ -59,7 +59,7 @@ public class MoveSpeedUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.moveSpeed += 0.1f;
+        playerStats.moveSpeed += 0.2f;
         playerStats.lookSpeed += 0.002f;
     }
 }
@@ -70,7 +70,7 @@ public class StrafeSpeedUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.strafeSpeed += 0.05f;
+        playerStats.strafeSpeed += 0.1f;
     }
 }
 

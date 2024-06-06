@@ -8,6 +8,7 @@ using UnityEngine.Rendering.Universal;
 public class GunSO : ScriptableObject
 {
     public GunType gunType;
+    public string uiName;
     public Sprite sprite;
     public Sprite uiSprite;
     public string animatorHasString;

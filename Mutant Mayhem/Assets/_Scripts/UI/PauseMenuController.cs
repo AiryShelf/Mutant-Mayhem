@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class PauseMenuController : MonoBehaviour
 {
     [SerializeField] UIBuildMenuController uIBuildMenuController;
+    [SerializeField] CanvasGroup myCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
 
     Player player;
@@ -44,16 +45,16 @@ public class PauseMenuController : MonoBehaviour
 
     void Start()
     {
-        
+        myCanvasGroup.blocksRaycasts = false;
     }
 
     void EscapePressed(InputAction.CallbackContext context)
     {
-        Debug.Log("escape pressed");
+        //Debug.Log("escape pressed");
         if (!player.isDead && !buildingSystem.inBuildMode 
             && !qCubeController.isUpgradesOpen)
         {
-            Debug.Log("Pause passed checks");
+            //Debug.Log("Pause passed checks");
             if (!isPaused)
                 OpenPanel(true);
             else
@@ -72,6 +73,7 @@ public class PauseMenuController : MonoBehaviour
             }
 
             fadeCanvasGroups.isTriggered = true;
+            myCanvasGroup.blocksRaycasts = true;
             Pause(true);
         }
         else
@@ -83,6 +85,7 @@ public class PauseMenuController : MonoBehaviour
             }
 
             fadeCanvasGroups.isTriggered = false;
+            myCanvasGroup.blocksRaycasts = false;
             Pause(false);
         }
     }

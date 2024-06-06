@@ -6,15 +6,15 @@ using UnityEngine;
 public class UIUpgrade : MonoBehaviour
 {
     public UpgradeType type;
-    public string UiName;
+    [SerializeField] string UiName;
     [TextArea(3,10)]
     public string tooltipDescription;
     
     public GameObject upgradeTextPrefab;
 
     [Header("For Gun Upgrades:")]
-    public bool isGunUpg;
-    public GunType gunType;
+    [SerializeField] bool isGunUpg;
+    [SerializeField] int playerGunIndex;
 
     [HideInInspector] public GameObject upgradeTextInstance;
     TextMeshProUGUI upgradeText;
@@ -28,27 +28,44 @@ public class UIUpgrade : MonoBehaviour
     }
 
     // This allows the enum to be referenced via UI button OnClick
-    public void InvokeOnClick(UIUpgrade u)
+    public void InvokeOnClick(UIUpgrade myUpg)
     {
         //Debug.Log("OnClick called");
 
-        upgradeSystem.OnUpgradeButtonClicked(u.type, isGunUpg, 0);
+        upgradeSystem.OnUpgradeButtonClicked(myUpg.type, isGunUpg, playerGunIndex);
         
         UpdateText();
     }
 
     void UpdateText()
     {
-        int upgLvl;
-        int upgCost;
 
+        int upgLvl = 1;
+        int upgCost = 1;
+
+        // Check for Gun Stats
         if (isGunUpg)
         {
-            upgLvl = upgradeSystem.playerStatsUpgLevels[type];
-            upgCost = upgradeSystem.playerStatsUpgCurrCosts[type];
+            switch (playerGunIndex)
+            {
+                case 0:
+                {
+                    upgLvl = upgradeSystem.laserPistolUpgLevels[type];
+                    upgCost = upgradeSystem.laserPistolUpgCurrCosts[type];
+                    break;
+                }
+
+                case 1:
+                {
+                    upgLvl = upgradeSystem.SMGUpgLevels[type];
+                    upgCost = upgradeSystem.SMGUpgCurrCosts[type];
+                    break;
+                }
+            }
         }
         else
         {
+            // PlayerStats
             upgLvl = upgradeSystem.playerStatsUpgLevels[type];
             upgCost = upgradeSystem.playerStatsUpgCurrCosts[type];
         }
