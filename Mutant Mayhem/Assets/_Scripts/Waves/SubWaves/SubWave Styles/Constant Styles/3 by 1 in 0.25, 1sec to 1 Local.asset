@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5048820a1e26fa04585ca53dc5d474be, type: 3}
-  m_Name: SubWave 10 Crab1
+  m_Script: {fileID: 11500000, guid: dc5551c89943e394fa28c5120f890be6, type: 3}
+  m_Name: 3 by 1 in 0.25, 1sec to 1 Local
   m_EditorClassIdentifier: 
-  enemyPrefabList:
-  - {fileID: 5437049528478583412, guid: 95eff1dda419f7b43badf0e11d25e35c, type: 3}
-  numberToSpawn: 0a000000
+  selectionType: 0
+  batchAmount: 3
+  timeToNextSpawn: 1
+  spreadForBatch: 0.25
+  timeToNextBatch: 1
+  spreadForNextBatch: 1
+  randomizeNextBatchSpread: 0

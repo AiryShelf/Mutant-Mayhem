@@ -33,6 +33,7 @@ public class BuildingSystem : MonoBehaviour
     InputActionMap playerActionMap;
     InputAction toolbarAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
+    MessagePanel messagePanel;
 
     Coroutine clearSelection;
 
@@ -41,6 +42,7 @@ public class BuildingSystem : MonoBehaviour
         BuildStructsAvailDict();    
         player = FindObjectOfType<Player>();
         PlayerCredits = playerStartingCredits;
+        messagePanel = FindObjectOfType<MessagePanel>();
     }
 
     void OnEnable()
@@ -171,6 +173,11 @@ public class BuildingSystem : MonoBehaviour
                 RemoveBuildHighlight();
                 PlayerCredits -= structureSO.tileCost;
             }
+        }
+        else
+        {
+            messagePanel.ShowMessage("Not enough Credits to build " + 
+                                     structureSO.tileName + "!", Color.red);
         }
     }
 

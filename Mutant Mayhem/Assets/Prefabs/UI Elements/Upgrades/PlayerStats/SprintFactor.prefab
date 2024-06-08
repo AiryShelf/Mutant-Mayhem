@@ -53,13 +53,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  upgradeFamily: 0
+  playerStatsUpgrade: 2
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 0
   UiName: Sprint Multiplier
   tooltipDescription: Increases the multiplier applied to move and strafe speeds. 
     Exosuit ECU upgrades along with increased amperage delivery makes sprinting faster
     for all directions of movement.  Press 'Shift' to sprint
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 0
   playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &3445147682719500606

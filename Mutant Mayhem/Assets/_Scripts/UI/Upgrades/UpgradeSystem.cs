@@ -8,10 +8,13 @@ public class UpgradeSystem : MonoBehaviour
 {
     [SerializeField] ParticleSystem playerUpgAppliedFX;
     [SerializeField] ParticleSystem uiUpgAppliedFX;
-    [SerializeField] List<UpgradeType> playerStatsEnums;
-    [SerializeField] List<UpgradeType> laserPistolEnums;
-    [SerializeField] List<UpgradeType> SMGEnums;
+    [SerializeField] List<PlayerStatsUpgrade> playerStatsEnums;
+    [SerializeField] List<QCubeStatsUpgrade> qCubeStatsEnums;
+    [SerializeField] List<ConsumablesUpgrade> consumablesEnums;
+    [SerializeField] List<GunStatsUpgrade> laserPistolEnums;
+    [SerializeField] List<GunStatsUpgrade> SMGEnums;
     public Player player;
+    public QCubeController qCubeController;
     public PlayerShooter playerShooter;
     public TileManager tileManager;
 
@@ -20,34 +23,55 @@ public class UpgradeSystem : MonoBehaviour
     #region Upgrade Dicts
 
     // PlayerStats
-    private Dictionary<UpgradeType, int> playerStatsUpgMaxLevels = 
-        new Dictionary<UpgradeType, int>();
-    public Dictionary<UpgradeType, int> playerStatsUpgLevels = 
-        new Dictionary<UpgradeType, int>();
-    private Dictionary<UpgradeType, int> playerStatsUpgBaseCosts = 
-        new Dictionary<UpgradeType, int>();
-    public Dictionary<UpgradeType, int> playerStatsUpgCurrCosts = 
-        new Dictionary<UpgradeType, int>();
+    private Dictionary<PlayerStatsUpgrade, int> playerStatsUpgMaxLevels = 
+        new Dictionary<PlayerStatsUpgrade, int>();
+    public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgLevels = 
+        new Dictionary<PlayerStatsUpgrade, int>();
+    private Dictionary<PlayerStatsUpgrade, int> playerStatsUpgBaseCosts = 
+        new Dictionary<PlayerStatsUpgrade, int>();
+    public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgCurrCosts = 
+        new Dictionary<PlayerStatsUpgrade, int>();
 
+    // QCubeStats
+    private Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgMaxLevels = 
+        new Dictionary<QCubeStatsUpgrade, int>();
+    public Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgLevels = 
+        new Dictionary<QCubeStatsUpgrade, int>();
+    private Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgBaseCosts = 
+        new Dictionary<QCubeStatsUpgrade, int>();
+    public Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgCurrCosts = 
+        new Dictionary<QCubeStatsUpgrade, int>();
+    
+    // Consumables
+    private Dictionary<ConsumablesUpgrade, int> consumablesUpgMaxLevels = 
+        new Dictionary<ConsumablesUpgrade, int>();
+    public Dictionary<ConsumablesUpgrade, int> consumablesUpgLevels = 
+        new Dictionary<ConsumablesUpgrade, int>();
+    private Dictionary<ConsumablesUpgrade, int> consumablesUpgBaseCosts = 
+        new Dictionary<ConsumablesUpgrade, int>();
+    public Dictionary<ConsumablesUpgrade, int> consumablesUpgCurrCosts = 
+        new Dictionary<ConsumablesUpgrade, int>();
+
+    // GUN STATS
     // Laser Pistol stats
-    private Dictionary<UpgradeType, int> laserPistolUpgMaxLevels = 
-        new Dictionary<UpgradeType, int>();
-    public Dictionary<UpgradeType, int> laserPistolUpgLevels = 
-        new Dictionary<UpgradeType, int>();
-    private Dictionary<UpgradeType, int> laserPistolUpgBaseCosts = 
-        new Dictionary<UpgradeType, int>();
-    public Dictionary<UpgradeType, int> laserPistolUpgCurrCosts = 
-        new Dictionary<UpgradeType, int>();
+    private Dictionary<GunStatsUpgrade, int> laserPistolUpgMaxLevels = 
+        new Dictionary<GunStatsUpgrade, int>();
+    public Dictionary<GunStatsUpgrade, int> laserPistolUpgLevels = 
+        new Dictionary<GunStatsUpgrade, int>();
+    private Dictionary<GunStatsUpgrade, int> laserPistolUpgBaseCosts = 
+        new Dictionary<GunStatsUpgrade, int>();
+    public Dictionary<GunStatsUpgrade, int> laserPistolUpgCurrCosts = 
+        new Dictionary<GunStatsUpgrade, int>();
 
     // SMG stats
-    private Dictionary<UpgradeType, int> SMGUpgMaxLevels = 
-        new Dictionary<UpgradeType, int>();
-    public Dictionary<UpgradeType, int> SMGUpgLevels = 
-        new Dictionary<UpgradeType, int>();
-    private Dictionary<UpgradeType, int> SMGUpgBaseCosts = 
-        new Dictionary<UpgradeType, int>();
-    public Dictionary<UpgradeType, int> SMGUpgCurrCosts = 
-        new Dictionary<UpgradeType, int>();
+    private Dictionary<GunStatsUpgrade, int> SMGUpgMaxLevels = 
+        new Dictionary<GunStatsUpgrade, int>();
+    public Dictionary<GunStatsUpgrade, int> SMGUpgLevels = 
+        new Dictionary<GunStatsUpgrade, int>();
+    private Dictionary<GunStatsUpgrade, int> SMGUpgBaseCosts = 
+        new Dictionary<GunStatsUpgrade, int>();
+    public Dictionary<GunStatsUpgrade, int> SMGUpgCurrCosts = 
+        new Dictionary<GunStatsUpgrade, int>();
     
     #endregion
 
@@ -59,99 +83,130 @@ public class UpgradeSystem : MonoBehaviour
 
         // Max upgrade levels
         // PlayerStats
-        playerStatsUpgMaxLevels[UpgradeType.MoveSpeed] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.StrafeSpeed] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.SprintFactor] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.PlayerReloadSpeed] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.PlayerAccuracy] = 10;
-        playerStatsUpgMaxLevels[UpgradeType.MeleeDamage] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.MeleeKnockback] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.MeleeAttackRate] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.StaminaMax] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.StaminaRegen] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.HealthMax] = 100;
-        playerStatsUpgMaxLevels[UpgradeType.HealthRegen] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MoveSpeed] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.StrafeSpeed] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.SprintFactor] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerAccuracy] = 10;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeDamage] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeKnockback] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeAttackRate] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.StaminaMax] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.StaminaRegen] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthMax] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthRegen] = 100;
+
+        // QCubeStats
+        qCubeStatsUpgMaxLevels[QCubeStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
+
+        //Consumables
+        consumablesUpgMaxLevels[ConsumablesUpgrade.PlayerHeal] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.QCubeRepair] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.GrenadeBuyAmmo] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.SMGBuyAmmo] = int.MaxValue;
 
         // Gun Stats
-        laserPistolUpgMaxLevels[UpgradeType.GunDamage] = 100;
-        laserPistolUpgMaxLevels[UpgradeType.GunKnockback] = 100;
-        laserPistolUpgMaxLevels[UpgradeType.ShootSpeed] = 10;
-        laserPistolUpgMaxLevels[UpgradeType.ClipSize] = 10;
-        laserPistolUpgMaxLevels[UpgradeType.ChargeDelay] = 10;
-        laserPistolUpgMaxLevels[UpgradeType.GunAccuracy] = 10;
-        laserPistolUpgMaxLevels[UpgradeType.GunRange] = 10;
-        laserPistolUpgMaxLevels[UpgradeType.Recoil] = 10;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.GunKnockback] = 100;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.ShootSpeed] = 10;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.ClipSize] = 10;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.ChargeDelay] = 10;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.GunAccuracy] = 10;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.GunRange] = 10;
+        laserPistolUpgMaxLevels[GunStatsUpgrade.Recoil] = 10;
 
-        SMGUpgMaxLevels[UpgradeType.GunDamage] = 100;
-        SMGUpgMaxLevels[UpgradeType.GunKnockback] = 100;
-        SMGUpgMaxLevels[UpgradeType.ShootSpeed] = 10;
-        SMGUpgMaxLevels[UpgradeType.ClipSize] = 10;
-        SMGUpgMaxLevels[UpgradeType.ChargeDelay] = 10;
-        SMGUpgMaxLevels[UpgradeType.GunAccuracy] = 10;
-        SMGUpgMaxLevels[UpgradeType.GunRange] = 10;
-        SMGUpgMaxLevels[UpgradeType.Recoil] = 10;
+        SMGUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
+        SMGUpgMaxLevels[GunStatsUpgrade.GunKnockback] = 100;
+        SMGUpgMaxLevels[GunStatsUpgrade.ShootSpeed] = 10;
+        SMGUpgMaxLevels[GunStatsUpgrade.ClipSize] = 10;
+        SMGUpgMaxLevels[GunStatsUpgrade.ChargeDelay] = 10;
+        SMGUpgMaxLevels[GunStatsUpgrade.GunAccuracy] = 10;
+        SMGUpgMaxLevels[GunStatsUpgrade.GunRange] = 10;
+        SMGUpgMaxLevels[GunStatsUpgrade.Recoil] = 10;
 
         // Base upgrade costs
         // PlayerStats
-        playerStatsUpgBaseCosts[UpgradeType.MoveSpeed] = 100;
-        playerStatsUpgBaseCosts[UpgradeType.StrafeSpeed] = 100;
-        playerStatsUpgBaseCosts[UpgradeType.SprintFactor] = 150;
-        playerStatsUpgBaseCosts[UpgradeType.PlayerReloadSpeed] = 150;
-        playerStatsUpgBaseCosts[UpgradeType.PlayerAccuracy] = 200;
-        playerStatsUpgBaseCosts[UpgradeType.MeleeDamage] = 100;
-        playerStatsUpgBaseCosts[UpgradeType.MeleeKnockback] = 150;
-        playerStatsUpgBaseCosts[UpgradeType.MeleeAttackRate] = 100;
-        playerStatsUpgBaseCosts[UpgradeType.StaminaMax] = 100;
-        playerStatsUpgBaseCosts[UpgradeType.StaminaRegen] = 200;
-        playerStatsUpgBaseCosts[UpgradeType.HealthMax] = 100;
-        playerStatsUpgBaseCosts[UpgradeType.HealthRegen] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MoveSpeed] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.StrafeSpeed] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.SprintFactor] = 150;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 150;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerAccuracy] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeKnockback] = 150;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeAttackRate] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaMax] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaRegen] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthMax] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 200;
+
+        // QCubeStats
+        qCubeStatsUpgBaseCosts[QCubeStatsUpgrade.QCubeMaxHealth] = 200;
+
+        // Consumables
+        consumablesUpgBaseCosts[ConsumablesUpgrade.PlayerHeal] = 100;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.QCubeRepair] = 200;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.GrenadeBuyAmmo] = 25;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 50;
 
         // Gun Stats
-        laserPistolUpgBaseCosts[UpgradeType.GunDamage] = 100;
-        laserPistolUpgBaseCosts[UpgradeType.GunKnockback] = 150;
-        laserPistolUpgBaseCosts[UpgradeType.ShootSpeed] = 200;
-        laserPistolUpgBaseCosts[UpgradeType.ClipSize] = 200;
-        laserPistolUpgBaseCosts[UpgradeType.ChargeDelay] = 200;
-        laserPistolUpgBaseCosts[UpgradeType.GunAccuracy] = 200;
-        laserPistolUpgBaseCosts[UpgradeType.GunRange] = 150;
-        laserPistolUpgBaseCosts[UpgradeType.Recoil] = 100; 
+        laserPistolUpgBaseCosts[GunStatsUpgrade.GunDamage] = 100;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.GunKnockback] = 150;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.ShootSpeed] = 200;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.ClipSize] = 200;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.ChargeDelay] = 200;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.GunAccuracy] = 200;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.GunRange] = 150;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.Recoil] = 100; 
 
-        SMGUpgBaseCosts[UpgradeType.GunDamage] = 100;
-        SMGUpgBaseCosts[UpgradeType.GunKnockback] = 150;
-        SMGUpgBaseCosts[UpgradeType.ShootSpeed] = 200;
-        SMGUpgBaseCosts[UpgradeType.ClipSize] = 200;
-        SMGUpgBaseCosts[UpgradeType.ChargeDelay] = 200;
-        SMGUpgBaseCosts[UpgradeType.GunAccuracy] = 200;
-        SMGUpgBaseCosts[UpgradeType.GunRange] = 150;
-        SMGUpgBaseCosts[UpgradeType.Recoil] = 100; 
+        SMGUpgBaseCosts[GunStatsUpgrade.GunDamage] = 100;
+        SMGUpgBaseCosts[GunStatsUpgrade.GunKnockback] = 150;
+        SMGUpgBaseCosts[GunStatsUpgrade.ShootSpeed] = 200;
+        SMGUpgBaseCosts[GunStatsUpgrade.ClipSize] = 200;
+        SMGUpgBaseCosts[GunStatsUpgrade.ChargeDelay] = 200;
+        SMGUpgBaseCosts[GunStatsUpgrade.GunAccuracy] = 200;
+        SMGUpgBaseCosts[GunStatsUpgrade.GunRange] = 150;
+        SMGUpgBaseCosts[GunStatsUpgrade.Recoil] = 100; 
 
         // Initialize currentCosts
-        foreach (KeyValuePair<UpgradeType, int> kvp in playerStatsUpgBaseCosts)
+        foreach (KeyValuePair<PlayerStatsUpgrade, int> kvp in playerStatsUpgBaseCosts)
         {
             playerStatsUpgCurrCosts.Add(kvp.Key, kvp.Value);
         }
-
-        foreach (KeyValuePair<UpgradeType, int> kvp in laserPistolUpgBaseCosts)
+        foreach (KeyValuePair<QCubeStatsUpgrade, int> kvp in qCubeStatsUpgBaseCosts)
+        {
+            qCubeStatsUpgCurrCosts.Add(kvp.Key, kvp.Value);
+        }
+        foreach (KeyValuePair<ConsumablesUpgrade, int> kvp in consumablesUpgBaseCosts)
+        {
+            consumablesUpgCurrCosts.Add(kvp.Key, kvp.Value);
+        }
+        foreach (KeyValuePair<GunStatsUpgrade, int> kvp in laserPistolUpgBaseCosts)
         {
             laserPistolUpgCurrCosts.Add(kvp.Key, kvp.Value);
         }
-
-        foreach (KeyValuePair<UpgradeType, int> kvp in SMGUpgBaseCosts)
+        foreach (KeyValuePair<GunStatsUpgrade, int> kvp in SMGUpgBaseCosts)
         {
             SMGUpgCurrCosts.Add(kvp.Key, kvp.Value);
         }
 
         // Initialize upgrade levels
-        foreach(UpgradeType type in playerStatsEnums)
+        foreach(PlayerStatsUpgrade type in playerStatsEnums)
         {
             playerStatsUpgLevels[type] = 0;
         }
-
-        foreach(UpgradeType type in laserPistolEnums)
+        foreach(QCubeStatsUpgrade type in qCubeStatsEnums)
+        {
+            qCubeStatsUpgLevels[type] = 0;
+        }
+        foreach(ConsumablesUpgrade type in consumablesEnums)
+        {
+            consumablesUpgLevels[type] = 0;
+        }
+        foreach(GunStatsUpgrade type in laserPistolEnums)
         {
             laserPistolUpgLevels[type] = 0;
         }
-        foreach(UpgradeType type in SMGEnums)
+        foreach(GunStatsUpgrade type in SMGEnums)
         {
             SMGUpgLevels[type] = 0;
         }
@@ -159,52 +214,94 @@ public class UpgradeSystem : MonoBehaviour
 
     #endregion Upgrade Properties
 
-    Upgrade CreateUpgrade(UpgradeType type)
+    Upgrade CreateUpgrade(PlayerStatsUpgrade type)
     {
         switch (type)
         {
             // PlayerStats
-            case UpgradeType.MoveSpeed:
+            case PlayerStatsUpgrade.MoveSpeed:
                 return new MoveSpeedUpgrade();
-            case UpgradeType.StrafeSpeed:
+            case PlayerStatsUpgrade.StrafeSpeed:
                 return new StrafeSpeedUpgrade();
-            case UpgradeType.SprintFactor:
+            case PlayerStatsUpgrade.SprintFactor:
                 return new SprintFactorUpgrade();
-            case UpgradeType.PlayerReloadSpeed:
+            case PlayerStatsUpgrade.PlayerReloadSpeed:
                 return new ReloadSpeedUpgrade();
-            case UpgradeType.MeleeDamage:
+            case PlayerStatsUpgrade.MeleeDamage:
                 return new MeleeDamageUpgrade();
-            case UpgradeType.MeleeKnockback:
+            case PlayerStatsUpgrade.MeleeKnockback:
                 return new KnockbackUpgrade();
-            case UpgradeType.MeleeAttackRate:
+            case PlayerStatsUpgrade.MeleeAttackRate:
                 return new MeleeAttackRateUpgrade();
-            case UpgradeType.StaminaMax:
+            case PlayerStatsUpgrade.StaminaMax:
                 return new StaminaMaxUpgrade();
-            case UpgradeType.StaminaRegen:
+            case PlayerStatsUpgrade.StaminaRegen:
                 return new StaminaRegenUpgrade();
-            case UpgradeType.HealthMax:
+            case PlayerStatsUpgrade.HealthMax:
                 return new HealthMaxUpgrade();
-            case UpgradeType.HealthRegen:
+            case PlayerStatsUpgrade.HealthRegen:
                 return new HealthRegenUpgrade();
-            case UpgradeType.PlayerAccuracy:
+            case PlayerStatsUpgrade.PlayerAccuracy:
                 return new PlayerAccuracyUpgrade();
 
+            default:
+                return null;
+        }
+    }
+
+    Upgrade CreateUpgrade(QCubeStatsUpgrade type)
+    {
+        switch (type)
+        {
+            // QCubeStats
+            case QCubeStatsUpgrade.QCubeMaxHealth:
+                return new QCubeMaxHealthUpgrade();
+
+            default:
+                return null;
+                
+        }
+    }
+
+    Upgrade CreateUpgrade(ConsumablesUpgrade type)
+    {
+        switch (type)
+        {
+            // Consumables
+            case ConsumablesUpgrade.PlayerHeal:
+                return new PlayerHealUpgrade();
+            case ConsumablesUpgrade.QCubeRepair:
+                return new QCubeRepairUpgrade();
+            case ConsumablesUpgrade.GrenadeBuyAmmo:
+                return new GrenadeBuyAmmoUpgrade();
+            case ConsumablesUpgrade.SMGBuyAmmo:
+                return new SMGBuyAmmoUpgrade();
+
+            default:
+                return null;
+        }
+    }
+
+    Upgrade CreateUpgrade(GunStatsUpgrade type)
+    {
+        switch (type)
+        {
             // GunSO stats
-            case UpgradeType.GunDamage:
+            case GunStatsUpgrade.GunDamage:
                 return new GunDamageUpgrade();
-            case UpgradeType.GunKnockback:
+            case GunStatsUpgrade.GunKnockback:
                 return new GunKnockbackUpgrade();
-            case UpgradeType.ShootSpeed:
+            case GunStatsUpgrade.ShootSpeed:
                 return new ShootSpeedUpgrade();
-            case UpgradeType.ClipSize:
+            case GunStatsUpgrade.ClipSize:
                 return new ClipSizeUpgrade();
-            case UpgradeType.ChargeDelay:
+            case GunStatsUpgrade.ChargeDelay:
                 return new ChargeDelayUpgrade();
-            case UpgradeType.GunAccuracy:
+            case GunStatsUpgrade.GunAccuracy:
                 return new GunAccuracyUpgrade();
-            case UpgradeType.GunRange:
+            case GunStatsUpgrade.GunRange:
                 return new RangeUpgrade();
-            case UpgradeType.Recoil:
+            case GunStatsUpgrade.Recoil:
                 return new RecoilUpgrade();
 
             default:
@@ -214,60 +311,133 @@ public class UpgradeSystem : MonoBehaviour
 
     #region Apply Upgrades
 
-    public void OnUpgradeButtonClicked(UpgradeType upgradeType, bool isGunUpgrade, int gunIndex)
+    public void OnUpgradeButtonClicked(PlayerStatsUpgrade upgType)
     {
-        Upgrade upgrade = CreateUpgrade(upgradeType);
-        if (upgrade == null)
-        {
-            Debug.LogError("Upgrade not found for type: " + upgradeType);
-            return;
-        }
-
-        if (isGunUpgrade)
-        {
-            ApplyGunUpgrade(upgrade, upgradeType, gunIndex);
-        }
-        else
-        {
-            ApplyPlayerUpgrade(upgrade, upgradeType);
-        }
+        Upgrade upgrade = CreateUpgrade(upgType);
+        ApplyPlayerUpgrade(upgrade, upgType);
     }
 
-    private void ApplyPlayerUpgrade(Upgrade upgrade, UpgradeType upgradeType)
+    public void OnUpgradeButtonClicked(QCubeStatsUpgrade upgType)
+    {
+        Upgrade upgrade = CreateUpgrade(upgType);
+        ApplyQCubeUpgrade(upgrade, upgType);
+    }
+
+    public void OnUpgradeButtonClicked(ConsumablesUpgrade upgType)
+    {
+        Upgrade upgrade = CreateUpgrade(upgType);
+        ApplyConsumableUpgrade(upgrade, upgType);
+    }
+
+    public void OnUpgradeButtonClicked(GunStatsUpgrade upgType, int gunIndex)
+    {
+        Upgrade upgrade = CreateUpgrade(upgType);
+        ApplyGunUpgrade(upgrade, upgType, gunIndex);
+    }
+
+    private void ApplyPlayerUpgrade(Upgrade upgrade, PlayerStatsUpgrade upgType)
     {
         // Check max level
-        if (playerStatsUpgLevels[upgradeType] >= playerStatsUpgMaxLevels[upgradeType])
+        if (playerStatsUpgLevels[upgType] >= playerStatsUpgMaxLevels[upgType])
         {
-            Debug.Log("Max level reached for: " + upgradeType);
+            Debug.Log("Max level reached for: " + upgType);
             messagePanel.ShowMessage("Max level reached!", Color.yellow);
             return;
         }
 
         // Buy and apply
-        int cost = playerStatsUpgCurrCosts[upgradeType];
+        int cost = playerStatsUpgCurrCosts[upgType];
         if (BuildingSystem.PlayerCredits >= cost)
         {
             BuildingSystem.PlayerCredits -= cost;
-            playerStatsUpgLevels[upgradeType]++;
+            playerStatsUpgLevels[upgType]++;
 
-            upgrade.Apply(player.stats, playerStatsUpgLevels[upgradeType]);
+            upgrade.Apply(player.stats, playerStatsUpgLevels[upgType]);
             PlayUpgradeEffects();
             
-            playerStatsUpgCurrCosts[upgradeType] = upgrade.CalculateCost(
-                playerStatsUpgBaseCosts[upgradeType], playerStatsUpgLevels[upgradeType] + 1);
+            playerStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(
+                playerStatsUpgBaseCosts[upgType], playerStatsUpgLevels[upgType] + 1);
 
-            Debug.Log("PlayerStats upgrade applied: " + upgradeType);
+            Debug.Log("PlayerStats upgrade applied: " + upgType);
             messagePanel.ShowMessage("Exosuit stat upgraded to level " + 
-                                     playerStatsUpgLevels[upgradeType], Color.cyan);
+                                     playerStatsUpgLevels[upgType], Color.cyan);
         }
         else
         {
-            Debug.Log("Not enough credits for: " + upgradeType);
+            Debug.Log("Not enough credits for: " + upgType);
             messagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }
 
-    private void ApplyGunUpgrade(Upgrade upgrade, UpgradeType upgradeType, int gunIndex)
+    private void ApplyQCubeUpgrade(Upgrade upgrade, QCubeStatsUpgrade upgType)
+    {
+        // Check max level
+        if (qCubeStatsUpgLevels[upgType] >= qCubeStatsUpgMaxLevels[upgType])
+        {
+            Debug.Log("Max level reached for: " + upgType);
+            messagePanel.ShowMessage("Max level reached!", Color.yellow);
+            return;
+        }
+
+        // Buy and apply
+        int cost = qCubeStatsUpgCurrCosts[upgType];
+        if (BuildingSystem.PlayerCredits >= cost)
+        {
+            BuildingSystem.PlayerCredits -= cost;
+            qCubeStatsUpgLevels[upgType]++;
+
+            upgrade.Apply(qCubeController.qCubeStats, qCubeStatsUpgLevels[upgType]);
+            PlayUpgradeEffects();
+            
+            qCubeStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(
+                qCubeStatsUpgBaseCosts[upgType], qCubeStatsUpgLevels[upgType] + 1);
+
+            Debug.Log("QCubeStats upgrade applied: " + upgType);
+            messagePanel.ShowMessage("Quantum Cube stat upgraded to level " + 
+                                     qCubeStatsUpgLevels[upgType], Color.cyan);
+        }
+        else
+        {
+            Debug.Log("Not enough credits for: " + upgType);
+            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+        }
+    }
+
+    private void ApplyConsumableUpgrade(Upgrade upgrade, ConsumablesUpgrade upgType)
+    {
+        // Buy and apply
+        int cost = consumablesUpgCurrCosts[upgType];
+        if (BuildingSystem.PlayerCredits >= cost)
+        {
+            // Check max level
+            if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
+            {
+                Debug.LogError("Consumable int maxed out: " + upgType);
+                messagePanel.ShowMessage("Maxed. You either bought this over 32,000 times " + 
+                                         "or there is a bug!  Let me know!", Color.yellow);
+                return;
+            }
+            
+            BuildingSystem.PlayerCredits -= cost;
+            consumablesUpgLevels[upgType]++;
+
+            upgrade.Apply(player.stats, consumablesUpgLevels[upgType]);
+            PlayUpgradeEffects();
+            
+            consumablesUpgCurrCosts[upgType] = upgrade.CalculateCost(
+                consumablesUpgBaseCosts[upgType], consumablesUpgLevels[upgType] + 1);
+
+            Debug.Log("Consumable applied: " + upgType);
+            messagePanel.ShowMessage("Consumabled applied!", Color.cyan);
+        }
+        else
+        {
+            Debug.Log("Not enough credits for: " + upgType);
+            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+        }
+    }
+
+    private void ApplyGunUpgrade(Upgrade upgrade, GunStatsUpgrade upgType, int gunIndex)
     {
         // Null check
         if (gunIndex < 0 || gunIndex >= playerShooter.gunList.Count)
@@ -277,10 +447,10 @@ public class UpgradeSystem : MonoBehaviour
         }
 
         GunSO gun = playerShooter.gunList[gunIndex];
-        Dictionary<UpgradeType, int> gunUpgLevels;
-        Dictionary<UpgradeType, int> gunUpgMaxLevels;
-        Dictionary<UpgradeType, int> gunUpgCurrCosts;
-        Dictionary<UpgradeType, int> gunUpgBaseCosts;
+        Dictionary<GunStatsUpgrade, int> gunUpgLevels;
+        Dictionary<GunStatsUpgrade, int> gunUpgMaxLevels;
+        Dictionary<GunStatsUpgrade, int> gunUpgCurrCosts;
+        Dictionary<GunStatsUpgrade, int> gunUpgBaseCosts;
 
         // Determine which gun's dictionaries to use
         if (gun.gunType == GunType.LaserPistol)
@@ -303,33 +473,33 @@ public class UpgradeSystem : MonoBehaviour
             return;
         }
 
-        if (gunUpgLevels[upgradeType] >= gunUpgMaxLevels[upgradeType])
+        if (gunUpgLevels[upgType] >= gunUpgMaxLevels[upgType])
         {
-            Debug.Log("Max level reached for: " + upgradeType);
+            Debug.Log("Max level reached for: " + upgType);
             messagePanel.ShowMessage("Max level reached!", Color.yellow);
             return;
         }
 
         // Buy and apply
-        int cost = gunUpgCurrCosts[upgradeType];
+        int cost = gunUpgCurrCosts[upgType];
         if (BuildingSystem.PlayerCredits >= cost)
         {
             BuildingSystem.PlayerCredits -= cost;
-            gunUpgLevels[upgradeType]++;
+            gunUpgLevels[upgType]++;
 
-            upgrade.Apply(gun, gunUpgLevels[upgradeType]);
+            upgrade.Apply(gun, gunUpgLevels[upgType]);
             PlayUpgradeEffects();
             
-            gunUpgCurrCosts[upgradeType] = upgrade.CalculateCost(
-                gunUpgBaseCosts[upgradeType], gunUpgLevels[upgradeType] + 1);
+            gunUpgCurrCosts[upgType] = upgrade.CalculateCost(
+                gunUpgBaseCosts[upgType], gunUpgLevels[upgType] + 1);
 
-            Debug.Log("Gun upgrade applied: " + upgradeType);
+            Debug.Log("Gun upgrade applied: " + upgType);
             messagePanel.ShowMessage(gun.uiName + " stat upgraded to level " + 
-                                     gunUpgLevels[upgradeType], Color.cyan);
+                                     gunUpgLevels[upgType], Color.cyan);
         }
         else
         {
-            Debug.Log("Not enough credits for: " + upgradeType);
+            Debug.Log("Not enough credits for: " + upgType);
             messagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }

@@ -40,7 +40,7 @@ public class EnemyIdleWanderTowards : EnemyIdleSOBase
         _direction = (_targetPos - transform.position).normalized;
 
         enemyBase.ChangeFacingDirection(_direction, rotateSpeedMultiplier);
-        enemyBase.MoveEnemy(enemyBase.FacingDirection * RandomMovementSpeedMult);
+        enemyBase.MoveEnemy(enemyBase.facingDirection * RandomMovementSpeedMult);
     }
 
     public override void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) 

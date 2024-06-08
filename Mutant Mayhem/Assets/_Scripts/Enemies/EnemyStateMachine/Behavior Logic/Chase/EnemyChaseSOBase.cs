@@ -33,7 +33,7 @@ public class EnemyChaseSOBase : ScriptableObject
         transform = gameObject.transform;
         this.enemyBase = enemyBase;
 
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        playerTransform = FindObjectOfType<Player>().transform;
     }
 
     public virtual void DoEnterLogic() 

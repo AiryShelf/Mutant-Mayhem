@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Timeline;
 using UnityEngine;
 
 public class WaveSpawner : MonoBehaviour
@@ -25,11 +26,6 @@ public class WaveSpawner : MonoBehaviour
         centerPoint = qCubeTrans.position;
     }
 
-    void OnDisable()
-    {
-
-    }
-
     public void StartWave()
     {       
         if (waveTimer != null)
@@ -44,11 +40,36 @@ public class WaveSpawner : MonoBehaviour
     {
         Debug.Log("Start Wave");
 
+        // Initialize
         currentSubWaveIndex = 0;
         currentConstantWaveIndex = 0;
         waveComplete = false;
         waveSpawning = true;
         waveSeconds = 0;
+
+        // Apply timing multipliers to Subwaves
+        List<int> _timesToTriggerSubWaves = new List<int>();
+        List<int> _timesToTriggerConstantWaves = new List<int>();
+        int prevTime = -1;
+        foreach (int timeToTrigger in currentWave.timesToTriggerSubWaves)
+        {
+            // This gives each wave its own time-slot to spawn in, doubles dont work.
+            int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMultiplier);
+            while (time <= prevTime)
+                time++;
+            prevTime = time;
+
+            _timesToTriggerSubWaves.Add(time);
+        }
+        // Apply timing multipliers to ConstantWaves
+        foreach (int timeToTrigger in currentWave.timesToTriggerConstantWaves)
+        {
+            // This gives each wave its own time-slot to spawn in, doubles dont work.
+            int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMultiplier);
+            if (time == prevTime)
+                time++;
+            _timesToTriggerConstantWaves.Add(time);
+        }           
 
         // Find max length of time, add 5 seconds
         int maxTime1 = currentWave.timesToTriggerSubWaves.Max();
@@ -57,7 +78,6 @@ public class WaveSpawner : MonoBehaviour
         {
             maxTime2 = currentWave.timesToTriggerConstantWaves.Max();
         }
-
         int maxTime = Mathf.Max(maxTime1, maxTime2) + 5;
         //Debug.Log("MaxTime for wave: " + maxTime);
 
@@ -118,20 +138,19 @@ public class WaveSpawner : MonoBehaviour
             subWave = currentWave.constantWaves[subWaveIndex];
             subWaveStyle = currentWave.constantWaveStyles[subWaveIndex];
         }
-        
-
+    
         // Make copy of wave to be created
         List<GameObject> _enemyPrefabList = 
             new List<GameObject>(subWave.enemyPrefabList);
         List<int> _numberToSpawn = 
             new List<int>(subWave.numberToSpawn);
 
-        int batchMult = FindBatchMultiplier(subWaveIndex, isSubWave);
+        float batchMult = FindBatchMultiplier(subWaveIndex, isSubWave);
 
         // Apply batch multipliers
         for (int i = 0; i < _numberToSpawn.Count; i++)
         {
-            _numberToSpawn[i] *= batchMult * waveController.batchMultiplier;
+            _numberToSpawn[i] *= Mathf.FloorToInt(batchMult * waveController.batchMultiplier);
         }
 
         // Get starting point, angle, radius
@@ -186,15 +205,17 @@ public class WaveSpawner : MonoBehaviour
                 if (listIndex > _enemyPrefabList.Count - 1)
                     listIndex = 0;
 
-                // Next spawn around batchAngle
+                // Get next spawn around batchAngle
                 spawnPos = GetPointOnCircumference(
                     spawnRadius, batchAngle, subWaveStyle.spreadForBatch, false);
                 spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
 
-                yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn * waveController.spawnSpeedMultiplier);
+                yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn * 
+                                                waveController.spawnSpeedMultiplier);
             }
 
-            yield return new WaitForSeconds(subWaveStyle.timeToNextBatch * waveController.spawnSpeedMultiplier);
+            yield return new WaitForSeconds(subWaveStyle.timeToNextBatch * 
+                                            waveController.spawnSpeedMultiplier);
         }
         
         //Debug.Log("Finished SubWave");
@@ -206,9 +227,9 @@ public class WaveSpawner : MonoBehaviour
         Instantiate(subWave.enemyPrefabList[index], spawnPos, Quaternion.identity);
     }
 
-    int FindBatchMultiplier(int subWaveIndex, bool isSubWave)
+    float FindBatchMultiplier(int subWaveIndex, bool isSubWave)
     {
-        int batchMult;
+        float batchMult;
         if (isSubWave)
         {
             batchMult = currentWave.subWaveMultipliers[subWaveIndex];

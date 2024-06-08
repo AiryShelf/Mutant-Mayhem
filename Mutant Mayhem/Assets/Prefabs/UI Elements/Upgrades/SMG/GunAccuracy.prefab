@@ -53,12 +53,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 17
+  upgradeFamily: 3
+  playerStatsUpgrade: 0
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 5
   UiName: Accuracy
   tooltipDescription: Magnetic rifling and impossibly smooth super-surfaces of the
     barrel help keep the trajectory as intended
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 1
   playerGunIndex: 1
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &3845421704380864337

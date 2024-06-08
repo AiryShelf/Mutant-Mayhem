@@ -118,7 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 6433497888709922468}
-  SR: {fileID: 1437740919546126437}
+  sR: {fileID: 1437740919546126437}
   moveSpeedBase: 5
   rotateSpeedBase: 3
   randomize: 1
@@ -145,7 +145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec72ac3390be592408a20e0ec872a805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 75
+  maxHealth: 35
+  healthToCreditsDivisor: 5
   hitEffectsChild: {fileID: 853075169137754596}
   corpsePrefab: {fileID: 3246120828009000940, guid: faec62a3480e22041925d4784d0e1d5c, type: 3}
   deathTorque: 20
@@ -255,18 +256,18 @@ MonoBehaviour:
   m_UseRendererSilhouette: 1
   m_CastsShadows: 1
   m_SelfShadows: 0
-  m_ApplyToSortingLayers: 00000000473099c06959b35277918778bb1f0873f33c0f815d220d4faf41a11b0ba2f4fbe91bfeef
+  m_ApplyToSortingLayers: 00000000473099c06959b35277918778bb1f0873f33c0f815d220d4faf41a11b0ba2f4fbe91bfeef9398b666
   m_ShapePath:
-  - {x: -0.099676415, y: -0.027075697, z: 0}
-  - {x: -0.10088229, y: 0.026472436, z: 0}
-  - {x: 0.10691173, y: 0.026472436, z: 0}
-  - {x: 0.1081176, y: -0.027075697, z: 0}
-  m_ShapePathHash: 841241107
+  - {x: -0.0969546, y: -0.021871874, z: 0}
+  - {x: -0.09733927, y: 0.0215425, z: 0}
+  - {x: 0.1022893, y: 0.0215425, z: 0}
+  - {x: 0.10267397, y: -0.021871874, z: 0}
+  m_ShapePathHash: -2130425429
   m_Mesh: {fileID: 0}
-  m_InstanceId: 138976
+  m_InstanceId: 70908
   m_LocalBounds:
-    m_Center: {x: 0.0036176592, y: -0.0003016293, z: 0}
-    m_Extent: {x: 0.10449995, y: 0.026774067, z: 0}
+    m_Center: {x: 0.0026673526, y: -0.00016468577, z: 0}
+    m_Extent: {x: 0.100006625, y: 0.021707188, z: 0}
 --- !u!1001 &7811264617619221878
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -456,7 +457,7 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.03, y: 0}
+  m_Offset: {x: -0.05, y: 0}
   serializedVersion: 2
   m_Radius: 0.07
 --- !u!114 &6433497888709922468 stripped

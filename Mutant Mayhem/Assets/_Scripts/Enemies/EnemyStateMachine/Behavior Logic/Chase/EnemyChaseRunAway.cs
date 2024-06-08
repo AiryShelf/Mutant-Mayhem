@@ -35,7 +35,7 @@ public class EnemyChaseRunAway : EnemyChaseSOBase
         // Run away from Player
         Vector2 targetDir = -(playerTransform.position - transform.position).normalized;
         enemyBase.ChangeFacingDirection(targetDir, rotateSpeedMultiplier);
-        enemyBase.MoveEnemy(enemyBase.FacingDirection * (runAwaySpeedMultiplier * _sprintFactor));
+        enemyBase.MoveEnemy(enemyBase.facingDirection * (runAwaySpeedMultiplier * _sprintFactor));
     }
 
     public override void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) 

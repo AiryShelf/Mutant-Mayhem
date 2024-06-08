@@ -129,13 +129,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 11
+  upgradeFamily: 0
+  playerStatsUpgrade: 11
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 0
   UiName: Health Regen
   tooltipDescription: Faster health regeneration.  Improvements to your suits self-awareness
     and biomechanical nervous system allow it to direct the self-repairing materials
     more effectively.
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 0
   playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &8723721936551275641

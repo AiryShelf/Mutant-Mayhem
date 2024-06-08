@@ -10,20 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e752e8fb088c6dd449087b81249014ce, type: 3}
-  m_Name: Wave Crabs
+  m_Name: Wave Crab1 x1 x1 Quick
   m_EditorClassIdentifier: 
   subWaves:
   - {fileID: 11400000, guid: e04a8aac1f6acfc4781102339dde90d4, type: 2}
-  - {fileID: 11400000, guid: e04a8aac1f6acfc4781102339dde90d4, type: 2}
   subWaveStyles:
   - {fileID: 11400000, guid: bc8c51d6a02b5b14dbf3f0dcb7e5672b, type: 2}
-  - {fileID: 11400000, guid: bc8c51d6a02b5b14dbf3f0dcb7e5672b, type: 2}
-  subWaveMultipliers: 0100000001000000
-  timesToTriggerSubWaves: 000000000a000000
-  constantWaves:
-  - {fileID: 11400000, guid: e04a8aac1f6acfc4781102339dde90d4, type: 2}
-  constantWaveStyles:
-  - {fileID: 11400000, guid: 4e2b7e50561c4a842b869cdc5df31e15, type: 2}
-  constantWaveMultipliers: 02000000
-  timesToTriggerConstantWaves: 00000000
+  subWaveMultipliers:
+  - 1
+  timesToTriggerSubWaves: 00000000
+  constantWaves: []
+  constantWaveStyles: []
+  constantWaveMultipliers: []
+  timesToTriggerConstantWaves: 
   minEnemiesToNextWave: 0

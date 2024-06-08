@@ -43,7 +43,7 @@ public class EnemyIdleRandomWander : EnemyIdleSOBase
         _direction = (_targetPos - transform.position).normalized;
 
         enemyBase.ChangeFacingDirection(_direction, rotateSpeedMultiplier);
-        enemyBase.MoveEnemy(enemyBase.FacingDirection * RandomMovementSpeedMult);
+        enemyBase.MoveEnemy(enemyBase.facingDirection * RandomMovementSpeedMult);
         
 
         if ((enemyBase.transform.position - _targetPos).sqrMagnitude < 0.01f)

@@ -118,7 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 6433497888709922468}
-  SR: {fileID: 1437740919546126437}
+  sR: {fileID: 1437740919546126437}
   moveSpeedBase: 1
   rotateSpeedBase: 3
   randomize: 1
@@ -145,7 +145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec72ac3390be592408a20e0ec872a805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 10
+  healthToCreditsDivisor: 5
   hitEffectsChild: {fileID: 853075169137754596}
   corpsePrefab: {fileID: 3246120828009000940, guid: 01e59512a120794408f96b0262c365f6, type: 3}
   deathTorque: 20
@@ -263,7 +264,7 @@ MonoBehaviour:
   - {x: 0.039504364, y: -0.043356996, z: 0}
   m_ShapePathHash: -719373122
   m_Mesh: {fileID: 0}
-  m_InstanceId: 139798
+  m_InstanceId: 61606
   m_LocalBounds:
     m_Center: {x: -0.0010840707, y: -0.000490997, z: 0}
     m_Extent: {x: 0.04058844, y: 0.042866, z: 0}

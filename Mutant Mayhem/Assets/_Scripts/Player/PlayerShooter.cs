@@ -19,9 +19,6 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] Animator bodyAnim;
     public int currentGunIndex = 0;
 
-    [SerializeField] float laserChargeDelay = 0.5f;
-    [SerializeField] int laserChargeMax = 50;
-
     public int[] gunsAmmo;
     public int[] gunsAmmoInClips;
 

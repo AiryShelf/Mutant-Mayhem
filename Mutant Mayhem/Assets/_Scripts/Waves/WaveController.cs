@@ -21,11 +21,10 @@ public class WaveController : MonoBehaviour
     public float timeBetweenWaves = 60f;
     public float spawnRadius = 60;
     public int wavesPerBase = 3;
-    public int wavesTillExtraWaveAdd = 2;
 
     [Header("Enemy Multipliers")]
+    public int batchMultiplier = 10;
     public int MultiplierStart = 1;
-    public int batchMultiplier = 1;
     public float damageMultiplier = 1;
     public float healthMultiplier = 1;
     public float speedMultiplier = 1;
@@ -39,6 +38,7 @@ public class WaveController : MonoBehaviour
     Coroutine nextWaveTimer;
     Coroutine endWave;
     public bool isNight;
+    Daylight daylight;
 
 
     void Awake()
@@ -46,6 +46,8 @@ public class WaveController : MonoBehaviour
         player = FindObjectOfType<Player>();
         playerActionMap = player.inputAsset.FindActionMap("Player");
         nextWaveAction = playerActionMap.FindAction("NextWave");
+
+        daylight = FindObjectOfType<Daylight>();
     }
 
     void OnEnable()
@@ -65,6 +67,7 @@ public class WaveController : MonoBehaviour
         nextWaveTimer = StartCoroutine(NextWaveTimer());
 
         waveSpawner.currentWave = allWaveBases[0];
+        currentWave = 0;
     }
 
     void OnNextWaveInput(InputAction.CallbackContext context)
@@ -78,13 +81,7 @@ public class WaveController : MonoBehaviour
 
     void TriggerWaves()
     {
-        int wavesToTrigger = 1 + (int)Mathf.Floor(currentWave / wavesTillExtraWaveAdd);
-
-        // ** NEED TO FINISHT THIS FOR MULTI-WAVE SPAWNING ** //
-        for (int w = 0; w < wavesToTrigger; w++)
-        {
-            StartCoroutine(StartWave());
-        }
+        StartCoroutine(StartWave());
     }
 
     IEnumerator NextWaveTimer()
@@ -96,8 +93,8 @@ public class WaveController : MonoBehaviour
 
         while (countdown >= 0)
         {
-            nextWaveText.text = "Time until night " 
-                + currentWave + ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";
+            nextWaveText.text = "Time until night " + (currentWave + 1) + 
+                ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";
             
             yield return new WaitForEndOfFrame();
             countdown -= Time.deltaTime;        
@@ -108,6 +105,7 @@ public class WaveController : MonoBehaviour
 
     IEnumerator StartWave()
     {
+        daylight.StartCoroutine(daylight.PlaySunsetEffect());
         isNight = true;
         UpdateWaveMultipliers();
 
@@ -127,7 +125,7 @@ public class WaveController : MonoBehaviour
         waveInfoFadeGroup.isTriggered = true;
         nextWaveFadeGroup.isTriggered = false;
         nextWaveText.enabled = false;
-        currentNightText.text = "Night " + currentWave;
+        currentNightText.text = "Night " + (currentWave + 1);
 
         // Wait 5 seconds before checking wave complete
         float timeElapsed = 0;
@@ -148,7 +146,7 @@ public class WaveController : MonoBehaviour
             yield return new WaitForEndOfFrame(); 
         }
         
-        // Let one wave initiate ending
+        // Let one wave initiate ending, if multiple
         if (endWave == null)
             endWave = StartCoroutine(EndWave());
     }
@@ -164,17 +162,18 @@ public class WaveController : MonoBehaviour
 
         endWave = null;
         Debug.Log("End Wave");
+
+        daylight.StartCoroutine(daylight.PlaySunriseEffect());
     }
 
     void UpdateWaveMultipliers()
     {
-        batchMultiplier = MultiplierStart 
-                          + (int)Mathf.Floor(currentWave / 5);
-        damageMultiplier = MultiplierStart + currentWave / 10;
-        healthMultiplier = MultiplierStart + currentWave / 10;
-        speedMultiplier = MultiplierStart + currentWave / 10;
-        sizeMultiplier = MultiplierStart + currentWave / 20;
+        batchMultiplier += currentWave;
+        damageMultiplier = MultiplierStart + currentWave / 20f;
+        healthMultiplier = MultiplierStart + currentWave / 20f;
+        speedMultiplier = MultiplierStart + currentWave / 20f;
+        sizeMultiplier = MultiplierStart + currentWave / 20f;
         spawnSpeedMultiplier = Mathf.Clamp(MultiplierStart 
-                               - currentWave / 100, 0.1f, 100);
+                               - currentWave / 100f, 0.1f, 100);
     }
 }

@@ -54,13 +54,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 16
+  upgradeFamily: 3
+  playerStatsUpgrade: 0
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 4
   UiName: Charge Regen
   tooltipDescription: 'The micro fusion reactor housed within the small weapon puts
     out a surprising amount of juice.  So much so, that some even drips out the end
     sometimes!  Actually, I''m not sure what that is.  I''m sure it''s fine...  '
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 1
   playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &6588224932737231826

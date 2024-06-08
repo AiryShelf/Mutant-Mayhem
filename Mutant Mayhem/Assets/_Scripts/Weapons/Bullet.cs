@@ -61,6 +61,7 @@ public class Bullet : MonoBehaviour
             if (this.gameObject.layer == 8)
                 StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damage;
 
+            // Create AI Trigger
             if (AiTrggerPrefabOptional != null)
             {
                 //Debug.Log("AiTrigger instantiated");

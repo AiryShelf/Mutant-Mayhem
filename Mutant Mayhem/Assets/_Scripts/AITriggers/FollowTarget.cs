@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerFollowTarget : MonoBehaviour
+public class FollowTarget : MonoBehaviour
 {
     [SerializeField] Transform target;
     

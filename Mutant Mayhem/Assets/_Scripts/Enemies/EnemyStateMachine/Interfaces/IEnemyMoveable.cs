@@ -4,8 +4,8 @@ using UnityEngine;
 
 public interface IEnemyMoveable
 {
-    Rigidbody2D RB { get; set; }
-    Vector2 FacingDirection { get; set; }
+    Rigidbody2D rB { get; set; }
+    Vector2 facingDirection { get; set; }
 
     void MoveEnemy(Vector2 velocity);
     void ChangeFacingDirection(Vector2 velocity, float speed);

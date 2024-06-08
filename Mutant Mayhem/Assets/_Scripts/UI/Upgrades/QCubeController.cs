@@ -4,9 +4,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[System.Serializable]
+public class QCubeStats
+{
+    public QCubeHealth healthScript;
+    public float armour = 0;
+    public float pulseDefenceForce = 0;
+}
+
 public class QCubeController : MonoBehaviour
 {
-    [SerializeField] Player player;
+    public QCubeStats qCubeStats;
+    [Space]
     [Header("Death")]
     [SerializeField] DeathCanvas deathCanvas;
     [SerializeField] TextMeshProUGUI deathTitleText;
@@ -22,6 +31,7 @@ public class QCubeController : MonoBehaviour
     public bool isUpgradesOpen;
     [SerializeField] PauseMenuController pauseMenuController;
     [SerializeField] BuildingSystem buildingSystem;
+    [SerializeField] Player player;
 
     InputActionMap playerActionMap;
     InputAction qCubeAction;
@@ -43,12 +53,19 @@ public class QCubeController : MonoBehaviour
         escapeAction = uIActionMap.FindAction("Escape");
 
         messagePanel = FindObjectOfType<MessagePanel>();
+
+        qCubeStats.healthScript = GetComponent<QCubeHealth>();
     }
 
     void OnEnable()
     {  
         qCubeAction.performed += OnQCubeInteract;
         escapeAction.started += OnEscapePressed;
+    }
+
+    void Start()
+    {
+        player.stats.qCubeStats = this.qCubeStats;
     }
 
     void OnDisable()
@@ -59,6 +76,7 @@ public class QCubeController : MonoBehaviour
 
     void FixedUpdate()
     {
+
         if (IsDestroyed && !player.isDead)
         {
             player.isDead = true;
@@ -113,8 +131,8 @@ public class QCubeController : MonoBehaviour
         }
         else if (!isUpgradesOpen)
         {
-            messagePanel.ShowMessage("Not close enough to access the " +
-                                     "Quantum Cube. Get closer!", Color.gray);
+            messagePanel.ShowMessage("Not close enough to access " +
+                                     "Cube. Get closer!", Color.gray);
             // Player is not in range, show UI message to the player
             //Debug.Log("Player NOT in QCube Range!");
         }

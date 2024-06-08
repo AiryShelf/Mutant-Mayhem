@@ -14,6 +14,6 @@ public class GrenadePanel : MonoBehaviour
 
     void Update()
     {
-        grenadeCountText.text = player.grenadeAmmo.ToString();
+        grenadeCountText.text = player.stats.grenadeAmmo.ToString();
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {   
     [SerializeField] protected float maxHealth = 100f;
+    [SerializeField] float healthToCreditsDivisor = 5;
     [SerializeField] HitEffects hitEffectsChild;
     [SerializeField] GameObject corpsePrefab;
     public float deathTorque = 20;
@@ -40,31 +41,41 @@ public class Health : MonoBehaviour
         maxHealth = value;
     }
 
-    public void ModifyHealth(float value, GameObject other)
+    public virtual void ModifyHealth(float value, GameObject other)
     {
         health += value;
+        if (health > maxHealth)
+            health = maxHealth;
 
         // Stats counting
         // Layer# 8 - PlayerProjectiles.  player, enemy
-        if (other.layer == 8)
+        if (other != null)
         {
-            StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
-            Debug.Log("Player prjectile damage: " + value);
-        }
-        else if (this.tag == "Enemy")
-            StatsCounterPlayer.DamageToEnemies -= value;
-        else if (this.tag == "Player")
+            if (other.layer == 8)
+            {
+                StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
+                Debug.Log("Player prjectile damage: " + value);
+            }
+            else if (this.tag == "Enemy")
+                StatsCounterPlayer.DamageToEnemies -= value;
+            else if (this.tag == "Player")
             StatsCounterPlayer.DamageToPlayer -= value;
+        }
         
+        // Die
         if (health <= 0 && !hasDied)
         {
-            // Structure layer 13
-            if (other.layer == 13)
-                StatsCounterPlayer.EnemiesKilledByTurrets++;
-            else if (other.tag == "Player" || other.tag == "PlayerExplosion" || other.layer == 8)
-                StatsCounterPlayer.EnemiesKilledByPlayer++;
+            if (other != null)
+            {
+                // Structure layer 13
+                if (other.layer == 13)
+                    StatsCounterPlayer.EnemiesKilledByTurrets++;
+                else if (other.tag == "Player" || other.tag == "PlayerExplosion" || other.layer == 8)
+                    StatsCounterPlayer.EnemiesKilledByPlayer++;
+            }
 
             Die();
+            return;
         }
     }
 
@@ -101,11 +112,11 @@ public class Health : MonoBehaviour
                                                 GetComponent<SpriteRenderer>().color;
         hitEffectsChild.transform.parent = null;
         hitEffectsChild.DestroyAfterSeconds();
+
+        // Player Credits
+        BuildingSystem.PlayerCredits += Mathf.Floor(maxHealth / healthToCreditsDivisor);
         
         WaveSpawner.EnemyCount--;
-        BuildingSystem.PlayerCredits += Mathf.Floor(maxHealth / 10);
-        Destroy(gameObject);
-        
-           
+        Destroy(gameObject);   
     }
 }

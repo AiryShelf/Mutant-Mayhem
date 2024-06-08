@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class PlayerStats
 {
+    public QCubeStats qCubeStats;
+
     [Header("Movement stats")]
     public float moveSpeed = 8;
     public float strafeSpeed = 5;
@@ -13,8 +15,7 @@ public class PlayerStats
     public float lookSpeed = 0.05f;
 
     [Header("Health Stats")]
-    public float healthMax = 1000;
-    public float healthRegen = 0.5f;
+    public PlayerHealth playerHealthScript;
 
     [Header("Stamina Stats")]
     public float staminaMax = 100;
@@ -26,8 +27,10 @@ public class PlayerStats
     public float meleeSpeedFactor = 1f;
 
     [Header("Shooting Stats")]
+    public PlayerShooter playerShooter;
     public float reloadFactor = 1f;
     public float accuracy = 1f;
+    public int grenadeAmmo = 12;
 }
 
 public class Player : MonoBehaviour
@@ -42,7 +45,6 @@ public class Player : MonoBehaviour
     [Header("Other")]
     public InputActionAsset inputAsset;
     [SerializeField] GameObject grenadePrefab;
-    public int grenadeAmmo = 12;
     [SerializeField] Transform headImageTrans;
     [SerializeField] Transform playerMainTrans;
     [SerializeField] Transform muzzleTrans;
@@ -50,7 +52,6 @@ public class Player : MonoBehaviour
     [SerializeField] Transform leftHandTrans;
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] MeleeControllerPlayer meleeController;
-    [SerializeField] PlayerHealth myHealth;
     [SerializeField] PlayerShooter myShooter;
     
     
@@ -73,12 +74,10 @@ public class Player : MonoBehaviour
         myStamina = GetComponent<Stamina>();
 
         // Initialize stats
-        //stats = new PlayerStats();
+        stats.playerHealthScript = GetComponent<PlayerHealth>();
         meleeController.stats = stats;
         myStamina.stats = stats;
-        myHealth.playerStats = stats;
-        myShooter.playerStats = stats;
-        
+        myShooter.playerStats = stats;        
     }
 
     void Start()
@@ -156,7 +155,7 @@ public class Player : MonoBehaviour
     {
         itemToThrow.transform.parent = null;
         itemToThrow.StartFly();
-        grenadeAmmo--;
+        stats.grenadeAmmo--;
         StatsCounterPlayer.GrenadesThrownByPlayer++;
     }
 

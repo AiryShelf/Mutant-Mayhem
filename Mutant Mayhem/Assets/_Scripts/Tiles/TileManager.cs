@@ -97,6 +97,7 @@ public class TileManager : MonoBehaviour
        
         //StructureTilemap.SetTile(rootPos, null);
         AnimatedTilemap.SetTile(rootPos, null);
+        //AnimatedTilemap.RefreshTile(rootPos);
         shadowCaster2DTileMap.Generate();
 
         StatsCounterPlayer.StructuresLost++;

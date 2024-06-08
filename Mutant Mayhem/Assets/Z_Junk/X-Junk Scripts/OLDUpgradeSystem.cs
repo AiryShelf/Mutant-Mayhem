@@ -6,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class OLDUpgradeSystem : MonoBehaviour
 {
+    /*
     
     [SerializeField] List<UpgradeType> playerStatsEnums;
     [SerializeField] List<UpgradeType> laserPistolEnums;
@@ -307,6 +308,6 @@ public class OLDUpgradeSystem : MonoBehaviour
 
     #endregion
 
-    
+    */
 }
 

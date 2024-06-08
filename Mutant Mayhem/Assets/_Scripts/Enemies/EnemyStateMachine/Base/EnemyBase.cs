@@ -5,9 +5,9 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 {
     public AnimationControllerEnemy animControllerEnemy;
     public MeleeControllerEnemy meleeController;
-    public SpriteRenderer SR;
-    public Rigidbody2D RB { get; set; }
-    public Vector2 FacingDirection { get; set; }
+    public SpriteRenderer sR;
+    public Rigidbody2D rB { get; set; }
+    public Vector2 facingDirection { get; set; }
     public float moveSpeedBase = 1f;
     public float rotateSpeedBase = 3f;
 
@@ -48,7 +48,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #endregion
 
-    #region Scriptable Object Logics Setup
+    #region SO Logic Setup
 
     // Reference these in Inspector
     [SerializeField] private EnemyIdleSOBase EnemyIdleSOBase;
@@ -82,7 +82,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         ShootState = new EnemyShootState(this, StateMachine);
         //MeleeState = new EnemyMeleeState(this, StateMachine);
 
-        RB = GetComponent<Rigidbody2D>();
+        rB = GetComponent<Rigidbody2D>();
     }
 
     void Start()
@@ -126,9 +126,9 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
             float randomColorRed = Random.Range(-randomColorFactor, randomColorFactor);
             float randomColorGreen = Random.Range(-randomColorFactor, randomColorFactor);
             float randomColorBlue = Random.Range(-randomColorFactor, randomColorFactor);
-            SR.color = new Color(SR.color.r + randomColorRed,
-                                SR.color.g + randomColorGreen,
-                                SR.color.b + randomColorBlue);
+            sR.color = new Color(sR.color.r + randomColorRed,
+                                 sR.color.g + randomColorGreen,
+                                 sR.color.b + randomColorBlue);
             
             // Randomize size with multipliers
             GaussianRandom _gaussianRandomm = new GaussianRandom();
@@ -148,7 +148,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
             meleeController.knockback *= randomSizeFactor;
             //meleeController.selfKnockback *= randomSizeFactor; no good?
 
-            RB.mass *= randomSizeFactor;
+            rB.mass *= randomSizeFactor;
 
             animControllerEnemy.animSpeedFactor /= randomSizeFactor;
         }
@@ -210,17 +210,15 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         if (!isHit)
         {
             if (EnemyChaseSOBaseInstance.isSprinting)
-                RB.AddForce(moveSpeedBase * velocity); 
+                rB.AddForce(moveSpeedBase * velocity); 
             else 
             {
                 Vector2 force = moveSpeedBase * velocity;
-                Vector2 acc = force / RB.mass;
+                Vector2 acc = force / rB.mass;
                 Vector2 deltaV = acc * Time.fixedDeltaTime;
-                RB.velocity += deltaV;  
+                rB.velocity += deltaV;  
             }
-        }
-
-        
+        }  
     }
 
     public void ChangeFacingDirection(Vector2 velocity, float speedMultipliers)
@@ -229,10 +227,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         {
             float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
             Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y,
-                                    Mathf.LerpAngle(RB.rotation, angle, 
+                                    Mathf.LerpAngle(rB.rotation, angle, 
                                     Time.fixedDeltaTime * rotateSpeedBase * speedMultipliers));
             transform.rotation = Quaternion.Euler(rotator);
-            FacingDirection = velocity.normalized;
+            facingDirection = velocity.normalized;
         }
     }
 

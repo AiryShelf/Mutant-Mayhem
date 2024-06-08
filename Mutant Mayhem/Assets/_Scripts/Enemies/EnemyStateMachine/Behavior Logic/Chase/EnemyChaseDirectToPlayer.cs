@@ -38,7 +38,7 @@ public class EnemyChaseDirectToPlayer : EnemyChaseSOBase
         // Move towards player
         Vector2 moveDirection = (playerTransform.position - transform.position).normalized;
         enemyBase.ChangeFacingDirection(moveDirection, rotateSpeedMultiplier);
-        enemyBase.MoveEnemy(enemyBase.FacingDirection * (moveSpeedMultiplier * _sprintFactor));
+        enemyBase.MoveEnemy(enemyBase.facingDirection * (moveSpeedMultiplier * _sprintFactor));
     }
 
     public override void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) 

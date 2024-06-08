@@ -6,19 +6,16 @@ using UnityEngine;
 public class PlayerHealth : Health
 {
     [SerializeField] Player player;
-    public PlayerStats playerStats;
+    public float healthRegenPerSec = 0.5f;
 
     void Start()
     {
-        playerStats = player.stats;
         StartCoroutine(HealthRegen());
-        maxHealth = playerStats.healthMax;
-        health = playerStats.healthMax;
     }
 
     public override void SetMaxHealth(float value)
     {
-        playerStats.healthMax = value;
+
         maxHealth = value;
     }
 
@@ -26,15 +23,12 @@ public class PlayerHealth : Health
     {
         while (true)
         {
-            // This is here to update healthMax after an upgrade
-            maxHealth = playerStats.healthMax;
-
             yield return new WaitForSeconds(1);
 
             // Regenerate
-            if (health < playerStats.healthMax)
+            if (health < maxHealth)
             {
-                health += playerStats.healthRegen;
+                health += healthRegenPerSec;
             }
         }
     }

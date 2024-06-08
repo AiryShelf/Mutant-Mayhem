@@ -53,13 +53,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
+  upgradeFamily: 0
+  playerStatsUpgrade: 1
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 0
   UiName: Strafe Speed
   tooltipDescription: Faster strafe speed.  Better exosuit rotators for force delivery
     at off angles allow you to move sideways and backwards faster.  You always move
     slower when not moving in the direction your body is facing
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 0
   playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &6271306168995584444

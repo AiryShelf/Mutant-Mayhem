@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.78431374}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -129,14 +129,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 14
+  upgradeFamily: 3
+  playerStatsUpgrade: 0
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 2
   UiName: Fire Rate
   tooltipDescription: Improvements to the nanofiber hypercoil mechanisms (springs)
     and an ultra-efficient microgravity bullet feeder increase your SMG's firing
     rate with each iteration. The hypercoil mechanism ensures rapid bullet loading,
     delivering unparalleled shooting speed
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 1
   playerGunIndex: 1
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &1323763195573457678

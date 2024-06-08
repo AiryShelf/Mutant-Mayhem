@@ -9,13 +9,13 @@ public class WaveSOBase : ScriptableObject
     //[Header("Sub Waves")]
     public List<SubWaveSO> subWaves;
     public List<SubWaveStyleSO> subWaveStyles;
-    public List<int> subWaveMultipliers;
+    public List<float> subWaveMultipliers;
     public List<int> timesToTriggerSubWaves;
 
     //[Header("Constant Waves")]
     public List<SubWaveSO> constantWaves;
     public List<SubWaveStyleSO> constantWaveStyles;
-    public List<int> constantWaveMultipliers;
+    public List<float> constantWaveMultipliers;
     public List<int> timesToTriggerConstantWaves;
 
     //[Header("Other Variables")]

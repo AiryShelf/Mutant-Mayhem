@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e752e8fb088c6dd449087b81249014ce, type: 3}
-  m_Name: Wave Fast Test
+  m_Name: Wave Dog x1 x0.5
   m_EditorClassIdentifier: 
   subWaves:
   - {fileID: 11400000, guid: 0fb765c6043d3d546b9f840151ab6b09, type: 2}
   subWaveStyles:
-  - {fileID: 11400000, guid: bc8c51d6a02b5b14dbf3f0dcb7e5672b, type: 2}
-  subWaveMultipliers: 01000000
+  - {fileID: 11400000, guid: ec92610f0b9ecf44ca03cb279d305f1c, type: 2}
+  subWaveMultipliers:
+  - 0.5
   timesToTriggerSubWaves: 01000000
   constantWaves: []
   constantWaveStyles: []
-  constantWaveMultipliers: 
+  constantWaveMultipliers: []
   timesToTriggerConstantWaves: 
   minEnemiesToNextWave: 0

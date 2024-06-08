@@ -5,15 +5,21 @@ using UnityEngine;
 
 public class UIUpgrade : MonoBehaviour
 {
-    public UpgradeType type;
+    public UpgradeFamily upgradeFamily;
+    public PlayerStatsUpgrade playerStatsUpgrade;
+    public QCubeStatsUpgrade qCubeStatsUpgrade;
+    public ConsumablesUpgrade consumablesUpgrade;
+    public GunStatsUpgrade gunStatsUpgrade;
+
     [SerializeField] string UiName;
     [TextArea(3,10)]
     public string tooltipDescription;
     
+    [SerializeField] bool showLevelsText;
     public GameObject upgradeTextPrefab;
 
+
     [Header("For Gun Upgrades:")]
-    [SerializeField] bool isGunUpg;
     [SerializeField] int playerGunIndex;
 
     [HideInInspector] public GameObject upgradeTextInstance;
@@ -31,8 +37,24 @@ public class UIUpgrade : MonoBehaviour
     public void InvokeOnClick(UIUpgrade myUpg)
     {
         //Debug.Log("OnClick called");
-
-        upgradeSystem.OnUpgradeButtonClicked(myUpg.type, isGunUpg, playerGunIndex);
+        switch (myUpg.upgradeFamily)
+        {
+            case UpgradeFamily.PlayerStats:
+                upgradeSystem.OnUpgradeButtonClicked(myUpg.playerStatsUpgrade);
+                break;
+            case UpgradeFamily.QCubeStats:
+                upgradeSystem.OnUpgradeButtonClicked(myUpg.qCubeStatsUpgrade);
+                break;
+            case UpgradeFamily.Consumables:
+                upgradeSystem.OnUpgradeButtonClicked(myUpg.consumablesUpgrade);
+                break;
+            case UpgradeFamily.GunStats:
+                upgradeSystem.OnUpgradeButtonClicked(myUpg.gunStatsUpgrade, myUpg.playerGunIndex);
+                break;
+            default:
+                Debug.LogWarning("Unhandled upgrade family: " + myUpg.upgradeFamily);
+                break;
+        }
         
         UpdateText();
     }
@@ -42,35 +64,57 @@ public class UIUpgrade : MonoBehaviour
 
         int upgLvl = 1;
         int upgCost = 1;
-
-        // Check for Gun Stats
-        if (isGunUpg)
+        
+        // Check for families
+        if (upgradeFamily == UpgradeFamily.Consumables)
         {
+            // Consumables
+            upgLvl = upgradeSystem.consumablesUpgLevels[consumablesUpgrade];
+            upgCost = upgradeSystem.consumablesUpgCurrCosts[consumablesUpgrade];
+        }
+        else if (upgradeFamily == UpgradeFamily.GunStats)
+        {
+            // GunStats
             switch (playerGunIndex)
             {
                 case 0:
                 {
-                    upgLvl = upgradeSystem.laserPistolUpgLevels[type];
-                    upgCost = upgradeSystem.laserPistolUpgCurrCosts[type];
+                    upgLvl = upgradeSystem.laserPistolUpgLevels[gunStatsUpgrade];
+                    upgCost = upgradeSystem.laserPistolUpgCurrCosts[gunStatsUpgrade];
                     break;
                 }
 
                 case 1:
                 {
-                    upgLvl = upgradeSystem.SMGUpgLevels[type];
-                    upgCost = upgradeSystem.SMGUpgCurrCosts[type];
+                    upgLvl = upgradeSystem.SMGUpgLevels[gunStatsUpgrade];
+                    upgCost = upgradeSystem.SMGUpgCurrCosts[gunStatsUpgrade];
                     break;
                 }
             }
         }
-        else
+        else if (upgradeFamily == UpgradeFamily.PlayerStats)
         {
             // PlayerStats
-            upgLvl = upgradeSystem.playerStatsUpgLevels[type];
-            upgCost = upgradeSystem.playerStatsUpgCurrCosts[type];
+            upgLvl = upgradeSystem.playerStatsUpgLevels[playerStatsUpgrade];
+            upgCost = upgradeSystem.playerStatsUpgCurrCosts[playerStatsUpgrade];
         }
+        else if (upgradeFamily == UpgradeFamily.QCubeStats)
+        {
+            // QCubeStats
+            upgLvl = upgradeSystem.qCubeStatsUpgLevels[qCubeStatsUpgrade];
+            upgCost = upgradeSystem.qCubeStatsUpgCurrCosts[qCubeStatsUpgrade];
+        }
+        
 
-        upgradeText.text = 
-            UiName + " Lvl " + (upgLvl + 1) + "\n" + "$" + upgCost;       
+        if (showLevelsText)
+        {
+            upgradeText.text = 
+                UiName + " Lvl " + (upgLvl + 1) + "\n" + "$" + upgCost;  
+        }
+        else
+        {
+            upgradeText.text = 
+                UiName + "\n" + "$" + upgCost; 
+        }     
     }
 }

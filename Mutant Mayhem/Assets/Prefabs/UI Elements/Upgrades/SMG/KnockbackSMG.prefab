@@ -54,14 +54,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 13
+  upgradeFamily: 3
+  playerStatsUpgrade: 0
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 1
   UiName: Knockback
   tooltipDescription: Improved graviton impact rounds. The scientists at BulShoot
     have engineered a bullet that generates a localized graviton burst upon impact,
     drastically increasing knockback force. This advanced technology ensures each
     shot delivers maximum repelling power to your targets. Buy your upgrade today!
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 1
   playerGunIndex: 1
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &1199939217475269759
@@ -187,7 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.78431374}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

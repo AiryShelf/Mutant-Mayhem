@@ -53,13 +53,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769e2f77a6268954a89beabcc68e5bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  upgradeFamily: 0
+  playerStatsUpgrade: 0
+  qCubeStatsUpgrade: 0
+  consumablesUpgrade: 0
+  gunStatsUpgrade: 0
   UiName: Move Speed
   tooltipDescription: Faster forward movement and rotation speeds.  Upgrades to the
     capacitors and servos of your exosuit allow for better general maneuverability. 
     You always move faster when moving towards where your body is facing
+  showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
-  isGunUpg: 0
   playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
 --- !u!222 &3775868154052106454
@@ -181,7 +185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 808465359057252210, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 808465359057252210, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_LocalRotation.w
