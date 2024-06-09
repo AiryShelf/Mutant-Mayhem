@@ -4,10 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class WaveController : MonoBehaviour
+public class WaveControllerRandom : MonoBehaviour
 {
     [SerializeField] List<WaveSOBase> allWaveBases;
-    [SerializeField] WaveSpawner waveSpawner;
+    [SerializeField] WaveSpawnerRandom waveSpawner;
 
     [Header("UI Wave Info")]
     [SerializeField] FadeCanvasGroupsWave nextWaveFadeGroup;
@@ -23,6 +23,7 @@ public class WaveController : MonoBehaviour
     public int wavesPerBase = 3;
 
     [Header("Enemy Multipliers")]
+    public int batchMultiplierStart = 10;
     public int batchMultiplier = 10;
     public int MultiplierStart = 1;
     public float damageMultiplier = 1;
@@ -66,7 +67,7 @@ public class WaveController : MonoBehaviour
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
 
-        waveSpawner.currentWave = allWaveBases[0];
+        waveSpawner.currentWaveSource = allWaveBases[0];
         currentWave = 0;
     }
 
@@ -112,7 +113,7 @@ public class WaveController : MonoBehaviour
         // Switch Spawner to new WaveBase
         int index = (int)Mathf.Floor(currentWave / wavesPerBase);
         index = Mathf.Clamp(index, 0, allWaveBases.Count - 1);
-        waveSpawner.currentWave = allWaveBases[index];
+        waveSpawner.currentWaveSource = allWaveBases[index];
         // Need to add logic to handle the end of the list.
         // Maybe restart with larger multipliers?  Or a random new list?
 
@@ -131,7 +132,7 @@ public class WaveController : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < 5)
         {
-            enemyCountText.text = "Enemies Detected: " + WaveSpawner.EnemyCount;
+            enemyCountText.text = "Enemies Detected: " + EnemyCounter.EnemyCount;
             
 
             yield return new WaitForEndOfFrame();
@@ -141,7 +142,7 @@ public class WaveController : MonoBehaviour
         // Check for end of wave
         while (!waveSpawner.waveComplete)
         {      
-            enemyCountText.text = "Enemies Detected: " + WaveSpawner.EnemyCount;
+            enemyCountText.text = "Enemies Detected: " + EnemyCounter.EnemyCount;
 
             yield return new WaitForEndOfFrame(); 
         }
@@ -168,7 +169,7 @@ public class WaveController : MonoBehaviour
 
     void UpdateWaveMultipliers()
     {
-        batchMultiplier += currentWave;
+        batchMultiplier++;
         damageMultiplier = MultiplierStart + currentWave / 20f;
         healthMultiplier = MultiplierStart + currentWave / 20f;
         speedMultiplier = MultiplierStart + currentWave / 20f;

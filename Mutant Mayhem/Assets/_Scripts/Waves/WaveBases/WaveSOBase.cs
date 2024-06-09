@@ -4,6 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Wave", 
                  menuName = "Waves/WaveSOBase")]
+[System.Serializable]
 public class WaveSOBase : ScriptableObject
 {
     //[Header("Sub Waves")]

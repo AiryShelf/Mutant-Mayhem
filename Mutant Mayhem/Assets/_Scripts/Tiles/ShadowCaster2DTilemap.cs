@@ -11,13 +11,16 @@ public class ShadowCaster2DTileMap : MonoBehaviour
     [SerializeField]
     private bool selfShadows = true;
 
-    private TilemapCollider2D tilemapCollider;
-    private CompositeCollider2D tilemapCompCollider;
+    public TilemapCollider2D tilemapCollider;
+    public CompositeCollider2D tilemapCompCollider;
 
 
-    static readonly FieldInfo meshField = typeof(ShadowCaster2D).GetField("m_Mesh", BindingFlags.NonPublic | BindingFlags.Instance);
-    static readonly FieldInfo shapePathField = typeof(ShadowCaster2D).GetField("m_ShapePath", BindingFlags.NonPublic | BindingFlags.Instance);
-    static readonly FieldInfo shapePathHashField = typeof(ShadowCaster2D).GetField("m_ShapePathHash", BindingFlags.NonPublic | BindingFlags.Instance);
+    static readonly FieldInfo meshField = typeof(ShadowCaster2D).GetField(
+                                        "m_Mesh", BindingFlags.NonPublic | BindingFlags.Instance);
+    static readonly FieldInfo shapePathField = typeof(ShadowCaster2D).GetField(
+                                        "m_ShapePath", BindingFlags.NonPublic | BindingFlags.Instance);
+    static readonly FieldInfo shapePathHashField = typeof(ShadowCaster2D).GetField(
+                                        "m_ShapePathHash", BindingFlags.NonPublic | BindingFlags.Instance);
     static readonly MethodInfo generateShadowMeshMethod = typeof(ShadowCaster2D)
                                     .Assembly
                                     .GetType("UnityEngine.Rendering.Universal.ShadowUtility")
@@ -74,7 +77,5 @@ public class ShadowCaster2DTileMap : MonoBehaviour
         {
             DestroyImmediate(child.gameObject);
         }
-
     }
-
 }

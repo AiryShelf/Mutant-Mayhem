@@ -417,18 +417,28 @@ public class UpgradeSystem : MonoBehaviour
                                          "or there is a bug!  Let me know!", Color.yellow);
                 return;
             }
-            
-            BuildingSystem.PlayerCredits -= cost;
-            consumablesUpgLevels[upgType]++;
 
-            upgrade.Apply(player.stats, consumablesUpgLevels[upgType]);
-            PlayUpgradeEffects();
             
-            consumablesUpgCurrCosts[upgType] = upgrade.CalculateCost(
-                consumablesUpgBaseCosts[upgType], consumablesUpgLevels[upgType] + 1);
+            if (upgrade.Apply(player.stats))
+            {
+                BuildingSystem.PlayerCredits -= cost;
+                consumablesUpgLevels[upgType]++;
 
-            Debug.Log("Consumable applied: " + upgType);
-            messagePanel.ShowMessage("Consumabled applied!", Color.cyan);
+                
+                PlayUpgradeEffects();
+                
+                
+                consumablesUpgCurrCosts[upgType] = upgrade.CalculateCost(
+                    consumablesUpgBaseCosts[upgType], consumablesUpgLevels[upgType] + 1);
+
+                Debug.Log("Consumable applied: " + upgType);
+                messagePanel.ShowMessage("Consumabled applied!", Color.cyan);
+            }
+            else
+            {
+                Debug.Log(upgType + "already full");
+                messagePanel.ShowMessage("It's already full", Color.yellow);
+            }
         }
         else
         {

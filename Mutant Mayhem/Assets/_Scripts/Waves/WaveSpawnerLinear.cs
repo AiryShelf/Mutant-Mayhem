@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Timeline;
 using UnityEngine;
 
-public class WaveSpawner : MonoBehaviour
+public class WaveSpawnerLinear : MonoBehaviour
 {
     public Transform qCubeTrans;
     public WaveSOBase currentWave;
-    public WaveController waveController;
+    public WaveControllerRandom waveController;
     public int currentSubWaveIndex;
     public int currentConstantWaveIndex;
 
-    public static int EnemyCount;
     public bool waveSpawning;
     public bool waveComplete;
 
@@ -22,7 +20,6 @@ public class WaveSpawner : MonoBehaviour
 
     void Start()
     {
-        EnemyCount = 0;
         centerPoint = qCubeTrans.position;
     }
 
@@ -109,7 +106,7 @@ public class WaveSpawner : MonoBehaviour
                 waveSpawning = false;
 
                 // Start checking for no enemies
-                while (EnemyCount > 0)
+                while (EnemyCounter.EnemyCount > 0)
                 {
                     yield return new WaitForSeconds(1);
                     waveSeconds++;
@@ -223,7 +220,7 @@ public class WaveSpawner : MonoBehaviour
 
     void SpawnEnemy(Vector2 spawnPos, SubWaveSO subWave, int index)
     {
-        EnemyCount++;
+        EnemyCounter.EnemyCount++;
         Instantiate(subWave.enemyPrefabList[index], spawnPos, Quaternion.identity);
     }
 

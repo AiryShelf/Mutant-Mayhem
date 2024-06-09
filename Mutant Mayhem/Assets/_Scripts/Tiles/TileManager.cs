@@ -20,7 +20,6 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForGridClearCheck;
-    [SerializeField] ShadowCaster2DTileMap shadowCaster2DTileMap;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -31,14 +30,32 @@ public class TileManager : MonoBehaviour
     Vector2 worldPos;
     Vector2 newWorldPos;
 
+    private ShadowCaster2DTileMap _shadowCaster2DTileMap;
 
+    // Re-references shadowCaster on accessing
+    public ShadowCaster2DTileMap shadowCaster2DTileMap
+    {
+        get
+        {
+            if (_shadowCaster2DTileMap == null)
+            {
+                _shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
+                if (_shadowCaster2DTileMap == null)
+                {
+                    Debug.LogError("ShadowCaster2DTileMap is not found in the scene.");
+                }
+            }
+            return _shadowCaster2DTileMap;
+        }
+}
 
     void Awake()
     {
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
-            Debug.Log("ERROR when trying to read the starting tilemap to dict");
+            Debug.LogError("ERROR when trying to read the starting tilemap to dict");
+        //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
     }
 
     void OnDisable()
@@ -98,10 +115,13 @@ public class TileManager : MonoBehaviour
         //StructureTilemap.SetTile(rootPos, null);
         AnimatedTilemap.SetTile(rootPos, null);
         //AnimatedTilemap.RefreshTile(rootPos);
-        shadowCaster2DTileMap.Generate();
+        if (shadowCaster2DTileMap != null)
+            shadowCaster2DTileMap.Generate();
+        else
+            Debug.LogError("shadowCaster2DTileMap is null");
 
         StatsCounterPlayer.StructuresLost++;
-        //Debug.Log("DESTROYED A TILE");
+        Debug.Log("DESTROYED A TILE");
     }
 
     public void ModifyHealthAt(Vector2 point, float amount)

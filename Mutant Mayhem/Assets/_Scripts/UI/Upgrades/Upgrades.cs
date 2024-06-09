@@ -85,11 +85,14 @@ public abstract class Upgrade
     public virtual void Apply(TileStats tileStats, int level) { }
     public virtual void Apply(GunSO gunSO, int level) { }
     // Consumables vv
-    public virtual void Apply(ConsumablesUpgrade upgType) { }
+    public virtual bool Apply(PlayerStats playerStats) 
+    { 
+        return false; 
+    }
 
-    public virtual int CalculateCost(int baseCost, int level)
-    {
-        return baseCost * level;
+    public virtual int CalculateCost(int baseCost, int level) 
+    { 
+        return baseCost * level; 
     }
 }
 
@@ -238,14 +241,23 @@ public class PlayerHealUpgrade : Upgrade
 {
     public PlayerHealUpgrade() : base(ConsumablesUpgrade.PlayerHeal) { }
 
-    public override void Apply(PlayerStats playerStats, int level)
+    public override bool Apply(PlayerStats playerStats)
     {
-        playerStats.playerHealthScript.ModifyHealth(100, null);
+        if (playerStats.playerHealthScript.GetHealth() <
+            playerStats.playerHealthScript.GetMaxHealth())
+        {
+            playerStats.playerHealthScript.ModifyHealth(100, null);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override int CalculateCost(int baseCost, int level)
     {
-        // No extra cost after upgrade
+        // No extra cost after consumable
         return baseCost;
     }
 }
@@ -254,14 +266,20 @@ public class QCubeRepairUpgrade : Upgrade
 {
     public QCubeRepairUpgrade() : base(ConsumablesUpgrade.QCubeRepair) { }
 
-    public override void Apply(PlayerStats playerStats, int level)
+    public override bool Apply(PlayerStats playerStats)
     {
-        playerStats.qCubeStats.healthScript.ModifyHealth(100, null);
+        if (playerStats.qCubeStats.healthScript.GetHealth() <
+            playerStats.qCubeStats.healthScript.GetMaxHealth())
+        {
+            playerStats.qCubeStats.healthScript.ModifyHealth(100, null);
+            return true;
+        }
+        else return false;
     }
 
     public override int CalculateCost(int baseCost, int level)
     {
-        // No extra cost after upgrade
+        // No extra cost after consumable
         return baseCost;
     }
 }
@@ -270,14 +288,15 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
 {
     public GrenadeBuyAmmoUpgrade() : base(ConsumablesUpgrade.GrenadeBuyAmmo) { }
 
-    public override void Apply(PlayerStats playerStats, int level)
+    public override bool Apply(PlayerStats playerStats)
     {
         playerStats.grenadeAmmo++;
+        return true;
     }
 
     public override int CalculateCost(int baseCost, int level)
     {
-        // No extra cost after upgrade
+        // No extra cost after consumable
         return baseCost;
     }
 }
@@ -286,15 +305,16 @@ public class SMGBuyAmmoUpgrade : Upgrade
 {
     public SMGBuyAmmoUpgrade() : base(ConsumablesUpgrade.SMGBuyAmmo) { }
 
-    public override void Apply(PlayerStats playerStats, int level)
+    public override bool Apply(PlayerStats playerStats)
     {
         int clipSize = playerStats.playerShooter.gunList[1].clipSize;
         playerStats.playerShooter.gunsAmmo[1] += clipSize * 2;
+        return true;
     }
 
     public override int CalculateCost(int baseCost, int level)
     {
-        // No extra cost after upgrade
+        // No extra cost after consumable
         return baseCost;
     }
 }

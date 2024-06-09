@@ -249,7 +249,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     IEnumerator FadeOutMain()
     {
-        EventSystem.current.SetSelectedGameObject(null);
+        if (autoSelectFirstElement)
+            EventSystem.current.SetSelectedGameObject(null);
         hasSelectedFirst = false;
 
         if (initialGroup != null)
@@ -304,7 +305,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
            // fadeIn = null;
         //}
         
-        EventSystem.current.SetSelectedGameObject(null);
+        if (autoSelectFirstElement)
+            EventSystem.current.SetSelectedGameObject(null);
         hasSelectedFirst = false;
 
         if (initialGroup != null)

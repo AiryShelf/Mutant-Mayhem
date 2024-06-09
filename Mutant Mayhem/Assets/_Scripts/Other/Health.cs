@@ -5,7 +5,7 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {   
     [SerializeField] protected float maxHealth = 100f;
-    [SerializeField] float healthToCreditsDivisor = 5;
+    [SerializeField] float healthToCreditsDivisor = 1;
     [SerializeField] HitEffects hitEffectsChild;
     [SerializeField] GameObject corpsePrefab;
     public float deathTorque = 20;
@@ -116,7 +116,7 @@ public class Health : MonoBehaviour
         // Player Credits
         BuildingSystem.PlayerCredits += Mathf.Floor(maxHealth / healthToCreditsDivisor);
         
-        WaveSpawner.EnemyCount--;
+        EnemyCounter.EnemyCount--;
         Destroy(gameObject);   
     }
 }

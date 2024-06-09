@@ -22,7 +22,7 @@ public class DebugPanel : MonoBehaviour
 
     void Update()
     {
-        enemyCountText.text = "EnemyCount: " + WaveSpawner.EnemyCount.ToString();
+        enemyCountText.text = "EnemyCount: " + EnemyCounter.EnemyCount.ToString();
 
         if (Input.GetKeyDown("p"))
         {

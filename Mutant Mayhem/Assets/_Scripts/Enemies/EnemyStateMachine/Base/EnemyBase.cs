@@ -63,11 +63,11 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #endregion
 
-    WaveController waveController;
+    WaveControllerRandom waveController;
 
     void Awake()
     {
-        waveController = FindObjectOfType<WaveController>();
+        waveController = FindObjectOfType<WaveControllerRandom>();
 
         // Logic machine linked to state machine
         EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
