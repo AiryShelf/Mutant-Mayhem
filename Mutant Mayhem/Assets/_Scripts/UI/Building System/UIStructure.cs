@@ -14,7 +14,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     [HideInInspector] public GameObject textInstance;
     [SerializeField] RectTransform myRectTransform;
     ScrollRectController scrollRectController;
-    BuildingSystem buildingSystemController;
+    BuildingSystem buildingSystem;
 
     bool initialized;
 
@@ -22,7 +22,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     {
         image.sprite = structureSO.uiImage;
         scrollRectController = GetComponentInParent<ScrollRectController>();
-        buildingSystemController = FindObjectOfType<BuildingSystem>();
+        buildingSystem = FindObjectOfType<BuildingSystem>();
 
     }
 
@@ -60,11 +60,11 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     {
         // Lock the scroll rect to this selected object.
         scrollRectController.SnapTo(myRectTransform);
-        buildingSystemController.SwitchTools(structureSO.structureType);
+        buildingSystem.SwitchTools(structureSO.structureType);
     }
     public void OnDeselect(BaseEventData data)
     {
-        buildingSystemController.structureInHand = buildingSystemController.AllStructureSOs[0];
+        buildingSystem.structureInHand = buildingSystem.AllStructureSOs[0];
     }
     
     public void MakeInteractable()

@@ -5,13 +5,16 @@ using UnityEngine;
 
 public class WaveSpawnerRandom : MonoBehaviour
 {
-    public Transform qCubeTrans;
-    public WaveSOBase currentWaveSource;
-    [SerializeField] WaveSOBase currentWave;
     public WaveControllerRandom waveController;
+    public Transform qCubeTrans;
+    public WaveSOBase waveSOBaseSource;
+    [SerializeField] int maxIndexToSelectAtStart;
+    [SerializeField] WaveSOBase currentWave;
+    [SerializeField] int numSubWavesAtStart;
+    [SerializeField] int timeToNextSubWave;
+
     public int currentSubWaveIndex;
     public int currentConstantWaveIndex;
-
     public bool waveSpawning;
     public bool waveComplete;
 
@@ -23,7 +26,7 @@ public class WaveSpawnerRandom : MonoBehaviour
     {
         centerPoint = qCubeTrans.position;
 
-        currentWave = Instantiate(currentWaveSource, transform);       
+        currentWave = Instantiate(waveSOBaseSource, transform);       
     }
 
     public void StartWave()
@@ -34,6 +37,45 @@ public class WaveSpawnerRandom : MonoBehaviour
         }
 
         waveTimer = StartCoroutine(WaveTimer());
+    }
+
+    void RebuildWave()
+    {
+        currentWave.subWaves.Clear();
+        currentWave.subWaveMultipliers.Clear();
+        currentWave.subWaveStyles.Clear();
+        currentWave.timesToTriggerSubWaves.Clear();
+
+        int timeToTrigger = 0;
+        int numOfWaves = numSubWavesAtStart + waveController.currentWaveCount;
+        for (int i = 0; i < numOfWaves; i ++)
+        {
+            // Find max index to select based on current wave, plus starting max index
+            int maxIndex = Mathf.FloorToInt(waveController.currentWaveCount / waveController.wavesPerBase) 
+                                            + maxIndexToSelectAtStart;
+            maxIndex = Mathf.Clamp(maxIndex, 0, waveSOBaseSource.subWaves.Count - 1);
+            Debug.Log("maxIndex: " + maxIndex);
+
+            // Select random index, wave, and style
+            int waveIndex = Random.Range(0, maxIndex + 1);
+            SubWaveSO waveToAdd = waveSOBaseSource.subWaves[waveIndex];
+
+            // Allow for extra waveSyles to select from
+            int styleIndex = Random.Range(0, maxIndex + 1);
+            SubWaveStyleSO styleToAdd = waveSOBaseSource.subWaveStyles[styleIndex];
+
+            // Add selection to list
+            currentWave.subWaves.Add(waveToAdd);
+            currentWave.subWaveMultipliers.Add(waveSOBaseSource.subWaveMultipliers[waveIndex]);
+            Debug.Log("Added SubWave: " + waveToAdd.name);
+            currentWave.subWaveStyles.Add(styleToAdd);
+            Debug.Log("Added SubWave Style: " + styleToAdd.name);
+            currentWave.timesToTriggerSubWaves.Add(timeToTrigger);
+
+            timeToTrigger += timeToNextSubWave;
+        }
+
+        Debug.Log("Number of SubWaves: " + currentWave.subWaves.Count);
     }
 
     IEnumerator WaveTimer()
@@ -47,9 +89,10 @@ public class WaveSpawnerRandom : MonoBehaviour
         waveSpawning = true;
         waveSeconds = 0;
 
+        RebuildWave();
+
         List<int> _timesToTriggerSubWaves = ApplySubWaveTimeMultipliers();
-        
-        List<int> _timesToTriggerConstantWaves = ApplyConstantWaveTimeMultipliers();        
+        List<int> _timesToTriggerConstantWaves = ApplyConstantWaveTimeMultipliers();     
 
         // Find max length of time, add 5 seconds
         int maxTime = _timesToTriggerSubWaves.Max() + 5;
@@ -63,7 +106,6 @@ public class WaveSpawnerRandom : MonoBehaviour
                 currentSubWaveIndex = 
                     _timesToTriggerSubWaves.IndexOf(waveSeconds);
                 StartCoroutine(SpawnSubWave(currentSubWaveIndex));
-                //Debug.Log("Start SubWave");
             }
             // If current wave seconds has constantWave trigger
             if (_timesToTriggerConstantWaves.Contains(waveSeconds))
@@ -101,7 +143,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         // Apply timing multipliers to Subwaves
         int prevTime = -1;
         List<int> _timesToTriggerSubWaves = new List<int>();
-        foreach (int timeToTrigger in currentWaveSource.timesToTriggerSubWaves)
+        foreach (int timeToTrigger in currentWave.timesToTriggerSubWaves)
         {
             // This gives each wave its own time-slot to spawn in, doubles dont work.
             int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMultiplier);
@@ -120,7 +162,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         List<int> _timesToTriggerConstantWaves = new List<int>();
         int prevTime = -1;
         // Apply timing multipliers to ConstantWaves
-        foreach (int timeToTrigger in currentWaveSource.timesToTriggerConstantWaves)
+        foreach (int timeToTrigger in currentWave.timesToTriggerConstantWaves)
         {
             // This gives each wave its own time-slot to spawn in, doubles dont work.
             int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMultiplier);
@@ -134,10 +176,10 @@ public class WaveSpawnerRandom : MonoBehaviour
 
     IEnumerator SpawnSubWave(int subWaveIndex)
     {
-        //Debug.Log("Spawn SubWave Started");
+        Debug.Log("Start spawning SubWave index: " + subWaveIndex);
         // Set up for subwave or constant wave;        
-        SubWaveSO subWave = currentWaveSource.subWaves[subWaveIndex];
-        SubWaveStyleSO subWaveStyle = currentWaveSource.subWaveStyles[subWaveIndex];
+        SubWaveSO subWave = currentWave.subWaves[subWaveIndex];
+        SubWaveStyleSO subWaveStyle = currentWave.subWaveStyles[subWaveIndex];
         
         // Make copy of wave to be created
         List<GameObject> _enemyPrefabList = 
@@ -145,12 +187,15 @@ public class WaveSpawnerRandom : MonoBehaviour
         List<int> _numberToSpawn = 
             new List<int>(subWave.numberToSpawn);
 
+        // BatchMult increases with waveController's batchMult
         float batchMult = FindBatchMultiplier(subWaveIndex, true);
+        batchMult *= waveController.batchMultiplier;
 
-        // Apply batch multipliers
+        // Apply batch multiplier to SubWave numbers to spawn
         for (int i = 0; i < _numberToSpawn.Count; i++)
         {
-            _numberToSpawn[i] *= Mathf.FloorToInt(batchMult * waveController.batchMultiplier);
+            _numberToSpawn[i] *= Mathf.FloorToInt(batchMult);
+            Debug.Log("Number to spawn of index " + i + ": " + _numberToSpawn[i]);
         }
 
         // Get starting point, angle, radius
@@ -161,8 +206,6 @@ public class WaveSpawnerRandom : MonoBehaviour
         int listIndex = 0;
         while (_enemyPrefabList.Count > 0)
         {
-            //Debug.Log("Start spawning batch");
-
             // Next new batch point 
             spawnPos = GetPointOnCircumference(
                 spawnRadius, spawnAngle, subWaveStyle.spreadForNextBatch, 
@@ -172,10 +215,16 @@ public class WaveSpawnerRandom : MonoBehaviour
             // Lock batch to local point
             float batchAngle = spawnAngle;
             
+            // Style's batchAmount start value and increasing with waveController Mult
+            int batchSize = Mathf.FloorToInt(subWaveStyle.batchAmount * batchMult / 
+                                             waveController.batchMultiplierStart);
+
             // Spawn batch
-            for (int i = 0; i < subWaveStyle.batchAmount * batchMult; i++)
+            for (int i = 0; i < batchSize; i++)
             {    
-                // Clear empty items
+                Debug.Log("Start spawning batch of size: " + batchSize);
+
+                // Clear empty list items
                 while (_numberToSpawn.Count > 0 && _numberToSpawn[listIndex] <= 0)
                 {
                     //Debug.Log("Removed List Items");
@@ -193,9 +242,17 @@ public class WaveSpawnerRandom : MonoBehaviour
                         listIndex = 0;
                 }
 
-                _numberToSpawn[listIndex]--;
-                SpawnEnemy(spawnPos, subWave, listIndex);
+                // If maxEnemies, wait to continue
+                while (EnemyCounter.EnemyCount >= EnemyCounter.MaxEnemies)
+                {
+                    yield return new WaitForSeconds(1);
+                }
 
+                // Spawn
+                SpawnEnemy(spawnPos, subWave, listIndex);
+                _numberToSpawn[listIndex]--;
+
+                // Apply selection type
                 if (subWaveStyle.selectionType == SelectionType.OneOfEach)
                 {
                     listIndex++;
@@ -206,16 +263,14 @@ public class WaveSpawnerRandom : MonoBehaviour
                     listIndex = 0;
 
                 // Get next spawn around batchAngle
-                spawnPos = GetPointOnCircumference(
-                    spawnRadius, batchAngle, subWaveStyle.spreadForBatch, false);
+                spawnPos = GetPointOnCircumference(spawnRadius, batchAngle, 
+                                                   subWaveStyle.spreadForBatch, true);
                 spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
 
-                yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn * 
-                                                waveController.spawnSpeedMultiplier);
+                yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn);
             }
 
-            yield return new WaitForSeconds(subWaveStyle.timeToNextBatch * 
-                                            waveController.spawnSpeedMultiplier);
+            yield return new WaitForSeconds(subWaveStyle.timeToNextBatch);
         }
         
         //Debug.Log("Finished SubWave");
@@ -239,11 +294,11 @@ public class WaveSpawnerRandom : MonoBehaviour
         float batchMult;
         if (isSubWave)
         {
-            batchMult = currentWaveSource.subWaveMultipliers[subWaveIndex];
+            batchMult = currentWave.subWaveMultipliers[subWaveIndex];
         }
         else
         {
-            batchMult = currentWaveSource.constantWaveMultipliers[subWaveIndex];
+            batchMult = currentWave.constantWaveMultipliers[subWaveIndex];
         }
 
         return batchMult;

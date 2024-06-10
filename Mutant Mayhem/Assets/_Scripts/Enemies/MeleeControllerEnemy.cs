@@ -68,19 +68,23 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
+        // Structures layer# 12
+        if (other.gameObject.layer == 12)
+        {
+            HitStructure(other.ClosestPoint(transform.position));
+        }
         // Attack Player
-        if (other.tag == "Player")
+        else if (other.tag == "Player")
         {
             Vector2 point = other.ClosestPoint(transform.position);
             Hit(other.GetComponent<Health>(), point);
         }
-
         // Attack Cube
-        if (other.tag == "QCube")
+        else if (other.tag == "QCube")
         {
             Vector2 point = other.ClosestPoint(transform.position);
             Hit(other.GetComponent<Health>(), point);
-        }
+        }        
     }
 
     IEnumerator AttackTimer()

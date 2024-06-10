@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc5551c89943e394fa28c5120f890be6, type: 3}
-  m_Name: New SubWave Style
+  m_Name: 1 by 0.5 in 1, 0.5sec to 1 Random
   m_EditorClassIdentifier: 
   selectionType: 0
-  batchAmount: 10
-  timeToNextSpawn: 0.01
-  spreadForBatch: 0.05
-  timeToNextBatch: 3
+  batchAmount: 1
+  timeToNextSpawn: 0.5
+  spreadForBatch: 1
+  timeToNextBatch: 0.5
   spreadForNextBatch: 1
-  randomizeNextBatchSpread: 0
+  randomizeNextBatchSpread: 1

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -28,8 +29,8 @@ public class ShadowCaster2DTileMap : MonoBehaviour
     
     void Start()
     {
-        tilemapCollider = GetComponent<TilemapCollider2D>();
-        tilemapCompCollider = GetComponent<CompositeCollider2D>();
+        //tilemapCollider = GetComponent<TilemapCollider2D>();
+        //tilemapCompCollider = GetComponent<CompositeCollider2D>();
     }
 
     void Update()
@@ -75,7 +76,7 @@ public class ShadowCaster2DTileMap : MonoBehaviour
         var tempList = transform.Cast<Transform>().ToList();
         foreach (var child in tempList)
         {
-            DestroyImmediate(child.gameObject);
+            Destroy(child.gameObject);
         }
     }
 }

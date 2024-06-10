@@ -47,7 +47,7 @@ public class TileManager : MonoBehaviour
             }
             return _shadowCaster2DTileMap;
         }
-}
+    }
 
     void Awake()
     {
@@ -79,6 +79,7 @@ public class TileManager : MonoBehaviour
             {
                 AnimatedTilemap.SetTile(gridPos, 
                     _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+                
                 StructureTilemap.SetTile(gridPos, rts);
                 
                 shadowCaster2DTileMap.Generate();
@@ -113,7 +114,7 @@ public class TileManager : MonoBehaviour
         }
        
         //StructureTilemap.SetTile(rootPos, null);
-        AnimatedTilemap.SetTile(rootPos, null);
+        //AnimatedTilemap.SetTile(rootPos, null);
         //AnimatedTilemap.RefreshTile(rootPos);
         if (shadowCaster2DTileMap != null)
             shadowCaster2DTileMap.Generate();

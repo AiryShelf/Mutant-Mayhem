@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
-  m_Name: StructureSo_2x2Wall1
+  m_Name: StructureSO_1x1Wall1
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: 7e3f15f0e992d8b48a32589b9bbfa432, type: 3}
-  tileName: 2x2 Wall
-  description: Extra thick means extra strong.  It should hold up for a while, hopefully...
-  tileCost: 500
-  maxHealth: 5000
-  health: 5000
-  ruleTileStructure: {fileID: 11400000, guid: 0bb250a301719e048bf65ab985195938, type: 2}
-  structureType: 4
+  tileName: 1x1 Wall
+  description: A basic steel wall, conveniently dropped from the Mission Control
+    station in low orbit.  I hope their aim is good!
+  tileCost: 100
+  maxHealth: 1000
+  health: 1000
+  ruleTileStructure: {fileID: 11400000, guid: 9c0c4aec31f432e429064bd2a9a65414, type: 2}
+  structureType: 3
   actionType: 1
-  range: {x: 100, y: 100}
+  range: {x: 5, y: 5}

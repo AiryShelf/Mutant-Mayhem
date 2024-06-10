@@ -104,16 +104,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
     void FixedUpdate() 
     {
         StateMachine.CurrentEnemyState.PhysicsUpdate();
-        CurrentSMStateDebug = StateMachine.CurrentEnemyState.ToString();
-    }
-
-    void OnCollisionStay2D(Collision2D other)
-    {
-        // Structures layer# 12
-        if (other.gameObject.layer == 12)
-        {
-            meleeController.HitStructure(other.GetContact(0).point);
-        }
+        // For SM debug
+        //CurrentSMStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
     #region Randomize Stats

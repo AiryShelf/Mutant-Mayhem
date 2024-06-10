@@ -1,17 +1,15 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "StructureSO")]
 public class StructureSO : ScriptableObject
 {
     [Header("Tile Info")]
     public Sprite uiImage;
-    public String tileName;
+    public string tileName;
     [TextArea(3,10)]
-    public String description;
+    public string description;
     public float tileCost;
     public float maxHealth;
     public float health;
@@ -32,6 +30,7 @@ public enum StructureType
     DestroyTool,
     OneByOneWall,
     TwoByTwoWall,
+    SpotLight,
     None
 }
 

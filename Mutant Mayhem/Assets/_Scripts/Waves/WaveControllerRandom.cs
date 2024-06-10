@@ -17,7 +17,7 @@ public class WaveControllerRandom : MonoBehaviour
     [SerializeField] TextMeshProUGUI nextWaveText;
 
     [Header("Wave Properties")]
-    public int currentWave = 0;
+    public int currentWaveCount = 0;
     public float timeBetweenWaves = 60f;
     public float spawnRadius = 60;
     public int wavesPerBase = 3;
@@ -25,7 +25,7 @@ public class WaveControllerRandom : MonoBehaviour
     [Header("Enemy Multipliers")]
     public int batchMultiplierStart = 10;
     public int batchMultiplier = 10;
-    public int MultiplierStart = 1;
+    public int multiplierStart = 1;
     public float damageMultiplier = 1;
     public float healthMultiplier = 1;
     public float speedMultiplier = 1;
@@ -67,8 +67,9 @@ public class WaveControllerRandom : MonoBehaviour
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
 
-        waveSpawner.currentWaveSource = allWaveBases[0];
-        currentWave = 0;
+        // Testing MaserWave and dynamically building currentWave
+        //waveSpawner.currentWaveSource = allWaveBases[0];
+        currentWaveCount = 0;
     }
 
     void OnNextWaveInput(InputAction.CallbackContext context)
@@ -94,7 +95,7 @@ public class WaveControllerRandom : MonoBehaviour
 
         while (countdown >= 0)
         {
-            nextWaveText.text = "Time until night " + (currentWave + 1) + 
+            nextWaveText.text = "Time until night " + (currentWaveCount + 1) + 
                 ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";
             
             yield return new WaitForEndOfFrame();
@@ -111,9 +112,9 @@ public class WaveControllerRandom : MonoBehaviour
         UpdateWaveMultipliers();
 
         // Switch Spawner to new WaveBase
-        int index = (int)Mathf.Floor(currentWave / wavesPerBase);
-        index = Mathf.Clamp(index, 0, allWaveBases.Count - 1);
-        waveSpawner.currentWaveSource = allWaveBases[index];
+        //int index = (int)Mathf.Floor(currentWave / wavesPerBase);
+        //index = Mathf.Clamp(index, 0, allWaveBases.Count - 1);
+        //waveSpawner.currentWaveSource = allWaveBases[index];
         // Need to add logic to handle the end of the list.
         // Maybe restart with larger multipliers?  Or a random new list?
 
@@ -126,7 +127,7 @@ public class WaveControllerRandom : MonoBehaviour
         waveInfoFadeGroup.isTriggered = true;
         nextWaveFadeGroup.isTriggered = false;
         nextWaveText.enabled = false;
-        currentNightText.text = "Night " + (currentWave + 1);
+        currentNightText.text = "Night " + (currentWaveCount + 1);
 
         // Wait 5 seconds before checking wave complete
         float timeElapsed = 0;
@@ -157,7 +158,7 @@ public class WaveControllerRandom : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         isNight = false;
-        currentWave++;
+        currentWaveCount++;
 
         StartCoroutine(NextWaveTimer());
 
@@ -169,12 +170,12 @@ public class WaveControllerRandom : MonoBehaviour
 
     void UpdateWaveMultipliers()
     {
-        batchMultiplier++;
-        damageMultiplier = MultiplierStart + currentWave / 20f;
-        healthMultiplier = MultiplierStart + currentWave / 20f;
-        speedMultiplier = MultiplierStart + currentWave / 20f;
-        sizeMultiplier = MultiplierStart + currentWave / 20f;
-        spawnSpeedMultiplier = Mathf.Clamp(MultiplierStart 
-                               - currentWave / 100f, 0.1f, 100);
+        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveCount / wavesPerBase / 2);
+        damageMultiplier = multiplierStart + currentWaveCount / 40f;
+        healthMultiplier = multiplierStart + currentWaveCount / 40f;
+        speedMultiplier = multiplierStart + currentWaveCount / 40f;
+        sizeMultiplier = multiplierStart + currentWaveCount / 40f;
+        spawnSpeedMultiplier = Mathf.Clamp(multiplierStart 
+                               - currentWaveCount / 100f, 0.1f, 100);
     }
 }

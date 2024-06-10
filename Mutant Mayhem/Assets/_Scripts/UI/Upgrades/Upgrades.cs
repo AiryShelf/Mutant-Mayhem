@@ -307,8 +307,7 @@ public class SMGBuyAmmoUpgrade : Upgrade
 
     public override bool Apply(PlayerStats playerStats)
     {
-        int clipSize = playerStats.playerShooter.gunList[1].clipSize;
-        playerStats.playerShooter.gunsAmmo[1] += clipSize * 2;
+        playerStats.playerShooter.gunsAmmo[1] += 100;
         return true;
     }
 

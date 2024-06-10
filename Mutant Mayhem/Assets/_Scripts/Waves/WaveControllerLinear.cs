@@ -66,7 +66,7 @@ public class WaveControllerLinear : MonoBehaviour
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
 
-        waveSpawner.currentWaveSource = allWaveBases[0];
+        waveSpawner.waveSOBaseSource = allWaveBases[0];
         currentWave = 0;
     }
 
@@ -112,7 +112,7 @@ public class WaveControllerLinear : MonoBehaviour
         // Switch Spawner to new WaveBase
         int index = (int)Mathf.Floor(currentWave / wavesPerBase);
         index = Mathf.Clamp(index, 0, allWaveBases.Count - 1);
-        waveSpawner.currentWaveSource = allWaveBases[index];
+        waveSpawner.waveSOBaseSource = allWaveBases[index];
         // Need to add logic to handle the end of the list.
         // Maybe restart with larger multipliers?  Or a random new list?
 

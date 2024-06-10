@@ -36,7 +36,7 @@ public class CorpseController : MonoBehaviour
 
     IEnumerator FadeOut()
     {
-        float alpha = mySr.color.a;
+        Color startColor = mySr.color;
         float timeElapsed = 0;
 
         while (timeElapsed < timeForFade)
@@ -44,7 +44,7 @@ public class CorpseController : MonoBehaviour
             yield return new WaitForFixedUpdate();
             timeElapsed += Time.fixedDeltaTime;
 
-            Color newColor = Color.Lerp(mySr.color, 
+            Color newColor = Color.Lerp(startColor, 
                              new Color(0,0,0,0), timeElapsed / timeForFade);
             
             mySr.color = newColor;

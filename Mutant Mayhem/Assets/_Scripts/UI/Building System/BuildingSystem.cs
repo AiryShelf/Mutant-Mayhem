@@ -155,6 +155,7 @@ public class BuildingSystem : MonoBehaviour
         if (_StructsAvailDict[structure])
         {
             RemoveBuildHighlight();
+            Debug.Log((int)structure);
             structureInHand = AllStructureSOs[(int)structure];
             //Debug.Log("SwitchedTools to index: " + (int)structure);         
         }
@@ -248,7 +249,7 @@ public class BuildingSystem : MonoBehaviour
         else highlightedTilePos = mouseGridPos;
 
         // Find player grid position
-        playerGridPos = structureTilemap.WorldToCell(transform.position);
+        playerGridPos = structureTilemap.WorldToCell(player.transform.position);
 
         // Highlight if in range and conditions met.
         if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.range))
