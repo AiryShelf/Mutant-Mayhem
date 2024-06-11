@@ -155,7 +155,7 @@ public class BuildingSystem : MonoBehaviour
         if (_StructsAvailDict[structure])
         {
             RemoveBuildHighlight();
-            Debug.Log((int)structure);
+            Debug.Log("Switched to tool index: " + (int)structure);
             structureInHand = AllStructureSOs[(int)structure];
             //Debug.Log("SwitchedTools to index: " + (int)structure);         
         }

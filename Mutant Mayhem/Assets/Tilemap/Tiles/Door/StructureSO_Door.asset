@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
+  m_Name: StructureSO_Door
+  m_EditorClassIdentifier: 
+  uiImage: {fileID: 1705434313, guid: 7a12fc301ddd5c94f8ec89d8ff32cf1a, type: 3}
+  tileName: Door
+  description: An automatic door that opens only for you.  Weaker than walls
+  tileCost: 200
+  maxHealth: 500
+  health: 500
+  ruleTileStructure: {fileID: 11400000, guid: f8e78a4700223194181c7e54d0a8aad4, type: 2}
+  structureType: 6
+  actionType: 1
+  range: {x: 5, y: 5}
