@@ -21,6 +21,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] QCubeController qCubeController;
 
     public bool inBuildMode;
+    public int currentRotation;
     
     // needs to actually be created
     public static Dictionary<StructureType, bool> _StructsAvailDict = 
@@ -32,6 +33,8 @@ public class BuildingSystem : MonoBehaviour
     Player player;
     InputActionMap playerActionMap;
     InputAction toolbarAction;
+    InputAction rotateStructureAction;
+    InputAction buildAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
     MessagePanel messagePanel;
 
@@ -40,6 +43,7 @@ public class BuildingSystem : MonoBehaviour
     void Awake()
     {
         BuildStructsAvailDict();    
+
         player = FindObjectOfType<Player>();
         PlayerCredits = playerStartingCredits;
         messagePanel = FindObjectOfType<MessagePanel>();
@@ -49,14 +53,19 @@ public class BuildingSystem : MonoBehaviour
     {
         playerActionMap = player.inputAsset.FindActionMap("Player");
         toolbarAction = playerActionMap.FindAction("Toolbar");
+        buildAction = playerActionMap.FindAction("BuildStructure");
+        rotateStructureAction = playerActionMap.FindAction("RotateStructure");
+
+        rotateStructureAction.started += OnRotate;
         toolbarAction.started += OnToolbarUsed;
-        //buildMenuAction = playerActionMap.FindAction("BuildMenu");
-        //buildMenuAction.performed += ctx => ToggleBuildMenu();
+        buildAction.started += OnBuild;
     }
 
     void OnDisable()
     {
         toolbarAction.started -= OnToolbarUsed;
+        rotateStructureAction.started -= OnRotate;
+        buildAction.started -= OnBuild;
    
         _StructsAvailDict.Clear();   
     }
@@ -68,25 +77,40 @@ public class BuildingSystem : MonoBehaviour
         {
             HighlightTile(structureInHand);
         }
-
-        // Perform action
-        if (Input.GetKey(KeyCode.F))
-        {
-            if (allHighlited)
-            {
-                if (structureInHand.actionType == ActionType.Build)
-                {
-                    Build((Vector3Int)highlightedTilePos, structureInHand);
-                }
-                else if (structureInHand.actionType == ActionType.Destroy)
-                {
-                    DestroyTile(destroyPositions[0]);
-                }
-            }
-        }
     }
 
     #region Controls
+
+    void OnRotate(InputAction.CallbackContext context)
+    {
+        if (context.control.name == "q")
+        {
+            currentRotation += 90;
+        }   
+        else if (context.control.name == "e")
+        {
+            currentRotation -= 90;
+        }
+
+        // Normalize the rotation to be within the range [0, 360)
+        currentRotation = (currentRotation % 360 + 360) % 360;
+        SwitchTools(structureInHand.structureType);
+    }
+
+    void OnBuild(InputAction.CallbackContext context)
+    {
+        if (allHighlited)
+        {
+            if (structureInHand.actionType == ActionType.Build)
+            {
+                Build(highlightedTilePos);
+            }
+            else if (structureInHand.actionType == ActionType.Destroy)
+            {
+                DestroyTile(destroyPositions[0]);
+            }
+        }
+    }
 
     public void ToggleBuildMenu(bool on)
     {
@@ -111,7 +135,7 @@ public class BuildingSystem : MonoBehaviour
             clearSelection = StartCoroutine(ClearSelection(time));
 
             RemoveBuildHighlight();
-            structureInHand = AllStructureSOs[0];
+            structureInHand = AllStructureSOs[(int)StructureType.SelectTool];
             
             //Debug.Log("Closed Build Panel");
         }
@@ -122,14 +146,14 @@ public class BuildingSystem : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         RemoveBuildHighlight();
-        structureInHand = AllStructureSOs[0];
+        structureInHand = AllStructureSOs[(int)StructureType.SelectTool];
     }
 
     void OnToolbarUsed(InputAction.CallbackContext context)
     {
         if (inBuildMode)
         {
-            Debug.Log("OnToolbar called");
+            //Debug.Log("OnToolbar called");
             if (Input.GetKeyDown("c"))
             {
                 //Repair Tool
@@ -155,9 +179,21 @@ public class BuildingSystem : MonoBehaviour
         if (_StructsAvailDict[structure])
         {
             RemoveBuildHighlight();
-            Debug.Log("Switched to tool index: " + (int)structure);
-            structureInHand = AllStructureSOs[(int)structure];
-            //Debug.Log("SwitchedTools to index: " + (int)structure);         
+
+            StructureSO sourceSO = AllStructureSOs[(int)structure];  
+
+            // Apply current Rotation to tiles, not tools
+            if ((int) structure > 2)
+            {
+                structureInHand = StructureRotator.RotateStructure(sourceSO, currentRotation);
+            }
+            else
+            {
+                structureInHand = sourceSO;
+            }
+
+
+            Debug.Log("Switched to tool index: " + (int)structure);     
         }
     }
 
@@ -165,20 +201,20 @@ public class BuildingSystem : MonoBehaviour
 
     #region Build and Destroy
 
-    void Build(Vector3Int gridPos, StructureSO structureSO)
+    void Build(Vector3Int gridPos)
     {
-        if (PlayerCredits >= structureSO.tileCost)
+        if (PlayerCredits >= structureInHand.tileCost)
         {
-            if (tileManager.AddTileAt(gridPos, structureSO.ruleTileStructure))
+            if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
             {
                 RemoveBuildHighlight();
-                PlayerCredits -= structureSO.tileCost;
+                PlayerCredits -= structureInHand.tileCost;
             }
         }
         else
         {
             messagePanel.ShowMessage("Not enough Credits to build " + 
-                                     structureSO.tileName + "!", Color.red);
+                                     structureInHand.tileName + "!", Color.red);
         }
     }
 
@@ -209,14 +245,16 @@ public class BuildingSystem : MonoBehaviour
 
     void RemoveBuildHighlight()
     {
-        // Remove preview destroy image
+        // Remove preview image
         Vector3Int previewImagePos = new Vector3Int(highlightedTilePos.x, 
                                         highlightedTilePos.y, highlightedTilePos.z + 1);
         tempTilemap.SetTile(previewImagePos, null);
+        StructureRotator.ResetTileMatrix(tempTilemap, previewImagePos);
+
         RemoveDestroyHighlight();
 
         // Remove build highlight
-        foreach (Vector3Int pos in structureInHand.ruleTileStructure.cellPositions)
+        foreach (Vector3Int pos in structureInHand.cellPositions)
         {
             tempTilemap.SetTile(highlightedTilePos + pos, null);               
         }
@@ -252,7 +290,7 @@ public class BuildingSystem : MonoBehaviour
         playerGridPos = structureTilemap.WorldToCell(player.transform.position);
 
         // Highlight if in range and conditions met.
-        if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.range))
+        if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
         {
             if (currentAction == ActionType.Destroy)
             {
@@ -282,7 +320,7 @@ public class BuildingSystem : MonoBehaviour
                 allHighlited = true;
                 if (currentAction == ActionType.Build)
                 {
-                    foreach (Vector3Int pos in structureInHand.ruleTileStructure.cellPositions)
+                    foreach (Vector3Int pos in structureInHand.cellPositions)
                     {                
                         if (tileManager.CheckGridIsClear(highlightedTilePos + pos))
                         {
@@ -334,10 +372,10 @@ public class BuildingSystem : MonoBehaviour
 
     void SetPreviewImage(Vector3Int gridPos, AnimatedTile tile, Color color)
     {
-        Vector3Int imageTilePos = new Vector3Int(
-            gridPos.x, gridPos.y, gridPos.z + 1);
+        Vector3Int imageTilePos = new Vector3Int(gridPos.x, gridPos.y, gridPos.z + 1);
         
         tempTilemap.SetTile(imageTilePos, tile);
+        StructureRotator.RotateTile(tempTilemap, imageTilePos, currentRotation);
         tempTilemap.SetTileFlags(imageTilePos, TileFlags.None);
         tempTilemap.SetColor(imageTilePos, color);
     }

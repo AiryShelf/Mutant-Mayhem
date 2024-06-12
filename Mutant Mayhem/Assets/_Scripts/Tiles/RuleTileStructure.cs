@@ -8,7 +8,6 @@ public class RuleTileStructure : RuleTile
 {
     [Header("Tile Settings")]
     public StructureSO structureSO;
-    public List<Vector3Int> cellPositions;
     public List<AnimatedTile> damagedTiles;
     public GameObject corpsePrefab;
     public GameObject hitEffectsPrefab;
@@ -20,5 +19,5 @@ public class RuleTileStructure : RuleTile
         tileData.colliderType = Tile.ColliderType.Sprite;
         tileData.sprite = transparentSprite;
     }
-    */
+*/
 }

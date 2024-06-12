@@ -18,7 +18,9 @@ MonoBehaviour:
   tileCost: 100
   maxHealth: 100
   health: 100
+  cellPositions:
+  - {x: 0, y: 0, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: e5d724530abd869469b54a3d499e99bb, type: 2}
   structureType: 5
   actionType: 1
-  range: {x: 5, y: 5}
+  actionRange: {x: 5, y: 5}

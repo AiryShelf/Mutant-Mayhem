@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -17,6 +17,8 @@ public class TileManager : MonoBehaviour
     // the Structures Tilemap (on "Structures" layer)
     private static Dictionary<Vector3Int, TileStats> _TileStatsDict = 
                                             new Dictionary<Vector3Int, TileStats>();
+    private Dictionary<Vector3Int, GameObject> tileGameObjects = 
+                                            new Dictionary<Vector3Int, GameObject>();
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForGridClearCheck;
@@ -25,7 +27,6 @@ public class TileManager : MonoBehaviour
     public int numberofTilesMissed;
 
     // For debugging
-    Vector2 boxPos;
     Vector2 boxSize;
     Vector2 worldPos;
     Vector2 newWorldPos;
@@ -71,17 +72,26 @@ public class TileManager : MonoBehaviour
 
     #region Alter Tiles
 
-    public bool AddTileAt(Vector3Int gridPos, RuleTileStructure rts)
+    public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
     {
-        if (CheckGridIsClear(gridPos, rts))
+        if (CheckGridIsClear(gridPos, structure))
         {
-            if (AddToTileStatsDict(gridPos, rts))
+            if (AddToTileStatsDict(gridPos, structure))
             {
+                // Set and rotate tile image
                 AnimatedTilemap.SetTile(gridPos, 
                     _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+                StructureRotator.RotateTile(AnimatedTilemap, gridPos, rotation);
+
+                // Set and rotate structure tile and gameObject
+                StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
                 
-                StructureTilemap.SetTile(gridPos, rts);
-                
+                // Rotate the structure tile, find new bounds
+                StructureRotator.RotateTile(StructureTilemap, gridPos, rotation);
+                Vector2Int bounds = StructureRotator.CalculateBoundingBox(structure.cellPositions);
+
+                StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
+
                 shadowCaster2DTileMap.Generate();
 
                 StatsCounterPlayer.StructuresBuilt++;
@@ -101,9 +111,26 @@ public class TileManager : MonoBehaviour
         }       
     }
 
+    IEnumerator RotateTileObject(Vector3Int gridPos, Vector2Int bounds, int rotation)
+    {
+        yield return new WaitForFixedUpdate();
+
+        GameObject tileObj = StructureTilemap.GetInstantiatedObject(gridPos);
+
+        // Rotate and position GameObject
+        if (tileObj != null)
+        {
+            StructureRotator.RepositionGameObject(StructureTilemap, tileObj, gridPos, bounds, rotation);
+            tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
+        }
+        else
+            Debug.Log("TileObject not found");
+    }
+
     public void DestroyTileAt(Vector3Int gridPos)
     {
-        List<Vector3Int> positions = _TileStatsDict[gridPos].ruleTileStructure.cellPositions;
+        List<Vector3Int> positions = 
+            _TileStatsDict[gridPos].ruleTileStructure.structureSO.cellPositions;
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         AnimatedTilemap.SetTile(rootPos, null);
 
@@ -162,12 +189,17 @@ public class TileManager : MonoBehaviour
         int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
         index = Mathf.Clamp(index, 0, dTiles.Count - 1);
 
+        // Keep original rotation
+        Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+
         if (AnimatedTilemap.GetTile(rootPos) != null)
         {
             AnimatedTilemap.SetTile(rootPos, null);
         }
+
         AnimatedTilemap.SetTile(rootPos, 
             _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+        AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
     }
 
     #endregion
@@ -192,9 +224,9 @@ public class TileManager : MonoBehaviour
         return _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0];
     }
 
-    public bool CheckGridIsClear(Vector3Int rootPos, RuleTileStructure rts)
+    public bool CheckGridIsClear(Vector3Int rootPos, StructureSO structure)
     {
-        foreach (Vector3Int pos in rts.cellPositions)
+        foreach (Vector3Int pos in structure.cellPositions)
         {   
             // Check tile dictionary
             if (_TileStatsDict.ContainsKey(rootPos + pos))
@@ -255,7 +287,7 @@ public class TileManager : MonoBehaviour
             RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
             
             // Get grid cell positions for the structure
-            List<Vector3Int> positions = new List<Vector3Int>(rts.cellPositions);
+            List<Vector3Int> positions = new List<Vector3Int>(rts.structureSO.cellPositions);
 
             for (int i = 0; i < positions.Count; i++)
             {
@@ -270,8 +302,6 @@ public class TileManager : MonoBehaviour
         
             return positions;
         }
-
-        
     }
 
     #endregion
@@ -330,7 +360,7 @@ public class TileManager : MonoBehaviour
                 var tileInMap = StructureTilemap.GetTile(rootPos);
                 if (tileInMap is RuleTileStructure rts)
                 {
-                    if(AddToTileStatsDict(rootPos, rts))
+                    if(AddToTileStatsDict(rootPos, rts.structureSO))
                     {
                         AnimatedTilemap.SetTile(rootPos, 
                             _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[0]);
@@ -342,18 +372,18 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    bool AddToTileStatsDict(Vector3Int rootPos, RuleTileStructure rts)
+    bool AddToTileStatsDict(Vector3Int rootPos, StructureSO structure)
     {
-        if (CheckGridIsClear(rootPos, rts))
+        if (CheckGridIsClear(rootPos, structure))
         {                                                      
             // Add the tile's data to the dictionary at root location
             if (!_TileStatsDict.ContainsKey(rootPos))
             {
                 _TileStatsDict.Add(rootPos, new TileStats 
                 { 
-                    ruleTileStructure = rts,
-                    maxHealth = rts.structureSO.maxHealth,
-                    health = rts.structureSO.health,
+                    ruleTileStructure = structure.ruleTileStructure,
+                    maxHealth = structure.maxHealth,
+                    health = structure.health,
                     rootGridPos = rootPos
                 });
             }
@@ -365,11 +395,10 @@ public class TileManager : MonoBehaviour
         }
 
         // Add any other cellPositions;
-        int length = rts.cellPositions.Count;
-        List<Vector3Int> positions = rts.cellPositions;
-        if (length > 1)
+        List<Vector3Int> positions = structure.cellPositions;
+        if (positions.Count > 1)
         {
-            for (int x = 1; x < length; x++)
+            for (int x = 1; x < positions.Count; x++)
             {
                 Vector3Int nextPos = rootPos + positions[x];
                 if (!_TileStatsDict.ContainsKey(nextPos))

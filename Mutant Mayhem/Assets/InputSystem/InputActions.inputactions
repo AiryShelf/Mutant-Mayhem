@@ -69,15 +69,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "BuildMenu",
-                    "type": "Button",
-                    "id": "49cbcfba-ed60-4f92-8276-080660973a37",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Reload",
                     "type": "Button",
                     "id": "d7454d66-932e-4aac-a095-98715e52e5a3",
@@ -108,6 +99,33 @@
                     "name": "QCube",
                     "type": "Button",
                     "id": "f48e9872-0397-417c-a291-f5345e677319",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "BuildMenu",
+                    "type": "Button",
+                    "id": "49cbcfba-ed60-4f92-8276-080660973a37",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateStructure",
+                    "type": "Button",
+                    "id": "ef61ac0a-4e67-49dd-b2cb-925afcdecfd9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "BuildStructure",
+                    "type": "Button",
+                    "id": "2c47c4e7-e1ef-4784-a94f-b562ab4c5f69",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -502,17 +520,6 @@
                 },
                 {
                     "name": "",
-                    "id": "6eec223b-09a3-4d29-a32a-41cae9f4f89e",
-                    "path": "<Keyboard>/b",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "BuildMenu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "430f27a6-7e41-4def-a4a0-04c9d85b2b01",
                     "path": "<Keyboard>/r",
                     "interactions": "",
@@ -574,6 +581,50 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "QCube",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "acc18c6e-0950-4458-a5ce-d43e7a401cfb",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RotateStructure",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "37b79bdc-e6ee-47e5-8ba5-042779535332",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RotateStructure",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6eec223b-09a3-4d29-a32a-41cae9f4f89e",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "BuildMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4e3f499f-4e8a-41f1-94bf-577783d8aee9",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BuildStructure",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

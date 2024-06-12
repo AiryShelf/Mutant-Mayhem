@@ -13,14 +13,14 @@ public class StructureSO : ScriptableObject
     public float tileCost;
     public float maxHealth;
     public float health;
+    public List<Vector3Int> cellPositions;
 
     [Header("Tile Type")]
     
     public RuleTileStructure ruleTileStructure;
     public StructureType structureType;
     public ActionType actionType;
-    public Vector2Int range = new Vector2Int(5, 5);
-
+    public Vector2Int actionRange = new Vector2Int(5, 5);
 }
 
 public enum StructureType
@@ -31,6 +31,7 @@ public enum StructureType
     OneByOneWall,
     TwoByTwoWall,
     SpotLight,
+    Door,
     None
 }
 
