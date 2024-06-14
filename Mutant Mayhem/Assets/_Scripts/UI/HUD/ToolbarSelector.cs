@@ -79,9 +79,14 @@ public class ToolbarSelector : MonoBehaviour
 
     void SwitchBoxes(int i)
     {
-        currentBox.color = unselectedColor;
-        currentBox = boxImages[i];
-        currentBox.color = selectedColor;
+        if (player.playerShooter.gunsUnlocked.Count - 1 < i)
+            return;
 
+        if (player.playerShooter.gunsUnlocked[i])
+        {
+            currentBox.color = unselectedColor;
+            currentBox = boxImages[i];
+            currentBox.color = selectedColor;
+        }
     }
 }

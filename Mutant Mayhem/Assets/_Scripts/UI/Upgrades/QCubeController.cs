@@ -144,7 +144,8 @@ public class QCubeController : MonoBehaviour
 
     void OpenUpgradeWindow()
     {
-        buildingSystem.ToggleBuildMenu(false);
+        if (player.playerShooter.isBuilding)
+            player.animControllerPlayer.ToggleBuildMode();
         fireAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
@@ -152,6 +153,7 @@ public class QCubeController : MonoBehaviour
 
     public void CloseUpgradeWindow()
     {
+        Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
         panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;

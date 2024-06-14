@@ -102,10 +102,12 @@ public class MoveSpeedUpgrade : Upgrade
 {
     public MoveSpeedUpgrade() : base(PlayerStatsUpgrade.MoveSpeed) { }
 
+    public static float UpgAmount = 0.2f;
+
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.moveSpeed += 0.2f;
-        playerStats.lookSpeed += 0.002f;
+        playerStats.moveSpeed += UpgAmount;
+        playerStats.lookSpeed += 0.001f;
     }
 }
 
@@ -113,9 +115,11 @@ public class StrafeSpeedUpgrade : Upgrade
 {
     public StrafeSpeedUpgrade() : base(PlayerStatsUpgrade.StrafeSpeed) { }
 
+    public static float UpgAmount = 0.1f;
+
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.strafeSpeed += 0.1f;
+        playerStats.strafeSpeed += UpgAmount;
     }
 }
 
@@ -123,9 +127,11 @@ public class SprintFactorUpgrade : Upgrade
 {
     public SprintFactorUpgrade() : base(PlayerStatsUpgrade.SprintFactor) { }
 
+    public static float UpgAmount = 0.05f;
+
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.sprintFactor += 0.05f;
+        playerStats.sprintFactor += UpgAmount;
     }
 }
 
@@ -133,80 +139,11 @@ public class ReloadSpeedUpgrade : Upgrade
 {
     public ReloadSpeedUpgrade() : base(PlayerStatsUpgrade.PlayerReloadSpeed) { }
 
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.reloadFactor += 0.1f;
-    }
-}
-
-public class MeleeDamageUpgrade : Upgrade
-{
-    public MeleeDamageUpgrade() : base(PlayerStatsUpgrade.MeleeDamage) { }
+    public static float UpgAmount = 0.1f;
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.meleeDamage += 1 * level;
-    }
-}
-
-public class KnockbackUpgrade : Upgrade
-{
-    public KnockbackUpgrade() : base(PlayerStatsUpgrade.MeleeKnockback) { }
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.knockback += 0.1f * level;
-    }
-}
-
-public class MeleeAttackRateUpgrade : Upgrade
-{
-    public MeleeAttackRateUpgrade() : base(PlayerStatsUpgrade.MeleeAttackRate) { }
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.meleeSpeedFactor += 0.02f;
-    }
-}
-
-public class StaminaMaxUpgrade : Upgrade
-{
-    public StaminaMaxUpgrade() : base(PlayerStatsUpgrade.StaminaMax) { }
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.staminaMax += 5;
-    }
-}
-
-public class StaminaRegenUpgrade : Upgrade
-{
-    public StaminaRegenUpgrade() : base(PlayerStatsUpgrade.StaminaRegen) { }
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.staminaRegen += 0.2f;
-    }
-}
-
-public class HealthMaxUpgrade : Upgrade
-{
-    public HealthMaxUpgrade() : base(PlayerStatsUpgrade.HealthMax) { }
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.playerHealthScript.SetMaxHealth(
-            playerStats.playerHealthScript.GetMaxHealth() + 100);
-    }
-}
-
-public class HealthRegenUpgrade : Upgrade
-{
-    public HealthRegenUpgrade() : base(PlayerStatsUpgrade.HealthRegen) { }
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.playerHealthScript.healthRegenPerSec += 0.05f;
+        playerStats.reloadFactor += UpgAmount;
     }
 }
 
@@ -214,9 +151,11 @@ public class PlayerAccuracyUpgrade : Upgrade
 {
     public PlayerAccuracyUpgrade() : base(PlayerStatsUpgrade.PlayerAccuracy) { }
 
+    public static float UpgAmount = 0.1f;
+
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.accuracy -= 0.1f;
+        playerStats.accuracy -= UpgAmount;
         playerStats.accuracy = Mathf.Clamp(playerStats.accuracy, 0, 1);
     }
 
@@ -232,6 +171,100 @@ public class PlayerAccuracyUpgrade : Upgrade
     }
 }
 
+public class MeleeDamageUpgrade : Upgrade
+{
+    public MeleeDamageUpgrade() : base(PlayerStatsUpgrade.MeleeDamage) { }
+
+    public static float GetUpgAmount(UpgradeSystem upgradeSystem)
+    {
+        float upgAmount = 1 * upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage];
+        return upgAmount;
+    }
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.meleeDamage += 1 * level;
+    }
+}
+
+public class KnockbackUpgrade : Upgrade
+{
+    public KnockbackUpgrade() : base(PlayerStatsUpgrade.MeleeKnockback) { }
+
+    public static float GetUpgAmount(UpgradeSystem upgradeSystem)
+    {
+        float upgAmount = 0.1f * upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeKnockback];
+        return upgAmount;
+    }
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.knockback += 0.1f * level;
+    }
+}
+
+public class MeleeAttackRateUpgrade : Upgrade
+{
+    // NOT USING THIS UPGRADE, DON'T PLAN TO SO FAR EITHER
+    public MeleeAttackRateUpgrade() : base(PlayerStatsUpgrade.MeleeAttackRate) { }
+
+    public static float UpgAmount = 0.02f;
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.meleeSpeedFactor += UpgAmount;
+    }
+}
+
+public class StaminaMaxUpgrade : Upgrade
+{
+    public StaminaMaxUpgrade() : base(PlayerStatsUpgrade.StaminaMax) { }
+
+    public static float UpgAmount = 5;
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.staminaMax += UpgAmount;
+    }
+}
+
+public class StaminaRegenUpgrade : Upgrade
+{
+    public StaminaRegenUpgrade() : base(PlayerStatsUpgrade.StaminaRegen) { }
+
+    public static float UpgAmount = 0.2f;
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.staminaRegen += UpgAmount;
+    }
+}
+
+public class HealthMaxUpgrade : Upgrade
+{
+    public HealthMaxUpgrade() : base(PlayerStatsUpgrade.HealthMax) { }
+
+    public static float UpgAmount = 100;
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.playerHealthScript.SetMaxHealth(
+            playerStats.playerHealthScript.GetMaxHealth() + UpgAmount);
+    }
+}
+
+public class HealthRegenUpgrade : Upgrade
+{
+    public HealthRegenUpgrade() : base(PlayerStatsUpgrade.HealthRegen) { }
+
+    public static float UpgAmount = 0.05f;
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.playerHealthScript.healthRegenPerSec += UpgAmount;
+    }
+}
+
 #endregion
 
 // Consumables grouped with PlayerStats in dicts and lists
@@ -241,12 +274,14 @@ public class PlayerHealUpgrade : Upgrade
 {
     public PlayerHealUpgrade() : base(ConsumablesUpgrade.PlayerHeal) { }
 
+    public static int HealAmount = 100;
+
     public override bool Apply(PlayerStats playerStats)
     {
         if (playerStats.playerHealthScript.GetHealth() <
             playerStats.playerHealthScript.GetMaxHealth())
         {
-            playerStats.playerHealthScript.ModifyHealth(100, null);
+            playerStats.playerHealthScript.ModifyHealth(HealAmount, null);
             return true;
         }
         else
@@ -265,6 +300,8 @@ public class PlayerHealUpgrade : Upgrade
 public class QCubeRepairUpgrade : Upgrade
 {
     public QCubeRepairUpgrade() : base(ConsumablesUpgrade.QCubeRepair) { }
+
+    public static int RepairAmount = 100;
 
     public override bool Apply(PlayerStats playerStats)
     {
@@ -288,9 +325,11 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
 {
     public GrenadeBuyAmmoUpgrade() : base(ConsumablesUpgrade.GrenadeBuyAmmo) { }
 
+    public static int AmmoAmount = 1;
+
     public override bool Apply(PlayerStats playerStats)
     {
-        playerStats.grenadeAmmo++;
+        playerStats.grenadeAmmo += AmmoAmount;
         return true;
     }
 
@@ -304,6 +343,8 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
 public class SMGBuyAmmoUpgrade : Upgrade
 {
     public SMGBuyAmmoUpgrade() : base(ConsumablesUpgrade.SMGBuyAmmo) { }
+
+    public static float AmmoAmount = 100;
 
     public override bool Apply(PlayerStats playerStats)
     {
@@ -326,10 +367,12 @@ public class QCubeMaxHealthUpgrade : Upgrade
 {
     public QCubeMaxHealthUpgrade() : base(QCubeStatsUpgrade.QCubeMaxHealth) { }
 
+    public static float UpgAmount = 200;
+
     public override void Apply(QCubeStats qCubeStats, int level)
     {
         qCubeStats.healthScript.SetMaxHealth(
-            qCubeStats.healthScript.GetMaxHealth() + 200);
+            qCubeStats.healthScript.GetMaxHealth() + UpgAmount);
     }
 
     public override int CalculateCost(int baseCost, int level)
@@ -352,6 +395,13 @@ public class GunDamageUpgrade : Upgrade
 {
     public GunDamageUpgrade() : base(GunStatsUpgrade.GunDamage) { }
 
+    public static float GetUpgAmount(Player player, int gunIndex, UpgradeSystem upgradeSystem)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].damageUpgAmt + 
+                          upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeKnockback];
+        return upgAmount;
+    }
+
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.damage += gunSO.damageUpgAmt + level;
@@ -361,6 +411,12 @@ public class GunDamageUpgrade : Upgrade
 public class GunKnockbackUpgrade : Upgrade
 {
     public GunKnockbackUpgrade() : base(GunStatsUpgrade.GunKnockback) { }
+
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].knockbackUpgAmt;
+        return upgAmount;
+    }
 
     public override void Apply(GunSO gunSO, int level)
     {
@@ -372,6 +428,12 @@ public class ShootSpeedUpgrade : Upgrade
 {
     public ShootSpeedUpgrade() : base(GunStatsUpgrade.ShootSpeed) { }
 
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].shootSpeedUpgNegAmt;
+        return upgAmount;
+    }
+
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.shootSpeed += gunSO.shootSpeedUpgNegAmt;
@@ -382,6 +444,12 @@ public class ClipSizeUpgrade : Upgrade
 {
     public ClipSizeUpgrade() : base(GunStatsUpgrade.ClipSize) { }
 
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].clipSizeUpgAmt;
+        return upgAmount;
+    }
+
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.clipSize += gunSO.clipSizeUpgAmt;
@@ -391,6 +459,12 @@ public class ClipSizeUpgrade : Upgrade
 public class ChargeDelayUpgrade : Upgrade
 {
     public ChargeDelayUpgrade() : base(GunStatsUpgrade.ChargeDelay) { }
+
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].chargeDelayUpgNegAmt;
+        return upgAmount;
+    }
 
     public override void Apply(GunSO gunSO, int level)
     {
@@ -405,6 +479,12 @@ public class GunAccuracyUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.accuracy += gunSO.accuracyUpgNegAmt;
+    }
+
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].accuracyUpgNegAmt;
+        return upgAmount;
     }
 
     public override int CalculateCost(int baseCost, int level)
@@ -422,6 +502,12 @@ public class GunAccuracyUpgrade : Upgrade
 public class RangeUpgrade : Upgrade
 {
     public RangeUpgrade() : base(GunStatsUpgrade.GunRange) { }
+
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].bulletRangeUpgAmt;
+        return upgAmount;
+    }
 
     public override void Apply(GunSO gunSO, int level)
     {
@@ -443,6 +529,12 @@ public class RangeUpgrade : Upgrade
 public class RecoilUpgrade : Upgrade
 {
     public RecoilUpgrade() : base(GunStatsUpgrade.Recoil) { }
+
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        float upgAmount = player.playerShooter.gunList[gunIndex].recoilUpgNegAmt;
+        return upgAmount;
+    }
 
     public override void Apply(GunSO gunSO, int level)
     {

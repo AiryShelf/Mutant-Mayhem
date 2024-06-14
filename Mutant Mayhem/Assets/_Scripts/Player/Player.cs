@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform muzzleTrans;
     public CapsuleCollider2D gunCollider;
     [SerializeField] Transform leftHandTrans;
-    [SerializeField] AnimationControllerPlayer animControllerPlayer;
+    public AnimationControllerPlayer animControllerPlayer;
     [SerializeField] MeleeControllerPlayer meleeController;
     [SerializeField] PlayerShooter myShooter;
     
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
     float angleToMouse;
     Rigidbody2D myRb;
     Stamina myStamina;
-    PlayerShooter playerShooter;
+    public PlayerShooter playerShooter;
     public bool isDead;  
     Throw itemToThrow;
 

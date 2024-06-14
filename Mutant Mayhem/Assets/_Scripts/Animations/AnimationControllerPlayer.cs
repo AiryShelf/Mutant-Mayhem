@@ -18,6 +18,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     Rigidbody2D playerRb;
     PlayerShooter playerShooter;
     Coroutine waitToLowerWeaponCoroutine;
+    MessagePanel messagePanel;
 
     bool isFireInput;
     bool isThrowInput;
@@ -48,6 +49,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         playerShooter = player.GetComponent<PlayerShooter>(); 
         bodyAnim = GameObject.FindGameObjectWithTag("PlayerBody").GetComponent<Animator>();
         legsAnim = GameObject.FindGameObjectWithTag("PlayerLegs").GetComponent<Animator>();
+        messagePanel = FindObjectOfType<MessagePanel>();
         
         actionMap = player.inputAsset.FindActionMap("Player");
         fireAction = actionMap.FindAction("Fire");
@@ -470,6 +472,18 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void SwitchGunsStart(int index)
     {
+        if (player.playerShooter.gunsUnlocked.Count - 1 < index)
+        {
+            messagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
+            return;
+        }
+
+        if (!player.playerShooter.gunsUnlocked[index])
+        {
+            messagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
+            return;
+        }
+
         bodyAnim.SetBool("isSwitchingGuns", true);
         bodyAnim.SetInteger("gunIndex", index);
 

@@ -12,6 +12,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
     [SerializeField] Tilemap structureTilemap;
+    [SerializeField] Tilemap animatedTilemap;
     [SerializeField] Tilemap tempTilemap;
     [SerializeField] TileManager tileManager;
     [SerializeField] UIBuildMenuController buildMenuController;
@@ -75,7 +76,7 @@ public class BuildingSystem : MonoBehaviour
         // Highlight a tile
         if (structureInHand != null)
         {
-            HighlightTile(structureInHand);
+            HighlightTile();
         }
     }
 
@@ -119,6 +120,7 @@ public class BuildingSystem : MonoBehaviour
         if (on)
         {
             inBuildMode = true;
+            player.playerShooter.isBuilding = true;
             buildMenuController.TriggerFadeGroups(true);
             qCubeController.CloseUpgradeWindow();
             //Debug.Log("Opened Build Panel");
@@ -126,6 +128,7 @@ public class BuildingSystem : MonoBehaviour
         else
         {
             inBuildMode = false;
+            player.playerShooter.isBuilding = false;
             buildMenuController.TriggerFadeGroups(false);
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
@@ -247,7 +250,7 @@ public class BuildingSystem : MonoBehaviour
     {
         // Remove preview image
         Vector3Int previewImagePos = new Vector3Int(highlightedTilePos.x, 
-                                        highlightedTilePos.y, highlightedTilePos.z + 1);
+                                        highlightedTilePos.y, highlightedTilePos.z - 1);
         tempTilemap.SetTile(previewImagePos, null);
         StructureRotator.ResetTileMatrix(tempTilemap, previewImagePos);
 
@@ -275,7 +278,7 @@ public class BuildingSystem : MonoBehaviour
         allHighlited = false;
     }
 
-    private void HighlightTile(StructureSO structureInHand)
+    private void HighlightTile()
     {
         Vector3Int mouseGridPos = GetMouseToGridPos();
         ActionType currentAction = structureInHand.actionType;
@@ -284,7 +287,8 @@ public class BuildingSystem : MonoBehaviour
         RemoveBuildHighlight();
         if (currentAction != ActionType.Build && tileManager.ContainsTileDictKey(mouseGridPos))
             highlightedTilePos = tileManager.GetRootPos(mouseGridPos);
-        else highlightedTilePos = mouseGridPos;
+        else 
+            highlightedTilePos = mouseGridPos;
 
         // Find player grid position
         playerGridPos = structureTilemap.WorldToCell(player.transform.position);
@@ -299,8 +303,13 @@ public class BuildingSystem : MonoBehaviour
                 if (tileManager.ContainsTileDictKey(highlightedTilePos))
                 {
                     Vector3Int rootPos = tileManager.GetRootPos(highlightedTilePos);
-                    AnimatedTile rootAnimTile = tileManager.GetRootAnimTile(rootPos);
-                    SetPreviewImage(rootPos, rootAnimTile, new Color(1, 0, 0, 0.5f));
+
+                    // Probably not finding the tile
+                    Matrix4x4 matrix = animatedTilemap.GetTransformMatrix(highlightedTilePos);
+                    int rotation = StructureRotator.GetRotationFromMatrix(matrix);
+                    TileBase tile = animatedTilemap.GetTile(highlightedTilePos);
+                        
+                    SetPreviewImageDestroy(rootPos, tile, new Color(1, 0, 0, 0.5f), -rotation);
                 }
                 
                 return;
@@ -312,8 +321,9 @@ public class BuildingSystem : MonoBehaviour
                 // Set preview build Image
                 if (currentAction == ActionType.Build)
                 {
-                    SetPreviewImage(highlightedTilePos, 
-                        structureInHand.ruleTileStructure.damagedTiles[0], new Color(1, 1, 1, 0.5f));
+                    SetPreviewImageBuild(highlightedTilePos, 
+                                         structureInHand.ruleTileStructure.damagedTiles[0], 
+                                         new Color(1, 1, 1, 0.5f));
                 }
                 
                 // Highlight the tiles for building
@@ -324,12 +334,14 @@ public class BuildingSystem : MonoBehaviour
                     {                
                         if (tileManager.CheckGridIsClear(highlightedTilePos + pos))
                         {
+                            Vector3Int newPos = new Vector3Int(pos.x, pos.y, pos.x + 1);
                             tempTilemap.SetTile(highlightedTilePos + pos, highlightedTileAsset);
                             tempTilemap.SetTileFlags(highlightedTilePos + pos, TileFlags.None);
                             tempTilemap.SetColor(highlightedTilePos + pos, new Color(1, 1, 1, 0.5f));
                         }
                         else
                         {
+                            // Show X where grid is not clear
                             tempTilemap.SetTile(highlightedTilePos + pos, destroyTileAsset);
                             allHighlited = false;
                         }   
@@ -355,7 +367,7 @@ public class BuildingSystem : MonoBehaviour
     void HighlightForDestroy(Vector3Int gridPos)
     {
         // Find cells for destroying
-        destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(gridPos));
+        destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(animatedTilemap, gridPos));
         if (destroyPositions.Count > 0)
         {
             foreach (Vector3Int pos in destroyPositions)
@@ -370,14 +382,28 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    void SetPreviewImage(Vector3Int gridPos, AnimatedTile tile, Color color)
+    void SetPreviewImageBuild(Vector3Int gridPos, TileBase tile, Color color)
     {
-        Vector3Int imageTilePos = new Vector3Int(gridPos.x, gridPos.y, gridPos.z + 1);
+        Vector3Int imageTilePos = new Vector3Int(gridPos.x, gridPos.y, gridPos.z - 1);
+        //Debug.Log($"Setting build preview image at {imageTilePos} with rotation {currentRotation}");
         
         tempTilemap.SetTile(imageTilePos, tile);
-        StructureRotator.RotateTile(tempTilemap, imageTilePos, currentRotation);
+        StructureRotator.RotateTileAt(tempTilemap, imageTilePos, currentRotation);
         tempTilemap.SetTileFlags(imageTilePos, TileFlags.None);
         tempTilemap.SetColor(imageTilePos, color);
+    }
+
+    void SetPreviewImageDestroy(Vector3Int gridPos, TileBase tile, Color color, int rotation)
+    {
+        // PROBLEMS HERE
+        Vector3Int imageTilePos = new Vector3Int(gridPos.x, gridPos.y, gridPos.z - 1);
+        //Debug.Log($"Setting destroy preview image at {imageTilePos} with rotation {rotation}");
+        
+        tempTilemap.SetTile(imageTilePos, tile);
+        StructureRotator.RotateTileAt(tempTilemap, imageTilePos, rotation);
+        tempTilemap.SetTileFlags(imageTilePos, TileFlags.None);
+        tempTilemap.SetColor(imageTilePos, color);
+        
     }
 
     #endregion

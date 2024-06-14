@@ -516,7 +516,7 @@ public class UpgradeSystem : MonoBehaviour
 
     #endregion
 
-    void PlayUpgradeEffects()
+    public void PlayUpgradeEffects()
     {
         playerUpgAppliedFX.transform.position = player.transform.position + new Vector3(0, -0.5f, 0);
 

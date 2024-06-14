@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerShooter : MonoBehaviour
 {
     [SerializeField] List<GunSO> _gunListSource;
     public List<GunSO> gunList;
+    public List<bool> gunsUnlocked;
     [SerializeField] Transform gunTrans;
     [SerializeField] SpriteRenderer gunSR;
     [SerializeField] Transform muzzleTrans;
@@ -34,6 +35,7 @@ public class PlayerShooter : MonoBehaviour
     public bool isSwitchingGuns;
     bool droppedGun;
     Rigidbody2D myRb;
+    MessagePanel messagePanel;
     
     [HideInInspector]public PlayerStats playerStats;
 
@@ -43,6 +45,7 @@ public class PlayerShooter : MonoBehaviour
     void Awake()
     {
         myRb = GetComponent<Rigidbody2D>();  
+        messagePanel = FindObjectOfType<MessagePanel>();
 
         // Make a working copy of the gun list
         foreach (GunSO gun in _gunListSource)
@@ -61,7 +64,6 @@ public class PlayerShooter : MonoBehaviour
     void Update()
     {
             Shoot();
-            //Debug.Log("Current gun damage: " + currentGunSO.damage);
     }
 
     public void DropGun()
@@ -93,7 +95,7 @@ public class PlayerShooter : MonoBehaviour
         if (currentMuzzleFlash != null)
             Destroy(currentMuzzleFlash);
         currentMuzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, 
-                                         muzzleTrans.transform);
+                                        muzzleTrans.transform);
         currentMuzzleFlash.SetActive(false);
 
         // This could be removed and gunIndex used instead for animation transitions
@@ -102,6 +104,7 @@ public class PlayerShooter : MonoBehaviour
 
         currentGunIndex = i;
         currentGunSO = gunList[i];
+        //Debug.Log("Current gun damage: " + currentGunSO.damage);
     }
 
     public void Reload()
@@ -239,6 +242,8 @@ public class PlayerShooter : MonoBehaviour
                 Instantiate(currentGunSO.bulletCasingPrefab, casingEjectorTrans.position, 
                             gunTrans.rotation, casingEjectorTrans);
             }
+
+            StatsCounterPlayer.ShotsFiredByPlayer++;
 
             // Use ammo
             gunsAmmoInClips[currentGunIndex]--;

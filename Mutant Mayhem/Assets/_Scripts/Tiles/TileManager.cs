@@ -17,8 +17,6 @@ public class TileManager : MonoBehaviour
     // the Structures Tilemap (on "Structures" layer)
     private static Dictionary<Vector3Int, TileStats> _TileStatsDict = 
                                             new Dictionary<Vector3Int, TileStats>();
-    private Dictionary<Vector3Int, GameObject> tileGameObjects = 
-                                            new Dictionary<Vector3Int, GameObject>();
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForGridClearCheck;
@@ -81,16 +79,19 @@ public class TileManager : MonoBehaviour
                 // Set and rotate tile image
                 AnimatedTilemap.SetTile(gridPos, 
                     _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
-                StructureRotator.RotateTile(AnimatedTilemap, gridPos, rotation);
+                StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
 
                 // Set and rotate structure tile and gameObject
                 StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
                 
                 // Rotate the structure tile, find new bounds
-                StructureRotator.RotateTile(StructureTilemap, gridPos, rotation);
+                StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
                 Vector2Int bounds = StructureRotator.CalculateBoundingBox(structure.cellPositions);
 
-                StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
+                if (structure.cellPositions.Count > 1)
+                {
+                    StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
+                }
 
                 shadowCaster2DTileMap.Generate();
 
@@ -129,15 +130,19 @@ public class TileManager : MonoBehaviour
 
     public void DestroyTileAt(Vector3Int gridPos)
     {
-        List<Vector3Int> positions = 
-            _TileStatsDict[gridPos].ruleTileStructure.structureSO.cellPositions;
+        // Find rotation matrix of tile at gridPos, convert source positions to rotation
+        int tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(gridPos));
+        RuleTileStructure rts = _TileStatsDict[gridPos].ruleTileStructure;
+        List<Vector3Int> sourcePositions = rts.structureSO.cellPositions;
+        List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, tileRot);
+
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         AnimatedTilemap.SetTile(rootPos, null);
 
-        for (int x = positions.Count - 1; x >= 0; x--)
+        foreach (var pos in rotatedPositions)
         {
-            _TileStatsDict.Remove(rootPos + positions[x]);
-            StructureTilemap.SetTile(rootPos + positions[x], null);           
+            _TileStatsDict.Remove(rootPos + pos);
+            StructureTilemap.SetTile(rootPos + pos, null);           
         }
        
         //StructureTilemap.SetTile(rootPos, null);
@@ -219,11 +224,6 @@ public class TileManager : MonoBehaviour
         return _TileStatsDict[gridPos].rootGridPos;
     }
 
-    public AnimatedTile GetRootAnimTile(Vector3Int gridPos)
-    {
-        return _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0];
-    }
-
     public bool CheckGridIsClear(Vector3Int rootPos, StructureSO structure)
     {
         foreach (Vector3Int pos in structure.cellPositions)
@@ -279,22 +279,32 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    public List<Vector3Int> GetStructurePositions(Vector3Int gridPos)
+    public List<Vector3Int> GetStructurePositions(Tilemap tilemap, Vector3Int gridPos)
     {
         if (_TileStatsDict.ContainsKey(gridPos))
         {
+            // Get rootPos and structure
             Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
             RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
             
-            // Get grid cell positions for the structure
-            List<Vector3Int> positions = new List<Vector3Int>(rts.structureSO.cellPositions);
+            // Get original positions
+            List<Vector3Int> sourcePositions = new List<Vector3Int>(rts.structureSO.cellPositions);
 
-            for (int i = 0; i < positions.Count; i++)
+            // Get rotation from transform matrix
+            Matrix4x4 matrix = tilemap.GetTransformMatrix(rootPos);
+            int rotation = StructureRotator.GetRotationFromMatrix(matrix);
+
+            // Rotate the sourcePositions
+            List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, rotation);
+
+            // Get positions relative to rootPos
+            for (int i = 0; i < rotatedPositions.Count; i++)
             {
-                positions[i] += rootPos;
+                rotatedPositions[i] += rootPos;
             }
 
-            return positions;
+            return rotatedPositions;
+            
         }
         else
         {

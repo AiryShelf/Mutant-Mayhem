@@ -31,27 +31,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     void Start()
     {
-        // Fade everything out
-        if (myGroup)
-            myGroup.alpha = 0;
-        foreach (CanvasGroup group in individualElements)
-        {
-            group.alpha = 0;
-            if (deactivateIndivsWithFade)
-                group.gameObject.SetActive(false);
-        }
-
-        // Refresh
-        foreach (CanvasGroup group in individualElements)
-        {
-            group.alpha = 0;
-            if (deactivateIndivsWithFade)
-                group.gameObject.SetActive(false);
-        }
-
-        // Turn the main child off, which contains all the individuals
-        if (deactivateGroup)
-            deactivateGroup.SetActive(false);
+        Initialize();
     }
 
     public void Initialize()

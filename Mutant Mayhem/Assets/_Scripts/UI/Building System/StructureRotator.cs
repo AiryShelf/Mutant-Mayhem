@@ -7,8 +7,9 @@ using UnityEngine.Tilemaps;
 
 public static class StructureRotator
 {
-    public static void RotateTile(Tilemap tilemap, Vector3Int gridPos, int rotation)
+    public static void RotateTileAt(Tilemap tilemap, Vector3Int gridPos, int rotation)
     {
+        //Debug.Log($"Applying rotation {rotation} at position {gridPos}");
         Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, 
                            Quaternion.Euler(0, 0, rotation), Vector3.one);
         tilemap.SetTransformMatrix(gridPos, matrix);
@@ -44,6 +45,19 @@ public static class StructureRotator
         return rotatedStructure;
     }
 
+    public static int GetRotationFromMatrix(Matrix4x4 matrix)
+    {
+        //Vector3 lossyScale = matrix.lossyScale;
+        float angle = Mathf.Atan2(matrix.m01, matrix.m00) * Mathf.Rad2Deg;
+
+        if (Mathf.Approximately(angle, 0)) return 0;
+        if (Mathf.Approximately(angle, 90)) return 90;
+        if (Mathf.Approximately(angle, 180) || Mathf.Approximately(angle, -180)) return 180;
+        if (Mathf.Approximately(angle, -90)) return 270;
+
+        return 0;
+    }
+
     public static void RepositionGameObject(Tilemap tilemap, GameObject tileGameObject, 
                                             Vector3Int gridPos, Vector2Int bounds, int rotation)
     {       
@@ -56,8 +70,8 @@ public static class StructureRotator
                                      newPos.y + 0.5f + bounds.y / 2, newPos.z);
                 break;
             case 180:
-                newPos = new Vector3(newPos.x - 0.5f + bounds.x / 2,
-                                     newPos.y + 0.5f + bounds.y / 2, newPos.z);
+                newPos = new Vector3(newPos.x + 0.5f + bounds.x / 2,
+                                     newPos.y - 0.5f + bounds.y / 2, newPos.z);
                 break;
             case 270:
                 newPos = new Vector3(newPos.x - 0.5f + bounds.x / 2,
@@ -72,7 +86,7 @@ public static class StructureRotator
         tileGameObject.transform.position = newPos;
     }
 
-    private static List<Vector3Int> RotateCellPositions(List<Vector3Int> origPositions, int rotation)
+    public static List<Vector3Int> RotateCellPositions(List<Vector3Int> origPositions, int rotation)
     {
         List<Vector3Int> rotatedPositions = new List<Vector3Int>();
 
@@ -98,6 +112,34 @@ public static class StructureRotator
         }
 
         return rotatedPositions;
+    }
+
+    public static List<Vector3Int> RotateCellPositionsBack(List<Vector3Int> cellPositions, int rotation)
+    {
+        List<Vector3Int> originalPositions = new List<Vector3Int>();
+
+        foreach (var pos in cellPositions)
+        {
+            Vector3Int originalPos;
+            switch (rotation)
+            {
+                case 90:
+                    originalPos = new Vector3Int(pos.y, -pos.x, pos.z);
+                    break;
+                case 180:
+                    originalPos = new Vector3Int(-pos.x, -pos.y, pos.z);
+                    break;
+                case 270:
+                    originalPos = new Vector3Int(-pos.y, pos.x, pos.z);
+                    break;
+                default:
+                    originalPos = pos; // No rotation
+                    break;
+            }
+            originalPositions.Add(originalPos);
+        }
+
+        return originalPositions;
     }
 
     public static Vector2Int CalculateBoundingBox(List<Vector3Int> cellPositions)
