@@ -51,9 +51,7 @@ public class Player : MonoBehaviour
     public CapsuleCollider2D gunCollider;
     [SerializeField] Transform leftHandTrans;
     public AnimationControllerPlayer animControllerPlayer;
-    [SerializeField] MeleeControllerPlayer meleeController;
-    [SerializeField] PlayerShooter myShooter;
-    
+    [SerializeField] MeleeControllerPlayer meleeController;    
     
     float sprintSpeedAmount;
     float moveForce;
@@ -77,7 +75,7 @@ public class Player : MonoBehaviour
         stats.playerHealthScript = GetComponent<PlayerHealth>();
         meleeController.stats = stats;
         myStamina.stats = stats;
-        myShooter.playerStats = stats;        
+        playerShooter.playerStats = stats;        
     }
 
     void Start()
@@ -132,19 +130,52 @@ public class Player : MonoBehaviour
             if (playerShooter.currentGunIndex != 1)
                 animControllerPlayer.SwitchGunsStart(1); 
         }
+        
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             if (playerShooter.currentGunIndex != 2)
                 animControllerPlayer.SwitchGunsStart(2); 
         }
+        
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             if (playerShooter.currentGunIndex != 3)
                 animControllerPlayer.SwitchGunsStart(3); 
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            if (playerShooter.currentGunIndex != 4)
+                animControllerPlayer.SwitchGunsStart(4); 
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            if (playerShooter.currentGunIndex != 5)
+                animControllerPlayer.SwitchGunsStart(5); 
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            if (playerShooter.currentGunIndex != 6)
+                animControllerPlayer.SwitchGunsStart(6); 
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            if (playerShooter.currentGunIndex != 7)
+                animControllerPlayer.SwitchGunsStart(7); 
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            if (playerShooter.currentGunIndex != 8)
+                animControllerPlayer.SwitchGunsStart(8); 
+        }
+        // REPAIR GUN
+        else if (Input.GetKeyDown(KeyCode.Alpha0) ||
+                 Input.GetKeyDown(KeyCode.C))
+        {
+            if (playerShooter.currentGunIndex != 9)
+                animControllerPlayer.SwitchGunsStart(9); 
+        }
     }
 
-    // Triggered by anim
     public void OnThrowGrab()
     {
         itemToThrow = Instantiate(grenadePrefab, transform.position, 
@@ -224,19 +255,41 @@ public class Player : MonoBehaviour
     void Move()
     {
         Vector2 moveDir;
-        // Move x moveSpeed forward but strafeSpeed backwards and sideways
-        if (rawInput.y > 0)
+
+        if (SettingsManager.Instance.useStandardWASD)
         {
-            moveDir = new Vector2 (rawInput.y * moveForce, 
-                                   -rawInput.x * strafeForce) * sprintSpeedAmount;
+            // Standard WASD movement
+            moveDir = new Vector2(rawInput.x, rawInput.y).normalized;
         }
         else
         {
-            moveDir = new Vector2 (rawInput.y * strafeForce, 
-                                   -rawInput.x * strafeForce) * sprintSpeedAmount;
+            moveDir = new Vector2(rawInput.y, -rawInput.x).normalized;
+            moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;
+            /* 
+            // Move x moveSpeed forward but strafeSpeed backwards and sideways
+            if (rawInput.y > 0)
+            {
+                moveDir = new Vector2 (rawInput.y * moveForce, 
+                                    -rawInput.x * strafeForce) * sprintSpeedAmount;
+            }
+            else
+            {
+                moveDir = new Vector2 (rawInput.y * strafeForce, 
+                                    -rawInput.x * strafeForce) * sprintSpeedAmount;
+            }
+
+            moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;
+            */
         }
 
-        moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;
+        // Calculate the angle difference between the movement direction and facing direction
+        float moveAngle = Mathf.Atan2(moveDir.y, moveDir.x) * Mathf.Rad2Deg;
+        float angleDifference = Mathf.DeltaAngle(moveAngle, angleToMouse);
+
+        // Determine the speed based on the angle difference
+        float speed = Mathf.Lerp(strafeForce, moveForce, Mathf.Cos(angleDifference * Mathf.Deg2Rad));
+        moveDir *= speed * sprintSpeedAmount;
+
         myRb.AddForce(moveDir);
     }
 }

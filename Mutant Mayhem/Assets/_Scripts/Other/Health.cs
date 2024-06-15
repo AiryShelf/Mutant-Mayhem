@@ -55,7 +55,7 @@ public class Health : MonoBehaviour
             {
                 StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
                 StatsCounterPlayer.ShotsHitByPlayer++;
-                Debug.Log("Player prjectile damage: " + value);
+                //Debug.Log("Player prjectile damage: " + value);
             }
             else if (this.tag == "Enemy")
                 StatsCounterPlayer.DamageToEnemies -= value;
@@ -100,13 +100,14 @@ public class Health : MonoBehaviour
         if (corpsePrefab)
         {
             hasDied = true;
-            // Create corpse and pass inhertance
+            // Create corpse and pass scale
             corpsePrefab = Instantiate(corpsePrefab, transform.position, transform.rotation);
             corpsePrefab.transform.localScale = transform.localScale;
-            // Pass physics
+            // Pass physics to corpse
             Rigidbody2D corpseRb = corpsePrefab.GetComponent<Rigidbody2D>();
             corpseRb.velocity = myRb.velocity;
             corpseRb.angularVelocity = myRb.angularVelocity;
+            corpseRb.mass = myRb.mass * 2;
         }
         
         corpsePrefab.GetComponentInChildren<SpriteRenderer>().color = 
@@ -115,7 +116,8 @@ public class Health : MonoBehaviour
         hitEffectsChild.DestroyAfterSeconds();
 
         // Player Credits
-        BuildingSystem.PlayerCredits += Mathf.Floor(maxHealth / healthToCreditsDivisor);
+        BuildingSystem.PlayerCredits += Mathf.FloorToInt(maxHealth / healthToCreditsDivisor * 
+                                        SettingsManager.Instance.CreditsMult);
         
         EnemyCounter.EnemyCount--;
         Destroy(gameObject);   

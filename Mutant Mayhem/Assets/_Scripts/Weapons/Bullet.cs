@@ -6,17 +6,23 @@ using UnityEngine.Tilemaps;
 public class Bullet : MonoBehaviour
 {
     public LayerMask hitLayers;
-    [SerializeField] TileManager tileManager;
     public float damage = 10;
     public float knockback = 1f;
 
-    [SerializeField] Rigidbody2D myRb;
-    [SerializeField] BulletTrails bulletTrail;
+    [SerializeField] protected Rigidbody2D myRb;
+    [SerializeField] protected BulletTrails bulletTrail;
 
     [SerializeField] GameObject AiTrggerPrefabOptional;
     [SerializeField] float AITriggerSize;
 
-    void Start()
+    protected TileManager tileManager;
+
+    void Awake()
+    {
+        tileManager = FindObjectOfType<TileManager>();
+    }
+
+    protected virtual void Start()
     {
         // Check origin point for collision
         Collider2D other = Physics2D.OverlapPoint(transform.position, hitLayers);
@@ -26,12 +32,12 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         CheckCollisions();
     }
 
-    void CheckCollisions()
+    protected virtual void CheckCollisions()
     {
         // Check with raycast
         Vector2 raycastDir = myRb.velocity;
@@ -43,7 +49,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    void Hit(Collider2D otherCollider, Vector2 point)
+    protected virtual void Hit(Collider2D otherCollider, Vector2 point)
     {
         // Enemies
         EnemyBase enemy = otherCollider.GetComponent<EnemyBase>();

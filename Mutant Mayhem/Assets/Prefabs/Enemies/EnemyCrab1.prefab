@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6814481061052034446}
-  - component: {fileID: 8431538982880265398}
-  - component: {fileID: 3574965776305570190}
   - component: {fileID: 6880951049279646120}
   - component: {fileID: 1640060437583579680}
   - component: {fileID: 8299610102731463758}
+  - component: {fileID: 8431538982880265398}
+  - component: {fileID: 3574965776305570190}
   - component: {fileID: 1437740919546126437}
   - component: {fileID: 6454006096251346839}
   - component: {fileID: -3098537921574815540}
@@ -42,6 +42,67 @@ Transform:
   - {fileID: 6833855505521134014}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6880951049279646120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5437049528478583412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6793013880b32d345b4656361f000dfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animControllerEnemy: {fileID: 8299610102731463758}
+  meleeController: {fileID: 6433497888709922468}
+  sR: {fileID: 1437740919546126437}
+  moveSpeedBase: 1
+  rotateSpeedBase: 3
+  randomize: 1
+  minSize: 1
+  randomColorFactor: 0.5
+  gaussMeanSize: 1.5
+  gaussStdDev: 0.3
+  <health>k__BackingField: {fileID: 1640060437583579680}
+  <unfreezeTime>k__BackingField: 0.5
+  CurrentSMStateDebug: 
+  EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
+  EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
+  EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
+  EnemyMeleeSOBase: {fileID: 0}
+--- !u!114 &1640060437583579680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5437049528478583412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec72ac3390be592408a20e0ec872a805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  healthToCreditsDivisor: 0.5
+  hitEffectsChild: {fileID: 853075169137754596}
+  corpsePrefab: {fileID: 3246120828009000940, guid: 01e59512a120794408f96b0262c365f6, type: 3}
+  deathTorque: 20
+--- !u!114 &8299610102731463758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5437049528478583412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animSpeedFactor: 2
+  switchToRunBuffer: 1.6
+  maxAnimSpeed: 10
 --- !u!58 &8431538982880265398
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -104,67 +165,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6880951049279646120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5437049528478583412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6793013880b32d345b4656361f000dfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animControllerEnemy: {fileID: 8299610102731463758}
-  meleeController: {fileID: 6433497888709922468}
-  sR: {fileID: 1437740919546126437}
-  moveSpeedBase: 1
-  rotateSpeedBase: 3
-  randomize: 1
-  minSize: 1
-  randomColorFactor: 0.5
-  gaussMeanSize: 1.5
-  gaussStdDev: 0.3
-  <health>k__BackingField: {fileID: 1640060437583579680}
-  <unfreezeTime>k__BackingField: 0.5
-  CurrentSMStateDebug: 
-  EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
-  EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
-  EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
-  EnemyMeleeSOBase: {fileID: 0}
---- !u!114 &1640060437583579680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5437049528478583412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec72ac3390be592408a20e0ec872a805, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  healthToCreditsDivisor: 0.5
-  hitEffectsChild: {fileID: 853075169137754596}
-  corpsePrefab: {fileID: 3246120828009000940, guid: 01e59512a120794408f96b0262c365f6, type: 3}
-  deathTorque: 20
---- !u!114 &8299610102731463758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5437049528478583412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animSpeedFactor: 2
-  switchToRunBuffer: 1.6
-  maxAnimSpeed: 10
 --- !u!212 &1437740919546126437
 SpriteRenderer:
   m_ObjectHideFlags: 0

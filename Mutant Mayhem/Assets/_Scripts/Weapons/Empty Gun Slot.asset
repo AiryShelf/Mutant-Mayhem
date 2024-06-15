@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a973bc44d767914408079356d9c621eb, type: 3}
+  m_Name: Empty Gun Slot
+  m_EditorClassIdentifier: 
+  gunType: 0
+  uiName: Empty Gun Slot
+  sprite: {fileID: 21300000, guid: ea72f50661ead4b43ba21d0106f94813, type: 3}
+  uiSprite: {fileID: 21300000, guid: 4a3275a517110794da0275231cfee2e9, type: 3}
+  animatorHasString: hasPistol
+  bulletPrefab: {fileID: 145518261742128944, guid: 07cdcb54209e84c4589fa7ee1c3c0774, type: 3}
+  emptyClipPrefab: {fileID: 0}
+  muzzleFlashPrefab: {fileID: 2692051205214700430, guid: eea213e6abd7839408143e3d97f642c2, type: 3}
+  muzzleLocalPos: {x: -0.052, y: -0.02}
+  bulletCasingPrefab: {fileID: 1136685630353648448, guid: 6e0dec1a382c9fc4cb40bc957c9ce5e5, type: 3}
+  casingLocalPos: {x: 0.31, y: 0}
+  muzzleFlashTime: 0.1
+  damage: 20
+  damageUpgAmt: 1
+  knockback: 0
+  knockbackUpgAmt: 0.1
+  clipSize: 20
+  clipSizeUpgAmt: 5
+  chargeDelay: 0.8
+  chargeDelayUpgNegAmt: -0.05
+  shootSpeed: 0.3
+  shootSpeedUpgNegAmt: -0.015
+  accuracy: 5
+  accuracyUpgNegAmt: -0.4
+  bulletSpeed: 80
+  bulletLifeTime: 0.2
+  bulletRangeUpgAmt: 0.03
+  recoil: 0
+  recoilUpgNegAmt: 0

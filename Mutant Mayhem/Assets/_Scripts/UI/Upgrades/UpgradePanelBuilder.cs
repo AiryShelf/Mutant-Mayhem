@@ -9,7 +9,6 @@ public class UpgradePanelBuilder : MonoBehaviour
     [SerializeField] List<GameObject> UIUpgradePrefabs;
     [SerializeField] GridLayoutGroup buttonsGrid;
     [SerializeField] GridLayoutGroup textGrid;
-    [SerializeField] GridLayoutGroup statsGrid;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
 
     [Header("Unlockable")]
@@ -39,10 +38,6 @@ public class UpgradePanelBuilder : MonoBehaviour
         for (int i = textGrid.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(textGrid.transform.GetChild(i).gameObject);
-        } 
-        for (int i = statsGrid.transform.childCount - 1; i >= 0; i--)
-        {
-            Destroy(statsGrid.transform.GetChild(i).gameObject);
         } 
     }
 
@@ -97,15 +92,12 @@ public class UpgradePanelBuilder : MonoBehaviour
 
             // Create text obj and give text instances to uIUpgrade
             uIUpgrade.upgradeTextInstance = Instantiate(textPrefab, textGrid.transform);
-            uIUpgrade.statValueTextInstance = Instantiate(textPrefab, statsGrid.transform);
 
             // Add to fade canvas groups
             fadeCanvasGroups.individualElements.Add(
                 buttonPrefab.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(
                 uIUpgrade.upgradeTextInstance.GetComponent<CanvasGroup>());
-            fadeCanvasGroups.individualElements.Add(
-                uIUpgrade.statValueTextInstance.GetComponent<CanvasGroup>());
 
             // Fade out for unlock
             /*

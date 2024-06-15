@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 236226679967019235}
   - component: {fileID: 7711098166412534391}
   m_Layer: 0
-  m_Name: QCubeMaxHealth
+  m_Name: QCubeIntegrity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -286,14 +286,13 @@ MonoBehaviour:
   qCubeStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
-  UiName: Q Cube Max Integrity
+  UiName: Q Cube Integrity
   tooltipDescription: Added structural support, impact resistance, and advanced alloys
     only go so far.  Keep the Cube protected at all costs!
   showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
   playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
-  statValueTextInstance: {fileID: 0}
 --- !u!222 &7777465848443300990
 CanvasRenderer:
   m_ObjectHideFlags: 0

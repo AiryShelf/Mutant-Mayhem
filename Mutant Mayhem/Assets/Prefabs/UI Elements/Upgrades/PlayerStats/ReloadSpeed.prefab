@@ -136,13 +136,14 @@ MonoBehaviour:
   gunStatsUpgrade: 0
   UiName: Reload Speed
   tooltipDescription: Less reload time, more time shooting bullets.  This is always
-    good.  Fine tuning to movemenst combined with machine learning allow your exosuit
-    to help you reload faster.  Works every time or get your Credits back in person
-    at the nearest Galactic MegaCenter!  Press 'R' to reload
+    good.  Fine tuning to movement algorithms combined with machine learning allow
+    your exosuit to help you reload faster.  Works every time or get your Credits
+    back in person at the nearest Galactic MegaCenter!  Press 'R' to reload
   showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
   playerGunIndex: 0
   upgradeTextInstance: {fileID: 0}
+  statValueTextInstance: {fileID: 0}
 --- !u!222 &6807383042789150645
 CanvasRenderer:
   m_ObjectHideFlags: 0

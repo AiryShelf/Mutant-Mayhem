@@ -75,18 +75,28 @@ public class ToolbarSelector : MonoBehaviour
         {
             SwitchBoxes(7);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            SwitchBoxes(8);
+        }
+        // Repair Tool
+        else if (Input.GetKeyDown(KeyCode.Alpha0) || 
+                 Input.GetKeyDown(KeyCode.C))
+        {
+            SwitchBoxes(9);
+        }
     }
 
     void SwitchBoxes(int i)
     {
-        if (player.playerShooter.gunsUnlocked.Count - 1 < i)
-            return;
-
-        if (player.playerShooter.gunsUnlocked[i])
+        if (player.playerShooter.gunList[i] != null)
         {
-            currentBox.color = unselectedColor;
-            currentBox = boxImages[i];
-            currentBox.color = selectedColor;
+            if (player.playerShooter.gunsUnlocked[i])
+            {
+                currentBox.color = unselectedColor;
+                currentBox = boxImages[i];
+                currentBox.color = selectedColor;
+            }
         }
     }
 }

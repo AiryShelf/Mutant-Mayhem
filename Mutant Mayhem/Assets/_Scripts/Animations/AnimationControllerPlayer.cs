@@ -472,13 +472,12 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void SwitchGunsStart(int index)
     {
-        if (player.playerShooter.gunsUnlocked.Count - 1 < index)
+        if (playerShooter.gunList[index] == null)
         {
             messagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
             return;
         }
-
-        if (!player.playerShooter.gunsUnlocked[index])
+        if (!playerShooter.gunsUnlocked[index])
         {
             messagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
             return;

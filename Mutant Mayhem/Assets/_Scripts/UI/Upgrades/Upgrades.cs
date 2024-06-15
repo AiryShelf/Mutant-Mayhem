@@ -177,7 +177,7 @@ public class MeleeDamageUpgrade : Upgrade
 
     public static float GetUpgAmount(UpgradeSystem upgradeSystem)
     {
-        float upgAmount = 1 * upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage];
+        float upgAmount = 1 * upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 1;
         return upgAmount;
     }
 
@@ -193,13 +193,13 @@ public class KnockbackUpgrade : Upgrade
 
     public static float GetUpgAmount(UpgradeSystem upgradeSystem)
     {
-        float upgAmount = 0.1f * upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeKnockback];
+        float upgAmount = 1;
         return upgAmount;
     }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.knockback += 0.1f * level;
+        playerStats.knockback += 1;
     }
 }
 
@@ -397,9 +397,20 @@ public class GunDamageUpgrade : Upgrade
 
     public static float GetUpgAmount(Player player, int gunIndex, UpgradeSystem upgradeSystem)
     {
-        float upgAmount = player.playerShooter.gunList[gunIndex].damageUpgAmt + 
-                          upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeKnockback];
-        return upgAmount;
+        float upgAmount = 0;
+        switch (gunIndex)
+        {
+            case 0:
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgAmt + 
+                            upgradeSystem.laserPistolUpgLevels[GunStatsUpgrade.GunDamage];
+                return upgAmount;
+            case 1:
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgAmt + 
+                            upgradeSystem.SMGUpgLevels[GunStatsUpgrade.GunDamage];
+                return upgAmount;
+            default:
+                return upgAmount;
+        }
     }
 
     public override void Apply(GunSO gunSO, int level)

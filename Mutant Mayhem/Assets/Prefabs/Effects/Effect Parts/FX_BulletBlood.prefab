@@ -116,7 +116,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 60
+      scalar: 120
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1324,7 +1324,7 @@ ParticleSystem:
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 6554
+        atime0: 39321
         atime1: 65535
         atime2: 0
         atime3: 0
@@ -2040,7 +2040,7 @@ ParticleSystem:
           inWeight: 0
           outWeight: 0.96569306
         - serializedVersion: 3
-          time: 0.0054214755
+          time: 0.00271
           value: 0.75392824
           inSlope: -81.03286
           outSlope: -81.03286
@@ -2049,7 +2049,7 @@ ParticleSystem:
           inWeight: 0.31395036
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.007
+          time: 0.0035
           value: 0
           inSlope: -368.90244
           outSlope: -368.90244
@@ -4958,7 +4958,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 60
+      scalar: 120
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -6166,7 +6166,7 @@ ParticleSystem:
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 6554
+        atime0: 39321
         atime1: 65535
         atime2: 0
         atime3: 0
@@ -6882,7 +6882,7 @@ ParticleSystem:
           inWeight: 0
           outWeight: 0.96569306
         - serializedVersion: 3
-          time: 0.0024498263
+          time: 0.00123
           value: 0.85562426
           inSlope: -81.03286
           outSlope: -81.03286
@@ -6891,7 +6891,7 @@ ParticleSystem:
           inWeight: 0.31395036
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.005
+          time: 0.0025
           value: 0
           inSlope: -368.90244
           outSlope: -368.90244
@@ -9693,6 +9693,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_BulletBloodEntry
       objectReference: {fileID: 0}
+    - target: {fileID: 3625843629149701209, guid: c23a3146216a1f1459fd5cd388727bf4, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 3625843629149701209, guid: c23a3146216a1f1459fd5cd388727bf4, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 39321
+      objectReference: {fileID: 0}
+    - target: {fileID: 3625843629149701209, guid: c23a3146216a1f1459fd5cd388727bf4, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[1].time
+      value: 0.00119
+      objectReference: {fileID: 0}
+    - target: {fileID: 3625843629149701209, guid: c23a3146216a1f1459fd5cd388727bf4, type: 3}
+      propertyPath: VelocityModule.speedModifier.maxCurve.m_Curve.Array.data[2].time
+      value: 0.0015
+      objectReference: {fileID: 0}
     - target: {fileID: 8672121570883514092, guid: c23a3146216a1f1459fd5cd388727bf4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -9751,6 +9767,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5246808911843546403}
     m_Modifications:
+    - target: {fileID: 1828347710278474107, guid: 672541b462c7a894d8ab8a15457dd18f, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 39321
+      objectReference: {fileID: 0}
     - target: {fileID: 7796008493148291963, guid: 672541b462c7a894d8ab8a15457dd18f, type: 3}
       propertyPath: m_Name
       value: FX_BloodSpray

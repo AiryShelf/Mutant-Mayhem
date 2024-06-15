@@ -23,6 +23,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     [SerializeField] float fadeIndivTime = 0.5f;
     public float fadeOutAllTime = 1f;
     [SerializeField] float lerpOutStopThreshold = 0.1f;
+    [SerializeField] float frameTime = 0.02f;
+    
     Coroutine fadeIn;
     Coroutine fadeOut;
     public bool isTriggered;
@@ -38,7 +40,11 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     {
         // Fade everything out
         if (myGroup)
+        {
             myGroup.alpha = 0;
+            myGroup.interactable = false;
+            myGroup.blocksRaycasts = false;
+        }
         foreach (CanvasGroup group in individualElements)
         {
             group.alpha = 0;
@@ -81,6 +87,14 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         }
     }
 
+    public void ToggleTrigger()
+    {
+        if (!isTriggered)
+            isTriggered = true;
+        else
+            isTriggered = false;
+    }
+
     IEnumerator FadeMainIn()
     {
         if (fadeOut != null)
@@ -92,30 +106,34 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         if (initialGroup != null)
         {
             initialGroup.interactable = false;
+            initialGroup.blocksRaycasts = false;
         }
 
         yield return new WaitForSecondsRealtime(fadeStartDelay);  
 
         if (myGroup)
         {
+            myGroup.interactable = true;
+            myGroup.blocksRaycasts = true;
+
             // Fade main panels
             float timeElapsed = 0;
             while (timeElapsed < fadeStartTime)
             {
-                timeElapsed += Time.unscaledDeltaTime;
+                timeElapsed += frameTime;
                 float value = Mathf.Lerp(0, 1, timeElapsed / fadeStartTime);
                 if (initialGroup != null)
                     initialGroup.alpha = 1 - value;
                 if (myGroup)
                     myGroup.alpha = value;
 
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForSecondsRealtime(frameTime);
             }
         }
 
         if (initialGroup != null)
         {
-            initialGroup.gameObject.SetActive(false);
+            //initialGroup.gameObject.SetActive(false);
         }
         
 
@@ -147,6 +165,9 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         if (deactivateIndivsWithFade)
             group.gameObject.SetActive(true);
 
+        group.interactable = true;
+        group.blocksRaycasts = true;
+
         // Select first button
         if (!hasSelectedFirst && autoSelectFirstElement && group.GetComponent<Button>())
         {
@@ -159,11 +180,11 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         while (timeElapsed < fadeIndivTime)
         {
 
-            timeElapsed += Time.unscaledDeltaTime;
+            timeElapsed += frameTime;
             float value = Mathf.Lerp(group.alpha, 1, timeElapsed / fadeIndivTime);
             group.alpha = value;
 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSecondsRealtime(frameTime);
         }
     }
 
@@ -203,12 +224,14 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     IEnumerator FadeOutIndividual(CanvasGroup group)
     {
+        group.interactable = false;
+        group.blocksRaycasts = false;
         // Fade Out
         float timeElapsed = 0;
         while (timeElapsed < fadeIndivTime)
         {
 
-            timeElapsed += Time.unscaledDeltaTime;
+            timeElapsed += frameTime;
             float value = Mathf.Lerp(group.alpha, 0, timeElapsed / fadeIndivTime);
             group.alpha = value;
 
@@ -219,7 +242,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 group.alpha = 0;
             }
 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSecondsRealtime(frameTime);
         }
 
         // Deactivate
@@ -236,13 +259,20 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         if (initialGroup != null)
         {
             initialGroup.gameObject.SetActive(true);
-            initialGroup.interactable = true;    
+            initialGroup.interactable = true;  
+            initialGroup.blocksRaycasts = true;  
+        }
+
+        if (myGroup)
+        {
+            myGroup.interactable = false;
+            myGroup.blocksRaycasts = false;
         }
 
         float timeElapsed = 0;
         while (timeElapsed < fadeIndivTime)
         {
-            timeElapsed += Time.unscaledDeltaTime;
+            timeElapsed += frameTime;
             float value = Mathf.Lerp(1, 0, timeElapsed / fadeOutAllTime);
 
             bool stop = value <= lerpOutStopThreshold;
@@ -273,7 +303,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 //myGroup.alpha = 0;
             }       
 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSecondsRealtime(frameTime);
         }
     }
 
@@ -292,13 +322,20 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         if (initialGroup != null)
         {
             initialGroup.gameObject.SetActive(true);
-            initialGroup.interactable = true;           
+            initialGroup.interactable = true;   
+            initialGroup.blocksRaycasts = true;        
+        }
+
+        if (myGroup)
+        {
+            myGroup.interactable = false;
+            myGroup.blocksRaycasts = false;
         }
 
         float timeElapsed = 0;
         while (timeElapsed < fadeOutAllTime)
         {
-            timeElapsed += Time.unscaledDeltaTime;
+            timeElapsed += frameTime;
             float value = Mathf.Lerp(1, 0, timeElapsed / fadeOutAllTime);
 
             bool stop = value <= lerpOutStopThreshold;
@@ -340,7 +377,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 //Debug.Log("Stop happened");
             }       
 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSecondsRealtime(frameTime);
         }
 
         // Deactivate

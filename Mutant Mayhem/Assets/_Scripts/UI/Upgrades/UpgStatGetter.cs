@@ -25,11 +25,11 @@ public static class UpgStatGetter
                 return stat;
             
             case PlayerStatsUpgrade.PlayerReloadSpeed:
-                stat = (1 - player.stats.reloadFactor).ToString();
+                stat = (player.stats.reloadFactor - 1).ToString();
                 return stat;
 
             case PlayerStatsUpgrade.PlayerAccuracy:
-                stat = (1 - player.stats.accuracy).ToString();
+                stat = (1 - player.stats.accuracy).ToString("#0.0");
                 return stat;
             
             case PlayerStatsUpgrade.MeleeDamage:
@@ -99,7 +99,7 @@ public static class UpgStatGetter
 
             case GunStatsUpgrade.ShootSpeed:
                 float speed = 1 - player.stats.playerShooter.gunList[gunIndex].shootSpeed;
-                stat = speed.ToString();
+                stat = speed.ToString("#0.000");
                 return stat;
 
             case GunStatsUpgrade.ClipSize:
@@ -112,7 +112,8 @@ public static class UpgStatGetter
                 return stat;
 
             case GunStatsUpgrade.GunAccuracy:
-                stat = player.stats.playerShooter.gunList[gunIndex].accuracy.ToString();
+                stat = (player.stats.playerShooter._gunListSource[gunIndex].accuracy -
+                       player.stats.playerShooter.gunList[gunIndex].accuracy).ToString("#0.0");
                 return stat;
 
             case GunStatsUpgrade.GunRange:
@@ -140,47 +141,47 @@ public static class UpgStatGetter
         switch (playerStatsUpgrade)
         {
             case PlayerStatsUpgrade.MoveSpeed:
-                amount = "+ " + MoveSpeedUpgrade.UpgAmount.ToString();
+                amount = "+" + MoveSpeedUpgrade.UpgAmount.ToString();
                 return amount;
 
             case PlayerStatsUpgrade.StrafeSpeed:
-                amount = "+ " + StrafeSpeedUpgrade.UpgAmount.ToString();
+                amount = "+" + StrafeSpeedUpgrade.UpgAmount.ToString();
                 return amount;
 
             case PlayerStatsUpgrade.SprintFactor:
-                amount = "+ " + SprintFactorUpgrade.UpgAmount.ToString();
+                amount = "+" + SprintFactorUpgrade.UpgAmount.ToString();
                 return amount;
 
             case PlayerStatsUpgrade.PlayerReloadSpeed:
-                amount = "+ " + ReloadSpeedUpgrade.UpgAmount.ToString();
+                amount = "+" + ReloadSpeedUpgrade.UpgAmount.ToString();
                 return amount;
 
             case PlayerStatsUpgrade.PlayerAccuracy:
-                amount = "+ " + PlayerAccuracyUpgrade.UpgAmount.ToString();
+                amount = "+" + PlayerAccuracyUpgrade.UpgAmount.ToString();
                 return amount;
             
             case PlayerStatsUpgrade.MeleeDamage:
-                amount = "+ " + MeleeDamageUpgrade.GetUpgAmount(upgradeSystem).ToString();
+                amount = "+" + MeleeDamageUpgrade.GetUpgAmount(upgradeSystem).ToString();
                 return amount;
 
             case PlayerStatsUpgrade.MeleeKnockback:
-                amount = "+ " + KnockbackUpgrade.GetUpgAmount(upgradeSystem).ToString();
+                amount = "+" + KnockbackUpgrade.GetUpgAmount(upgradeSystem).ToString();
                 return amount;
 
             case PlayerStatsUpgrade.StaminaMax:
-                amount = "+ " + StaminaMaxUpgrade.UpgAmount.ToString();
+                amount = "+" + StaminaMaxUpgrade.UpgAmount.ToString();
                 return amount;
 
             case PlayerStatsUpgrade.StaminaRegen:
-                amount = "+ " + StaminaRegenUpgrade.UpgAmount.ToString();
+                amount = "+" + StaminaRegenUpgrade.UpgAmount.ToString();
                 return amount;
 
             case PlayerStatsUpgrade.HealthMax:
-                amount = "+ " + HealthMaxUpgrade.UpgAmount.ToString();
+                amount = "+" + HealthMaxUpgrade.UpgAmount.ToString();
                 return amount;
 
             case PlayerStatsUpgrade.HealthRegen:
-                amount = "+ " + HealthRegenUpgrade.UpgAmount.ToString();
+                amount = "+" +HealthRegenUpgrade.UpgAmount.ToString();
                 return amount;
         }
 
@@ -194,19 +195,19 @@ public static class UpgStatGetter
         switch (consumablesUpgrade)
         {
             case ConsumablesUpgrade.PlayerHeal:
-                amount = "+ " + PlayerHealUpgrade.HealAmount.ToString();
+                amount = "+" + PlayerHealUpgrade.HealAmount.ToString();
                 return amount;
 
             case ConsumablesUpgrade.QCubeRepair:
-                amount = "+ " + QCubeRepairUpgrade.RepairAmount.ToString();
+                amount = "+" + QCubeRepairUpgrade.RepairAmount.ToString();
                 return amount;
 
             case ConsumablesUpgrade.GrenadeBuyAmmo:
-                amount = "+ " + GrenadeBuyAmmoUpgrade.AmmoAmount.ToString();
+                amount = "+" + GrenadeBuyAmmoUpgrade.AmmoAmount.ToString();
                 return amount;
 
             case ConsumablesUpgrade.SMGBuyAmmo:
-                amount = "+ " + SMGBuyAmmoUpgrade.AmmoAmount.ToString();
+                amount = "+" + SMGBuyAmmoUpgrade.AmmoAmount.ToString();
                 return amount;
         }
 
@@ -220,7 +221,7 @@ public static class UpgStatGetter
         switch (qCubeStatsUpgrade)
         {
             case QCubeStatsUpgrade.QCubeMaxHealth:
-                amount = "+ " + QCubeMaxHealthUpgrade.UpgAmount.ToString();
+                amount = "+" + QCubeMaxHealthUpgrade.UpgAmount.ToString();
                 return amount;
         }
 
@@ -234,35 +235,36 @@ public static class UpgStatGetter
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                amount = "+ " + GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeSystem).ToString();
+                amount = "+" + GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeSystem).ToString();
                 return amount;
 
             case GunStatsUpgrade.GunKnockback:
-                amount = "+ " + GunKnockbackUpgrade.GetUpgAmount(player, gunIndex).ToString();
+                amount = "+" + GunKnockbackUpgrade.GetUpgAmount(player, gunIndex).ToString();
                 return amount;
 
             case GunStatsUpgrade.ShootSpeed:
-                amount = "+ " + Mathf.Abs(ShootSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "+" + Mathf.Abs(ShootSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString();
                 return amount;
 
             case GunStatsUpgrade.ClipSize:
-                amount = "+ " + ClipSizeUpgrade.GetUpgAmount(player, gunIndex).ToString();
+                amount = "+" + ClipSizeUpgrade.GetUpgAmount(player, gunIndex).ToString();
                 return amount;
 
             case GunStatsUpgrade.ChargeDelay:
-                amount = "+ " + Mathf.Abs(ChargeDelayUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "+" + Mathf.Abs(ChargeDelayUpgrade.GetUpgAmount(player, gunIndex)).ToString();
                 return amount;
 
             case GunStatsUpgrade.GunAccuracy:
-                amount = "+ " + Mathf.Abs(GunAccuracyUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "+" + Mathf.Abs(GunAccuracyUpgrade.GetUpgAmount(player, gunIndex)).ToString();
                 return amount;
 
             case GunStatsUpgrade.GunRange:
-                amount = "+ " + RangeUpgrade.GetUpgAmount(player, gunIndex).ToString();
+                amount = "+" + (RangeUpgrade.GetUpgAmount(player, gunIndex) *
+                         player.stats.playerShooter.gunList[gunIndex].bulletSpeed).ToString();
                 return amount;
 
             case GunStatsUpgrade.Recoil:
-                amount = "+ " + Mathf.Abs(RecoilUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "-" + Mathf.Abs(RecoilUpgrade.GetUpgAmount(player, gunIndex)).ToString();
                 return amount;            
         }
 

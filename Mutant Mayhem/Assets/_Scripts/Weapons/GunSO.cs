@@ -2,7 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+
+public enum GunType
+{
+    LaserPistol,
+    SMG,
+    RepairGun = 10,
+}
 
 [CreateAssetMenu(menuName = "Gun", fileName = "NewGun")]
 public class GunSO : ScriptableObject
@@ -17,6 +23,7 @@ public class GunSO : ScriptableObject
     [Header("Effects")]
     public GameObject emptyClipPrefab;
     public GameObject muzzleFlashPrefab;
+    public GameObject laserSight;
     public Vector2 muzzleLocalPos;
     public GameObject bulletCasingPrefab;
     public Vector2 casingLocalPos;
@@ -40,10 +47,4 @@ public class GunSO : ScriptableObject
     public float bulletRangeUpgAmt;
     public float recoil;
     public float recoilUpgNegAmt;
-}
-
-public enum GunType
-{
-    LaserPistol,
-    SMG,
 }

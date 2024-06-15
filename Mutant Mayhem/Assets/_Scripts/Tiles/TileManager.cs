@@ -1,5 +1,6 @@
  using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,6 +21,7 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForGridClearCheck;
+    public ParticleSystem repairEffect;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -224,6 +226,21 @@ public class TileManager : MonoBehaviour
         return _TileStatsDict[gridPos].rootGridPos;
     }
 
+    public bool CheckTileFullHealth(Vector3 point)
+    {
+        Vector3Int gridPos = StructureTilemap.WorldToCell(point);
+
+        if (!_TileStatsDict.ContainsKey(gridPos))
+        {
+            return true;
+        }
+
+        if (_TileStatsDict[gridPos].health < _TileStatsDict[gridPos].maxHealth)
+            return false;
+        
+        return true;
+    }
+
     public bool CheckGridIsClear(Vector3Int rootPos, StructureSO structure)
     {
         foreach (Vector3Int pos in structure.cellPositions)
@@ -337,6 +354,7 @@ public class TileManager : MonoBehaviour
             //Debug.Log("Key not found: " + gridPos + " when shooting a tile");
         }
     }
+
     public void MeleeHitEffectAt(Vector2 point, Vector2 hitDir)
     {
         Vector3Int gridPos = GetGridPos(point);
@@ -354,6 +372,21 @@ public class TileManager : MonoBehaviour
         else
         {
             //Debug.Log("Key not found: " + gridPos + " when meleeing a tile");
+        }
+    }
+
+    public void RepairEffectAt(Vector2 point)
+    {
+        Vector3Int gridPos = GetGridPos(point);
+        //Debug.Log("HitEffects called");
+        if (_TileStatsDict.ContainsKey(gridPos))
+        {
+            repairEffect.transform.position = point;
+            repairEffect.Emit(10);
+        }
+        else
+        {
+            //Debug.Log("Key not found: " + gridPos + " when repairing a tile");
         }
     }
 

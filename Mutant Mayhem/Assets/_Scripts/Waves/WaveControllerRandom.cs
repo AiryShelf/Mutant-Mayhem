@@ -20,11 +20,11 @@ public class WaveControllerRandom : MonoBehaviour
     public int currentWaveCount = 0;
     public float timeBetweenWaves = 60f;
     public float spawnRadius = 60;
-    public int wavesPerBase = 3;
+    public int wavesPerBase = 2;
 
     [Header("Enemy Multipliers")]
-    public int batchMultiplierStart = 10;
-    public int batchMultiplier = 10;
+    public int batchMultiplierStart = 5;
+    public int batchMultiplier = 5;
     public int multiplierStart = 1;
     public float damageMultiplier = 1;
     public float healthMultiplier = 1;
@@ -163,19 +163,24 @@ public class WaveControllerRandom : MonoBehaviour
         StartCoroutine(NextWaveTimer());
 
         endWave = null;
-        Debug.Log("End Wave");
+        //Debug.Log("End Wave");
 
         daylight.StartCoroutine(daylight.PlaySunriseEffect());
     }
 
     void UpdateWaveMultipliers()
     {
-        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveCount / wavesPerBase / 2);
-        damageMultiplier = multiplierStart + currentWaveCount / 40f;
-        healthMultiplier = multiplierStart + currentWaveCount / 40f;
-        speedMultiplier = multiplierStart + currentWaveCount / 40f;
-        sizeMultiplier = multiplierStart + currentWaveCount / 40f;
-        spawnSpeedMultiplier = Mathf.Clamp(multiplierStart 
-                               - currentWaveCount / 100f, 0.1f, 100);
+        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveCount / 
+                          wavesPerBase / 2 * SettingsManager.Instance.WaveDifficultyMult);
+        damageMultiplier = multiplierStart + currentWaveCount / 40f * 
+                           SettingsManager.Instance.WaveDifficultyMult;
+        healthMultiplier = multiplierStart + currentWaveCount / 40f * 
+                           SettingsManager.Instance.WaveDifficultyMult;
+        speedMultiplier = multiplierStart + currentWaveCount / 40f *  
+                           SettingsManager.Instance.WaveDifficultyMult;
+        sizeMultiplier = multiplierStart + currentWaveCount / 40f *   
+                           SettingsManager.Instance.WaveDifficultyMult;
+        spawnSpeedMultiplier = Mathf.Clamp(multiplierStart - currentWaveCount / 100f * 
+                           SettingsManager.Instance.WaveDifficultyMult, 0.1f, 100);
     }
 }

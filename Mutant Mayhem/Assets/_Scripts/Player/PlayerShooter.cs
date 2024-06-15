@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class PlayerShooter : MonoBehaviour
 {
-    [SerializeField] List<GunSO> _gunListSource;
+    public List<GunSO> _gunListSource;
     public List<GunSO> gunList;
     public List<bool> gunsUnlocked;
     [SerializeField] Transform gunTrans;
@@ -35,7 +33,7 @@ public class PlayerShooter : MonoBehaviour
     public bool isSwitchingGuns;
     bool droppedGun;
     Rigidbody2D myRb;
-    MessagePanel messagePanel;
+    GameObject laserSight;
     
     [HideInInspector]public PlayerStats playerStats;
 
@@ -45,13 +43,15 @@ public class PlayerShooter : MonoBehaviour
     void Awake()
     {
         myRb = GetComponent<Rigidbody2D>();  
-        messagePanel = FindObjectOfType<MessagePanel>();
 
         // Make a working copy of the gun list
         foreach (GunSO gun in _gunListSource)
         {
-            GunSO g = Instantiate(gun);
-            gunList.Add(g);
+            if (gun != null)
+            {
+                GunSO g = Instantiate(gun);
+                gunList.Add(g);
+            }
         }
     }
 
@@ -88,23 +88,33 @@ public class PlayerShooter : MonoBehaviour
 
     public void SwitchGuns(int i)
     {
-        gunSR.sprite = gunList[i].sprite;
-        muzzleTrans.localPosition = gunList[i].muzzleLocalPos;
-        casingEjectorTrans.localPosition = gunList[i].casingLocalPos;
+        if (gunList[i] != null)
+        {
+            gunSR.sprite = gunList[i].sprite;
+            muzzleTrans.localPosition = gunList[i].muzzleLocalPos;
+            casingEjectorTrans.localPosition = gunList[i].casingLocalPos;
 
-        if (currentMuzzleFlash != null)
-            Destroy(currentMuzzleFlash);
-        currentMuzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, 
-                                        muzzleTrans.transform);
-        currentMuzzleFlash.SetActive(false);
+            // Muzzle Flash
+            if (currentMuzzleFlash != null)
+                Destroy(currentMuzzleFlash);
+            currentMuzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, muzzleTrans);
+            currentMuzzleFlash.SetActive(false);
 
-        // This could be removed and gunIndex used instead for animation transitions
-        bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
-        bodyAnim.SetBool(gunList[i].animatorHasString, true);
+            // Sights
+            if (laserSight != null)
+                Destroy(laserSight);
+            if (gunList[i].laserSight != null)
+                laserSight = Instantiate(gunList[i].laserSight, muzzleTrans);
 
-        currentGunIndex = i;
-        currentGunSO = gunList[i];
-        //Debug.Log("Current gun damage: " + currentGunSO.damage);
+            // This could be removed and gunIndex used instead for animation transitions
+            bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
+            bodyAnim.SetBool(gunList[i].animatorHasString, true);
+
+            currentGunIndex = i;
+            currentGunSO = gunList[i];
+            //Debug.Log("Current gun damage: " + currentGunSO.damage);
+        }
+        Debug.Log("Tried to switch to a gun that is not unlocked or does not exist");
     }
 
     public void Reload()
@@ -132,14 +142,17 @@ public class PlayerShooter : MonoBehaviour
     {
         for (int i = 0; i < gunList.Count; i++)
         {
-            // Only start ChargeGun for chargeables
-            if (gunList[i].chargeDelay != 0)
+            if (gunList[i] != null)
             {
-                if (chargeCoroutines.ContainsKey(i) && chargeCoroutines[i] != null)
+                // Only start ChargeGun for chargeables
+                if (gunList[i].chargeDelay != 0)
                 {
-                    StopCoroutine(chargeCoroutines[i]);
+                    if (chargeCoroutines.ContainsKey(i) && chargeCoroutines[i] != null)
+                    {
+                        StopCoroutine(chargeCoroutines[i]);
+                    }
+                    chargeCoroutines[i] = StartCoroutine(ChargeGun(i));
                 }
-                chargeCoroutines[i] = StartCoroutine(ChargeGun(i));
             }
         }
     }

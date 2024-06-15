@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] UIBuildMenuController uIBuildMenuController;
     [SerializeField] CanvasGroup myCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
+    [SerializeField] FadeCanvasGroupsWave optionsFadeGroup;
 
     Player player;
     QCubeController qCubeController;
@@ -17,7 +19,7 @@ public class PauseMenuController : MonoBehaviour
     InputActionMap uIActionMap;
     InputAction escapeAction;
     public bool isPaused;
-    bool wasBuildPanelOpen;
+    public bool isOptionsOpen;
 
     void Awake()
     {
@@ -50,51 +52,42 @@ public class PauseMenuController : MonoBehaviour
 
     void EscapePressed(InputAction.CallbackContext context)
     {
+        if (isOptionsOpen)
+            {
+                ToggleOptionsMenu();
+                return;
+            }
         //Debug.Log("escape pressed");
         if (!player.isDead && !buildingSystem.inBuildMode 
             && !qCubeController.isUpgradesOpen)
         {
             //Debug.Log("Pause passed checks");
             if (!isPaused)
-                OpenPanel(true);
+                OpenPauseMenu(true);
             else
-                OpenPanel(false);
+                OpenPauseMenu(false);
         }
     }
 
-    public void OpenPanel(bool open)
+    public void OpenPauseMenu(bool open)
     {
         if (open)
         {
-            if (uIBuildMenuController.fadeCanvasGroups.isTriggered == true)
-            {
-                wasBuildPanelOpen = true;
-                uIBuildMenuController.fadeCanvasGroups.isTriggered = false;
-            }
-
             fadeCanvasGroups.isTriggered = true;
             myCanvasGroup.blocksRaycasts = true;
             Pause(true);
         }
         else
         {
-            if (wasBuildPanelOpen)
-            {
-                wasBuildPanelOpen = false;
-                uIBuildMenuController.fadeCanvasGroups.isTriggered = true;
-            }
-
             fadeCanvasGroups.isTriggered = false;
             myCanvasGroup.blocksRaycasts = false;
             Pause(false);
         }
     }
 
-
-
     public void Continue()
     {
-        OpenPanel(false);
+        OpenPauseMenu(false);
     }
 
     public void Restart()
@@ -122,9 +115,24 @@ public class PauseMenuController : MonoBehaviour
         }
         else
         {
+            EventSystem.current.SetSelectedGameObject(null);
             playerActionMap.Enable();
             Time.timeScale = 1;
             isPaused = false;
+        }
+    }
+
+    public void ToggleOptionsMenu()
+    {
+        if (!isOptionsOpen)
+        {
+            isOptionsOpen = true;
+            optionsFadeGroup.isTriggered = true;
+        }
+        else
+        {
+            isOptionsOpen = false;
+            optionsFadeGroup.isTriggered = false;
         }
     }
 }

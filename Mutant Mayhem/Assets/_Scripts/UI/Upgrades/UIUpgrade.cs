@@ -24,9 +24,7 @@ public class UIUpgrade : MonoBehaviour
 
 
     [HideInInspector] public GameObject upgradeTextInstance;
-    [HideInInspector] public GameObject statValueTextInstance;
     TextMeshProUGUI upgradeText;
-    TextMeshProUGUI statValueText;
     UpgradeSystem upgradeSystem;
     Player player;
     string cyanColorTag;
@@ -39,7 +37,6 @@ public class UIUpgrade : MonoBehaviour
     {
         upgradeSystem = FindObjectOfType<UpgradeSystem>();
         upgradeText = upgradeTextInstance.GetComponent<TextMeshProUGUI>();
-        statValueText = statValueTextInstance.GetComponent<TextMeshProUGUI>();
         player = FindObjectOfType<Player>();
 
         cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
@@ -79,8 +76,10 @@ public class UIUpgrade : MonoBehaviour
 
     void UpdateText()
     {
+        Debug.Log("Upgrade UI text updated");
 
         int upgLvl = 1;
+        int maxLvl = int.MaxValue;
         int upgCost = 1;
         string upgAmount = "";
         string statValue = "";
@@ -102,6 +101,7 @@ public class UIUpgrade : MonoBehaviour
                 case 0:
                 {
                     upgLvl = upgradeSystem.laserPistolUpgLevels[gunStatsUpgrade];
+                    maxLvl = upgradeSystem.laserPistolUpgMaxLevels[gunStatsUpgrade];
                     upgCost = upgradeSystem.laserPistolUpgCurrCosts[gunStatsUpgrade];
                     break;
                 }
@@ -109,6 +109,7 @@ public class UIUpgrade : MonoBehaviour
                 case 1:
                 {
                     upgLvl = upgradeSystem.SMGUpgLevels[gunStatsUpgrade];
+                    maxLvl = upgradeSystem.SMGUpgMaxLevels[gunStatsUpgrade];
                     upgCost = upgradeSystem.SMGUpgCurrCosts[gunStatsUpgrade];
                     break;
                 }
@@ -122,6 +123,7 @@ public class UIUpgrade : MonoBehaviour
         {
             // PlayerStats
             upgLvl = upgradeSystem.playerStatsUpgLevels[playerStatsUpgrade];
+            maxLvl = upgradeSystem.playerStatsUpgMaxLevels[playerStatsUpgrade];
             upgCost = upgradeSystem.playerStatsUpgCurrCosts[playerStatsUpgrade];
             statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, playerStatsUpgrade);
             upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeSystem);
@@ -131,39 +133,37 @@ public class UIUpgrade : MonoBehaviour
         {
             // QCubeStats
             upgLvl = upgradeSystem.qCubeStatsUpgLevels[qCubeStatsUpgrade];
+            maxLvl = upgradeSystem.qCubeStatsUpgMaxLevels[qCubeStatsUpgrade];
             upgCost = upgradeSystem.qCubeStatsUpgCurrCosts[qCubeStatsUpgrade];
             statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, qCubeStatsUpgrade);
             upgAmount = UpgStatGetter.GetUpgAmount(qCubeStatsUpgrade);
         }
         
         // Change text color depending on affordability
-        string amtColorTag;
+        string costColorTag;
         if (BuildingSystem.PlayerCredits >= upgCost)
-            amtColorTag = yellowColorTag;
+            costColorTag = yellowColorTag;
         else
-            amtColorTag = redColorTag;
+            costColorTag = redColorTag;
  
         // Upgrade buttons text
         if (showLevelsText)
         {
-            upgradeText.text = UiName + " " + cyanColorTag + upgAmount + endColorTag + 
-                            "\nLvl " + (upgLvl + 1) + ": " + amtColorTag + "$" + upgCost + endColorTag;  
+            if (upgLvl + 1 > maxLvl)
+            {
+                upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + 
+                                   "\n" + greenColorTag + "Max level reached!" + endColorTag;
+            }
+            else
+            {
+                upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag + 
+                                   "\nLvl " + (upgLvl + 1) + ": " + costColorTag + "$" + upgCost + endColorTag;
+            }
         }
         else
         {
-            upgradeText.text = UiName + " " + cyanColorTag + upgAmount + endColorTag +
-                            "\n" + amtColorTag + "$" + upgCost + endColorTag; 
-        }
-        
-        // Stat values text
-        if (upgradeFamily == UpgradeFamily.Consumables)
-        {
-            statValueText.text = UiName + ": " + cyanColorTag + upgAmount + endColorTag;
-        }
-        else
-        {
-            statValueText.text = UiName + ": " + greenColorTag + statValue + endColorTag + 
-                                 " " + cyanColorTag + upgAmount + endColorTag;
+            upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag +
+                               "\n" + costColorTag + "$" + upgCost + endColorTag; 
         }
     }
 }

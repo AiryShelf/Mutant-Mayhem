@@ -23,7 +23,7 @@ public class UpgradeSystem : MonoBehaviour
     #region Upgrade Dicts
 
     // PlayerStats
-    private Dictionary<PlayerStatsUpgrade, int> playerStatsUpgMaxLevels = 
+    public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgMaxLevels = 
         new Dictionary<PlayerStatsUpgrade, int>();
     public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgLevels = 
         new Dictionary<PlayerStatsUpgrade, int>();
@@ -33,7 +33,7 @@ public class UpgradeSystem : MonoBehaviour
         new Dictionary<PlayerStatsUpgrade, int>();
 
     // QCubeStats
-    private Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgMaxLevels = 
+    public Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgMaxLevels = 
         new Dictionary<QCubeStatsUpgrade, int>();
     public Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgLevels = 
         new Dictionary<QCubeStatsUpgrade, int>();
@@ -43,7 +43,7 @@ public class UpgradeSystem : MonoBehaviour
         new Dictionary<QCubeStatsUpgrade, int>();
     
     // Consumables
-    private Dictionary<ConsumablesUpgrade, int> consumablesUpgMaxLevels = 
+    public Dictionary<ConsumablesUpgrade, int> consumablesUpgMaxLevels = 
         new Dictionary<ConsumablesUpgrade, int>();
     public Dictionary<ConsumablesUpgrade, int> consumablesUpgLevels = 
         new Dictionary<ConsumablesUpgrade, int>();
@@ -54,7 +54,7 @@ public class UpgradeSystem : MonoBehaviour
 
     // GUN STATS
     // Laser Pistol stats
-    private Dictionary<GunStatsUpgrade, int> laserPistolUpgMaxLevels = 
+    public Dictionary<GunStatsUpgrade, int> laserPistolUpgMaxLevels = 
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> laserPistolUpgLevels = 
         new Dictionary<GunStatsUpgrade, int>();
@@ -64,7 +64,7 @@ public class UpgradeSystem : MonoBehaviour
         new Dictionary<GunStatsUpgrade, int>();
 
     // SMG stats
-    private Dictionary<GunStatsUpgrade, int> SMGUpgMaxLevels = 
+    public Dictionary<GunStatsUpgrade, int> SMGUpgMaxLevels = 
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> SMGUpgLevels = 
         new Dictionary<GunStatsUpgrade, int>();
