@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class ControlsPanel : MonoBehaviour
 {
     [SerializeField] string hideControlsStr;
-    [SerializeField] string unhideControlsStr;
+    [SerializeField] string showControlsStr;
     [SerializeField] TextMeshProUGUI showHideText;
     [SerializeField] List<string> controlStrings;
     [SerializeField] GameObject controlsTextPrefab;
@@ -29,6 +29,8 @@ public class ControlsPanel : MonoBehaviour
             obj.GetComponent<TextMeshProUGUI>().text = str;
             fadeCanvasGroupsWave.individualElements.Add(obj.GetComponent<CanvasGroup>());
         }
+
+        showHideText.text = showControlsStr;
     }
 
     void OnEnable()
@@ -39,12 +41,7 @@ public class ControlsPanel : MonoBehaviour
     void OnDisable()
     {
         helpAction.performed -= OnHelpPressed;
-    }
-
-    void Start()
-    {
-        TogglePanel();
-    }
+    } 
 
     void OnHelpPressed(InputAction.CallbackContext context)
     {
@@ -59,7 +56,7 @@ public class ControlsPanel : MonoBehaviour
             if (fadeCanvasGroupsWave.isTriggered)
             {
                 fadeCanvasGroupsWave.isTriggered = false;
-                showHideText.text = unhideControlsStr;
+                showHideText.text = showControlsStr;
             }
             else
             {

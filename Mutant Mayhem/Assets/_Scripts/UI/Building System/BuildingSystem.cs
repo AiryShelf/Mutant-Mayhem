@@ -36,6 +36,7 @@ public class BuildingSystem : MonoBehaviour
     InputAction toolbarAction;
     InputAction rotateStructureAction;
     InputAction buildAction;
+    InputAction cheatCodeCreditsAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
     MessagePanel messagePanel;
 
@@ -56,10 +57,12 @@ public class BuildingSystem : MonoBehaviour
         toolbarAction = playerActionMap.FindAction("Toolbar");
         buildAction = playerActionMap.FindAction("BuildStructure");
         rotateStructureAction = playerActionMap.FindAction("RotateStructure");
+        cheatCodeCreditsAction = playerActionMap.FindAction("CheatCodeCredits");
 
         rotateStructureAction.started += OnRotate;
         toolbarAction.started += OnToolbarUsed;
         buildAction.started += OnBuild;
+        cheatCodeCreditsAction.started += OnCheatCodeCredits;
     }
 
     void OnDisable()
@@ -198,6 +201,11 @@ public class BuildingSystem : MonoBehaviour
 
             Debug.Log("Switched to tool index: " + (int)structure);     
         }
+    }
+
+    public void OnCheatCodeCredits(InputAction.CallbackContext context)
+    {
+        PlayerCredits += 10000;
     }
 
     #endregion

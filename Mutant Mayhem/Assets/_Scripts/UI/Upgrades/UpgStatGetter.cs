@@ -13,19 +13,19 @@ public static class UpgStatGetter
         switch (playerStatsUpgrade)
         {
             case PlayerStatsUpgrade.MoveSpeed:
-                stat = player.stats.moveSpeed.ToString();
+                stat = player.stats.moveSpeed.ToString("#0.0");
                 return stat;
 
             case PlayerStatsUpgrade.StrafeSpeed:
-                stat = player.stats.strafeSpeed.ToString();
+                stat = player.stats.strafeSpeed.ToString("#0.0");
                 return stat;
 
             case PlayerStatsUpgrade.SprintFactor:
-                stat = player.stats.sprintFactor.ToString();
+                stat = player.stats.sprintFactor.ToString("#0.00");
                 return stat;
             
             case PlayerStatsUpgrade.PlayerReloadSpeed:
-                stat = (player.stats.reloadFactor - 1).ToString();
+                stat = (player.stats.reloadFactor - 1).ToString("#0.0");
                 return stat;
 
             case PlayerStatsUpgrade.PlayerAccuracy:
@@ -33,27 +33,27 @@ public static class UpgStatGetter
                 return stat;
             
             case PlayerStatsUpgrade.MeleeDamage:
-                stat = player.stats.meleeDamage.ToString();
+                stat = player.stats.meleeDamage.ToString("#0");
                 return stat;
 
             case PlayerStatsUpgrade.MeleeKnockback:
-                stat = player.stats.knockback.ToString();
+                stat = player.stats.knockback.ToString("#0");
                 return stat;
 
             case PlayerStatsUpgrade.StaminaMax:
-                stat = player.stats.staminaMax.ToString();
+                stat = player.stats.staminaMax.ToString("#0");
                 return stat;
 
             case PlayerStatsUpgrade.StaminaRegen:
-                stat = player.stats.staminaRegen.ToString();
+                stat = player.stats.staminaRegen.ToString("#0.0");
                 return stat;
 
             case PlayerStatsUpgrade.HealthMax:
-                stat = player.stats.playerHealthScript.GetMaxHealth().ToString();
+                stat = player.stats.playerHealthScript.GetMaxHealth().ToString("#0");
                 return stat;
 
             case PlayerStatsUpgrade.HealthRegen:
-                stat = player.stats.playerHealthScript.healthRegenPerSec.ToString();
+                stat = player.stats.playerHealthScript.healthRegenPerSec.ToString("#0.00");
                 return stat;
         }
 
@@ -90,11 +90,11 @@ public static class UpgStatGetter
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                stat = player.stats.playerShooter.gunList[gunIndex].damage.ToString();
+                stat = player.stats.playerShooter.gunList[gunIndex].damage.ToString("#0");
                 return stat;
 
             case GunStatsUpgrade.GunKnockback:
-                stat = player.stats.playerShooter.gunList[gunIndex].knockback.ToString();
+                stat = player.stats.playerShooter.gunList[gunIndex].knockback.ToString("#0.0");
                 return stat;
 
             case GunStatsUpgrade.ShootSpeed:
@@ -103,12 +103,12 @@ public static class UpgStatGetter
                 return stat;
 
             case GunStatsUpgrade.ClipSize:
-                stat = player.stats.playerShooter.gunList[gunIndex].clipSize.ToString();
+                stat = player.stats.playerShooter.gunList[gunIndex].clipSize.ToString("#0");
                 return stat;
 
             case GunStatsUpgrade.ChargeDelay:
                 float regen = 1 - player.stats.playerShooter.gunList[gunIndex].chargeDelay;
-                stat = regen.ToString();
+                stat = regen.ToString("#0.00");
                 return stat;
 
             case GunStatsUpgrade.GunAccuracy:
@@ -119,11 +119,11 @@ public static class UpgStatGetter
             case GunStatsUpgrade.GunRange:
                 float range = player.stats.playerShooter.gunList[gunIndex].bulletLifeTime *
                               player.stats.playerShooter.gunList[gunIndex].bulletSpeed;
-                stat = range.ToString();
+                stat = range.ToString("#0.00");
                 return stat;
                 
             case GunStatsUpgrade.Recoil:
-                stat = player.stats.playerShooter.gunList[gunIndex].recoil.ToString();
+                stat = player.stats.playerShooter.gunList[gunIndex].recoil.ToString("#0.0");
                 return stat;
         }
 

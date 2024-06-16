@@ -14,7 +14,7 @@ public class EnemyChaseSOBase : ScriptableObject
 
     protected Coroutine distanceCheck;
     protected Coroutine accelerate;
-    [SerializeField] protected float _sprintFactor = 1f;
+    protected float _sprintFactor = 1f;
     [SerializeField] protected float TimeToCheckDistance = 0.3f;
     [SerializeField] protected float DistToStartSprint = 8f;
     [SerializeField] protected float SprintSpeedMultiplier = 2f;
@@ -55,8 +55,8 @@ public class EnemyChaseSOBase : ScriptableObject
     public virtual void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) { }
     public virtual void ResetValues() { }
 
-    public IEnumerator DistanceToSprintCheck(float DistToStartSprint, 
-        float SprintSpeedMultiplier, float TimeToCheckDistance)
+    public IEnumerator DistanceToSprintCheck(float distToStartSprint, 
+        float sprintSpeedMultiplier, float timeToCheckDistance)
     {
         while (true)
         {   
@@ -64,10 +64,10 @@ public class EnemyChaseSOBase : ScriptableObject
             {
                 // if in sprint range. sqrMagnitude for efficiency
                 if ((playerTransform.position - transform.position).sqrMagnitude 
-                    < DistToStartSprint*DistToStartSprint)
+                    < distToStartSprint*distToStartSprint)
                 {
                     // Sprint
-                    if (accelerate == null && _sprintFactor < SprintSpeedMultiplier - 0.01f)
+                    if (accelerate == null && _sprintFactor < sprintSpeedMultiplier - 0.01f)
                     {
                         isSprinting = true;
                         if (stopSprint != null)
@@ -77,7 +77,7 @@ public class EnemyChaseSOBase : ScriptableObject
 
                         stopSprint = enemyBase.StartCoroutine(StopSprint());
                         accelerate = enemyBase.StartCoroutine(
-                                    LerpSpeed(_sprintFactor, SprintSpeedMultiplier, TimeToFullSprint));
+                                    LerpSpeed(_sprintFactor, sprintSpeedMultiplier, TimeToFullSprint));
                     }
                 }
                 else
@@ -92,7 +92,7 @@ public class EnemyChaseSOBase : ScriptableObject
                 //Debug.Log("sqrMagnitude: " + (playerTransform.position 
                 //                              - transform.position).sqrMagnitude);
             }    
-            yield return new WaitForSeconds(TimeToCheckDistance);
+            yield return new WaitForSeconds(timeToCheckDistance);
             //Debug.Log("Enemy isAggroed.  sprintFactor: " + _sprintFactor);
         }
     }
@@ -119,7 +119,7 @@ public class EnemyChaseSOBase : ScriptableObject
         stopSprint = null;
     }
 
-    public IEnumerator LerpSpeed(float start, float end, float TimeToFullSprint)
+    public IEnumerator LerpSpeed(float start, float end, float timeToFullSprint)
     {
         bool increase;
         float timeElapsed = Time.deltaTime;
@@ -129,9 +129,9 @@ public class EnemyChaseSOBase : ScriptableObject
         else
             increase = false;
 
-        while (timeElapsed < TimeToFullSprint)
+        while (timeElapsed < timeToFullSprint)
         {
-            _sprintFactor = Mathf.Lerp(start, end, timeElapsed / TimeToFullSprint);
+            _sprintFactor = Mathf.Lerp(start, end, timeElapsed / timeToFullSprint);
             if (increase)
                 _sprintFactor = Mathf.Clamp(_sprintFactor, start, end);
             else

@@ -29,9 +29,14 @@ public enum StructureType
     RepairTool,
     DestroyTool,
     OneByOneWall,
+    OneByFourWall,
+    OneByOneCorner,
     TwoByTwoWall,
-    SpotLight,
+    TwoByEightWall,
+    TwoByTwoCorner,
+    FloodLight,
     Door,
+    BlastDoor,
     None
 }
 

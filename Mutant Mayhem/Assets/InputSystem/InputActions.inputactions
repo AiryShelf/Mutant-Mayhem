@@ -130,6 +130,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CheatCodeCredits",
+                    "type": "Button",
+                    "id": "b22a124f-9a12-44b2-89fb-e9522c150653",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -627,6 +636,39 @@
                     "action": "BuildStructure",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Ctrl+P",
+                    "id": "c4da3ef5-5ee1-4cd1-aef7-221eb9ffbb4a",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CheatCodeCredits",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "28d244b1-e94a-404e-9ff1-033dff7d126a",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CheatCodeCredits",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "c300b606-49ad-4f1d-a2d9-573146d66b23",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CheatCodeCredits",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

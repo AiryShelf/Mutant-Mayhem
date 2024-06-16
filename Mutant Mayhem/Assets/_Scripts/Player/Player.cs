@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
     [SerializeField] float forceFactor = 1.5f;
     [SerializeField] float sprintStaminaUse = 0.1f;
     [SerializeField] float headTurnSpeed = 0.1f;
+    [SerializeField] float headTurnMax = 80;
 
     [Header("Other")]
     public InputActionAsset inputAsset;
@@ -57,8 +58,8 @@ public class Player : MonoBehaviour
     float moveForce;
     float strafeForce;
     Vector2 rawInput;
-    Vector2 dirToMouse;
-    float angleToMouse;
+    Vector2 muzzleDirToMouse;
+    float muzzleAngleToMouse;
     Rigidbody2D myRb;
     Stamina myStamina;
     public PlayerShooter playerShooter;
@@ -203,24 +204,44 @@ public class Player : MonoBehaviour
         if ((transform.position - mousePos).magnitude > 
             (transform.position - muzzleTrans.position).magnitude)
         {
-            dirToMouse = mousePos - muzzleTrans.transform.position;
+            muzzleDirToMouse = mousePos - muzzleTrans.transform.position;
         }
         else
         {
-            dirToMouse = mousePos - transform.position;
+            muzzleDirToMouse = mousePos - transform.position;
         }
 
-        dirToMouse.Normalize();
-       
-        // Convert mouseDir to rotation, add moveAccuracy, and convert back 
-        angleToMouse = Mathf.Atan2(dirToMouse.y, dirToMouse.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(0, 0, angleToMouse);
+        Vector3 headDirToMouse = mousePos - headImageTrans.position;
 
-        //Apply rotations       
+        muzzleDirToMouse.Normalize();
+       
+        // Get muzzle angle and rotation
+        muzzleAngleToMouse = Mathf.Atan2(muzzleDirToMouse.y, muzzleDirToMouse.x) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, muzzleAngleToMouse);
+
+        // Get head angle
+        float headAngleToMouse = Mathf.Atan2(headDirToMouse.y, headDirToMouse.x) * Mathf.Rad2Deg;
+
+        // Apply body rotation       
         playerMainTrans.rotation = Quaternion.Lerp(
             playerMainTrans.rotation, targetRotation, stats.lookSpeed);
+
+        // Calculate the difference between the body angle and the head angle
+        float bodyAngle = playerMainTrans.eulerAngles.z;
+        float relativeAngle = Mathf.DeltaAngle(bodyAngle, headAngleToMouse);
+
+        // Clamp the relative angle to headTurnMax
+        float clampedRelativeAngle = Mathf.Clamp(relativeAngle, -headTurnMax, headTurnMax);
+
+        // Calculate the clamped target rotation for the head
+        Quaternion clampedTargetRotation = Quaternion.Euler(0, 0, bodyAngle + clampedRelativeAngle);
+
+        // Apply the clamped rotation to the head
         headImageTrans.rotation = Quaternion.Lerp(
-            headImageTrans.rotation, targetRotation, headTurnSpeed);
+        headImageTrans.rotation, clampedTargetRotation, headTurnSpeed);
+
+        //headImageTrans.rotation = Quaternion.Lerp(
+            //headImageTrans.rotation, targetRotation, headTurnSpeed);
 
         // ** TO ADD DRUNKEN BEHAVIOUR **
         //rotAngle += Random.Range(-moveAccuracy, moveAccuracy); 
@@ -264,7 +285,7 @@ public class Player : MonoBehaviour
         else
         {
             moveDir = new Vector2(rawInput.y, -rawInput.x).normalized;
-            moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;
+            moveDir = Quaternion.Euler(0, 0, muzzleAngleToMouse) * moveDir;
             /* 
             // Move x moveSpeed forward but strafeSpeed backwards and sideways
             if (rawInput.y > 0)
@@ -284,7 +305,7 @@ public class Player : MonoBehaviour
 
         // Calculate the angle difference between the movement direction and facing direction
         float moveAngle = Mathf.Atan2(moveDir.y, moveDir.x) * Mathf.Rad2Deg;
-        float angleDifference = Mathf.DeltaAngle(moveAngle, angleToMouse);
+        float angleDifference = Mathf.DeltaAngle(moveAngle, muzzleAngleToMouse);
 
         // Determine the speed based on the angle difference
         float speed = Mathf.Lerp(strafeForce, moveForce, Mathf.Cos(angleDifference * Mathf.Deg2Rad));

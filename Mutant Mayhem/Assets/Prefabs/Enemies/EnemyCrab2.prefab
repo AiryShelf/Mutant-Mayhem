@@ -65,10 +65,10 @@ MonoBehaviour:
   gaussMeanSize: 1.5
   gaussStdDev: 0.3
   <health>k__BackingField: {fileID: 1640060437583579680}
-  <unfreezeTime>k__BackingField: 0.2
+  <unfreezeTime>k__BackingField: 0.1
   CurrentSMStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
-  EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
+  EnemyChaseSOBase: {fileID: 11400000, guid: e800cd9523d9f6344b43d6463422dd23, type: 2}
   EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
   EnemyMeleeSOBase: {fileID: 0}
 --- !u!114 &1640060437583579680
@@ -204,7 +204,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1929912251
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -439186225, guid: d123095bdc2774241bde14f09851d989, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

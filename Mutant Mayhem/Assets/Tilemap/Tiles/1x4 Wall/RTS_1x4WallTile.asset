@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
+  m_Name: RTS_1x4WallTile
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: 7e3f15f0e992d8b48a32589b9bbfa432, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 21300000, guid: 7e3f15f0e992d8b48a32589b9bbfa432, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 2
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions: []
+    m_RuleTransform: 1
+  structureSO: {fileID: 11400000, guid: 854b4a06fd8089f41917e0459fa0833c, type: 2}
+  damagedTiles:
+  - {fileID: 11400000, guid: 239401257267d9f4885bcf57b0dfae59, type: 2}
+  - {fileID: 11400000, guid: 989a14c9f9dd0a1439e06daf141d749f, type: 2}
+  - {fileID: 11400000, guid: d9306a8b9959e0f468ac33a6803e5b06, type: 2}
+  - {fileID: 11400000, guid: 77a091852a0f0d244a22d903c1f08bc1, type: 2}
+  corpsePrefab: {fileID: 3246120828009000940, guid: faec62a3480e22041925d4784d0e1d5c, type: 3}
+  hitEffectsPrefab: {fileID: 1682317847907704817, guid: 6cafa6edc653bce418cc43786f8ea1fb, type: 3}

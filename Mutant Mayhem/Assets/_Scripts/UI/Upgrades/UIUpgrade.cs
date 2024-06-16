@@ -33,6 +33,14 @@ public class UIUpgrade : MonoBehaviour
     string redColorTag;
     string endColorTag = "</color>";
 
+    bool initialized = false;
+
+    void OnEnable()
+    {
+        if (initialized)
+            UpdateText();
+    }
+
     void Start()
     {
         upgradeSystem = FindObjectOfType<UpgradeSystem>();
@@ -44,6 +52,8 @@ public class UIUpgrade : MonoBehaviour
         yellowColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.yellow) + ">";
         redColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.red) + ">";
         //Debug.Log(upgAmountColor);
+
+        initialized = true;
 
         UpdateText();
     }

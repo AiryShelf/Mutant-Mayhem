@@ -193,20 +193,25 @@ public class TileManager : MonoBehaviour
                                  _TileStatsDict[rootPos].maxHealth);
         List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
 
-        int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
-        index = Mathf.Clamp(index, 0, dTiles.Count - 1);
-
-        // Keep original rotation
-        Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
-
-        if (AnimatedTilemap.GetTile(rootPos) != null)
+        // Stops doors from closing since no damage sprite, plus other logic in the way
+        // Yes, this is a band-aid!  Father's Day tomorrow!
+        if (dTiles.Count > 1)
         {
-            AnimatedTilemap.SetTile(rootPos, null);
-        }
+            int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
+            index = Mathf.Clamp(index, 0, dTiles.Count - 1);
 
-        AnimatedTilemap.SetTile(rootPos, 
-            _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
-        AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
+            // Keep original rotation
+            Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+
+            if (AnimatedTilemap.GetTile(rootPos) != null)
+            {
+                AnimatedTilemap.SetTile(rootPos, null);
+            }
+
+            AnimatedTilemap.SetTile(rootPos, 
+                _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+            AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
+        }
     }
 
     #endregion
