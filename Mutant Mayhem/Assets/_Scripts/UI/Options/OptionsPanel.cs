@@ -12,6 +12,31 @@ public class OptionsPanel : MonoBehaviour
 
     void Start()
     {
+        Initialize();
+    }
+
+    void Initialize()
+    {
+        // Difficulty
+        if (PlayerPrefs.HasKey("DifficultyLevel"))
+        {
+            difficultyDropdown.value = PlayerPrefs.GetInt("DifficultyLevel");
+        }
+        else
+        {
+            difficultyDropdown.value = SettingsManager.startingDifficulty;
+        }
+
+        // Movement Type
+        if (PlayerPrefs.HasKey("StandardWASD"))
+        {
+            movementTypeDropdown.value = PlayerPrefs.GetInt("StandardWASD");
+        }
+        else
+        {
+            movementTypeDropdown.value = SettingsManager.startingMovement;
+        }
+
         difficultyDropdown.onValueChanged.AddListener(delegate { 
                                           DifficultyValueChanged(difficultyDropdown); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
@@ -35,6 +60,8 @@ public class OptionsPanel : MonoBehaviour
                 Debug.LogError("Failed to change difficulty");
                 break;
         }
+
+        Debug.Log("Difficulty changed via Dropdown");
     }
 
     void MoveTypeValueChanged(TMP_Dropdown change)
@@ -42,10 +69,10 @@ public class OptionsPanel : MonoBehaviour
         switch (change.value)
         {
             case 0:
-                SettingsManager.Instance.SetMovementType(false);
+                SettingsManager.Instance.SetMovementType(0);
                 break;
             case 1:
-                SettingsManager.Instance.SetMovementType(true);
+                SettingsManager.Instance.SetMovementType(1);
                 break;
             default:
                 Debug.LogError("Failed to change move type");

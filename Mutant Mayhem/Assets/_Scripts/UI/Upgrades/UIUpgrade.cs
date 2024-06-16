@@ -100,6 +100,7 @@ public class UIUpgrade : MonoBehaviour
             // Consumables
             upgLvl = upgradeSystem.consumablesUpgLevels[consumablesUpgrade];
             upgCost = upgradeSystem.consumablesUpgCurrCosts[consumablesUpgrade];
+            statValue = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
             upgAmount = UpgStatGetter.GetUpgAmount(consumablesUpgrade);
         }
 

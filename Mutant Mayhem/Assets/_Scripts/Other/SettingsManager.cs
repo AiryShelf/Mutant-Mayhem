@@ -12,12 +12,15 @@ public enum DifficultyLevel
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
+    public static bool Welcomed = false;
 
     [Header("Difficulty Setting")]
-    private DifficultyLevel difficultyLevel = DifficultyLevel.Easy; 
+    public static int startingDifficulty = 1;
+    private DifficultyLevel difficultyLevel; 
 
     [Header("Movement Setting")]
-    public bool useStandardWASD = false;
+    public static int startingMovement = 1;
+    public int useStandardWASD = 1;
 
     [Header("Difficulty Multipliers")]
     public float WaveDifficultyMult = 1;
@@ -38,11 +41,36 @@ public class SettingsManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        InitializeSettings();
     }
 
-    void Start()
+    void InitializeSettings()
     {
-        SetDifficulty(DifficultyLevel.Normal);
+        // Difficulty
+        if (PlayerPrefs.HasKey("DifficultyLevel"))
+        {
+            difficultyLevel = (DifficultyLevel)PlayerPrefs.GetInt("DifficultyLevel");
+        }
+        else
+        {
+            difficultyLevel = (DifficultyLevel)startingDifficulty;
+            PlayerPrefs.SetInt("DifficultyLevel", (int)difficultyLevel);
+        }
+
+        // Movement Type
+        if (PlayerPrefs.HasKey("StandardWASD"))
+        {
+            useStandardWASD = PlayerPrefs.GetInt("StandardWASD");
+        }
+        else
+        {
+            useStandardWASD = startingMovement;
+            PlayerPrefs.SetInt("StandardWASD", 1);
+        }
+
+        ApplyDifficultySettings();
+        ApplyMovementSettings();
     }
 
     #region Difficulty
@@ -50,6 +78,7 @@ public class SettingsManager : MonoBehaviour
     public void SetDifficulty(DifficultyLevel level)
     {
         difficultyLevel = level;
+        PlayerPrefs.SetInt("DifficultyLevel", (int)level);
         ApplyDifficultySettings();
     }
 
@@ -91,13 +120,21 @@ public class SettingsManager : MonoBehaviour
 
     #region Movement
 
-    public void SetMovementType(bool useStandardWASD)
+    public void SetMovementType(int useStandardWASD)
     {
-        if (useStandardWASD)
-            this.useStandardWASD = true;
+        if (useStandardWASD == 1)
+            this.useStandardWASD = 1;
         else
             // Move to mouse
-            this.useStandardWASD = false;
+            this.useStandardWASD = 0;
+
+        PlayerPrefs.SetInt("StandardWASD", useStandardWASD);
+        ApplyMovementSettings();
+    }
+
+    public void ApplyMovementSettings()
+    {
+        FindObjectOfType<Player>().movementType = useStandardWASD;
         Debug.Log("Movement Type updated");
     }
 

@@ -1,6 +1,5 @@
- using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -146,17 +145,26 @@ public class TileManager : MonoBehaviour
             _TileStatsDict.Remove(rootPos + pos);
             StructureTilemap.SetTile(rootPos + pos, null);           
         }
-       
-        //StructureTilemap.SetTile(rootPos, null);
-        //AnimatedTilemap.SetTile(rootPos, null);
-        //AnimatedTilemap.RefreshTile(rootPos);
+
         if (shadowCaster2DTileMap != null)
             shadowCaster2DTileMap.Generate();
         else
             Debug.LogError("shadowCaster2DTileMap is null");
 
-        StatsCounterPlayer.StructuresLost++;
-        Debug.Log("DESTROYED A TILE");
+        //Debug.Log("DESTROYED A TILE");
+    }
+
+    public void RefundTileAt(Vector3Int gridPos)
+    {
+        // Get remaining health ratio and tile cost
+        float ratio = 1 - (_TileStatsDict[gridPos].maxHealth - _TileStatsDict[gridPos].health) /
+                      _TileStatsDict[gridPos].maxHealth;
+        int cost = (int)_TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
+
+        // Refund cost
+        BuildingSystem.PlayerCredits += cost * ratio / 2;
+
+        Debug.Log("REFUNDED A TILE");
     }
 
     public void ModifyHealthAt(Vector2 point, float amount)
@@ -174,6 +182,7 @@ public class TileManager : MonoBehaviour
 
             if (_TileStatsDict[rootPos].health == 0)
             {
+                StatsCounterPlayer.StructuresLost++;
                 DestroyTileAt(rootPos);
                 return;
             }

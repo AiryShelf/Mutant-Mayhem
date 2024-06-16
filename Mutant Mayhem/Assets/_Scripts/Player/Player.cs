@@ -65,6 +65,7 @@ public class Player : MonoBehaviour
     public PlayerShooter playerShooter;
     public bool isDead;  
     Throw itemToThrow;
+    [HideInInspector] public int movementType;
 
     void Awake()
     {
@@ -218,13 +219,17 @@ public class Player : MonoBehaviour
         // Get muzzle angle and rotation
         muzzleAngleToMouse = Mathf.Atan2(muzzleDirToMouse.y, muzzleDirToMouse.x) * Mathf.Rad2Deg;
         Quaternion targetRotation = Quaternion.Euler(0, 0, muzzleAngleToMouse);
-
+    
         // Get head angle
         float headAngleToMouse = Mathf.Atan2(headDirToMouse.y, headDirToMouse.x) * Mathf.Rad2Deg;
 
-        // Apply body rotation       
+        // Apply body rotation 
+        float rotationSpeed = stats.lookSpeed;
         playerMainTrans.rotation = Quaternion.Lerp(
-            playerMainTrans.rotation, targetRotation, stats.lookSpeed);
+            playerMainTrans.rotation, targetRotation, rotationSpeed);
+
+        //playerMainTrans.rotation = Quaternion.Lerp(
+            //playerMainTrans.rotation, targetRotation, stats.lookSpeed);
 
         // Calculate the difference between the body angle and the head angle
         float bodyAngle = playerMainTrans.eulerAngles.z;
@@ -277,7 +282,7 @@ public class Player : MonoBehaviour
     {
         Vector2 moveDir;
 
-        if (SettingsManager.Instance.useStandardWASD)
+        if (movementType == 1)
         {
             // Standard WASD movement
             moveDir = new Vector2(rawInput.x, rawInput.y).normalized;

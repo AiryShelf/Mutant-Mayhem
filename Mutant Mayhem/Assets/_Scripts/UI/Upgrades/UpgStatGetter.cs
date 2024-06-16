@@ -64,7 +64,25 @@ public static class UpgStatGetter
     {
         string stat = "";
 
-        // No stat to track for consumables
+        switch(consumablesUpgrade)
+        {
+            case ConsumablesUpgrade.PlayerHeal:
+                stat = player.stats.playerHealthScript.GetHealth().ToString("#0");
+                return stat;
+
+            case ConsumablesUpgrade.QCubeRepair:
+                stat = player.stats.qCubeStats.healthScript.GetHealth().ToString("#0");
+                return stat;
+
+            case ConsumablesUpgrade.GrenadeBuyAmmo:
+                stat = player.stats.grenadeAmmo.ToString("#0");
+                return stat;
+
+            case ConsumablesUpgrade.SMGBuyAmmo:
+                stat = (player.stats.playerShooter.gunsAmmo[1] +
+                        player.stats.playerShooter.gunsAmmoInClips[1]).ToString("#0");
+                return stat;
+        }
 
         return stat;
     }

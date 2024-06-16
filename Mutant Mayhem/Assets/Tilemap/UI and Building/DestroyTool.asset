@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: 0a48672cf36271144af9672d0fd91e32, type: 3}
   tileName: Destroy Tool
-  description: Used to remove structures
+  description: Used to remove structures.  50% refund per integrity remaining
   tileCost: 0
   maxHealth: 0
   health: 0
+  cellPositions: []
   ruleTileStructure: {fileID: 11400000, guid: 9c0c4aec31f432e429064bd2a9a65414, type: 2}
   structureType: 2
   actionType: 2
-  range: {x: 50, y: 50}
+  actionRange: {x: 5, y: 5}

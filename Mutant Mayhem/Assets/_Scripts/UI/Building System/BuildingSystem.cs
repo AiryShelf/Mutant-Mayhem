@@ -111,7 +111,7 @@ public class BuildingSystem : MonoBehaviour
             }
             else if (structureInHand.actionType == ActionType.Destroy)
             {
-                DestroyTile(destroyPositions[0]);
+                RemoveTile(destroyPositions[0]);
             }
         }
     }
@@ -210,7 +210,7 @@ public class BuildingSystem : MonoBehaviour
 
     #endregion
 
-    #region Build and Destroy
+    #region Build and Remove
 
     void Build(Vector3Int gridPos)
     {
@@ -229,9 +229,10 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    void DestroyTile(Vector3Int gridPos)
+    void RemoveTile(Vector3Int gridPos)
     {
         RemoveBuildHighlight();
+        tileManager.RefundTileAt(gridPos);
         tileManager.DestroyTileAt(gridPos);
     }
 
