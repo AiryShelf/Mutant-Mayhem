@@ -289,23 +289,9 @@ public class Player : MonoBehaviour
         }
         else
         {
+            // Move to mouse
             moveDir = new Vector2(rawInput.y, -rawInput.x).normalized;
             moveDir = Quaternion.Euler(0, 0, muzzleAngleToMouse) * moveDir;
-            /* 
-            // Move x moveSpeed forward but strafeSpeed backwards and sideways
-            if (rawInput.y > 0)
-            {
-                moveDir = new Vector2 (rawInput.y * moveForce, 
-                                    -rawInput.x * strafeForce) * sprintSpeedAmount;
-            }
-            else
-            {
-                moveDir = new Vector2 (rawInput.y * strafeForce, 
-                                    -rawInput.x * strafeForce) * sprintSpeedAmount;
-            }
-
-            moveDir = Quaternion.Euler(0, 0, angleToMouse) * moveDir;
-            */
         }
 
         // Calculate the angle difference between the movement direction and facing direction
@@ -313,8 +299,22 @@ public class Player : MonoBehaviour
         float angleDifference = Mathf.DeltaAngle(moveAngle, muzzleAngleToMouse);
 
         // Determine the speed based on the angle difference
-        float speed = Mathf.Lerp(strafeForce, moveForce, Mathf.Cos(angleDifference * Mathf.Deg2Rad));
+        float maxSpeedAngle = 15f; // Full speed within ±15 degrees
+        float minSpeedAngle = 90f;
+        float speedFactor = 1.0f;
+        if (Mathf.Abs(angleDifference) > maxSpeedAngle)
+        {
+            // Normalize the angle difference within the range
+            speedFactor = Mathf.InverseLerp(minSpeedAngle, maxSpeedAngle, Mathf.Abs(angleDifference));
+        }
+
+        float speed = Mathf.Lerp(strafeForce, moveForce, speedFactor);
         moveDir *= speed * sprintSpeedAmount;
+
+
+        //OG code
+        //float speed = Mathf.Lerp(strafeForce, moveForce, Mathf.Cos(angleDifference * Mathf.Deg2Rad));
+        //moveDir *= speed * sprintSpeedAmount;
 
         myRb.AddForce(moveDir);
     }

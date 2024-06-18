@@ -175,13 +175,13 @@ public class MeleeDamageUpgrade : Upgrade
 
     public static float GetUpgAmount(UpgradeSystem upgradeSystem)
     {
-        float upgAmount = 1 * upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 1;
+        float upgAmount = 0.5f * (upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 1);
         return upgAmount;
     }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.meleeDamage += 1 * level;
+        playerStats.meleeDamage += 0.5f * level;
     }
 }
 
@@ -191,13 +191,13 @@ public class KnockbackUpgrade : Upgrade
 
     public static float GetUpgAmount(UpgradeSystem upgradeSystem)
     {
-        float upgAmount = 1;
+        float upgAmount = 0.5f;
         return upgAmount;
     }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.knockback += 1;
+        playerStats.knockback += 0.5f;
     }
 }
 
@@ -399,12 +399,12 @@ public class GunDamageUpgrade : Upgrade
         switch (gunIndex)
         {
             case 0:
-                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgAmt + 
-                            upgradeSystem.laserPistolUpgLevels[GunStatsUpgrade.GunDamage];
+                upgAmount = 0.5f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
+                            upgradeSystem.laserPistolUpgLevels[GunStatsUpgrade.GunDamage] + 1);
                 return upgAmount;
             case 1:
-                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgAmt + 
-                            upgradeSystem.SMGUpgLevels[GunStatsUpgrade.GunDamage];
+                upgAmount = 0.5f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
+                            upgradeSystem.SMGUpgLevels[GunStatsUpgrade.GunDamage] + 1);
                 return upgAmount;
             default:
                 return upgAmount;
@@ -413,7 +413,7 @@ public class GunDamageUpgrade : Upgrade
 
     public override void Apply(GunSO gunSO, int level)
     {
-        gunSO.damage += gunSO.damageUpgAmt + level;
+        gunSO.damage += 0.5f * (gunSO.damageUpgAmt + level);
     }
 }
 

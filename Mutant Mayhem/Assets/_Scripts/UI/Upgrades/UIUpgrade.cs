@@ -33,15 +33,8 @@ public class UIUpgrade : MonoBehaviour
     string redColorTag;
     string endColorTag = "</color>";
 
-    bool initialized = false;
 
-    void OnEnable()
-    {
-        if (initialized)
-            UpdateText();
-    }
-
-    void Start()
+    void Awake()
     {
         upgradeSystem = FindObjectOfType<UpgradeSystem>();
         upgradeText = upgradeTextInstance.GetComponent<TextMeshProUGUI>();
@@ -53,9 +46,17 @@ public class UIUpgrade : MonoBehaviour
         redColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.red) + ">";
         //Debug.Log(upgAmountColor);
 
-        initialized = true;
+        //UpdateText();
+    }
 
-        UpdateText();
+    void OnEnable()
+    {
+        StartCoroutine(UpdateText());
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
     }
 
     // This allows the enum to be referenced via UI button OnClick
@@ -81,100 +82,103 @@ public class UIUpgrade : MonoBehaviour
                 break;
         }
         
-        UpdateText();
+        //UpdateText();
     }
 
-    void UpdateText()
+    IEnumerator UpdateText()
     {
-        Debug.Log("Upgrade UI text updated");
-
-        int upgLvl = 1;
-        int maxLvl = int.MaxValue;
-        int upgCost = 1;
-        string upgAmount = "";
-        string statValue = "";
-        
-        // Check for families
-        if (upgradeFamily == UpgradeFamily.Consumables)
+        //Debug.Log("Upgrade UI text updating");
+        while (true)
         {
-            // Consumables
-            upgLvl = upgradeSystem.consumablesUpgLevels[consumablesUpgrade];
-            upgCost = upgradeSystem.consumablesUpgCurrCosts[consumablesUpgrade];
-            statValue = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
-            upgAmount = UpgStatGetter.GetUpgAmount(consumablesUpgrade);
-        }
-
-        else if (upgradeFamily == UpgradeFamily.GunStats)
-        {
-            // GunStats
-            switch (playerGunIndex)
+            int upgLvl = 1;
+            int maxLvl = int.MaxValue;
+            int upgCost = 1;
+            string upgAmount = "";
+            string statValue = "";
+            
+            // Check for families
+            if (upgradeFamily == UpgradeFamily.Consumables)
             {
-                case 0:
-                {
-                    upgLvl = upgradeSystem.laserPistolUpgLevels[gunStatsUpgrade];
-                    maxLvl = upgradeSystem.laserPistolUpgMaxLevels[gunStatsUpgrade];
-                    upgCost = upgradeSystem.laserPistolUpgCurrCosts[gunStatsUpgrade];
-                    break;
-                }
-
-                case 1:
-                {
-                    upgLvl = upgradeSystem.SMGUpgLevels[gunStatsUpgrade];
-                    maxLvl = upgradeSystem.SMGUpgMaxLevels[gunStatsUpgrade];
-                    upgCost = upgradeSystem.SMGUpgCurrCosts[gunStatsUpgrade];
-                    break;
-                }
+                // Consumables
+                upgLvl = upgradeSystem.consumablesUpgLevels[consumablesUpgrade];
+                upgCost = upgradeSystem.consumablesUpgCurrCosts[consumablesUpgrade];
+                statValue = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
+                upgAmount = UpgStatGetter.GetUpgAmount(consumablesUpgrade);
             }
-            statValue = UpgStatGetter.GetStatValue(
-                               upgradeSystem.player, gunStatsUpgrade, playerGunIndex);
-            upgAmount = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeSystem);
-        }
 
-        else if (upgradeFamily == UpgradeFamily.PlayerStats)
-        {
-            // PlayerStats
-            upgLvl = upgradeSystem.playerStatsUpgLevels[playerStatsUpgrade];
-            maxLvl = upgradeSystem.playerStatsUpgMaxLevels[playerStatsUpgrade];
-            upgCost = upgradeSystem.playerStatsUpgCurrCosts[playerStatsUpgrade];
-            statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, playerStatsUpgrade);
-            upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeSystem);
-        }
-
-        else if (upgradeFamily == UpgradeFamily.QCubeStats)
-        {
-            // QCubeStats
-            upgLvl = upgradeSystem.qCubeStatsUpgLevels[qCubeStatsUpgrade];
-            maxLvl = upgradeSystem.qCubeStatsUpgMaxLevels[qCubeStatsUpgrade];
-            upgCost = upgradeSystem.qCubeStatsUpgCurrCosts[qCubeStatsUpgrade];
-            statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, qCubeStatsUpgrade);
-            upgAmount = UpgStatGetter.GetUpgAmount(qCubeStatsUpgrade);
-        }
-        
-        // Change text color depending on affordability
-        string costColorTag;
-        if (BuildingSystem.PlayerCredits >= upgCost)
-            costColorTag = yellowColorTag;
-        else
-            costColorTag = redColorTag;
- 
-        // Upgrade buttons text
-        if (showLevelsText)
-        {
-            if (upgLvl + 1 > maxLvl)
+            else if (upgradeFamily == UpgradeFamily.GunStats)
             {
-                upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + 
-                                   "\n" + greenColorTag + "Max level reached!" + endColorTag;
+                // GunStats
+                switch (playerGunIndex)
+                {
+                    case 0:
+                    {
+                        upgLvl = upgradeSystem.laserPistolUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeSystem.laserPistolUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = upgradeSystem.laserPistolUpgCurrCosts[gunStatsUpgrade];
+                        break;
+                    }
+
+                    case 1:
+                    {
+                        upgLvl = upgradeSystem.SMGUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeSystem.SMGUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = upgradeSystem.SMGUpgCurrCosts[gunStatsUpgrade];
+                        break;
+                    }
+                }
+                statValue = UpgStatGetter.GetStatValue(
+                                upgradeSystem.player, gunStatsUpgrade, playerGunIndex);
+                upgAmount = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeSystem);
+            }
+
+            else if (upgradeFamily == UpgradeFamily.PlayerStats)
+            {
+                // PlayerStats
+                upgLvl = upgradeSystem.playerStatsUpgLevels[playerStatsUpgrade];
+                maxLvl = upgradeSystem.playerStatsUpgMaxLevels[playerStatsUpgrade];
+                upgCost = upgradeSystem.playerStatsUpgCurrCosts[playerStatsUpgrade];
+                statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, playerStatsUpgrade);
+                upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeSystem);
+            }
+
+            else if (upgradeFamily == UpgradeFamily.QCubeStats)
+            {
+                // QCubeStats
+                upgLvl = upgradeSystem.qCubeStatsUpgLevels[qCubeStatsUpgrade];
+                maxLvl = upgradeSystem.qCubeStatsUpgMaxLevels[qCubeStatsUpgrade];
+                upgCost = upgradeSystem.qCubeStatsUpgCurrCosts[qCubeStatsUpgrade];
+                statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, qCubeStatsUpgrade);
+                upgAmount = UpgStatGetter.GetUpgAmount(qCubeStatsUpgrade);
+            }
+            
+            // Change text color depending on affordability
+            string costColorTag;
+            if (BuildingSystem.PlayerCredits >= upgCost)
+                costColorTag = yellowColorTag;
+            else
+                costColorTag = redColorTag;
+    
+            // Upgrade buttons text
+            if (showLevelsText)
+            {
+                if (upgLvl + 1 > maxLvl)
+                {
+                    upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + 
+                                    "\n" + greenColorTag + "Max level reached!" + endColorTag;
+                }
+                else
+                {
+                    upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag + 
+                                    "\nLvl " + (upgLvl + 1) + ": " + costColorTag + "$" + upgCost + endColorTag;
+                }
             }
             else
             {
-                upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag + 
-                                   "\nLvl " + (upgLvl + 1) + ": " + costColorTag + "$" + upgCost + endColorTag;
+                upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag +
+                                "\n" + costColorTag + "$" + upgCost + endColorTag; 
             }
-        }
-        else
-        {
-            upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag +
-                               "\n" + costColorTag + "$" + upgCost + endColorTag; 
+            yield return new WaitForSeconds(0.2f);
         }
     }
 }

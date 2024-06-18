@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class UpgradeSystem : MonoBehaviour
 {
@@ -88,8 +87,8 @@ public class UpgradeSystem : MonoBehaviour
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.SprintFactor] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerAccuracy] = 10;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeDamage] = 100;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeKnockback] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeDamage] = 150;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeKnockback] = 150;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeAttackRate] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.StaminaMax] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.StaminaRegen] = 100;
@@ -131,7 +130,7 @@ public class UpgradeSystem : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.SprintFactor] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerAccuracy] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeKnockback] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeAttackRate] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaMax] = 100;
@@ -149,7 +148,7 @@ public class UpgradeSystem : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 50;
 
         // Gun Stats
-        laserPistolUpgBaseCosts[GunStatsUpgrade.GunDamage] = 100;
+        laserPistolUpgBaseCosts[GunStatsUpgrade.GunDamage] = 150;
         laserPistolUpgBaseCosts[GunStatsUpgrade.GunKnockback] = 150;
         laserPistolUpgBaseCosts[GunStatsUpgrade.ShootSpeed] = 200;
         laserPistolUpgBaseCosts[GunStatsUpgrade.ClipSize] = 200;
@@ -158,7 +157,7 @@ public class UpgradeSystem : MonoBehaviour
         laserPistolUpgBaseCosts[GunStatsUpgrade.GunRange] = 150;
         laserPistolUpgBaseCosts[GunStatsUpgrade.Recoil] = 100; 
 
-        SMGUpgBaseCosts[GunStatsUpgrade.GunDamage] = 100;
+        SMGUpgBaseCosts[GunStatsUpgrade.GunDamage] = 150;
         SMGUpgBaseCosts[GunStatsUpgrade.GunKnockback] = 150;
         SMGUpgBaseCosts[GunStatsUpgrade.ShootSpeed] = 200;
         SMGUpgBaseCosts[GunStatsUpgrade.ClipSize] = 200;

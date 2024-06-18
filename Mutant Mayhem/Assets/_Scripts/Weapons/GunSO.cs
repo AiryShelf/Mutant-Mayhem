@@ -30,8 +30,8 @@ public class GunSO : ScriptableObject
     public float muzzleFlashTime;
     
     [Header("Gun Stats")]
-    public int damage;
-    public int damageUpgAmt;
+    public float damage;
+    public float damageUpgAmt;
     public float knockback;
     public float knockbackUpgAmt;
     public int clipSize;

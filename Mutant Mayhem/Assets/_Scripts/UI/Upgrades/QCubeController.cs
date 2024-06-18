@@ -14,6 +14,8 @@ public class QCubeStats
 
 public class QCubeController : MonoBehaviour
 {
+    [SerializeField] GameObject tutorialUpgradePanelPrefab;
+    [SerializeField] RectTransform gamePlayCanvas;
     public QCubeStats qCubeStats;
     [Space]
     [Header("Death")]
@@ -122,7 +124,7 @@ public class QCubeController : MonoBehaviour
             // Open or close menu
             if (!isUpgradesOpen)
             {
-                OpenUpgradeWindow();
+                StartCoroutine(OpenUpgradeWindow());
             }
             else
             {
@@ -142,8 +144,14 @@ public class QCubeController : MonoBehaviour
         }
     }
 
-    void OpenUpgradeWindow()
+    IEnumerator OpenUpgradeWindow()
     {
+        if (!SettingsManager.tutorialShowedUpgrade)
+        {
+            Instantiate(tutorialUpgradePanelPrefab, gamePlayCanvas);
+        }
+        yield return new WaitForFixedUpdate();
+        
         if (player.playerShooter.isBuilding)
             player.animControllerPlayer.ToggleBuildMode();
         fireAction.Disable();

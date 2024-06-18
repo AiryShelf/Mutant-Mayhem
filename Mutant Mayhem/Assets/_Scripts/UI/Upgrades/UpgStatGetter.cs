@@ -33,11 +33,11 @@ public static class UpgStatGetter
                 return stat;
             
             case PlayerStatsUpgrade.MeleeDamage:
-                stat = player.stats.meleeDamage.ToString("#0");
+                stat = player.stats.meleeDamage.ToString("#0.0");
                 return stat;
 
             case PlayerStatsUpgrade.MeleeKnockback:
-                stat = player.stats.knockback.ToString("#0");
+                stat = player.stats.knockback.ToString("#0.0");
                 return stat;
 
             case PlayerStatsUpgrade.StaminaMax:
@@ -108,7 +108,7 @@ public static class UpgStatGetter
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                stat = player.stats.playerShooter.gunList[gunIndex].damage.ToString("#0");
+                stat = player.stats.playerShooter.gunList[gunIndex].damage.ToString("#0.0");
                 return stat;
 
             case GunStatsUpgrade.GunKnockback:

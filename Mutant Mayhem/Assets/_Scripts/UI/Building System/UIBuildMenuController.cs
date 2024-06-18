@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
@@ -11,9 +12,8 @@ public class UIBuildMenuController : MonoBehaviour
     [HideInInspector] public List<GameObject> structureButtonInstances;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
-
-    
-
+    [SerializeField] GameObject tutorialBuildPanelPrefab;
+    [SerializeField] RectTransform gamePlayCanvas;
 
     void Awake()
     {
@@ -56,6 +56,11 @@ public class UIBuildMenuController : MonoBehaviour
     {
         if (active)
         {
+            if (!SettingsManager.tutorialShowedBuild)
+            {
+                Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
+            }
+
             fadeCanvasGroups.isTriggered = true;
             myCanvasGroup.blocksRaycasts = true;
         }

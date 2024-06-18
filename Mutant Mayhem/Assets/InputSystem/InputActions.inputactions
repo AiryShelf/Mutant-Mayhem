@@ -386,6 +386,17 @@
                 },
                 {
                     "name": "",
+                    "id": "36561fbf-dd61-401a-a1f6-86d162e26810",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "a1885e0f-d6be-49ba-bec9-e6aa92a15fe8",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
@@ -723,12 +734,12 @@
                 },
                 {
                     "name": "ScrollWheel",
-                    "type": "PassThrough",
+                    "type": "Value",
                     "id": "891d0e59-64d1-46fd-9ef2-25a46c1e1e21",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "MiddleClick",
@@ -1157,6 +1168,39 @@
                     "action": "ScrollWheel",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Ctrl+Mouse",
+                    "id": "4f1e0f1d-962f-40b4-82f9-638b7802ba6c",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScrollWheel",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "1640744b-e99b-473c-af59-4945882ae506",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ScrollWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "844873b4-e147-4eb8-b812-af6a5a0f51ea",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ScrollWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",

@@ -12,7 +12,10 @@ public enum DifficultyLevel
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
-    public static bool Welcomed = false;
+    
+    public static bool TutorialDisabled = false;
+    public static bool tutorialShowedBuild = false;
+    public static bool tutorialShowedUpgrade = false;
 
     [Header("Difficulty Setting")]
     public static int startingDifficulty = 1;
@@ -47,6 +50,10 @@ public class SettingsManager : MonoBehaviour
 
     void InitializeSettings()
     {
+        // Reset tutorial
+        tutorialShowedBuild = false;
+        tutorialShowedUpgrade = false;
+
         // Difficulty
         if (PlayerPrefs.HasKey("DifficultyLevel"))
         {
