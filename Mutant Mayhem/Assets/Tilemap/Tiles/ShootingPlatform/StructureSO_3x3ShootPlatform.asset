@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
+  m_Name: StructureSO_3x3ShootPlatform
+  m_EditorClassIdentifier: 
+  uiImage: {fileID: -709865987, guid: 4db600167671580459f5cc3856d95396, type: 3}
+  tileName: Raised Platform
+  description: A tall wooden platform to shoot over walls
+  tileCost: 500
+  maxHealth: 1000
+  health: 1000
+  cellPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: -1, z: 0}
+  - {x: 2, y: -1, z: 0}
+  - {x: 0, y: -2, z: 0}
+  - {x: 1, y: -2, z: 0}
+  - {x: 2, y: -2, z: 0}
+  ruleTileStructure: {fileID: 11400000, guid: 3f8d93fa4a7b9cf4ab7fdcb75e06c32b, type: 2}
+  structureType: 12
+  actionType: 1
+  actionRange: {x: 5, y: 5}

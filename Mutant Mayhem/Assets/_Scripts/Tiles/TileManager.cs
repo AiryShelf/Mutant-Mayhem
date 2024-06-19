@@ -25,6 +25,8 @@ public class TileManager : MonoBehaviour
     public int numberOfTilesHit;
     public int numberofTilesMissed;
 
+    //[SerializeField] GameObject debugDotPrefab;
+
     // For debugging
     Vector2 boxSize;
     Vector2 worldPos;
@@ -82,7 +84,7 @@ public class TileManager : MonoBehaviour
                     _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
                 StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
 
-                // Set and rotate structure tile and gameObject
+                // Set structure tile
                 StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
                 
                 // Rotate the structure tile, find new bounds
@@ -122,7 +124,7 @@ public class TileManager : MonoBehaviour
         // Rotate and position GameObject
         if (tileObj != null)
         {
-            StructureRotator.RepositionGameObject(StructureTilemap, tileObj, gridPos, bounds, rotation);
+            //StructureRotator.RepositionGameObject(StructureTilemap, tileObj, gridPos, bounds, rotation);
             tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
         else
@@ -221,6 +223,21 @@ public class TileManager : MonoBehaviour
                 _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
             AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
         }
+        else 
+        {
+            int layerMask = LayerMask.GetMask("PlayerOnly");
+            Collider2D door = Physics2D.OverlapPoint(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
+            if (door)
+            {
+                Debug.Log("Door found at: " + rootPos);
+                door.GetComponent<DoorOpener>().UpdateHealthRatio(GetTileHealthRatio(rootPos));
+            }
+            else
+            {
+                Debug.Log("Door not found");
+            }
+            
+        }
     }
 
     #endregion
@@ -239,6 +256,14 @@ public class TileManager : MonoBehaviour
     {
         return _TileStatsDict[gridPos].rootGridPos;
     }
+    
+    public float GetTileHealthRatio(Vector3Int rootPos)
+    {
+        float healthRatio = (_TileStatsDict[rootPos].maxHealth - _TileStatsDict[rootPos].health) /
+                            _TileStatsDict[rootPos].maxHealth;
+
+        return healthRatio;
+    }
 
     public bool CheckTileFullHealth(Vector3 point)
     {
@@ -246,6 +271,7 @@ public class TileManager : MonoBehaviour
 
         if (!_TileStatsDict.ContainsKey(gridPos))
         {
+            // True causes repair bullet to do nothing, as it should
             return true;
         }
 
@@ -441,7 +467,7 @@ public class TileManager : MonoBehaviour
                     ruleTileStructure = structure.ruleTileStructure,
                     maxHealth = structure.maxHealth,
                     health = structure.health,
-                    rootGridPos = rootPos
+                    rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0)
                 });
             }
             else

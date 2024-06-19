@@ -302,6 +302,7 @@ public class Player : MonoBehaviour
         float maxSpeedAngle = 15f; // Full speed within ±15 degrees
         float minSpeedAngle = 90f;
         float speedFactor = 1.0f;
+        
         if (Mathf.Abs(angleDifference) > maxSpeedAngle)
         {
             // Normalize the angle difference within the range

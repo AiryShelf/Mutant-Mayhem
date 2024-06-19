@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerShooter : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] Transform gunTrans;
     [SerializeField] SpriteRenderer gunSR;
     [SerializeField] Transform muzzleTrans;
+    public Light2D flashlight1;
+    public Light2D flashlight2;
     [SerializeField] ParticleSystem bulletCasingsPS;
     [SerializeField] float casingToGroundTime;
     [SerializeField] Transform casingEjectorTrans;
@@ -31,6 +34,8 @@ public class PlayerShooter : MonoBehaviour
     public bool isBuilding;
     public bool isReloading;
     public bool isSwitchingGuns;
+    public bool isElevated;
+    [SerializeField] LayerMask elevatedHitLayers;
     bool droppedGun;
     Rigidbody2D myRb;
     GameObject laserSight;
@@ -247,6 +252,12 @@ public class PlayerShooter : MonoBehaviour
     {
         while (true)
         {
+            StatsCounterPlayer.ShotsFiredByPlayer++;
+
+            // Use ammo
+            gunsAmmoInClips[currentGunIndex]--;
+            StatsCounterPlayer.ShotsFiredByPlayer++;
+
             // Create bullet and casing
             GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
                                             muzzleTrans.position, muzzleTrans.rotation);
@@ -256,14 +267,16 @@ public class PlayerShooter : MonoBehaviour
                             gunTrans.rotation, casingEjectorTrans);
             }
 
-            StatsCounterPlayer.ShotsFiredByPlayer++;
+            Bullet bullet = bulletObj.GetComponent<Bullet>();
 
-            // Use ammo
-            gunsAmmoInClips[currentGunIndex]--;
-            StatsCounterPlayer.ShotsFiredByPlayer++;
+            // Check if elevated
+            if (isElevated)
+            {
+                bullet.hitLayers = elevatedHitLayers;
+            }
             
             // Apply stats and effects
-            Bullet bullet = bulletObj.GetComponent<Bullet>();
+            
             bullet.damage = currentGunSO.damage;
             bullet.knockback = currentGunSO.knockback;
             Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();

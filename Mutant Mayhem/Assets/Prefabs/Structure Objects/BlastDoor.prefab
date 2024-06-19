@@ -130,8 +130,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe0673b051d5a4096977e025cb21ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorOpen: {fileID: 11400000, guid: 21fa0c06e5bbbeb4fbc3dedf417584ed, type: 2}
-  doorClosed: {fileID: 11400000, guid: 8670c5b16b751a045b7c9466879f7ece, type: 2}
+  doorsOpen:
+  - {fileID: 11400000, guid: 21fa0c06e5bbbeb4fbc3dedf417584ed, type: 2}
+  - {fileID: 11400000, guid: ae2858951324f284bb84188d386b3086, type: 2}
+  - {fileID: 11400000, guid: 4c330bf3b6feef64ea9f4d7a1ee6db62, type: 2}
+  - {fileID: 11400000, guid: 2a88673952d5dd1488257c7175bfa1a0, type: 2}
+  doorsClosed:
+  - {fileID: 11400000, guid: 8670c5b16b751a045b7c9466879f7ece, type: 2}
+  - {fileID: 11400000, guid: 79e76b7b8a52ef14abf28cca91544470, type: 2}
+  - {fileID: 11400000, guid: 91256c5f12999d8419109e1edd295ff8, type: 2}
+  - {fileID: 11400000, guid: 1e4a62724741645439e19ed4a6144324, type: 2}
 --- !u!61 &524527611849307979
 BoxCollider2D:
   m_ObjectHideFlags: 0

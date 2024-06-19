@@ -27,7 +27,7 @@ public static class StructureRotator
         // Create a new instance of StructureSO
         StructureSO rotatedStructure = ScriptableObject.CreateInstance<StructureSO>();
 
-        // Copy the basic properties
+        // Copy properties
         rotatedStructure.uiImage = source.uiImage;
         rotatedStructure.tileName = source.tileName;
         rotatedStructure.description = source.description;
@@ -58,11 +58,35 @@ public static class StructureRotator
         return 0;
     }
 
+    // This ended up being pointless thankfully, it was a headache!
     public static void RepositionGameObject(Tilemap tilemap, GameObject tileGameObject, 
                                             Vector3Int gridPos, Vector2Int bounds, int rotation)
-    {       
+    {
         Vector3 newPos = tilemap.CellToWorld(gridPos);
 
+        /*
+        switch (rotation)
+        {
+            case 90:
+                offsetX = (bounds.y - 1) / 2f;
+                offsetY = -(bounds.x - 1) / 2f;
+                break;
+            case 180:
+                offsetX = -(bounds.x - 1) / 2f;
+                offsetY = -(bounds.y - 1) / 2f;
+                break;
+            case 270:
+                offsetX = -(bounds.y - 1) / 2f;
+                offsetY = (bounds.x - 1) / 2f;
+                break;
+            default: // 0 degrees
+                offsetX = (bounds.x - 1) / 2f;
+                offsetY = (bounds.y - 1) / 2f;
+                break;
+        }
+        */
+
+        
         switch (rotation)
         {
             case 90:
@@ -82,6 +106,11 @@ public static class StructureRotator
                                      newPos.y - 0.5f + bounds.y / 2, newPos.z);
                 break;
         }
+
+        //newPos = new Vector3(newPos.x);
+        
+
+        //newPos = new Vector3(newPos.x + offsetX, newPos.y + offsetY, newPos.z);
         
         tileGameObject.transform.position = newPos;
     }

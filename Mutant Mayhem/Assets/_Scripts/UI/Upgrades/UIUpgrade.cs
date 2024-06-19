@@ -18,13 +18,11 @@ public class UIUpgrade : MonoBehaviour
     [SerializeField] bool showLevelsText;
     public GameObject upgradeTextPrefab;
 
-
     [Header("For Gun Upgrades:")]
     [SerializeField] int playerGunIndex;
 
 
-    [HideInInspector] public GameObject upgradeTextInstance;
-    TextMeshProUGUI upgradeText;
+    [HideInInspector] public TextMeshProUGUI upgradeText;
     UpgradeSystem upgradeSystem;
     Player player;
     string cyanColorTag;
@@ -33,30 +31,35 @@ public class UIUpgrade : MonoBehaviour
     string redColorTag;
     string endColorTag = "</color>";
 
+    bool initialized;
 
     void Awake()
     {
         upgradeSystem = FindObjectOfType<UpgradeSystem>();
-        upgradeText = upgradeTextInstance.GetComponent<TextMeshProUGUI>();
         player = FindObjectOfType<Player>();
 
         cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
         greenColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.green) + ">";
         yellowColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.yellow) + ">";
         redColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.red) + ">";
-        //Debug.Log(upgAmountColor);
-
-        //UpdateText();
     }
 
     void OnEnable()
     {
-        StartCoroutine(UpdateText());
+        if (initialized)
+            StartCoroutine(UpdateText());
     }
 
     void OnDisable()
     {
         StopAllCoroutines();
+    }
+
+    public void Initialize()
+    {
+        initialized = true;
+        if (gameObject.activeSelf)
+            StartCoroutine(UpdateText());
     }
 
     // This allows the enum to be referenced via UI button OnClick

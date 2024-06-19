@@ -58,7 +58,8 @@ public class UIBuildMenuController : MonoBehaviour
         {
             if (!SettingsManager.tutorialShowedBuild)
             {
-                Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
+                StartCoroutine(DelayOpen());
+                return;
             }
 
             fadeCanvasGroups.isTriggered = true;
@@ -69,5 +70,15 @@ public class UIBuildMenuController : MonoBehaviour
             fadeCanvasGroups.isTriggered = false;
             myCanvasGroup.blocksRaycasts = false;
         }
+    }
+
+    IEnumerator DelayOpen()
+    {
+        Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
+
+        yield return new WaitForFixedUpdate();
+
+        fadeCanvasGroups.isTriggered = true;
+        myCanvasGroup.blocksRaycasts = true;
     }
 }

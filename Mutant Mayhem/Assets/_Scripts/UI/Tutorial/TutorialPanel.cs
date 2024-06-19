@@ -4,19 +4,27 @@ using UnityEngine;
 
 public class TutorialPanel : MonoBehaviour
 {
+    Player player;
+
     void Start()
     {
+        player = FindObjectOfType<Player>();
+
         if (SettingsManager.TutorialDisabled == true)
         {
             Destroy(gameObject);
         }
-
-        Time.timeScale = 0;
+        else
+        {
+            Time.timeScale = 0;
+            player.inputAsset.FindActionMap("Player").Disable();
+        }
     }
 
     public virtual void OnOKButtonClick()
     {
         Time.timeScale = 1;
+        player.inputAsset.FindActionMap("Player").Enable();
         Destroy(gameObject);
     }
 
@@ -24,6 +32,7 @@ public class TutorialPanel : MonoBehaviour
     {
         Time.timeScale = 1;
         SettingsManager.TutorialDisabled = true;
+        player.inputAsset.FindActionMap("Player").Enable();
         Destroy(gameObject);
     }
 }

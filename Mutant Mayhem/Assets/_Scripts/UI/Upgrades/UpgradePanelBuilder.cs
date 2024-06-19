@@ -39,6 +39,24 @@ public class UpgradePanelBuilder : MonoBehaviour
         {
             Destroy(textGrid.transform.GetChild(i).gameObject);
         } 
+
+        // Clear unlock button
+        if (unlockPanel)
+            unlockPanel.gameObject.SetActive(false);
+
+        // If is a gun upgrade, check for unlock
+        if (upgradeFamily == UpgradeFamily.GunStats && unlockPanel != null)
+        {
+            if (!IsGunUnlocked())
+            {
+                ShowUnlockButton();
+                return;
+            }
+        }
+
+        // Initialize panel
+        Initialize();
+        StartCoroutine(InitializeFadeGroups());
     }
 
     void FixedUpdate()
@@ -57,29 +75,6 @@ public class UpgradePanelBuilder : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        // Clear unlock button
-        if (unlockPanel)
-            unlockPanel.gameObject.SetActive(false);
-
-        // If is a gun upgrade, check for unlock
-        bool isUnlocked;
-        if (upgradeFamily == UpgradeFamily.GunStats && unlockPanel != null)
-        {
-            isUnlocked = CheckIfGunUnlocked();
-            if (!isUnlocked)
-            {
-                ShowUnlockButton();
-                return;
-            }
-        }
-
-        // Initialize panel
-        Initialize();
-        fadeCanvasGroups.Initialize();
-    }
-
     void Initialize()
     {
         // Initialize upgrade lists into UI
@@ -91,13 +86,14 @@ public class UpgradePanelBuilder : MonoBehaviour
             GameObject textPrefab = uIUpgrade.upgradeTextPrefab;
 
             // Create text obj and give text instances to uIUpgrade
-            uIUpgrade.upgradeTextInstance = Instantiate(textPrefab, textGrid.transform);
+            GameObject txtObj = Instantiate(textPrefab, textGrid.transform);
+            StartCoroutine(SetTextReference(uIUpgrade, txtObj));
+
+            //uIUpgrade.Initialize();
 
             // Add to fade canvas groups
-            fadeCanvasGroups.individualElements.Add(
-                buttonPrefab.GetComponent<CanvasGroup>());
-            fadeCanvasGroups.individualElements.Add(
-                uIUpgrade.upgradeTextInstance.GetComponent<CanvasGroup>());
+            fadeCanvasGroups.individualElements.Add(buttonPrefab.GetComponent<CanvasGroup>());
+            fadeCanvasGroups.individualElements.Add(txtObj.GetComponent<CanvasGroup>());
 
             // Fade out for unlock
             /*
@@ -108,7 +104,20 @@ public class UpgradePanelBuilder : MonoBehaviour
                 uIUpgrade.statValueTextInstance.GetComponent<CanvasGroup>().alpha = 0;
             }
             */
-        }
+        } 
+    }
+
+    IEnumerator SetTextReference(UIUpgrade upg, GameObject obj)
+    {
+        yield return new WaitForFixedUpdate();
+        upg.upgradeText = obj.GetComponent<TextMeshProUGUI>();
+        upg.Initialize();
+    }
+
+    IEnumerator InitializeFadeGroups()
+    {
+        yield return new WaitForFixedUpdate();
+        fadeCanvasGroups.Initialize();
     }
 
     void ShowUnlockButton()
@@ -132,7 +141,7 @@ public class UpgradePanelBuilder : MonoBehaviour
             // Initialize and open panel
             Initialize();
             //StartCoroutine(DelayTrigger());
-            unlockPanel.gameObject.SetActive(false);
+            Destroy(unlockPanel.gameObject);
 
             upgradeSystem.PlayUpgradeEffects();
 
@@ -150,7 +159,7 @@ public class UpgradePanelBuilder : MonoBehaviour
         fadeCanvasGroups.isTriggered = true;
     }
 
-    bool CheckIfGunUnlocked()
+    bool IsGunUnlocked()
     {
         bool isGunUnlocked = false;
         if (player.playerShooter.gunsUnlocked[playerGunIndex])

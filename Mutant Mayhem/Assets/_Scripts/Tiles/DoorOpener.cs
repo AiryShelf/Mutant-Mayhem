@@ -5,33 +5,30 @@ using UnityEngine.Tilemaps;
 
 public class DoorOpener : MonoBehaviour
 {
-    [SerializeField] AnimatedTile doorOpen;
-    [SerializeField] AnimatedTile doorClosed;
+    [SerializeField] List<AnimatedTile> doorsOpen;
+    [SerializeField] List<AnimatedTile> doorsClosed;
 
     Tilemap animatedTilemap;
     Vector3Int myGridPos;
     Collider2D doorColl;
     bool isOpen;
+    float healthRatio;
 
     TileManager tileManager;
 
-    void Awake()
-    {
-        //doorContainer = GameObject.Find("DoorContainer").transform;
-
-        //transform.parent.SetParent(doorContainer);
-    }
-
     void Start()
     {
-        doorColl = GetComponent<Collider2D>();
-        if (doorColl == null) Debug.LogError("Collider2D is not found");
-
         animatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
-        if (animatedTilemap == null) Debug.LogError("AnimatedTilemap is not found");
+        
+        doorColl = GetComponent<Collider2D>();
+        if (doorColl == null) 
+            Debug.LogError("Collider2D is not found");
+
+        if (animatedTilemap == null) 
+            Debug.LogError("AnimatedTilemap is not found");
 
         myGridPos = animatedTilemap.WorldToCell(transform.position);
-        Debug.Log("DoorOpener initialized at position: " + myGridPos);
+        //Debug.Log("DoorOpener initialized at position: " + myGridPos);
 
         tileManager = FindObjectOfType<TileManager>();
         TileManager.AnimatedTilemap.RefreshTile(myGridPos);
@@ -41,7 +38,8 @@ public class DoorOpener : MonoBehaviour
 
     void OnDisable()
     {
-        Debug.Log("Door OnDisable ran");
+        /*
+        //Debug.Log("Door OnDisable ran");
         if (doorColl != null)
         {
             Destroy(doorColl);
@@ -56,6 +54,38 @@ public class DoorOpener : MonoBehaviour
         {
             tileManager.shadowCaster2DTileMap.Generate();
         }
+        */
+    }
+
+    public void UpdateHealthRatio(float healthRatio)
+    {
+        this.healthRatio = healthRatio;
+
+        UpdateSprite();
+    }
+
+    private void UpdateSprite()
+    {
+        int damageIndex = Mathf.FloorToInt(doorsOpen.Count * healthRatio);
+        Debug.Log("Damage Index: " + damageIndex);
+        if (isOpen)
+        {
+            animatedTilemap.SetTile(myGridPos, doorsOpen[damageIndex]);
+
+            if (tileManager.shadowCaster2DTileMap != null && tileManager.shadowCaster2DTileMap.gameObject != null)
+            {
+                tileManager.shadowCaster2DTileMap.Generate();
+            }
+        }
+        else
+        {
+            animatedTilemap.SetTile(myGridPos, doorsClosed[damageIndex]);
+
+            if (tileManager.shadowCaster2DTileMap != null && tileManager.shadowCaster2DTileMap.gameObject != null)
+            {
+                tileManager.shadowCaster2DTileMap.Generate();
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -64,14 +94,10 @@ public class DoorOpener : MonoBehaviour
         {
             if (!isOpen)
             {
-                animatedTilemap.SetTile(myGridPos, doorOpen);
-                if (tileManager.shadowCaster2DTileMap != null && tileManager.shadowCaster2DTileMap.gameObject != null)
-                {
-                    tileManager.shadowCaster2DTileMap.Generate();
-                }
                 isOpen = true;
+                UpdateSprite();
             }
-            Debug.Log("Door detected Player");
+            //Debug.Log("Door detected Player");
         }
     }
 
@@ -81,14 +107,10 @@ public class DoorOpener : MonoBehaviour
         {
             if (isOpen)
             {
-                animatedTilemap.SetTile(myGridPos, doorClosed);
-                if (tileManager.shadowCaster2DTileMap != null && tileManager.shadowCaster2DTileMap.gameObject != null)
-                {
-                    tileManager.shadowCaster2DTileMap.Generate();
-                }
                 isOpen = false;
+                UpdateSprite();
             }
-            Debug.Log("Player away from door");
+            //Debug.Log("Player away from door");
         }
     }
 }

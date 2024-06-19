@@ -37,6 +37,7 @@ public enum StructureType
     FloodLight,
     Door,
     BlastDoor,
+    ThreeByThreePlatform,
     None
 }
 

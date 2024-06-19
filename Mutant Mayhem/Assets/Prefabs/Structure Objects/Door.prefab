@@ -130,8 +130,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfe0673b051d5a4096977e025cb21ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorOpen: {fileID: 11400000, guid: d236b7356e528b647bd95208148fd4ca, type: 2}
-  doorClosed: {fileID: 11400000, guid: 8b0dafea0b6b7f64b9c6621152ac8784, type: 2}
+  doorsOpen:
+  - {fileID: 11400000, guid: d236b7356e528b647bd95208148fd4ca, type: 2}
+  - {fileID: 11400000, guid: c9dc62b90492a50408e26505fdffa0f4, type: 2}
+  - {fileID: 11400000, guid: cb465c04c8fb0da4592ea1c8012ea5a1, type: 2}
+  - {fileID: 11400000, guid: ab2637146ae4709438a59c6088d73b5e, type: 2}
+  doorsClosed:
+  - {fileID: 11400000, guid: 8b0dafea0b6b7f64b9c6621152ac8784, type: 2}
+  - {fileID: 11400000, guid: a469a9e1c1629d64fb4db045b75ec06b, type: 2}
+  - {fileID: 11400000, guid: ae1085aeeb017b04eb0b42199a65d2fe, type: 2}
+  - {fileID: 11400000, guid: d51148b374a9ad74d9ce71051e340605, type: 2}
 --- !u!61 &524527611849307979
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,7 +152,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4096
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -175,5 +183,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.2307558, y: 1.598414}
+  m_Size: {x: 1.1, y: 1.598414}
   m_EdgeRadius: 0
