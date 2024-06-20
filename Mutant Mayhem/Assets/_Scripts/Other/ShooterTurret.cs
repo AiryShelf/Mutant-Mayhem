@@ -83,7 +83,7 @@ public class ShooterTurret : MonoBehaviour
         yield return new WaitForSeconds(lifeTime);
         if (bullet != null)
         {
-            BulletTrails trails = bullet.GetComponent<BulletTrails>();
+            BulletEffectsHandler trails = bullet.GetComponent<BulletEffectsHandler>();
             trails.transform.parent = null;
             trails.DestroyAfterSeconds();
         }

@@ -29,22 +29,6 @@ public class RepairBullet : Bullet
 
         // Start the coroutine to check the distance traveled
         StartCoroutine(CheckDistanceTravelled());
-        /*
-        StartCoroutine(LerpToTarget());
-        myRb.velocity = Vector2.zero;
-
-        // Set target
-        target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 dir = target - transform.position;
-        float targetDist = dir.magnitude;
-        target = transform.right * targetDist;
-        target.z = 0;
-
-        // Calculate the rotation to face the target
-        dir = dir.normalized;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        */
     }
 
     protected override void CheckCollisions()
@@ -56,30 +40,10 @@ public class RepairBullet : Bullet
     {
         tileManager.ModifyHealthAt(point, damage);
 
-        // Delay bullet trail destroy
-        if (bulletTrail != null)
-        {
-            bulletTrail.DestroyAfterSeconds();
-            bulletTrail.transform.parent = null;
-        }
+        effectsHandler.DestroyAfterSeconds();
 
         gameObject.SetActive(false);
         Destroy(gameObject);
-    }
-
-    IEnumerator LerpToTarget()
-    {
-        while (Vector3.Distance(transform.position, target) > 0.05f)
-        {
-            // Move towards the target at a constant speed
-            transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-            yield return new WaitForEndOfFrame();
-        }
-
-        // Ensure final position is set to target's position
-        transform.position = target;
-
-        Hit(null, target);   
     }
 
     private IEnumerator CheckDistanceTravelled()
@@ -106,6 +70,8 @@ public class RepairBullet : Bullet
                 messagePanel.ShowMessage("Not enough Credits to repair!", Color.red);
             }
         }
+
+        effectsHandler.DestroyAfterSeconds();
 
         Destroy(gameObject);
     }

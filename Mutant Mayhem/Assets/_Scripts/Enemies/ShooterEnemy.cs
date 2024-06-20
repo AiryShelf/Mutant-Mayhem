@@ -78,6 +78,8 @@ public class ShooterEnemy : MonoBehaviour
         }
     }
 
+    // OLD CODE!  Use BulletEffectsHandler
+    
     IEnumerator KeepBulletTrail(GameObject bullet, float lifeTime)
     {
         yield return new WaitForSeconds(lifeTime);
@@ -85,11 +87,10 @@ public class ShooterEnemy : MonoBehaviour
         
         if (bullet != null)
         {
-            BulletTrails trails = bullet.GetComponent<BulletTrails>();
-            trails.transform.parent = null;
-            trails.DestroyAfterSeconds();
-        }
-        
+            BulletEffectsHandler bulletFX = bullet.GetComponent<BulletEffectsHandler>();
+            bulletFX.transform.parent = null;
+            bulletFX.DestroyAfterSeconds();
+        }  
     }
 
     Vector2 ApplyAccuracy(Vector2 dir)

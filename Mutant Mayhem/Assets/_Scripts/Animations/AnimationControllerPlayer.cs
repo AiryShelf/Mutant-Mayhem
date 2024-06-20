@@ -500,7 +500,9 @@ public class AnimationControllerPlayer : MonoBehaviour
     public void ReloadTrigger()
     {
         if (!reloadAnimPlaying && playerShooter.gunsAmmo[playerShooter.currentGunIndex] > 0 &&
-            playerShooter.currentGunIndex != 0)
+            playerShooter.currentGunIndex != 0 && 
+            playerShooter.gunsAmmoInClips[playerShooter.currentGunIndex] !=
+            playerShooter.gunList[playerShooter.currentGunIndex].clipSize)
         {
             bodyAnim.SetBool("isReloading", true);
             if (waitToLowerWeaponCoroutine != null)

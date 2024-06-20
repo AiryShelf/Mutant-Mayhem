@@ -200,7 +200,7 @@ public class BuildingSystem : MonoBehaviour
             }
 
 
-            Debug.Log("Switched to tool index: " + (int)structure);     
+            //Debug.Log("Switched to tool index: " + (int)structure);     
         }
     }
 

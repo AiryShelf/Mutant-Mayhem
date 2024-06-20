@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,12 +11,14 @@ public class Bullet : MonoBehaviour
     public float knockback = 1f;
 
     [SerializeField] protected Rigidbody2D myRb;
-    [SerializeField] protected BulletTrails bulletTrail;
+    [SerializeField] protected BulletEffectsHandler effectsHandler;
+    //[SerializeField] protected 
 
     [SerializeField] GameObject AiTrggerPrefabOptional;
     [SerializeField] float AITriggerSize;
 
     protected TileManager tileManager;
+    [HideInInspector] public float destroyTime;
 
     void Awake()
     {
@@ -29,7 +32,10 @@ public class Bullet : MonoBehaviour
         if (other)
         {
             Hit(other, transform.position);
+            return;
         }
+
+        StartCoroutine(DestroyAfterSeconds());
     }
 
     protected virtual void FixedUpdate()
@@ -37,15 +43,25 @@ public class Bullet : MonoBehaviour
         CheckCollisions();
     }
 
+    protected IEnumerator DestroyAfterSeconds()
+    {
+        //Debug.Log("Destroying bullet after seconds: " + destroyTime);
+        yield return new WaitForSeconds(destroyTime);
+
+        effectsHandler.DestroyAfterSeconds();
+
+        Destroy(gameObject);
+    }
+
     protected virtual void CheckCollisions()
     {
         // Check with raycast
         Vector2 raycastDir = myRb.velocity;
         RaycastHit2D raycast = Physics2D.Raycast(transform.position, raycastDir, 
-                                                 raycastDir.magnitude * Time.deltaTime, hitLayers);
+                                                 raycastDir.magnitude * Time.fixedDeltaTime, hitLayers);
         if (raycast.collider)
         {
-            Hit(raycast.collider, raycast.point + raycastDir/10 * Time.deltaTime);
+            Hit(raycast.collider, raycast.point + raycastDir/10 * Time.fixedDeltaTime);
         }
     }
 
@@ -86,13 +102,11 @@ public class Bullet : MonoBehaviour
             //Debug.Log("TILE HIT");
         }
 
-        // Delay bullet trail destroy
-        if (bulletTrail != null)
-        {
-            bulletTrail.DestroyAfterSeconds();
-            bulletTrail.transform.parent = null;
-        }
+        // Play bullet hit effect
 
+        effectsHandler.DestroyAfterSeconds();
+        effectsHandler.PlayBulletHitEffectAt(point);
+        
         gameObject.SetActive(false);
         Destroy(gameObject);
     }

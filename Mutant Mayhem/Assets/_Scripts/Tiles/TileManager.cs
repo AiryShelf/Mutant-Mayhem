@@ -21,6 +21,7 @@ public class TileManager : MonoBehaviour
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForGridClearCheck;
     public ParticleSystem repairEffect;
+    public int amountRepairParticles = 5;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -422,7 +423,7 @@ public class TileManager : MonoBehaviour
         if (_TileStatsDict.ContainsKey(gridPos))
         {
             repairEffect.transform.position = point;
-            repairEffect.Emit(10);
+            repairEffect.Emit(amountRepairParticles);
         }
         else
         {

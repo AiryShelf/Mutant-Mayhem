@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using LiteDB.Engine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -263,43 +264,40 @@ public class PlayerShooter : MonoBehaviour
                                             muzzleTrans.position, muzzleTrans.rotation);
             if (currentGunSO.bulletCasingPrefab != null)
             {
-                Instantiate(currentGunSO.bulletCasingPrefab, casingEjectorTrans.position, 
+                GameObject casingObj = Instantiate(currentGunSO.bulletCasingPrefab, casingEjectorTrans.position, 
                             gunTrans.rotation, casingEjectorTrans);
+
+                // If elevated, most shells go over walls
+                if (isElevated)
+                {
+                    int rand = Random.Range(0, 5);
+                    if (rand != 0)
+                        casingObj.layer = LayerMask.NameToLayer("Default");
+                }
             }
 
             Bullet bullet = bulletObj.GetComponent<Bullet>();
 
-            // Check if elevated
+            // Check if elevated for shooting over walls
             if (isElevated)
             {
                 bullet.hitLayers = elevatedHitLayers;
             }
             
             // Apply stats and effects
-            
             bullet.damage = currentGunSO.damage;
             bullet.knockback = currentGunSO.knockback;
+            bullet.destroyTime = currentGunSO.bulletLifeTime;
             Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();
             Vector2 dir = ApplyAccuracy(muzzleTrans.right);
             rb.velocity = dir * currentGunSO.bulletSpeed;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
+
             Kickback();
             StartCoroutine(MuzzleFlash());
 
-            StartCoroutine(ManageBulletTrails(bulletObj, currentGunSO.bulletLifeTime));
-            Destroy(bulletObj, currentGunSO.bulletLifeTime);
-
             yield return new WaitForSeconds(currentGunSO.shootSpeed);
-        }
-    }
-
-    IEnumerator ManageBulletTrails(GameObject bullet, float lifeTime)
-    {
-        yield return new WaitForSeconds(lifeTime);
-        if (bullet != null)
-        {
-            BulletTrails trails = bullet.GetComponent<BulletTrails>();
-            trails.transform.parent = null;
-            trails.DestroyAfterSeconds();
         }
     }
 
