@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Bullet : MonoBehaviour
 {
@@ -12,17 +10,22 @@ public class Bullet : MonoBehaviour
 
     [SerializeField] protected Rigidbody2D myRb;
     [SerializeField] protected BulletEffectsHandler effectsHandler;
-    //[SerializeField] protected 
+    [SerializeField] Sound shootSoundOrig;
 
-    [SerializeField] GameObject AiTrggerPrefabOptional;
+    [Header("Optional")]
+    [SerializeField] GameObject AiTrggerPrefab;
     [SerializeField] float AITriggerSize;
 
     protected TileManager tileManager;
     [HideInInspector] public float destroyTime;
+    private Sound shootSound;
 
     void Awake()
     {
         tileManager = FindObjectOfType<TileManager>();
+
+        shootSound = AudioUtility.InitializeSoundEffect(shootSoundOrig);
+        AudioManager.instance.PlaySoundFollow(shootSound, transform);
     }
 
     protected virtual void Start()
@@ -84,10 +87,10 @@ public class Bullet : MonoBehaviour
                 StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damage;
 
             // Create AI Trigger
-            if (AiTrggerPrefabOptional != null)
+            if (AiTrggerPrefab != null)
             {
                 //Debug.Log("AiTrigger instantiated");
-                GameObject trigger = Instantiate(AiTrggerPrefabOptional, transform.position, Quaternion.identity);
+                GameObject trigger = Instantiate(AiTrggerPrefab, transform.position, Quaternion.identity);
                 trigger.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
             } 
         }
@@ -95,7 +98,17 @@ public class Bullet : MonoBehaviour
         else if (otherCollider.gameObject.layer == 12)
         { 
             tileManager.BulletHitEffectAt(point, transform.right);
-            tileManager.ModifyHealthAt(point, -damage);
+
+            // If player projectile, do 1/3 damage
+            if (otherCollider.gameObject.layer == LayerMask.NameToLayer("PlayerProjectiles"))
+            {
+                tileManager.ModifyHealthAt(point, -damage / 3);
+            }
+            else
+            {
+                tileManager.ModifyHealthAt(point, -damage);
+            }
+            
 
             StatsCounterPlayer.DamageToStructures += damage;
 

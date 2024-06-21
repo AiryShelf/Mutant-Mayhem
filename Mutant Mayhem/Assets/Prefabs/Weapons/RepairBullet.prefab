@@ -52,15 +52,26 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 0
-  damage: -100
+  damage: -200
   knockback: 0
   myRb: {fileID: 2082839547474369568}
   effectsHandler: {fileID: 809539151921915496}
-  AiTrggerPrefabOptional: {fileID: 0}
+  shootSoundOrig:
+    soundName: 
+    clip: {fileID: 8300000, guid: b22c4e2da4f26534e80c84806d62edf3, type: 3}
+    loop: 0
+    volume: 0.3
+    pitch: 1
+    pitchRandRange: 0.2
+    spatialBlend: 0.8
+    dopplerLevel: 1
+    minDistance: 1
+    maxDistance: 50
+  AiTrggerPrefab: {fileID: 0}
   AITriggerSize: 0
   destroyTime: 0
   speed: 10
-  repairCost: 5
+  repairCost: 10
 --- !u!50 &2082839547474369568
 Rigidbody2D:
   serializedVersion: 4

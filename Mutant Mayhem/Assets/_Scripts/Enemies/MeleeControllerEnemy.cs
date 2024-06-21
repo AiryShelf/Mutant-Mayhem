@@ -11,6 +11,8 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] float meleeTileDotProdRange = 0.5f;
     [SerializeField] Collider2D meleeCollider;
     [SerializeField] Animator meleeAnim;
+    [SerializeField] Sound meleeSoundOrig;
+    Sound meleeSound;
 
     Health myHealth;
     TileManager tileManager;
@@ -18,6 +20,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     void Awake()
     {
+        meleeSound = AudioUtility.InitializeSoundEffect(meleeSoundOrig);
         myHealth = GetComponentInParent<Health>();
         tileManager = FindObjectOfType<TileManager>();
     }
@@ -33,6 +36,8 @@ public class MeleeControllerEnemy : MonoBehaviour
             otherHealth.Knockback((Vector2)otherHealth.transform.position - point, knockback);
             otherHealth.MeleeHitEffect(point, transform.right);
             otherHealth.ModifyHealth(-meleeDamage, gameObject);
+
+            PlayMeleeSound(point);
 
             StatsCounterPlayer.MeleeAttacksByEnemies++;
             StatsCounterPlayer.MeleeDamageByEnemies += meleeDamage;
@@ -60,6 +65,8 @@ public class MeleeControllerEnemy : MonoBehaviour
                 tileManager.ModifyHealthAt(point, -meleeDamage);
                 tileManager.MeleeHitEffectAt(point, transform.right);
 
+                PlayMeleeSound(point);
+
                 StatsCounterPlayer.MeleeAttacksByEnemies++;
                 StatsCounterPlayer.DamageToStructures += meleeDamage;
             }
@@ -85,6 +92,11 @@ public class MeleeControllerEnemy : MonoBehaviour
             Vector2 point = other.ClosestPoint(transform.position);
             Hit(other.GetComponent<Health>(), point);
         }        
+    }
+
+    void PlayMeleeSound(Vector2 point)
+    {
+        AudioManager.instance.PlaySoundAt(meleeSound, point);
     }
 
     IEnumerator AttackTimer()

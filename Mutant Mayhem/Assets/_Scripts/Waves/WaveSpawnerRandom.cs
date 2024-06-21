@@ -75,6 +75,7 @@ public class WaveSpawnerRandom : MonoBehaviour
 
             // Allow for extra waveSyles to select from
             int styleIndex = Random.Range(0, maxIndex + 1);
+            styleIndex = Mathf.Clamp(styleIndex, 0, waveSOBaseSource.subWaveStyles.Count - 1);
             SubWaveStyleSO styleToAdd = waveSOBaseSource.subWaveStyles[styleIndex];
 
             // Add selection to list
