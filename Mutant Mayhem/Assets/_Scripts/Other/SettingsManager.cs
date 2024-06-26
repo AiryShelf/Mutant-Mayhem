@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum DifficultyLevel
 {
@@ -49,6 +50,16 @@ public class SettingsManager : MonoBehaviour
         InitializeSettings();
     }
 
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     void InitializeSettings()
     {
         // Reset tutorial
@@ -77,6 +88,13 @@ public class SettingsManager : MonoBehaviour
             PlayerPrefs.SetInt("StandardWASD", 1);
         }
 
+        ApplyDifficultySettings();
+        ApplyMovementSettings();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Scene Loaded: " + scene.name);
         ApplyDifficultySettings();
         ApplyMovementSettings();
     }
@@ -142,8 +160,16 @@ public class SettingsManager : MonoBehaviour
 
     public void ApplyMovementSettings()
     {
-        FindObjectOfType<Player>().movementType = useStandardWASD;
-        Debug.Log("Movement Type updated");
+        Player player = FindObjectOfType<Player>();
+        if (player)
+        {
+            player.movementType = useStandardWASD;
+            Debug.Log("Movement Type updated");
+        }
+        else
+        {
+            Debug.Log("Player not found by SettingsManager");
+        }
     }
 
     #endregion
