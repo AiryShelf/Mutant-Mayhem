@@ -12,6 +12,7 @@ public class DoorOpener : MonoBehaviour
     Vector3Int myGridPos;
     Collider2D doorColl;
     bool isOpen;
+    bool destroyed;
     float healthRatio;
 
     TileManager tileManager;
@@ -38,6 +39,7 @@ public class DoorOpener : MonoBehaviour
 
     void OnDisable()
     {
+        destroyed = true;
         /*
         //Debug.Log("Door OnDisable ran");
         if (doorColl != null)
@@ -103,14 +105,17 @@ public class DoorOpener : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (!destroyed)
         {
-            if (isOpen)
+            if (other.tag == "Player")
             {
-                isOpen = false;
-                UpdateSprite();
+                if (isOpen)
+                {
+                    isOpen = false;
+                    UpdateSprite();
+                }
+                //Debug.Log("Player away from door");
             }
-            //Debug.Log("Player away from door");
         }
     }
 }

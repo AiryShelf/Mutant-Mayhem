@@ -19,6 +19,7 @@ public class GunSO : ScriptableObject
     public Sprite uiSprite;
     public string animatorHasString;
     public GameObject bulletPrefab;
+    public bool isOneHanded;
 
     [Header("Effects")]
     public GameObject emptyClipPrefab;
@@ -28,6 +29,9 @@ public class GunSO : ScriptableObject
     public GameObject bulletCasingPrefab;
     public Vector2 casingLocalPos;
     public float muzzleFlashTime;
+    public Vector2 leftHandPos;
+    public Vector2 rightHandPos;
+    public Vector2 recoilAmount;
     
     [Header("Gun Stats")]
     public float damage;
@@ -45,6 +49,6 @@ public class GunSO : ScriptableObject
     public float bulletSpeed;
     public float bulletLifeTime;
     public float bulletRangeUpgAmt;
-    public float recoil;
-    public float recoilUpgNegAmt;
+    public float kickback;
+    public float kickbackUpgNegAmt;
 }

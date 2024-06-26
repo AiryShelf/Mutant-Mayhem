@@ -311,11 +311,13 @@ public class AnimationControllerPlayer : MonoBehaviour
         if (playing)
         {
             meleeAnimPlaying = true;
+            playerShooter.isMeleeing = true;
         }
 
         else
         {
             meleeAnimPlaying = false;
+            playerShooter.isMeleeing = false;
         }
     }
 

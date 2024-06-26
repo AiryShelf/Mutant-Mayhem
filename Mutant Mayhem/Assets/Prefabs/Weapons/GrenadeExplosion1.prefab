@@ -9756,7 +9756,7 @@ GameObject:
   - component: {fileID: 1459399991134938693}
   - component: {fileID: 7599369406812756531}
   m_Layer: 12
-  m_Name: PlayerExplosion1
+  m_Name: GrenadeExplosion1
   m_TagString: PlayerExplosion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9809,6 +9809,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82920fbc67461184c91d32c78c202fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionSoundOrig:
+    soundName: Explosion
+    clips:
+    - {fileID: 8300000, guid: 8ea173643e03d03499b6967ebb06bd20, type: 3}
+    - {fileID: 8300000, guid: c903fd08ef34e4d47aac8f5671bf948e, type: 3}
+    - {fileID: 8300000, guid: f93080de9eef12b49ad43daf38fffd5e, type: 3}
+    loop: 0
+    volume: 1
+    pitch: 1
+    pitchRandRange: 0.1
+    spatialBlend: 0.8
+    dopplerLevel: 1
+    minDistance: 1
+    maxDistance: 50
   force: 15
   radius: 4
   damage: 200

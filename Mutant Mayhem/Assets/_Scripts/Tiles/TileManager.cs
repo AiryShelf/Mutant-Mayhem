@@ -19,7 +19,9 @@ public class TileManager : MonoBehaviour
                                             new Dictionary<Vector3Int, TileStats>();
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
-    public LayerMask layersForGridClearCheck;
+    public LayerMask layersForBuildClearCheck;
+    public LayerMask layersForBuildClearingArea;
+    [SerializeField] List<ParticleSystem> particlesToClear;
     public ParticleSystem repairEffect;
     public int amountRepairParticles = 5;
 
@@ -76,11 +78,11 @@ public class TileManager : MonoBehaviour
 
     public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
     {
-        if (CheckGridIsClear(gridPos, structure))
+        if (CheckGridIsClear(gridPos, structure, layersForBuildClearCheck, true))
         {
             if (AddToTileStatsDict(gridPos, structure))
             {
-                // Set and rotate tile image
+                // Set and rotate animated tile
                 AnimatedTilemap.SetTile(gridPos, 
                     _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
                 StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
@@ -96,6 +98,47 @@ public class TileManager : MonoBehaviour
                 {
                     StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
                 }
+
+                List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
+                foreach (ParticleSystem ps in particlesToClear)
+                {
+                    // Access the particles from the particle system
+                    ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.main.maxParticles];
+                    int particleCount = ps.GetParticles(particles);
+
+                    for (int i = 0; i < particleCount; i++)
+                    {
+                        Vector3 particlePosition = particles[i].position;
+
+                        // Check if the particle is within any of the defined overlap boxes
+                        foreach (Vector3Int pos in positions)
+                        {
+                            Vector2 boxCenter = StructureTilemap.CellToWorld(pos);
+                            boxCenter = new Vector2(boxCenter.x + 0.5f, boxCenter.y + 0.5f);
+
+                            if (IsParticleInBox(particlePosition, boxCenter, Vector2.one))
+                            {
+                                //particles[i].startLifetime = -1f;
+                                //particles[i].startSize = 0;
+                                //particles[i].startColor = new Color(0, 0, 0, 0);
+                                particles[i].remainingLifetime = 0; // Remove the particle by setting its remaining lifetime to zero
+                                break;
+                            }
+                        }
+                    }
+                    ps.SetParticles(particles, particleCount);
+                }
+
+                /*
+                // Clear ground debris
+                List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
+                Vector2Int box = StructureRotator.CalculateBoundingBox(positions);
+                foreach (Vector3Int pos in positions)
+                {
+                    
+                }
+                */
+                
 
                 shadowCaster2DTileMap.Generate();
 
@@ -114,6 +157,15 @@ public class TileManager : MonoBehaviour
             Debug.Log("Grid was not clear for building on");
             return false;
         }       
+    }
+
+    bool IsParticleInBox(Vector3 particlePosition, Vector2 boxCenter, Vector2 boxSize)
+    {
+        
+        bool inBox = particlePosition.x >= boxCenter.x - boxSize.x / 2 && particlePosition.x <= boxCenter.x + boxSize.x / 2 &&
+                     particlePosition.y >= boxCenter.y - boxSize.y / 2 && particlePosition.y <= boxCenter.y + boxSize.y / 2;
+        Debug.Log("Particle box check: " + inBox);
+        return inBox;
     }
 
     IEnumerator RotateTileObject(Vector3Int gridPos, Vector2Int bounds, int rotation)
@@ -282,14 +334,17 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    public bool CheckGridIsClear(Vector3Int rootPos, StructureSO structure)
+    public bool CheckGridIsClear(Vector3Int rootPos, StructureSO structure, LayerMask layerMask, bool checkDict)
     {
         foreach (Vector3Int pos in structure.cellPositions)
         {   
-            // Check tile dictionary
-            if (_TileStatsDict.ContainsKey(rootPos + pos))
+            if (checkDict)
             {
-                return false;
+                // Check tile dictionary
+                if (_TileStatsDict.ContainsKey(rootPos + pos))
+                {
+                    return false;
+                }
             }
 
             // Check for colliders
@@ -299,7 +354,7 @@ public class TileManager : MonoBehaviour
             newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
             boxSize = StructureTilemap.cellSize * 0.9f;
 
-            Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
+            Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layerMask);
             
             if (hit != null)
             {
@@ -311,12 +366,15 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    public bool CheckGridIsClear(Vector3Int gridPos)
+    public bool CheckGridIsClear(Vector3Int gridPos, LayerMask layerMask, bool checkDict)
     {
-        // Check tile dictionary
-        if (_TileStatsDict.ContainsKey(gridPos))
+        if (checkDict)
         {
-            return false;
+            // Check tile dictionary
+            if (_TileStatsDict.ContainsKey(gridPos))
+            {
+                return false;
+            }
         }
 
         // Check for colliders
@@ -326,7 +384,7 @@ public class TileManager : MonoBehaviour
         newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
         boxSize = StructureTilemap.cellSize * 0.9f;
 
-        Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layersForGridClearCheck);
+        Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layerMask);
         
         if (hit != null)
         {
@@ -435,6 +493,7 @@ public class TileManager : MonoBehaviour
 
     #region Tile Dictionary
 
+    // To load tile data from pre-set scene tiles, they must be placed on StructureTilemap
     bool ReadTilemapToDict()
     {
         foreach (Vector3Int rootPos in StructureTilemap.cellBounds.allPositionsWithin)
@@ -458,7 +517,7 @@ public class TileManager : MonoBehaviour
 
     bool AddToTileStatsDict(Vector3Int rootPos, StructureSO structure)
     {
-        if (CheckGridIsClear(rootPos, structure))
+        if (CheckGridIsClear(rootPos, structure, layersForBuildClearCheck, true))
         {                                                      
             // Add the tile's data to the dictionary at root location
             if (!_TileStatsDict.ContainsKey(rootPos))

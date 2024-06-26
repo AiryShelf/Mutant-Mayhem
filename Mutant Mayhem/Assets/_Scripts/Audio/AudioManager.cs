@@ -26,11 +26,17 @@ public class AudioManager : MonoBehaviour
         InitializeSources();
     }
 
+    /// <summary>
+    /// Plays sound at given position
+    /// </summary>
     public void PlaySoundAt(Sound sound, Vector2 pos)
     {
         StartCoroutine(PlaySoundAtRoutine(sound, pos));
     }
 
+    /// <summary>
+    /// Plays sound following a target
+    /// </summary>
     public void PlaySoundFollow(Sound sound, Transform target)
     {
         StartCoroutine(PlaySoundFollowRoutine(sound, target));
@@ -42,6 +48,7 @@ public class AudioManager : MonoBehaviour
 
         if (source != null)
         {
+            source.transform.position = pos;
             source = ConfigureSource(source, sound);
             float rand = Random.Range(-sound.pitchRandRange, sound.pitchRandRange);
             source.pitch += rand;
@@ -86,10 +93,15 @@ public class AudioManager : MonoBehaviour
 
     AudioSource ConfigureSource(AudioSource source, Sound sound)
     {
+        // Choose random clip from list
+        int i = Random.Range(0, sound.clips.Length);
+        source.clip = sound.clips[i];
+
+        // If new sound list, configure
         if (source.name != sound.soundName)
         {
             source.gameObject.SetActive(true);
-            source.clip = sound.clip;
+            
             source.loop = sound.loop;
             source.volume = sound.volume;
             source.pitch = sound.pitch;
@@ -127,6 +139,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
+            Debug.LogWarning("No available AudioSources in pool. Adding new source.");
             source = GetNewAudioSource();
         }
 
@@ -135,8 +148,6 @@ public class AudioManager : MonoBehaviour
     
     private AudioSource GetNewAudioSource()
     {
-        Debug.LogWarning("No available AudioSources in pool. Adding new source.");
-
         AudioSource source = CreateAudioSource(sourcesActivePool.Count);
         sourcesActivePool.Add(source);
 
@@ -156,6 +167,7 @@ public class AudioManager : MonoBehaviour
         sourceObj.SetActive(false);
         sourceObj.transform.SetParent(transform);
 
+        Debug.Log("Created AudioSource");
         return source;
     }
 

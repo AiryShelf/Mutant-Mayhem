@@ -7,7 +7,7 @@ public class Sound
 {
     public string soundName;
     [Header("AudioSource Settings")]
-    public AudioClip clip;
+    public AudioClip[] clips;
     public bool loop;
     [Range(0f, 1f)]
     public float volume = 1;

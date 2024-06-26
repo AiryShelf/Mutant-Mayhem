@@ -58,7 +58,8 @@ MonoBehaviour:
   effectsHandler: {fileID: 2189567560517365770}
   shootSoundOrig:
     soundName: SMGFire
-    clip: {fileID: 8300000, guid: f0d98ac26b4874d438aab5fefbdc94a3, type: 3}
+    clips:
+    - {fileID: 8300000, guid: f0d98ac26b4874d438aab5fefbdc94a3, type: 3}
     loop: 0
     volume: 0.9
     pitch: 1

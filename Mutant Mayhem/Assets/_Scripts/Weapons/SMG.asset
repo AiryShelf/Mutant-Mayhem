@@ -18,12 +18,17 @@ MonoBehaviour:
   uiSprite: {fileID: 21300000, guid: bf7343c908608ae4b98e98372a200b1b, type: 3}
   animatorHasString: hasRifle
   bulletPrefab: {fileID: 145518261742128944, guid: 2f34aec5bd679f64e81317a4522430ea, type: 3}
+  isOneHanded: 0
   emptyClipPrefab: {fileID: 3812386894870190738, guid: 60a00ee6bfd8cc34e851221a4baa97c5, type: 3}
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: f378eb9fe298cff4e8028b2aeb9a4bd2, type: 3}
+  laserSight: {fileID: 0}
   muzzleLocalPos: {x: 0.022, y: 0}
   bulletCasingPrefab: {fileID: 4080447890916436050, guid: cba583d53adb8f340927905d88e1af40, type: 3}
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
+  leftHandPos: {x: 0, y: 0}
+  rightHandPos: {x: 0, y: 0}
+  recoilAmount: {x: -0.2, y: 0}
   damage: 30
   damageUpgAmt: 2
   knockback: 1
@@ -39,5 +44,5 @@ MonoBehaviour:
   bulletSpeed: 60
   bulletLifeTime: 0.3
   bulletRangeUpgAmt: 0.04
-  recoil: 1.5
-  recoilUpgNegAmt: -0.1
+  kickback: 1
+  kickbackUpgNegAmt: -0.1

@@ -541,13 +541,13 @@ public class RecoilUpgrade : Upgrade
 
     public static float GetUpgAmount(Player player, int gunIndex)
     {
-        float upgAmount = player.playerShooter.gunList[gunIndex].recoilUpgNegAmt;
+        float upgAmount = player.playerShooter.gunList[gunIndex].kickbackUpgNegAmt;
         return upgAmount;
     }
 
     public override void Apply(GunSO gunSO, int level)
     {
-        gunSO.recoil += gunSO.recoilUpgNegAmt;
+        gunSO.kickback += gunSO.kickbackUpgNegAmt;
     }
 
     public override int CalculateCost(int baseCost, int level)

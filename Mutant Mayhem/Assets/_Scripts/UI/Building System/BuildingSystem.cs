@@ -9,6 +9,8 @@ public class BuildingSystem : MonoBehaviour
     public static float PlayerCredits;
     [SerializeField] float playerStartingCredits;
     public StructureSO structureInHand;
+    public LayerMask layersForBuildClearCheck;
+    public LayerMask layersForRemoveClearCheck;
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
     [SerializeField] Tilemap structureTilemap;
@@ -32,6 +34,7 @@ public class BuildingSystem : MonoBehaviour
     Vector3Int playerGridPos;
     private Vector3Int highlightedTilePos;
     public bool allHighlited;
+    bool inRange;
     Player player;
     InputActionMap playerActionMap;
     InputAction toolbarAction;
@@ -71,6 +74,7 @@ public class BuildingSystem : MonoBehaviour
         toolbarAction.started -= OnToolbarUsed;
         rotateStructureAction.started -= OnRotate;
         buildAction.started -= OnBuild;
+        cheatCodeCreditsAction.started -= OnCheatCodeCredits;
    
         _StructsAvailDict.Clear();   
     }
@@ -114,6 +118,14 @@ public class BuildingSystem : MonoBehaviour
             {
                 RemoveTile(destroyPositions[0]);
             }
+        }
+        else if (inRange)
+        {
+            messagePanel.ShowMessage("Tile not clear for building", Color.yellow);
+        }
+        else
+        {
+            messagePanel.ShowMessage("Too far away to build", Color.yellow);
         }
     }
 
@@ -219,8 +231,8 @@ public class BuildingSystem : MonoBehaviour
         {
             if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
             {
-                RemoveBuildHighlight();
                 PlayerCredits -= structureInHand.tileCost;
+                RemoveBuildHighlight();
             }
         }
         else
@@ -233,8 +245,17 @@ public class BuildingSystem : MonoBehaviour
     void RemoveTile(Vector3Int gridPos)
     {
         RemoveBuildHighlight();
-        tileManager.RefundTileAt(gridPos);
-        tileManager.DestroyTileAt(gridPos);
+        if (tileManager.CheckGridIsClear(gridPos, structureInHand, layersForRemoveClearCheck, false))
+        {
+            
+            tileManager.RefundTileAt(gridPos);
+            tileManager.DestroyTileAt(gridPos);
+        }
+        else
+        {
+            messagePanel.ShowMessage("Tile not clear for removal", Color.yellow);
+            Debug.Log("Tile removal blocked");
+        }
     }
 
     void BuildStructsAvailDict()
@@ -274,6 +295,7 @@ public class BuildingSystem : MonoBehaviour
         // Highlight if in range and conditions met.
         if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
         {
+            inRange = true;
             if (currentAction == ActionType.Destroy)
             {
                 HighlightForDestroy(highlightedTilePos);
@@ -310,7 +332,7 @@ public class BuildingSystem : MonoBehaviour
                 {
                     foreach (Vector3Int pos in structureInHand.cellPositions)
                     {                
-                        if (tileManager.CheckGridIsClear(highlightedTilePos + pos))
+                        if (tileManager.CheckGridIsClear(highlightedTilePos + pos, layersForBuildClearCheck, true))
                         {
                             Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
                             highlightTilemap.SetTile(highlightedTilePos + newPos, highlightedTileAsset);
@@ -339,6 +361,7 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
+            inRange = false;
             allHighlited = false;
         }    
     }

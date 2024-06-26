@@ -141,7 +141,7 @@ public static class UpgStatGetter
                 return stat;
                 
             case GunStatsUpgrade.Recoil:
-                stat = player.stats.playerShooter.gunList[gunIndex].recoil.ToString("#0.0");
+                stat = player.stats.playerShooter.gunList[gunIndex].kickback.ToString("#0.0");
                 return stat;
         }
 

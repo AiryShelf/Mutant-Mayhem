@@ -56,7 +56,9 @@ MonoBehaviour:
   meleeAnim: {fileID: 1899956248810806691}
   meleeSoundOrig:
     soundName: MeleeEnemy
-    clip: {fileID: 8300000, guid: a7bf252e44b29c141b4af815746fa925, type: 3}
+    clips:
+    - {fileID: 8300000, guid: 55516310dd55c7d439eff4d81fb3bbe9, type: 3}
+    - {fileID: 8300000, guid: a7bf252e44b29c141b4af815746fa925, type: 3}
     loop: 0
     volume: 1
     pitch: 1

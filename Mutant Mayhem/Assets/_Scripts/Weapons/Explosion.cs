@@ -5,16 +5,27 @@ using UnityEngine.InputSystem;
 
 public class Explosion : MonoBehaviour
 {
+    [SerializeField] Sound explosionSoundOrig;
     
+    [Header("Explosion Settings")]
     [SerializeField] float force;
     [SerializeField] float radius;
     [SerializeField] float damage;
     [SerializeField] WindZone wind;
     [SerializeField] float windTime;
 
+    Sound explosionSound;
+
+    void Awake()
+    {
+        explosionSound = AudioUtility.InitializeSoundEffect(explosionSoundOrig);
+    }
+
     void Start()
     {
         // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
+
+        AudioManager.instance.PlaySoundAt(explosionSound, transform.position);
 
         // Find objects in range
         Vector2 pos = transform.position;

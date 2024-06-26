@@ -63,29 +63,6 @@ public static class StructureRotator
                                             Vector3Int gridPos, Vector2Int bounds, int rotation)
     {
         Vector3 newPos = tilemap.CellToWorld(gridPos);
-
-        /*
-        switch (rotation)
-        {
-            case 90:
-                offsetX = (bounds.y - 1) / 2f;
-                offsetY = -(bounds.x - 1) / 2f;
-                break;
-            case 180:
-                offsetX = -(bounds.x - 1) / 2f;
-                offsetY = -(bounds.y - 1) / 2f;
-                break;
-            case 270:
-                offsetX = -(bounds.y - 1) / 2f;
-                offsetY = (bounds.x - 1) / 2f;
-                break;
-            default: // 0 degrees
-                offsetX = (bounds.x - 1) / 2f;
-                offsetY = (bounds.y - 1) / 2f;
-                break;
-        }
-        */
-
         
         switch (rotation)
         {
@@ -106,11 +83,6 @@ public static class StructureRotator
                                      newPos.y - 0.5f + bounds.y / 2, newPos.z);
                 break;
         }
-
-        //newPos = new Vector3(newPos.x);
-        
-
-        //newPos = new Vector3(newPos.x + offsetX, newPos.y + offsetY, newPos.z);
         
         tileGameObject.transform.position = newPos;
     }

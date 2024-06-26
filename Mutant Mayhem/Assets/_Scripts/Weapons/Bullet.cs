@@ -25,6 +25,10 @@ public class Bullet : MonoBehaviour
         tileManager = FindObjectOfType<TileManager>();
 
         shootSound = AudioUtility.InitializeSoundEffect(shootSoundOrig);
+    }
+
+    void OnEnable()
+    {
         AudioManager.instance.PlaySoundFollow(shootSound, transform);
     }
 

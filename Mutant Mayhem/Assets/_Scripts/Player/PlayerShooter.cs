@@ -21,6 +21,7 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] Animator bodyAnim;
     public int currentGunIndex = 0;
+    [SerializeField] GunRecoil gunRecoil;
 
     public int[] gunsAmmo;
     public int[] gunsAmmoInClips;
@@ -36,6 +37,7 @@ public class PlayerShooter : MonoBehaviour
     public bool isReloading;
     public bool isSwitchingGuns;
     public bool isElevated;
+    public bool isMeleeing;
     [SerializeField] LayerMask elevatedHitLayers;
     bool droppedGun;
     Rigidbody2D myRb;
@@ -175,7 +177,7 @@ public class PlayerShooter : MonoBehaviour
     void Kickback()
     {
         myRb.AddForce(-myRb.transform.right * 
-                      currentGunSO.recoil, ForceMode2D.Impulse);
+                      currentGunSO.kickback, ForceMode2D.Impulse);
     }
 
     Vector2 ApplyAccuracy(Vector2 dir)
@@ -223,8 +225,6 @@ public class PlayerShooter : MonoBehaviour
             return;
         }
 
-        #region State Check for Firing
-
         if (isShooting && shootingCoroutine == null && !waitToShoot && 
             isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
         {
@@ -237,8 +237,6 @@ public class PlayerShooter : MonoBehaviour
             StopCoroutine(shootingCoroutine);
             shootingCoroutine = null;
         }
-
-        #endregion
     }
 
     #region Coroutines
@@ -296,6 +294,8 @@ public class PlayerShooter : MonoBehaviour
 
             Kickback();
             StartCoroutine(MuzzleFlash());
+            bool oneHand = currentGunSO.isOneHanded || isMeleeing || !isAiming;
+            gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
 
             yield return new WaitForSeconds(currentGunSO.shootSpeed);
         }
