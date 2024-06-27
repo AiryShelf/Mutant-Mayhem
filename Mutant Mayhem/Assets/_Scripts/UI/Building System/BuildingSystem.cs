@@ -280,6 +280,7 @@ public class BuildingSystem : MonoBehaviour
     private void HighlightTile()
     {
         Vector3Int mouseGridPos = GetMouseToGridPos();
+        mouseGridPos.z = 0;
         ActionType currentAction = structureInHand.actionType;
         
         // Replace the highlight

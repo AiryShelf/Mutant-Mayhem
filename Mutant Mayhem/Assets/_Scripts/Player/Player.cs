@@ -43,6 +43,17 @@ public class Player : MonoBehaviour
     [SerializeField] float headTurnSpeed = 0.1f;
     [SerializeField] float headTurnMax = 80;
 
+    [Header("Sound")]
+    [SerializeField] Sound walkGrassSoundOrig;
+    [SerializeField] Sound walkWoodSoundOrig;
+    [SerializeField] Sound walkConcreteSoundOrig;
+    [SerializeField] Sound walkMetalSoundOrig;
+    [HideInInspector] public Sound walkGrassSound;
+    [HideInInspector] public Sound walkWoodSound;
+    [HideInInspector] public Sound walkConcreteSound;
+    [HideInInspector] public Sound walkMetalSound;
+    
+
     [Header("Other")]
     public InputActionAsset inputAsset;
     [SerializeField] GameObject grenadePrefab;
@@ -77,7 +88,13 @@ public class Player : MonoBehaviour
         stats.playerHealthScript = GetComponent<PlayerHealth>();
         meleeController.stats = stats;
         myStamina.stats = stats;
-        playerShooter.playerStats = stats;        
+        playerShooter.playerStats = stats;
+
+        // Initialize sounds
+        walkGrassSound = AudioUtility.InitializeSoundEffect(walkGrassSoundOrig);
+        //walkWoodSound = AudioUtility.InitializeSoundEffect(walkWoodSoundOrig);
+        //walkConcreteSound = AudioUtility.InitializeSoundEffect(walkConcreteSoundOrig);
+        //walkMetalSound = AudioUtility.InitializeSoundEffect(walkMetalSoundOrig);
     }
 
     void Start()

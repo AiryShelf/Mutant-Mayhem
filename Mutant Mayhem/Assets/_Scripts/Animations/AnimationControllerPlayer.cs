@@ -140,7 +140,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     void UpdatePlayerStates()
     {
         // Stop trowing when out of grenades
-        if (player.stats.grenadeAmmo < 1 && isThrowInput)
+        if (player.stats.grenadeAmmo == 1 && isThrowInput)
         {
             bodyAnim.SetBool("isThrowing", false);
             if (waitToLowerWeaponCoroutine != null)

@@ -69,7 +69,7 @@ public class DoorOpener : MonoBehaviour
     private void UpdateSprite()
     {
         int damageIndex = Mathf.FloorToInt(doorsOpen.Count * healthRatio);
-        Debug.Log("Damage Index: " + damageIndex);
+        //Debug.Log("Damage Index: " + damageIndex);
         if (isOpen)
         {
             animatedTilemap.SetTile(myGridPos, doorsOpen[damageIndex]);

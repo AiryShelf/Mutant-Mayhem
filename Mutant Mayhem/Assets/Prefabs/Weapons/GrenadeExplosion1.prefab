@@ -9810,7 +9810,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionSoundOrig:
-    soundName: Explosion
+    soundName: GrenadeExplosion
+    soundType: 1
+    mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
     clips:
     - {fileID: 8300000, guid: 8ea173643e03d03499b6967ebb06bd20, type: 3}
     - {fileID: 8300000, guid: c903fd08ef34e4d47aac8f5671bf948e, type: 3}
@@ -9819,10 +9821,10 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     pitchRandRange: 0.1
-    spatialBlend: 0.8
+    spatialBlend: 1
     dopplerLevel: 1
-    minDistance: 1
-    maxDistance: 50
+    minDistance: 30
+    maxDistance: 100
   force: 15
   radius: 4
   damage: 200

@@ -4,26 +4,27 @@ using UnityEngine;
 
 public class EnemyChaseSOBase : ScriptableObject
 {
-    [SerializeField] protected float rotateSpeedMultiplier = 1.5f;
-
     protected EnemyBase enemyBase;
     protected Transform transform;
     protected GameObject gameObject;
 
-    #region Sprint Variables
-
-    protected Coroutine distanceCheck;
-    protected Coroutine accelerate;
-    protected float _sprintFactor = 1f;
+    [Header("Chase Variables")]
+    [SerializeField] protected float timeToStopChase = 3;
     [SerializeField] protected float TimeToCheckDistance = 0.3f;
+    [SerializeField] protected float rotateSpeedMultiplier = 1.5f;
+
+    [Header("Sprint Variables")]
     [SerializeField] protected float DistToStartSprint = 8f;
     [SerializeField] protected float SprintSpeedMultiplier = 2f;
     [SerializeField] protected float TimeToFullSprint = 1f;
     [SerializeField] protected float TimeToStopSprint = 3f;
+
     protected Coroutine stopSprint;
     public bool isSprinting = false;
-
-    #endregion
+    protected Coroutine distanceCheck;
+    protected Coroutine accelerate;
+    protected float _sprintFactor = 1f;
+    protected float stopTimer;
     
     protected Transform playerTransform;
 
@@ -38,13 +39,31 @@ public class EnemyChaseSOBase : ScriptableObject
 
     public virtual void DoEnterLogic() 
     {
-        distanceCheck = enemyBase.StartCoroutine(
-            DistanceToSprintCheck(DistToStartSprint, SprintSpeedMultiplier, TimeToCheckDistance));
+        enemyBase.IsShotAggroed = false;
+        stopTimer = 0;
+        distanceCheck = enemyBase.StartCoroutine(DistanceToSprintCheck(
+                        DistToStartSprint, SprintSpeedMultiplier, TimeToCheckDistance));
     }
     public virtual void DoExitLogic() { }
     public virtual void DoFrameUpdateLogic() { }
     public virtual void DoPhysicsUpdateLogic() 
     {
+        // If aggroed, reset stop chase timer.
+        if (enemyBase.IsAggroed)
+        {
+            stopTimer = 0;
+        }
+        else 
+        {
+            stopTimer += Time.fixedDeltaTime;
+
+            if (stopTimer >= timeToStopChase)
+            {
+                enemyBase.StateMachine.ChangeState(enemyBase.IdleState);
+                return;
+            }
+        }
+
         if (enemyBase.IsWithinShootDistance)
         {
             enemyBase.StateMachine.ChangeState(enemyBase.ShootState);

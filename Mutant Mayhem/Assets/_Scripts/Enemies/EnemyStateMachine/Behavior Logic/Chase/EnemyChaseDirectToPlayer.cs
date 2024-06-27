@@ -28,7 +28,7 @@ public class EnemyChaseDirectToPlayer : EnemyChaseSOBase
 
     public override void DoFrameUpdateLogic() 
     { 
-        base.DoFrameUpdateLogic();        
+        base.DoFrameUpdateLogic();
     }
 
     public override void DoPhysicsUpdateLogic() 

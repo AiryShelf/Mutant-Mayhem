@@ -16,15 +16,21 @@ public class EnemyAggroTrigger : MonoBehaviour
     {
         //Debug.Log("enemy AiTrigger enter");
 
+        // Can raycast here for line-of-sight check
+
         // Layer# 13 - "AiTriggers"
         if (other.gameObject.layer == 13)
-        {               
-            if (other.tag == "PlayerTrigger")
+        {   
+            if (other.CompareTag("PlayerBulletTrigger"))
+            {
+                _enemyBase.IsShotAggroed = true;
+            }
+            else if (other.CompareTag("PlayerTrigger"))
             {
                 //Debug.Log("Aggro triggered");
                 _enemyBase.SetAggroToPlayerStatus(true);
             }
-            else if (other.tag == "TurretTrigger")
+            else if (other.CompareTag("TurretTrigger"))
             {
                 // Do Turret logic.
             }
@@ -33,10 +39,13 @@ public class EnemyAggroTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other) 
     {
-        if (other.gameObject.layer == LayerMask.GetMask("AITriggers"))
+        if (other.gameObject.layer == 13)
         {
-            //Debug.Log("Aggro Un-triggered");
-            _enemyBase.SetAggroToPlayerStatus(false);
+            if (other.CompareTag("PlayerTrigger"))
+            {
+                //Debug.Log("Aggro Un-triggered");
+                _enemyBase.SetAggroToPlayerStatus(false);
+            }
         }
     }
 }

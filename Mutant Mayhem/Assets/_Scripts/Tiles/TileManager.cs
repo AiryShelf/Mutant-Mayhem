@@ -181,7 +181,9 @@ public class TileManager : MonoBehaviour
             tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
         else
-            Debug.Log("TileObject not found");
+        {
+            //Debug.Log("TileObject not found");
+        }
     }
 
     public void DestroyTileAt(Vector3Int gridPos)

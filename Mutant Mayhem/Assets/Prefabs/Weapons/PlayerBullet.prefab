@@ -57,19 +57,21 @@ MonoBehaviour:
   myRb: {fileID: 2082839547474369568}
   effectsHandler: {fileID: 2189567560517365770}
   shootSoundOrig:
-    soundName: SMGFire
+    soundName: SMGShoot
+    soundType: 1
+    mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
     clips:
-    - {fileID: 8300000, guid: f0d98ac26b4874d438aab5fefbdc94a3, type: 3}
+    - {fileID: 8300000, guid: d32bf865d3952da4bb9e7cac86419792, type: 3}
     loop: 0
     volume: 0.9
     pitch: 1
     pitchRandRange: 0.1
-    spatialBlend: 0.8
+    spatialBlend: 1
     dopplerLevel: 0
-    minDistance: 1
-    maxDistance: 50
+    minDistance: 20
+    maxDistance: 100
   AiTrggerPrefab: {fileID: 5148803634519629604, guid: 04afd8a7aa8f9fa40a307da430558e55, type: 3}
-  AITriggerSize: 5
+  AITriggerSize: 4
   destroyTime: 0
 --- !u!50 &2082839547474369568
 Rigidbody2D:

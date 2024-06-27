@@ -411,7 +411,7 @@ public class UpgradeSystem : MonoBehaviour
             // Check max level
             if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
             {
-                Debug.LogError("Consumable int maxed out: " + upgType);
+                Debug.LogWarning("Consumable int maxed out: " + upgType);
                 messagePanel.ShowMessage("Maxed. You either bought this over 32,000 times " + 
                                          "or there is a bug!  Let me know!", Color.yellow);
                 return;
@@ -430,18 +430,18 @@ public class UpgradeSystem : MonoBehaviour
                 consumablesUpgCurrCosts[upgType] = upgrade.CalculateCost(
                     consumablesUpgBaseCosts[upgType], consumablesUpgLevels[upgType] + 1);
 
-                Debug.Log("Consumable applied: " + upgType);
+                //Debug.Log("Consumable applied: " + upgType);
                 messagePanel.ShowMessage("Consumabled applied!", Color.cyan);
             }
             else
             {
-                Debug.Log(upgType + "already full");
+                //Debug.Log(upgType + " already full");
                 messagePanel.ShowMessage("It's already full", Color.yellow);
             }
         }
         else
         {
-            Debug.Log("Not enough credits for: " + upgType);
+            //Debug.Log("Not enough credits for: " + upgType);
             messagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }

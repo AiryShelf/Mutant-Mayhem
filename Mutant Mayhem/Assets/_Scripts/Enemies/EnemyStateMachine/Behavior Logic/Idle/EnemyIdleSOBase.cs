@@ -22,14 +22,14 @@ public class EnemyIdleSOBase : ScriptableObject
 
     public virtual void DoEnterLogic() { }
     public virtual void DoExitLogic() { }
-    public virtual void DoFrameUpdateLogic() 
-    { 
-        if (enemyBase.IsAggroed)
+    public virtual void DoFrameUpdateLogic() { }
+    public virtual void DoPhysicsUpdateLogic() 
+    {
+        if (enemyBase.IsAggroed || enemyBase.IsShotAggroed)
         {
             enemyBase.StateMachine.ChangeState(enemyBase.ChaseState);
         }
     }
-    public virtual void DoPhysicsUpdateLogic() { }
     public virtual void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) { }
     public virtual void ResetValues() { }
 }

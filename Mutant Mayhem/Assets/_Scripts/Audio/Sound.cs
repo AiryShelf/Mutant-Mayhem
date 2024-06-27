@@ -1,12 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
+
+public enum SoundType
+{
+    Music,
+    SFX,
+    UI,
+}
 
 [System.Serializable]
 public class Sound
 {
     public string soundName;
+    public SoundType soundType;
+
     [Header("AudioSource Settings")]
+    public AudioMixerGroup mixerGroup;
     public AudioClip[] clips;
     public bool loop;
     [Range(0f, 1f)]
@@ -19,7 +30,7 @@ public class Sound
     public float spatialBlend = 0.8f;
     [Range(0f, 5f)]
     public float dopplerLevel = 1;
-    public float minDistance = 1;
-    public float maxDistance = 50;
+    public float minDistance = 20;
+    public float maxDistance = 100;
 
 }

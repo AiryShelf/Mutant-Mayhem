@@ -1,14 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    public int poolSize = 20;
-    private List<AudioSource> sourcesPool;
-    private List<AudioSource> sourcesActivePool;
+    [Header("Audio Mixer")]
+    public AudioMixerGroup MixerGroupMusic;
+    public AudioMixerGroup MixerGroupSFX;
+    public AudioMixerGroup MixerGroupUI;
+
+    [Header("Pooling Settings")]
+    public int poolSizeMusic = 20;
+    private List<AudioSource> sourcesPoolMusic;
+    private List<AudioSource> sourcesActivePoolMusic;
+
+    public int poolSizeSFX = 3;
+    private List<AudioSource> sourcesPoolSFX;
+    private List<AudioSource> sourcesActivePoolSFX;
+
+    public int poolSizeUI = 5;
+    private List<AudioSource> sourcesPoolUI;
+    private List<AudioSource> sourcesActivePoolUI;
+    
 
     void Awake()
     {
@@ -23,7 +40,14 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        InitializeSources();
+        sourcesPoolMusic = CreateAudioSourcePool(MixerGroupMusic, poolSizeMusic);
+        sourcesActivePoolMusic = new List<AudioSource>();
+        
+        sourcesPoolSFX = CreateAudioSourcePool(MixerGroupSFX, poolSizeSFX);
+        sourcesActivePoolSFX = new List<AudioSource>();
+
+        sourcesPoolUI = CreateAudioSourcePool(MixerGroupUI, poolSizeUI);
+        sourcesActivePoolUI = new List<AudioSource>();
     }
 
     /// <summary>
@@ -44,7 +68,7 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator PlaySoundAtRoutine(Sound sound, Vector2 pos)
     {
-        AudioSource source = GetAvailableAudioSource();
+        AudioSource source = GetAvailableAudioSource(sound.soundType);
 
         if (source != null)
         {
@@ -55,17 +79,17 @@ public class AudioManager : MonoBehaviour
             source.Play();
 
             yield return new WaitWhile(() => source.isPlaying);
-            ReturnAudioSourceToPool(source);
+            ReturnAudioSourceToPool(source, sound.soundType);
         }
         else
         {
-            Debug.LogError("Could not find AudioSource!");
+            Debug.LogError("Did not find or create AudioSource!");
         }
     }
 
     private IEnumerator PlaySoundFollowRoutine(Sound sound, Transform target)
     {
-        AudioSource source = GetAvailableAudioSource();
+        AudioSource source = GetAvailableAudioSource(sound.soundType);
 
         if (source != null)
         {
@@ -83,7 +107,7 @@ public class AudioManager : MonoBehaviour
                 yield return null;
             }
 
-            ReturnAudioSourceToPool(source);
+            ReturnAudioSourceToPool(source, sound.soundType);
         }
         else
         {
@@ -97,11 +121,11 @@ public class AudioManager : MonoBehaviour
         int i = Random.Range(0, sound.clips.Length);
         source.clip = sound.clips[i];
 
+        source.gameObject.SetActive(true);
+
         // If new sound list, configure
         if (source.name != sound.soundName)
         {
-            source.gameObject.SetActive(true);
-            
             source.loop = sound.loop;
             source.volume = sound.volume;
             source.pitch = sound.pitch;
@@ -114,23 +138,53 @@ public class AudioManager : MonoBehaviour
         return source;
     }
 
-    #region Pooling
+    #region Pool Handling
 
-    private void InitializeSources()
+    private List<AudioSource> CreateAudioSourcePool(AudioMixerGroup mixerGroup, int poolSize)
     {
-        sourcesPool = new List<AudioSource>();
-        sourcesActivePool = new List<AudioSource>();
+        List<AudioSource> sourcesPool = new List<AudioSource>();
 
         for (int i = 0; i < poolSize; i++)
         {
-            AudioSource source = CreateAudioSource(i);
+            AudioSource source = CreateAudioSource(i, mixerGroup);
             sourcesPool.Add(source);
         }
+
+        return sourcesPool;
     }
 
-    private AudioSource GetAvailableAudioSource()
+    private AudioSource GetAvailableAudioSource(SoundType type)
     {
+        // Setup for sound type
         AudioSource source;
+        AudioMixerGroup mixerGroup;
+        List<AudioSource> sourcesPool;
+        List<AudioSource> sourcesActivePool;
+        switch (type)
+        {
+            case SoundType.Music:
+                sourcesPool = sourcesPoolMusic;
+                sourcesActivePool = sourcesActivePoolMusic;
+                mixerGroup = MixerGroupMusic;
+                break;
+            case SoundType.SFX:
+                sourcesPool = sourcesPoolSFX;
+                sourcesActivePool = sourcesActivePoolSFX;
+                mixerGroup = MixerGroupSFX;
+                break;
+            case SoundType.UI:
+                sourcesPool = sourcesPoolUI;
+                sourcesActivePool = sourcesActivePoolUI;
+                mixerGroup = MixerGroupUI;
+                break;
+            default:
+                sourcesPool = sourcesPoolSFX;
+                sourcesActivePool = sourcesActivePoolSFX;
+                mixerGroup = MixerGroupSFX;
+                break; 
+        }
+
+        // Get AudioSource or add new
         if (sourcesPool.Count > 0)
         {
             source = sourcesPool[0];
@@ -139,42 +193,64 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No available AudioSources in pool. Adding new source.");
-            source = GetNewAudioSource();
+            Debug.LogWarning("No available " + type + " AudioSources in pool. Adding new source.");
+            source = GetNewAudioSource(sourcesActivePool, mixerGroup);
         }
 
         return source;
     }
     
-    private AudioSource GetNewAudioSource()
+    private AudioSource GetNewAudioSource(List<AudioSource> sourcesActivePool, AudioMixerGroup mixerGroup)
     {
-        AudioSource source = CreateAudioSource(sourcesActivePool.Count);
+        AudioSource source = CreateAudioSource(sourcesActivePoolSFX.Count, mixerGroup);
         sourcesActivePool.Add(source);
 
         return source;
     }
 
-    AudioSource CreateAudioSource(int i)
+    private void ReturnAudioSourceToPool(AudioSource source, SoundType type)
     {
-        GameObject sourceObj = new GameObject("AudioSource_" + i);
+        // Setup for sound type
+        List<AudioSource> sourcesPool;
+        List<AudioSource> sourcesActivePool;
+        switch (type)
+        {
+            case SoundType.Music:
+                sourcesPool = sourcesPoolMusic;
+                sourcesActivePool = sourcesActivePoolMusic;
+                break;
+            case SoundType.SFX:
+                sourcesPool = sourcesPoolSFX;
+                sourcesActivePool = sourcesActivePoolSFX;
+                break;
+            case SoundType.UI:
+                sourcesPool = sourcesPoolUI;
+                sourcesActivePool = sourcesActivePoolUI;
+                break;
+            default:
+                sourcesPool = sourcesPoolSFX;
+                sourcesActivePool = sourcesActivePoolSFX;
+                break; 
+        }
+
+        // Remove from active, return to pool
+        source.gameObject.SetActive(false);
+        sourcesActivePool.Remove(source);
+        sourcesPool.Insert(0, source);
+    }
+
+    AudioSource CreateAudioSource(int i, AudioMixerGroup mixerGroup)
+    {
+        GameObject sourceObj = new GameObject(mixerGroup + "_AudioSource_" + i);
         AudioSource source = sourceObj.AddComponent<AudioSource>();
+        source.outputAudioMixerGroup = mixerGroup;
         source.playOnAwake = false;
-        source.spatialBlend = 0.8f; // 1 is full 3D sound
-        source.minDistance = 1;
-        source.maxDistance = 50;
-        source.dopplerLevel = 0.2f;
         source.rolloffMode = AudioRolloffMode.Logarithmic;
         sourceObj.SetActive(false);
         sourceObj.transform.SetParent(transform);
 
-        Debug.Log("Created AudioSource");
+        Debug.Log("Created " + mixerGroup.name + " AudioSource");
         return source;
-    }
-
-    private void ReturnAudioSourceToPool(AudioSource source)
-    {
-        sourcesActivePool.Remove(source);
-        sourcesPool.Add(source);
     }
 
     #endregion

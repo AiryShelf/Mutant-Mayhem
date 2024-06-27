@@ -14,6 +14,7 @@ public class AudioUtility
         Sound newSound = new Sound
         {
             soundName = sound.soundName,
+            soundType = sound.soundType,
             clips = new AudioClip[sound.clips.Length],
             loop = sound.loop,
             volume = sound.volume,

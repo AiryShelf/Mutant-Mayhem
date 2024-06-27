@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class WaveSpawnerRandom : MonoBehaviour
 {
     public WaveControllerRandom waveController;
+    [SerializeField] TileManager tileManager;
+    [SerializeField] Tilemap structureTilemap;
+    [SerializeField] LayerMask checkClearLayers;
     public Transform qCubeTrans;
     public WaveSOBase waveSOBaseSource;
     [SerializeField] int maxIndexToSelectAtStart;
@@ -248,8 +252,8 @@ public class WaveSpawnerRandom : MonoBehaviour
         {
             // Next new batch point 
             spawnPos = GetPointOnCircumference(
-                spawnRadius, spawnAngle, subWaveStyle.spreadForNextBatch, 
-                subWaveStyle.randomizeNextBatchSpread);
+                        spawnRadius, spawnAngle, subWaveStyle.spreadForNextBatch, 
+                        subWaveStyle.randomizeNextBatchSpread);
             spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
 
             // Lock batch to local point
@@ -289,7 +293,7 @@ public class WaveSpawnerRandom : MonoBehaviour
                 }
 
                 // Spawn
-                SpawnEnemy(spawnPos, subWave, listIndex);
+                StartCoroutine(TryToSpawn(spawnPos, subWave, listIndex, spawnRadius, spawnAngle));
                 _numberToSpawn[listIndex]--;
 
                 // Apply selection type
@@ -323,10 +327,35 @@ public class WaveSpawnerRandom : MonoBehaviour
         yield return null;
     }
 
-    void SpawnEnemy(Vector2 spawnPos, SubWaveSO subWave, int index)
+    IEnumerator TryToSpawn(Vector2 spawnPos, SubWaveSO subWave, int index, float radius, float angle)
     {
-        EnemyCounter.EnemyCount++;
-        Instantiate(subWave.enemyPrefabList[index], spawnPos, Quaternion.identity);
+        bool spawned = false;
+        float radSpread = 0;
+        while (!spawned)
+        {
+            spawned = SpawnEnemy(spawnPos, subWave, index);
+            yield return null;
+            if (!spawned)
+            {
+                spawnPos = GetPointOnCircumference(radius, angle, radSpread, true);
+                radSpread += 0.02f;
+            }
+        }
+    }
+
+    bool SpawnEnemy(Vector2 spawnPos, SubWaveSO subWave, int index)
+    {
+        Vector3Int gridPos = structureTilemap.WorldToCell(spawnPos);
+        if (tileManager.CheckGridIsClear(gridPos, checkClearLayers, true))
+        {
+            EnemyCounter.EnemyCount++;
+            Instantiate(subWave.enemyPrefabList[index], spawnPos, Quaternion.identity);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     Vector2 GetPointOnCircumference(float radius, float startRadAngle, 

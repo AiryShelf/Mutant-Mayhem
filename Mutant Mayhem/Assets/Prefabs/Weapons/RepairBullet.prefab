@@ -57,17 +57,19 @@ MonoBehaviour:
   myRb: {fileID: 2082839547474369568}
   effectsHandler: {fileID: 809539151921915496}
   shootSoundOrig:
-    soundName: 
+    soundName: RepairBullet
+    soundType: 1
+    mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
     clips:
     - {fileID: 8300000, guid: b22c4e2da4f26534e80c84806d62edf3, type: 3}
     loop: 0
     volume: 0.3
     pitch: 1
     pitchRandRange: 0.2
-    spatialBlend: 0.8
-    dopplerLevel: 1
-    minDistance: 1
-    maxDistance: 50
+    spatialBlend: 1
+    dopplerLevel: 0
+    minDistance: 20
+    maxDistance: 100
   AiTrggerPrefab: {fileID: 0}
   AITriggerSize: 0
   destroyTime: 0

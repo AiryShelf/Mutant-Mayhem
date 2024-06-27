@@ -56,6 +56,8 @@ MonoBehaviour:
   meleeAnim: {fileID: 1899956248810806691}
   meleeSoundOrig:
     soundName: MeleeEnemy
+    soundType: 1
+    mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
     clips:
     - {fileID: 8300000, guid: 55516310dd55c7d439eff4d81fb3bbe9, type: 3}
     - {fileID: 8300000, guid: a7bf252e44b29c141b4af815746fa925, type: 3}
@@ -63,7 +65,7 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     pitchRandRange: 0.3
-    spatialBlend: 0.8
+    spatialBlend: 1
     dopplerLevel: 1
     minDistance: 1
     maxDistance: 50

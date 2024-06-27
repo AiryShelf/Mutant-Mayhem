@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class RepairBullet : Bullet
 {
+    [Header("Repair Bullet Settings")]
     [SerializeField] float speed = 10;
     [SerializeField] int repairCost = 5;
 

@@ -12,6 +12,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
     public float rotateSpeedBase = 3f;
 
     public bool IsAggroed { get; set; }
+    public bool IsShotAggroed { get; set; }
     public bool IsWithinMeleeDistance { get; set; }
     public bool IsWithinShootDistance { get; set; }
 
