@@ -40,7 +40,6 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     InputActionMap uIActionMap;
     InputAction escapeAction;
-    
 
     void OnEnable()
     {
@@ -169,15 +168,13 @@ public class AnimationControllerPlayer : MonoBehaviour
         {
             bodyAnim.SetBool("isAiming", false);
         }
-        
+
         // Legs anim speed
         float speed = playerRb.velocity.magnitude;
         legsAnim.speed = speed * animSpeedFactor * Time.fixedDeltaTime;
-        float normalizedSpeed = speed / player.stats.moveSpeed;
-
+        float normalizedSpeed = speed / player.stats.maxVelocity;
         legsAnim.SetFloat("BlendSpeed", normalizedSpeed);
-        
-        bodyAnim.SetFloat("BlendSpeed", normalizedSpeed);
+        bodyAnim.SetFloat("BlendSpeed", normalizedSpeed);        
 
         // Check if shooting
         if (isFireInput && !isBuilding)
@@ -234,9 +231,11 @@ public class AnimationControllerPlayer : MonoBehaviour
             !switchGunsAnimPlaying && !reloadAnimPlaying)
         {
             bodyAnim.speed = speed * animSpeedFactor * Time.fixedDeltaTime;
+
+            // Sync legs anim time-position
             AnimatorStateInfo bodyState = bodyAnim.GetCurrentAnimatorStateInfo(0);
             float bodyNormalizedTime = bodyState.normalizedTime;
-            legsAnim.Play("Idle_Walk_Run BLEND TREE", 0, bodyNormalizedTime);
+            //legsAnim.Play("Idle_Walk_Run BLEND TREE", 0, bodyNormalizedTime);
         }
         else
         {

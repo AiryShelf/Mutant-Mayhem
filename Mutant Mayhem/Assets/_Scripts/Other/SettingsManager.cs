@@ -32,7 +32,9 @@ public class SettingsManager : MonoBehaviour
     public float WaveListFactor = 0; // up harder, more waves added over time
     public float BatchTimeMult = 1;
     public float BatchMult = 1;
-    public float CreditsMult = 1;    
+    public float CreditsMult = 1;  
+
+    WaveControllerRandom waveController;  
 
     void Awake()
     {
@@ -110,9 +112,14 @@ public class SettingsManager : MonoBehaviour
 
     private void ApplyDifficultySettings()
     {
+        waveController = FindObjectOfType<WaveControllerRandom>();
+        if (waveController == null)
+            Debug.LogError("Wave Controller not found on scene load!");
+
         switch (difficultyLevel)
         {
             case DifficultyLevel.Easy:
+                waveController.timeBetweenWaves += 30;
                 WaveDifficultyMult = 0.7f;
                 WavePerBaseAdjust = 1;
                 WaveListFactor = 0.8f;
@@ -131,6 +138,7 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Hard:
+                waveController.timeBetweenWaves -= 30;
                 WaveDifficultyMult = 1.3f;
                 WavePerBaseAdjust = -1;
                 WaveListFactor = 1.2f;

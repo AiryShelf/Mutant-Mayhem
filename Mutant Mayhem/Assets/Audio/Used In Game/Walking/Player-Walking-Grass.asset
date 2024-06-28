@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
+  m_Name: Player-Walking-Grass
+  m_EditorClassIdentifier: 
+  soundName: PlayerWalkingGrass
+  soundType: 1
+  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
+  clips:
+  - {fileID: 8300000, guid: fdbdf7234083abf409be6805021a4d8d, type: 3}
+  - {fileID: 8300000, guid: bbd616b52ba9adc4990dfdf8f6b18d0b, type: 3}
+  - {fileID: 8300000, guid: 3b08fea9eb76ce04c89e7cad3efff39f, type: 3}
+  - {fileID: 8300000, guid: 7a3f81714c7196c4881b0d3a9242ea28, type: 3}
+  - {fileID: 8300000, guid: 342cf7a318b06254e9a6595c49fd6494, type: 3}
+  - {fileID: 8300000, guid: 7dcc69856b8ff8f4299a8c1c8e3b9181, type: 3}
+  - {fileID: 8300000, guid: c6c03a724771e8f4daf88bd5dd179a30, type: 3}
+  loop: 0
+  volume: 1
+  pitch: 1
+  pitchRandRange: 0.1
+  spatialBlend: 0.8
+  minDistance: 20
+  maxDistance: 100

@@ -24,6 +24,8 @@ public class RepairBullet : Bullet
         // Calculate the distance to the target
         Vector3 dir = target - transform.position;
         targetDist = dir.magnitude;
+        targetDist = Mathf.Clamp(targetDist, 0, destroyTime * speed);
+
 
         // Set the bullet's velocity to move straight out of the gun
         myRb.velocity = transform.right * speed;

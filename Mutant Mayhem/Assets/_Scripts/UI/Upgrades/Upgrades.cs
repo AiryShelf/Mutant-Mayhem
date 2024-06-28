@@ -106,6 +106,7 @@ public class MoveSpeedUpgrade : Upgrade
     {
         playerStats.moveSpeed += UpgAmount;
         playerStats.lookSpeed += 0.001f;
+        playerStats.player.RefreshMoveForces();
     }
 }
 
@@ -118,6 +119,7 @@ public class StrafeSpeedUpgrade : Upgrade
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.strafeSpeed += UpgAmount;
+        playerStats.player.RefreshMoveForces();
     }
 }
 
@@ -130,6 +132,7 @@ public class SprintFactorUpgrade : Upgrade
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.sprintFactor += UpgAmount;
+        playerStats.player.RefreshMoveForces();
     }
 }
 

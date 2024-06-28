@@ -10,7 +10,7 @@ public enum GunType
     RepairGun = 10,
 }
 
-[CreateAssetMenu(menuName = "Gun", fileName = "NewGun")]
+[CreateAssetMenu(menuName = "GunSO", fileName = "NewGun")]
 public class GunSO : ScriptableObject
 {
     public GunType gunType;
@@ -20,6 +20,9 @@ public class GunSO : ScriptableObject
     public string animatorHasString;
     public GameObject bulletPrefab;
     public bool isOneHanded;
+
+    [Header("Sounds")]
+    public List<SoundSO> reloadSounds;
 
     [Header("Effects")]
     public GameObject emptyClipPrefab;

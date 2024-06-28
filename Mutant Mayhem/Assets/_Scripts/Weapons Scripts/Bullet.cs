@@ -5,26 +5,23 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public LayerMask hitLayers;
-    public float damage = 10;
-    public float knockback = 1f;
+    [HideInInspector] public float damage = 10;
+    [HideInInspector] public float knockback = 1f;
+    [HideInInspector] public float destroyTime;
 
     [SerializeField] protected Rigidbody2D myRb;
     [SerializeField] protected BulletEffectsHandler effectsHandler;
-    [SerializeField] Sound shootSoundOrig;
+    [SerializeField] SoundSO shootSound;
 
     [Header("Optional")]
     [SerializeField] GameObject AiTrggerPrefab;
     [SerializeField] float AITriggerSize;
 
     protected TileManager tileManager;
-    [HideInInspector] public float destroyTime;
-    private Sound shootSound;
 
     void Awake()
     {
         tileManager = FindObjectOfType<TileManager>();
-
-        shootSound = AudioUtility.InitializeSoundEffect(shootSoundOrig);
     }
 
     void OnEnable()

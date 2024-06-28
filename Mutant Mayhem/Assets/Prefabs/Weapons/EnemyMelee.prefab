@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1899956248810806691}
   - component: {fileID: 10070538269960853}
   m_Layer: 14
-  m_Name: MeleeEnemy
+  m_Name: EnemyMelee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,21 +54,7 @@ MonoBehaviour:
   meleeTileDotProdRange: 0.5
   meleeCollider: {fileID: 10070538269960853}
   meleeAnim: {fileID: 1899956248810806691}
-  meleeSoundOrig:
-    soundName: MeleeEnemy
-    soundType: 1
-    mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
-    clips:
-    - {fileID: 8300000, guid: 55516310dd55c7d439eff4d81fb3bbe9, type: 3}
-    - {fileID: 8300000, guid: a7bf252e44b29c141b4af815746fa925, type: 3}
-    loop: 0
-    volume: 1
-    pitch: 1
-    pitchRandRange: 0.3
-    spatialBlend: 1
-    dopplerLevel: 1
-    minDistance: 1
-    maxDistance: 50
+  meleeSound: {fileID: 11400000, guid: 6a3e0d5445d7e404b87530c84e4e7443, type: 2}
 --- !u!212 &8762316274977813352
 SpriteRenderer:
   m_ObjectHideFlags: 0

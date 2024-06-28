@@ -6,13 +6,17 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class PlayerStats
 {
-    public QCubeStats qCubeStats;
+    [HideInInspector] public QCubeStats qCubeStats;
+    [HideInInspector] public Player player;
 
     [Header("Movement stats")]
     public float moveSpeed = 8;
     public float strafeSpeed = 5;
     public float sprintFactor = 1.5f;
     public float lookSpeed = 0.05f;
+    [HideInInspector] public float moveForce;
+    [HideInInspector] public float strafeForce;
+    [HideInInspector] public float maxVelocity;
 
     [Header("Health Stats")]
     public PlayerHealth playerHealthScript;
@@ -44,15 +48,11 @@ public class Player : MonoBehaviour
     [SerializeField] float headTurnMax = 80;
 
     [Header("Sound")]
-    [SerializeField] Sound walkGrassSoundOrig;
-    [SerializeField] Sound walkWoodSoundOrig;
-    [SerializeField] Sound walkConcreteSoundOrig;
-    [SerializeField] Sound walkMetalSoundOrig;
-    [HideInInspector] public Sound walkGrassSound;
-    [HideInInspector] public Sound walkWoodSound;
-    [HideInInspector] public Sound walkConcreteSound;
-    [HideInInspector] public Sound walkMetalSound;
-    
+
+    [SerializeField] SoundSO walkGrassSound;
+    [SerializeField] SoundSO walkWoodSound;
+    [SerializeField] SoundSO walkConcreteSound;
+    [SerializeField] SoundSO walkMetalSound;
 
     [Header("Other")]
     public InputActionAsset inputAsset;
@@ -66,8 +66,6 @@ public class Player : MonoBehaviour
     [SerializeField] MeleeControllerPlayer meleeController;    
     
     float sprintSpeedAmount;
-    float moveForce;
-    float strafeForce;
     Vector2 rawInput;
     Vector2 muzzleDirToMouse;
     float muzzleAngleToMouse;
@@ -77,9 +75,12 @@ public class Player : MonoBehaviour
     public bool isDead;  
     Throw itemToThrow;
     [HideInInspector] public int movementType;
+    float lastFootstepTime;
+    float footstepCooldown = 0.1f;
 
     void Awake()
     {
+        stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
         myRb = GetComponent<Rigidbody2D>();
         myStamina = GetComponent<Stamina>();
@@ -89,21 +90,11 @@ public class Player : MonoBehaviour
         meleeController.stats = stats;
         myStamina.stats = stats;
         playerShooter.playerStats = stats;
-
-        // Initialize sounds
-        walkGrassSound = AudioUtility.InitializeSoundEffect(walkGrassSoundOrig);
-        //walkWoodSound = AudioUtility.InitializeSoundEffect(walkWoodSoundOrig);
-        //walkConcreteSound = AudioUtility.InitializeSoundEffect(walkConcreteSoundOrig);
-        //walkMetalSound = AudioUtility.InitializeSoundEffect(walkMetalSoundOrig);
     }
 
     void Start()
     { 
-        // Use these for force-based movements
-        moveForce = stats.moveSpeed * myRb.mass * forceFactor;
-        strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
-
-        StartCoroutine(RefreshForceRepeat());
+        RefreshMoveForces();
     }
 
     void FixedUpdate()
@@ -120,21 +111,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    void RefreshForce()
+    public void PlayFootStepSound()
     {
-        moveForce = stats.moveSpeed * myRb.mass * forceFactor;
-        strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
+        // Need check for ground type
+        if (Time.time - lastFootstepTime >= footstepCooldown)
+        {
+            AudioManager.instance.PlaySoundAt(walkGrassSound, transform.position);
+            lastFootstepTime = Time.time;
+        }
     }
 
-    IEnumerator RefreshForceRepeat()
+    public void RefreshMoveForces()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(2);
-
-            // Update force values
-            RefreshForce();
-        }
+        stats.moveForce = stats.moveSpeed * myRb.mass * forceFactor;
+        stats.strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
+        stats.maxVelocity = (stats.moveForce * stats.sprintFactor) / 
+                            (myRb.drag * myRb.mass);
     }
 
     void OnToolbar()
@@ -198,7 +190,7 @@ public class Player : MonoBehaviour
     public void OnThrowGrab()
     {
         itemToThrow = Instantiate(grenadePrefab, transform.position, 
-            Quaternion.identity, leftHandTrans).gameObject.GetComponent<Throw>();    
+                      Quaternion.identity, leftHandTrans).gameObject.GetComponent<Throw>();    
     }
 
     public void OnThrowFly()
@@ -326,7 +318,7 @@ public class Player : MonoBehaviour
             speedFactor = Mathf.InverseLerp(minSpeedAngle, maxSpeedAngle, Mathf.Abs(angleDifference));
         }
 
-        float speed = Mathf.Lerp(strafeForce, moveForce, speedFactor);
+        float speed = Mathf.Lerp(stats.strafeForce, stats.moveForce, speedFactor);
         moveDir *= speed * sprintSpeedAmount;
 
 

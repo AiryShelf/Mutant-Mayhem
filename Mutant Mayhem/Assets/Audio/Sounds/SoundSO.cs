@@ -10,11 +10,11 @@ public enum SoundType
     UI,
 }
 
-[System.Serializable]
-public class Sound
+[CreateAssetMenu(fileName = "NewSound", menuName = "SoundSO")]
+public class SoundSO :ScriptableObject
 {
     public string soundName;
-    public SoundType soundType;
+    public SoundType soundType = SoundType.SFX;
 
     [Header("AudioSource Settings")]
     public AudioMixerGroup mixerGroup;
@@ -25,11 +25,9 @@ public class Sound
     [Range(-3f, 3f)]
     public float pitch = 1;
     [Range(0, 1)]
-    public float pitchRandRange = 0;
+    public float pitchRandRange = 0.2f;
     [Range(0, 1)]
-    public float spatialBlend = 0.8f;
-    [Range(0f, 5f)]
-    public float dopplerLevel = 1;
+    public float spatialBlend = 1f;
     public float minDistance = 20;
     public float maxDistance = 100;
 

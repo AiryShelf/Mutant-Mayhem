@@ -9,6 +9,6 @@ public class PlayerLegsAnimEventReceiver : MonoBehaviour
     void OnFootStep()
     {
         // Need check for ground type
-        AudioManager.instance.PlaySoundAt(player.walkGrassSound, transform.position);
+        player.PlayFootStepSound();
     }
 }

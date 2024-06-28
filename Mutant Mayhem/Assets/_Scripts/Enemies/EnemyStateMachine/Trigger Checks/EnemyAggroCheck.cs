@@ -30,7 +30,7 @@ public class EnemyAggroTrigger : MonoBehaviour
                 //Debug.Log("Aggro triggered");
                 _enemyBase.SetAggroToPlayerStatus(true);
             }
-            else if (other.CompareTag("TurretTrigger"))
+            //else if (other.CompareTag("TurretTrigger"))
             {
                 // Do Turret logic.
             }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class PlayerBodyAnimEventReceiver : MonoBehaviour
@@ -9,6 +10,9 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
     [SerializeField] Animator bodyAnim;
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] MeleeControllerPlayer meleeControllerPlayer;
+
+    [Header("Sounds")]
+    [SerializeField] GunSO smg;
 
     void OnPlayerDie()
     {
@@ -94,5 +98,10 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
     void OnThrowFly()
     {
         player.OnThrowFly();
+    }
+
+    void OnSMGReloadSound(int index)
+    {
+        AudioManager.instance.PlaySoundAt(smg.reloadSounds[index], transform.position);
     }
 }

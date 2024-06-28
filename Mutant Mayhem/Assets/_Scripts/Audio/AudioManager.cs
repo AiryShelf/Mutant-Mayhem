@@ -53,7 +53,7 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Plays sound at given position
     /// </summary>
-    public void PlaySoundAt(Sound sound, Vector2 pos)
+    public void PlaySoundAt(SoundSO sound, Vector2 pos)
     {
         StartCoroutine(PlaySoundAtRoutine(sound, pos));
     }
@@ -61,12 +61,12 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Plays sound following a target
     /// </summary>
-    public void PlaySoundFollow(Sound sound, Transform target)
+    public void PlaySoundFollow(SoundSO sound, Transform target)
     {
         StartCoroutine(PlaySoundFollowRoutine(sound, target));
     }
 
-    private IEnumerator PlaySoundAtRoutine(Sound sound, Vector2 pos)
+    private IEnumerator PlaySoundAtRoutine(SoundSO sound, Vector2 pos)
     {
         AudioSource source = GetAvailableAudioSource(sound.soundType);
 
@@ -87,7 +87,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PlaySoundFollowRoutine(Sound sound, Transform target)
+    private IEnumerator PlaySoundFollowRoutine(SoundSO sound, Transform target)
     {
         AudioSource source = GetAvailableAudioSource(sound.soundType);
 
@@ -115,25 +115,22 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    AudioSource ConfigureSource(AudioSource source, Sound sound)
+    AudioSource ConfigureSource(AudioSource source, SoundSO sound)
     {
         // Choose random clip from list
         int i = Random.Range(0, sound.clips.Length);
         source.clip = sound.clips[i];
 
         source.gameObject.SetActive(true);
+        Debug.Log("source name: " + source.name);
 
-        // If new sound list, configure
-        if (source.name != sound.soundName)
-        {
-            source.loop = sound.loop;
-            source.volume = sound.volume;
-            source.pitch = sound.pitch;
-            source.spatialBlend = sound.spatialBlend;
-            source.dopplerLevel = sound.dopplerLevel;
-            source.minDistance = sound.minDistance;
-            source.maxDistance = sound.maxDistance;
-        }
+        source.loop = sound.loop;
+        source.volume = sound.volume;
+        source.pitch = sound.pitch;
+        source.spatialBlend = sound.spatialBlend;
+        source.dopplerLevel = 0;
+        source.minDistance = sound.minDistance;
+        source.maxDistance = sound.maxDistance;
 
         return source;
     }

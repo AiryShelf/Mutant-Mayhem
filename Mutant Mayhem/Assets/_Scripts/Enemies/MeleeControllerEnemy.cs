@@ -11,8 +11,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] float meleeTileDotProdRange = 0.5f;
     [SerializeField] Collider2D meleeCollider;
     [SerializeField] Animator meleeAnim;
-    [SerializeField] Sound meleeSoundOrig;
-    Sound meleeSound;
+    [SerializeField] SoundSO meleeSound;
 
     Health myHealth;
     TileManager tileManager;
@@ -20,7 +19,6 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     void Awake()
     {
-        meleeSound = AudioUtility.InitializeSoundEffect(meleeSoundOrig);
         myHealth = GetComponentInParent<Health>();
         tileManager = FindObjectOfType<TileManager>();
     }
@@ -96,7 +94,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     void PlayMeleeSound(Vector2 point)
     {
-        AudioManager.instance.PlaySoundAt(meleeSound, point);
+        AudioManager.instance.PlaySoundAt(meleeSound, point);;
     }
 
     IEnumerator AttackTimer()

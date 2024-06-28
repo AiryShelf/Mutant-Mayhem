@@ -6,9 +6,6 @@ public class Stamina : MonoBehaviour
 {
     public PlayerStats stats;
     [SerializeField] float stamina = 100f;
-    [SerializeField] float staminaRegen = 5f;
-
-
 
     void Start()
     {
@@ -18,12 +15,11 @@ public class Stamina : MonoBehaviour
     void FixedUpdate()
     {
         StaminaRegen();
-        //Debug.Log(stamina);
     }
 
     void StaminaRegen()
     {
-        stamina += staminaRegen * Time.fixedDeltaTime;
+        stamina += stats.staminaRegen * Time.fixedDeltaTime;
         if (stamina > stats.staminaMax)
         {
             stamina = stats.staminaMax;

@@ -8,10 +8,10 @@ public class AudioUtility
     /// <summary>
     /// Used once to create new sound which prevents pops/clicks
     /// </summary>
-    public static Sound InitializeSoundEffect(Sound sound)
+    public static SoundSO InitializeSoundEffect(SoundSO sound)
     {
         // Create copy of sound to add editted clips
-        Sound newSound = new Sound
+        SoundSO newSound = new SoundSO
         {
             soundName = sound.soundName,
             soundType = sound.soundType,
@@ -21,7 +21,6 @@ public class AudioUtility
             pitch = sound.pitch,
             pitchRandRange = sound.pitchRandRange,
             spatialBlend = sound.spatialBlend,
-            dopplerLevel = sound.dopplerLevel,
             minDistance = sound.minDistance,
             maxDistance = sound.maxDistance,
         };
