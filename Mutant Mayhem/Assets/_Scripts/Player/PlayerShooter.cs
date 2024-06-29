@@ -120,6 +120,8 @@ public class PlayerShooter : MonoBehaviour
 
             currentGunIndex = i;
             currentGunSO = gunList[i];
+
+            AudioManager.instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
             //Debug.Log("Current gun damage: " + currentGunSO.damage);
         }
         Debug.Log("Tried to switch to a gun that is not unlocked or does not exist");
@@ -238,6 +240,15 @@ public class PlayerShooter : MonoBehaviour
             shootingCoroutine = null;
         }
     }
+
+    #region Sounds
+
+    public void OnReloadSound(int index)
+    {
+        AudioManager.instance.PlaySoundAt(currentGunSO.reloadSounds[index], transform.position);
+    }
+
+    #endregion
 
     #region Coroutines
 

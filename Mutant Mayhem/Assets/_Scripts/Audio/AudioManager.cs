@@ -122,7 +122,7 @@ public class AudioManager : MonoBehaviour
         source.clip = sound.clips[i];
 
         source.gameObject.SetActive(true);
-        Debug.Log("source name: " + source.name);
+        //Debug.Log("Configured AudioSource: " + source.name);
 
         source.loop = sound.loop;
         source.volume = sound.volume;
@@ -246,7 +246,7 @@ public class AudioManager : MonoBehaviour
         sourceObj.SetActive(false);
         sourceObj.transform.SetParent(transform);
 
-        Debug.Log("Created " + mixerGroup.name + " AudioSource");
+        //Debug.Log("Created " + mixerGroup.name + " AudioSource");
         return source;
     }
 

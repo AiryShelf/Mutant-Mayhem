@@ -153,6 +153,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         hasMeleeStamina = bodyAnim.GetBool("hasMeleeStamina");
         bool isBuilding = bodyAnim.GetBool("isBuilding");
         bool isMeleeing;
+        // Might need check for reload animations, SMG got stuck again.
         
         if (!hasMeleeStamina) 
         {

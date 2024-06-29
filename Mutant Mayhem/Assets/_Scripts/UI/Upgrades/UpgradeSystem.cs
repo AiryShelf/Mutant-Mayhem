@@ -144,8 +144,8 @@ public class UpgradeSystem : MonoBehaviour
         // Consumables
         consumablesUpgBaseCosts[ConsumablesUpgrade.PlayerHeal] = 100;
         consumablesUpgBaseCosts[ConsumablesUpgrade.QCubeRepair] = 200;
-        consumablesUpgBaseCosts[ConsumablesUpgrade.GrenadeBuyAmmo] = 25;
-        consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 50;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.GrenadeBuyAmmo] = 200;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 100;
 
         // Gun Stats
         laserPistolUpgBaseCosts[GunStatsUpgrade.GunDamage] = 150;

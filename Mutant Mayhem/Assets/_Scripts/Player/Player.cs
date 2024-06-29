@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
     public CapsuleCollider2D gunCollider;
     [SerializeField] Transform leftHandTrans;
     public AnimationControllerPlayer animControllerPlayer;
-    [SerializeField] MeleeControllerPlayer meleeController;    
+    public MeleeControllerPlayer meleeController;    
     
     float sprintSpeedAmount;
     Vector2 rawInput;

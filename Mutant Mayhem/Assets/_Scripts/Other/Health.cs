@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -9,6 +10,9 @@ public class Health : MonoBehaviour
     [SerializeField] HitEffects hitEffectsChild;
     [SerializeField] GameObject corpsePrefab;
     public float deathTorque = 20;
+    [SerializeField] SoundSO painSound;
+    [SerializeField] float painSoundCooldown= 0.3f;
+    float lastPainSoundTime;
 
     protected float health;
     protected Rigidbody2D myRb;
@@ -16,7 +20,6 @@ public class Health : MonoBehaviour
 
     void Awake()
     {
-
         myRb = GetComponent<Rigidbody2D>();
         health = maxHealth;
     }
@@ -43,6 +46,19 @@ public class Health : MonoBehaviour
 
     public virtual void ModifyHealth(float value, GameObject other)
     {
+        // Pain sounds
+        if (value < 0)
+        {
+            if (painSound != null)
+            {
+                if (Time.time - lastPainSoundTime >= painSoundCooldown)
+                {
+                    AudioManager.instance.PlaySoundAt(painSound, transform.position);
+                    lastPainSoundTime = Time.time;
+                }
+            }
+        }
+
         health += value;
         if (health > maxHealth)
             health = maxHealth;

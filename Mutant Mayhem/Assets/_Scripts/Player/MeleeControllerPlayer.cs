@@ -13,6 +13,7 @@ public class MeleeControllerPlayer : MonoBehaviour
     public SwordController swordController;
     [SerializeField] PlayerShooter playerShooter;
     [SerializeField] AnimationControllerPlayer animationControllerPlayer;
+    [SerializeField] SoundSO swordSound;
     public Stamina myStamina;
     
     void Start()
@@ -30,6 +31,11 @@ public class MeleeControllerPlayer : MonoBehaviour
         {
             animationControllerPlayer.bodyAnim.SetBool("hasMeleeStamina", false);
         }
+    }
+
+    public void PlayMeleeSound()
+    {
+        AudioManager.instance.PlaySoundAt(swordSound, transform.position);
     }
 
     public void MeleeColliderToggle(bool on)

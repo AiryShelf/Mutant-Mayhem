@@ -88,6 +88,8 @@ MonoBehaviour:
   hitEffectsChild: {fileID: 853075169137754596}
   corpsePrefab: {fileID: 3246120828009000940, guid: 9144ac51e65349742a12fc9ba99a1aef, type: 3}
   deathTorque: 30
+  painSound: {fileID: 0}
+  painSoundCooldown: 0.3
 --- !u!114 &8299610102731463758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +266,7 @@ MonoBehaviour:
   - {x: 0.039231207, y: -0.04582111, z: 0}
   m_ShapePathHash: 1377517957
   m_Mesh: {fileID: 0}
-  m_InstanceId: 52572
+  m_InstanceId: 101120
   m_LocalBounds:
     m_Center: {x: 0.00037250668, y: 0.0009024441, z: 0}
     m_Extent: {x: 0.038858704, y: 0.04746858, z: 0}
@@ -278,7 +280,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.x
-      value: 0.12728855
+      value: 0.25283986
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.y
@@ -286,7 +288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.x
-      value: -0.011420246
+      value: -0.074195914
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.y

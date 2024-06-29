@@ -11,9 +11,6 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] MeleeControllerPlayer meleeControllerPlayer;
 
-    [Header("Sounds")]
-    [SerializeField] GunSO smg;
-
     void OnPlayerDie()
     {
         animControllerPlayer.DeathAnimEnd();
@@ -73,6 +70,8 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
     {
         animControllerPlayer.MeleeAnimationPlaying(true);
         meleeControllerPlayer.MeleeColliderToggle(true);
+
+        meleeControllerPlayer.PlayMeleeSound();
     }
 
     void OnMeleeAttackStamina()
@@ -100,8 +99,8 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
         player.OnThrowFly();
     }
 
-    void OnSMGReloadSound(int index)
+    void OnReloadSound(int index)
     {
-        AudioManager.instance.PlaySoundAt(smg.reloadSounds[index], transform.position);
+        playerShooter.OnReloadSound(index);
     }
 }
