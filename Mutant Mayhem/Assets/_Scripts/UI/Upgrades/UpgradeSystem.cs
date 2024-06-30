@@ -46,7 +46,7 @@ public class UpgradeSystem : MonoBehaviour
         new Dictionary<ConsumablesUpgrade, int>();
     public Dictionary<ConsumablesUpgrade, int> consumablesUpgLevels = 
         new Dictionary<ConsumablesUpgrade, int>();
-    private Dictionary<ConsumablesUpgrade, int> consumablesUpgBaseCosts = 
+    public Dictionary<ConsumablesUpgrade, int> consumablesUpgBaseCosts = 
         new Dictionary<ConsumablesUpgrade, int>();
     public Dictionary<ConsumablesUpgrade, int> consumablesUpgCurrCosts = 
         new Dictionary<ConsumablesUpgrade, int>();
@@ -354,7 +354,7 @@ public class UpgradeSystem : MonoBehaviour
             upgrade.Apply(player.stats, playerStatsUpgLevels[upgType]);
             PlayUpgradeEffects();
             
-            playerStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(
+            playerStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
                 playerStatsUpgBaseCosts[upgType], playerStatsUpgLevels[upgType] + 1);
 
             Debug.Log("PlayerStats upgrade applied: " + upgType);
@@ -388,7 +388,7 @@ public class UpgradeSystem : MonoBehaviour
             upgrade.Apply(qCubeController.qCubeStats, qCubeStatsUpgLevels[upgType]);
             PlayUpgradeEffects();
             
-            qCubeStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(
+            qCubeStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
                 qCubeStatsUpgBaseCosts[upgType], qCubeStatsUpgLevels[upgType] + 1);
 
             Debug.Log("QCubeStats upgrade applied: " + upgType);
@@ -405,7 +405,9 @@ public class UpgradeSystem : MonoBehaviour
     private void ApplyConsumableUpgrade(Upgrade upgrade, ConsumablesUpgrade upgType)
     {
         // Buy and apply
-        int cost = consumablesUpgCurrCosts[upgType];
+        int cost = upgrade.CalculateCost(player, 
+                   consumablesUpgBaseCosts[upgType], consumablesUpgLevels[upgType] + 1);
+
         if (BuildingSystem.PlayerCredits >= cost)
         {
             // Check max level
@@ -427,8 +429,7 @@ public class UpgradeSystem : MonoBehaviour
                 PlayUpgradeEffects();
                 
                 
-                consumablesUpgCurrCosts[upgType] = upgrade.CalculateCost(
-                    consumablesUpgBaseCosts[upgType], consumablesUpgLevels[upgType] + 1);
+                consumablesUpgCurrCosts[upgType] = cost;
 
                 //Debug.Log("Consumable applied: " + upgType);
                 messagePanel.ShowMessage("Consumabled applied!", Color.cyan);
@@ -499,7 +500,7 @@ public class UpgradeSystem : MonoBehaviour
             upgrade.Apply(gun, gunUpgLevels[upgType]);
             PlayUpgradeEffects();
             
-            gunUpgCurrCosts[upgType] = upgrade.CalculateCost(
+            gunUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
                 gunUpgBaseCosts[upgType], gunUpgLevels[upgType] + 1);
 
             Debug.Log("Gun upgrade applied: " + upgType);

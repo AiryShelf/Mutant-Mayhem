@@ -9,6 +9,8 @@ public class BuildingSystem : MonoBehaviour
     public static float PlayerCredits;
     [SerializeField] float playerStartingCredits;
     public StructureSO structureInHand;
+    public BuildRangeCircle buildRangeCircle;
+    public int previousGunIndex;
     public LayerMask layersForBuildClearCheck;
     public LayerMask layersForRemoveClearCheck;
     [SerializeField] TileBase highlightedTileAsset;
@@ -108,6 +110,11 @@ public class BuildingSystem : MonoBehaviour
 
     void OnBuild(InputAction.CallbackContext context)
     {
+        if (!inBuildMode)
+        {
+            return;
+        }
+
         if (allHighlited)
         {
             if (structureInHand.actionType == ActionType.Build)
@@ -135,16 +142,23 @@ public class BuildingSystem : MonoBehaviour
 
         if (on)
         {
+            buildRangeCircle.EnableBuildCircle(true);
             inBuildMode = true;
+            //previousGunIndex = player.playerShooter.currentGunIndex;
             player.playerShooter.isBuilding = true;
+            //player.playerShooter.SwitchGuns(9);
             buildMenuController.TriggerFadeGroups(true);
             qCubeController.CloseUpgradeWindow();
             //Debug.Log("Opened Build Panel");
         }
         else
         {
+            buildRangeCircle.EnableBuildCircle(false);
             inBuildMode = false;
             player.playerShooter.isBuilding = false;
+            // Only switch guns if not repair gun
+            //if (previousGunIndex != 9)
+                //player.playerShooter.SwitchGuns(previousGunIndex);
             buildMenuController.TriggerFadeGroups(false);
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
@@ -291,10 +305,12 @@ public class BuildingSystem : MonoBehaviour
             highlightedTilePos = mouseGridPos;
 
         // Find player grid position
-        playerGridPos = structureTilemap.WorldToCell(player.transform.position);
+        //playerGridPos = structureTilemap.WorldToCell(player.transform.position);
+        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Highlight if in range and conditions met.
-        if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
+        //if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
+        if (InRange(player.transform.position, mouseWorldPos, 6f))
         {
             inRange = true;
             if (currentAction == ActionType.Destroy)
@@ -456,8 +472,16 @@ public class BuildingSystem : MonoBehaviour
         return mouseCellPos;
     }
 
-    private bool InRange(Vector3Int positionA, Vector3Int positionB, Vector3Int range)
+    private bool InRange(Vector2 positionA, Vector2 positionB, float radius)
     {
+        // Calculate the squared distance between positionA and positionB
+        float distanceSquared = (positionA.x - positionB.x) * (positionA.x - positionB.x) +
+                                (positionA.y - positionB.y) * (positionA.y - positionB.y);
+    
+    // Compare the squared distance with the squared radius
+    return distanceSquared <= radius * radius;
+
+        /*
         Vector3Int distance = positionA - positionB;
 
         // Thsi code allows for different x and y ranges.
@@ -467,6 +491,7 @@ public class BuildingSystem : MonoBehaviour
         }
 
         return true;
+        */
     }
 
     private bool CheckHighlightConditions(RuleTileStructure mousedTile, StructureSO structureInHand)

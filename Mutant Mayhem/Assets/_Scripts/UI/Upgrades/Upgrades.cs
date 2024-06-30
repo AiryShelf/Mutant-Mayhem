@@ -88,7 +88,7 @@ public abstract class Upgrade
         return false; 
     }
 
-    public virtual int CalculateCost(int baseCost, int level) 
+    public virtual int CalculateCost(Player player, int baseCost, int level) 
     { 
         return baseCost * level; 
     }
@@ -160,7 +160,7 @@ public class PlayerAccuracyUpgrade : Upgrade
         playerStats.accuracy = Mathf.Clamp(playerStats.accuracy, 0, 1);
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
         // Double the cost each level
         int newCost = baseCost;
@@ -277,6 +277,21 @@ public class PlayerHealUpgrade : Upgrade
 
     public static int HealAmount = 100;
 
+    public static int GetUpgAmount(PlayerHealth health)
+    {
+        int amount;
+        int missingHealth = Mathf.FloorToInt(health.GetMaxHealth() - health.GetHealth());
+        
+        if (missingHealth <= 0)
+            amount = 0;
+        else if (missingHealth < HealAmount)
+            amount = missingHealth;
+        else
+            amount = HealAmount;
+
+        return amount;
+    }
+
     public override bool Apply(PlayerStats playerStats)
     {
         if (playerStats.playerHealthScript.GetHealth() <
@@ -291,10 +306,16 @@ public class PlayerHealUpgrade : Upgrade
         }
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // No extra cost after consumable
-        return baseCost;
+        float healthRatio = (float)GetUpgAmount(player.stats.playerHealthScript) / HealAmount;
+        return Mathf.FloorToInt(baseCost * healthRatio);
+    }
+
+    public static int GetCost(Player player, int baseCost)
+    {
+        float healthRatio = (float)GetUpgAmount(player.stats.playerHealthScript) / HealAmount;
+        return Mathf.FloorToInt(baseCost * healthRatio);
     }
 }
 
@@ -303,6 +324,20 @@ public class QCubeRepairUpgrade : Upgrade
     public QCubeRepairUpgrade() : base(ConsumablesUpgrade.QCubeRepair) { }
 
     public static int RepairAmount = 100;
+
+    public static int GetUpgAmount(QCubeHealth health)
+    {
+        int amount;
+        int missingHealth = Mathf.FloorToInt(health.GetMaxHealth() - health.GetHealth());
+        if (missingHealth <= 0)
+            amount = 0;
+        else if (missingHealth < RepairAmount)
+            amount = missingHealth;
+        else
+            amount = RepairAmount;
+
+        return amount;
+    }
 
     public override bool Apply(PlayerStats playerStats)
     {
@@ -315,10 +350,16 @@ public class QCubeRepairUpgrade : Upgrade
         else return false;
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // No extra cost after consumable
-        return baseCost;
+        float healthRatio = (float)GetUpgAmount(player.stats.qCubeStats.healthScript) / RepairAmount;
+        return Mathf.FloorToInt(baseCost * healthRatio);
+    }
+
+    public static int GetCost(Player player, int baseCost)
+    {
+        float healthRatio = (float)GetUpgAmount(player.stats.qCubeStats.healthScript) / RepairAmount;
+        return Mathf.FloorToInt(baseCost * healthRatio);
     }
 }
 
@@ -334,9 +375,15 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
         return true;
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
         // No extra cost after consumable
+        return baseCost;
+    }
+
+    public static int GetCost(Player player, int baseCost)
+    {
+        
         return baseCost;
     }
 }
@@ -353,9 +400,14 @@ public class SMGBuyAmmoUpgrade : Upgrade
         return true;
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
         // No extra cost after consumable
+        return baseCost;
+    }
+    public static int GetCost(Player player, int baseCost)
+    {
+        
         return baseCost;
     }
 }
@@ -376,7 +428,7 @@ public class QCubeMaxHealthUpgrade : Upgrade
             qCubeStats.healthScript.GetMaxHealth() + UpgAmount);
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
         // Double the cost each level
         int newCost = baseCost;
@@ -499,7 +551,7 @@ public class GunAccuracyUpgrade : Upgrade
         return upgAmount;
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
         // Double the cost each level
         int newCost = baseCost;
@@ -526,7 +578,7 @@ public class RangeUpgrade : Upgrade
         gunSO.bulletLifeTime += gunSO.bulletRangeUpgAmt;
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
         // Double the cost each level
         int newCost = baseCost;
@@ -553,7 +605,7 @@ public class RecoilUpgrade : Upgrade
         gunSO.kickback += gunSO.kickbackUpgNegAmt;
     }
 
-    public override int CalculateCost(int baseCost, int level)
+    public override int CalculateCost(Player player, int baseCost, int level)
     {
         // Double the cost each level
         int newCost = baseCost;

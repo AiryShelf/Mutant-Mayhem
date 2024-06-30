@@ -20,8 +20,9 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     [Header("Randomize Variables")]
     public bool randomize;
+    public float randSpeedFactor = 0.1f;
     public float minSize;
-    public float randomColorFactor;
+    public float randColorFactor;
     public float gaussMeanSize;
     public float gaussStdDev;
 
@@ -115,10 +116,13 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
     {
         if (randomize)
         {
+            // Randomize speed
+            moveSpeedBase *= Random.Range(1 - randSpeedFactor, 1 + randSpeedFactor);
+
             // Randomize color
-            float randomColorRed = Random.Range(-randomColorFactor, randomColorFactor);
-            float randomColorGreen = Random.Range(-randomColorFactor, randomColorFactor);
-            float randomColorBlue = Random.Range(-randomColorFactor, randomColorFactor);
+            float randomColorRed = Random.Range(-randColorFactor, randColorFactor);
+            float randomColorGreen = Random.Range(-randColorFactor, randColorFactor);
+            float randomColorBlue = Random.Range(-randColorFactor, randColorFactor);
             sR.color = new Color(sR.color.r + randomColorRed,
                                  sR.color.g + randomColorGreen,
                                  sR.color.b + randomColorBlue);

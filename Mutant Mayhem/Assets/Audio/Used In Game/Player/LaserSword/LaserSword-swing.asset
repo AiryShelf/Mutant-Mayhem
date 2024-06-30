@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
-  m_Name: LaserSword
+  m_Name: LaserSword-swing
   m_EditorClassIdentifier: 
   soundName: 
   soundType: 1
   mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
-  - {fileID: 8300000, guid: 1729845020c8e41468ae99c69003b263, type: 3}
-  - {fileID: 8300000, guid: 8552808032b63594cb5ae7c93f66e027, type: 3}
-  - {fileID: 8300000, guid: 51b956ea9a5a8184d90a131c721f963e, type: 3}
-  - {fileID: 8300000, guid: 720363d0055bb43459e600fa34829458, type: 3}
-  - {fileID: 8300000, guid: 9c7d449f4f66edf468ca8f5a13bb741a, type: 3}
+  - {fileID: 8300000, guid: ff04e87119d221a4aa56c65381e1c286, type: 3}
+  - {fileID: 8300000, guid: e0e0a613d3ebb24438479575a17ba2e0, type: 3}
+  - {fileID: 8300000, guid: 61381e23862ccda45b737cf0f944736f, type: 3}
+  - {fileID: 8300000, guid: 3de75b9109071304a99742d04019bac4, type: 3}
+  - {fileID: 8300000, guid: 9179b53d2ab18be48b833157dfd26951, type: 3}
+  - {fileID: 8300000, guid: 15a569646062bf640bfebb2dde5b72f6, type: 3}
   loop: 0
-  volume: 1
+  volume: 0.8
   pitch: 1
   pitchRandRange: 0.1
   spatialBlend: 0.8

@@ -104,9 +104,9 @@ public class UIUpgrade : MonoBehaviour
             {
                 // Consumables
                 upgLvl = upgradeSystem.consumablesUpgLevels[consumablesUpgrade];
-                upgCost = upgradeSystem.consumablesUpgCurrCosts[consumablesUpgrade];
+                upgCost = UpgStatGetter.GetUpgCost(player, consumablesUpgrade, upgradeSystem);
                 statValue = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
-                upgAmount = UpgStatGetter.GetUpgAmount(consumablesUpgrade);
+                upgAmount = UpgStatGetter.GetUpgAmount(player, consumablesUpgrade);
             }
 
             else if (upgradeFamily == UpgradeFamily.GunStats)
@@ -130,8 +130,7 @@ public class UIUpgrade : MonoBehaviour
                         break;
                     }
                 }
-                statValue = UpgStatGetter.GetStatValue(
-                                upgradeSystem.player, gunStatsUpgrade, playerGunIndex);
+                statValue = UpgStatGetter.GetStatValue(player, gunStatsUpgrade, playerGunIndex);
                 upgAmount = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeSystem);
             }
 
@@ -141,7 +140,7 @@ public class UIUpgrade : MonoBehaviour
                 upgLvl = upgradeSystem.playerStatsUpgLevels[playerStatsUpgrade];
                 maxLvl = upgradeSystem.playerStatsUpgMaxLevels[playerStatsUpgrade];
                 upgCost = upgradeSystem.playerStatsUpgCurrCosts[playerStatsUpgrade];
-                statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, playerStatsUpgrade);
+                statValue = UpgStatGetter.GetStatValue(player, playerStatsUpgrade);
                 upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeSystem);
             }
 
@@ -165,6 +164,7 @@ public class UIUpgrade : MonoBehaviour
             // Upgrade buttons text
             if (showLevelsText)
             {
+                // Levels text
                 if (upgLvl + 1 > maxLvl)
                 {
                     upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + 
@@ -178,6 +178,7 @@ public class UIUpgrade : MonoBehaviour
             }
             else
             {
+                // No levels text
                 upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag +
                                 "\n" + costColorTag + "$" + upgCost + endColorTag; 
             }

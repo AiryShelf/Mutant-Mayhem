@@ -13,6 +13,7 @@ public class TutorialPanel : MonoBehaviour
         if (SettingsManager.TutorialDisabled == true)
         {
             Destroy(gameObject);
+            return;
         }
         else
         {

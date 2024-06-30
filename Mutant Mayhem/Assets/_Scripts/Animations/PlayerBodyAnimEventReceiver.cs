@@ -71,7 +71,7 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
         animControllerPlayer.MeleeAnimationPlaying(true);
         meleeControllerPlayer.MeleeColliderToggle(true);
 
-        meleeControllerPlayer.PlayMeleeSound();
+        meleeControllerPlayer.PlayMeleeSwingSound();
     }
 
     void OnMeleeAttackStamina()

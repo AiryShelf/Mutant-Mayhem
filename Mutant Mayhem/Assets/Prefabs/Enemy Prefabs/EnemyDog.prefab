@@ -60,8 +60,9 @@ MonoBehaviour:
   moveSpeedBase: 4
   rotateSpeedBase: 3
   randomize: 1
-  minSize: 0.8
-  randomColorFactor: 0.2
+  randSpeedFactor: 0.1
+  minSize: 1
+  randColorFactor: 0.5
   gaussMeanSize: 2
   gaussStdDev: 0.4
   <health>k__BackingField: {fileID: 1640060437583579680}
@@ -88,6 +89,8 @@ MonoBehaviour:
   hitEffectsChild: {fileID: 853075169137754596}
   corpsePrefab: {fileID: 3246120828009000940, guid: faec62a3480e22041925d4784d0e1d5c, type: 3}
   deathTorque: 20
+  painSound: {fileID: 0}
+  painSoundCooldown: 0.3
 --- !u!114 &8299610102731463758
 MonoBehaviour:
   m_ObjectHideFlags: 0

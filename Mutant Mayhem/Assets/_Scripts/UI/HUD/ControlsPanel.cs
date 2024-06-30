@@ -38,6 +38,12 @@ public class ControlsPanel : MonoBehaviour
         helpAction.performed += OnHelpPressed;
     }
 
+    void Start()
+    {
+        if (!SettingsManager.TutorialDisabled)
+            TogglePanel();
+    }
+
     void OnDisable()
     {
         helpAction.performed -= OnHelpPressed;

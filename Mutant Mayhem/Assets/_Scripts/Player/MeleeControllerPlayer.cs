@@ -13,7 +13,8 @@ public class MeleeControllerPlayer : MonoBehaviour
     public SwordController swordController;
     [SerializeField] PlayerShooter playerShooter;
     [SerializeField] AnimationControllerPlayer animationControllerPlayer;
-    [SerializeField] SoundSO swordSound;
+    [SerializeField] SoundSO swordSwingSound;
+    [SerializeField] SoundSO swordHitSound;
     public Stamina myStamina;
     
     void Start()
@@ -33,9 +34,9 @@ public class MeleeControllerPlayer : MonoBehaviour
         }
     }
 
-    public void PlayMeleeSound()
+    public void PlayMeleeSwingSound()
     {
-        AudioManager.instance.PlaySoundAt(swordSound, transform.position);
+        AudioManager.instance.PlaySoundAt(swordSwingSound, transform.position);
     }
 
     public void MeleeColliderToggle(bool on)
@@ -58,6 +59,8 @@ public class MeleeControllerPlayer : MonoBehaviour
 
     public void Hit(Collider2D other, Vector2 point)
     {
+        AudioManager.instance.PlaySoundAt(swordHitSound, point);
+
         EnemyBase enemy = other.GetComponent<EnemyBase>();
         if (enemy != null)
         {     

@@ -206,18 +206,18 @@ public static class UpgStatGetter
         return amount;
     }
 
-    public static string GetUpgAmount(ConsumablesUpgrade consumablesUpgrade)
+    public static string GetUpgAmount(Player player, ConsumablesUpgrade consumablesUpgrade)
     {
         string amount = "null";
 
         switch (consumablesUpgrade)
         {
             case ConsumablesUpgrade.PlayerHeal:
-                amount = "+" + PlayerHealUpgrade.HealAmount.ToString();
+                amount = "+" + PlayerHealUpgrade.GetUpgAmount(player.stats.playerHealthScript).ToString();
                 return amount;
 
             case ConsumablesUpgrade.QCubeRepair:
-                amount = "+" + QCubeRepairUpgrade.RepairAmount.ToString();
+                amount = "+" + QCubeRepairUpgrade.GetUpgAmount(player.stats.qCubeStats.healthScript).ToString();
                 return amount;
 
             case ConsumablesUpgrade.GrenadeBuyAmmo:
@@ -287,6 +287,36 @@ public static class UpgStatGetter
         }
 
         return amount;
+    }
+
+    #endregion
+
+    #region Upgrade Costs
+
+    public static int GetUpgCost(Player player, ConsumablesUpgrade consumablesUpgrade, UpgradeSystem upgradeSystem)
+    {
+        int cost = 0;
+
+        switch (consumablesUpgrade)
+        {
+            case ConsumablesUpgrade.PlayerHeal:
+                cost = PlayerHealUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+
+            case ConsumablesUpgrade.QCubeRepair:
+                cost = QCubeRepairUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+
+            case ConsumablesUpgrade.GrenadeBuyAmmo:
+                cost = GrenadeBuyAmmoUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+
+            case ConsumablesUpgrade.SMGBuyAmmo:
+                cost = SMGBuyAmmoUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+        }
+
+        return cost;
     }
 
     #endregion

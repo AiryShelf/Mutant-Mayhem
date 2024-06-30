@@ -333,33 +333,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The objective is to survive while defending the Quantum Cube from waves
-    of mutants.
-
-
-    You''ve taken a job in a remote sector of the Galaxy to investigate
-    and retrieve samples of strange lifeforms which were recently detected.  It''s
-    just you, an AI powered ship, and a Quantum Matter Exchange Interface, or Q Cube. 
-    The Cube is your lifeline back to your ship and home.  Samples of lifeform tissues
-    are teleported back to your ship via this device, and it''s also how you get
-    paid and upgrade your gear.
-
-
-    Oddly enough, all lifeforms found so far have
-    striking similarities to those we find (and used to find) on Earth.  Further
-    investigation is required to find out how this is possible, and how long these
-    organisms have been here.
-
-
-    The lifeforms, dubbed "Mutants", are extremely
-    hostile.  Approach the Cube and press ''Tab'' to access the upgrades you''ll
-    need to survive.
-
-
-    Good luck
-
-
-'
+  m_text: "The objective is to survive while defending the Quantum Cube from waves
+    of mutants.  Approach the Cube and press 'Tab' to access the upgrades you'll
+    need to survive.\n\nYou've arrived on site for a job in a remote sector of the
+    galaxy to investigate and retrieve samples of strange lifeforms which were recently
+    detected on an oxygen rich planet.  It's just you, an AI powered ship, and a
+    Quantum Matter Exchange Interface, or Q Cube.  The Cube is your lifeline back
+    to your ship and home.  Defend it at all costs.  Samples of lifeform tissues
+    are teleported back to your ship via this device in exchange for Credits.\n\nOddly
+    enough, all lifeforms found so far have striking similarities to those we find
+    (and used to find) on Earth.  Further investigation is required to find out how
+    this is possible, and how long these organisms have been here.\n\nThe lifeforms,
+    dubbed \"Mutants\", are extremely hostile.  \n\nGood luck"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -734,8 +719,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -19.7488}
-  m_SizeDelta: {x: 441.36, y: 380.6176}
+  m_AnchoredPosition: {x: 0, y: -25.946188}
+  m_SizeDelta: {x: 468.5844, y: 393.0124}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9067666444432964570
 MonoBehaviour:
@@ -821,9 +806,9 @@ RectTransform:
   - {fileID: 2972609625071404820}
   m_Father: {fileID: 3458928221112978256}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 145.4, y: 28.100006}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -75.600006, y: 28.100006}
   m_SizeDelta: {x: 123.81, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &764418102991939631
@@ -953,10 +938,10 @@ RectTransform:
   - {fileID: 1447348428704786458}
   m_Father: {fileID: 3458928221112978256}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -22.539993}
-  m_SizeDelta: {x: 429.96, y: -54.929993}
+  m_SizeDelta: {x: -12.040009, y: -54.929993}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1069657796254461487
 CanvasRenderer:
