@@ -92,6 +92,20 @@ public class Player : MonoBehaviour
         playerShooter.playerStats = stats;
     }
 
+    public void RemoveSpaceBar()
+    {
+        InputAction throwAction = inputAsset.FindActionMap("Player").FindAction("Throw");
+
+        // Override index?  testing needed!
+        /*
+        InputBinding inputBinding = throwAction.bindings[1];
+        inputBinding.overridePath = "path";
+        throwAction.ApplyBindingOverride(1, null);
+        */
+        
+        
+    }
+
     void Start()
     { 
         RefreshMoveForces();

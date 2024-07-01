@@ -5,20 +5,20 @@ using UnityEngine.UI;
 
 public class OffScreenIndicator : MonoBehaviour
 {
-    public GameObject target; // The object you want to track
-    public Image arrow; // The arrow UI element
+    public GameObject target;
+    public Image arrow;
     public Camera mainCamera;
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector3 targetPosition = mainCamera.WorldToViewportPoint(target.transform.position);
-
+        //Debug.Log("offscreen targetPosition: " + targetPosition);
         if (IsTargetOffScreen(targetPosition))
         {
             arrow.enabled = true;
             Vector2 screenPosition = CalculateScreenPosition(targetPosition);
             arrow.rectTransform.position = screenPosition;
-            arrow.rectTransform.rotation = CalculateArrowRotation(target.transform.position);
+            arrow.rectTransform.rotation = CalculateArrowRotation(screenPosition, target.transform.position);
         }
         else
         {
@@ -38,10 +38,11 @@ public class OffScreenIndicator : MonoBehaviour
         return mainCamera.ViewportToScreenPoint(targetPosition);
     }
 
-    private Quaternion CalculateArrowRotation(Vector3 targetWorldPosition)
+    private Quaternion CalculateArrowRotation(Vector2 screenPosition, Vector3 targetWorldPosition)
     { 
-        Vector3 direction = targetWorldPosition - mainCamera.transform.position;
+        Vector3 direction = Camera.main.ScreenToWorldPoint(arrow.rectTransform.position) - targetWorldPosition;
+
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        return Quaternion.Euler(new Vector3(0, 0, angle - 90));
+        return Quaternion.Euler(new Vector3(0, 0, angle + 90));
     }
 }

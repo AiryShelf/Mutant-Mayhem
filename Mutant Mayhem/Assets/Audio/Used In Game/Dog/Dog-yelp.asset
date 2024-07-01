@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
+  m_Name: Dog-yelp
+  m_EditorClassIdentifier: 
+  soundName: 
+  soundType: 1
+  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
+  clips:
+  - {fileID: 8300000, guid: c4056704af976074b85c27a09fa40e85, type: 3}
+  - {fileID: 8300000, guid: 326e26b3ea501874198701e73a32bd43, type: 3}
+  - {fileID: 8300000, guid: 0a7b93215d9b85c4bad4ba38fd478325, type: 3}
+  - {fileID: 8300000, guid: 2802dd9fb10d7c44a92f7910c4f26269, type: 3}
+  - {fileID: 8300000, guid: 5e7c7a71e7131934591f08e2799baa27, type: 3}
+  - {fileID: 8300000, guid: a29ecdc38646e994698e1967022a3e8c, type: 3}
+  - {fileID: 8300000, guid: baf00e1c87b06254a8743acb52ec3fcf, type: 3}
+  - {fileID: 8300000, guid: 4c6369ec93812624d872fd10dfa1d756, type: 3}
+  - {fileID: 8300000, guid: cf801678fc7e6ce438f917583376224e, type: 3}
+  - {fileID: 8300000, guid: 3528129d6a14fc24e93e8f4f775749e5, type: 3}
+  - {fileID: 8300000, guid: 9ce8b0fe14c380c49a3edba36c2717c7, type: 3}
+  - {fileID: 8300000, guid: 4501512526e0ed84a86797c83bcf6be4, type: 3}
+  - {fileID: 8300000, guid: ec23c487c3f80124c8580fdb96a3a111, type: 3}
+  - {fileID: 8300000, guid: 30c3b356f41d8624a9ee801c595e6b67, type: 3}
+  - {fileID: 8300000, guid: 6b1b4fa5f595e33468c1c9154e88acdf, type: 3}
+  loop: 0
+  volume: 0.5
+  pitch: 1
+  pitchRandRange: 0.2
+  spatialBlend: 1
+  minDistance: 20
+  maxDistance: 100

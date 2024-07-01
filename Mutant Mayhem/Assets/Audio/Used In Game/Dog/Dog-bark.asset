@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
+  m_Name: Dog-bark
+  m_EditorClassIdentifier: 
+  soundName: 
+  soundType: 1
+  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
+  clips:
+  - {fileID: 8300000, guid: 21c76e94ff7bcdd40856df2629b00bb7, type: 3}
+  - {fileID: 8300000, guid: 293407a10d4ace441ae6d6e541b31fdb, type: 3}
+  - {fileID: 8300000, guid: cc9eb0f6b9e2f5e4fa80979e7e0fe8b1, type: 3}
+  - {fileID: 8300000, guid: e93ebfb5f5b52d440877c6adbab13639, type: 3}
+  - {fileID: 8300000, guid: cf974a740673acb4fa1fa59b4d29f74f, type: 3}
+  - {fileID: 8300000, guid: 70d9c67da044b5a4dae56ab4e3711e98, type: 3}
+  - {fileID: 8300000, guid: cb9707f20a9bfb5419f50ba6679e90f8, type: 3}
+  - {fileID: 8300000, guid: 78f03a596fd0dc64584ba001f0b07717, type: 3}
+  - {fileID: 8300000, guid: 2705fce959546154c9000699a765551c, type: 3}
+  - {fileID: 8300000, guid: cf3d4df374a669e47a8de657bb66f7ee, type: 3}
+  - {fileID: 8300000, guid: fbf84a56bb80e474faa2828882371333, type: 3}
+  - {fileID: 8300000, guid: b4f47fa4c881bf542bda0f794e34941d, type: 3}
+  - {fileID: 8300000, guid: db030cd050965874590b6592bf5539b0, type: 3}
+  - {fileID: 8300000, guid: cbb342765209b0a46a89adfebfbbbf2f, type: 3}
+  - {fileID: 8300000, guid: b155e0c62db638845b3951e5e266c79f, type: 3}
+  - {fileID: 8300000, guid: e15d0a04cafe4804f8abce29c3587df4, type: 3}
+  - {fileID: 8300000, guid: 99f9e38549b273f4eb999f0389c4bcd0, type: 3}
+  - {fileID: 8300000, guid: e2d381d7a7e748441b54ef872b86042f, type: 3}
+  - {fileID: 8300000, guid: 358c4914401f19444a1441e29a8faf7b, type: 3}
+  - {fileID: 8300000, guid: 1186d79351fe68e40902987bde99092c, type: 3}
+  - {fileID: 8300000, guid: 45dcb7475980ebd43ba5738eb6687312, type: 3}
+  - {fileID: 8300000, guid: fb22c0d91c0e5e04f92f90746e95d8e0, type: 3}
+  - {fileID: 8300000, guid: 38dfa3d3d9183d6408a521d4dadb7e06, type: 3}
+  - {fileID: 8300000, guid: 9fa65e19aa260d142b239aef3c40fcd7, type: 3}
+  - {fileID: 8300000, guid: 7a6fd37b86a9de1468489275c40f9efe, type: 3}
+  - {fileID: 8300000, guid: 411c90e6e96b26443b0da58f1dafb527, type: 3}
+  - {fileID: 8300000, guid: 49ff12e83e7260c44be27f73081377a8, type: 3}
+  - {fileID: 8300000, guid: 1cc787ac73afdbd45ae09bed6ee887a5, type: 3}
+  - {fileID: 8300000, guid: dede83dbd597f754aa8ddd952e5e51cb, type: 3}
+  - {fileID: 8300000, guid: 50ca9699c2792c64fa57e3db9349d66b, type: 3}
+  - {fileID: 8300000, guid: 7bfcaf8ffaaac6740b4ccecce36f3a69, type: 3}
+  - {fileID: 8300000, guid: 2ae23675b0982d0458d2f3576a97ac4c, type: 3}
+  - {fileID: 8300000, guid: b8306b04fb6f45d45933180c3abf2bc6, type: 3}
+  - {fileID: 8300000, guid: 34c974f6f43e67449ad54296866eb4c1, type: 3}
+  - {fileID: 8300000, guid: 65c6f471f3691024886f348bb89befa0, type: 3}
+  - {fileID: 8300000, guid: 3c8b0118b89cc31479908c13c23094dc, type: 3}
+  - {fileID: 8300000, guid: 0a6861fdc11a1ee49b05a3035b4c0932, type: 3}
+  - {fileID: 8300000, guid: 3622c84c8b45def4793c06b3efa4aab2, type: 3}
+  - {fileID: 8300000, guid: 4e2c0d4d9568b2f4ab823ef2fd0fc37a, type: 3}
+  - {fileID: 8300000, guid: 289d614cdc57be6419ab1dc5ecb4b2fa, type: 3}
+  - {fileID: 8300000, guid: 9083bbe43a0bbb94bb19ebac2e0fe8fd, type: 3}
+  - {fileID: 8300000, guid: ea6b72d171866ad4cb0a36cdd98a32dc, type: 3}
+  loop: 0
+  volume: 0.2
+  pitch: 1.2
+  pitchRandRange: 0.2
+  spatialBlend: 1
+  minDistance: 20
+  maxDistance: 100

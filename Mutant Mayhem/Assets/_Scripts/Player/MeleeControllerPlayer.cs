@@ -15,6 +15,8 @@ public class MeleeControllerPlayer : MonoBehaviour
     [SerializeField] AnimationControllerPlayer animationControllerPlayer;
     [SerializeField] SoundSO swordSwingSound;
     [SerializeField] SoundSO swordHitSound;
+    [SerializeField] float meleeSoundCooldown = 0.1f;
+    float lastMeleeSoundTime;
     public Stamina myStamina;
     
     void Start()
@@ -59,7 +61,11 @@ public class MeleeControllerPlayer : MonoBehaviour
 
     public void Hit(Collider2D other, Vector2 point)
     {
-        AudioManager.instance.PlaySoundAt(swordHitSound, point);
+        if (Time.time - lastMeleeSoundTime >= meleeSoundCooldown)
+        {
+            AudioManager.instance.PlaySoundAt(swordHitSound, point);
+            lastMeleeSoundTime = Time.time;
+        }
 
         EnemyBase enemy = other.GetComponent<EnemyBase>();
         if (enemy != null)

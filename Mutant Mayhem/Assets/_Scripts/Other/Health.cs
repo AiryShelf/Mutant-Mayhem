@@ -46,18 +46,7 @@ public class Health : MonoBehaviour
 
     public virtual void ModifyHealth(float value, GameObject other)
     {
-        // Pain sounds
-        if (value < 0)
-        {
-            if (painSound != null)
-            {
-                if (Time.time - lastPainSoundTime >= painSoundCooldown)
-                {
-                    AudioManager.instance.PlaySoundAt(painSound, transform.position);
-                    lastPainSoundTime = Time.time;
-                }
-            }
-        }
+        PlayPainSound(value);
 
         health += value;
         if (health > maxHealth)
@@ -75,8 +64,6 @@ public class Health : MonoBehaviour
             }
             else if (this.tag == "Enemy")
                 StatsCounterPlayer.DamageToEnemies -= value;
-            else if (this.tag == "Player")
-            StatsCounterPlayer.DamageToPlayer -= value;
         }
         
         // Die
@@ -93,6 +80,21 @@ public class Health : MonoBehaviour
 
             Die();
             return;
+        }
+    }
+
+    protected void PlayPainSound(float value)
+    {
+        if (value < 0)
+        {
+            if (painSound != null)
+            {
+                if (Time.time - lastPainSoundTime >= painSoundCooldown)
+                {
+                    AudioManager.instance.PlaySoundAt(painSound, transform.position);
+                    lastPainSoundTime = Time.time;
+                }
+            }
         }
     }
 

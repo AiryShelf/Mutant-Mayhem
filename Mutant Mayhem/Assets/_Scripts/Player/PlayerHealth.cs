@@ -12,9 +12,32 @@ public class PlayerHealth : Health
         StartCoroutine(HealthRegen());
     }
 
+    public override void ModifyHealth(float value, GameObject other)
+    {
+        if (!hasDied)
+            PlayPainSound(value);
+
+        health += value;
+        if (health > maxHealth)
+            health = maxHealth;
+
+        // Stats counting
+        // Layer# 8 - PlayerProjectiles.  player, enemy
+        if (value < 0)
+        {
+            StatsCounterPlayer.DamageToPlayer -= value;
+        }
+        
+        // Die
+        if (health <= 0 && !hasDied)
+        {
+            Die();
+            return;
+        }
+    }
+
     public override void SetMaxHealth(float value)
     {
-
         maxHealth = value;
     }
 
@@ -34,7 +57,8 @@ public class PlayerHealth : Health
 
     public override void Die()
     {
-        Debug.Log("PLAYER IS DEAD");
+        //Debug.Log("PLAYER IS DEAD");
+        hasDied = true;
         player.isDead = true;
         myRb.freezeRotation = false;
         // Random flip 

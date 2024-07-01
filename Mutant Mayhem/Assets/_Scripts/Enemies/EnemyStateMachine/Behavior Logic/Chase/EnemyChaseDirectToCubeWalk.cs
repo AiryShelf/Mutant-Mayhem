@@ -24,7 +24,8 @@ public class EnemyChaseDirectToCubeWalk : EnemyChaseSOBase
     {
         base.DoExitLogic();
 
-        enemyBase.StopCoroutine(distanceCheck);
+        if (distanceCheck != null)
+            enemyBase.StopCoroutine(distanceCheck);
     }
 
     public override void DoFrameUpdateLogic() 
