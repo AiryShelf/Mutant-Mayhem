@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public float knockback = 1f;
     [HideInInspector] public float destroyTime;
 
-    [SerializeField] protected Rigidbody2D myRb;
+    [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected BulletEffectsHandler effectsHandler;
     [SerializeField] protected SoundSO shootSound;
     [SerializeField] protected SoundSO hitSound;
@@ -61,7 +61,7 @@ public class Bullet : MonoBehaviour
     protected virtual void CheckCollisions()
     {
         // Check with raycast
-        Vector2 raycastDir = myRb.velocity;
+        Vector2 raycastDir = rb.velocity;
         RaycastHit2D raycast = Physics2D.Raycast(transform.position, raycastDir, 
                                                  raycastDir.magnitude * Time.fixedDeltaTime, hitLayers);
         if (raycast.collider)

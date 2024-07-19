@@ -19,7 +19,7 @@ public class ShootingPlatform : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             Debug.Log("Player entered platform");
             playerShooter.isElevated = true;
@@ -30,7 +30,7 @@ public class ShootingPlatform : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             Debug.Log("Player exitted platform");
             playerShooter.isElevated = false;

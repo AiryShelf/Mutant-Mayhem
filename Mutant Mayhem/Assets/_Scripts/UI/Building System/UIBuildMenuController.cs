@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
@@ -14,6 +16,9 @@ public class UIBuildMenuController : MonoBehaviour
     public FadeCanvasGroupsWave fadeCanvasGroups;
     [SerializeField] GameObject tutorialBuildPanelPrefab;
     [SerializeField] RectTransform gamePlayCanvas;
+
+    InputSystemUIInputModule uIInputModule;
+    InputActionReference origLeftClickAction;
 
     void Awake()
     {
@@ -50,13 +55,17 @@ public class UIBuildMenuController : MonoBehaviour
     {
         fadeCanvasGroups.Initialize(); 
         myCanvasGroup.blocksRaycasts = false;
+
+        uIInputModule = EventSystem.current.GetComponent<InputSystemUIInputModule>();
+
+        origLeftClickAction = uIInputModule.leftClick;
     }
 
     public void TriggerFadeGroups(bool active)
     {
         if (active)
         {
-            if (!SettingsManager.tutorialShowedBuild)
+            if (!TutorialManager.tutorialShowedBuild)
             {
                 StartCoroutine(DelayOpen());
                 return;
@@ -64,11 +73,13 @@ public class UIBuildMenuController : MonoBehaviour
 
             fadeCanvasGroups.isTriggered = true;
             myCanvasGroup.blocksRaycasts = true;
+            uIInputModule.leftClick = null;
         }
         else
         {
             fadeCanvasGroups.isTriggered = false;
             myCanvasGroup.blocksRaycasts = false;
+            uIInputModule.leftClick = origLeftClickAction;
         }
     }
 

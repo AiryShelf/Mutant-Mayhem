@@ -4,19 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[System.Serializable]
-public class QCubeStats
-{
-    public QCubeHealth healthScript;
-    public float armour = 0;
-    public float pulseDefenceForce = 0;
-}
-
 public class QCubeController : MonoBehaviour
 {
     [SerializeField] GameObject tutorialUpgradePanelPrefab;
     [SerializeField] RectTransform gamePlayCanvas;
-    public QCubeStats qCubeStats;
     [Space]
     [Header("Death")]
     [SerializeField] DeathCanvas deathCanvas;
@@ -55,19 +46,12 @@ public class QCubeController : MonoBehaviour
         escapeAction = uIActionMap.FindAction("Escape");
 
         messagePanel = FindObjectOfType<MessagePanel>();
-
-        qCubeStats.healthScript = GetComponent<QCubeHealth>();
     }
 
     void OnEnable()
     {  
         qCubeAction.performed += OnQCubeInteract;
         escapeAction.started += OnEscapePressed;
-    }
-
-    void Start()
-    {
-        player.stats.qCubeStats = this.qCubeStats;
     }
 
     void OnDisable()
@@ -115,6 +99,11 @@ public class QCubeController : MonoBehaviour
 
     void OnQCubeInteract(InputAction.CallbackContext context)
     {
+        if (player.playerShooter.isBuilding)
+        {
+            player.animControllerPlayer.ToggleBuildMode();
+        }
+
         Collider2D col = Physics2D.OverlapCircle(
             transform.position, interactRadius, LayerMask.GetMask("Player"));
         if (col != null)
@@ -146,14 +135,12 @@ public class QCubeController : MonoBehaviour
 
     IEnumerator OpenUpgradeWindow()
     {
-        if (!SettingsManager.tutorialShowedUpgrade)
+        if (!TutorialManager.tutorialShowedUpgrade)
         {
             Instantiate(tutorialUpgradePanelPrefab, gamePlayCanvas);
         }
         yield return new WaitForFixedUpdate();
         
-        if (player.playerShooter.isBuilding)
-            player.animControllerPlayer.ToggleBuildMode();
         fireAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
@@ -161,7 +148,7 @@ public class QCubeController : MonoBehaviour
 
     public void CloseUpgradeWindow()
     {
-        Debug.Log("CloseUpgradeWindow ran");
+        //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
         panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;

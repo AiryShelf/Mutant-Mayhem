@@ -1,3 +1,4 @@
+using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 public enum UpgradeFamily
 {
     PlayerStats,
-    QCubeStats,
+    StructureStats,
     Consumables,
     GunStats,
 }
@@ -26,10 +27,13 @@ public enum PlayerStatsUpgrade
     HealthRegen,
 }
 
-public enum QCubeStatsUpgrade
+public enum StructureStatsUpgrade
 {
     // QCubeStats
     QCubeMaxHealth,
+    StructureMaxHealth,
+    Armour,
+    MaxTurrets,
 }
 
 public enum ConsumablesUpgrade
@@ -57,7 +61,7 @@ public enum GunStatsUpgrade
 public abstract class Upgrade
 {
     public PlayerStatsUpgrade PlayerStatsUpgType { get; private set; }
-    public QCubeStatsUpgrade QCubeStatsUpgType { get; private set; }
+    public StructureStatsUpgrade StructureUpgType { get; private set; }
     public ConsumablesUpgrade ConsumUpgType { get; private set; }
     public GunStatsUpgrade GunStatsUpgType { get; private set; }
 
@@ -65,9 +69,9 @@ public abstract class Upgrade
     {
         PlayerStatsUpgType = type;
     }
-    protected Upgrade(QCubeStatsUpgrade type)
+    protected Upgrade(StructureStatsUpgrade type)
     {
-        QCubeStatsUpgType = type;
+        StructureUpgType = type;
     }
     protected Upgrade(ConsumablesUpgrade type)
     {
@@ -76,13 +80,13 @@ public abstract class Upgrade
     protected Upgrade(GunStatsUpgrade type)
     {
         GunStatsUpgType = type;
-    }
+    }    
 
     public virtual void Apply(PlayerStats playerStats, int level) { }
-    public virtual void Apply(QCubeStats qCubeStats, int level) { }
+    public virtual void Apply(StructureStats structureStats, int level) { }
     public virtual void Apply(TileStats tileStats, int level) { }
     public virtual void Apply(GunSO gunSO, int level) { }
-    // Consumables vv
+    // Consumables below
     public virtual bool Apply(PlayerStats playerStats) 
     { 
         return false; 
@@ -178,7 +182,7 @@ public class MeleeDamageUpgrade : Upgrade
 
     public static float GetUpgAmount(UpgradeSystem upgradeSystem)
     {
-        float upgAmount = 0.5f * (upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 1);
+        float upgAmount = 0.3f * (upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 1);
         return upgAmount;
     }
 
@@ -258,7 +262,7 @@ public class HealthRegenUpgrade : Upgrade
 {
     public HealthRegenUpgrade() : base(PlayerStatsUpgrade.HealthRegen) { }
 
-    public static float UpgAmount = 0.05f;
+    public static float UpgAmount = 0.1f;
 
     public override void Apply(PlayerStats playerStats, int level)
     {
@@ -341,10 +345,10 @@ public class QCubeRepairUpgrade : Upgrade
 
     public override bool Apply(PlayerStats playerStats)
     {
-        if (playerStats.qCubeStats.healthScript.GetHealth() <
-            playerStats.qCubeStats.healthScript.GetMaxHealth())
+        if (playerStats.structureStats.cubeHealthScript.GetHealth() <
+            playerStats.structureStats.cubeHealthScript.GetMaxHealth())
         {
-            playerStats.qCubeStats.healthScript.ModifyHealth(100, null);
+            playerStats.structureStats.cubeHealthScript.ModifyHealth(100, null);
             return true;
         }
         else return false;
@@ -352,13 +356,13 @@ public class QCubeRepairUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        float healthRatio = (float)GetUpgAmount(player.stats.qCubeStats.healthScript) / RepairAmount;
+        float healthRatio = (float)GetUpgAmount(player.stats.structureStats.cubeHealthScript) / RepairAmount;
         return Mathf.FloorToInt(baseCost * healthRatio);
     }
 
     public static int GetCost(Player player, int baseCost)
     {
-        float healthRatio = (float)GetUpgAmount(player.stats.qCubeStats.healthScript) / RepairAmount;
+        float healthRatio = (float)GetUpgAmount(player.stats.structureStats.cubeHealthScript) / RepairAmount;
         return Mathf.FloorToInt(baseCost * healthRatio);
     }
 }
@@ -414,18 +418,18 @@ public class SMGBuyAmmoUpgrade : Upgrade
 
 #endregion
 
-#region QCube Stats Upgrades
+#region StructureStats Upgrades
 
 public class QCubeMaxHealthUpgrade : Upgrade
 {
-    public QCubeMaxHealthUpgrade() : base(QCubeStatsUpgrade.QCubeMaxHealth) { }
+    public QCubeMaxHealthUpgrade() : base(StructureStatsUpgrade.QCubeMaxHealth) { }
 
     public static float UpgAmount = 200;
 
-    public override void Apply(QCubeStats qCubeStats, int level)
+    public override void Apply(StructureStats structureStats, int level)
     {
-        qCubeStats.healthScript.SetMaxHealth(
-            qCubeStats.healthScript.GetMaxHealth() + UpgAmount);
+        structureStats.cubeHealthScript.SetMaxHealth(
+            structureStats.cubeHealthScript.GetMaxHealth() + UpgAmount);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -440,9 +444,23 @@ public class QCubeMaxHealthUpgrade : Upgrade
     }
 }
 
+public class StructureMaxHealthUpgrade : Upgrade
+{
+    public StructureMaxHealthUpgrade() : base(StructureStatsUpgrade.StructureMaxHealth) { }
+
+    public static float UpgAmount = 0.1f;
+
+    public override void Apply(StructureStats structureStats, int level)
+    {
+        Debug.Log("StructureMaxHealth applied");
+        structureStats.structureMaxHealthFactor += UpgAmount;
+        structureStats.tileManager.ModifyMaxHealthAll(structureStats.structureMaxHealthFactor);
+    }
+}
+
 #endregion
 
-#region Gun Stats Upgrades
+#region GunStats Upgrades
 
 public class GunDamageUpgrade : Upgrade
 {
@@ -454,15 +472,15 @@ public class GunDamageUpgrade : Upgrade
         switch (gunIndex)
         {
             case 0:
-                upgAmount = 0.5f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
+                upgAmount = 0.3f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
                             upgradeSystem.laserPistolUpgLevels[GunStatsUpgrade.GunDamage] + 1);
                 return upgAmount;
             case 1:
-                upgAmount = 0.5f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
+                upgAmount = 0.3f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
                             upgradeSystem.SMGUpgLevels[GunStatsUpgrade.GunDamage] + 1);
                 return upgAmount;
             default:
-                return upgAmount;
+                return upgAmount; 
         }
     }
 

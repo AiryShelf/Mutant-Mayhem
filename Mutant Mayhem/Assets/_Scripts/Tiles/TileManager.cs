@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[System.Serializable]
+public class StructureStats
+{
+    public QCubeHealth cubeHealthScript;
+    public TileManager tileManager;
+    public TurretManager turretManager;
+    public float structureMaxHealthFactor = 1;
+    public float armour = 0;
+    public float pulseDefenceForce = 0;
+}
+
 public class TileStats
 {   
     [SerializeField]public RuleTileStructure ruleTileStructure;
@@ -13,10 +24,12 @@ public class TileStats
 
 public class TileManager : MonoBehaviour
 {
-    // This stores the TileStats for each tile in 
+    // This stores the TileStats/reference for each tile in 
     // the Structures Tilemap (on "Structures" layer)
     private static Dictionary<Vector3Int, TileStats> _TileStatsDict = 
                                             new Dictionary<Vector3Int, TileStats>();
+    private static List<Vector3Int> _Structures = new List<Vector3Int>();
+    public Player player;
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForBuildClearCheck;
@@ -56,6 +69,7 @@ public class TileManager : MonoBehaviour
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
@@ -99,35 +113,7 @@ public class TileManager : MonoBehaviour
                     StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
                 }
 
-                List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
-                foreach (ParticleSystem ps in particlesToClear)
-                {
-                    // Access the particles from the particle system
-                    ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.main.maxParticles];
-                    int particleCount = ps.GetParticles(particles);
-
-                    for (int i = 0; i < particleCount; i++)
-                    {
-                        Vector3 particlePosition = particles[i].position;
-
-                        // Check if the particle is within any of the defined overlap boxes
-                        foreach (Vector3Int pos in positions)
-                        {
-                            Vector2 boxCenter = StructureTilemap.CellToWorld(pos);
-                            boxCenter = new Vector2(boxCenter.x + 0.5f, boxCenter.y + 0.5f);
-
-                            if (IsParticleInBox(particlePosition, boxCenter, Vector2.one))
-                            {
-                                //particles[i].startLifetime = -1f;
-                                //particles[i].startSize = 0;
-                                //particles[i].startColor = new Color(0, 0, 0, 0);
-                                particles[i].remainingLifetime = 0; // Remove the particle by setting its remaining lifetime to zero
-                                break;
-                            }
-                        }
-                    }
-                    ps.SetParticles(particles, particleCount);
-                }
+                ClearParticles(gridPos);
 
                 /*
                 // Clear ground debris
@@ -157,6 +143,39 @@ public class TileManager : MonoBehaviour
             Debug.Log("Grid was not clear for building on");
             return false;
         }       
+    }
+
+    void ClearParticles(Vector3Int gridPos)
+    {
+        List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
+        foreach (ParticleSystem ps in particlesToClear)
+        {
+            // Access the particles from the particle system
+            ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.main.maxParticles];
+            int particleCount = ps.GetParticles(particles);
+
+            for (int i = 0; i < particleCount; i++)
+            {
+                Vector3 particlePosition = particles[i].position;
+
+                // Check if the particle is within any of the defined overlap boxes
+                foreach (Vector3Int pos in positions)
+                {
+                    Vector2 boxCenter = StructureTilemap.CellToWorld(pos);
+                    boxCenter = new Vector2(boxCenter.x + 0.5f, boxCenter.y + 0.5f);
+
+                    if (IsParticleInBox(particlePosition, boxCenter, Vector2.one))
+                    {
+                        //particles[i].startLifetime = -1f;
+                        //particles[i].startSize = 0;
+                        //particles[i].startColor = new Color(0, 0, 0, 0);
+                        particles[i].remainingLifetime = 0; // Remove the particle by setting its remaining lifetime to zero
+                        break;
+                    }
+                }
+            }
+            ps.SetParticles(particles, particleCount);
+        }
     }
 
     bool IsParticleInBox(Vector3 particlePosition, Vector2 boxCenter, Vector2 boxSize)
@@ -197,8 +216,11 @@ public class TileManager : MonoBehaviour
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         AnimatedTilemap.SetTile(rootPos, null);
 
+        // Remove from list and dict
         foreach (var pos in rotatedPositions)
         {
+            if (_Structures.Contains(pos))
+                _Structures.Remove(rootPos + pos);
             _TileStatsDict.Remove(rootPos + pos);
             StructureTilemap.SetTile(rootPos + pos, null);           
         }
@@ -221,7 +243,7 @@ public class TileManager : MonoBehaviour
         // Refund cost
         BuildingSystem.PlayerCredits += cost * ratio / 2;
 
-        Debug.Log("REFUNDED A TILE");
+        //Debug.Log("Refunded a tile");
     }
 
     public void ModifyHealthAt(Vector2 point, float amount)
@@ -230,7 +252,11 @@ public class TileManager : MonoBehaviour
         //Debug.Log("modify health called");
         if (_TileStatsDict.ContainsKey(gridPos))
         {
-            numberOfTilesHit++;
+            if (amount < 0)
+            {
+                numberOfTilesHit++;
+            }
+            
             Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
             _TileStatsDict[rootPos].health += amount;
             _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 
@@ -243,12 +269,39 @@ public class TileManager : MonoBehaviour
                 DestroyTileAt(rootPos);
                 return;
             }
+
             UpdateAnimatedTile(rootPos);
         }
         else
         {
+            // For debug
             numberofTilesMissed++;
             //Debug.Log("Key not found: " + gridPos);
+        }
+    }
+
+    public void ModifyMaxHealthAll(float factor)
+    {
+        foreach (Vector3Int rootPos in _Structures)
+        {
+            ModifyMaxHealthAt(rootPos, factor);
+        }
+    }
+
+    public void ModifyMaxHealthAt(Vector3Int gridPos, float factor)
+    {
+        if (_TileStatsDict.ContainsKey(gridPos))
+        {
+            // Get rootPos and structure
+            Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
+            StructureSO structureSO = _TileStatsDict[rootPos].ruleTileStructure.structureSO;
+
+            // Store ratio of health remaining
+            float ratio = _TileStatsDict[gridPos].health / _TileStatsDict[gridPos].maxHealth;
+
+            // Modify max heatlh and set heatlh to ratio
+            _TileStatsDict[gridPos].maxHealth = structureSO.maxHealth * factor;
+            _TileStatsDict[gridPos].health = _TileStatsDict[gridPos].maxHealth * ratio;
         }
     }
 
@@ -259,8 +312,6 @@ public class TileManager : MonoBehaviour
                                  _TileStatsDict[rootPos].maxHealth);
         List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
 
-        // Stops doors from closing since no damage sprite, plus other logic in the way
-        // Yes, this is a band-aid!  Father's Day tomorrow!
         if (dTiles.Count > 1)
         {
             int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
@@ -281,15 +332,15 @@ public class TileManager : MonoBehaviour
         else 
         {
             int layerMask = LayerMask.GetMask("PlayerOnly");
-            Collider2D door = Physics2D.OverlapPoint(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
-            if (door)
+            Collider2D tileObj = Physics2D.OverlapPoint(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
+            if (tileObj)
             {
-                Debug.Log("Door found at: " + rootPos);
-                door.GetComponent<DoorOpener>().UpdateHealthRatio(GetTileHealthRatio(rootPos));
+                //Debug.Log("TileObject found at: " + rootPos);
+                tileObj.GetComponent<TileObject>().UpdateHealthRatio(GetTileHealthRatio(rootPos));
             }
             else
             {
-                Debug.Log("Door not found");
+                Debug.Log("TileObject not found");
             }
             
         }
@@ -315,7 +366,7 @@ public class TileManager : MonoBehaviour
     public float GetTileHealthRatio(Vector3Int rootPos)
     {
         float healthRatio = (_TileStatsDict[rootPos].maxHealth - _TileStatsDict[rootPos].health) /
-                            _TileStatsDict[rootPos].maxHealth;
+                             _TileStatsDict[rootPos].maxHealth;
 
         return healthRatio;
     }
@@ -498,17 +549,17 @@ public class TileManager : MonoBehaviour
     // To load tile data from pre-set scene tiles, they must be placed on StructureTilemap
     bool ReadTilemapToDict()
     {
-        foreach (Vector3Int rootPos in StructureTilemap.cellBounds.allPositionsWithin)
+        foreach (Vector3Int gridPos in StructureTilemap.cellBounds.allPositionsWithin)
         {
-            if (StructureTilemap.HasTile(rootPos))
+            if (StructureTilemap.HasTile(gridPos))
             {
-                var tileInMap = StructureTilemap.GetTile(rootPos);
+                var tileInMap = StructureTilemap.GetTile(gridPos);
                 if (tileInMap is RuleTileStructure rts)
                 {
-                    if(AddToTileStatsDict(rootPos, rts.structureSO))
+                    if(AddToTileStatsDict(gridPos, rts.structureSO))
                     {
-                        AnimatedTilemap.SetTile(rootPos, 
-                            _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[0]);
+                        AnimatedTilemap.SetTile(gridPos, 
+                            _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
                     }
                     else return false;
                 }
@@ -524,11 +575,16 @@ public class TileManager : MonoBehaviour
             // Add the tile's data to the dictionary at root location
             if (!_TileStatsDict.ContainsKey(rootPos))
             {
+                // Add to structures list
+                _Structures.Add(rootPos);
+
+                float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthFactor;
+                // Add to TileStats
                 _TileStatsDict.Add(rootPos, new TileStats 
                 { 
                     ruleTileStructure = structure.ruleTileStructure,
-                    maxHealth = structure.maxHealth,
-                    health = structure.health,
+                    maxHealth = maxHP,
+                    health = maxHP,
                     rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0)
                 });
             }
@@ -560,6 +616,11 @@ public class TileManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    void RemoveTile()
+    {
+
     }
 
     #endregion

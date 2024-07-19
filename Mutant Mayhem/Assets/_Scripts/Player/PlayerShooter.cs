@@ -4,44 +4,28 @@ using LiteDB.Engine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class PlayerShooter : MonoBehaviour
+public class PlayerShooter : Shooter
 {
-    public List<GunSO> _gunListSource;
-    public List<GunSO> gunList;
     public List<bool> gunsUnlocked;
-    [SerializeField] Transform gunTrans;
     [SerializeField] SpriteRenderer gunSR;
-    [SerializeField] Transform muzzleTrans;
     public Light2D flashlight1;
     public Light2D flashlight2;
     [SerializeField] ParticleSystem bulletCasingsPS;
     [SerializeField] float casingToGroundTime;
-    [SerializeField] Transform casingEjectorTrans;
-    [SerializeField] Transform clipEjectorTrans;
     [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] Animator bodyAnim;
-    public int currentGunIndex = 0;
-    [SerializeField] GunRecoil gunRecoil;
-
     public int[] gunsAmmo;
-    public int[] gunsAmmoInClips;
-
-    [HideInInspector] public GunSO currentGunSO;
-    GameObject currentMuzzleFlash;
     Coroutine shootingCoroutine;
     Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
     bool waitToShoot;
     public bool isShooting;
     public bool isAiming;
     public bool isBuilding;
-    public bool isReloading;
     public bool isSwitchingGuns;
-    public bool isElevated;
     public bool isMeleeing;
-    [SerializeField] LayerMask elevatedHitLayers;
+    
     bool droppedGun;
     Rigidbody2D myRb;
-    GameObject laserSight;
     
     [HideInInspector]public PlayerStats playerStats;
 
@@ -69,9 +53,9 @@ public class PlayerShooter : MonoBehaviour
         SwitchGuns(0);
     }
 
-    void Update()
+    protected override void Update()
     {
-            Shoot();
+        Shoot();
     }
 
     public void DropGun()
@@ -94,37 +78,39 @@ public class PlayerShooter : MonoBehaviour
         }
     }
 
-    public void SwitchGuns(int i)
+    public override void SwitchGuns(int i)
     {
-        if (gunList[i] != null)
+        if (i < 0 || i >= gunList.Count)
         {
-            gunSR.sprite = gunList[i].sprite;
-            muzzleTrans.localPosition = gunList[i].muzzleLocalPos;
-            casingEjectorTrans.localPosition = gunList[i].casingLocalPos;
-
-            // Muzzle Flash
-            if (currentMuzzleFlash != null)
-                Destroy(currentMuzzleFlash);
-            currentMuzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, muzzleTrans);
-            currentMuzzleFlash.SetActive(false);
-
-            // Sights
-            if (laserSight != null)
-                Destroy(laserSight);
-            if (gunList[i].laserSight != null)
-                laserSight = Instantiate(gunList[i].laserSight, muzzleTrans);
-
-            // This could be removed and gunIndex used instead for animation transitions
-            bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
-            bodyAnim.SetBool(gunList[i].animatorHasString, true);
-
-            currentGunIndex = i;
-            currentGunSO = gunList[i];
-
-            AudioManager.instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
-            //Debug.Log("Current gun damage: " + currentGunSO.damage);
+            Debug.Log("Tried to switch to a gun that is not unlocked or does not exist");
+            return;
         }
-        Debug.Log("Tried to switch to a gun that is not unlocked or does not exist");
+
+        gunSR.sprite = gunList[i].sprite;
+        muzzleTrans.localPosition = gunList[i].muzzleLocalPos;
+        casingEjectorTrans.localPosition = gunList[i].casingLocalPos;
+
+        // Muzzle Flash
+        if (muzzleFlash != null)
+            Destroy(muzzleFlash);
+        muzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, muzzleTrans);
+        muzzleFlash.SetActive(false);
+
+        // Sights
+        if (laserSight != null)
+            Destroy(laserSight);
+        if (gunList[i].laserSight != null)
+            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans);
+
+        // This could be removed and gunIndex used instead for animation transitions
+        bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
+        bodyAnim.SetBool(gunList[i].animatorHasString, true);
+
+        currentGunIndex = i;
+        currentGunSO = gunList[i];
+
+        AudioManager.instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
+        //Debug.Log("Current gun damage: " + currentGunSO.damage);          
     }
 
     public void Reload()
@@ -167,35 +153,10 @@ public class PlayerShooter : MonoBehaviour
         }
     }
 
-    public void DropClip()
-    {
-        if (currentGunSO.emptyClipPrefab != null)
-        {
-            Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
-                        gunTrans.rotation, clipEjectorTrans);
-        }
-    }
-
     void Kickback()
     {
         myRb.AddForce(-myRb.transform.right * 
                       currentGunSO.kickback, ForceMode2D.Impulse);
-    }
-
-    Vector2 ApplyAccuracy(Vector2 dir)
-    {
-        // Vector to radians to degrees
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-        // Implement accuracy randomness
-        angle += Random.Range(-currentGunSO.accuracy * playerStats.accuracy, 
-                              currentGunSO.accuracy * playerStats.accuracy);
-
-        // Convert back to radians to vector
-        float radians = angle * Mathf.Deg2Rad;
-        dir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
-
-        return dir;
     }
 
     public void StartAiming()
@@ -241,6 +202,54 @@ public class PlayerShooter : MonoBehaviour
         }
     }
 
+    protected override void Fire()
+    {
+        // Use ammo
+        gunsAmmoInClips[currentGunIndex]--;
+        StatsCounterPlayer.ShotsFiredByPlayer++;
+
+        // Create bullet and casing
+        GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
+                                        muzzleTrans.position, muzzleTrans.rotation);
+        if (currentGunSO.bulletCasingPrefab != null)
+        {
+            GameObject casingObj = Instantiate(currentGunSO.bulletCasingPrefab, 
+                                                casingEjectorTrans.position, 
+                                                gunTrans.rotation, casingEjectorTrans);
+
+            // If elevated, most shells go over walls
+            if (isElevated)
+            {
+                int rand = Random.Range(0, 5);
+                if (rand != 0)
+                    casingObj.layer = LayerMask.NameToLayer("Default");
+            }
+        }
+
+        Bullet bullet = bulletObj.GetComponent<Bullet>();
+
+        // Check if elevated for shooting over walls
+        if (isElevated)
+        {
+            bullet.hitLayers = elevatedHitLayers;
+        }
+        
+        // Apply stats and effects
+        bullet.damage = currentGunSO.damage;
+        bullet.knockback = currentGunSO.knockback;
+        bullet.destroyTime = currentGunSO.bulletLifeTime;
+        Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();
+        Vector2 dir = ApplyAccuracy(muzzleTrans.right);
+        rb.velocity = dir * currentGunSO.bulletSpeed;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        Kickback();
+        StartCoroutine(MuzzleFlash());
+        bool oneHand = isMeleeing || !isAiming;
+        gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
+    }
+
     #region Sounds
 
     public void OnReloadSound(int index)
@@ -262,62 +271,10 @@ public class PlayerShooter : MonoBehaviour
     {
         while (true)
         {
-            StatsCounterPlayer.ShotsFiredByPlayer++;
-
-            // Use ammo
-            gunsAmmoInClips[currentGunIndex]--;
-            StatsCounterPlayer.ShotsFiredByPlayer++;
-
-            // Create bullet and casing
-            GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
-                                            muzzleTrans.position, muzzleTrans.rotation);
-            if (currentGunSO.bulletCasingPrefab != null)
-            {
-                GameObject casingObj = Instantiate(currentGunSO.bulletCasingPrefab, casingEjectorTrans.position, 
-                            gunTrans.rotation, casingEjectorTrans);
-
-                // If elevated, most shells go over walls
-                if (isElevated)
-                {
-                    int rand = Random.Range(0, 5);
-                    if (rand != 0)
-                        casingObj.layer = LayerMask.NameToLayer("Default");
-                }
-            }
-
-            Bullet bullet = bulletObj.GetComponent<Bullet>();
-
-            // Check if elevated for shooting over walls
-            if (isElevated)
-            {
-                bullet.hitLayers = elevatedHitLayers;
-            }
-            
-            // Apply stats and effects
-            bullet.damage = currentGunSO.damage;
-            bullet.knockback = currentGunSO.knockback;
-            bullet.destroyTime = currentGunSO.bulletLifeTime;
-            Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();
-            Vector2 dir = ApplyAccuracy(muzzleTrans.right);
-            rb.velocity = dir * currentGunSO.bulletSpeed;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
-
-            Kickback();
-            StartCoroutine(MuzzleFlash());
-            bool oneHand = currentGunSO.isOneHanded || isMeleeing || !isAiming;
-            gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
+            Fire();
 
             yield return new WaitForSeconds(currentGunSO.shootSpeed);
         }
-    }
-
-    IEnumerator MuzzleFlash()
-    {
-        currentMuzzleFlash.SetActive(true);
-        yield return new WaitForSeconds(currentGunSO.muzzleFlashTime);
-        currentMuzzleFlash.SetActive(false);
-        //currentGun.muzzleFlash.enabled = false;
     }
 
     IEnumerator ChargeGun(int index)

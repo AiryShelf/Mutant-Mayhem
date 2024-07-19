@@ -10,7 +10,7 @@ public class ScrollRectController : MonoBehaviour
     [SerializeField] float lerpTime;
     [SerializeField] RectTransform rectTrans;
     [SerializeField] List<RectTransform> rectTransforms;
-    [SerializeField] float scrollSpeed = 0.01f;
+    //[SerializeField] float scrollSpeed = 0.01f;
 
     Vector2 targetPosition;
 

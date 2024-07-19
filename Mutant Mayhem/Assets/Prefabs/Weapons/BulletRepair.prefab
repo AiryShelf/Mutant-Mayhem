@@ -55,14 +55,14 @@ MonoBehaviour:
   damage: -200
   knockback: 0
   destroyTime: 0
-  myRb: {fileID: 2082839547474369568}
+  rb: {fileID: 2082839547474369568}
   effectsHandler: {fileID: 809539151921915496}
   shootSound: {fileID: 11400000, guid: 8465f650553b1174eb58f7929935f425, type: 2}
   hitSound: {fileID: 11400000, guid: bccc17a84e5535444b5bae5847344d75, type: 2}
   AiTrggerPrefab: {fileID: 0}
   AITriggerSize: 0
   speed: 10
-  repairCost: 10
+  repairCost: 100
 --- !u!50 &2082839547474369568
 Rigidbody2D:
   serializedVersion: 4

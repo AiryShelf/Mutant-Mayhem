@@ -6,7 +6,7 @@ public class TutorialUpgradePanel : TutorialPanel
 {
     void Awake()
     {
-        if (SettingsManager.tutorialShowedUpgrade)
+        if (TutorialManager.tutorialShowedUpgrade)
         {
             Destroy(gameObject);
         }
@@ -14,7 +14,7 @@ public class TutorialUpgradePanel : TutorialPanel
 
     public override void OnOKButtonClick()
     {
-        SettingsManager.tutorialShowedUpgrade = true;
+        TutorialManager.tutorialShowedUpgrade = true;
         base.OnOKButtonClick();
     }
 }

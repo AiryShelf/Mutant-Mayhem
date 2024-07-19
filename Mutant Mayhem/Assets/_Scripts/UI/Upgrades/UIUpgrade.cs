@@ -7,7 +7,7 @@ public class UIUpgrade : MonoBehaviour
 {
     public UpgradeFamily upgradeFamily;
     public PlayerStatsUpgrade playerStatsUpgrade;
-    public QCubeStatsUpgrade qCubeStatsUpgrade;
+    public StructureStatsUpgrade structureStatsUpgrade;
     public ConsumablesUpgrade consumablesUpgrade;
     public GunStatsUpgrade gunStatsUpgrade;
 
@@ -71,8 +71,8 @@ public class UIUpgrade : MonoBehaviour
             case UpgradeFamily.PlayerStats:
                 upgradeSystem.OnUpgradeButtonClicked(myUpg.playerStatsUpgrade);
                 break;
-            case UpgradeFamily.QCubeStats:
-                upgradeSystem.OnUpgradeButtonClicked(myUpg.qCubeStatsUpgrade);
+            case UpgradeFamily.StructureStats:
+                upgradeSystem.OnUpgradeButtonClicked(myUpg.structureStatsUpgrade);
                 break;
             case UpgradeFamily.Consumables:
                 upgradeSystem.OnUpgradeButtonClicked(myUpg.consumablesUpgrade);
@@ -144,14 +144,14 @@ public class UIUpgrade : MonoBehaviour
                 upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeSystem);
             }
 
-            else if (upgradeFamily == UpgradeFamily.QCubeStats)
+            else if (upgradeFamily == UpgradeFamily.StructureStats)
             {
                 // QCubeStats
-                upgLvl = upgradeSystem.qCubeStatsUpgLevels[qCubeStatsUpgrade];
-                maxLvl = upgradeSystem.qCubeStatsUpgMaxLevels[qCubeStatsUpgrade];
-                upgCost = upgradeSystem.qCubeStatsUpgCurrCosts[qCubeStatsUpgrade];
-                statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, qCubeStatsUpgrade);
-                upgAmount = UpgStatGetter.GetUpgAmount(qCubeStatsUpgrade);
+                upgLvl = upgradeSystem.structureStatsUpgLevels[structureStatsUpgrade];
+                maxLvl = upgradeSystem.structureStatsUpgMaxLevels[structureStatsUpgrade];
+                upgCost = upgradeSystem.structureStatsUpgCurrCosts[structureStatsUpgrade];
+                statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, structureStatsUpgrade);
+                upgAmount = UpgStatGetter.GetUpgAmount(structureStatsUpgrade);
             }
             
             // Change text color depending on affordability

@@ -62,7 +62,7 @@ public class Health : MonoBehaviour
                 StatsCounterPlayer.ShotsHitByPlayer++;
                 //Debug.Log("Player prjectile damage: " + value);
             }
-            else if (this.tag == "Enemy")
+            else if (this.CompareTag("Enemy"))
                 StatsCounterPlayer.DamageToEnemies -= value;
         }
         
@@ -74,7 +74,7 @@ public class Health : MonoBehaviour
                 // Structure layer 13
                 if (other.layer == 13)
                     StatsCounterPlayer.EnemiesKilledByTurrets++;
-                else if (other.tag == "Player" || other.tag == "PlayerExplosion" || other.layer == 8)
+                else if (other.CompareTag("Player") || other.CompareTag("PlayerExplosion") || other.layer == 8)
                     StatsCounterPlayer.EnemiesKilledByPlayer++;
             }
 

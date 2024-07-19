@@ -6,7 +6,7 @@ public class TutorialBuildPanel : TutorialPanel
 {
     void Awake()
     {
-        if (SettingsManager.tutorialShowedBuild)
+        if (TutorialManager.tutorialShowedBuild)
         {
             Destroy(gameObject);
         }
@@ -14,7 +14,7 @@ public class TutorialBuildPanel : TutorialPanel
 
     public override void OnOKButtonClick()
     {
-        SettingsManager.tutorialShowedBuild = true;
+        TutorialManager.tutorialShowedBuild = true;
         base.OnOKButtonClick();
     }
 }

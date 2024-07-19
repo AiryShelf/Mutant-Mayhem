@@ -23,6 +23,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] UIBuildMenuController buildMenuController;
     public List<StructureSO> AllStructureSOs;
     [SerializeField] int numStructuresAvailAtStart;
+    public int maxTurrets = 1;
 
     [SerializeField] QCubeController qCubeController;
 
@@ -33,7 +34,6 @@ public class BuildingSystem : MonoBehaviour
     public static Dictionary<StructureType, bool> _StructsAvailDict = 
                                         new Dictionary<StructureType, bool>();
 
-    Vector3Int playerGridPos;
     private Vector3Int highlightedTilePos;
     public bool allHighlited;
     bool inRange;
@@ -69,6 +69,7 @@ public class BuildingSystem : MonoBehaviour
         toolbarAction.started += OnToolbarUsed;
         buildAction.started += OnBuild;
         cheatCodeCreditsAction.started += OnCheatCodeCredits;
+
     }
 
     void OnDisable()
@@ -310,77 +311,75 @@ public class BuildingSystem : MonoBehaviour
 
         // Highlight if in range and conditions met.
         //if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
-        if (InRange(player.transform.position, mouseWorldPos, 6f))
-        {
-            inRange = true;
-            if (currentAction == ActionType.Destroy)
-            {
-                HighlightForDestroy(highlightedTilePos);
-                
-                if (tileManager.ContainsTileDictKey(highlightedTilePos))
-                {
-                    Vector3Int rootPos = tileManager.GetRootPos(highlightedTilePos);
-
-                    // Probably not finding the tile
-                    Matrix4x4 matrix = animatedTilemap.GetTransformMatrix(highlightedTilePos);
-                    int rotation = StructureRotator.GetRotationFromMatrix(matrix);
-                    TileBase tile = animatedTilemap.GetTile(highlightedTilePos);
-                        
-                    SetPreviewImageDestroy(rootPos, tile, new Color(1, 0, 0, 0.5f), -rotation);
-                }
-                
-                return;
-            }
-
-            if (currentAction != ActionType.Destroy && CheckHighlightConditions(
-                structureTilemap.GetTile<RuleTileStructure>(highlightedTilePos), structureInHand))
-            { 
-                // Set preview build Image
-                if (currentAction == ActionType.Build)
-                {
-                    SetPreviewImageBuild(highlightedTilePos, 
-                                         structureInHand.ruleTileStructure.damagedTiles[0], 
-                                         new Color(1, 1, 1, 0.5f));
-                }
-
-                // Highlight the tiles for building
-                allHighlited = true;
-                if (currentAction == ActionType.Build)
-                {
-                    foreach (Vector3Int pos in structureInHand.cellPositions)
-                    {                
-                        if (tileManager.CheckGridIsClear(highlightedTilePos + pos, layersForBuildClearCheck, true))
-                        {
-                            Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
-                            highlightTilemap.SetTile(highlightedTilePos + newPos, highlightedTileAsset);
-                            highlightTilemap.SetTileFlags(highlightedTilePos + newPos, TileFlags.None);
-                            highlightTilemap.SetColor(highlightedTilePos + newPos, new Color(1, 1, 1, 1f));
-                        }
-                        else
-                        {
-                            // Show X where grid is not clear
-                            Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
-                            highlightTilemap.SetTile(highlightedTilePos + newPos, destroyTileAsset);
-                            allHighlited = false;
-                        }   
-                    }
-                }             
-                else if (currentAction == ActionType.Select ||
-                         currentAction == ActionType.Interact)
-                {
-                    // Do stuff
-                }
-            }
-            else
-            {
-                allHighlited = false;
-            }
-        }
-        else
+        if (!InRange(player.transform.position, mouseWorldPos, 6f))
         {
             inRange = false;
             allHighlited = false;
-        }    
+            return;
+        }
+
+        inRange = true;
+        if (currentAction == ActionType.Destroy)
+        {
+            HighlightForDestroy(highlightedTilePos);
+            
+            if (tileManager.ContainsTileDictKey(highlightedTilePos))
+            {
+                Vector3Int rootPos = tileManager.GetRootPos(highlightedTilePos);
+
+                // Probably not finding the tile
+                Matrix4x4 matrix = animatedTilemap.GetTransformMatrix(highlightedTilePos);
+                int rotation = StructureRotator.GetRotationFromMatrix(matrix);
+                TileBase tile = animatedTilemap.GetTile(highlightedTilePos);
+                    
+                SetPreviewImageDestroy(rootPos, tile, new Color(1, 0, 0, 0.5f), -rotation);
+            }
+            
+            return;
+        }
+
+        if (currentAction == ActionType.Destroy && !CheckHighlightConditions(
+            structureTilemap.GetTile<RuleTileStructure>(highlightedTilePos), structureInHand))
+        { 
+            allHighlited = false;
+            return;
+        }
+
+        // Set preview build Image
+        if (currentAction == ActionType.Build)
+        {
+            SetPreviewImageBuild(highlightedTilePos, 
+                                    structureInHand.ruleTileStructure.damagedTiles[0], 
+                                    new Color(1, 1, 1, 0.5f));
+        }
+
+        // Highlight the tiles for building
+        allHighlited = true;
+        if (currentAction == ActionType.Build)
+        {
+            foreach (Vector3Int pos in structureInHand.cellPositions)
+            {                
+                if (tileManager.CheckGridIsClear(highlightedTilePos + pos, layersForBuildClearCheck, true))
+                {
+                    Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
+                    highlightTilemap.SetTile(highlightedTilePos + newPos, highlightedTileAsset);
+                    highlightTilemap.SetTileFlags(highlightedTilePos + newPos, TileFlags.None);
+                    highlightTilemap.SetColor(highlightedTilePos + newPos, new Color(1, 1, 1, 1f));
+                }
+                else
+                {
+                    // Show X where grid is not clear
+                    Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
+                    highlightTilemap.SetTile(highlightedTilePos + newPos, destroyTileAsset);
+                    allHighlited = false;
+                }   
+            }
+        }             
+        else if (currentAction == ActionType.Select ||
+                    currentAction == ActionType.Interact)
+        {
+            // Do stuff
+        } 
     }
 
     void RemoveBuildHighlight()

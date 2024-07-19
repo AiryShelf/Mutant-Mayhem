@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class DoorOpener : MonoBehaviour
+public class DoorOpener : TileObject
 {
     [SerializeField] List<AnimatedTile> doorsOpen;
     [SerializeField] List<AnimatedTile> doorsClosed;
@@ -23,7 +23,7 @@ public class DoorOpener : MonoBehaviour
         
         doorColl = GetComponent<Collider2D>();
         if (doorColl == null) 
-            Debug.LogError("Collider2D is not found");
+            Debug.LogError("TileObject Collider is not found");
 
         if (animatedTilemap == null) 
             Debug.LogError("AnimatedTilemap is not found");
@@ -40,26 +40,9 @@ public class DoorOpener : MonoBehaviour
     void OnDisable()
     {
         destroyed = true;
-        /*
-        //Debug.Log("Door OnDisable ran");
-        if (doorColl != null)
-        {
-            Destroy(doorColl);
-        }
-
-        if (animatedTilemap != null)
-        {
-            animatedTilemap.SetTile(myGridPos, null);
-        }
-
-        if (tileManager.shadowCaster2DTileMap != null)
-        {
-            tileManager.shadowCaster2DTileMap.Generate();
-        }
-        */
     }
 
-    public void UpdateHealthRatio(float healthRatio)
+    public override void UpdateHealthRatio(float healthRatio)
     {
         this.healthRatio = healthRatio;
 
@@ -92,7 +75,7 @@ public class DoorOpener : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             if (!isOpen)
             {
@@ -107,7 +90,7 @@ public class DoorOpener : MonoBehaviour
     {
         if (!destroyed)
         {
-            if (other.tag == "Player")
+            if (other.CompareTag("Player"))
             {
                 if (isOpen)
                 {

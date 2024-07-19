@@ -25,7 +25,7 @@ public class SwordController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        if (other.tag == "Enemy")
+        if (other.CompareTag("Enemy"))
         {
             meleeControllerPlayer.Hit(other, other.ClosestPoint(meleeControllerPlayer.transform.position));
         }

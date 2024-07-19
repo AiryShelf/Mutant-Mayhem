@@ -13,10 +13,6 @@ public enum DifficultyLevel
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
-    
-    public static bool TutorialDisabled = false;
-    public static bool tutorialShowedBuild = false;
-    public static bool tutorialShowedUpgrade = false;
 
     [Header("Difficulty Setting")]
     public static int startingDifficulty = 1;
@@ -64,10 +60,6 @@ public class SettingsManager : MonoBehaviour
 
     void InitializeSettings()
     {
-        // Reset tutorial
-        tutorialShowedBuild = false;
-        tutorialShowedUpgrade = false;
-
         // Difficulty
         if (PlayerPrefs.HasKey("DifficultyLevel"))
         {
@@ -119,7 +111,7 @@ public class SettingsManager : MonoBehaviour
         switch (difficultyLevel)
         {
             case DifficultyLevel.Easy:
-                waveController.timeBetweenWaves += 30;
+                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase + 60;
                 WaveDifficultyMult = 0.7f;
                 WavePerBaseAdjust = 1;
                 WaveListFactor = 0.8f;
@@ -129,6 +121,7 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Normal:
+            waveController.timeBetweenWaves = waveController.timeBetweenWavesBase;
                 WaveDifficultyMult = 1;
                 WavePerBaseAdjust = 0;
                 WaveListFactor = 1f;
@@ -138,7 +131,7 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Hard:
-                waveController.timeBetweenWaves -= 30;
+                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
                 WaveDifficultyMult = 1.3f;
                 WavePerBaseAdjust = -1;
                 WaveListFactor = 1.2f;
@@ -147,7 +140,7 @@ public class SettingsManager : MonoBehaviour
                 CreditsMult = 1;
                 break;
         }
-        Debug.Log("Difficulty updated");
+        //Debug.Log("Difficulty updated");
     }
 
     #endregion
@@ -172,11 +165,11 @@ public class SettingsManager : MonoBehaviour
         if (player)
         {
             player.movementType = useStandardWASD;
-            Debug.Log("Movement Type updated");
+            //Debug.Log("Movement Type updated");
         }
         else
         {
-            Debug.Log("Player not found by SettingsManager");
+            //Debug.Log("Player not found by SettingsManager");
         }
     }
 

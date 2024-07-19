@@ -71,7 +71,7 @@ public static class UpgStatGetter
                 return stat;
 
             case ConsumablesUpgrade.QCubeRepair:
-                stat = player.stats.qCubeStats.healthScript.GetHealth().ToString("#0");
+                stat = player.stats.structureStats.cubeHealthScript.GetHealth().ToString("#0");
                 return stat;
 
             case ConsumablesUpgrade.GrenadeBuyAmmo:
@@ -87,14 +87,17 @@ public static class UpgStatGetter
         return stat;
     }
 
-    public static string GetStatValue(Player player, QCubeStatsUpgrade qCubeStatsUpgrade)
+    public static string GetStatValue(Player player, StructureStatsUpgrade structureStatsUpgrade)
     {
         string stat = "null";
 
-        switch(qCubeStatsUpgrade)
+        switch(structureStatsUpgrade)
         {
-            case QCubeStatsUpgrade.QCubeMaxHealth:
-                stat = player.stats.qCubeStats.healthScript.GetMaxHealth().ToString();
+            case StructureStatsUpgrade.QCubeMaxHealth:
+                stat = player.stats.structureStats.cubeHealthScript.GetMaxHealth().ToString();
+                return stat;
+            case StructureStatsUpgrade.StructureMaxHealth:
+                stat = player.stats.structureStats.structureMaxHealthFactor.ToString("#0.0");
                 return stat;
         }
 
@@ -152,6 +155,7 @@ public static class UpgStatGetter
 
     #region Upgrade Amounts
 
+    // PlayerStats
     public static string GetUpgAmount(PlayerStatsUpgrade playerStatsUpgrade, UpgradeSystem upgradeSystem)
     {
         string amount = "null";
@@ -206,6 +210,7 @@ public static class UpgStatGetter
         return amount;
     }
 
+    // Consumables
     public static string GetUpgAmount(Player player, ConsumablesUpgrade consumablesUpgrade)
     {
         string amount = "null";
@@ -217,7 +222,7 @@ public static class UpgStatGetter
                 return amount;
 
             case ConsumablesUpgrade.QCubeRepair:
-                amount = "+" + QCubeRepairUpgrade.GetUpgAmount(player.stats.qCubeStats.healthScript).ToString();
+                amount = "+" + QCubeRepairUpgrade.GetUpgAmount(player.stats.structureStats.cubeHealthScript).ToString();
                 return amount;
 
             case ConsumablesUpgrade.GrenadeBuyAmmo:
@@ -232,20 +237,25 @@ public static class UpgStatGetter
         return amount;
     }
 
-    public static string GetUpgAmount(QCubeStatsUpgrade qCubeStatsUpgrade)
+    // StructureStats
+    public static string GetUpgAmount(StructureStatsUpgrade structureStatsUpgrade)
     {
         string amount = "null";
 
-        switch (qCubeStatsUpgrade)
+        switch (structureStatsUpgrade)
         {
-            case QCubeStatsUpgrade.QCubeMaxHealth:
+            case StructureStatsUpgrade.QCubeMaxHealth:
                 amount = "+" + QCubeMaxHealthUpgrade.UpgAmount.ToString();
+                return amount;
+            case StructureStatsUpgrade.StructureMaxHealth:
+                amount = "+" + StructureMaxHealthUpgrade.UpgAmount.ToString("#0.0");
                 return amount;
         }
 
         return amount;
     }
 
+    // GunStats
     public static string GetUpgAmount(Player player, GunStatsUpgrade gunStatsUpgrade, int gunIndex, UpgradeSystem upgradeSystem)
     {
         string amount = "null";
@@ -253,15 +263,15 @@ public static class UpgStatGetter
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                amount = "+" + GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeSystem).ToString();
+                amount = "+" + GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeSystem).ToString("#0.0");
                 return amount;
 
             case GunStatsUpgrade.GunKnockback:
-                amount = "+" + GunKnockbackUpgrade.GetUpgAmount(player, gunIndex).ToString();
+                amount = "+" + GunKnockbackUpgrade.GetUpgAmount(player, gunIndex).ToString("#0.0");
                 return amount;
 
             case GunStatsUpgrade.ShootSpeed:
-                amount = "+" + Mathf.Abs(ShootSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "+" + Mathf.Abs(ShootSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
                 return amount;
 
             case GunStatsUpgrade.ClipSize:
@@ -269,20 +279,20 @@ public static class UpgStatGetter
                 return amount;
 
             case GunStatsUpgrade.ChargeDelay:
-                amount = "+" + Mathf.Abs(ChargeDelayUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "+" + Mathf.Abs(ChargeDelayUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
                 return amount;
 
             case GunStatsUpgrade.GunAccuracy:
-                amount = "+" + Mathf.Abs(GunAccuracyUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "+" + Mathf.Abs(GunAccuracyUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
                 return amount;
 
             case GunStatsUpgrade.GunRange:
                 amount = "+" + (RangeUpgrade.GetUpgAmount(player, gunIndex) *
-                         player.stats.playerShooter.gunList[gunIndex].bulletSpeed).ToString();
+                         player.stats.playerShooter.gunList[gunIndex].bulletSpeed).ToString("#0.0");
                 return amount;
 
             case GunStatsUpgrade.Recoil:
-                amount = "-" + Mathf.Abs(RecoilUpgrade.GetUpgAmount(player, gunIndex)).ToString();
+                amount = "-" + Mathf.Abs(RecoilUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
                 return amount;            
         }
 
@@ -293,6 +303,7 @@ public static class UpgStatGetter
 
     #region Upgrade Costs
 
+    // Consumables
     public static int GetUpgCost(Player player, ConsumablesUpgrade consumablesUpgrade, UpgradeSystem upgradeSystem)
     {
         int cost = 0;

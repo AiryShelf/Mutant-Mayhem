@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Unity.Sentis.Layers;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
 public class BulletCasingFly : MonoBehaviour
 {
@@ -28,6 +25,8 @@ public class BulletCasingFly : MonoBehaviour
     void Start()
     {
         casingPS = GetComponentInParent<ParticleSystem>();
+        if (casingPS == null)
+            casingPS = GetComponentInChildren<ParticleSystem>();
         
         deg = Random.Range(0, 360);
         rot = Quaternion.Euler(0, 0, deg);
@@ -36,7 +35,7 @@ public class BulletCasingFly : MonoBehaviour
         Transform casingTrans = casingPS.transform;
         Vector3 randomCirc = Random.insideUnitCircle * targetAccuracy;
 
-        Vector3 localDir = casingTrans.TransformDirection(flyDir)*flyDist + randomCirc;
+        Vector3 localDir = casingTrans.TransformDirection(flyDir.normalized)*flyDist + randomCirc;
         Vector3 target = casingTrans.position + localDir;
 
         StartCoroutine(Fly(startHeight, peakHeight, duration));
@@ -49,7 +48,6 @@ public class BulletCasingFly : MonoBehaviour
         rotationAmount = Random.Range(-rotationAmount, rotationAmount);
         transform.parent = null;
     }
-
     
     void FixedUpdate()
     {
@@ -58,7 +56,7 @@ public class BulletCasingFly : MonoBehaviour
         transform.rotation = rot;
     }
 
-        IEnumerator Fly(float startHeight, float peakHeight, float duration)
+    IEnumerator Fly(float startHeight, float peakHeight, float duration)
     {
         int currentFrame = 0;
         float elapsed = 0;

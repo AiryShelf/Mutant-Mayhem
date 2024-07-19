@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class PlayerStats
 {
-    [HideInInspector] public QCubeStats qCubeStats;
+    public StructureStats structureStats;
     [HideInInspector] public Player player;
 
     [Header("Movement stats")]
@@ -90,6 +90,7 @@ public class Player : MonoBehaviour
         meleeController.stats = stats;
         myStamina.stats = stats;
         playerShooter.playerStats = stats;
+        stats.structureStats.cubeHealthScript = FindObjectOfType<QCubeHealth>();
     }
 
     public void RemoveSpaceBar()

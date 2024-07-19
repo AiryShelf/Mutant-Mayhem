@@ -1,0 +1,227 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Shooter : MonoBehaviour
+{
+    public List<GunSO> _gunListSource;
+    public List<GunSO> gunList;
+    public List<int> gunsAmmoInClips;
+    float shootSpeed = 1.0f;
+    public float reloadTime = 2.0f; 
+    [SerializeField] protected Transform gunTrans;
+    [SerializeField] protected Transform muzzleTrans;
+    [SerializeField] protected Transform casingEjectorTrans;
+    [SerializeField] protected Transform clipEjectorTrans;
+    [SerializeField] protected LayerMask elevatedHitLayers;
+    [SerializeField] protected GunRecoil gunRecoil;
+
+    int clipSize;
+    float fireTimer;
+    float reloadTimer;
+    public bool isReloading;
+    public bool isElevated;
+    bool isTurret;
+    [HideInInspector] public bool hasTarget;
+    public int currentGunIndex = 0;
+    [HideInInspector] public GunSO currentGunSO;
+    protected GameObject muzzleFlash;
+    protected GameObject laserSight;
+    Coroutine reloadRoutine;
+
+    void Start()
+    {
+        // Make a working copy of the gun list
+        foreach (GunSO gun in _gunListSource)
+        {
+            if (gun != null)
+            {
+                GunSO g = Instantiate(gun);
+                gunList.Add(g);
+            }
+        }
+
+        // Initialize first gun
+        SwitchGuns(0);
+        gunsAmmoInClips[0] = 0;
+        isReloading = true;
+    }
+
+    protected virtual void Update()
+    {
+        if (isReloading)
+        {
+            if (reloadRoutine == null)
+                reloadRoutine = StartCoroutine(ReloadRoutine());
+        }
+
+        if (!hasTarget)
+            return;
+
+        fireTimer -= Time.deltaTime;
+        if (fireTimer <= 0)
+        {
+            Fire();
+            fireTimer = shootSpeed;
+
+            // Start reloading after firing a certain number of shots
+            if (ShouldReload())
+            {
+                isReloading = true;
+            }
+        }
+    }
+
+    public virtual void SwitchGuns(int i)
+    {
+        if (i < 0 || i >= gunList.Count)
+        {
+            Debug.Log("Tried to switch to a gun that is not unlocked or does not exist");
+            return;
+        }
+
+        // Muzzle Flash
+        if (muzzleFlash != null)
+            Destroy(muzzleFlash);
+        Debug.Log("MuzzleFlash instantiated");
+        muzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, muzzleTrans);
+        muzzleFlash.SetActive(false);
+
+        // Sights
+        if (laserSight != null)
+            Destroy(laserSight);
+        if (gunList[i].laserSight != null)
+            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans);
+
+        if (gunList[i] is TurretGunSO turretGunSO)
+        {
+            isTurret = true;
+            reloadTime = turretGunSO.reloadTime;
+        }
+        currentGunIndex = i;
+        currentGunSO = gunList[i];
+        shootSpeed = gunList[i].shootSpeed;
+        clipSize = gunList[i].clipSize;
+
+        fireTimer = shootSpeed;
+        reloadTimer = reloadTime;
+    }
+
+    protected virtual void Fire()
+    {
+        //StatsCounterPlayer.ShotsFiredByPlayer++;
+
+        // Use ammo
+        gunsAmmoInClips[currentGunIndex]--;
+        StatsCounterPlayer.ShotsFiredByPlayer++;
+
+        // Create bullet and casing
+        GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
+                                        muzzleTrans.position, muzzleTrans.rotation);
+        if (currentGunSO.bulletCasingPrefab != null)
+        {
+            GameObject casingObj = Instantiate(currentGunSO.bulletCasingPrefab, 
+                                                casingEjectorTrans.position, 
+                                                gunTrans.rotation, casingEjectorTrans);
+
+            // If elevated, most shells go over walls
+            if (isTurret)
+                casingObj.layer = LayerMask.NameToLayer("Default");
+            else if (isElevated)
+            {
+                int rand = Random.Range(0, 5);
+                if (rand != 0)
+                    casingObj.layer = LayerMask.NameToLayer("Default");
+            }
+        }
+
+        Bullet bullet = bulletObj.GetComponent<Bullet>();
+
+        // Check if elevated for shooting over walls
+        if (isElevated)
+        {
+            bullet.hitLayers = elevatedHitLayers;
+        }
+        
+        // Apply stats and effects
+        bullet.damage = currentGunSO.damage;
+        bullet.knockback = currentGunSO.knockback;
+        bullet.destroyTime = currentGunSO.bulletLifeTime;
+        Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();
+        
+        Vector2 dir = ApplyAccuracy(muzzleTrans.right);
+        rb.velocity = dir * currentGunSO.bulletSpeed;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        //Kickback();
+        StartCoroutine(MuzzleFlash());
+        
+        //gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
+        //Debug.Log("Shooter fired");
+    }
+
+    protected Vector2 ApplyAccuracy(Vector2 dir)
+    {
+        // Vector to radians to degrees
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        // Implement accuracy randomness
+        angle += Random.Range(-currentGunSO.accuracy, currentGunSO.accuracy);
+
+        // Convert back to radians to vector
+        float radians = angle * Mathf.Deg2Rad;
+        dir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
+
+        return dir;
+    }
+
+    bool ShouldReload()
+    {
+        if (gunsAmmoInClips[currentGunIndex] <= 0)
+            return true;
+        else
+            return false;
+    }
+
+    public void DropClip()
+    {
+        if (currentGunSO.emptyClipPrefab != null)
+        {
+            GameObject obj = Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
+                                         gunTrans.rotation, clipEjectorTrans);
+            if (isElevated)
+            {
+                obj.layer = LayerMask.NameToLayer("Default");
+            }
+        }
+    }
+
+    protected IEnumerator ReloadRoutine()
+    {
+        DropClip();
+
+        while (isReloading)
+        {
+            yield return new WaitForSeconds(0.1f);
+            reloadTimer -= 0.1f;
+
+            if (reloadTimer <= 0)
+            {
+                isReloading = false;
+                gunsAmmoInClips[currentGunIndex] = clipSize;
+                reloadTimer = reloadTime;
+                reloadRoutine = null;
+            }
+        }
+    }
+
+    protected IEnumerator MuzzleFlash()
+    {
+        Debug.Log("Muzzle Flash");
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(currentGunSO.muzzleFlashTime);
+        muzzleFlash.SetActive(false);
+        //currentGun.muzzleFlash.enabled = false;
+    }
+}

@@ -40,7 +40,7 @@ public class ControlsPanel : MonoBehaviour
 
     void Start()
     {
-        if (!SettingsManager.TutorialDisabled)
+        if (!TutorialManager.TutorialDisabled)
             TogglePanel();
     }
 

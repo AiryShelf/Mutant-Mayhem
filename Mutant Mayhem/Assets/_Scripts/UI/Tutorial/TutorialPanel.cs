@@ -10,7 +10,7 @@ public class TutorialPanel : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
 
-        if (SettingsManager.TutorialDisabled == true)
+        if (TutorialManager.TutorialDisabled == true)
         {
             Destroy(gameObject);
             return;
@@ -32,7 +32,7 @@ public class TutorialPanel : MonoBehaviour
     public virtual void OnDisableButtonClick()
     {
         Time.timeScale = 1;
-        SettingsManager.TutorialDisabled = true;
+        TutorialManager.TutorialDisabled = true;
         player.inputAsset.FindActionMap("Player").Enable();
         Destroy(gameObject);
     }

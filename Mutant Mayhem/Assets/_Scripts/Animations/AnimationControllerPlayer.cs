@@ -412,8 +412,8 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     void FireInput_Performed(InputAction.CallbackContext context)
     {
-        if (playerShooter.isBuilding)
-            ToggleBuildMode();
+        //if (playerShooter.isBuilding)
+            //ToggleBuildMode();
         bodyAnim.SetBool("isAiming", true);
         isFireInput = true;
     }

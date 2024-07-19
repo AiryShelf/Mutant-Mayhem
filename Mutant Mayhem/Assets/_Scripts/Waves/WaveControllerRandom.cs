@@ -18,7 +18,8 @@ public class WaveControllerRandom : MonoBehaviour
 
     [Header("Wave Properties")]
     public int currentWaveCount = 0;
-    public float timeBetweenWaves = 60f;
+    public float timeBetweenWavesBase = 90;
+    public float timeBetweenWaves = 90f;
     public float spawnRadius = 60;
     public int wavesPerBase = 2;
 
@@ -134,7 +135,6 @@ public class WaveControllerRandom : MonoBehaviour
         while (timeElapsed < 5)
         {
             enemyCountText.text = "Enemies Detected: " + EnemyCounter.EnemyCount;
-            
 
             yield return new WaitForEndOfFrame();
             timeElapsed += Time.deltaTime; 

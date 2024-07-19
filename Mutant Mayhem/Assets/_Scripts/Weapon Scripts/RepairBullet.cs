@@ -28,7 +28,7 @@ public class RepairBullet : Bullet
 
 
         // Set the bullet's velocity to move straight out of the gun
-        myRb.velocity = transform.right * speed;
+        rb.velocity = transform.right * speed;
 
         // Start the coroutine to check the distance traveled
         StartCoroutine(CheckDistanceTravelled());

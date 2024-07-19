@@ -8,12 +8,11 @@ public class UpgradeSystem : MonoBehaviour
     [SerializeField] ParticleSystem playerUpgAppliedFX;
     [SerializeField] ParticleSystem uiUpgAppliedFX;
     [SerializeField] List<PlayerStatsUpgrade> playerStatsEnums;
-    [SerializeField] List<QCubeStatsUpgrade> qCubeStatsEnums;
+    [SerializeField] List<StructureStatsUpgrade> structureStatsEnums;
     [SerializeField] List<ConsumablesUpgrade> consumablesEnums;
     [SerializeField] List<GunStatsUpgrade> laserPistolEnums;
     [SerializeField] List<GunStatsUpgrade> SMGEnums;
     public Player player;
-    public QCubeController qCubeController;
     public PlayerShooter playerShooter;
     public TileManager tileManager;
 
@@ -31,15 +30,15 @@ public class UpgradeSystem : MonoBehaviour
     public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgCurrCosts = 
         new Dictionary<PlayerStatsUpgrade, int>();
 
-    // QCubeStats
-    public Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgMaxLevels = 
-        new Dictionary<QCubeStatsUpgrade, int>();
-    public Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgLevels = 
-        new Dictionary<QCubeStatsUpgrade, int>();
-    private Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgBaseCosts = 
-        new Dictionary<QCubeStatsUpgrade, int>();
-    public Dictionary<QCubeStatsUpgrade, int> qCubeStatsUpgCurrCosts = 
-        new Dictionary<QCubeStatsUpgrade, int>();
+    // StructureStats
+    public Dictionary<StructureStatsUpgrade, int> structureStatsUpgMaxLevels = 
+        new Dictionary<StructureStatsUpgrade, int>();
+    public Dictionary<StructureStatsUpgrade, int> structureStatsUpgLevels = 
+        new Dictionary<StructureStatsUpgrade, int>();
+    private Dictionary<StructureStatsUpgrade, int> structureStatsUpgBaseCosts = 
+        new Dictionary<StructureStatsUpgrade, int>();
+    public Dictionary<StructureStatsUpgrade, int> structureStatsUpgCurrCosts = 
+        new Dictionary<StructureStatsUpgrade, int>();
     
     // Consumables
     public Dictionary<ConsumablesUpgrade, int> consumablesUpgMaxLevels = 
@@ -82,10 +81,10 @@ public class UpgradeSystem : MonoBehaviour
 
         // Max upgrade levels
         // PlayerStats
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MoveSpeed] = 100;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.StrafeSpeed] = 100;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.SprintFactor] = 100;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.MoveSpeed] = 50;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.StrafeSpeed] = 50;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.SprintFactor] = 50;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 20;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerAccuracy] = 10;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeDamage] = 150;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeKnockback] = 150;
@@ -96,7 +95,8 @@ public class UpgradeSystem : MonoBehaviour
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthRegen] = 100;
 
         // QCubeStats
-        qCubeStatsUpgMaxLevels[QCubeStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
+        structureStatsUpgMaxLevels[StructureStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
+        structureStatsUpgMaxLevels[StructureStatsUpgrade.StructureMaxHealth] = int.MaxValue;
 
         //Consumables
         consumablesUpgMaxLevels[ConsumablesUpgrade.PlayerHeal] = int.MaxValue;
@@ -139,7 +139,8 @@ public class UpgradeSystem : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 200;
 
         // QCubeStats
-        qCubeStatsUpgBaseCosts[QCubeStatsUpgrade.QCubeMaxHealth] = 200;
+        structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 200;
+        structureStatsUpgBaseCosts[StructureStatsUpgrade.StructureMaxHealth] = 500;
 
         // Consumables
         consumablesUpgBaseCosts[ConsumablesUpgrade.PlayerHeal] = 100;
@@ -171,9 +172,9 @@ public class UpgradeSystem : MonoBehaviour
         {
             playerStatsUpgCurrCosts.Add(kvp.Key, kvp.Value);
         }
-        foreach (KeyValuePair<QCubeStatsUpgrade, int> kvp in qCubeStatsUpgBaseCosts)
+        foreach (KeyValuePair<StructureStatsUpgrade, int> kvp in structureStatsUpgBaseCosts)
         {
-            qCubeStatsUpgCurrCosts.Add(kvp.Key, kvp.Value);
+            structureStatsUpgCurrCosts.Add(kvp.Key, kvp.Value);
         }
         foreach (KeyValuePair<ConsumablesUpgrade, int> kvp in consumablesUpgBaseCosts)
         {
@@ -193,9 +194,9 @@ public class UpgradeSystem : MonoBehaviour
         {
             playerStatsUpgLevels[type] = 0;
         }
-        foreach(QCubeStatsUpgrade type in qCubeStatsEnums)
+        foreach(StructureStatsUpgrade type in structureStatsEnums)
         {
-            qCubeStatsUpgLevels[type] = 0;
+            structureStatsUpgLevels[type] = 0;
         }
         foreach(ConsumablesUpgrade type in consumablesEnums)
         {
@@ -248,14 +249,15 @@ public class UpgradeSystem : MonoBehaviour
         }
     }
 
-    Upgrade CreateUpgrade(QCubeStatsUpgrade type)
+    Upgrade CreateUpgrade(StructureStatsUpgrade type)
     {
         switch (type)
         {
             // QCubeStats
-            case QCubeStatsUpgrade.QCubeMaxHealth:
+            case StructureStatsUpgrade.QCubeMaxHealth:
                 return new QCubeMaxHealthUpgrade();
-
+            case StructureStatsUpgrade.StructureMaxHealth:
+                return new StructureMaxHealthUpgrade();
             default:
                 return null;
                 
@@ -316,10 +318,10 @@ public class UpgradeSystem : MonoBehaviour
         ApplyPlayerUpgrade(upgrade, upgType);
     }
 
-    public void OnUpgradeButtonClicked(QCubeStatsUpgrade upgType)
+    public void OnUpgradeButtonClicked(StructureStatsUpgrade upgType)
     {
         Upgrade upgrade = CreateUpgrade(upgType);
-        ApplyQCubeUpgrade(upgrade, upgType);
+        ApplyStructureUpgrade(upgrade, upgType);
     }
 
     public void OnUpgradeButtonClicked(ConsumablesUpgrade upgType)
@@ -368,10 +370,10 @@ public class UpgradeSystem : MonoBehaviour
         }
     }
 
-    private void ApplyQCubeUpgrade(Upgrade upgrade, QCubeStatsUpgrade upgType)
+    private void ApplyStructureUpgrade(Upgrade upgrade, StructureStatsUpgrade upgType)
     {
         // Check max level
-        if (qCubeStatsUpgLevels[upgType] >= qCubeStatsUpgMaxLevels[upgType])
+        if (structureStatsUpgLevels[upgType] >= structureStatsUpgMaxLevels[upgType])
         {
             Debug.Log("Max level reached for: " + upgType);
             messagePanel.ShowMessage("Max level reached!", Color.yellow);
@@ -379,21 +381,21 @@ public class UpgradeSystem : MonoBehaviour
         }
 
         // Buy and apply
-        int cost = qCubeStatsUpgCurrCosts[upgType];
+        int cost = structureStatsUpgCurrCosts[upgType];
         if (BuildingSystem.PlayerCredits >= cost)
         {
             BuildingSystem.PlayerCredits -= cost;
-            qCubeStatsUpgLevels[upgType]++;
+            structureStatsUpgLevels[upgType]++;
 
-            upgrade.Apply(qCubeController.qCubeStats, qCubeStatsUpgLevels[upgType]);
+            upgrade.Apply(player.stats.structureStats, structureStatsUpgLevels[upgType]);
             PlayUpgradeEffects();
             
-            qCubeStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
-                qCubeStatsUpgBaseCosts[upgType], qCubeStatsUpgLevels[upgType] + 1);
+            structureStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
+                structureStatsUpgBaseCosts[upgType], structureStatsUpgLevels[upgType] + 1);
 
             Debug.Log("QCubeStats upgrade applied: " + upgType);
             messagePanel.ShowMessage("Quantum Cube stat upgraded to level " + 
-                                     qCubeStatsUpgLevels[upgType], Color.cyan);
+                                     structureStatsUpgLevels[upgType], Color.cyan);
         }
         else
         {

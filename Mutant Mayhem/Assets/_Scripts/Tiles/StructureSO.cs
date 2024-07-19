@@ -38,6 +38,7 @@ public enum StructureType
     Door,
     BlastDoor,
     ThreeByThreePlatform,
+    GunTurret,
     None
 }
 
