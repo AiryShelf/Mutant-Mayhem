@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public float damage = 10;
     [HideInInspector] public float knockback = 1f;
     [HideInInspector] public float destroyTime;
+    [HideInInspector] public Vector2 velocity;
+    [HideInInspector] public Transform origin;
 
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected BulletEffectsHandler effectsHandler;
@@ -41,6 +43,7 @@ public class Bullet : MonoBehaviour
         }
 
         StartCoroutine(DestroyAfterSeconds());
+        rb.velocity = velocity;
     }
 
     protected virtual void FixedUpdate()
@@ -92,8 +95,9 @@ public class Bullet : MonoBehaviour
             if (AiTrggerPrefab != null)
             {
                 //Debug.Log("AiTrigger instantiated");
-                GameObject trigger = Instantiate(AiTrggerPrefab, point, Quaternion.identity);
-                trigger.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
+                GameObject triggerObj = Instantiate(AiTrggerPrefab, point, Quaternion.identity);
+                triggerObj.GetComponent<AiTrigger>().origin = this.origin;
+                triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
             } 
         }
         // Structures Layer #12

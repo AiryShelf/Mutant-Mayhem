@@ -22,13 +22,13 @@ public class UpgradePanelBuilder : MonoBehaviour
     bool unlocked = false;
     Player player;
     MessagePanel messagePanel;
-    UpgradeSystem upgradeSystem;
+    UpgradeManager upgradeSystem;
 
     void Awake()
     {
         player = FindObjectOfType<Player>();
         messagePanel = FindObjectOfType<MessagePanel>();
-        upgradeSystem = FindObjectOfType<UpgradeSystem>();
+        upgradeSystem = FindObjectOfType<UpgradeManager>();
 
         // Clear editor objects in layout groups
         for (int i = buttonsGrid.transform.childCount - 1; i >= 0; i--)
@@ -143,7 +143,7 @@ public class UpgradePanelBuilder : MonoBehaviour
             //StartCoroutine(DelayTrigger());
             Destroy(unlockPanel.gameObject);
 
-            upgradeSystem.PlayUpgradeEffects();
+            upgradeSystem.PlayUpgradeButtonEffect();
 
             messagePanel.ShowMessage(unlockName + " unlocked!", Color.green);
         }

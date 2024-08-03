@@ -9,6 +9,7 @@ public class TutorialBuildPanel : TutorialPanel
         if (TutorialManager.tutorialShowedBuild)
         {
             Destroy(gameObject);
+            return;
         }
     }
 

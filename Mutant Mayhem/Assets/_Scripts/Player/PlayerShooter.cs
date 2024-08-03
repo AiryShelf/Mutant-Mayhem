@@ -30,25 +30,14 @@ public class PlayerShooter : Shooter
     [HideInInspector]public PlayerStats playerStats;
 
     [SerializeField] float showDamage;
-    
 
-    void Awake()
-    {
-        myRb = GetComponent<Rigidbody2D>();  
-
-        // Make a working copy of the gun list
-        foreach (GunSO gun in _gunListSource)
-        {
-            if (gun != null)
-            {
-                GunSO g = Instantiate(gun);
-                gunList.Add(g);
-            }
-        }
-    }
+    protected override void Awake() { }
 
     void Start()
     {
+        myRb = GetComponent<Rigidbody2D>(); 
+
+        CopyGunList();
         RefreshChargeGuns();
         SwitchGuns(0);
     }
@@ -204,48 +193,10 @@ public class PlayerShooter : Shooter
 
     protected override void Fire()
     {
-        // Use ammo
-        gunsAmmoInClips[currentGunIndex]--;
-        StatsCounterPlayer.ShotsFiredByPlayer++;
-
-        // Create bullet and casing
-        GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
-                                        muzzleTrans.position, muzzleTrans.rotation);
-        if (currentGunSO.bulletCasingPrefab != null)
-        {
-            GameObject casingObj = Instantiate(currentGunSO.bulletCasingPrefab, 
-                                                casingEjectorTrans.position, 
-                                                gunTrans.rotation, casingEjectorTrans);
-
-            // If elevated, most shells go over walls
-            if (isElevated)
-            {
-                int rand = Random.Range(0, 5);
-                if (rand != 0)
-                    casingObj.layer = LayerMask.NameToLayer("Default");
-            }
-        }
-
-        Bullet bullet = bulletObj.GetComponent<Bullet>();
-
-        // Check if elevated for shooting over walls
-        if (isElevated)
-        {
-            bullet.hitLayers = elevatedHitLayers;
-        }
+        base.Fire();
         
-        // Apply stats and effects
-        bullet.damage = currentGunSO.damage;
-        bullet.knockback = currentGunSO.knockback;
-        bullet.destroyTime = currentGunSO.bulletLifeTime;
-        Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();
-        Vector2 dir = ApplyAccuracy(muzzleTrans.right);
-        rb.velocity = dir * currentGunSO.bulletSpeed;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
-
+        StatsCounterPlayer.ShotsFiredByPlayer++;
         Kickback();
-        StartCoroutine(MuzzleFlash());
         bool oneHand = isMeleeing || !isAiming;
         gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
     }

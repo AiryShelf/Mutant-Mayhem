@@ -42,7 +42,7 @@ public class Explosion : MonoBehaviour
                 {
                     enemy.ModifyHealth(-damage / dist, gameObject);
                     enemy.StartFreeze();
-                    enemy.SetAggroToPlayerStatus(true);
+                    enemy.SetAggroStatus(true);
                     enemy.EnemyChaseSOBaseInstance.StartSprint();
 
                     StatsCounterPlayer.TotalDamageByPlayerExplosions += damage / dist;

@@ -23,7 +23,7 @@ public class UIUpgrade : MonoBehaviour
 
 
     [HideInInspector] public TextMeshProUGUI upgradeText;
-    UpgradeSystem upgradeSystem;
+    UpgradeManager upgradeSystem;
     Player player;
     string cyanColorTag;
     string greenColorTag;
@@ -35,7 +35,7 @@ public class UIUpgrade : MonoBehaviour
 
     void Awake()
     {
-        upgradeSystem = FindObjectOfType<UpgradeSystem>();
+        upgradeSystem = FindObjectOfType<UpgradeManager>();
         player = FindObjectOfType<Player>();
 
         cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
@@ -116,17 +116,17 @@ public class UIUpgrade : MonoBehaviour
                 {
                     case 0:
                     {
-                        upgLvl = upgradeSystem.laserPistolUpgLevels[gunStatsUpgrade];
-                        maxLvl = upgradeSystem.laserPistolUpgMaxLevels[gunStatsUpgrade];
-                        upgCost = upgradeSystem.laserPistolUpgCurrCosts[gunStatsUpgrade];
+                        upgLvl = upgradeSystem.laserUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeSystem.laserUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = upgradeSystem.laserUpgCurrCosts[gunStatsUpgrade];
                         break;
                     }
 
                     case 1:
                     {
-                        upgLvl = upgradeSystem.SMGUpgLevels[gunStatsUpgrade];
-                        maxLvl = upgradeSystem.SMGUpgMaxLevels[gunStatsUpgrade];
-                        upgCost = upgradeSystem.SMGUpgCurrCosts[gunStatsUpgrade];
+                        upgLvl = upgradeSystem.bulletUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeSystem.bulletUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = upgradeSystem.bulletUpgCurrCosts[gunStatsUpgrade];
                         break;
                     }
                 }
@@ -146,7 +146,7 @@ public class UIUpgrade : MonoBehaviour
 
             else if (upgradeFamily == UpgradeFamily.StructureStats)
             {
-                // QCubeStats
+                // StructureStats
                 upgLvl = upgradeSystem.structureStatsUpgLevels[structureStatsUpgrade];
                 maxLvl = upgradeSystem.structureStatsUpgMaxLevels[structureStatsUpgrade];
                 upgCost = upgradeSystem.structureStatsUpgCurrCosts[structureStatsUpgrade];

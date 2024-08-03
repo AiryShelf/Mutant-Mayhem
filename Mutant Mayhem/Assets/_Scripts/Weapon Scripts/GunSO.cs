@@ -5,8 +5,8 @@ using UnityEngine;
 
 public enum GunType
 {
-    LaserPistol,
-    SMG,
+    Laser,
+    Bullet,
     RepairGun = 10,
 }
 
@@ -14,11 +14,14 @@ public enum GunType
 public class GunSO : ScriptableObject
 {
     public GunType gunType;
+    public GameObject bulletPrefab;
     public string uiName;
+
+    [Header("For Player")]
     public Sprite sprite;
     public Sprite uiSprite;
     public string animatorHasString;
-    public GameObject bulletPrefab;
+    
 
     [Header("Sounds")]
     public List<SoundSO> reloadSounds;
@@ -36,13 +39,13 @@ public class GunSO : ScriptableObject
     
     [Header("Gun Stats")]
     public float damage;
-    public float damageUpgAmt;
+    public float damageUpgFactor;
     public float knockback;
     public float knockbackUpgAmt;
     public int clipSize;
     public int clipSizeUpgAmt;
     public float chargeDelay;
-    public float chargeDelayUpgNegAmt;
+    public float chargeSpeedUpgNegAmt;
     public float shootSpeed;
     public float shootSpeedUpgNegAmt;
     public float accuracy;

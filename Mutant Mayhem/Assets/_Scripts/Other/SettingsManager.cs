@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public enum DifficultyLevel
@@ -14,12 +15,12 @@ public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
 
-    [Header("Difficulty Setting")]
-    public static int startingDifficulty = 1;
+    [Header("Difficulty Settings")]
+    public int startingDifficulty = 1;
     private DifficultyLevel difficultyLevel; 
 
-    [Header("Movement Setting")]
-    public static int startingMovement = 1;
+    [Header("Movement Settings")]
+    public int startingMovement = 1;
     public int useStandardWASD = 1;
 
     [Header("Difficulty Multipliers")]
@@ -28,9 +29,13 @@ public class SettingsManager : MonoBehaviour
     public float WaveListFactor = 0; // up harder, more waves added over time
     public float BatchTimeMult = 1;
     public float BatchMult = 1;
-    public float CreditsMult = 1;  
+    public float CreditsMult = 1;
+
+    [Header("Controls Settings")]
+    public int spacebarEnabled = 1;
 
     WaveControllerRandom waveController;  
+    Player player;
 
     void Awake()
     {
@@ -82,8 +87,20 @@ public class SettingsManager : MonoBehaviour
             PlayerPrefs.SetInt("StandardWASD", 1);
         }
 
+        // Controls
+        if (PlayerPrefs.HasKey("SpacebarEnabled"))
+        {
+            spacebarEnabled = PlayerPrefs.GetInt("SpacebarEnabled");
+        }
+        else
+        {
+            spacebarEnabled = 1;
+            PlayerPrefs.SetInt("SpacebarEnabled", 1);
+        }
+
         ApplyDifficultySettings();
         ApplyMovementSettings();
+        ApplyControlSettings();
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -111,17 +128,19 @@ public class SettingsManager : MonoBehaviour
         switch (difficultyLevel)
         {
             case DifficultyLevel.Easy:
-                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase + 60;
+                waveController.timeBetweenWaves = 
+                                waveController.timeBetweenWavesBase + 60;
                 WaveDifficultyMult = 0.7f;
                 WavePerBaseAdjust = 1;
                 WaveListFactor = 0.8f;
                 BatchTimeMult = 1.2f;
                 BatchMult = 0.7f;
-                CreditsMult = 2f;
+                CreditsMult = 1.5f;
                 break;
 
             case DifficultyLevel.Normal:
-            waveController.timeBetweenWaves = waveController.timeBetweenWavesBase;
+            waveController.timeBetweenWaves = 
+                            waveController.timeBetweenWavesBase;
                 WaveDifficultyMult = 1;
                 WavePerBaseAdjust = 0;
                 WaveListFactor = 1f;
@@ -131,7 +150,8 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Hard:
-                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
+                waveController.timeBetweenWaves = 
+                                waveController.timeBetweenWavesBase - 30;
                 WaveDifficultyMult = 1.3f;
                 WavePerBaseAdjust = -1;
                 WaveListFactor = 1.2f;
@@ -170,6 +190,39 @@ public class SettingsManager : MonoBehaviour
         else
         {
             //Debug.Log("Player not found by SettingsManager");
+        }
+    }
+
+    #endregion
+
+    #region Controls
+
+    public void ApplyControlSettings()
+    {
+        player = FindObjectOfType<Player>();
+        InputAction throwAction = player.inputAsset.FindActionMap("Player").FindAction("Throw");
+
+        if (spacebarEnabled == 0)
+        {
+            // Disable the spacebar
+            for (int i = 0; i < throwAction.bindings.Count; i++)
+            {
+                if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
+                {
+                    throwAction.ApplyBindingOverride(i, new InputBinding { overridePath = "" });
+                }
+            }
+        }
+        else
+        {
+            // Enable the spacebar
+            for (int i = 0; i < throwAction.bindings.Count; i++)
+            {
+                if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
+                {
+                    throwAction.RemoveBindingOverride(i);
+                }
+            }
         }
     }
 

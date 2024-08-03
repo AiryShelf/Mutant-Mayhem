@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a973bc44d767914408079356d9c621eb, type: 3}
   m_Name: RepairGun
   m_EditorClassIdentifier: 
-  gunType: 0
+  gunType: 10
+  bulletPrefab: {fileID: 145518261742128944, guid: a541e93f5f717e44dac9311f6d529a18, type: 3}
   uiName: Repair Gun
   sprite: {fileID: 21300000, guid: 2eb6dc60541c920449efa7ffcd7d740b, type: 3}
   uiSprite: {fileID: 21300000, guid: 33ba324b557c3494c96f3ba3bfee6981, type: 3}
   animatorHasString: hasPistol
-  bulletPrefab: {fileID: 145518261742128944, guid: a541e93f5f717e44dac9311f6d529a18, type: 3}
   reloadSounds: []
   selectedSound: {fileID: 11400000, guid: 16dbbb20aa291b14783178bed40bd5a5, type: 2}
   emptyClipPrefab: {fileID: 0}
@@ -29,13 +29,13 @@ MonoBehaviour:
   muzzleFlashTime: 0.05
   recoilAmount: {x: -0.1, y: 0}
   damage: -200
-  damageUpgAmt: 1
+  damageUpgFactor: 2
   knockback: 0
   knockbackUpgAmt: 0.1
   clipSize: 50
   clipSizeUpgAmt: 5
   chargeDelay: 0.2
-  chargeDelayUpgNegAmt: -0.05
+  chargeSpeedUpgNegAmt: 0
   shootSpeed: 0.1
   shootSpeedUpgNegAmt: -0.015
   accuracy: 1

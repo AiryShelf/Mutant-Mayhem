@@ -7,6 +7,6 @@ public interface ITriggerCheckable
     bool IsAggroed { get; set; }
     bool IsWithinShootDistance { get; set; }
 
-    void SetAggroToPlayerStatus(bool isAggroed);
+    void SetAggroStatus(bool isAggroed);
     void SetShootDistanceBool(bool IsWithinShootDistance);
 }

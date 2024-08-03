@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: SMG
   m_EditorClassIdentifier: 
   gunType: 1
+  bulletPrefab: {fileID: 145518261742128944, guid: 2f34aec5bd679f64e81317a4522430ea, type: 3}
   uiName: SMG
   sprite: {fileID: 21300000, guid: cd66e9e5790dfb04e89fb3ebed3f14e2, type: 3}
   uiSprite: {fileID: 21300000, guid: bf7343c908608ae4b98e98372a200b1b, type: 3}
   animatorHasString: hasRifle
-  bulletPrefab: {fileID: 145518261742128944, guid: 2f34aec5bd679f64e81317a4522430ea, type: 3}
   reloadSounds:
   - {fileID: 11400000, guid: 472f154edd96ead4a959c38a5698845e, type: 2}
   - {fileID: 11400000, guid: 136636e437e01ab4c913e241216df217, type: 2}
@@ -32,14 +32,14 @@ MonoBehaviour:
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
   recoilAmount: {x: -0.25, y: 0}
-  damage: 50
-  damageUpgAmt: 2
+  damage: 40
+  damageUpgFactor: 0.6
   knockback: 2
   knockbackUpgAmt: 0.3
   clipSize: 30
   clipSizeUpgAmt: 5
   chargeDelay: 0
-  chargeDelayUpgNegAmt: 0
+  chargeSpeedUpgNegAmt: 0
   shootSpeed: 0.12
   shootSpeedUpgNegAmt: -0.006
   accuracy: 7

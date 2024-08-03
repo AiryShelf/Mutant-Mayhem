@@ -172,15 +172,15 @@ public class WaveControllerRandom : MonoBehaviour
     {
         batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveCount / 
                           wavesPerBase / 2 * SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = multiplierStart + currentWaveCount / 40f * 
+        damageMultiplier = multiplierStart + currentWaveCount / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult;
-        healthMultiplier = multiplierStart + currentWaveCount / 40f * 
+        healthMultiplier = multiplierStart + currentWaveCount / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult;
-        speedMultiplier = multiplierStart + currentWaveCount / 40f *  
+        speedMultiplier = multiplierStart + currentWaveCount / 20f *  
                            SettingsManager.Instance.WaveDifficultyMult;
-        sizeMultiplier = multiplierStart + currentWaveCount / 40f *   
+        sizeMultiplier = multiplierStart + currentWaveCount / 20f *   
                            SettingsManager.Instance.WaveDifficultyMult;
-        spawnSpeedMultiplier = Mathf.Clamp(multiplierStart - currentWaveCount / 100f * 
-                           SettingsManager.Instance.WaveDifficultyMult, 0.1f, 100);
+        spawnSpeedMultiplier = Mathf.Clamp(multiplierStart - currentWaveCount / 20f * 
+                           SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);
     }
 }

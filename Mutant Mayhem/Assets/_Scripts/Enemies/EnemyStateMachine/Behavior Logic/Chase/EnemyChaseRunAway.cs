@@ -33,7 +33,7 @@ public class EnemyChaseRunAway : EnemyChaseSOBase
         base.DoPhysicsUpdateLogic();
 
         // Run away from Player
-        Vector2 targetDir = -(playerTransform.position - transform.position).normalized;
+        Vector2 targetDir = -(targetTransform.position - transform.position).normalized;
         enemyBase.ChangeFacingDirection(targetDir, rotateSpeedMultiplier);
         enemyBase.MoveEnemy(enemyBase.facingDirection * (runAwaySpeedMultiplier * _sprintFactor));
     }

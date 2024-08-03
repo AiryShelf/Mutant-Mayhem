@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 777023944421896143}
   - component: {fileID: 8890929138447465926}
   - component: {fileID: 7019984189303895679}
+  - component: {fileID: 7432193421338744068}
   m_Layer: 13
   m_Name: PlayerTriggerSingleFixed-Bullet
   m_TagString: PlayerBulletTrigger
@@ -80,3 +81,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8435d9d2f0119b64eac9fc5d2632f2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7432193421338744068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5148803634519629604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf0c26fa2f44c94fae64ed0f626cd53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  origin: {fileID: 0}

@@ -9,6 +9,7 @@ public class OptionsPanel : MonoBehaviour
 {
     [SerializeField] TMP_Dropdown difficultyDropdown;
     [SerializeField] TMP_Dropdown movementTypeDropdown;
+    [SerializeField] Toggle spacebarToggle;
 
     void Start()
     {
@@ -24,7 +25,7 @@ public class OptionsPanel : MonoBehaviour
         }
         else
         {
-            difficultyDropdown.value = SettingsManager.startingDifficulty;
+            difficultyDropdown.value = SettingsManager.Instance.startingDifficulty;
         }
 
         // Movement Type
@@ -34,13 +35,72 @@ public class OptionsPanel : MonoBehaviour
         }
         else
         {
-            movementTypeDropdown.value = SettingsManager.startingMovement;
+            movementTypeDropdown.value = SettingsManager.Instance.startingMovement;
         }
 
+        // Controls
+        if (SettingsManager.Instance.spacebarEnabled == 1)
+            spacebarToggle.isOn = true;
+        else
+            spacebarToggle.isOn = false;
+
         difficultyDropdown.onValueChanged.AddListener(delegate { 
-                                          DifficultyValueChanged(difficultyDropdown); });
+                                            DifficultyValueChanged(difficultyDropdown); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
+        spacebarToggle.onValueChanged.AddListener(delegate {
+                                            ToggleSpacebar(spacebarToggle); });
+    }
+
+    public void ToggleSpacebar(Toggle change)
+    {
+        Debug.Log("Toggle Spacebar ran");
+        Player player = FindObjectOfType<Player>();
+        if (player == null)
+        {
+            Debug.LogError("Player not found");
+            return;
+        }
+
+        InputAction throwAction = player.inputAsset.FindActionMap("Player").FindAction("Throw");
+        if (throwAction == null)
+        {
+            Debug.LogError("Throw action not found");
+            return;
+        }
+
+        if (SettingsManager.Instance.spacebarEnabled == 1)
+        { 
+            Debug.Log("spacebar found enabled");
+            // Disable the spacebar
+            for (int i = 0; i < throwAction.bindings.Count; i++)
+            {
+                Debug.Log("entered for loop disable");
+                if (throwAction.bindings[i].path == "<Keyboard>/space")
+                {
+                    Debug.Log("Disbaled Spacebar");
+                    throwAction.ApplyBindingOverride(i, new InputBinding { overridePath = "" });
+                    PlayerPrefs.SetInt("SpacebarEnabled", 0);
+                    SettingsManager.Instance.spacebarEnabled = 0;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("spacebar found disabled");
+            // Enable the spacebar
+            for (int i = 0; i < throwAction.bindings.Count; i++)
+            {
+                Debug.Log("entered for loop enable");
+                if (throwAction.bindings[i].path == "<Keyboard>/space")
+                {
+                    Debug.Log("Enabled Spacebar");
+                    throwAction.RemoveBindingOverride(i);
+                    PlayerPrefs.SetInt("SpacebarEnabled", 1);
+                    SettingsManager.Instance.spacebarEnabled = 1;
+                }
+            }
+        }
     }
 
     void DifficultyValueChanged(TMP_Dropdown change)

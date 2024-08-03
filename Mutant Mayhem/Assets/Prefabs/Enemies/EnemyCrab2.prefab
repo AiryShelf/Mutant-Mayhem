@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 80
-  healthToCreditsDivisor: 2
+  healthToCreditsDivisor: 1.8
   hitEffectsChild: {fileID: 853075169137754596}
   corpsePrefab: {fileID: 3246120828009000940, guid: 9144ac51e65349742a12fc9ba99a1aef, type: 3}
   deathTorque: 30
@@ -267,7 +267,7 @@ MonoBehaviour:
   - {x: 0.039231207, y: -0.04582111, z: 0}
   m_ShapePathHash: 1377517957
   m_Mesh: {fileID: 0}
-  m_InstanceId: 252104
+  m_InstanceId: 86520
   m_LocalBounds:
     m_Center: {x: 0.00037250668, y: 0.0009024441, z: 0}
     m_Extent: {x: 0.038858704, y: 0.04746858, z: 0}
@@ -281,15 +281,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.x
-      value: 0.25283986
+      value: 0.21800134
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.y
-      value: 0.2941444
+      value: 0.26412594
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.x
-      value: -0.074195914
+      value: -0.085394025
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.y
@@ -297,12 +297,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: knockback
-      value: 30
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: meleeSound
       value: 
       objectReference: {fileID: 11400000, guid: 81abc622a3560a749a59b4a60bb01f90, type: 2}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: meleeDamage
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: selfKnockback
       value: 2

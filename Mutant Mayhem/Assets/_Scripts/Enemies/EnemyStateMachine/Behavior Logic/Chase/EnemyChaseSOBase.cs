@@ -26,32 +26,56 @@ public class EnemyChaseSOBase : ScriptableObject
     protected float _sprintFactor = 1f;
     protected float stopTimer;
     
-    protected Transform playerTransform;
+    [HideInInspector] public Transform targetTransform;
+    [HideInInspector] public Vector3 targetPos;
 
     public virtual void Initialize(GameObject gameObject, EnemyBase enemyBase)
     {
         this.gameObject = gameObject;
         transform = gameObject.transform;
         this.enemyBase = enemyBase;
-
-        playerTransform = FindObjectOfType<Player>().transform;
     }
 
     public virtual void DoEnterLogic() 
     {
-        enemyBase.IsShotAggroed = false;
+        // Set targetPos
+        if (targetTransform != null)
+            targetPos = targetTransform.position;
+
+        // Clear target if aggroed by bullet
+        if (enemyBase.IsShotAggroed)
+        {
+            enemyBase.IsShotAggroed = false;
+            targetTransform = null;
+        }
+        
         stopTimer = 0;
         distanceCheck = enemyBase.StartCoroutine(DistanceToSprintCheck(
                         DistToStartSprint, SprintSpeedMultiplier, TimeToCheckDistance));
     }
-    public virtual void DoExitLogic() { }
+    public virtual void DoExitLogic() 
+    { 
+        if (distanceCheck != null)
+        {
+            enemyBase.StopCoroutine(distanceCheck);
+            distanceCheck = null;
+        }
+
+        enemyBase.IsAggroed = false; 
+        targetTransform = null;
+    }
     public virtual void DoFrameUpdateLogic() { }
     public virtual void DoPhysicsUpdateLogic() 
     {
         // If aggroed, reset stop chase timer.
         if (enemyBase.IsAggroed)
         {
+            // Refresh targetPos
             stopTimer = 0;
+            if (targetTransform != null)
+            {
+                targetPos = targetTransform.position;
+            }
         }
         else 
         {
@@ -60,6 +84,7 @@ public class EnemyChaseSOBase : ScriptableObject
             if (stopTimer >= timeToStopChase)
             {
                 enemyBase.StateMachine.ChangeState(enemyBase.IdleState);
+                stopTimer = 0;
                 return;
             }
         }
@@ -68,8 +93,6 @@ public class EnemyChaseSOBase : ScriptableObject
         {
             enemyBase.StateMachine.ChangeState(enemyBase.ShootState);
         }
-
-
     }
     public virtual void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) { }
     public virtual void ResetValues() { }
@@ -82,7 +105,7 @@ public class EnemyChaseSOBase : ScriptableObject
             if (enemyBase.IsAggroed)
             {
                 // if in sprint range. sqrMagnitude for efficiency
-                if ((playerTransform.position - transform.position).sqrMagnitude 
+                if ((targetPos - transform.position).sqrMagnitude 
                     < distToStartSprint*distToStartSprint)
                 {
                     // Sprint
@@ -92,6 +115,7 @@ public class EnemyChaseSOBase : ScriptableObject
                         if (stopSprint != null)
                         {
                             enemyBase.StopCoroutine(stopSprint);
+                            stopSprint = null;
                         }
 
                         stopSprint = enemyBase.StartCoroutine(StopSprint());
@@ -122,10 +146,12 @@ public class EnemyChaseSOBase : ScriptableObject
         if (accelerate != null)
         {
             enemyBase.StopCoroutine(accelerate);
+            accelerate = null;
         }
         if (stopSprint != null)
         {
             enemyBase.StopCoroutine(stopSprint);
+            stopSprint = null;
         }
         stopSprint = enemyBase.StartCoroutine(StopSprint());
         accelerate = enemyBase.StartCoroutine(

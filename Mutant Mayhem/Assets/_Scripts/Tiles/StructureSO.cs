@@ -19,6 +19,7 @@ public class StructureSO : ScriptableObject
     
     public RuleTileStructure ruleTileStructure;
     public StructureType structureType;
+    public bool isTurret;
     public ActionType actionType;
     public Vector2Int actionRange = new Vector2Int(5, 5);
 }
@@ -38,7 +39,12 @@ public enum StructureType
     Door,
     BlastDoor,
     ThreeByThreePlatform,
+    LaserTurret,
     GunTurret,
+    LaserTurret2,
+    RocketTurret,
+    GunTurret2,
+    RocketTurret2,
     None
 }
 

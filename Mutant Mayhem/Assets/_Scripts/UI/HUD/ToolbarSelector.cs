@@ -16,11 +16,7 @@ public class ToolbarSelector : MonoBehaviour
 
     void Awake()
     {
-        player = FindObjectOfType<Player>();
-
-        currentBox = boxImages[0];
-        unselectedColor = currentBox.color;
-        SwitchBoxes(0);
+        player = FindObjectOfType<Player>(); 
     }
 
     void OnEnable()
@@ -32,6 +28,13 @@ public class ToolbarSelector : MonoBehaviour
 
         // Add my method to the action event
         toolbarAction.performed += OnToolbar;
+    }
+
+    void Start()
+    {
+        currentBox = boxImages[0];
+        unselectedColor = currentBox.color;
+        SwitchBoxes(0);
     }
 
     void OnDisable()

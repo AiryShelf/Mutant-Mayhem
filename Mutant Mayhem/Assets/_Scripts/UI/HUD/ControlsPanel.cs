@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class ControlsPanel : MonoBehaviour
 {
+    public bool isOpen = true;
     [SerializeField] string hideControlsStr;
     [SerializeField] string showControlsStr;
     [SerializeField] TextMeshProUGUI showHideText;
@@ -54,18 +55,20 @@ public class ControlsPanel : MonoBehaviour
         TogglePanel();   
     }
 
-    void TogglePanel()
+    public void TogglePanel()
     {
         if (!player.isDead)
         {
             // Show/Hide Panel
             if (fadeCanvasGroupsWave.isTriggered)
             {
+                isOpen = false;
                 fadeCanvasGroupsWave.isTriggered = false;
                 showHideText.text = showControlsStr;
             }
             else
             {
+                isOpen = true;
                 fadeCanvasGroupsWave.isTriggered = true;
                 showHideText.text = hideControlsStr;
             }

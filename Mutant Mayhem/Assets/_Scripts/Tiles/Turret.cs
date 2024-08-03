@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-    public float detectionRange = 10f;
+    [HideInInspector] public float detectionRange;
     [HideInInspector] public float rotationSpeed;
-    public float expansionSpeed = 1f;
-    [SerializeField] float expansionDelay = 0.1f;
+    [HideInInspector] public float expansionDelay;
+    [SerializeField] float expansionDist = 0.5f;
     [SerializeField] float randScanPauseMinTime = 0.5f;
-    [SerializeField] float randScanPauseTime = 2f;
+    [SerializeField] float randScanPauseMaxTime = 2f;
     [SerializeField] float startShootAngle = 45f;
     public CircleCollider2D detectionCollider;
     public Shooter shooter;
-    TurretGunSO turretGunSO;
+    TurretGunSO turretGun;
     Transform target;
     bool hasTarget;
     float detectionRangeSqrd;
@@ -21,14 +21,7 @@ public class Turret : MonoBehaviour
 
     void Start()
     {
-        detectionCollider.radius = 0f;
-        detectionRangeSqrd = detectionRange * detectionRange;
-        if (shooter.currentGunSO is TurretGunSO _turretGunSO)
-        {
-            turretGunSO = _turretGunSO;
-        }
-
-        rotationSpeed = turretGunSO.rotationSpeed;
+        InitializeTurret();
     }
 
     void FixedUpdate()
@@ -42,6 +35,60 @@ public class Turret : MonoBehaviour
             if (searchRoutine == null)
                 searchRoutine = StartCoroutine(SearchForTarget());
         }
+    }
+
+    void InitializeTurret()
+    {
+        turretGun = (TurretGunSO)shooter.gunList[0];
+        
+        // Initialize gun
+        switch (turretGun.gunType)
+        {
+            case GunType.Laser:
+                turretGun.damage += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.GunDamage] * turretGun.damageUpgFactor;
+                turretGun.knockback += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.GunKnockback] * turretGun.knockbackUpgAmt;
+                turretGun.clipSize += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.ClipSize] * turretGun.clipSizeUpgAmt;
+                turretGun.chargeDelay += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.ChargeSpeed] * turretGun.chargeSpeedUpgNegAmt;
+                turretGun.shootSpeed += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.ShootSpeed] * turretGun.shootSpeedUpgNegAmt;
+                turretGun.accuracy += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.GunAccuracy] * turretGun.accuracyUpgNegAmt;
+                turretGun.bulletLifeTime += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.GunRange] * turretGun.bulletRangeUpgAmt;
+                break;
+            case GunType.Bullet:
+                turretGun.damage += UpgradeManager.Instance.bulletUpgLevels[GunStatsUpgrade.GunDamage] * turretGun.damageUpgFactor;
+                turretGun.knockback += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.GunKnockback] * turretGun.knockbackUpgAmt;
+                turretGun.clipSize += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.ClipSize] * turretGun.clipSizeUpgAmt;
+                turretGun.shootSpeed += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.ShootSpeed] * turretGun.shootSpeedUpgNegAmt;
+                turretGun.accuracy += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.GunAccuracy] * turretGun.accuracyUpgNegAmt;
+                turretGun.bulletLifeTime += UpgradeManager.Instance.laserUpgLevels[GunStatsUpgrade.GunRange] * turretGun.bulletRangeUpgAmt;
+                turretGun.reloadSpeed += UpgradeManager.Instance.bulletUpgLevels[GunStatsUpgrade.TurretReloadSpeed] * turretGun.reloadSpeedUpgNegAmt;
+                break;
+        }
+
+        // Initialize turret structure
+        turretGun.rotationSpeed += UpgradeManager.Instance.structureStatsUpgLevels[StructureStatsUpgrade.TurretRotSpeed] 
+                                   * turretGun.rotSpeedUpgAmt;
+        turretGun.detectRange += UpgradeManager.Instance.structureStatsUpgLevels[StructureStatsUpgrade.TurretSensors] 
+                                 * turretGun.detectRangeUpgAmt;
+
+        // Initialize detection collider
+        if (shooter.gunList[0] is TurretGunSO gun)
+        {
+            detectionRangeSqrd = gun.detectRange * gun.detectRange;
+            turretGun = gun;
+            rotationSpeed = gun.rotationSpeed;
+        }
+        detectionCollider.radius = 0f;
+    }
+
+    public void UpdateSensors()
+    {
+        if (shooter.currentGunSO is TurretGunSO turretGunSO)
+        {
+            detectionRangeSqrd = turretGunSO.detectRange * turretGunSO.detectRange;
+            expansionDelay = turretGunSO.expansionDelay;
+        }
+        else 
+            Debug.Log("Found a non-turret gun attached to a turret");
     }
 
     void TrackTarget()
@@ -67,7 +114,7 @@ public class Turret : MonoBehaviour
         while (!hasTarget)
         {
             // Expand the detection radius to find the next target
-            detectionCollider.radius += expansionSpeed;
+            detectionCollider.radius += expansionDist;
             if (detectionCollider.radius > detectionRange)
             {
                 detectionCollider.radius = detectionRange; // Cap the radius at the max detection range
@@ -108,7 +155,7 @@ public class Turret : MonoBehaviour
             }
 
             // Wait for a random time
-            float randomWaitTime = Random.Range(randScanPauseMinTime, randScanPauseTime);
+            float randomWaitTime = Random.Range(randScanPauseMinTime, randScanPauseMaxTime);
             yield return new WaitForSeconds(randomWaitTime);
         }
     }

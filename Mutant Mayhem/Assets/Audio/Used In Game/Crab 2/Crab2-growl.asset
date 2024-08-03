@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
   m_Name: Crab2-growl
   m_EditorClassIdentifier: 
-  soundName: 
+  soundName: Grab2Growl
   soundType: 1
   mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
@@ -39,5 +39,5 @@ MonoBehaviour:
   pitch: 1
   pitchRandRange: 0.2
   spatialBlend: 1
-  minDistance: 20
+  minDistance: 10
   maxDistance: 100

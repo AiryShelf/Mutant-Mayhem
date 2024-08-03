@@ -10,7 +10,6 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] float playerStartingCredits;
     public StructureSO structureInHand;
     public BuildRangeCircle buildRangeCircle;
-    public int previousGunIndex;
     public LayerMask layersForBuildClearCheck;
     public LayerMask layersForRemoveClearCheck;
     [SerializeField] TileBase highlightedTileAsset;
@@ -20,10 +19,10 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] Tilemap highlightTilemap;
     [SerializeField] Tilemap previewTilemap;
     [SerializeField] TileManager tileManager;
+    [SerializeField] TurretManager turretManager;
     [SerializeField] UIBuildMenuController buildMenuController;
     public List<StructureSO> AllStructureSOs;
     [SerializeField] int numStructuresAvailAtStart;
-    public int maxTurrets = 1;
 
     [SerializeField] QCubeController qCubeController;
 
@@ -143,6 +142,7 @@ public class BuildingSystem : MonoBehaviour
 
         if (on)
         {
+            currentRotation = 0;
             buildRangeCircle.EnableBuildCircle(true);
             inBuildMode = true;
             //previousGunIndex = player.playerShooter.currentGunIndex;
@@ -225,8 +225,6 @@ public class BuildingSystem : MonoBehaviour
             {
                 structureInHand = sourceSO;
             }
-
-
             //Debug.Log("Switched to tool index: " + (int)structure);     
         }
     }
@@ -242,19 +240,35 @@ public class BuildingSystem : MonoBehaviour
 
     void Build(Vector3Int gridPos)
     {
-        if (PlayerCredits >= structureInHand.tileCost)
+        // Check Turrets
+        if (structureInHand.isTurret)
         {
-            if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
+            if (turretManager.numTurrets >= player.stats.structureStats.maxTurrets)
             {
-                PlayerCredits -= structureInHand.tileCost;
-                RemoveBuildHighlight();
+                messagePanel.ShowMessage("Turret limit reached.  Use upgrades to increase the limit", Color.red);
+                return;
             }
         }
-        else
+
+        // Check Credits
+        if (PlayerCredits < structureInHand.tileCost)
         {
             messagePanel.ShowMessage("Not enough Credits to build " + 
                                      structureInHand.tileName + "!", Color.red);
+            return;
         }
+
+        // Add Tile
+        if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
+        {
+            PlayerCredits -= structureInHand.tileCost;
+            RemoveBuildHighlight();
+
+            if (structureInHand.isTurret)
+            {
+                turretManager.AddTurret(gridPos);
+            }
+        }   
     }
 
     void RemoveTile(Vector3Int gridPos)
@@ -264,7 +278,7 @@ public class BuildingSystem : MonoBehaviour
         {
             
             tileManager.RefundTileAt(gridPos);
-            tileManager.DestroyTileAt(gridPos);
+            tileManager.RemoveTileAt(gridPos);
         }
         else
         {

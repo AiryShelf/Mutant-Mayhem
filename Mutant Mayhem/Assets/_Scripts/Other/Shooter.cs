@@ -5,41 +5,33 @@ using UnityEngine;
 public class Shooter : MonoBehaviour
 {
     public List<GunSO> _gunListSource;
-    public List<GunSO> gunList;
-    public List<int> gunsAmmoInClips;
-    float shootSpeed = 1.0f;
-    public float reloadTime = 2.0f; 
+    [HideInInspector] public List<GunSO> gunList;
     [SerializeField] protected Transform gunTrans;
     [SerializeField] protected Transform muzzleTrans;
     [SerializeField] protected Transform casingEjectorTrans;
     [SerializeField] protected Transform clipEjectorTrans;
     [SerializeField] protected LayerMask elevatedHitLayers;
     [SerializeField] protected GunRecoil gunRecoil;
-
-    int clipSize;
-    float fireTimer;
-    float reloadTimer;
+    public List<int> gunsAmmoInClips = new List<int>();
+    float shootSpeed = 1.0f;
+    public float reloadTime = 2.0f; 
     public bool isReloading;
     public bool isElevated;
-    bool isTurret;
+
+
     [HideInInspector] public bool hasTarget;
-    public int currentGunIndex = 0;
+    [HideInInspector] public int currentGunIndex = 0;
     [HideInInspector] public GunSO currentGunSO;
     protected GameObject muzzleFlash;
     protected GameObject laserSight;
     Coroutine reloadRoutine;
+    int clipSize;
+    float fireTimer;
+    float reloadTimer;
 
-    void Start()
+    protected virtual void Awake()
     {
-        // Make a working copy of the gun list
-        foreach (GunSO gun in _gunListSource)
-        {
-            if (gun != null)
-            {
-                GunSO g = Instantiate(gun);
-                gunList.Add(g);
-            }
-        }
+        CopyGunList();
 
         // Initialize first gun
         SwitchGuns(0);
@@ -72,6 +64,19 @@ public class Shooter : MonoBehaviour
         }
     }
 
+    protected void CopyGunList()
+    {
+        // Make a working copy of the gun list
+        foreach (GunSO gun in _gunListSource)
+        {
+            if (gun != null)
+            {
+                GunSO g = Instantiate(gun);
+                gunList.Add(g);
+            }
+        }
+    }
+
     public virtual void SwitchGuns(int i)
     {
         if (i < 0 || i >= gunList.Count)
@@ -83,7 +88,7 @@ public class Shooter : MonoBehaviour
         // Muzzle Flash
         if (muzzleFlash != null)
             Destroy(muzzleFlash);
-        Debug.Log("MuzzleFlash instantiated");
+        //Debug.Log("MuzzleFlash instantiated");
         muzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, muzzleTrans);
         muzzleFlash.SetActive(false);
 
@@ -95,8 +100,7 @@ public class Shooter : MonoBehaviour
 
         if (gunList[i] is TurretGunSO turretGunSO)
         {
-            isTurret = true;
-            reloadTime = turretGunSO.reloadTime;
+            reloadTime = turretGunSO.reloadSpeed;
         }
         currentGunIndex = i;
         currentGunSO = gunList[i];
@@ -109,29 +113,22 @@ public class Shooter : MonoBehaviour
 
     protected virtual void Fire()
     {
-        //StatsCounterPlayer.ShotsFiredByPlayer++;
-
         // Use ammo
         gunsAmmoInClips[currentGunIndex]--;
-        StatsCounterPlayer.ShotsFiredByPlayer++;
 
         // Create bullet and casing
         GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
-                                        muzzleTrans.position, muzzleTrans.rotation);
+                                           muzzleTrans.position, muzzleTrans.rotation);
         if (currentGunSO.bulletCasingPrefab != null)
         {
             GameObject casingObj = Instantiate(currentGunSO.bulletCasingPrefab, 
-                                                casingEjectorTrans.position, 
-                                                gunTrans.rotation, casingEjectorTrans);
+                                               casingEjectorTrans.position, 
+                                               gunTrans.rotation, casingEjectorTrans);
 
-            // If elevated, most shells go over walls
-            if (isTurret)
-                casingObj.layer = LayerMask.NameToLayer("Default");
-            else if (isElevated)
+            // If elevated, all shells go over walls                
+            if (isElevated)
             {
-                int rand = Random.Range(0, 5);
-                if (rand != 0)
-                    casingObj.layer = LayerMask.NameToLayer("Default");
+                casingObj.layer = LayerMask.NameToLayer("Default");
             }
         }
 
@@ -145,20 +142,17 @@ public class Shooter : MonoBehaviour
         
         // Apply stats and effects
         bullet.damage = currentGunSO.damage;
+        //Debug.Log("Bullet damage: " + bullet.damage);
+        bullet.origin = this.transform;
         bullet.knockback = currentGunSO.knockback;
         bullet.destroyTime = currentGunSO.bulletLifeTime;
-        Rigidbody2D rb = bulletObj.GetComponent<Rigidbody2D>();
         
         Vector2 dir = ApplyAccuracy(muzzleTrans.right);
-        rb.velocity = dir * currentGunSO.bulletSpeed;
+        bullet.velocity = dir * currentGunSO.bulletSpeed;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        //Kickback();
         StartCoroutine(MuzzleFlash());
-        
-        //gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
-        //Debug.Log("Shooter fired");
     }
 
     protected Vector2 ApplyAccuracy(Vector2 dir)
@@ -218,7 +212,7 @@ public class Shooter : MonoBehaviour
 
     protected IEnumerator MuzzleFlash()
     {
-        Debug.Log("Muzzle Flash");
+        //Debug.Log("Muzzle Flash");
         muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(currentGunSO.muzzleFlashTime);
         muzzleFlash.SetActive(false);

@@ -153,7 +153,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #endregion
 
-    #region Health / Hit Functions
+    #region Health / Hit
 
     public void ModifyHealth(float amount, GameObject gameObject)
     {
@@ -235,7 +235,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #region Status Checks
 
-    public void SetAggroToPlayerStatus(bool isAggroed)
+    public void SetAggroStatus(bool isAggroed)
     {
         IsAggroed = isAggroed;
     }

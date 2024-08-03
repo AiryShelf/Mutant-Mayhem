@@ -3,17 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[System.Serializable]
-public class StructureStats
-{
-    public QCubeHealth cubeHealthScript;
-    public TileManager tileManager;
-    public TurretManager turretManager;
-    public float structureMaxHealthFactor = 1;
-    public float armour = 0;
-    public float pulseDefenceForce = 0;
-}
-
 public class TileStats
 {   
     [SerializeField]public RuleTileStructure ruleTileStructure;
@@ -33,13 +22,15 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForBuildClearCheck;
-    public LayerMask layersForBuildClearingArea;
+    public LayerMask layersForBuildClearingArea; // Finish implementation for corpses
     [SerializeField] List<ParticleSystem> particlesToClear;
     public ParticleSystem repairEffect;
     public int amountRepairParticles = 5;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
+
+    TurretManager turretManager;
 
     //[SerializeField] GameObject debugDotPrefab;
 
@@ -70,6 +61,7 @@ public class TileManager : MonoBehaviour
     void Awake()
     {
         player = FindObjectOfType<Player>();
+        turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
@@ -94,7 +86,7 @@ public class TileManager : MonoBehaviour
     {
         if (CheckGridIsClear(gridPos, structure, layersForBuildClearCheck, true))
         {
-            if (AddToTileStatsDict(gridPos, structure))
+            if (AddNewTileToDict(gridPos, structure))
             {
                 // Set and rotate animated tile
                 AnimatedTilemap.SetTile(gridPos, 
@@ -113,23 +105,11 @@ public class TileManager : MonoBehaviour
                     StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
                 }
 
-                ClearParticles(gridPos);
-
-                /*
-                // Clear ground debris
-                List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
-                Vector2Int box = StructureRotator.CalculateBoundingBox(positions);
-                foreach (Vector3Int pos in positions)
-                {
-                    
-                }
-                */
-                
-
+                ClearParticles(gridPos);                
                 shadowCaster2DTileMap.Generate();
-
                 StatsCounterPlayer.StructuresBuilt++;
                 //Debug.Log("Added a Tile");
+                
                 return true;
             }
             else
@@ -205,16 +185,21 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public void DestroyTileAt(Vector3Int gridPos)
+    public void RemoveTileAt(Vector3Int rootPos)
     {
         // Find rotation matrix of tile at gridPos, convert source positions to rotation
-        int tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(gridPos));
-        RuleTileStructure rts = _TileStatsDict[gridPos].ruleTileStructure;
+        int tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
+        RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
         List<Vector3Int> sourcePositions = rts.structureSO.cellPositions;
         List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, tileRot);
 
-        Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         AnimatedTilemap.SetTile(rootPos, null);
+
+        // Check for turrets
+        if (rts.structureSO.isTurret)
+        {
+            turretManager.RemoveTurret(rootPos);
+        }
 
         // Remove from list and dict
         foreach (var pos in rotatedPositions)
@@ -266,7 +251,7 @@ public class TileManager : MonoBehaviour
             if (_TileStatsDict[rootPos].health == 0)
             {
                 StatsCounterPlayer.StructuresLost++;
-                DestroyTileAt(rootPos);
+                RemoveTileAt(rootPos);
                 return;
             }
 
@@ -556,7 +541,8 @@ public class TileManager : MonoBehaviour
                 var tileInMap = StructureTilemap.GetTile(gridPos);
                 if (tileInMap is RuleTileStructure rts)
                 {
-                    if(AddToTileStatsDict(gridPos, rts.structureSO))
+                    // Need new method to add existing tiles with set health for tutorial level
+                    if(AddNewTileToDict(gridPos, rts.structureSO))
                     {
                         AnimatedTilemap.SetTile(gridPos, 
                             _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
@@ -568,7 +554,7 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    bool AddToTileStatsDict(Vector3Int rootPos, StructureSO structure)
+    bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure)
     {
         if (CheckGridIsClear(rootPos, structure, layersForBuildClearCheck, true))
         {                                                      
@@ -578,7 +564,7 @@ public class TileManager : MonoBehaviour
                 // Add to structures list
                 _Structures.Add(rootPos);
 
-                float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthFactor;
+                float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthMult;
                 // Add to TileStats
                 _TileStatsDict.Add(rootPos, new TileStats 
                 { 
@@ -616,11 +602,6 @@ public class TileManager : MonoBehaviour
             }
         }
         return true;
-    }
-
-    void RemoveTile()
-    {
-
     }
 
     #endregion

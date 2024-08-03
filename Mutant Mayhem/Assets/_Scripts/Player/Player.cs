@@ -37,6 +37,17 @@ public class PlayerStats
     public int grenadeAmmo = 12;
 }
 
+[System.Serializable]
+public class StructureStats
+{
+    public QCubeHealth cubeHealthScript;
+    public TileManager tileManager;
+    public float structureMaxHealthMult = 1;
+    public float armour = 0;
+    public float maxTurrets = 0;
+    public float pulseDefenceForce = 0;
+}
+
 public class Player : MonoBehaviour
 {
     public PlayerStats stats;
@@ -93,23 +104,11 @@ public class Player : MonoBehaviour
         stats.structureStats.cubeHealthScript = FindObjectOfType<QCubeHealth>();
     }
 
-    public void RemoveSpaceBar()
-    {
-        InputAction throwAction = inputAsset.FindActionMap("Player").FindAction("Throw");
-
-        // Override index?  testing needed!
-        /*
-        InputBinding inputBinding = throwAction.bindings[1];
-        inputBinding.overridePath = "path";
-        throwAction.ApplyBindingOverride(1, null);
-        */
-        
-        
-    }
-
     void Start()
-    { 
+    {
         RefreshMoveForces();
+        UpgradeManager.Instance.Initialize();
+        TurretManager.Instance.Initialize();
     }
 
     void FixedUpdate()

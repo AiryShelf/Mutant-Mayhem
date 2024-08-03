@@ -20,7 +20,6 @@ public enum PlayerStatsUpgrade
     PlayerAccuracy,
     MeleeDamage,
     MeleeKnockback,
-    MeleeAttackRate,
     StaminaMax,
     StaminaRegen,
     HealthMax,
@@ -34,6 +33,8 @@ public enum StructureStatsUpgrade
     StructureMaxHealth,
     Armour,
     MaxTurrets,
+    TurretRotSpeed,
+    TurretSensors,
 }
 
 public enum ConsumablesUpgrade
@@ -52,10 +53,11 @@ public enum GunStatsUpgrade
     GunKnockback,
     ShootSpeed,
     ClipSize,
-    ChargeDelay,
+    ChargeSpeed,
     GunAccuracy,
     GunRange,
     Recoil,
+    TurretReloadSpeed,
 }
 
 public abstract class Upgrade
@@ -140,15 +142,26 @@ public class SprintFactorUpgrade : Upgrade
     }
 }
 
-public class ReloadSpeedUpgrade : Upgrade
+public class PlayerReloadSpeedUpgrade : Upgrade
 {
-    public ReloadSpeedUpgrade() : base(PlayerStatsUpgrade.PlayerReloadSpeed) { }
+    public PlayerReloadSpeedUpgrade() : base(PlayerStatsUpgrade.PlayerReloadSpeed) { }
 
     public static float UpgAmount = 0.1f;
 
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.reloadFactor += UpgAmount;
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
     }
 }
 
@@ -168,7 +181,7 @@ public class PlayerAccuracyUpgrade : Upgrade
     {
         // Double the cost each level
         int newCost = baseCost;
-        for (int i = 1; i < level; i ++)
+        for (int i = 1; i < level; i++)
         {
             newCost *= 2;
         }
@@ -180,7 +193,7 @@ public class MeleeDamageUpgrade : Upgrade
 {
     public MeleeDamageUpgrade() : base(PlayerStatsUpgrade.MeleeDamage) { }
 
-    public static float GetUpgAmount(UpgradeSystem upgradeSystem)
+    public static float GetUpgAmount(UpgradeManager upgradeSystem)
     {
         float upgAmount = 0.3f * (upgradeSystem.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 1);
         return upgAmount;
@@ -188,7 +201,7 @@ public class MeleeDamageUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.meleeDamage += 0.5f * level;
+        playerStats.meleeDamage += 0.3f * level;
     }
 }
 
@@ -196,7 +209,7 @@ public class KnockbackUpgrade : Upgrade
 {
     public KnockbackUpgrade() : base(PlayerStatsUpgrade.MeleeKnockback) { }
 
-    public static float GetUpgAmount(UpgradeSystem upgradeSystem)
+    public static float GetUpgAmount(UpgradeManager upgradeSystem)
     {
         float upgAmount = 0.5f;
         return upgAmount;
@@ -205,19 +218,6 @@ public class KnockbackUpgrade : Upgrade
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.knockback += 0.5f;
-    }
-}
-
-public class MeleeAttackRateUpgrade : Upgrade
-{
-    // NOT USING THIS UPGRADE, DON'T PLAN TO SO FAR EITHER
-    public MeleeAttackRateUpgrade() : base(PlayerStatsUpgrade.MeleeAttackRate) { }
-
-    public static float UpgAmount = 0.02f;
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.meleeSpeedFactor += UpgAmount;
     }
 }
 
@@ -422,7 +422,7 @@ public class SMGBuyAmmoUpgrade : Upgrade
 
 public class QCubeMaxHealthUpgrade : Upgrade
 {
-    public QCubeMaxHealthUpgrade() : base(StructureStatsUpgrade.QCubeMaxHealth) { }
+    public QCubeMaxHealthUpgrade() : base(StructureStatsUpgrade.MaxTurrets) { }
 
     public static float UpgAmount = 200;
 
@@ -436,7 +436,7 @@ public class QCubeMaxHealthUpgrade : Upgrade
     {
         // Double the cost each level
         int newCost = baseCost;
-        for (int i = 1; i < level; i ++)
+        for (int i = 1; i < level; i++)
         {
             newCost *= 2;
         }
@@ -453,8 +453,80 @@ public class StructureMaxHealthUpgrade : Upgrade
     public override void Apply(StructureStats structureStats, int level)
     {
         Debug.Log("StructureMaxHealth applied");
-        structureStats.structureMaxHealthFactor += UpgAmount;
-        structureStats.tileManager.ModifyMaxHealthAll(structureStats.structureMaxHealthFactor);
+        structureStats.structureMaxHealthMult += UpgAmount;
+        structureStats.tileManager.ModifyMaxHealthAll(structureStats.structureMaxHealthMult);
+    }
+}
+
+public class MaxTurretsUpgrade : Upgrade
+{
+    public MaxTurretsUpgrade() : base(StructureStatsUpgrade.StructureMaxHealth) { }
+
+    public static float UpgAmount = 1;
+
+    public override void Apply(StructureStats structureStats, int level)
+    {
+        Debug.Log("MaxTurretsUpg applied");
+        structureStats.maxTurrets += UpgAmount;
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
+    }
+}
+
+public class TurretRotSpeedUpgrade : Upgrade
+{
+    public TurretRotSpeedUpgrade() : base(StructureStatsUpgrade.TurretRotSpeed) { }
+
+    public static float UpgAmount = 2;
+
+    public override void Apply(StructureStats structureStats, int level)
+    {
+        Debug.Log("TurretRotSpeedUpg applied");
+        TurretManager.Instance.UpgradeTurretStructures(base.StructureUpgType);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
+    }
+}
+
+public class TurretSensorsUpgrade : Upgrade
+{
+    public TurretSensorsUpgrade() : base(StructureStatsUpgrade.TurretSensors) { }
+
+    public static float UpgAmount = 0.5f;
+
+    public override void Apply(StructureStats structureStats, int level)
+    {
+        Debug.Log("TurretDetectRangeUpg applied");
+        TurretManager.Instance.UpgradeTurretStructures(base.StructureUpgType);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
     }
 }
 
@@ -466,18 +538,18 @@ public class GunDamageUpgrade : Upgrade
 {
     public GunDamageUpgrade() : base(GunStatsUpgrade.GunDamage) { }
 
-    public static float GetUpgAmount(Player player, int gunIndex, UpgradeSystem upgradeSystem)
+    public static float GetUpgAmount(Player player, int gunIndex, UpgradeManager upgradeSystem)
     {
         float upgAmount = 0;
         switch (gunIndex)
         {
             case 0:
-                upgAmount = 0.3f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
-                            upgradeSystem.laserPistolUpgLevels[GunStatsUpgrade.GunDamage] + 1);
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
+                            ((upgradeSystem.laserUpgLevels[GunStatsUpgrade.GunDamage] + 2) / (float)2);
                 return upgAmount;
             case 1:
-                upgAmount = 0.3f * (player.playerShooter.gunList[gunIndex].damageUpgAmt + 
-                            upgradeSystem.SMGUpgLevels[GunStatsUpgrade.GunDamage] + 1);
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
+                            ((upgradeSystem.bulletUpgLevels[GunStatsUpgrade.GunDamage] + 2) / (float)2);
                 return upgAmount;
             default:
                 return upgAmount; 
@@ -486,7 +558,8 @@ public class GunDamageUpgrade : Upgrade
 
     public override void Apply(GunSO gunSO, int level)
     {
-        gunSO.damage += 0.5f * (gunSO.damageUpgAmt + level);
+        gunSO.damage += gunSO.damageUpgFactor * ((level + 1) / (float)2);
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 }
 
@@ -503,6 +576,7 @@ public class GunKnockbackUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.knockback += gunSO.knockbackUpgAmt;
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 }
 
@@ -519,6 +593,7 @@ public class ShootSpeedUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.shootSpeed += gunSO.shootSpeedUpgNegAmt;
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 }
 
@@ -535,22 +610,24 @@ public class ClipSizeUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.clipSize += gunSO.clipSizeUpgAmt;
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 }
 
 public class ChargeDelayUpgrade : Upgrade
 {
-    public ChargeDelayUpgrade() : base(GunStatsUpgrade.ChargeDelay) { }
+    public ChargeDelayUpgrade() : base(GunStatsUpgrade.ChargeSpeed) { }
 
     public static float GetUpgAmount(Player player, int gunIndex)
     {
-        float upgAmount = player.playerShooter.gunList[gunIndex].chargeDelayUpgNegAmt;
+        float upgAmount = player.playerShooter.gunList[gunIndex].chargeSpeedUpgNegAmt;
         return upgAmount;
     }
 
     public override void Apply(GunSO gunSO, int level)
     {
-        gunSO.chargeDelay += gunSO.chargeDelayUpgNegAmt;
+        gunSO.chargeDelay += gunSO.chargeSpeedUpgNegAmt;
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 }
 
@@ -558,22 +635,23 @@ public class GunAccuracyUpgrade : Upgrade
 {
     public GunAccuracyUpgrade() : base(GunStatsUpgrade.GunAccuracy) { }
 
-    public override void Apply(GunSO gunSO, int level)
-    {
-        gunSO.accuracy += gunSO.accuracyUpgNegAmt;
-    }
-
     public static float GetUpgAmount(Player player, int gunIndex)
     {
         float upgAmount = player.playerShooter.gunList[gunIndex].accuracyUpgNegAmt;
         return upgAmount;
     }
 
+    public override void Apply(GunSO gunSO, int level)
+    {
+        gunSO.accuracy += gunSO.accuracyUpgNegAmt;
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
+    }
+
     public override int CalculateCost(Player player, int baseCost, int level)
     {
         // Double the cost each level
         int newCost = baseCost;
-        for (int i = 1; i < level; i ++)
+        for (int i = 1; i < level; i++)
         {
             newCost *= 2;
         }
@@ -594,13 +672,14 @@ public class RangeUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         gunSO.bulletLifeTime += gunSO.bulletRangeUpgAmt;
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
         // Double the cost each level
         int newCost = baseCost;
-        for (int i = 1; i < level; i ++)
+        for (int i = 1; i < level; i++)
         {
             newCost *= 2;
         }
@@ -610,6 +689,7 @@ public class RangeUpgrade : Upgrade
 
 public class RecoilUpgrade : Upgrade
 {
+    // ******** DEPRICATED ********
     public RecoilUpgrade() : base(GunStatsUpgrade.Recoil) { }
 
     public static float GetUpgAmount(Player player, int gunIndex)
@@ -627,7 +707,36 @@ public class RecoilUpgrade : Upgrade
     {
         // Double the cost each level
         int newCost = baseCost;
-        for (int i = 1; i < level; i ++)
+        for (int i = 1; i < level; i++)
+        {
+            newCost *= 2;
+        }
+        return newCost;
+    }
+}
+
+public class TurretReloadSpeedUpgrade : Upgrade
+{
+    public TurretReloadSpeedUpgrade() : base(GunStatsUpgrade.TurretReloadSpeed) { }
+
+    public static float GetUpgAmount(Player player, int gunIndex)
+    {
+        TurretGunSO turretGunSO = TurretManager.Instance.turretGunList[gunIndex];
+        float upgAmount = turretGunSO.reloadSpeedUpgNegAmt;
+
+        return upgAmount;
+    }
+
+    public override void Apply(GunSO gunSO, int level)
+    {
+        TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Double the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
         {
             newCost *= 2;
         }

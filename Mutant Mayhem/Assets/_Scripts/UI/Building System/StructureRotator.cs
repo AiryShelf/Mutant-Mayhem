@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -27,7 +28,7 @@ public static class StructureRotator
         // Create a new instance of StructureSO
         StructureSO rotatedStructure = ScriptableObject.CreateInstance<StructureSO>();
 
-        // Copy properties
+        /* Copy properties
         rotatedStructure.uiImage = source.uiImage;
         rotatedStructure.tileName = source.tileName;
         rotatedStructure.description = source.description;
@@ -36,8 +37,27 @@ public static class StructureRotator
         rotatedStructure.health = source.health;
         rotatedStructure.ruleTileStructure = source.ruleTileStructure;
         rotatedStructure.structureType = source.structureType;
+        rotatedStructure.isTurret = source.isTurret;
         rotatedStructure.actionType = source.actionType;
         rotatedStructure.actionRange = source.actionRange;
+        */
+
+        // Copy all fields
+        FieldInfo[] fields = typeof(StructureSO).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (FieldInfo field in fields)
+        {
+            field.SetValue(rotatedStructure, field.GetValue(source));
+        }
+
+        // Copy all properties
+        PropertyInfo[] properties = typeof(StructureSO).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (PropertyInfo property in properties)
+        {
+            if (property.CanWrite)
+            {
+                property.SetValue(rotatedStructure, property.GetValue(source));
+            }
+        }
 
         // Rotate cell positions
         rotatedStructure.cellPositions = RotateCellPositions(source.cellPositions, rotation);

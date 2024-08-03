@@ -85,11 +85,11 @@ public class UIBuildMenuController : MonoBehaviour
 
     IEnumerator DelayOpen()
     {
-        Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
+        fadeCanvasGroups.isTriggered = true;
+        myCanvasGroup.blocksRaycasts = true;
 
         yield return new WaitForFixedUpdate();
 
-        fadeCanvasGroups.isTriggered = true;
-        myCanvasGroup.blocksRaycasts = true;
+        Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
     }
 }
