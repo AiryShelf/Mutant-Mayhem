@@ -6,9 +6,9 @@ DOWNLOAD LATEST VERSION HERE: https://drive.google.com/drive/folders/1-wGFZxvgRv
 (For bandwidth reason, I'll only update GitHub LFS occassionally)
 
 
-My first game in Unity, a remake of a project I did in GameMaker over a decade ago.
+My first game in Unity, a remake of a project I did in GameMaker nearly two decades ago.
 
-Im amazed at all the tools and systems available in Unity!  It sure beats the features I had to work with in GameMaker around 16 years ago.
+I'm amazed at all the tools and systems available in Unity!  It sure beats the features I had to work with in GameMaker around 18 years ago.
 
 I'm really enjoying the fact that I'm now able to learn about and implement any system I manage to dream up.  The biggest challenge
 so far has been to get to sleep on on time, and remembering to take breaks from learning full time.
