@@ -8,31 +8,24 @@ public class Throw : MonoBehaviour
     [SerializeField] float scaleFactor = 0.5f;
     [SerializeField] float height = 3f;
     [SerializeField] float durationSensitivity;
+    [SerializeField] float durationMinimum;
     [SerializeField] float rotationAmount;
     [SerializeField] SpriteRenderer mySR;
+    public Vector2 target;
     
     Quaternion rot;
     float deg;
-
-    void Start()
-    {
-        
-    }
-
-    void FixedUpdate()
-    {
-        
-    }
 
     public void StartFly()
     {
         // Set new sorting layer
         mySR.sortingLayerID = SortingLayer.NameToID("FireParticles");
         
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        float throwDuration = (transform.position - mousePos).magnitude / durationSensitivity;
+        // Set how long to fly through air
+        float throwDuration = (transform.position - (Vector3)target).magnitude / durationSensitivity;
+        throwDuration = Mathf.Clamp(throwDuration,durationMinimum, float.MaxValue);
 
-        StartCoroutine(ThrowGrenade(transform.position, mousePos, height, throwDuration));
+        StartCoroutine(ThrowGrenade(transform.position, target, height, throwDuration));
     }
 
     IEnumerator ThrowGrenade(Vector3 start, Vector3 end, float height, float duration)

@@ -178,7 +178,7 @@ public class BuildingSystem : MonoBehaviour
         if (on)
         {
             // Lock camera to player
-            cameraController.ZoomAndFocus(player.transform, 0, 1, 1, true, false);
+            cameraController.ZoomAndFocus(player.transform, 0, 1, 0.5f, true, false);
             mouseLooker.lockedToPlayer = true;
 
             //currentRotation = 0;

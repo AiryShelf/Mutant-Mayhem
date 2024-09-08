@@ -49,8 +49,10 @@ MonoBehaviour:
   scaleFactor: 1
   height: 20
   durationSensitivity: 20
+  durationMinimum: 1
   rotationAmount: 15
   mySR: {fileID: 448512424271837364}
+  target: {x: 0, y: 0}
 --- !u!212 &448512424271837364
 SpriteRenderer:
   m_ObjectHideFlags: 0

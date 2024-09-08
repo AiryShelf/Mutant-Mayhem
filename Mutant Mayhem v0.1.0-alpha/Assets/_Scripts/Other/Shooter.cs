@@ -98,6 +98,7 @@ public class Shooter : MonoBehaviour
         if (gunList[i].laserSight != null)
             laserSight = Instantiate(gunList[i].laserSight, muzzleTrans);
 
+        // Turrets
         if (gunList[i] is TurretGunSO turretGunSO)
         {
             reloadTime = turretGunSO.reloadSpeed;

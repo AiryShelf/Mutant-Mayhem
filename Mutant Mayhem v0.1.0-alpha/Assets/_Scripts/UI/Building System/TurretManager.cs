@@ -77,6 +77,7 @@ public class TurretManager : MonoBehaviour
         }
 
         turrets.Remove(rootPos);
+        numTurrets--;
     }
 
     #region Turret Upgrades
@@ -90,7 +91,8 @@ public class TurretManager : MonoBehaviour
         foreach (KeyValuePair<Vector3Int, GameObject> kvp in turrets)
         {
             GameObject obj = kvp.Value;
-            foreach (GunSO gun in obj.GetComponentInChildren<Shooter>().gunList)
+            Shooter shooter = obj.GetComponentInChildren<Shooter>();
+            foreach (GunSO gun in shooter.gunList)
             {
                 if (gun.gunType != gunType)
                 {
@@ -98,10 +100,13 @@ public class TurretManager : MonoBehaviour
                 }
 
                 if (gun is TurretGunSO turretGun)
-                    UpgradeTurretGun(turretGun, upgType, level);
+                    UpgradeTurretGun(turretGun, upgType, level);                
             }
+            // Refresh stats in shooter
+            shooter.SwitchGuns(shooter.currentGunIndex);
+            
             upgradeManager.PlayUpgradeEffectAt(obj.transform.position);
-            Debug.Log("Upgraded a turret's gun's");
+            Debug.Log("Finished upgrading a turret's guns");
         }
     }
 
@@ -116,6 +121,7 @@ public class TurretManager : MonoBehaviour
     
     void UpgradeTurretGun(TurretGunSO turretGun, GunStatsUpgrade upgType, int level)
     {
+        Debug.Log("Entering switch statement");
         switch (upgType)
         {
             case GunStatsUpgrade.GunDamage:

@@ -18,17 +18,18 @@ public class UpgradePanelBuilder : MonoBehaviour
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] int unlockCost;
     [SerializeField] string unlockName;
+    [SerializeField] Image toolbarImage;
     
     bool unlocked = false;
     Player player;
     MessagePanel messagePanel;
-    UpgradeManager upgradeSystem;
+    UpgradeManager upgradeManager;
 
     void Awake()
     {
         player = FindObjectOfType<Player>();
         messagePanel = FindObjectOfType<MessagePanel>();
-        upgradeSystem = FindObjectOfType<UpgradeManager>();
+        upgradeManager = FindObjectOfType<UpgradeManager>();
 
         // Clear editor objects in layout groups
         for (int i = buttonsGrid.transform.childCount - 1; i >= 0; i--)
@@ -136,6 +137,8 @@ public class UpgradePanelBuilder : MonoBehaviour
             if (upgradeFamily == UpgradeFamily.GunStats)
             {
                 player.playerShooter.gunsUnlocked[playerGunIndex] = true;
+                toolbarImage.color = new Color(1,1,1,1);
+                upgradeManager.PlayUpgradeEffectAt(Camera.main.ScreenToWorldPoint(toolbarImage.transform.position));
             }
 
             // Initialize and open panel
@@ -143,7 +146,7 @@ public class UpgradePanelBuilder : MonoBehaviour
             //StartCoroutine(DelayTrigger());
             Destroy(unlockPanel.gameObject);
 
-            upgradeSystem.PlayUpgradeButtonEffect();
+            upgradeManager.PlayUpgradeButtonEffect();
 
             messagePanel.ShowMessage(unlockName + " unlocked!", Color.green);
         }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-    [HideInInspector] public float detectionRange;
-    [HideInInspector] public float rotationSpeed;
-    [HideInInspector] public float expansionDelay;
+    public float detectionRange;
+    public float rotationSpeed;
+    public float expansionDelay;
     [SerializeField] float expansionDist = 0.5f;
     [SerializeField] float randScanPauseMinTime = 0.5f;
     [SerializeField] float randScanPauseMaxTime = 2f;
@@ -18,6 +18,7 @@ public class Turret : MonoBehaviour
     bool hasTarget;
     float detectionRangeSqrd;
     Coroutine searchRoutine;
+    Coroutine scanRoutine;
 
     void Start()
     {
@@ -77,6 +78,9 @@ public class Turret : MonoBehaviour
             turretGun = gun;
             rotationSpeed = gun.rotationSpeed;
         }
+        else
+            Debug.Log("Non-turret gun found in TurretShooter");
+            
         detectionCollider.radius = 0f;
     }
 
@@ -109,15 +113,18 @@ public class Turret : MonoBehaviour
 
     IEnumerator SearchForTarget()
     {
-        StartCoroutine(RandomScanning());
+        if (scanRoutine != null)
+            StopCoroutine(scanRoutine);
+
+        scanRoutine = StartCoroutine(RandomScanning());
 
         while (!hasTarget)
         {
             // Expand the detection radius to find the next target
             detectionCollider.radius += expansionDist;
-            if (detectionCollider.radius > detectionRange)
+            if (detectionCollider.radius > turretGun.detectRange)
             {
-                detectionCollider.radius = detectionRange; // Cap the radius at the max detection range
+                detectionCollider.radius = turretGun.detectRange; // Cap the radius at the max detection range
             }
             yield return new WaitForSeconds(expansionDelay);
         }
@@ -140,6 +147,7 @@ public class Turret : MonoBehaviour
     {
         while (!hasTarget)
         {
+            yield return new WaitForSeconds(2f);
             // Pick a random angle
             float randomAngle = Random.Range(0f, 360f);
             Quaternion randomRotation = Quaternion.Euler(0, 0, randomAngle);
@@ -148,7 +156,7 @@ public class Turret : MonoBehaviour
             while (Quaternion.Angle(transform.rotation, randomRotation) > 0.01f)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, randomRotation, 
-                                                              rotationSpeed/3 * Time.fixedDeltaTime);
+                                                              rotationSpeed/5 * Time.fixedDeltaTime);
                 yield return new WaitForFixedUpdate();
                 if (hasTarget)
                     yield break;

@@ -98,6 +98,8 @@ public class Player : MonoBehaviour
         }
     }
     Throw itemToThrow;
+    [HideInInspector] public bool hasFirstThrowTarget;
+    [HideInInspector] public Vector2 throwTarget;
     [HideInInspector] public int movementType;
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
@@ -219,11 +221,22 @@ public class Player : MonoBehaviour
     public void OnThrowGrab()
     {
         itemToThrow = Instantiate(grenadePrefab, transform.position, 
-                      Quaternion.identity, leftHandTrans).gameObject.GetComponent<Throw>();    
+                      Quaternion.identity, leftHandTrans).gameObject.GetComponent<Throw>();
     }
 
     public void OnThrowFly()
     {
+        // Handles player input holding down the throw action
+        if (hasFirstThrowTarget)
+        {
+            itemToThrow.target = throwTarget;
+            hasFirstThrowTarget = false;
+        }
+        else
+        {
+            itemToThrow.target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }
+
         itemToThrow.transform.parent = null;
         itemToThrow.StartFly();
         stats.grenadeAmmo--;

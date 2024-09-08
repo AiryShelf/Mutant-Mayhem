@@ -453,6 +453,8 @@ public class AnimationControllerPlayer : MonoBehaviour
             if (playerShooter.isBuilding)
                 ToggleBuildMode();
             isThrowInput = true;
+            player.throwTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            player.hasFirstThrowTarget = true;
             bodyAnim.SetBool("isThrowing", true);
             if (waitToLowerWeaponCoroutine != null)
             {
