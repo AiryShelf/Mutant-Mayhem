@@ -179,10 +179,9 @@ public class TurretManager : MonoBehaviour
             foreach (TurretGunSO turretGun in turret.shooter.gunList)
                 UpgradeTurretStructure(turretGun, upgType);
 
-            turret.UpdateSensors();
+            turret.UpdateStructure();
             
             upgradeManager.PlayUpgradeEffectAt(obj.transform.position);
-            Debug.Log("Upgraded a turret's structure");
         }
     }
 

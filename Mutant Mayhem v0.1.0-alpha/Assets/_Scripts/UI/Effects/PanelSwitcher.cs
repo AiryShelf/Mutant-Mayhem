@@ -31,6 +31,9 @@ public class PanelSwitcher : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0)
+            return;
+            
         if (isTriggered)
         {
             if (!isOpen)
@@ -140,12 +143,13 @@ public class PanelSwitcher : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < swipeDuration)
         {
+            yield return null;
+
             transform.localPosition = Vector2.Lerp(startPosition, endPosition, timeElapsed / swipeDuration);
             // Fade in and out ** Handled by fade groups **  Could add functionality to this
             //targCanv.alpha = Mathf.Lerp(0, 1, timeElapsed / swipeDuration);
             //prevCanv.alpha = Mathf.Lerp(1, 0, timeElapsed / swipeDuration);
             timeElapsed += Time.deltaTime;
-            yield return null;
         }
 
         transform.localPosition = endPosition;

@@ -16,7 +16,6 @@ public class PlayerShooter : Shooter
     [SerializeField] Animator bodyAnim;
     public int[] gunsAmmo;
     Coroutine shootingCoroutine;
-    Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
     bool waitToShoot;
     public bool isShooting;
     public bool isAiming;
@@ -33,12 +32,12 @@ public class PlayerShooter : Shooter
 
     protected override void Awake() { }
 
-    void Start()
+    protected override void Start()
     {
         myRb = GetComponent<Rigidbody2D>(); 
 
         CopyGunList();
-        RefreshChargeGuns();
+        StartChargingGuns();
         SwitchGuns(0);
     }
 
@@ -99,7 +98,11 @@ public class PlayerShooter : Shooter
         currentGunSO = gunList[i];
 
         AudioManager.instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
-        //Debug.Log("Current gun damage: " + currentGunSO.damage);          
+        //Debug.Log("Current gun damage: " + currentGunSO.damage); 
+
+        // Set cursor
+        if (!isBuilding)
+            CursorManager.Instance.SetAimCursor();  
     }
 
     public void Reload()
@@ -117,27 +120,6 @@ public class PlayerShooter : Shooter
             {
                 gunsAmmoInClips[currentGunIndex] += numBullets;
                 gunsAmmo[currentGunIndex] -= numBullets;
-            }
-        }
-    }
-
-    // Call this whenever adding new charging weapon 
-    // or charging ability to non-charge weapon
-    void RefreshChargeGuns()
-    {
-        for (int i = 0; i < gunList.Count; i++)
-        {
-            if (gunList[i] != null)
-            {
-                // Only start ChargeGun for chargeables
-                if (gunList[i].chargeDelay != 0)
-                {
-                    if (chargeCoroutines.ContainsKey(i) && chargeCoroutines[i] != null)
-                    {
-                        StopCoroutine(chargeCoroutines[i]);
-                    }
-                    chargeCoroutines[i] = StartCoroutine(ChargeGun(i));
-                }
             }
         }
     }
@@ -226,17 +208,6 @@ public class PlayerShooter : Shooter
 
             yield return new WaitForSeconds(currentGunSO.shootSpeed);
         }
-    }
-
-    IEnumerator ChargeGun(int index)
-    {
-        while (true)
-        {
-            if (gunsAmmoInClips[index] < gunList[index].clipSize)
-                gunsAmmoInClips[index]++;
-
-            yield return new WaitForSeconds(gunList[index].chargeDelay); 
-        }  
     }
 
     #endregion

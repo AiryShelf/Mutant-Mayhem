@@ -10,9 +10,7 @@ public class TutorialManager : MonoBehaviour
     [Header("Tutorial Tracking")]
     public static bool TutorialDisabled = false;
     public static bool tutorialShowedBuild = false;
-    public static bool tutorialShowedUpgrade = false;
-
-    WaveControllerRandom waveController;  
+    public static bool tutorialShowedUpgrade = false; 
 
     void Awake()
     {
@@ -35,5 +33,6 @@ public class TutorialManager : MonoBehaviour
         // Reset tutorial
         tutorialShowedBuild = false;
         tutorialShowedUpgrade = false;
+        TutorialDisabled = false;
     }
 }

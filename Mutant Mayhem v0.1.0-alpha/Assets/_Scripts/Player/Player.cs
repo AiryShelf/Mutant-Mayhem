@@ -74,7 +74,10 @@ public class Player : MonoBehaviour
     public CapsuleCollider2D gunCollider;
     [SerializeField] Transform leftHandTrans;
     public AnimationControllerPlayer animControllerPlayer;
-    public MeleeControllerPlayer meleeController;    
+    public MeleeControllerPlayer meleeController;  
+    [SerializeField] ToolbarSelector toolbarSelector; 
+
+    [SerializeField] float experimentRotationConstant; 
     
     float sprintSpeedAmount;
     Vector2 rawInput;
@@ -103,9 +106,11 @@ public class Player : MonoBehaviour
     [HideInInspector] public int movementType;
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
+    int previousGunIndex;
 
     void Awake()
     {
+        SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
         stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
         myRb = GetComponent<Rigidbody2D>();
@@ -152,69 +157,95 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void RefreshMoveForces()
-    {
-        stats.moveForce = stats.moveSpeed * myRb.mass * forceFactor;
-        stats.strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
-        stats.maxVelocity = (stats.moveForce * stats.sprintFactor) / 
-                            (myRb.drag * myRb.mass);
-    }
+    #region Inputs
 
     void OnToolbar()
     {
+        // Laser Pistol
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             if (playerShooter.currentGunIndex != 0)
-                animControllerPlayer.SwitchGunsStart(0);    
+                animControllerPlayer.SwitchGunsStart(0);
+            toolbarSelector.SwitchBoxes(0); 
+            previousGunIndex = 0;
         }
+        // SMG
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             if (playerShooter.currentGunIndex != 1)
                 animControllerPlayer.SwitchGunsStart(1); 
+            toolbarSelector.SwitchBoxes(1);
+            previousGunIndex = 1;
         }
-        
+        // Battle Rifle
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             if (playerShooter.currentGunIndex != 2)
                 animControllerPlayer.SwitchGunsStart(2); 
+            toolbarSelector.SwitchBoxes(2);
+            previousGunIndex = 2;
         }
-        
+        // Laser Rifle
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             if (playerShooter.currentGunIndex != 3)
                 animControllerPlayer.SwitchGunsStart(3); 
+            toolbarSelector.SwitchBoxes(3);
+            previousGunIndex = 3;
         }
+        // FlameThrower?
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             if (playerShooter.currentGunIndex != 4)
                 animControllerPlayer.SwitchGunsStart(4); 
+            toolbarSelector.SwitchBoxes(4);
+            previousGunIndex = 4;
         }
+        // Rocket Launcher?
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             if (playerShooter.currentGunIndex != 5)
                 animControllerPlayer.SwitchGunsStart(5); 
+            toolbarSelector.SwitchBoxes(5);
+            previousGunIndex = 5;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             if (playerShooter.currentGunIndex != 6)
                 animControllerPlayer.SwitchGunsStart(6); 
+            toolbarSelector.SwitchBoxes(6);
+            previousGunIndex = 6;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             if (playerShooter.currentGunIndex != 7)
                 animControllerPlayer.SwitchGunsStart(7); 
+            toolbarSelector.SwitchBoxes(7);
+            previousGunIndex = 7;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             if (playerShooter.currentGunIndex != 8)
                 animControllerPlayer.SwitchGunsStart(8); 
+            toolbarSelector.SwitchBoxes(8);
+            previousGunIndex = 8;
         }
         // REPAIR GUN
         else if (Input.GetKeyDown(KeyCode.Alpha0) ||
                  Input.GetKeyDown(KeyCode.C))
         {
             if (playerShooter.currentGunIndex != 9)
-                animControllerPlayer.SwitchGunsStart(9); 
+            {
+                animControllerPlayer.SwitchGunsStart(9);
+                toolbarSelector.SwitchBoxes(9);
+            }
+            else 
+            {
+                // Switch back to previous weapon
+                animControllerPlayer.SwitchGunsStart(previousGunIndex);
+                toolbarSelector.SwitchBoxes(previousGunIndex);
+            }
+            return;
         }
     }
 
@@ -248,6 +279,18 @@ public class Player : MonoBehaviour
         rawInput = value.Get<Vector2>();    
     }
 
+    #endregion
+
+    #region Movement
+
+    public void RefreshMoveForces()
+    {
+        stats.moveForce = stats.moveSpeed * myRb.mass * forceFactor;
+        stats.strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
+        stats.maxVelocity = (stats.moveForce * stats.sprintFactor) / 
+                            (myRb.drag * myRb.mass);
+    }
+
     void LookAtMouse()
     {
         // Find Mouse direction and angle
@@ -263,24 +306,39 @@ public class Player : MonoBehaviour
             muzzleDirToMouse = mousePos - transform.position;
         }
 
-        Vector3 headDirToMouse = mousePos - headImageTrans.position;
-
         muzzleDirToMouse.Normalize();
        
         // Get muzzle angle and rotation
         muzzleAngleToMouse = Mathf.Atan2(muzzleDirToMouse.y, muzzleDirToMouse.x) * Mathf.Rad2Deg;
         Quaternion targetRotation = Quaternion.Euler(0, 0, muzzleAngleToMouse);
-    
-        // Get head angle
-        float headAngleToMouse = Mathf.Atan2(headDirToMouse.y, headDirToMouse.x) * Mathf.Rad2Deg;
 
         // Apply body rotation 
-        float rotationSpeed = stats.lookSpeed;
+        double rotationSpeed = Math.Pow(stats.lookSpeed, experimentRotationConstant);
         playerMainTrans.rotation = Quaternion.Lerp(
-            playerMainTrans.rotation, targetRotation, rotationSpeed);
+            playerMainTrans.rotation, targetRotation, (float)rotationSpeed);
+
+        RotateHead(mousePos);
 
         //playerMainTrans.rotation = Quaternion.Lerp(
             //playerMainTrans.rotation, targetRotation, stats.lookSpeed);
+
+        //headImageTrans.rotation = Quaternion.Lerp(
+            //headImageTrans.rotation, targetRotation, headTurnSpeed);
+
+        // ** TO ADD DRUNKEN BEHAVIOUR **
+        //rotAngle += Random.Range(-moveAccuracy, moveAccuracy); 
+        //float radians = rotAngle * Mathf.Deg2Rad;
+        //mouseDir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
+        
+        //myRb.rotation = Mathf.LerpAngle(myRb.rotation, 
+            //angleToMouse, Time.deltaTime * lookSpeed);
+    }
+
+    void RotateHead(Vector3 mousePos)
+    {
+        // Get head angle
+        Vector3 headDirToMouse = mousePos - headImageTrans.position;
+        float headAngleToMouse = Mathf.Atan2(headDirToMouse.y, headDirToMouse.x) * Mathf.Rad2Deg;
 
         // Calculate the difference between the body angle and the head angle
         float bodyAngle = playerMainTrans.eulerAngles.z;
@@ -293,19 +351,9 @@ public class Player : MonoBehaviour
         Quaternion clampedTargetRotation = Quaternion.Euler(0, 0, bodyAngle + clampedRelativeAngle);
 
         // Apply the clamped rotation to the head
+        double rotationSpeed = Math.Pow(headTurnSpeed, experimentRotationConstant / 1.5f);
         headImageTrans.rotation = Quaternion.Lerp(
-        headImageTrans.rotation, clampedTargetRotation, headTurnSpeed);
-
-        //headImageTrans.rotation = Quaternion.Lerp(
-            //headImageTrans.rotation, targetRotation, headTurnSpeed);
-
-        // ** TO ADD DRUNKEN BEHAVIOUR **
-        //rotAngle += Random.Range(-moveAccuracy, moveAccuracy); 
-        //float radians = rotAngle * Mathf.Deg2Rad;
-        //mouseDir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
-        
-        //myRb.rotation = Mathf.LerpAngle(myRb.rotation, 
-            //angleToMouse, Time.deltaTime * lookSpeed);
+        headImageTrans.rotation, clampedTargetRotation, (float)rotationSpeed);
     }
 
     void Sprint()
@@ -370,4 +418,6 @@ public class Player : MonoBehaviour
 
         myRb.AddForce(moveDir);
     }
+
+    #endregion
 }

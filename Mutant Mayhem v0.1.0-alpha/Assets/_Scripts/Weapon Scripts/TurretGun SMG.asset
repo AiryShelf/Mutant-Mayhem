@@ -10,46 +10,46 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6956ae236b6e2142be75f03ca1ae122, type: 3}
-  m_Name: Laser Turret Gun
+  m_Name: TurretGun SMG
   m_EditorClassIdentifier: 
-  gunType: 0
-  bulletPrefab: {fileID: 145518261742128944, guid: bac53c885b4ec214b8bbc98e7b2950a8, type: 3}
-  uiName: Laser Turret
+  gunType: 1
+  bulletPrefab: {fileID: 145518261742128944, guid: 1e9ac2e9097fb0d47a8559940a92e36f, type: 3}
+  uiName: Gun Turret
   sprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   uiSprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   animatorHasString: 
   reloadSounds: []
   selectedSound: {fileID: 0}
-  emptyClipPrefab: {fileID: 0}
-  muzzleFlashPrefab: {fileID: 2692051205214700430, guid: eea213e6abd7839408143e3d97f642c2, type: 3}
+  emptyClipPrefab: {fileID: 3812386894870190738, guid: 80cde5188b5302640a9ed770be851c5e, type: 3}
+  muzzleFlashPrefab: {fileID: 2692051205214700430, guid: 20d003c99b550154db672cce3ee9d67d, type: 3}
   laserSight: {fileID: 0}
   muzzleLocalPos: {x: 1, y: 0}
-  bulletCasingPrefab: {fileID: 1136685630353648448, guid: 6e0dec1a382c9fc4cb40bc957c9ce5e5, type: 3}
+  bulletCasingPrefab: {fileID: 4080447890916436050, guid: 8a83884c62a405549ac12c59ccdd00a9, type: 3}
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
   recoilAmount: {x: 0, y: 0}
-  damage: 25
-  damageUpgFactor: 0.5
-  knockback: 0
-  knockbackUpgAmt: 0.1
-  clipSize: 20
+  damage: 40
+  damageUpgFactor: 0.6
+  knockback: 2
+  knockbackUpgAmt: 0.3
+  clipSize: 30
   clipSizeUpgAmt: 5
-  chargeDelay: 0.7
-  chargeSpeedUpgNegAmt: -0.04
-  shootSpeed: 0.45
-  shootSpeedUpgNegAmt: -0.015
-  accuracy: 4
-  accuracyUpgNegAmt: -0.35
-  bulletSpeed: 80
-  bulletLifeTime: 0.2
-  bulletRangeUpgAmt: 0.03
+  chargeDelay: 0
+  chargeSpeedUpgNegAmt: 0
+  shootSpeed: 0.24
+  shootSpeedUpgNegAmt: -0.006
+  accuracy: 7
+  accuracyUpgNegAmt: -0.5
+  bulletSpeed: 60
+  bulletLifeTime: 0.3
+  bulletRangeUpgAmt: 0.04
   kickback: 0
   kickbackUpgNegAmt: 0
   rotationSpeed: 40
-  rotSpeedUpgAmt: 2
+  rotSpeedUpgAmt: 4
   detectRange: 10
   detectRangeUpgAmt: 0.5
   expansionDelay: 0.1
   expansionDelayUpgNegAmt: -0.004
-  reloadSpeed: 0
-  reloadSpeedUpgNegAmt: 0
+  reloadSpeed: 4
+  reloadSpeedUpgNegAmt: -0.35

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
+    public SpriteRenderer reloadImageSr;
     public float detectionRange;
     public float rotationSpeed;
     public float expansionDelay;
@@ -27,6 +28,7 @@ public class Turret : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Tracking
         if (hasTarget)
         {
             TrackTarget();
@@ -35,6 +37,16 @@ public class Turret : MonoBehaviour
         {
             if (searchRoutine == null)
                 searchRoutine = StartCoroutine(SearchForTarget());
+        }
+
+        // Reload Image
+        if (shooter.gunsAmmoInClips[shooter.currentGunIndex] < 1)
+        {
+            reloadImageSr.enabled = true;
+        }
+        else
+        {
+            reloadImageSr.enabled = false;
         }
     }
 
@@ -84,20 +96,21 @@ public class Turret : MonoBehaviour
         detectionCollider.radius = 0f;
     }
 
-    public void UpdateSensors()
+    public void UpdateStructure()
     {
         if (shooter.currentGunSO is TurretGunSO turretGunSO)
         {
             detectionRangeSqrd = turretGunSO.detectRange * turretGunSO.detectRange;
             expansionDelay = turretGunSO.expansionDelay;
+            rotationSpeed = turretGunSO.rotationSpeed;
         }
         else 
-            Debug.Log("Found a non-turret gun attached to a turret");
+            Debug.Log("Non-turret gun found in TurretShooter");
     }
 
     void TrackTarget()
     {
-        if (target == null || (transform.position - target.position).sqrMagnitude > detectionRangeSqrd)
+        if (target == null || (transform.position - target.position).sqrMagnitude > detectionRangeSqrd + 20)
         {
             // Target is dead or out of range
             hasTarget = false;
@@ -113,18 +126,18 @@ public class Turret : MonoBehaviour
 
     IEnumerator SearchForTarget()
     {
+        Debug.Log("Turret search routine ran");
         if (scanRoutine != null)
             StopCoroutine(scanRoutine);
-
         scanRoutine = StartCoroutine(RandomScanning());
 
         while (!hasTarget)
         {
-            // Expand the detection radius to find the next target
+            // Expand the detection radius to find the next target, cap at max
             detectionCollider.radius += expansionDist;
             if (detectionCollider.radius > turretGun.detectRange)
             {
-                detectionCollider.radius = turretGun.detectRange; // Cap the radius at the max detection range
+                detectionCollider.radius = turretGun.detectRange;
             }
             yield return new WaitForSeconds(expansionDelay);
         }
@@ -148,6 +161,7 @@ public class Turret : MonoBehaviour
         while (!hasTarget)
         {
             yield return new WaitForSeconds(2f);
+
             // Pick a random angle
             float randomAngle = Random.Range(0f, 360f);
             Quaternion randomRotation = Quaternion.Euler(0, 0, randomAngle);
@@ -175,10 +189,11 @@ public class Turret : MonoBehaviour
             //Debug.Log("Enemy entered trigger");
             target = other.transform;
             hasTarget = true;
+            detectionCollider.radius = 0f; // Reset the detection radius
+
             if (searchRoutine != null)
                 StopCoroutine(searchRoutine);
             searchRoutine = null;
-            detectionCollider.radius = 0f; // Reset the detection radius
         }
     }
 

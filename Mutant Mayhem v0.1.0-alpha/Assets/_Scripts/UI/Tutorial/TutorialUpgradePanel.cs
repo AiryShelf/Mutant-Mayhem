@@ -16,6 +16,18 @@ public class TutorialUpgradePanel : TutorialPanel
     public override void OnOKButtonClick()
     {
         TutorialManager.tutorialShowedUpgrade = true;
+
+        playerActionMap.Enable();
+        playerFireAction.Disable();
+
         base.OnOKButtonClick();
+    }
+
+    public override void OnDisableButtonClick()
+    {
+        playerActionMap.Enable();
+        playerFireAction.Disable();
+        
+        base.OnDisableButtonClick();
     }
 }

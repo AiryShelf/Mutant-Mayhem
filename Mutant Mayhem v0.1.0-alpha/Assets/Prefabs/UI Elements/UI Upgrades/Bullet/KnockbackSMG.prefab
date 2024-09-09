@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeFamily: 3
   playerStatsUpgrade: 0
-  qCubeStatsUpgrade: 0
+  structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 1
   UiName: Knockback
@@ -300,10 +300,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3077068755420810402, guid: c68b552e96894a148a099deb438bfcca, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -2037724186, guid: b2575fe84843531439e39dc1be326ae3, type: 3}
     - target: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

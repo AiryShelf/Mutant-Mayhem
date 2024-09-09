@@ -17,5 +17,16 @@ public class TutorialBuildPanel : TutorialPanel
     {
         TutorialManager.tutorialShowedBuild = true;
         base.OnOKButtonClick();
+
+        playerActionMap.Enable();
+        playerFireAction.Disable();
+    }
+
+    public override void OnDisableButtonClick()
+    {
+        playerActionMap.Enable();
+        playerFireAction.Disable();
+        
+        base.OnDisableButtonClick();
     }
 }

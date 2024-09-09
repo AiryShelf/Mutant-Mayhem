@@ -7,27 +7,27 @@ using UnityEngine.Tilemaps;
 
 public class BuildingSystem : MonoBehaviour
 {
+    public List<StructureSO> AllStructureSOs;
+    public StructureSO structureInHand;
+    [SerializeField] int numStructuresAvailAtStart;
     public static float PlayerCredits;
     [SerializeField] float playerStartingCredits;
-    public StructureSO structureInHand;
     public BuildRangeCircle buildRangeCircle;
     public LayerMask layersForBuildClearCheck;
     public LayerMask layersForRemoveClearCheck;
-    [SerializeField] TileBase highlightedTileAsset;
-    [SerializeField] TileBase destroyTileAsset;
+    [SerializeField] TurretManager turretManager;
+    [SerializeField] UIBuildMenuController buildMenuController;
+    [SerializeField] QCubeController qCubeController;
+    [SerializeField] MouseLooker mouseLooker;
+    [SerializeField] CameraController cameraController;
+    [Header("Tilemaps")]
+    [SerializeField] TileManager tileManager;
     [SerializeField] Tilemap structureTilemap;
     [SerializeField] Tilemap animatedTilemap;
     [SerializeField] Tilemap highlightTilemap;
     [SerializeField] Tilemap previewTilemap;
-    [SerializeField] TileManager tileManager;
-    [SerializeField] TurretManager turretManager;
-    [SerializeField] UIBuildMenuController buildMenuController;
-    public List<StructureSO> AllStructureSOs;
-    [SerializeField] int numStructuresAvailAtStart;
-
-    [SerializeField] QCubeController qCubeController;
-    [SerializeField] MouseLooker mouseLooker;
-    [SerializeField] CameraController cameraController;
+    [SerializeField] TileBase highlightedTileAsset;
+    [SerializeField] TileBase destroyTileAsset;
 
     public bool inBuildMode;
     public int currentRotation;
@@ -177,6 +177,8 @@ public class BuildingSystem : MonoBehaviour
 
         if (on)
         {
+            CursorManager.Instance.SetBuildCursor();
+
             // Lock camera to player
             cameraController.ZoomAndFocus(player.transform, 0, 1, 0.5f, true, false);
             mouseLooker.lockedToPlayer = true;
@@ -193,6 +195,10 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
+            // If not holding repair gun, set aim cursor
+            if (player.playerShooter.currentGunIndex != 9)
+                CursorManager.Instance.SetAimCursor();
+
             // Unlock camera from player
             cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
             mouseLooker.lockedToPlayer = false;
@@ -404,9 +410,16 @@ public class BuildingSystem : MonoBehaviour
         // Set preview build Image
         if (currentAction == ActionType.Build)
         {
-            SetPreviewImageBuild(highlightedTilePos, 
+            if (structureInHand.ruleTileStructure.buildUiTile != null)
+            {
+                SetPreviewImageBuild(highlightedTilePos, 
+                                    structureInHand.ruleTileStructure.buildUiTile, 
+                                    new Color(1, 1, 1, 0.8f));
+            }
+            else
+                SetPreviewImageBuild(highlightedTilePos, 
                                     structureInHand.ruleTileStructure.damagedTiles[0], 
-                                    new Color(1, 1, 1, 0.5f));
+                                    new Color(1, 1, 1, 0.8f));
         }
 
         // Highlight the tiles for building
@@ -420,7 +433,7 @@ public class BuildingSystem : MonoBehaviour
                     Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
                     highlightTilemap.SetTile(highlightedTilePos + newPos, highlightedTileAsset);
                     highlightTilemap.SetTileFlags(highlightedTilePos + newPos, TileFlags.None);
-                    highlightTilemap.SetColor(highlightedTilePos + newPos, new Color(1, 1, 1, 1f));
+                    highlightTilemap.SetColor(highlightedTilePos + newPos, new Color(1, 1, 1, 0.5f));
                 }
                 else
                 {

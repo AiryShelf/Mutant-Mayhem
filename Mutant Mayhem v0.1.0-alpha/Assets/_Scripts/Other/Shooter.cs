@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shooter : MonoBehaviour
 {
     public List<GunSO> _gunListSource;
-    [HideInInspector] public List<GunSO> gunList;
+    
     [SerializeField] protected Transform gunTrans;
     [SerializeField] protected Transform muzzleTrans;
     [SerializeField] protected Transform casingEjectorTrans;
@@ -18,16 +18,19 @@ public class Shooter : MonoBehaviour
     public bool isReloading;
     public bool isElevated;
 
+    [Header("Dynamic vars, don't set or change")]
+    public List<GunSO> gunList;
+    public bool hasTarget;
+    public int currentGunIndex = 0;
+    public GunSO currentGunSO;
 
-    [HideInInspector] public bool hasTarget;
-    [HideInInspector] public int currentGunIndex = 0;
-    [HideInInspector] public GunSO currentGunSO;
     protected GameObject muzzleFlash;
     protected GameObject laserSight;
     Coroutine reloadRoutine;
     int clipSize;
     float fireTimer;
     float reloadTimer;
+    Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
 
     protected virtual void Awake()
     {
@@ -39,19 +42,25 @@ public class Shooter : MonoBehaviour
         isReloading = true;
     }
 
+    protected virtual void Start()
+    {
+        StartChargingGuns();
+    }
+
     protected virtual void Update()
     {
         if (isReloading)
         {
             if (reloadRoutine == null)
                 reloadRoutine = StartCoroutine(ReloadRoutine());
+            return;
         }
 
         if (!hasTarget)
             return;
 
         fireTimer -= Time.deltaTime;
-        if (fireTimer <= 0)
+        if (fireTimer <= 0 && gunsAmmoInClips[currentGunIndex] > 0)
         {
             Fire();
             fireTimer = shootSpeed;
@@ -156,6 +165,17 @@ public class Shooter : MonoBehaviour
         StartCoroutine(MuzzleFlash());
     }
 
+    protected IEnumerator MuzzleFlash()
+    {
+        //Debug.Log("Muzzle Flash");
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(currentGunSO.muzzleFlashTime);
+        muzzleFlash.SetActive(false);
+        //currentGun.muzzleFlash.enabled = false;
+    }
+
+    #region Charge and Reload
+
     protected Vector2 ApplyAccuracy(Vector2 dir)
     {
         // Vector to radians to degrees
@@ -173,23 +193,13 @@ public class Shooter : MonoBehaviour
 
     bool ShouldReload()
     {
+        if (currentGunSO.gunType == GunType.Laser)
+            return false;
+
         if (gunsAmmoInClips[currentGunIndex] <= 0)
             return true;
         else
             return false;
-    }
-
-    public void DropClip()
-    {
-        if (currentGunSO.emptyClipPrefab != null)
-        {
-            GameObject obj = Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
-                                         gunTrans.rotation, clipEjectorTrans);
-            if (isElevated)
-            {
-                obj.layer = LayerMask.NameToLayer("Default");
-            }
-        }
     }
 
     protected IEnumerator ReloadRoutine()
@@ -211,12 +221,50 @@ public class Shooter : MonoBehaviour
         }
     }
 
-    protected IEnumerator MuzzleFlash()
+    public void DropClip()
     {
-        //Debug.Log("Muzzle Flash");
-        muzzleFlash.SetActive(true);
-        yield return new WaitForSeconds(currentGunSO.muzzleFlashTime);
-        muzzleFlash.SetActive(false);
-        //currentGun.muzzleFlash.enabled = false;
+        if (currentGunSO.emptyClipPrefab != null)
+        {
+            GameObject obj = Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
+                                         gunTrans.rotation, clipEjectorTrans);
+            if (isElevated)
+            {
+                obj.layer = LayerMask.NameToLayer("Default");
+            }
+        }
     }
+
+    // Call this whenever adding new charging weapon 
+    // or charging ability to non-charge weapon
+    protected void StartChargingGuns()
+    {
+        for (int i = 0; i < gunList.Count; i++)
+        {
+            if (gunList[i] != null)
+            {
+                // Only start ChargeGun for chargeables
+                if (gunList[i].chargeDelay != 0)
+                {
+                    if (chargeCoroutines.ContainsKey(i) && chargeCoroutines[i] != null)
+                    {
+                        StopCoroutine(chargeCoroutines[i]);
+                    }
+                    chargeCoroutines[i] = StartCoroutine(ChargeGun(i));
+                }
+            }
+        }
+    }
+
+    protected IEnumerator ChargeGun(int index)
+    {
+        while (true)
+        {
+            if (gunsAmmoInClips[index] < gunList[index].clipSize)
+                gunsAmmoInClips[index]++;
+
+            yield return new WaitForSeconds(gunList[index].chargeDelay); 
+        }  
+    }
+
+    #endregion
 }

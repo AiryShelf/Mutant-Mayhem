@@ -11,6 +11,8 @@ public class RuleTileStructure : RuleTile
     public List<AnimatedTile> damagedTiles;
     public GameObject corpsePrefab;
     public GameObject hitEffectsPrefab;
+    [Header("Optional")]
+    public AnimatedTile buildUiTile;
 
 /*
     public override void GetTileData(Vector3Int location, ITilemap tilemap, ref TileData tileData) 

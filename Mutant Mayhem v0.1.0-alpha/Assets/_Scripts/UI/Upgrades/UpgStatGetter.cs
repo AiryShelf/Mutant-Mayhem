@@ -113,14 +113,14 @@ public static class UpgStatGetter
                 stat = player.stats.playerShooter.gunList[gunIndex].knockback.ToString("#0.0");
                 return stat;
             case GunStatsUpgrade.ShootSpeed:
-                float speed = 1 - player.stats.playerShooter.gunList[gunIndex].shootSpeed;
+                float speed = player.stats.playerShooter.gunList[gunIndex].shootSpeed;
                 stat = speed.ToString("#0.000");
                 return stat;
             case GunStatsUpgrade.ClipSize:
                 stat = player.stats.playerShooter.gunList[gunIndex].clipSize.ToString("#0");
                 return stat;
             case GunStatsUpgrade.ChargeSpeed:
-                float regen = 1 - player.stats.playerShooter.gunList[gunIndex].chargeDelay;
+                float regen = player.stats.playerShooter.gunList[gunIndex].chargeDelay;
                 stat = regen.ToString("#0.00");
                 return stat;
             case GunStatsUpgrade.GunAccuracy:
@@ -257,13 +257,13 @@ public static class UpgStatGetter
                 amount = "+" + GunKnockbackUpgrade.GetUpgAmount(player, gunIndex).ToString("#0.0");
                 return amount;
             case GunStatsUpgrade.ShootSpeed:
-                amount = "+" + Mathf.Abs(ShootSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.000");
+                amount = "-" + Mathf.Abs(ShootSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.000");
                 return amount;
             case GunStatsUpgrade.ClipSize:
                 amount = "+" + ClipSizeUpgrade.GetUpgAmount(player, gunIndex).ToString();
                 return amount;
             case GunStatsUpgrade.ChargeSpeed:
-                amount = "+" + Mathf.Abs(ChargeDelayUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.00");
+                amount = "-" + Mathf.Abs(ChargeDelayUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.00");
                 return amount;
             case GunStatsUpgrade.GunAccuracy:
                 amount = "+" + Mathf.Abs(GunAccuracyUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
@@ -276,7 +276,7 @@ public static class UpgStatGetter
                 amount = "-" + Mathf.Abs(RecoilUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
                 return amount;     
             case GunStatsUpgrade.TurretReloadSpeed:
-                amount = "+" + Mathf.Abs(TurretReloadSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.00");
+                amount = "-" + Mathf.Abs(TurretReloadSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.00");
                 return amount;         
         }
 

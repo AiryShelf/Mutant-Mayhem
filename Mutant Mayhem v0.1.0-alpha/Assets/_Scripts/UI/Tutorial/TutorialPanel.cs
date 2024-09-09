@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class TutorialPanel : MonoBehaviour
 {
     Player player;
+    protected InputActionMap playerActionMap;
+    protected InputAction playerFireAction;
     ControlsPanel controlsPanel;
     GameObject prevUiSelection;
 
@@ -21,7 +25,9 @@ public class TutorialPanel : MonoBehaviour
         }
         
         Time.timeScale = 0;
-        player.inputAsset.FindActionMap("Player").Disable();
+        playerActionMap = player.inputAsset.FindActionMap("Player");
+        playerFireAction = playerActionMap.FindAction("Fire");
+        playerActionMap.Disable();
         
         StartCoroutine(WaitToStoreSelection());
     }
@@ -46,13 +52,12 @@ public class TutorialPanel : MonoBehaviour
     IEnumerator HandleOnOKButtonClick()
     {
         // Block input briefly to avoid unintended clicks
-        //EventSystem.current.SetSelectedGameObject(null);
         yield return new WaitForSecondsRealtime(0.1f);
 
         RestorePreviousSelection();
 
         Time.timeScale = 1;
-        player.inputAsset.FindActionMap("Player").Enable();
+        playerActionMap.Enable();
         Destroy(gameObject);
     }
 
@@ -69,7 +74,7 @@ public class TutorialPanel : MonoBehaviour
 
         Time.timeScale = 1;
         TutorialManager.TutorialDisabled = true;
-        player.inputAsset.FindActionMap("Player").Enable();
+        playerActionMap.Enable();
         Destroy(gameObject);
     }
 

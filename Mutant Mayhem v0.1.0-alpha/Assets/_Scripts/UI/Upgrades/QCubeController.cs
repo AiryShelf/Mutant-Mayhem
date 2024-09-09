@@ -147,9 +147,9 @@ public class QCubeController : MonoBehaviour
 
     IEnumerator OpenUpgradeWindow()
     {
-        if (!TutorialManager.tutorialShowedUpgrade)
+        if (!TutorialManager.tutorialShowedUpgrade && !TutorialManager.TutorialDisabled)
         {
-            Instantiate(tutorialUpgradePanelPrefab, gamePlayCanvas);
+            StartCoroutine(DelayTutorialOpen());
         }
         yield return new WaitForFixedUpdate();
         
@@ -164,6 +164,8 @@ public class QCubeController : MonoBehaviour
         fireAction.Enable();
         panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;
+
+        StopAllCoroutines();
     }
 
     public void RandomizeDeathMessages()
@@ -174,4 +176,11 @@ public class QCubeController : MonoBehaviour
         randomIndex = UnityEngine.Random.Range(0, deathSubtitles.Count);
         deathSubtitleText.text = deathSubtitles[randomIndex];
     }   
+
+    IEnumerator DelayTutorialOpen()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Instantiate(tutorialUpgradePanelPrefab, gamePlayCanvas);
+    }
 }

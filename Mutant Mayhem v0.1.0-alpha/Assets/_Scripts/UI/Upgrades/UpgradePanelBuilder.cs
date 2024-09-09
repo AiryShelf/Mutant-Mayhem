@@ -62,7 +62,7 @@ public class UpgradePanelBuilder : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Update cost text color as per afforadability
+        // Update unlock cost text color as per afforadability
         if (!unlocked && unlockPanel != null)
         {
             Color color;

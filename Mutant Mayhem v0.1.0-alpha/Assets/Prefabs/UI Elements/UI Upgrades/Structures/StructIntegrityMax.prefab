@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 2630243552122023806}
   - component: {fileID: 2424608126604974389}
   m_Layer: 0
-  m_Name: Repair
+  m_Name: Wrench
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -957196868, guid: dc49408a2b312534ca97aefdc77db78b, type: 3}
+  m_Sprite: {fileID: 535712138, guid: b2575fe84843531439e39dc1be326ae3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 236226679967019235}
   - component: {fileID: 7711098166412534391}
   m_Layer: 0
-  m_Name: TileHealthMax
+  m_Name: StructIntegrityMax
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8233925072109925713}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -454,18 +454,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3077068755420810402, guid: c68b552e96894a148a099deb438bfcca, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -2037724186, guid: b2575fe84843531439e39dc1be326ae3, type: 3}
     - target: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 3564340016473378526}
-    - target: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: InvokeOnClick
-      objectReference: {fileID: 0}
     - target: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
