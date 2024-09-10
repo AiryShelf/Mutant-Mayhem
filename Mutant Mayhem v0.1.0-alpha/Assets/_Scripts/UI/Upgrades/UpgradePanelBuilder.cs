@@ -11,25 +11,30 @@ public class UpgradePanelBuilder : MonoBehaviour
     [SerializeField] GridLayoutGroup textGrid;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
 
-    [Header("Unlockable")]
-    [SerializeField] UpgradeFamily upgradeFamily;
-    [SerializeField] int playerGunIndex;
+    [Header("Unlockables")]
     [SerializeField] GameObject unlockPanel;
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] int unlockCost;
-    [SerializeField] string unlockName;
+    [SerializeField] string techUnlockMessageName;
     [SerializeField] Image toolbarImage;
-    
+    [Header("Gun")]
+    [SerializeField] UpgradeFamily upgradeFamily;
+    [SerializeField] int playerGunIndex;
+    [Header("Structure")]
+    [SerializeField] Structure structureToUnlock;
+
     bool unlocked = false;
     Player player;
     MessagePanel messagePanel;
     UpgradeManager upgradeManager;
+    BuildingSystem buildingSystem;
 
     void Awake()
     {
         player = FindObjectOfType<Player>();
         messagePanel = FindObjectOfType<MessagePanel>();
         upgradeManager = FindObjectOfType<UpgradeManager>();
+        buildingSystem = FindObjectOfType<BuildingSystem>();
 
         // Clear editor objects in layout groups
         for (int i = buttonsGrid.transform.childCount - 1; i >= 0; i--)
@@ -141,14 +146,17 @@ public class UpgradePanelBuilder : MonoBehaviour
                 upgradeManager.PlayUpgradeEffectAt(Camera.main.ScreenToWorldPoint(toolbarImage.transform.position));
             }
 
-            // Initialize and open panel
+            // Unlock Structure
+            buildingSystem.UnlockStructure(structureToUnlock);
+
+            // Initialize and open upgrades panel
             Initialize();
             //StartCoroutine(DelayTrigger());
             Destroy(unlockPanel.gameObject);
 
             upgradeManager.PlayUpgradeButtonEffect();
 
-            messagePanel.ShowMessage(unlockName + " unlocked!", Color.green);
+            messagePanel.ShowMessage(techUnlockMessageName + " unlocked!", Color.green);
         }
         else
         {

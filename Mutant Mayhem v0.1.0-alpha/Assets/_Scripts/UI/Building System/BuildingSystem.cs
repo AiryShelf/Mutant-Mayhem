@@ -8,13 +8,13 @@ using UnityEngine.Tilemaps;
 public class BuildingSystem : MonoBehaviour
 {
     public List<StructureSO> AllStructureSOs;
+    [SerializeField] List<bool> unlockedStructuresStart;
     public StructureSO structureInHand;
-    [SerializeField] int numStructuresAvailAtStart;
     public static float PlayerCredits;
     [SerializeField] float playerStartingCredits;
     public BuildRangeCircle buildRangeCircle;
-    public LayerMask layersForBuildClearCheck;
-    public LayerMask layersForRemoveClearCheck;
+    [SerializeField] LayerMask layersForBuildClearCheck;
+    [SerializeField] LayerMask layersForRemoveClearCheck;
     [SerializeField] TurretManager turretManager;
     [SerializeField] UIBuildMenuController buildMenuController;
     [SerializeField] QCubeController qCubeController;
@@ -29,13 +29,10 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
 
+    public static Dictionary<Structure, bool> _UnlockedStructuresDict = 
+                                        new Dictionary<Structure, bool>();
     public bool inBuildMode;
     public int currentRotation;
-    
-    // needs to actually be created
-    public static Dictionary<StructureType, bool> _StructsAvailDict = 
-                                        new Dictionary<StructureType, bool>();
-
     private Vector3Int highlightedTilePos;
     public bool allHighlited;
     bool inRange;
@@ -82,7 +79,7 @@ public class BuildingSystem : MonoBehaviour
         buildAction.started -= OnBuild;
         cheatCodeCreditsAction.started -= OnCheatCodeCredits;
    
-        _StructsAvailDict.Clear();   
+        _UnlockedStructuresDict.Clear();   
     }
 
     void FixedUpdate()
@@ -103,23 +100,7 @@ public class BuildingSystem : MonoBehaviour
         }        
     }
 
-    #region Controls
-
-    void OnRotate(InputAction.CallbackContext context)
-    {
-        if (context.control.name == "q")
-        {
-            currentRotation += 90;
-        }   
-        else if (context.control.name == "e")
-        {
-            currentRotation -= 90;
-        }
-
-        // Normalize the rotation to be within the range (0, 360)
-        currentRotation = (currentRotation % 360 + 360) % 360;
-        SwitchTools(structureInHand.structureType);
-    }
+    #region Inputs
 
     void OnBuild(InputAction.CallbackContext context)
     {
@@ -141,6 +122,7 @@ public class BuildingSystem : MonoBehaviour
             }
         }
 
+        // Build
         if (allHighlited)
         {   
             if (!EventSystem.current.IsPointerOverGameObject())
@@ -155,13 +137,20 @@ public class BuildingSystem : MonoBehaviour
                 }
             }
         }
+        // Failed to build or destroy messages
         else if (inRange)
         {
-            messagePanel.ShowMessage("Tile not clear for building", Color.yellow);
+            if (structureInHand.actionType == ActionType.Build)
+                messagePanel.ShowMessage("Area not clear for building", Color.yellow);
+            if (structureInHand.actionType == ActionType.Destroy)
+                messagePanel.ShowMessage("Unable to destroy", Color.yellow);
         }
         else
         {
-            messagePanel.ShowMessage("Too far away to build", Color.yellow);
+            if (structureInHand.actionType == ActionType.Build)
+                messagePanel.ShowMessage("Too far away to build", Color.yellow);
+            if (structureInHand.actionType == ActionType.Destroy)
+                messagePanel.ShowMessage("Too far away to destroy", Color.yellow);
         }
     }
 
@@ -170,6 +159,57 @@ public class BuildingSystem : MonoBehaviour
         yield return new WaitForFixedUpdate();
         EventSystem.current.SetSelectedGameObject(lastSelectedObject);
     }
+
+    void OnRotate(InputAction.CallbackContext context)
+    {
+        if (context.control.name == "q")
+        {
+            currentRotation += 90;
+        }   
+        else if (context.control.name == "e")
+        {
+            currentRotation -= 90;
+        }
+        // Normalize the rotation to be within the range (0, 360)
+        currentRotation = (currentRotation % 360 + 360) % 360;
+        Rotate(structureInHand.ruleTileStructure.structureSO);
+    }
+
+    void Rotate(StructureSO structure)
+    {
+        RemoveBuildHighlight();
+        // ensure use of original cell positions for rotation
+        structure = AllStructureSOs[AllStructureSOs.IndexOf(structure)];
+        structureInHand = StructureRotator.RotateStructure(structure, currentRotation);
+    }
+
+    void OnToolbarUsed(InputAction.CallbackContext context)
+    {
+        if (inBuildMode)
+        {
+            //Debug.Log("OnToolbar called");
+            if (Input.GetKeyDown("c"))
+            {
+                //Repair Tool
+                ChangeStructureInHand(AllStructureSOs[1]);
+            }
+            else if (Input.GetKeyDown("x"))
+            {
+                Debug.Log("Switched to destroy tool");
+                //Destroy Tool
+                ChangeStructureInHand(AllStructureSOs[2]);
+            }
+            else
+            {
+                //structureInHand = AllStructureSOs[(int)Structure.SelectTool];
+                //RemoveBuildHighlight();
+            }
+        }
+    }
+
+    #endregion
+
+    #region Build Menu and Unlock
 
     public void ToggleBuildMenu(bool on)
     {
@@ -218,7 +258,7 @@ public class BuildingSystem : MonoBehaviour
             clearSelection = StartCoroutine(ClearSelection(time));
 
             RemoveBuildHighlight();
-            structureInHand = AllStructureSOs[(int)StructureType.SelectTool];
+            structureInHand = AllStructureSOs[(int)Structure.SelectTool];
             //Debug.Log("Closed Build Panel");
         }
     }
@@ -228,53 +268,29 @@ public class BuildingSystem : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         RemoveBuildHighlight();
-        structureInHand = AllStructureSOs[(int)StructureType.SelectTool];
+        structureInHand = AllStructureSOs[(int)Structure.SelectTool];
     }
 
-    void OnToolbarUsed(InputAction.CallbackContext context)
+    public void ChangeStructureInHand(StructureSO structure)
     {
-        if (inBuildMode)
-        {
-            //Debug.Log("OnToolbar called");
-            if (Input.GetKeyDown("c"))
-            {
-                //Repair Tool
-                SwitchTools(StructureType.RepairTool);
-            }
-            else if (Input.GetKeyDown("x"))
-            {
-                Debug.Log("switch to destroy tool");
-                //Destroy Tool
-                SwitchTools(StructureType.DestroyTool);
-            }
+        Rotate(structure);
+    }
+
+    void BuildStructsAvailDict()
+    {
+        // Starts list at destroy tool
+        for (int i = 2; i < AllStructureSOs.Count; i++)
+        {           
+            if (unlockedStructuresStart[i])
+                _UnlockedStructuresDict.Add(AllStructureSOs[i].structureType, true);
             else
-            {
-                RemoveBuildHighlight();
-                structureInHand = AllStructureSOs[(int)StructureType.SelectTool];
-            }
+                _UnlockedStructuresDict.Add(AllStructureSOs[i].structureType, false);
         }
     }
 
-    public void SwitchTools(StructureType structure)
+    public void UnlockStructure(Structure structure)
     {
-        // if the bool in the dict is true, its avialable to use
-        if (_StructsAvailDict[structure])
-        {
-            RemoveBuildHighlight();
-
-            StructureSO sourceSO = AllStructureSOs[(int)structure];  
-
-            // Apply current Rotation to tiles, not tools
-            if ((int) structure > 2)
-            {
-                structureInHand = StructureRotator.RotateStructure(sourceSO, currentRotation);
-            }
-            else
-            {
-                structureInHand = sourceSO;
-            }
-            //Debug.Log("Switched to tool index: " + (int)structure);     
-        }
+        _UnlockedStructuresDict[structure] = true;
     }
 
     public void OnCheatCodeCredits(InputAction.CallbackContext context)
@@ -335,24 +351,9 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    void BuildStructsAvailDict()
-    {
-        int available = numStructuresAvailAtStart;
-        foreach(StructureSO structure in AllStructureSOs)
-        {           
-            if (available != 0)
-            {
-                _StructsAvailDict.Add(structure.structureType, true);
-                available--;
-            }
-            else
-                _StructsAvailDict.Add(structure.structureType, false);
-        }
-    }
-
     #endregion
 
-    #region Highlights and Preview Image
+    #region Highlight and Preview
 
     private void HighlightTile()
     {
@@ -445,7 +446,7 @@ public class BuildingSystem : MonoBehaviour
             }
         }             
         else if (currentAction == ActionType.Select ||
-                    currentAction == ActionType.Interact)
+                 currentAction == ActionType.Interact)
         {
             // Do stuff
         } 
@@ -548,18 +549,6 @@ public class BuildingSystem : MonoBehaviour
     
     // Compare the squared distance with the squared radius
     return distanceSquared <= radius * radius;
-
-        /*
-        Vector3Int distance = positionA - positionB;
-
-        // Thsi code allows for different x and y ranges.
-        if (Mathf.Abs(distance.x) >= range.x || Mathf.Abs(distance.y) >= range.y)
-        {
-            return false;
-        }
-
-        return true;
-        */
     }
 
     private bool CheckHighlightConditions(RuleTileStructure mousedTile, StructureSO structureInHand)

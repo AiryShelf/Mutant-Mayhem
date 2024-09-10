@@ -28,14 +28,10 @@ public class CursorManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        SetAimCursor();
-    }
-
     public void Initialize()
     {
         player = FindObjectOfType<Player>();
+        SetAimCursor();
     }
 
     public void SetAimCursor()

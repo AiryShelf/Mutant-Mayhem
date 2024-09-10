@@ -18,13 +18,13 @@ public class StructureSO : ScriptableObject
     [Header("Tile Type")]
     
     public RuleTileStructure ruleTileStructure;
-    public StructureType structureType;
+    public Structure structureType;
     public bool isTurret;
     public ActionType actionType;
     public Vector2Int actionRange = new Vector2Int(5, 5);
 }
 
-public enum StructureType
+public enum Structure
 {
     SelectTool,
     RepairTool,

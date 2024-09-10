@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PanelSwitcher : MonoBehaviour
 {
     public FadeCanvasGroupsWave backgroundGroupWave;
     public RectTransform[] panels;
+    public Button[] tabButtons;
     public float swipeDuration = 0.5f;
     public FadeCanvasGroupsWave prevButton;
     public FadeCanvasGroupsWave nextButton;
@@ -13,40 +15,44 @@ public class PanelSwitcher : MonoBehaviour
     bool isOpen;
 
     private int currentPanelIndex = 0;
-    private bool isSwiping = false;
     private Vector2 originalPosition;
+    ColorBlock defaultColorBlock;
+    ColorBlock highlightedColorBlock;
 
     RectTransform myRect;
 
     void Start()
     {
         myRect = GetComponent<RectTransform>();
-        
         originalPosition = transform.localPosition;
 
-        UpdateNavButtons();
+        // Set up colorBlocks for tab buttons
+        defaultColorBlock = tabButtons[0].colors;
+        highlightedColorBlock = defaultColorBlock;
+        highlightedColorBlock.normalColor = defaultColorBlock.highlightedColor;
 
-        //UpdatePanelVisibility();
+        UpdateNavButtons();
+        AssignTabButtonHandlers();
     }
 
     void Update()
     {
         if (Time.timeScale == 0)
             return;
-            
+        
+        // Handle opening/closing 
         if (isTriggered)
         {
             if (!isOpen)
-                FadeIn();
+                OpenPanel();
         }
         else
         {
             if (isOpen)
-                FadeOut();
+                ClosePanel();
         }
 
-        if (isSwiping) return;
-
+        // Check swipe input
         if (isOpen)
         {
             if (Input.GetKeyDown(KeyCode.Q))
@@ -60,7 +66,43 @@ public class PanelSwitcher : MonoBehaviour
         }
     }
 
-    void FadeIn()
+    void AssignTabButtonHandlers()
+    {
+        for (int i = 0; i < tabButtons.Length; i++)
+        {
+            int index = i; // Capture the loop variable
+            tabButtons[i].onClick.AddListener(() => OnTabClicked(index));
+        }
+    }
+
+    public void OnTabClicked(int tabIndex)
+    {
+        if (tabIndex != currentPanelIndex)
+        {
+            StartCoroutine(SwipeToPanel(tabIndex, currentPanelIndex));
+            currentPanelIndex = tabIndex;
+            UpdateNavButtons();
+            UpdateTabHighlight();  // Update visual highlight of the tabs
+        }
+    }
+
+    void UpdateTabHighlight()
+    {
+        for (int i = 0; i < tabButtons.Length; i++)
+        {
+            
+            // Highlight selected tab only
+            if (i == currentPanelIndex)
+            {
+                tabButtons[i].colors = highlightedColorBlock;
+                tabButtons[i].Select();
+            }
+            else
+                tabButtons[i].colors = defaultColorBlock;  // Reset default
+        }
+    }
+
+    void OpenPanel()
     {
         isOpen = true;
         transform.localPosition = originalPosition;
@@ -68,12 +110,12 @@ public class PanelSwitcher : MonoBehaviour
         panels[0].GetComponent<FadeCanvasGroupsWave>().isTriggered = true;
         backgroundGroupWave.isTriggered = true;
         UpdateNavButtons();
+        UpdateTabHighlight();
     }
 
-    void FadeOut()
+    void ClosePanel()
     {
         isOpen = false;
-        isSwiping = false;
         backgroundGroupWave.isTriggered = false;
         currentPanelIndex = 0;
 
@@ -115,6 +157,7 @@ public class PanelSwitcher : MonoBehaviour
         StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex + 1));
 
         UpdateNavButtons();
+        UpdateTabHighlight();
     }
 
     public void SwipeRight()
@@ -125,12 +168,11 @@ public class PanelSwitcher : MonoBehaviour
         StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex - 1));
 
         UpdateNavButtons();
+        UpdateTabHighlight();
     }
 
     IEnumerator SwipeToPanel(int targetIndex, int prevIndex)
     {
-        //panels[targetIndex].gameObject.SetActive(true);
-        isSwiping = true;
         Vector2 startPosition = transform.localPosition;
         Vector2 endPosition = originalPosition - new Vector2(targetIndex * myRect.sizeDelta.x, 0);
 
@@ -146,22 +188,9 @@ public class PanelSwitcher : MonoBehaviour
             yield return null;
 
             transform.localPosition = Vector2.Lerp(startPosition, endPosition, timeElapsed / swipeDuration);
-            // Fade in and out ** Handled by fade groups **  Could add functionality to this
-            //targCanv.alpha = Mathf.Lerp(0, 1, timeElapsed / swipeDuration);
-            //prevCanv.alpha = Mathf.Lerp(1, 0, timeElapsed / swipeDuration);
             timeElapsed += Time.deltaTime;
         }
 
         transform.localPosition = endPosition;
-        isSwiping = false;
-        //UpdatePanelVisibility();
-    }
-
-    void UpdatePanelVisibility()
-    {
-        for (int i = 0; i < panels.Length; i++)
-        {
-            panels[i].gameObject.SetActive(i == currentPanelIndex);
-        }
     }
 }

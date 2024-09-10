@@ -31,7 +31,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         if (initialized)
         {
             // If unlocked to player
-            if (BuildingSystem._StructsAvailDict[structureSO.structureType])
+            if (BuildingSystem._UnlockedStructuresDict[structureSO.structureType])
             {
                 MakeInteractable();
             }
@@ -46,7 +46,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     {
         initialized = true;
         // If unlocked to player
-        if (BuildingSystem._StructsAvailDict[structureSO.structureType])
+        if (BuildingSystem._UnlockedStructuresDict[structureSO.structureType])
         {
             MakeInteractable();
         }
@@ -60,7 +60,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     {
         // Lock the scroll rect to this selected object.
         scrollRectController.SnapTo(myRectTransform);
-        buildingSystem.SwitchTools(structureSO.structureType);
+        buildingSystem.ChangeStructureInHand(structureSO);
     }
     public void OnDeselect(BaseEventData data)
     {
