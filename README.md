@@ -6,12 +6,13 @@ DOWNLOAD LATEST VERSION HERE: https://drive.google.com/drive/folders/1-wGFZxvgRv
 (For bandwidth reason, I'll only update GitHub LFS occassionally)
 
 
-My first game in Unity, a remake of a project I did in GameMaker over a decade ago.
+This is my first game in Unity, a remake of a project I did in GameMaker over a decade ago.  I spent a good chunk of time in my teenage
+years learning and making a handful of rough games in GameMaker, around 16 years ago.  Im amazed at all the tools and systems available in 
+Unity!  It sure beats the features I had to work with in GameMaker back then!
 
-Im amazed at all the tools and systems available in Unity!  It sure beats the features I had to work with in GameMaker around 16 years ago.
-
-I'm really enjoying the fact that I'm now able to learn about and implement any system I manage to dream up.  The biggest challenge
-so far has been to get to sleep on on time, and remembering to take breaks from learning full time.
+I'm also really enjoying the fact that I'm now able to learn about and implement any system I manage to dream up.  When I was younger I 
+quickly ran into walls and did not know how to learn properly.  The biggest challenge lately has been to get to sleep on on time, and 
+remember to take breaks from learning and practicing full time.
 
 
 Mutant Mayhem
