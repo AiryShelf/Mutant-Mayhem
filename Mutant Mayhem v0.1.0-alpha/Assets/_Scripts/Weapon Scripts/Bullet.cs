@@ -29,7 +29,7 @@ public class Bullet : MonoBehaviour
 
     void OnEnable()
     {
-        AudioManager.instance.PlaySoundFollow(shootSound, transform);
+        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
     }
 
     protected virtual void Start()
@@ -125,7 +125,7 @@ public class Bullet : MonoBehaviour
         effectsHandler.DestroyAfterSeconds();
         effectsHandler.PlayBulletHitEffectAt(point);
 
-        AudioManager.instance.PlaySoundAt(hitSound, point);
+        AudioManager.Instance.PlaySoundAt(hitSound, point);
         
         gameObject.SetActive(false);
         Destroy(gameObject);

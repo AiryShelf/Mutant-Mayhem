@@ -10,8 +10,6 @@ public class TimeControl : MonoBehaviour
     InputActionMap playerActionMap;
     InputAction timeControlAction;
 
-    MessagePanel messagePanel;
-
     public float gameSpeed = 1;
 
     const float epsilon = 0.0001f;
@@ -22,8 +20,6 @@ public class TimeControl : MonoBehaviour
         playerActionMap = player.inputAsset.FindActionMap("Player");
         timeControlAction = playerActionMap.FindAction("TimeControl");
         timeControlAction.performed += OnTimeControl;
-
-        messagePanel = FindObjectOfType<MessagePanel>();
     }
 
     void OnTimeControl(InputAction.CallbackContext context)
@@ -33,7 +29,7 @@ public class TimeControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.KeypadMinus) && Time.timeScale - 0.01f > epsilon)
             Time.timeScale -= 0.1f;
         Debug.Log("timeScale changed to: " + Time.timeScale.ToString("#0.0"));
-        messagePanel.ShowMessage("For Debug: Timescale changed to: " + 
+        MessagePanel.ShowMessage("For Debug: Timescale changed to: " + 
                                  Time.timeScale.ToString("#0.0"), Color.red);
     }
 

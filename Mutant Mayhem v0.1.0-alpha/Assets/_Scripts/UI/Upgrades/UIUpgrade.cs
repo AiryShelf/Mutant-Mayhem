@@ -167,20 +167,20 @@ public class UIUpgrade : MonoBehaviour
                 // Levels text
                 if (upgLvl + 1 > maxLvl)
                 {
-                    upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + 
-                                    "\n" + greenColorTag + "Max level reached!" + endColorTag;
+                    upgradeText.text = UiName + ": " + greenColorTag + statValue + 
+                                       "\n" + "Max level reached!" + endColorTag;
                 }
                 else
                 {
-                    upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag + 
-                                    "\nLvl " + (upgLvl + 1) + ": " + costColorTag + "$" + upgCost + endColorTag;
+                    upgradeText.text = UiName + ": " + greenColorTag + statValue + " " + cyanColorTag + upgAmount + endColorTag + 
+                                       "\nLvl " + (upgLvl + 1) + ": " + costColorTag + "$" + upgCost + endColorTag;
                 }
             }
             else
             {
                 // No levels text
-                upgradeText.text = UiName + ": " + greenColorTag + statValue + endColorTag + " " + cyanColorTag + upgAmount + endColorTag +
-                                "\n" + costColorTag + "$" + upgCost + endColorTag; 
+                upgradeText.text = UiName + ": " + greenColorTag + statValue + " " + cyanColorTag + upgAmount + endColorTag +
+                                   "\n" + costColorTag + "$" + upgCost + endColorTag; 
             }
             yield return new WaitForSeconds(0.2f);
         }

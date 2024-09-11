@@ -17,7 +17,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Difficulty Settings")]
     public int startingDifficulty = 1;
-    private DifficultyLevel difficultyLevel; 
+    public DifficultyLevel difficultyLevel; 
 
     [Header("Movement Settings")]
     public int useStandardWASD = 1;

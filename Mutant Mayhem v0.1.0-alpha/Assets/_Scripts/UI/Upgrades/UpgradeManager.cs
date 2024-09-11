@@ -19,7 +19,6 @@ public class UpgradeManager : MonoBehaviour
 
     ParticleSystem playerUpgAppliedFX;
     ParticleSystem uiUpgAppliedFX;
-    MessagePanel messagePanel;
 
     #region Upg Dicts
 
@@ -97,7 +96,6 @@ public class UpgradeManager : MonoBehaviour
         // Reset references
         player = FindObjectOfType<Player>();
         playerShooter = player.playerShooter;
-        messagePanel = FindObjectOfType<MessagePanel>();
 
         // Reset particle system references
         if (playerUpgAppliedFX != null)
@@ -220,7 +218,7 @@ public class UpgradeManager : MonoBehaviour
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.StructureMaxHealth] = 500;
-        structureStatsUpgBaseCosts[StructureStatsUpgrade.MaxTurrets] = 3000;
+        structureStatsUpgBaseCosts[StructureStatsUpgrade.MaxTurrets] = 6000;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretRotSpeed] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretSensors] = 500;
 
@@ -415,7 +413,7 @@ public class UpgradeManager : MonoBehaviour
         if (playerStatsUpgLevels[upgType] >= playerStatsUpgMaxLevels[upgType])
         {
             Debug.Log("Max level reached for: " + upgType);
-            messagePanel.ShowMessage("Max level reached!", Color.yellow);
+            MessagePanel.ShowMessage("Max level reached!", Color.yellow);
             return;
         }
 
@@ -433,13 +431,13 @@ public class UpgradeManager : MonoBehaviour
                 playerStatsUpgBaseCosts[upgType], playerStatsUpgLevels[upgType] + 1);
 
             Debug.Log("PlayerStats upgrade applied: " + upgType);
-            messagePanel.ShowMessage("Exosuit stat upgraded to level " + 
+            MessagePanel.ShowMessage("Exosuit stat upgraded to level " + 
                                      playerStatsUpgLevels[upgType], Color.cyan);
         }
         else
         {
             Debug.Log("Not enough credits for: " + upgType);
-            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+            MessagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }
 
@@ -450,7 +448,7 @@ public class UpgradeManager : MonoBehaviour
         if (structureStatsUpgLevels[upgType] >= structureStatsUpgMaxLevels[upgType])
         {
             Debug.Log("Max level reached for: " + upgType);
-            messagePanel.ShowMessage("Max level reached!", Color.yellow);
+            MessagePanel.ShowMessage("Max level reached!", Color.yellow);
             return;
         }
 
@@ -468,13 +466,13 @@ public class UpgradeManager : MonoBehaviour
                 structureStatsUpgBaseCosts[upgType], structureStatsUpgLevels[upgType] + 1);
 
             Debug.Log("Structure upgrade applied: " + upgType);
-            messagePanel.ShowMessage("Structure stat upgraded to level " + 
+            MessagePanel.ShowMessage("Structure stat upgraded to level " + 
                                      structureStatsUpgLevels[upgType], Color.cyan);
         }
         else
         {
             Debug.Log("Not enough credits for: " + upgType);
-            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+            MessagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }
 
@@ -491,7 +489,7 @@ public class UpgradeManager : MonoBehaviour
             if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
             {
                 Debug.LogWarning("Consumable int maxed out: " + upgType);
-                messagePanel.ShowMessage("Maxed. You either bought this over 32,000 times " + 
+                MessagePanel.ShowMessage("Maxed. You either bought this over 32,000 times " + 
                                          "or there is a bug!  Let me know!", Color.yellow);
                 return;
             }
@@ -509,18 +507,18 @@ public class UpgradeManager : MonoBehaviour
                 consumablesUpgCurrCosts[upgType] = cost;
 
                 //Debug.Log("Consumable applied: " + upgType);
-                messagePanel.ShowMessage("Consumabled applied!", Color.cyan);
+                MessagePanel.ShowMessage("Consumabled applied!", Color.cyan);
             }
             else
             {
                 //Debug.Log(upgType + " already full");
-                messagePanel.ShowMessage("It's already full", Color.yellow);
+                MessagePanel.ShowMessage("It's already full", Color.yellow);
             }
         }
         else
         {
             //Debug.Log("Not enough credits for: " + upgType);
-            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+            MessagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }
 
@@ -564,7 +562,7 @@ public class UpgradeManager : MonoBehaviour
         if (gunUpgLevels[upgType] >= gunUpgMaxLevels[upgType])
         {
             Debug.Log("Max level reached for: " + upgType);
-            messagePanel.ShowMessage("Max level reached!", Color.yellow);
+            MessagePanel.ShowMessage("Max level reached!", Color.yellow);
             return;
         }
 
@@ -582,13 +580,13 @@ public class UpgradeManager : MonoBehaviour
                                        gunUpgBaseCosts[upgType], gunUpgLevels[upgType] + 1);
 
             Debug.Log("Gun upgrade applied: " + upgType);
-            messagePanel.ShowMessage(gun.uiName + " stat upgraded to level " + 
+            MessagePanel.ShowMessage(gun.uiName + " stat upgraded to level " + 
                                      gunUpgLevels[upgType], Color.cyan);
         }
         else
         {
             Debug.Log("Not enough credits for: " + upgType);
-            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+            MessagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }
 

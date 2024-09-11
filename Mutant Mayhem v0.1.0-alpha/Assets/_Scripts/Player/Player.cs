@@ -127,6 +127,12 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        if (SettingsManager.Instance.difficultyLevel == DifficultyLevel.Easy)
+        {
+            BuildingSystem.PlayerCredits += 600;
+            MessagePanel.ShowMessage("You recieved $600 to help you through easy mode", Color.cyan);
+        }
+
         RefreshMoveForces();
         UpgradeManager.Instance.Initialize();
         TurretManager.Instance.Initialize();
@@ -152,7 +158,7 @@ public class Player : MonoBehaviour
         // Need check for ground type
         if (Time.time - lastFootstepTime >= footstepCooldown)
         {
-            AudioManager.instance.PlaySoundAt(walkGrassSound, transform.position);
+            AudioManager.Instance.PlaySoundAt(walkGrassSound, transform.position);
             lastFootstepTime = Time.time;
         }
     }
@@ -164,71 +170,97 @@ public class Player : MonoBehaviour
         // Laser Pistol
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (playerShooter.currentGunIndex != 0)
-                animControllerPlayer.SwitchGunsStart(0);
-            toolbarSelector.SwitchBoxes(0); 
-            previousGunIndex = 0;
+            if (playerShooter.currentGunIndex != 0 && 
+                animControllerPlayer.SwitchGunsStart(0))
+            {
+                toolbarSelector.SwitchBoxes(0); 
+                previousGunIndex = 0;
+            }
         }
         // SMG
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            if (playerShooter.currentGunIndex != 1)
-                animControllerPlayer.SwitchGunsStart(1); 
-            toolbarSelector.SwitchBoxes(1);
-            previousGunIndex = 1;
+
+            if (playerShooter.currentGunIndex != 1 && 
+                animControllerPlayer.SwitchGunsStart(1))
+            { 
+                toolbarSelector.SwitchBoxes(1);
+                previousGunIndex = 1;
+            }
         }
         // Battle Rifle
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            if (playerShooter.currentGunIndex != 2)
-                animControllerPlayer.SwitchGunsStart(2); 
-            toolbarSelector.SwitchBoxes(2);
-            previousGunIndex = 2;
+
+            if (playerShooter.currentGunIndex != 2 && 
+                animControllerPlayer.SwitchGunsStart(2))
+            { 
+                toolbarSelector.SwitchBoxes(2);
+                previousGunIndex = 2;
+            }
         }
         // Laser Rifle
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            if (playerShooter.currentGunIndex != 3)
-                animControllerPlayer.SwitchGunsStart(3); 
-            toolbarSelector.SwitchBoxes(3);
-            previousGunIndex = 3;
+
+            if (playerShooter.currentGunIndex != 3 && 
+                animControllerPlayer.SwitchGunsStart(3))
+            { 
+                toolbarSelector.SwitchBoxes(3);
+                previousGunIndex = 3;
+            }
         }
         // FlameThrower?
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            if (playerShooter.currentGunIndex != 4)
-                animControllerPlayer.SwitchGunsStart(4); 
-            toolbarSelector.SwitchBoxes(4);
-            previousGunIndex = 4;
+
+            if (playerShooter.currentGunIndex != 4 && 
+                animControllerPlayer.SwitchGunsStart(4))
+            { 
+                toolbarSelector.SwitchBoxes(4);
+                previousGunIndex = 4;
+            }
         }
         // Rocket Launcher?
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            if (playerShooter.currentGunIndex != 5)
-                animControllerPlayer.SwitchGunsStart(5); 
-            toolbarSelector.SwitchBoxes(5);
-            previousGunIndex = 5;
+
+            if (playerShooter.currentGunIndex != 5 && 
+                animControllerPlayer.SwitchGunsStart(5))
+            { 
+                toolbarSelector.SwitchBoxes(5);
+                previousGunIndex = 5;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            if (playerShooter.currentGunIndex != 6)
-                animControllerPlayer.SwitchGunsStart(6); 
-            toolbarSelector.SwitchBoxes(6);
-            previousGunIndex = 6;
+
+            if (playerShooter.currentGunIndex != 6 && 
+                animControllerPlayer.SwitchGunsStart(6))
+            { 
+                toolbarSelector.SwitchBoxes(6);
+                previousGunIndex = 6;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            if (playerShooter.currentGunIndex != 7)
-                animControllerPlayer.SwitchGunsStart(7); 
-            toolbarSelector.SwitchBoxes(7);
-            previousGunIndex = 7;
+
+            if (playerShooter.currentGunIndex != 7 && 
+                animControllerPlayer.SwitchGunsStart(7))
+            { 
+                toolbarSelector.SwitchBoxes(7);
+                previousGunIndex = 7;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            if (playerShooter.currentGunIndex != 8)
-                animControllerPlayer.SwitchGunsStart(8); 
-            toolbarSelector.SwitchBoxes(8);
-            previousGunIndex = 8;
+
+            if (playerShooter.currentGunIndex != 8 && 
+                animControllerPlayer.SwitchGunsStart(8))
+            { 
+                toolbarSelector.SwitchBoxes(8);
+                previousGunIndex = 8;
+            }
         }
         // REPAIR GUN
         else if (Input.GetKeyDown(KeyCode.Alpha0) ||
@@ -318,20 +350,6 @@ public class Player : MonoBehaviour
             playerMainTrans.rotation, targetRotation, (float)rotationSpeed);
 
         RotateHead(mousePos);
-
-        //playerMainTrans.rotation = Quaternion.Lerp(
-            //playerMainTrans.rotation, targetRotation, stats.lookSpeed);
-
-        //headImageTrans.rotation = Quaternion.Lerp(
-            //headImageTrans.rotation, targetRotation, headTurnSpeed);
-
-        // ** TO ADD DRUNKEN BEHAVIOUR **
-        //rotAngle += Random.Range(-moveAccuracy, moveAccuracy); 
-        //float radians = rotAngle * Mathf.Deg2Rad;
-        //mouseDir = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
-        
-        //myRb.rotation = Mathf.LerpAngle(myRb.rotation, 
-            //angleToMouse, Time.deltaTime * lookSpeed);
     }
 
     void RotateHead(Vector3 mousePos)
@@ -367,14 +385,10 @@ public class Player : MonoBehaviour
                 myStamina.ModifyStamina(-sprintStaminaUse);
             }
             else
-            {
                 sprintSpeedAmount = 1;
-            }
         }
         else
-        {
             sprintSpeedAmount = 1;
-        }
     }
 
     void Move()

@@ -11,30 +11,30 @@ public class UpgradePanelBuilder : MonoBehaviour
     [SerializeField] GridLayoutGroup textGrid;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
 
-    [Header("Unlockables")]
+    [Header("Unlockables (Optional)")]
     [SerializeField] GameObject unlockPanel;
-    [SerializeField] TextMeshProUGUI costText;
+    [SerializeField] TextMeshProUGUI unlockCostText;
     [SerializeField] int unlockCost;
     [SerializeField] string techUnlockMessageName;
-    [SerializeField] Image toolbarImage;
     [Header("Gun")]
     [SerializeField] UpgradeFamily upgradeFamily;
     [SerializeField] int playerGunIndex;
+    [SerializeField] Image toolbarImage;
     [Header("Structure")]
-    [SerializeField] Structure structureToUnlock;
+    [SerializeField] List<Structure> structuresToUnlock;
+    [SerializeField] bool addTurretSlot;
 
     bool unlocked = false;
     Player player;
-    MessagePanel messagePanel;
     UpgradeManager upgradeManager;
     BuildingSystem buildingSystem;
 
     void Awake()
     {
         player = FindObjectOfType<Player>();
-        messagePanel = FindObjectOfType<MessagePanel>();
         upgradeManager = FindObjectOfType<UpgradeManager>();
         buildingSystem = FindObjectOfType<BuildingSystem>();
+        BuildingSystem.OnPlayerCreditsChanged += UpdateUnlockCostTextColor;
 
         // Clear editor objects in layout groups
         for (int i = buttonsGrid.transform.childCount - 1; i >= 0; i--)
@@ -50,14 +50,12 @@ public class UpgradePanelBuilder : MonoBehaviour
         if (unlockPanel)
             unlockPanel.gameObject.SetActive(false);
 
-        // If is a gun upgrade, check for unlock
-        if (upgradeFamily == UpgradeFamily.GunStats && unlockPanel != null)
+        // Check if unlockable
+        if (unlockPanel != null)
         {
-            if (!IsGunUnlocked())
-            {
-                ShowUnlockButton();
-                return;
-            }
+            ShowUnlockButton();
+            UpdateUnlockCostTextColor(BuildingSystem.PlayerCredits);
+            return;
         }
 
         // Initialize panel
@@ -65,19 +63,23 @@ public class UpgradePanelBuilder : MonoBehaviour
         StartCoroutine(InitializeFadeGroups());
     }
 
-    void FixedUpdate()
+    void UpdateUnlockCostTextColor(float playerCredits)
     {
+        if (unlockCostText == null)
+            return;
+
         // Update unlock cost text color as per afforadability
+        // Could be handled by new Event OnPlayerCreditsChanged
         if (!unlocked && unlockPanel != null)
         {
             Color color;
-            if (BuildingSystem.PlayerCredits >= unlockCost)
+            if (playerCredits >= unlockCost)
                 color = Color.yellow;
             else
                 color = Color.red;
 
-            costText.text = "$" + unlockCost.ToString();
-            costText.color = color;
+            unlockCostText.text = "$" + unlockCost.ToString();
+            unlockCostText.color = color;
         }
     }
 
@@ -100,16 +102,6 @@ public class UpgradePanelBuilder : MonoBehaviour
             // Add to fade canvas groups
             fadeCanvasGroups.individualElements.Add(buttonPrefab.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(txtObj.GetComponent<CanvasGroup>());
-
-            // Fade out for unlock
-            /*
-            if (unlockPanel != null)
-            {
-                buttonPrefab.GetComponent<CanvasGroup>().alpha = 0;
-                uIUpgrade.upgradeTextInstance.GetComponent<CanvasGroup>().alpha = 0;
-                uIUpgrade.statValueTextInstance.GetComponent<CanvasGroup>().alpha = 0;
-            }
-            */
         } 
     }
 
@@ -146,8 +138,10 @@ public class UpgradePanelBuilder : MonoBehaviour
                 upgradeManager.PlayUpgradeEffectAt(Camera.main.ScreenToWorldPoint(toolbarImage.transform.position));
             }
 
-            // Unlock Structure
-            buildingSystem.UnlockStructure(structureToUnlock);
+            // Unlock Structures, add turret
+            buildingSystem.UnlockStructures(structuresToUnlock);
+            if (addTurretSlot)
+                player.stats.structureStats.maxTurrets++;
 
             // Initialize and open upgrades panel
             Initialize();
@@ -156,11 +150,11 @@ public class UpgradePanelBuilder : MonoBehaviour
 
             upgradeManager.PlayUpgradeButtonEffect();
 
-            messagePanel.ShowMessage(techUnlockMessageName + " unlocked!", Color.green);
+            MessagePanel.ShowMessage(techUnlockMessageName + " unlocked!", Color.green);
         }
         else
         {
-            messagePanel.ShowMessage("Not enough Credits!", Color.red);
+            MessagePanel.ShowMessage("Not enough Credits!", Color.red);
         }
     }
 

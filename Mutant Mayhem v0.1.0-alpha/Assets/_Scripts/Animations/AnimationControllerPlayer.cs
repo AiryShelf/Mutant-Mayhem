@@ -18,7 +18,6 @@ public class AnimationControllerPlayer : MonoBehaviour
     Rigidbody2D playerRb;
     PlayerShooter playerShooter;
     Coroutine waitToLowerWeaponCoroutine;
-    MessagePanel messagePanel;
 
     bool isFireInput;
     bool isThrowInput;
@@ -30,6 +29,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     bool hasDied;
     float bodyAnimStartSpeed;
 
+    // Player input
     InputActionMap actionMap;
     InputAction fireAction;
     InputAction moveAction;
@@ -38,6 +38,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     InputAction throwAction;
     InputAction reloadAction;
 
+    // UI input
     InputActionMap uIActionMap;
     InputAction escapeAction;
 
@@ -48,7 +49,6 @@ public class AnimationControllerPlayer : MonoBehaviour
         playerShooter = player.GetComponent<PlayerShooter>(); 
         bodyAnim = GameObject.FindGameObjectWithTag("PlayerBody").GetComponent<Animator>();
         legsAnim = GameObject.FindGameObjectWithTag("PlayerLegs").GetComponent<Animator>();
-        messagePanel = FindObjectOfType<MessagePanel>();
         
         actionMap = player.inputAsset.FindActionMap("Player");
         fireAction = actionMap.FindAction("Fire");
@@ -474,17 +474,24 @@ public class AnimationControllerPlayer : MonoBehaviour
         }       
     }
 
-    public void SwitchGunsStart(int index)
+    public bool SwitchGunsStart(int index)
     {
+        if (index == playerShooter.currentGunIndex)
+        {
+            MessagePanel.ShowMessage("Weapon already selected!", Color.yellow);
+            return false;
+        }
+
         if (playerShooter.gunList[index] == null)
         {
-            messagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
-            return;
+            MessagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
+            return false;
         }
+
         if (!playerShooter.gunsUnlocked[index])
         {
-            messagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
-            return;
+            MessagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
+            return false;
         }
 
         bodyAnim.SetBool("isSwitchingGuns", true);
@@ -495,6 +502,8 @@ public class AnimationControllerPlayer : MonoBehaviour
             StopCoroutine(waitToLowerWeaponCoroutine);
             waitToLowerWeaponCoroutine = null;
         }
+
+        return true;
     }
 
     public void IsReloadInput(InputAction.CallbackContext context)

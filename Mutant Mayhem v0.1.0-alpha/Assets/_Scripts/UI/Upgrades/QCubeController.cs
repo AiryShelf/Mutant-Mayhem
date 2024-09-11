@@ -46,8 +46,6 @@ public class QCubeController : MonoBehaviour
     InputActionMap uIActionMap;
     InputAction escapeAction;
 
-    MessagePanel messagePanel;
-
     void Awake()
     {
         IsCubeDestroyed = false;
@@ -57,8 +55,6 @@ public class QCubeController : MonoBehaviour
 
         uIActionMap = player.inputAsset.FindActionMap("UI");
         escapeAction = uIActionMap.FindAction("Escape");
-
-        messagePanel = FindObjectOfType<MessagePanel>();
     }
 
     void OnEnable()
@@ -85,8 +81,9 @@ public class QCubeController : MonoBehaviour
 
         if (isUpgradesOpen)
         {
+            // Changed this to only have one circle check, instead of a "leaving circle"
             Collider2D col = Physics2D.OverlapCircle(
-                transform.position, leaveRadius, LayerMask.GetMask("Player"));
+                transform.position, interactRadius, LayerMask.GetMask("Player"));
             if (!col)
             {
                 CloseUpgradeWindow();
@@ -116,32 +113,39 @@ public class QCubeController : MonoBehaviour
             player.animControllerPlayer.ToggleBuildMode();
         }
 
-        Collider2D col = Physics2D.OverlapCircle(
+        // Look for player's main collider
+        Collider2D[] playerColliders = Physics2D.OverlapCircleAll(
             transform.position, interactRadius, LayerMask.GetMask("Player"));
-        if (col != null)
+        foreach (Collider2D col in playerColliders)
         {
-            //Debug.Log("Player in QCube Range");
-
-            // Open or close menu
-            if (!isUpgradesOpen)
+            if (col != null && col.CompareTag("Player") )
             {
-                StartCoroutine(OpenUpgradeWindow());
+                //Debug.Log("Player in QCube Range");
+
+                // Open or close menu
+                if (!isUpgradesOpen)
+                {
+                    StartCoroutine(OpenUpgradeWindow());
+                    return;
+                }
+                else
+                {
+                    CloseUpgradeWindow();
+                    return;
+                }
+            }
+            else if (!isUpgradesOpen)
+            {
+                MessagePanel.ShowMessage("Not close enough to access " +
+                                        "Cube. Get closer!", Color.black);
+                // Player is not in range, show UI message to the player
+                //Debug.Log("Player NOT in QCube Range!");
             }
             else
             {
                 CloseUpgradeWindow();
+                return;
             }
-        }
-        else if (!isUpgradesOpen)
-        {
-            messagePanel.ShowMessage("Not close enough to access " +
-                                     "Cube. Get closer!", Color.gray);
-            // Player is not in range, show UI message to the player
-            //Debug.Log("Player NOT in QCube Range!");
-        }
-        else
-        {
-            CloseUpgradeWindow();
         }
     }
 

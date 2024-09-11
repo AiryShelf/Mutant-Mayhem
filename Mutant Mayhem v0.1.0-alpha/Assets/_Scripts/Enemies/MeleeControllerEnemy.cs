@@ -95,7 +95,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     void PlayMeleeSound(Vector2 point)
     {
-        AudioManager.instance.PlaySoundAt(meleeSound, point);;
+        AudioManager.Instance.PlaySoundAt(meleeSound, point);;
     }
 
     IEnumerator AttackTimer()

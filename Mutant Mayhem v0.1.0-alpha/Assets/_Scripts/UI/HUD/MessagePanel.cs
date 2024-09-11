@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MessagePanel : MonoBehaviour
 {
+    public static MessagePanel instance;
+
     [SerializeField] TextMeshProUGUI messageText;
     [SerializeField] CanvasGroup messageCanvasGroup;
     [SerializeField] TextPulser textPulser;
@@ -12,12 +14,22 @@ public class MessagePanel : MonoBehaviour
 
     Coroutine flashMessage;
 
+    void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         messageCanvasGroup.alpha = 0;
     }
 
-    public void ShowMessage(string message, Color color)
+    public static void ShowMessage(string message, Color color)
+    {
+        instance.DisplayMessage(message, color);
+    }
+
+    public void DisplayMessage(string message, Color color)
     {
         messageText.text = message;
         textPulser.pulseToColor = color;

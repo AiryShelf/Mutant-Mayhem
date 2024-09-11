@@ -129,6 +129,7 @@ public class PanelSwitcher : MonoBehaviour
 
     void UpdateNavButtons()
     {
+        /* Testing looping through panels
         if (isOpen)
         {
             // Update prev/next buttons
@@ -147,14 +148,21 @@ public class PanelSwitcher : MonoBehaviour
             prevButton.isTriggered = false;
             nextButton.isTriggered = false;
         }
+        */
     }
 
     public void SwipeLeft()
     {
-        if (currentPanelIndex <= 0) return;
-
-        currentPanelIndex--;
-        StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex + 1));
+        if (currentPanelIndex <= 0)
+        {
+            currentPanelIndex = panels.Length - 1;
+            StartCoroutine(SwipeToPanel(currentPanelIndex, 0));
+        }
+        else
+        {
+            currentPanelIndex--;
+            StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex + 1));
+        }
 
         UpdateNavButtons();
         UpdateTabHighlight();
@@ -162,10 +170,16 @@ public class PanelSwitcher : MonoBehaviour
 
     public void SwipeRight()
     {
-        if (currentPanelIndex >= panels.Length - 1) return;
-
-        currentPanelIndex++;
-        StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex - 1));
+        if (currentPanelIndex >= panels.Length - 1) 
+        {
+            currentPanelIndex = 0;
+            StartCoroutine(SwipeToPanel(currentPanelIndex, panels.Length - 1));
+        }
+        else
+        {
+            currentPanelIndex++;
+            StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex - 1));
+        }
 
         UpdateNavButtons();
         UpdateTabHighlight();

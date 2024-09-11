@@ -11,13 +11,9 @@ public class RepairBullet : Bullet
 
     Vector3 target;
     float targetDist;
-
-    MessagePanel messagePanel;
     
     protected override void Start()
     {
-        messagePanel = FindObjectOfType<MessagePanel>();
-
         target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         target.z = 0; // Ensure the Z position is zero for 2D.
 
@@ -62,12 +58,12 @@ public class RepairBullet : Bullet
                 tileManager.RepairEffectAt(pos);
                 BuildingSystem.PlayerCredits -= repairCost;
 
-                AudioManager.instance.PlaySoundAt(hitSound, pos);
+                AudioManager.Instance.PlaySoundAt(hitSound, pos);
                 Debug.Log("Ran repair code");
             }
             else
             {
-                messagePanel.ShowMessage("Not enough Credits to repair!", Color.red);
+                MessagePanel.ShowMessage("Not enough Credits to repair!", Color.red);
             }
         }
 

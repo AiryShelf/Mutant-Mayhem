@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,20 @@ public class BuildingSystem : MonoBehaviour
     public List<StructureSO> AllStructureSOs;
     [SerializeField] List<bool> unlockedStructuresStart;
     public StructureSO structureInHand;
-    public static float PlayerCredits;
+    public static event Action<float> OnPlayerCreditsChanged;
+    private static float playerCredits;
+    public static float PlayerCredits
+    {
+        get => playerCredits;
+        set 
+        { 
+            if (playerCredits != value)
+            {
+                playerCredits = value;
+                OnPlayerCreditsChanged?.Invoke(playerCredits);
+            }
+        }
+    }
     [SerializeField] float playerStartingCredits;
     public BuildRangeCircle buildRangeCircle;
     [SerializeField] LayerMask layersForBuildClearCheck;
@@ -43,10 +57,10 @@ public class BuildingSystem : MonoBehaviour
     InputAction buildAction;
     InputAction cheatCodeCreditsAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
-    MessagePanel messagePanel;
 
-    Coroutine clearSelection;
-    GameObject lastSelectedObject;
+    Coroutine clearStructureInHand;
+    GameObject lastSelectedUiObject;
+    public StructureSO lastStructureInHand;
 
     void Awake()
     {
@@ -54,7 +68,6 @@ public class BuildingSystem : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         PlayerCredits = playerStartingCredits;
-        messagePanel = FindObjectOfType<MessagePanel>();
     }
 
     void OnEnable()
@@ -96,7 +109,7 @@ public class BuildingSystem : MonoBehaviour
         // Keep track of currently selected object
         if (EventSystem.current.currentSelectedGameObject != null)
         {
-            lastSelectedObject = EventSystem.current.currentSelectedGameObject;
+            lastSelectedUiObject = EventSystem.current.currentSelectedGameObject;
         }        
     }
 
@@ -115,7 +128,7 @@ public class BuildingSystem : MonoBehaviour
             // Check if the pointer is over a UI element
             if (!EventSystem.current.IsPointerOverGameObject())
             {
-                if (lastSelectedObject != null)
+                if (lastSelectedUiObject != null)
                 {
                     StartCoroutine(DelayUIReselect());
                 }
@@ -141,27 +154,31 @@ public class BuildingSystem : MonoBehaviour
         else if (inRange)
         {
             if (structureInHand.actionType == ActionType.Build)
-                messagePanel.ShowMessage("Area not clear for building", Color.yellow);
+                MessagePanel.ShowMessage("Area not clear for building", Color.yellow);
             if (structureInHand.actionType == ActionType.Destroy)
-                messagePanel.ShowMessage("Unable to destroy", Color.yellow);
+                MessagePanel.ShowMessage("Unable to destroy", Color.yellow);
         }
         else
         {
             if (structureInHand.actionType == ActionType.Build)
-                messagePanel.ShowMessage("Too far away to build", Color.yellow);
+                MessagePanel.ShowMessage("Too far away to build", Color.yellow);
             if (structureInHand.actionType == ActionType.Destroy)
-                messagePanel.ShowMessage("Too far away to destroy", Color.yellow);
+                MessagePanel.ShowMessage("Too far away to destroy", Color.yellow);
         }
     }
 
     IEnumerator DelayUIReselect()
     {
         yield return new WaitForFixedUpdate();
-        EventSystem.current.SetSelectedGameObject(lastSelectedObject);
+        EventSystem.current.SetSelectedGameObject(lastSelectedUiObject);
     }
 
     void OnRotate(InputAction.CallbackContext context)
     {
+        // Return if not in build mode or is holding destroy tool
+        if (!inBuildMode || structureInHand.structureType == AllStructureSOs[2].structureType)
+            return;
+
         if (context.control.name == "q")
         {
             currentRotation += 90;
@@ -178,33 +195,37 @@ public class BuildingSystem : MonoBehaviour
     void Rotate(StructureSO structure)
     {
         RemoveBuildHighlight();
-        // ensure use of original cell positions for rotation
+        // Ensure use of original SO cell positions for rotation
         structure = AllStructureSOs[AllStructureSOs.IndexOf(structure)];
         structureInHand = StructureRotator.RotateStructure(structure, currentRotation);
     }
 
     void OnToolbarUsed(InputAction.CallbackContext context)
     {
-        if (inBuildMode)
+        if (!inBuildMode)
+            return;
+
+        if (Input.GetKeyDown("x"))
         {
-            //Debug.Log("OnToolbar called");
-            if (Input.GetKeyDown("c"))
+            // If destroy tool is not selected
+            if (structureInHand.structureType != AllStructureSOs[2].structureType)
             {
-                //Repair Tool
-                ChangeStructureInHand(AllStructureSOs[1]);
-            }
-            else if (Input.GetKeyDown("x"))
-            {
-                Debug.Log("Switched to destroy tool");
-                //Destroy Tool
+                // Store structure in hand
+                lastStructureInHand = structureInHand.ruleTileStructure.structureSO;
+                // Select Destroy Tool
                 ChangeStructureInHand(AllStructureSOs[2]);
+                Debug.Log("Switched to destroy tool");
             }
             else
             {
-                //structureInHand = AllStructureSOs[(int)Structure.SelectTool];
-                //RemoveBuildHighlight();
+                if (lastStructureInHand == null)
+                    return;
+                // Switch back to previously selected structure
+                ChangeStructureInHand(lastStructureInHand);
+                Debug.Log("Switched to destroy tool");
             }
         }
+        
     }
 
     #endregion
@@ -232,12 +253,12 @@ public class BuildingSystem : MonoBehaviour
             buildMenuController.TriggerFadeGroups(true);
             qCubeController.CloseUpgradeWindow();
             //Debug.Log("Opened Build Panel");
+            lastStructureInHand = AllStructureSOs[2];
         }
         else
         {
             // If not holding repair gun, set aim cursor
-            if (player.playerShooter.currentGunIndex != 9)
-                CursorManager.Instance.SetAimCursor();
+            CursorManager.Instance.SetAimCursor();
 
             // Unlock camera from player
             cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
@@ -253,9 +274,9 @@ public class BuildingSystem : MonoBehaviour
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
 
-            if (clearSelection != null)
-                StopCoroutine(clearSelection);
-            clearSelection = StartCoroutine(ClearSelection(time));
+            if (clearStructureInHand != null)
+                StopCoroutine(clearStructureInHand);
+            clearStructureInHand = StartCoroutine(ClearSelection(time));
 
             RemoveBuildHighlight();
             structureInHand = AllStructureSOs[(int)Structure.SelectTool];
@@ -288,9 +309,12 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    public void UnlockStructure(Structure structure)
+    public void UnlockStructures(List<Structure> structures)
     {
-        _UnlockedStructuresDict[structure] = true;
+        foreach (Structure structure in structures)
+            _UnlockedStructuresDict[structure] = true;
+
+        buildMenuController.RefreshBuildList();
     }
 
     public void OnCheatCodeCredits(InputAction.CallbackContext context)
@@ -309,7 +333,7 @@ public class BuildingSystem : MonoBehaviour
         {
             if (turretManager.numTurrets >= player.stats.structureStats.maxTurrets)
             {
-                messagePanel.ShowMessage("Turret limit reached.  Use upgrades to increase the limit", Color.red);
+                MessagePanel.ShowMessage("Turret limit reached.  Use upgrades to increase the limit", Color.red);
                 return;
             }
         }
@@ -317,7 +341,7 @@ public class BuildingSystem : MonoBehaviour
         // Check Credits
         if (PlayerCredits < structureInHand.tileCost)
         {
-            messagePanel.ShowMessage("Not enough Credits to build " + 
+            MessagePanel.ShowMessage("Not enough Credits to build " + 
                                      structureInHand.tileName + "!", Color.red);
             return;
         }
@@ -346,7 +370,7 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
-            messagePanel.ShowMessage("Tile not clear for removal", Color.yellow);
+            MessagePanel.ShowMessage("Tile not clear for removal", Color.yellow);
             Debug.Log("Tile removal blocked");
         }
     }

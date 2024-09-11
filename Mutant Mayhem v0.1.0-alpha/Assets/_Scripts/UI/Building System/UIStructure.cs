@@ -18,12 +18,23 @@ public class UIStructure : MonoBehaviour, ISelectHandler
 
     bool initialized;
 
+    string cyanColorTag;
+    string greenColorTag;
+    string yellowColorTag;
+    string redColorTag;
+    string endColorTag = "</color>";
+
     void Awake()
     {
         image.sprite = structureSO.uiImage;
         scrollRectController = GetComponentInParent<ScrollRectController>();
         buildingSystem = FindObjectOfType<BuildingSystem>();
+        BuildingSystem.OnPlayerCreditsChanged += SetText;
 
+        cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
+        greenColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.green) + ">";
+        yellowColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.yellow) + ">";
+        redColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.red) + ">";
     }
 
     void OnEnable()
@@ -54,6 +65,8 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         {
             button.interactable = false;
         }
+
+        SetText(BuildingSystem.PlayerCredits);
     }
 
     public void OnSelect(BaseEventData data)
@@ -70,19 +83,35 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     public void MakeInteractable()
     {
         button.interactable = true;
+        SetText(BuildingSystem.PlayerCredits);
+    }
 
-        if (structureSO.actionType == ActionType.Build)
+    void SetText(float playerCredits)
+    {
+        if (textInstance == null)
+            return;
+        Debug.Log("SetText ran in UiStructure");
+        // Set structure info text
+        if (structureSO.actionType != ActionType.Build)
+        {
+            textInstance.GetComponent<TextMeshProUGUI>().text = structureSO.tileName;
+            return;
+        }
+
+        // Set yellow or red depending on affordability
+        if (playerCredits >= structureSO.tileCost)
         {
             textInstance.GetComponent<TextMeshProUGUI>().text = 
-                structureSO.tileName + "\n" +
-                "$" + structureSO.tileCost + "\n" +
-                structureSO.maxHealth + " HP";
+            structureSO.tileName + "\n" +
+            yellowColorTag + "$" + structureSO.tileCost + "\n" +
+            greenColorTag + structureSO.maxHealth + " HP" + endColorTag;
         }
         else
         {
-            textInstance.GetComponent<TextMeshProUGUI>().text =
-                structureSO.tileName;
+            textInstance.GetComponent<TextMeshProUGUI>().text = 
+            structureSO.tileName + "\n" +
+            redColorTag + "$" + structureSO.tileCost + "\n" +
+            greenColorTag + structureSO.maxHealth + " HP" + endColorTag;
         }
-
     }
 }

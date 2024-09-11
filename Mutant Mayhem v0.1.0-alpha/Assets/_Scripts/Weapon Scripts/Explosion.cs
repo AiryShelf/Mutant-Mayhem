@@ -18,7 +18,7 @@ public class Explosion : MonoBehaviour
     {
         // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
 
-        AudioManager.instance.PlaySoundAt(explosionSound, transform.position);
+        AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
         // Find objects in range
         Vector2 pos = transform.position;

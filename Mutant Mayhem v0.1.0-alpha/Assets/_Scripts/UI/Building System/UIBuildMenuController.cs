@@ -27,6 +27,17 @@ public class UIBuildMenuController : MonoBehaviour
             Destroy(textLayoutGrid.transform.GetChild(i).gameObject);
         }
 
+        InitializeBuildList();             
+    }
+
+    void Start()
+    {
+        fadeCanvasGroups.Initialize(); 
+        myCanvasGroup.blocksRaycasts = false; 
+    }
+
+    void InitializeBuildList()
+    {
         // Initialize structures list and fade groups list
         foreach (GameObject obj in structureButtonPrefabs)
         {
@@ -42,13 +53,23 @@ public class UIBuildMenuController : MonoBehaviour
             // Initialize FadeCanvasGroup list
             fadeCanvasGroups.individualElements.Add(uIStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
-        }      
+        }
     }
 
-    void Start()
+    public void RefreshBuildList()
     {
-        fadeCanvasGroups.Initialize(); 
-        myCanvasGroup.blocksRaycasts = false;
+        foreach (GameObject obj in structureButtonInstances)
+        {
+            // Make unlocked structures interactable
+            UIStructure uiStructure = obj.GetComponent<UIStructure>();
+            if (BuildingSystem._UnlockedStructuresDict[uiStructure.structureSO.structureType])
+                uiStructure.MakeInteractable();
+        }
+    }
+
+    public void SelectInBuildList()
+    {
+
     }
 
     public void TriggerFadeGroups(bool active)
