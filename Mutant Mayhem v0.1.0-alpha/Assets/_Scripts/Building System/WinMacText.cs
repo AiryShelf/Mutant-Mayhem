@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class WinMacText : MonoBehaviour
 {
-    [TextArea(3,10)]
+    [TextArea(5,10)]
     [SerializeField] string replacementText;
 
     [SerializeField] TextMeshProUGUI TMPText;

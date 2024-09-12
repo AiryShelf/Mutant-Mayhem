@@ -10,7 +10,7 @@ public enum GunType
     RepairGun = 10,
 }
 
-[CreateAssetMenu(menuName = "GunSO", fileName = "NewGun")]
+[CreateAssetMenu(menuName = "Guns/GunSO", fileName = "NewGun")]
 public class GunSO : ScriptableObject
 {
     public GunType gunType;

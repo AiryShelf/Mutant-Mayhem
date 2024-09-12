@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "RuleTileStructure")]
+[CreateAssetMenu(menuName = "Tiles and Structures/RuleTileStructure")]
 public class RuleTileStructure : RuleTile
 {
     [Header("Tile Settings")]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Tiles and Structures/Animated Tile Test")]
 public class AnimatedTileTest : TileBase {
     public Sprite[] animatedSprites;
     public float animationSpeed = 1f;

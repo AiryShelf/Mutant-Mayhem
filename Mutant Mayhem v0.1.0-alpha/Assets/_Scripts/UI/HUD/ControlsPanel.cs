@@ -10,7 +10,7 @@ public class ControlsPanel : MonoBehaviour
     public bool isOpen = true;
     [SerializeField] string hideControlsStr;
     [SerializeField] string showControlsStr;
-    [SerializeField] TextMeshProUGUI showHideText;
+    [SerializeField] TextMeshProUGUI header;
     [SerializeField] List<string> controlStrings;
     [SerializeField] GameObject controlsTextPrefab;
     [SerializeField] GridLayoutGroup gridLayoutGroup;
@@ -27,11 +27,11 @@ public class ControlsPanel : MonoBehaviour
         foreach (string str in controlStrings)
         {
             GameObject obj = Instantiate(controlsTextPrefab, gridLayoutGroup.transform);
-            obj.GetComponent<TextMeshProUGUI>().text = str;
+            obj.GetComponentInChildren<TextMeshProUGUI>().text = str;
             fadeCanvasGroupsWave.individualElements.Add(obj.GetComponent<CanvasGroup>());
         }
 
-        showHideText.text = showControlsStr;
+        header.text = showControlsStr;
     }
 
     void OnEnable()
@@ -64,13 +64,13 @@ public class ControlsPanel : MonoBehaviour
             {
                 isOpen = false;
                 fadeCanvasGroupsWave.isTriggered = false;
-                showHideText.text = showControlsStr;
+                header.text = showControlsStr;
             }
             else
             {
                 isOpen = true;
                 fadeCanvasGroupsWave.isTriggered = true;
-                showHideText.text = hideControlsStr;
+                header.text = hideControlsStr;
             }
         }
     }

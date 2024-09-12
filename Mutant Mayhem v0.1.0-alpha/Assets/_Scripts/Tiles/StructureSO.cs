@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "StructureSO")]
+[CreateAssetMenu(menuName = "Tiles and Structures/StructureSO")]
 public class StructureSO : ScriptableObject
 {
     [Header("Tile Info")]

@@ -14,8 +14,8 @@ public class QCubeController : MonoBehaviour
     [SerializeField] DeathCanvas deathCanvas;
     [SerializeField] TextMeshProUGUI deathTitleText;
     [SerializeField] TextMeshProUGUI deathSubtitleText;
-    [SerializeField] List<string> deathTitles;
-    [SerializeField] List<string> deathSubtitles;
+    [SerializeField] List<string> cubeDeathTitles;
+    [SerializeField] List<string> cubeDeathSubtitles;
     static bool _isCubeDestroyed; // Backing field
     public static event Action<bool> OnCubeDestroyed;
     public static bool IsCubeDestroyed
@@ -174,11 +174,11 @@ public class QCubeController : MonoBehaviour
 
     public void RandomizeDeathMessages()
     {
-        int randomIndex = UnityEngine.Random.Range(0, deathTitles.Count);
-        deathTitleText.text = deathTitles[randomIndex];
+        int randomIndex = UnityEngine.Random.Range(0, cubeDeathTitles.Count);
+        deathTitleText.text = cubeDeathTitles[randomIndex];
 
-        randomIndex = UnityEngine.Random.Range(0, deathSubtitles.Count);
-        deathSubtitleText.text = deathSubtitles[randomIndex];
+        randomIndex = UnityEngine.Random.Range(0, cubeDeathSubtitles.Count);
+        deathSubtitleText.text = cubeDeathSubtitles[randomIndex];
     }   
 
     IEnumerator DelayTutorialOpen()
