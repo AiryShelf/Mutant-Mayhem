@@ -110,7 +110,6 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
         stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
         myRb = GetComponent<Rigidbody2D>();
@@ -127,6 +126,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
+
         if (SettingsManager.Instance.difficultyLevel == DifficultyLevel.Easy)
         {
             BuildingSystem.PlayerCredits += 600;

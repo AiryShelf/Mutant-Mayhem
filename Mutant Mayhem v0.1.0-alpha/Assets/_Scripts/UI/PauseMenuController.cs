@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -11,6 +12,7 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] CanvasGroup myCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
     [SerializeField] FadeCanvasGroupsWave optionsFadeGroup;
+    [SerializeField] TextMeshProUGUI currentProfileText;
 
     Player player;
     QCubeController qCubeController;
@@ -76,6 +78,21 @@ public class PauseMenuController : MonoBehaviour
             fadeCanvasGroups.isTriggered = true;
             myCanvasGroup.blocksRaycasts = true;
             Pause(true);
+            
+            // Update current profile text
+            string profileName = ProfileManager.Instance.currentProfile.profileName;
+            bool nameExists = !string.IsNullOrEmpty(profileName);
+            if (nameExists)
+            {
+                currentProfileText.text = "Current Profile: " + profileName;
+                currentProfileText.color = Color.green;
+            }
+            else
+            {
+                currentProfileText.text = "WARNING no profile found. Progress can't be saved!";
+                currentProfileText.color = Color.red;
+                Debug.LogError("No profile found on gameplay pause menu!");
+            }
         }
         else
         {

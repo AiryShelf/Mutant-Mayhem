@@ -23,7 +23,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     [SerializeField] float fadeIndivTime = 0.5f;
     public float fadeOutAllTime = 1f;
     [SerializeField] float lerpOutStopThreshold = 0.1f;
-    [SerializeField] float frameTime = 0.02f;
+    [SerializeField] float frameTimeLength = 0.02f;
     
     Coroutine fadeIn;
     Coroutine fadeOut;
@@ -120,14 +120,14 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             float timeElapsed = 0;
             while (timeElapsed < fadeStartTime)
             {
-                timeElapsed += frameTime;
+                timeElapsed += frameTimeLength;
                 float value = Mathf.Lerp(0, 1, timeElapsed / fadeStartTime);
                 if (initialGroup != null)
                     initialGroup.alpha = 1 - value;
                 if (myGroup)
                     myGroup.alpha = value;
 
-                yield return new WaitForSecondsRealtime(frameTime);
+                yield return new WaitForSecondsRealtime(frameTimeLength);
             }
         }
 
@@ -180,11 +180,11 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         while (timeElapsed < fadeIndivTime)
         {
 
-            timeElapsed += frameTime;
+            timeElapsed += frameTimeLength;
             float value = Mathf.Lerp(group.alpha, 1, timeElapsed / fadeIndivTime);
             group.alpha = value;
 
-            yield return new WaitForSecondsRealtime(frameTime);
+            yield return new WaitForSecondsRealtime(frameTimeLength);
         }
     }
 
@@ -231,7 +231,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         while (timeElapsed < fadeIndivTime)
         {
 
-            timeElapsed += frameTime;
+            timeElapsed += frameTimeLength;
             float value = Mathf.Lerp(group.alpha, 0, timeElapsed / fadeIndivTime);
             group.alpha = value;
 
@@ -242,7 +242,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 group.alpha = 0;
             }
 
-            yield return new WaitForSecondsRealtime(frameTime);
+            yield return new WaitForSecondsRealtime(frameTimeLength);
         }
 
         // Deactivate
@@ -272,7 +272,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < fadeIndivTime)
         {
-            timeElapsed += frameTime;
+            timeElapsed += frameTimeLength;
             float value = Mathf.Lerp(1, 0, timeElapsed / fadeOutAllTime);
 
             bool stop = value <= lerpOutStopThreshold;
@@ -303,7 +303,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 //myGroup.alpha = 0;
             }       
 
-            yield return new WaitForSecondsRealtime(frameTime);
+            yield return new WaitForSecondsRealtime(frameTimeLength);
         }
     }
 
@@ -335,7 +335,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < fadeOutAllTime)
         {
-            timeElapsed += frameTime;
+            timeElapsed += frameTimeLength;
             float value = Mathf.Lerp(1, 0, timeElapsed / fadeOutAllTime);
 
             bool stop = value <= lerpOutStopThreshold;
@@ -377,7 +377,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
                 //Debug.Log("Stop happened");
             }       
 
-            yield return new WaitForSecondsRealtime(frameTime);
+            yield return new WaitForSecondsRealtime(frameTimeLength);
         }
 
         // Deactivate

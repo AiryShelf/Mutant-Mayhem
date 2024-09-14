@@ -8,7 +8,7 @@ public class PlayerProfile
     public string profileName;
     public int researchPoints;
     public int playthroughs;
-    public int highestWaveReached;
+    public int maxWaveReached;
 
     // Constructor for easy creation
     public PlayerProfile(string profileName)
@@ -16,6 +16,6 @@ public class PlayerProfile
         this.profileName = profileName;
         this.researchPoints = 0;
         this.playthroughs = 0;
-        this.highestWaveReached = 0;
+        this.maxWaveReached = 0;
     }
 }

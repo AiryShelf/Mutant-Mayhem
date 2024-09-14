@@ -110,6 +110,7 @@ public class TileManager : MonoBehaviour
                 StatsCounterPlayer.StructuresBuilt++;
                 //Debug.Log("Added a Tile");
                 
+                Debug.Log("Structure tile and Animated tile placed");
                 return true;
             }
             else
@@ -374,6 +375,7 @@ public class TileManager : MonoBehaviour
 
     public bool CheckGridIsClear(Vector3Int rootPos, StructureSO structure, LayerMask layerMask, bool checkDict)
     {
+        Debug.Log("CheckGridIsClear started w/ rootPos and structureSO");
         foreach (Vector3Int pos in structure.cellPositions)
         {   
             if (checkDict)
@@ -381,6 +383,7 @@ public class TileManager : MonoBehaviour
                 // Check tile dictionary
                 if (_TileStatsDict.ContainsKey(rootPos + pos))
                 {
+                    Debug.Log("Structure rootPos already exists in dictionary");
                     return false;
                 }
             }
@@ -396,21 +399,24 @@ public class TileManager : MonoBehaviour
             
             if (hit != null)
             {
-                Debug.Log("Collider detected when trying to build");
+                Debug.Log("CheckGridIsClear found a collider at the checked position");
                 return false;
             }
         }
 
+        Debug.Log("CheckGrid returned clear");
         return true;
     }
 
     public bool CheckGridIsClear(Vector3Int gridPos, LayerMask layerMask, bool checkDict)
     {
+        Debug.Log("CheckGridIsClear started w/ one gridPos");
         if (checkDict)
         {
             // Check tile dictionary
             if (_TileStatsDict.ContainsKey(gridPos))
             {
+                Debug.Log("Structure rootPos already exists in dictionary");
                 return false;
             }
         }
@@ -426,7 +432,7 @@ public class TileManager : MonoBehaviour
         
         if (hit != null)
         {
-            //Debug.Log("Collider detected when trying to build");
+            Debug.Log("Collider detected on CheckGridIsClear");
             return false;
         }
 
@@ -573,6 +579,8 @@ public class TileManager : MonoBehaviour
                     health = maxHP,
                     rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0)
                 });
+
+                Debug.Log("Structure added to structures list and dict");
             }
             else
             {

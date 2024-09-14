@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -32,14 +33,29 @@ public class ProfileManager : MonoBehaviour
 
     void Initialize()
     {
-        LoadProfiles();
+        LoadAllProfiles();
 
+        // Check if there is a last used profile
         if (PlayerPrefs.HasKey(LastUsedProfileKey))
         {
             string lastUsedProfile = PlayerPrefs.GetString(LastUsedProfileKey);
-            Debug.Log($"Last used profile '{lastUsedProfile}' found in PlayerPrefs.");
 
+        // Check if the last used profile exists in the loaded profiles
+        bool profileExists = profiles.Any(profile => profile.profileName == lastUsedProfile);
+
+        if (profileExists)
+        {
+            Debug.Log($"Last used profile '{lastUsedProfile}' found in PlayerPrefs and exists " +
+                      "in loaded profiles.");
             SetCurrentProfile(lastUsedProfile);
+        }
+        else
+        {
+            Debug.LogWarning($"Last used profile '{lastUsedProfile}' does not exist in loaded " +
+                             "profiles. Removing from PlayerPrefs.");
+            PlayerPrefs.DeleteKey(LastUsedProfileKey);
+            PlayerPrefs.Save(); // Ensure the change is saved
+        }
             
         }
         else
@@ -49,7 +65,7 @@ public class ProfileManager : MonoBehaviour
     }
 
     // Loads all profiles from JSON
-    public void LoadProfiles()
+    public void LoadAllProfiles()
     {
         if (File.Exists(savePath))
         {
@@ -69,7 +85,7 @@ public class ProfileManager : MonoBehaviour
     }
 
     // Saves all profiles to JSON
-    public void SaveProfiles()
+    public void SaveAllProfiles()
     {
         ProfileDataWrapper wrapper = new ProfileDataWrapper(profiles);
         string json = JsonUtility.ToJson(wrapper, true);
@@ -78,6 +94,33 @@ public class ProfileManager : MonoBehaviour
 
         File.WriteAllText(savePath, json);
         Debug.Log($"Profiles saved to {savePath}");
+    }
+
+    public void SaveCurrentProfile()
+    {
+        if (currentProfile != null)
+        {
+            // Ensure the profile is part of the profiles list
+            int index = profiles.FindIndex(profile => profile.profileName == currentProfile.profileName);
+
+            if (index != -1)
+            {
+                profiles[index] = currentProfile;
+            }
+            else
+            {
+                // If for some reason the current profile is not found, add it
+                profiles.Add(currentProfile);
+                Debug.LogError("Could not find current profile in list.  Added it to list.");
+            }
+
+            SaveAllProfiles(); // Save all profiles including the updated current profile
+            Debug.Log($"Current profile '{currentProfile.profileName}' has been saved.");
+        }
+        else
+        {
+            Debug.LogError("No current profile set to save.");
+        }
     }
 
     // Create a new profile
@@ -91,7 +134,7 @@ public class ProfileManager : MonoBehaviour
 
         PlayerProfile newProfile = new PlayerProfile(profileName);
         profiles.Add(newProfile);
-        SaveProfiles();
+        SaveAllProfiles();
         SetCurrentProfile(newProfile.profileName);
     }
 
@@ -108,10 +151,11 @@ public class ProfileManager : MonoBehaviour
         PlayerProfile profileToRemove = profiles.Find(profile => profile.profileName.Equals(
                                         profileName, System.StringComparison.OrdinalIgnoreCase));
 
+        // Remove the profile
         if (profileToRemove != null)
         {
             profiles.Remove(profileToRemove);
-            SaveProfiles(); // Save the updated profiles list after removal
+            SaveAllProfiles(); // Save the updated profiles list after removal
             PlayerPrefs.DeleteKey(profileToRemove.profileName);
             Debug.Log($"Profile '{profileName}' has been removed successfully.");
         }
@@ -119,11 +163,28 @@ public class ProfileManager : MonoBehaviour
         {
             Debug.LogWarning($"Profile '{profileName}' not found.");
         }
+
+        // Check if any profiles remain
+        if (profiles.Count > 0)
+        {
+            // Set the first profile in the list as the new current profile
+            SetCurrentProfile(profiles[0].profileName);
+        }
+        else
+        {
+            // No profiles left, clear currentProfile and prompt for a new profile
+            currentProfile = null;
+            Debug.LogWarning("No profiles left. Please create a new profile.");
+            
+            // Optionally, prompt the player to create a new profile
+            // You could display a message or open the create profile panel
+        }
     }
 
     // Set the current profile by profile name
     public void SetCurrentProfile(string profileName)
     {
+        // Find profile in loaded list
         foreach (PlayerProfile profile in profiles)
         {
             if (profile.profileName == profileName)
@@ -135,11 +196,12 @@ public class ProfileManager : MonoBehaviour
                 PlayerPrefs.Save(); // Make sure to save PlayerPrefs
 
                 Debug.Log($"Profile '{profileName}' set as the current profile.");
-                break;
+                return;
             }
         }
 
-        Debug.Log($"Current profile set to '{profileName}'");
+        // Handle no profiles remaining
+        Debug.LogWarning("No profile with name " + profileName + " found to set!");
     }
 }
 

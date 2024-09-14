@@ -11,7 +11,6 @@ public class QCubeController : MonoBehaviour
     [SerializeField] RectTransform gamePlayCanvas;
 
     [Header("Death")]
-    [SerializeField] DeathCanvas deathCanvas;
     [SerializeField] TextMeshProUGUI deathTitleText;
     [SerializeField] TextMeshProUGUI deathSubtitleText;
     [SerializeField] List<string> cubeDeathTitles;
@@ -71,14 +70,6 @@ public class QCubeController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (IsCubeDestroyed && !player.IsDead)
-        {
-            // Implement different ending, animation of cube exploding or the like
-            RandomizeDeathMessages();
-            deathCanvas.TransitionToDeathPanel(true);
-            player.IsDead = true;
-        }
-
         if (isUpgradesOpen)
         {
             // Changed this to only have one circle check, instead of a "leaving circle"

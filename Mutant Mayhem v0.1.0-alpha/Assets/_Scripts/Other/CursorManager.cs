@@ -14,6 +14,8 @@ public class CursorManager : MonoBehaviour
     [SerializeField] Vector2 repairCursorHotspot = Vector2.zero;
     Player player;
 
+    bool initialized;
+
     void Awake()
     {
         if (Instance == null)
@@ -30,12 +32,16 @@ public class CursorManager : MonoBehaviour
 
     public void Initialize()
     {
+        initialized = true;
         player = FindObjectOfType<Player>();
         SetAimCursor();
     }
 
     public void SetAimCursor()
     {
+        if (!initialized)
+            return;
+            
         // Repair gun
         if (player.playerShooter.currentGunIndex == 9)
             SetRepairCursor();

@@ -90,7 +90,8 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     {
         if (textInstance == null)
             return;
-        Debug.Log("SetText ran in UiStructure");
+        //Debug.Log("SetText ran in UiStructure");
+        
         // Set structure info text
         if (structureSO.actionType != ActionType.Build)
         {

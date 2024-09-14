@@ -250,7 +250,7 @@ public class BuildingSystem : MonoBehaviour
             //previousGunIndex = player.playerShooter.currentGunIndex;
             player.playerShooter.isBuilding = true;
             //player.playerShooter.SwitchGuns(9);
-            buildMenuController.TriggerFadeGroups(true);
+            buildMenuController.OpenBuildMenu(true);
             qCubeController.CloseUpgradeWindow();
             //Debug.Log("Opened Build Panel");
             lastStructureInHand = AllStructureSOs[2];
@@ -270,7 +270,7 @@ public class BuildingSystem : MonoBehaviour
             // Only switch guns if not repair gun
             //if (previousGunIndex != 9)
                 //player.playerShooter.SwitchGuns(previousGunIndex);
-            buildMenuController.TriggerFadeGroups(false);
+            buildMenuController.OpenBuildMenu(false);
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
 

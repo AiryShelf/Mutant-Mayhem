@@ -17,17 +17,25 @@ public class TutorialUpgradePanel : TutorialPanel
     {
         TutorialManager.tutorialShowedUpgrade = true;
 
+        RestorePreviousSelection();
+
+        Time.timeScale = 1;
         playerActionMap.Enable();
         playerFireAction.Disable();
 
-        base.OnOKButtonClick();
+        Destroy(gameObject);
     }
 
     public override void OnDisableButtonClick()
     {
+        TutorialManager.TutorialDisabled = true;
+
+        RestorePreviousSelection();
+
+        Time.timeScale = 1;
         playerActionMap.Enable();
         playerFireAction.Disable();
-        
-        base.OnDisableButtonClick();
+
+        Destroy(gameObject);
     }
 }

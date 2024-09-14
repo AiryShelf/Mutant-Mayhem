@@ -1,27 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
     [SerializeField] FadeCanvasGroupsWave optionsFadeGroup;
+    [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
+    [SerializeField] TextMeshProUGUI currentProfileText;
+    [SerializeField] Button playButton;
+    [SerializeField] InputActionAsset inputAsset;
+    [SerializeField] ProfileSelectionUI profileSelectionUI;
 
+    InputAction escapeKeyPressed;
     bool isOptionsOpen;
+    bool isProfilesOpen;
+
+    void OnEnable() 
+    {
+        InputActionMap uiActionMap = inputAsset.FindActionMap("UI");
+        uiActionMap.Enable();
+        escapeKeyPressed = uiActionMap.FindAction("Escape");
+        escapeKeyPressed.performed += EscapeKeyPressed;
+    }
+
+    void OnDisable()
+    {
+        escapeKeyPressed.performed -= EscapeKeyPressed;
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // Update current profile text
+        PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
+
+        if (currentProfile != null && !string.IsNullOrEmpty(currentProfile.profileName))
         {
-            Debug.Log("Esc pressed");
-            if (isOptionsOpen)
-            {
-                ToggleOptions();
-            }
+            currentProfileText.text = "Current Profile: " + currentProfile.profileName;
+            currentProfileText.color = Color.green;
+            playButton.interactable = true;
+        }
+        else
+        {
+            currentProfileText.text = "Create a profile before playing!";
+            currentProfileText.color = Color.red;
+            playButton.interactable = false;
         }
     }
 
-    public void StartGame()
+    public void OnStartGame()
     {
         SceneManager.LoadScene(1);
     }
@@ -30,13 +60,31 @@ public class MainMenuController : MonoBehaviour
     {
         if (!isOptionsOpen)
         {
+            // Open options panel
             optionsFadeGroup.isTriggered = true;
             isOptionsOpen = true;
         }
         else
         {
+            // Close options panel
             optionsFadeGroup.isTriggered = false;
             isOptionsOpen = false;
+        }
+    }
+
+    public void ToggleProfiles()
+    {
+        if (!isProfilesOpen)
+        {
+            // Open profiles panel
+            profileFadeGroup.isTriggered = true;
+            isProfilesOpen = true;
+        }
+        else
+        {
+            // Close profiles panel
+            profileFadeGroup.isTriggered = false;
+            isProfilesOpen = false;
         }
     }
 
@@ -49,5 +97,13 @@ public class MainMenuController : MonoBehaviour
             Application.Quit();
     }
 
-
+    void EscapeKeyPressed(InputAction.CallbackContext context)
+    {
+        if (isOptionsOpen)
+            ToggleOptions();
+        if (profileSelectionUI.isAreYouSurePanelOpen)
+            profileSelectionUI.OnCancelDeleteProfile();
+        else
+            ToggleProfiles();
+    }
 }

@@ -87,7 +87,7 @@ public class TutorialPanel : MonoBehaviour
         prevUiSelection = EventSystem.current.currentSelectedGameObject;
     }
 
-    void RestorePreviousSelection()
+    protected void RestorePreviousSelection()
     {
         if (prevUiSelection != null)
         {

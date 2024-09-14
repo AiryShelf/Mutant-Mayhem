@@ -72,9 +72,9 @@ public class UIBuildMenuController : MonoBehaviour
 
     }
 
-    public void TriggerFadeGroups(bool active)
+    public void OpenBuildMenu(bool open)
     {
-        if (active)
+        if (open)
         {
             if (!TutorialManager.tutorialShowedBuild)
             {

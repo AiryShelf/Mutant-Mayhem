@@ -24,9 +24,11 @@ public class TutorialBuildPanel : TutorialPanel
 
     public override void OnDisableButtonClick()
     {
+        base.OnDisableButtonClick();
+        
         playerActionMap.Enable();
         playerFireAction.Disable();
         
-        base.OnDisableButtonClick();
+        
     }
 }
