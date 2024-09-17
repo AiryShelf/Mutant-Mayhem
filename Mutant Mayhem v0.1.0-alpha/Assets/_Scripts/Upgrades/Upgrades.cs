@@ -371,7 +371,7 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
 {
     public GrenadeBuyAmmoUpgrade() : base(ConsumablesUpgrade.GrenadeBuyAmmo) { }
 
-    public static int AmmoAmount = 1;
+    public static int AmmoAmount = 1 * AugManager.Instance.grenadeAmmoMult;
 
     public override bool Apply(PlayerStats playerStats)
     {
@@ -381,14 +381,14 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // No extra cost after consumable
-        return baseCost;
+        // No extra cost for consumable
+        return Mathf.FloorToInt(baseCost * AugManager.Instance.grenadeCostMult);
     }
 
     public static int GetCost(Player player, int baseCost)
     {
         
-        return baseCost;
+        return Mathf.FloorToInt(baseCost * AugManager.Instance.grenadeCostMult);
     }
 }
 
@@ -545,11 +545,11 @@ public class GunDamageUpgrade : Upgrade
         {
             case 0:
                 upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
-                            ((upgradeSystem.laserUpgLevels[GunStatsUpgrade.GunDamage] + 2) / (float)2);
+                            ((upgradeSystem.laserUpgLevels[GunStatsUpgrade.GunDamage] + 2) / 2f);
                 return upgAmount;
             case 1:
                 upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
-                            ((upgradeSystem.bulletUpgLevels[GunStatsUpgrade.GunDamage] + 2) / (float)2);
+                            ((upgradeSystem.bulletUpgLevels[GunStatsUpgrade.GunDamage] + 2) / 2f);
                 return upgAmount;
             default:
                 return upgAmount; 
@@ -558,7 +558,7 @@ public class GunDamageUpgrade : Upgrade
 
     public override void Apply(GunSO gunSO, int level)
     {
-        gunSO.damage += gunSO.damageUpgFactor * ((level + 1) / (float)2);
+        gunSO.damage += gunSO.damageUpgFactor * ((level + 1) / 2f);
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TurretManager : MonoBehaviour
 {
-    public static TurretManager Instance { get; set; }
+    public static TurretManager Instance { get; private set; }
 
     public List<TurretGunSO> _turretGunListSource = new List<TurretGunSO>();
     [HideInInspector] public List<TurretGunSO> turretGunList = new List<TurretGunSO>();
@@ -60,12 +60,6 @@ public class TurretManager : MonoBehaviour
 
         GameObject obj = TileManager.StructureTilemap.GetInstantiatedObject(rootPos);
         turrets.Add(rootPos, obj);
-        InitializeTurretStats(obj);
-    }
-
-    public void InitializeTurretStats(GameObject obj)
-    {
-        // Need to set stats to upgrade levels on build ***
     }
 
     public void RemoveTurret(Vector3Int rootPos)
@@ -121,11 +115,10 @@ public class TurretManager : MonoBehaviour
     
     void UpgradeTurretGun(TurretGunSO turretGun, GunStatsUpgrade upgType, int level)
     {
-        Debug.Log("Entering switch statement");
         switch (upgType)
         {
             case GunStatsUpgrade.GunDamage:
-                turretGun.damage += turretGun.damageUpgFactor * ((level + 1) / (float)2);
+                turretGun.damage += turretGun.damageUpgFactor * ((level + 1) / 2f);
                 break;
             case GunStatsUpgrade.GunKnockback:
                 turretGun.knockback += turretGun.knockbackUpgAmt;

@@ -17,15 +17,15 @@ public class WaveControllerRandom : MonoBehaviour
 
     [Header("Wave Properties")]
     public int currentWaveCount = 0;
-    public float timeBetweenWavesBase = 90;
-    public float _timeBetweenWaves;
-    public float spawnRadius = 60;
-    public int wavesPerBase = 2;
+    public float timeBetweenWavesBase = 90; // Base amount of day-time
+    public float _timeBetweenWaves; // Amount of day-time after difficulty setting
+    public float spawnRadius = 60; // Radius around the cube that enemies spawn
+    public int wavesPerBase = 2; // Affects batch multiplier and max index to choose subwaves from
 
     [Header("Enemy Multipliers")]
-    public int batchMultiplierStart = 5;
-    public int batchMultiplier = 5;
-    public int multiplierStart = 1;
+    public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
+    public int batchMultiplier = 5; // Current batch multiplier
+    public int multiplierStart = 1; // Applies it's multiplier to enemy stats multipliers below
     public float damageMultiplier = 1;
     public float healthMultiplier = 1;
     public float speedMultiplier = 1;

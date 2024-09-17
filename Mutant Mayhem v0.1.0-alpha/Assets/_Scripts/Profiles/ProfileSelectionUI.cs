@@ -10,6 +10,7 @@ public class ProfileSelectionUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentProfileNameText;
     [SerializeField] TextMeshProUGUI researchPointsValueText;
     [SerializeField] TextMeshProUGUI maxWaveReachedValueText;
+    [SerializeField] TextMeshProUGUI clonesUsedValueText;
     [SerializeField] Button deleteButton;
     public TMP_Dropdown profileDropdown;
     public TMP_InputField newProfileNameInput;
@@ -66,6 +67,7 @@ public class ProfileSelectionUI : MonoBehaviour
             currentProfileNameText.text = emptyProfileListWarning;
             researchPointsValueText.text = "N/A";
             maxWaveReachedValueText.text = "N/A";
+            clonesUsedValueText.text = "N/A";
             ProfileManager.Instance.currentProfile = null;
             return;
         }
@@ -87,6 +89,7 @@ public class ProfileSelectionUI : MonoBehaviour
         currentProfileNameText.text = ProfileManager.Instance.currentProfile.profileName;
         researchPointsValueText.text = ProfileManager.Instance.currentProfile.researchPoints.ToString();
         maxWaveReachedValueText.text = ProfileManager.Instance.currentProfile.maxWaveReached.ToString();
+        clonesUsedValueText.text = ProfileManager.Instance.currentProfile.playthroughs.ToString();
 
         profileDropdown.AddOptions(profileNames);
         SyncDropdownWithCurrentProfile();

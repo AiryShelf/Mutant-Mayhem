@@ -69,6 +69,17 @@ public static class GameTools
         // Ensure the final value is set
         onUpdate?.Invoke(endValue);
     }
+
+    public static void TextureOffsetCentered(Material material, Transform transform, Transform target, 
+                                             Vector2 direction, float speed, ref Vector2 currentOffset)
+    {
+        Vector2 targetPos = target.transform.position;
+        transform.position = targetPos;
+        currentOffset += direction * speed * Time.deltaTime;
+        Vector2 newOffset = targetPos/64 + currentOffset;
+
+        material.mainTextureOffset = newOffset;
+    }
 }
 
 // Helper MonoBehaviour class to run coroutines

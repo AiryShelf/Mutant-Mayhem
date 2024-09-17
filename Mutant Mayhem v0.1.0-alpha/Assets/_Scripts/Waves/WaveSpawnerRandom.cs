@@ -356,6 +356,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         }
         else
         {
+            Debug.Log("Wave Spawner CheckGridIsClear failed");
             return false;
         }
     }

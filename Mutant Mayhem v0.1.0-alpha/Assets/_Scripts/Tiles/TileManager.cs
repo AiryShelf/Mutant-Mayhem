@@ -115,7 +115,7 @@ public class TileManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Failed to add structure tiles to dict");
+                Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
                 return false;
             }
         }
@@ -410,13 +410,13 @@ public class TileManager : MonoBehaviour
 
     public bool CheckGridIsClear(Vector3Int gridPos, LayerMask layerMask, bool checkDict)
     {
-        Debug.Log("CheckGridIsClear started w/ one gridPos");
+        //Debug.Log("CheckGridIsClear started w/ one gridPos");
         if (checkDict)
         {
             // Check tile dictionary
             if (_TileStatsDict.ContainsKey(gridPos))
             {
-                Debug.Log("Structure rootPos already exists in dictionary");
+                //Debug.Log("Structure rootPos already exists in dictionary");
                 return false;
             }
         }
@@ -432,7 +432,7 @@ public class TileManager : MonoBehaviour
         
         if (hit != null)
         {
-            Debug.Log("Collider detected on CheckGridIsClear");
+            //Debug.Log("Collider detected on CheckGridIsClear");
             return false;
         }
 
@@ -553,7 +553,11 @@ public class TileManager : MonoBehaviour
                         AnimatedTilemap.SetTile(gridPos, 
                             _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
                     }
-                    else return false;
+                    else 
+                    {
+                        Debug.LogError("Failed to add a pre-existing tile to dict on scene load");
+                        return false;
+                    }
                 }
             }
         }

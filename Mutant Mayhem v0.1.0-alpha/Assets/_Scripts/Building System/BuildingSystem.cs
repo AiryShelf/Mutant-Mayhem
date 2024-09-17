@@ -29,7 +29,6 @@ public class BuildingSystem : MonoBehaviour
     public BuildRangeCircle buildRangeCircle;
     [SerializeField] LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersForRemoveClearCheck;
-    [SerializeField] TurretManager turretManager;
     [SerializeField] UIBuildMenuController buildMenuController;
     [SerializeField] QCubeController qCubeController;
     [SerializeField] MouseLooker mouseLooker;
@@ -57,21 +56,24 @@ public class BuildingSystem : MonoBehaviour
     InputAction buildAction;
     InputAction cheatCodeCreditsAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
+    TurretManager turretManager;
 
     Coroutine clearStructureInHand;
     GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
 
-    void Awake()
-    {
-        BuildStructsAvailDict();    
-
-        player = FindObjectOfType<Player>();
-        PlayerCredits = playerStartingCredits;
-    }
-
     void OnEnable()
     {
+        BuildStructsAvailDict();
+
+        player = FindObjectOfType<Player>();
+        if (player == null)
+        {
+            Debug.LogError("BuildingSystem could not find Player in scene");
+            return;
+        }
+        PlayerCredits = playerStartingCredits;
+
         playerActionMap = player.inputAsset.FindActionMap("Player");
         toolbarAction = playerActionMap.FindAction("Toolbar");
         buildAction = playerActionMap.FindAction("BuildStructure");
@@ -81,8 +83,16 @@ public class BuildingSystem : MonoBehaviour
         rotateStructureAction.started += OnRotate;
         toolbarAction.started += OnToolbarUsed;
         buildAction.started += OnBuild;
-        cheatCodeCreditsAction.started += OnCheatCodeCredits;
+        cheatCodeCreditsAction.started += OnCheatCodeCredits; 
+    }
 
+    void Start()
+    {
+        turretManager = TurretManager.Instance;
+        if (turretManager == null)
+        {
+            Debug.LogError("BuildingSystem could not find TurretManager in scene");
+        }
     }
 
     void OnDisable()
@@ -364,14 +374,13 @@ public class BuildingSystem : MonoBehaviour
         RemoveBuildHighlight();
         if (tileManager.CheckGridIsClear(gridPos, structureInHand, layersForRemoveClearCheck, false))
         {
-            
             tileManager.RefundTileAt(gridPos);
             tileManager.RemoveTileAt(gridPos);
         }
         else
         {
             MessagePanel.ShowMessage("Tile not clear for removal", Color.yellow);
-            Debug.Log("Tile removal blocked");
+            Debug.Log("Tile removal unsuccesful");
         }
     }
 

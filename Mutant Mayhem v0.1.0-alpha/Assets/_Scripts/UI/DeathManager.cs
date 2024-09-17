@@ -102,7 +102,8 @@ public class DeathManager : MonoBehaviour
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
 
         // Apply research points to profile
-        int pointsToGive = basePoints + (incrementPerWave * waveController.currentWaveCount);
+        int pointsToGive = basePoints + (incrementPerWave * waveController.currentWaveCount) + 
+                           (waveController.currentWaveCount * 2);
         currentProfile.researchPoints += pointsToGive;
 
         // Apply max wave reached to profile

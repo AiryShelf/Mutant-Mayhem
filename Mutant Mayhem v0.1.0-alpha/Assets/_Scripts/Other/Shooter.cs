@@ -18,7 +18,7 @@ public class Shooter : MonoBehaviour
     public bool isReloading;
     public bool isElevated;
 
-    [Header("Dynamic vars, don't set or change")]
+    [Header("Dynamic vars, don't set or change in inspector")]
     public List<GunSO> gunList;
     public bool hasTarget;
     public int currentGunIndex = 0;

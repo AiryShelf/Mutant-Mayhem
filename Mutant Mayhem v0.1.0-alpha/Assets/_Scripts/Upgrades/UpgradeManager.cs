@@ -7,11 +7,11 @@ public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance { get; private set; }
     
-    [SerializeField] List<PlayerStatsUpgrade> playerStatsEnums;
-    [SerializeField] List<StructureStatsUpgrade> structureStatsEnums;
-    [SerializeField] List<ConsumablesUpgrade> consumablesEnums;
-    [SerializeField] List<GunStatsUpgrade> laserPistolEnums;
-    [SerializeField] List<GunStatsUpgrade> SMGEnums;
+    [SerializeField] List<PlayerStatsUpgrade> playerStatsUpgrades;
+    [SerializeField] List<StructureStatsUpgrade> structureStatsUpgrades;
+    [SerializeField] List<ConsumablesUpgrade> consumablesUpgrades;
+    [SerializeField] List<GunStatsUpgrade> laserPistolUpgrades;
+    [SerializeField] List<GunStatsUpgrade> SMGUpgrades;
     [HideInInspector] public Player player;
     [HideInInspector] public PlayerShooter playerShooter;
     public GameObject playerUpgAppliedPrefab;
@@ -178,23 +178,23 @@ public class UpgradeManager : MonoBehaviour
         bulletUpgMaxLevels[GunStatsUpgrade.TurretReloadSpeed] = 10;
 
         // Initialize upgrade levels
-        foreach(PlayerStatsUpgrade type in playerStatsEnums)
+        foreach(PlayerStatsUpgrade type in playerStatsUpgrades)
         {
             playerStatsUpgLevels[type] = 0;
         }
-        foreach(StructureStatsUpgrade type in structureStatsEnums)
+        foreach(StructureStatsUpgrade type in structureStatsUpgrades)
         {
             structureStatsUpgLevels[type] = 0;
         }
-        foreach(ConsumablesUpgrade type in consumablesEnums)
+        foreach(ConsumablesUpgrade type in consumablesUpgrades)
         {
             consumablesUpgLevels[type] = 0;
         }
-        foreach(GunStatsUpgrade type in laserPistolEnums)
+        foreach(GunStatsUpgrade type in laserPistolUpgrades)
         {
             laserUpgLevels[type] = 0;
         }
-        foreach(GunStatsUpgrade type in SMGEnums)
+        foreach(GunStatsUpgrade type in SMGUpgrades)
         {
             bulletUpgLevels[type] = 0;
         }

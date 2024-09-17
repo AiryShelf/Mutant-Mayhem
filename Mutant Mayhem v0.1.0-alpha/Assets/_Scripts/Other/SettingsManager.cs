@@ -23,11 +23,11 @@ public class SettingsManager : MonoBehaviour
     public int useStandardWASD = 1;
 
     [Header("Difficulty Multipliers")]
-    public float WaveDifficultyMult = 1;
+    public float WaveDifficultyMult = 1; // Multiplies enemy stats on spawning
     public int WavesTillAddWaveBase = 0; // down harder, hard enemies faster
     public float SubwaveListGrowthFactor = 0; // up harder, more waves added over time
-    public float SubwaveDelayMult = 1;
-    public float BatchSpawnMult = 1;
+    public float SubwaveDelayMult = 1; // Time between Subwaves
+    public float BatchSpawnMult = 1; // Multiplies number of enemies per batch in each Subwave
     public float CreditsMult = 1;
 
     [Header("Controls Settings")]
@@ -169,6 +169,8 @@ public class SettingsManager : MonoBehaviour
                 break;
         }
         //Debug.Log("Difficulty updated");
+
+        AugManager.Instance.ApplySelectedAugmentations();
     }
 
     #endregion
