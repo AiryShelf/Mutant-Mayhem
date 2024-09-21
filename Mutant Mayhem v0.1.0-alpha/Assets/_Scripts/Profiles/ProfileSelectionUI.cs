@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class ProfileSelectionUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI currentProfileNameText;
+    [SerializeField] TextMeshProUGUI noProfilesText;
     [SerializeField] TextMeshProUGUI researchPointsValueText;
     [SerializeField] TextMeshProUGUI maxWaveReachedValueText;
     [SerializeField] TextMeshProUGUI clonesUsedValueText;
@@ -64,7 +64,7 @@ public class ProfileSelectionUI : MonoBehaviour
         if (ProfileManager.Instance.profiles == null || ProfileManager.Instance.profiles.Count < 1)
         {
             deleteButton.interactable = false;
-            currentProfileNameText.text = emptyProfileListWarning;
+            noProfilesText.text = emptyProfileListWarning;
             researchPointsValueText.text = "N/A";
             maxWaveReachedValueText.text = "N/A";
             clonesUsedValueText.text = "N/A";
@@ -86,7 +86,7 @@ public class ProfileSelectionUI : MonoBehaviour
 
         // Update delete button, current profile and reasearch text
         deleteButton.interactable = true;
-        currentProfileNameText.text = ProfileManager.Instance.currentProfile.profileName;
+        noProfilesText.text = "";
         researchPointsValueText.text = ProfileManager.Instance.currentProfile.researchPoints.ToString();
         maxWaveReachedValueText.text = ProfileManager.Instance.currentProfile.maxWaveReached.ToString();
         clonesUsedValueText.text = ProfileManager.Instance.currentProfile.playthroughs.ToString();

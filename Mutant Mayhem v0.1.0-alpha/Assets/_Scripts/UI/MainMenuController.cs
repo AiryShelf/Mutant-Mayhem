@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
+    [SerializeField] FadeCanvasGroupsWave mainMenuFadeGroup;
     [SerializeField] FadeCanvasGroupsWave optionsFadeGroup;
     [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
     [SerializeField] TextMeshProUGUI currentProfileText;
@@ -54,6 +55,11 @@ public class MainMenuController : MonoBehaviour
     public void OnStartGame()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public void OnAnimTriggerMenu()
+    {
+        mainMenuFadeGroup.isTriggered = true;
     }
 
     public void ToggleOptions()

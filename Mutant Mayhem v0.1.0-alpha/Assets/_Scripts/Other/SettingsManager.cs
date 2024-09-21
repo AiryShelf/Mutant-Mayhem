@@ -102,17 +102,25 @@ public class SettingsManager : MonoBehaviour
         }
 
         PlayerPrefs.Save();
+        Debug.Log("Settings Manager initialized settings");
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log("Scene Loaded: " + scene.name);
-        if (scene.name == "Level 1")
+        if (scene.buildIndex > 1)
         {
             ApplyDifficultySettings();
             ApplyMovementSettings();
             ApplyControlSettings();
+
+            Debug.Log("Settings Manager applied settings");
         }
+    }
+
+    public void ApplyAugs()
+    {
+        AugManager.Instance.ApplySelectedAugmentations();
     }
 
     #region Difficulty
@@ -170,7 +178,7 @@ public class SettingsManager : MonoBehaviour
         }
         //Debug.Log("Difficulty updated");
 
-        AugManager.Instance.ApplySelectedAugmentations();
+        BuildingSystem.PlayerCredits = BuildingSystem.playerStartingCredits;
     }
 
     #endregion

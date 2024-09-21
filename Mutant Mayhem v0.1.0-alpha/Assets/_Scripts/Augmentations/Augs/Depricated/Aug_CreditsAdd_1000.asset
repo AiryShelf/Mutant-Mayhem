@@ -12,17 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f112489c4b09cd48a1067f22604b5ef, type: 3}
   m_Name: Aug_CreditsAdd_1000
   m_EditorClassIdentifier: 
-  augmentationName: Starting Credits
+  augmentationName: Add Credits I
+  description: Adds 1,000 Credits at start - Loan RP to a customer's research project
+    for 1,000 Credits
   uiImage: {fileID: 21300000, guid: cdd924c3680ee3347a5f491fadbd174d, type: 3}
   cost: 100
-  lvlCostIncrement: 50
-  lvlCostIncrementMult: 1.2
-  refund: 0
-  lvlRefundIncrement: 0
-  lvlRefundIncrementMult: 1
-  maxLvl: 20
-  minLvl: 0
   family: 3
   type: 0
-  amountToAdd: 1000
-  lvlAddIncrement: 1000
+  lvlCostIncrement: 0
+  lvlCostIncrementMult: 1
+  maxLvl: 0
+  creditsAdd: 1000
+  lvlMultIncrement: 2

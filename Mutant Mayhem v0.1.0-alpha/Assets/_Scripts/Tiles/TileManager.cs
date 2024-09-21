@@ -20,6 +20,7 @@ public class TileManager : MonoBehaviour
     private static List<Vector3Int> _Structures = new List<Vector3Int>();
     public Player player;
     public static Tilemap StructureTilemap;
+    public Grid StructureGrid;
     public static Tilemap AnimatedTilemap;
     public LayerMask layersForBuildClearCheck;
     public LayerMask layersForBuildClearingArea; // Finish implementation for corpses
@@ -65,19 +66,13 @@ public class TileManager : MonoBehaviour
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
-            Debug.LogError("ERROR when trying to read the starting tilemap to dict");
+            Debug.LogError("Error when trying to read the starting tilemap to dict");
         //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
     }
 
     void OnDisable()
     {
         _TileStatsDict.Clear();
-    }
-
-    Vector3Int GetGridPos(Vector2 point)
-    {
-        Vector3Int gridPos = StructureTilemap.WorldToCell(point);
-        return gridPos;
     }
 
     #region Alter Tiles
@@ -234,7 +229,7 @@ public class TileManager : MonoBehaviour
 
     public void ModifyHealthAt(Vector2 point, float amount)
     {
-        Vector3Int gridPos = GetGridPos(point);
+        Vector3Int gridPos = WorldToGrid(point);
         //Debug.Log("modify health called");
         if (_TileStatsDict.ContainsKey(gridPos))
         {
@@ -347,6 +342,25 @@ public class TileManager : MonoBehaviour
     public Vector3Int GetRootPos(Vector3Int gridPos)
     {
         return _TileStatsDict[gridPos].rootGridPos;
+    }
+
+    public Vector3Int WorldToGrid(Vector2 point)
+    {
+        Vector3Int gridPos = StructureTilemap.WorldToCell(point);
+        return gridPos;
+    }
+
+    public Vector2 GridToWorld(Vector3Int gridPos)
+    {
+        Vector2 worldPos = StructureTilemap.CellToWorld(gridPos);
+        return worldPos;
+    }
+
+    public Vector2 GridCenterToWorld(Vector3Int gridPos)
+    {
+        Vector2 worldPos = StructureTilemap.CellToWorld(gridPos);
+        worldPos += new Vector2(StructureTilemap.cellSize.x / 2, StructureTilemap.cellSize.y / 2);
+        return worldPos;
     }
     
     public float GetTileHealthRatio(Vector3Int rootPos)
@@ -480,7 +494,7 @@ public class TileManager : MonoBehaviour
 
     public void BulletHitEffectAt(Vector2 point, Vector2 hitDir)
     {
-        Vector3Int gridPos = GetGridPos(point);
+        Vector3Int gridPos = WorldToGrid(point);
         //Debug.Log("HitEffects called");
         if (_TileStatsDict.ContainsKey(gridPos))
         {
@@ -500,7 +514,7 @@ public class TileManager : MonoBehaviour
 
     public void MeleeHitEffectAt(Vector2 point, Vector2 hitDir)
     {
-        Vector3Int gridPos = GetGridPos(point);
+        Vector3Int gridPos = WorldToGrid(point);
         //Debug.Log("HitEffects called");
         if (_TileStatsDict.ContainsKey(gridPos))
         {
@@ -520,7 +534,7 @@ public class TileManager : MonoBehaviour
 
     public void RepairEffectAt(Vector2 point)
     {
-        Vector3Int gridPos = GetGridPos(point);
+        Vector3Int gridPos = WorldToGrid(point);
         //Debug.Log("HitEffects called");
         if (_TileStatsDict.ContainsKey(gridPos))
         {

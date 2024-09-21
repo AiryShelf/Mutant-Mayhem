@@ -938,10 +938,12 @@ MonoBehaviour:
   nextCanvasGroupsWave: {fileID: 0}
   deactivateGroup: {fileID: 0}
   individualElements:
+  - {fileID: 1359214529276991714}
   - {fileID: 6182944553934750549}
   - {fileID: 7104950688823167382}
   - {fileID: 9202919397701398385}
   - {fileID: 454778732037857490}
+  - {fileID: 5740690826168250507}
   - {fileID: 6562745478812076757}
   fadeStartDelay: 0
   delayBetweenElements: 0.05
@@ -949,7 +951,7 @@ MonoBehaviour:
   fadeIndivTime: 0.5
   fadeOutAllTime: 0.2
   lerpOutStopThreshold: 0.1
-  frameTime: 0.02
+  frameTimeLength: 0.02
   isTriggered: 0
 --- !u!225 &811945238475258976
 CanvasGroup:
@@ -1372,15 +1374,15 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1226553905838869538}
-  - {fileID: 1444682489884963205}
+  - {fileID: 6949313262776951126}
   - {fileID: 9210070307421459909}
   - {fileID: 4843691202433607440}
-  - {fileID: 6949313262776951126}
+  - {fileID: 1444682489884963205}
   m_Father: {fileID: 8353789901146059663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 297.5739, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 360, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8269849215499003969
@@ -1652,6 +1654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4843691202433607440}
   - component: {fileID: 7667362025387243335}
+  - component: {fileID: 5740690826168250507}
   m_Layer: 5
   m_Name: Spacebar Toggle
   m_TagString: Untagged
@@ -1729,17 +1732,29 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6466690513043990042}
         m_TargetAssemblyTypeName: OptionsPanel, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
+        m_MethodName: ToggleSpacebar
+        m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 1
+--- !u!225 &5740690826168250507
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3283878506438068119}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3389206201273623360
 GameObject:
   m_ObjectHideFlags: 0
@@ -2429,6 +2444,7 @@ GameObject:
   - component: {fileID: 6949313262776951126}
   - component: {fileID: 8263086318828165420}
   - component: {fileID: 5291697867397515974}
+  - component: {fileID: 1359214529276991714}
   m_Layer: 5
   m_Name: Options Info Text
   m_TagString: Untagged
@@ -2552,6 +2568,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &1359214529276991714
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6622732571615111777}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7031865624396287198
 GameObject:
   m_ObjectHideFlags: 0
@@ -3145,9 +3173,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8211360464089062252}
-        m_TargetAssemblyTypeName: FadeCanvasGroupsWave, Assembly-CSharp
-        m_MethodName: ToggleTrigger
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
+        m_MethodName: ToggleOptionsMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

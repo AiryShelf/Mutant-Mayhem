@@ -12,17 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3edfa197c4ae3004c8d6927090947a3d, type: 3}
   m_Name: Aug_CreditsMult_1.1
   m_EditorClassIdentifier: 
-  augmentationName: Credits Mod
+  augmentationName: Income Boost I
+  description: Boost Credits income by 10% - Recent insights into Mutant anatomy
+    allows clones to identify prime tissue samples, which sell at a higher price
   uiImage: {fileID: 21300000, guid: cec9ed8c6d67b1044b6f5353cbd00a9b, type: 3}
   cost: 50
-  lvlCostIncrement: 25
-  lvlCostIncrementMult: 1.15
-  refund: 50
-  lvlRefundIncrement: 25
-  lvlRefundIncrementMult: 1.2
-  maxLvl: 10
-  minLvl: -10
   family: 3
-  type: 0
+  type: 1
   creditsMult: 1.1
-  lvlMultIncrement: 0.1

@@ -54,18 +54,19 @@ public class DeathManager : MonoBehaviour
         deathSubtitleText.text = subtitlesList[randomIndex];
     }
 
-    public void QuitGame()
-    {
-        //  If the editor is running, else if compiled quit.
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-            Application.Quit();
-    }
-
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void BackToShip()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void QuitGame()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public void TransitionToPlayerDeath(bool destroyed)

@@ -9,20 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3edfa197c4ae3004c8d6927090947a3d, type: 3}
-  m_Name: Aug_CreditsMult_1.1
+  m_Script: {fileID: 11500000, guid: 1c4fb43846fec7d478546d2bac6ef6fb, type: 3}
+  m_Name: Aug_LaserDamageStart_1.15
   m_EditorClassIdentifier: 
-  augmentationName: Credits Mod
-  uiImage: {fileID: 21300000, guid: cec9ed8c6d67b1044b6f5353cbd00a9b, type: 3}
+  augmentationName: Laser Tech Damage
+  uiImage: {fileID: 0}
   cost: 50
   lvlCostIncrement: 25
-  lvlCostIncrementMult: 1.15
+  lvlCostIncrementMult: 1.5
   refund: 50
   lvlRefundIncrement: 25
   lvlRefundIncrementMult: 1.2
-  maxLvl: 10
-  minLvl: -10
-  family: 3
+  maxLvl: 20
+  minLvl: -6
+  family: 4
   type: 0
-  creditsMult: 1.1
-  lvlMultIncrement: 0.1
+  damageMult: 1
+  lvlMultIncrement: 0.15

@@ -25,7 +25,7 @@ public class BuildingSystem : MonoBehaviour
             }
         }
     }
-    [SerializeField] float playerStartingCredits;
+    public static float playerStartingCredits;
     public BuildRangeCircle buildRangeCircle;
     [SerializeField] LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersForRemoveClearCheck;
@@ -72,7 +72,7 @@ public class BuildingSystem : MonoBehaviour
             Debug.LogError("BuildingSystem could not find Player in scene");
             return;
         }
-        PlayerCredits = playerStartingCredits;
+        //PlayerCredits = playerStartingCredits;
 
         playerActionMap = player.inputAsset.FindActionMap("Player");
         toolbarAction = playerActionMap.FindAction("Toolbar");

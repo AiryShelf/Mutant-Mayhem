@@ -110,17 +110,19 @@ public class PauseMenuController : MonoBehaviour
     public void Restart()
     {
         Pause(false);
+        SceneManager.LoadScene(2);
+    }
+
+    public void BackToShip()
+    {
+        Pause(false);
         SceneManager.LoadScene(1);
     }
 
     public void QuitGame()
     {
-        //  If the editor is running, else if compiled quit.
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-
-        Application.Quit();
+        Pause(false);
+        SceneManager.LoadScene(0);
     }
 
     public void Pause(bool pause)

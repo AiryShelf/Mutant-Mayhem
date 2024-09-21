@@ -5,20 +5,19 @@ using UnityEngine;
 
 public class TextPulser : MonoBehaviour
 {
-    public TextMeshProUGUI textToPulse;
-    public Color pulseToColor = Color.black;
-    public float pulseTime = 1f;
+    Color pulseInColor;
 
     Color startColor;
+    Coroutine flashMessage;
 
     void Awake()
     {
-        startColor = textToPulse.color;
+        
     }
 
     void OnEnable()
     {
-        StartCoroutine(PulseIn());
+
     }
 
     void OnDisable()
@@ -26,30 +25,59 @@ public class TextPulser : MonoBehaviour
         StopAllCoroutines();
     }
 
-    IEnumerator PulseIn()
+    public void DisplayMessage(TextMeshProUGUI textToPulse, string message, 
+                               Color color, float timeToDisplay, float pulseTime)
     {
-        float timeElapsed = 0;
-        while (timeElapsed < pulseTime)
+        textToPulse.text = message;
+        pulseInColor = color;
+        startColor = textToPulse.color;
+        
+        if (flashMessage != null)
         {
-            Color newColor = Color.Lerp(startColor, pulseToColor, timeElapsed / pulseTime);
-            textToPulse.color = newColor;
-            yield return new WaitForFixedUpdate();
-            timeElapsed += Time.fixedDeltaTime;
+            StopAllCoroutines();
+            textToPulse.color = startColor;
         }
-        StartCoroutine(PulseOut());
+        flashMessage = StartCoroutine(FlashMessage(textToPulse, timeToDisplay, pulseTime));
     }
 
-    IEnumerator PulseOut()
+    IEnumerator FlashMessage(TextMeshProUGUI textToPulse, float timeToDisplay, float pulseTime)
+    {
+        StartCoroutine(PulseIn(textToPulse, pulseTime));
+        CanvasGroup messageCanvasGroup = textToPulse.GetComponent<CanvasGroup>();
+
+        messageCanvasGroup.alpha = 1;
+
+        yield return new WaitForSecondsRealtime(timeToDisplay);
+
+        messageCanvasGroup.alpha = 0;
+        textToPulse.color = startColor;
+        StopAllCoroutines();
+    }
+
+    IEnumerator PulseIn(TextMeshProUGUI textToPulse, float pulseTime)
     {
         float timeElapsed = 0;
         while (timeElapsed < pulseTime)
         {
-            Color newColor = Color.Lerp(pulseToColor, startColor, timeElapsed / pulseTime);
+            Color newColor = Color.Lerp(startColor, pulseInColor, timeElapsed / pulseTime);
             textToPulse.color = newColor;
-            yield return new WaitForFixedUpdate();
-            timeElapsed += Time.fixedDeltaTime;
+            yield return null;
+            timeElapsed += Time.unscaledDeltaTime;
         }
-        StartCoroutine(PulseIn());
+        StartCoroutine(PulseOut(textToPulse, pulseTime));
+    }
+
+    IEnumerator PulseOut(TextMeshProUGUI textToPulse, float pulseTime)
+    {
+        float timeElapsed = 0;
+        while (timeElapsed < pulseTime)
+        {
+            Color newColor = Color.Lerp(pulseInColor, startColor, timeElapsed / pulseTime);
+            textToPulse.color = newColor;
+            yield return null;
+            timeElapsed += Time.unscaledDeltaTime;
+        }
+        StartCoroutine(PulseIn(textToPulse, pulseTime));
     }
 
 }

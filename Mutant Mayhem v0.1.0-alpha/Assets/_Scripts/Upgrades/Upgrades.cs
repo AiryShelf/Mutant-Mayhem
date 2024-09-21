@@ -111,7 +111,7 @@ public class MoveSpeedUpgrade : Upgrade
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.moveSpeed += UpgAmount;
-        playerStats.lookSpeed += 0.001f;
+        playerStats.lookSpeed += 0.002f;
         playerStats.player.RefreshMoveForces();
     }
 }
@@ -120,7 +120,7 @@ public class StrafeSpeedUpgrade : Upgrade
 {
     public StrafeSpeedUpgrade() : base(PlayerStatsUpgrade.StrafeSpeed) { }
 
-    public static float UpgAmount = 0.1f;
+    public static float UpgAmount = 0.15f;
 
     public override void Apply(PlayerStats playerStats, int level)
     {

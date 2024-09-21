@@ -13,16 +13,17 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] Color selectedColor;
     [SerializeField] Color addedColor;
+    [SerializeField] Color addedNegColor;
     Color originalIconColor;
     Color originalTextColor;
 
-    [Header("Dynamic from UIAugPanel, don't set")]
+    [Header("Dynamic from UIAugPanel, don't set here")]
     public AugmentationBaseSO aug;
+    public int totalCost;
 
     AugManager augManager;
     UIAugPanel augPanel;
-    bool selected;
-    bool addedToManager;
+    public bool selected;
 
     public void Setup(AugmentationBaseSO augmentation, AugManager manager, 
                       UIAugPanel panel)
@@ -34,110 +35,112 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
         augPanel = panel;
         icon.sprite = augmentation.uiImage;
         nameText.text = augmentation.augmentationName;
-        costText.text = "Cost: " + augmentation.cost.ToString() + " RP"; 
 
         UpdateIconAndText();                           
     }
 
     public void OnSelect(BaseEventData data)
     {
-        selected = true;
         augPanel.SelectAugmentation(this);
         UpdateIconAndText();
+        
+        Debug.Log("Selected an Aug");
     }
     
     public void OnDeselect(BaseEventData data)
     {
-        selected = false;
         UpdateIconAndText();
     }
 
-    public void AddToSelectedAugs()
+    public bool AddToSelectedAugs(int level)
     {
-        if (!addedToManager)
+        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
         {
-            // Check RP
-            if (augManager.currentResearchPoints < aug.cost)
-            {
-                Debug.Log("Not enough credits for Aug");
-            }
+            Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
+            return false;
+        } 
 
-            // Check maxAugs
-            if (augManager.selectedAugsWithLvls.Count >= augManager.maxAugs)
+        // Check for duplicate type that isn't 'other'
+        if (aug.type != AugmentationType.Other)
+        {
+            foreach (KeyValuePair<AugmentationBaseSO, int> kvp in augManager.selectedAugsWithLvls)
             {
-                Debug.Log("Max Augs already selected");
-                return;
-            }    
-
-            // Check for duplicate type that isn't 'other'
-            if (aug.type != AugmentationType.Other)
-            {
-                foreach (KeyValuePair<AugmentationBaseSO, int> kvp in augManager.selectedAugsWithLvls)
+                if (kvp.Key.type == aug.type)
                 {
-                    if (kvp.Key.type == aug.type)
-                    {
-                        Debug.Log("Tried to select Aug of conflicting Type");
-                        return;
-                    }
+                    Debug.LogWarning("Tried to select Aug of conflicting Type");
+                    return false;
                 }
             }
-
-            // Check for duplicates
-            if (augManager.selectedAugsWithLvls.ContainsKey(aug))
-            {
-                Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
-                return;
-            }
-
-            addedToManager = true;
-            augManager.selectedAugsWithLvls.Add(aug, 1);
-            augManager.currentResearchPoints -= aug.cost;
-            Debug.Log("Added Augmentation: " + aug.augmentationName);
         }
 
+        // Check for duplicates
+        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        {
+            Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
+            return false;
+        }
+
+        augManager.selectedAugsWithLvls.Add(aug, level);
+        Debug.Log("Added Augmentation: " + aug.augmentationName);
+
         UpdateIconAndText();
+        return true;
     }
 
     public void RemoveFromSelectedAugs()
     {
-        if (addedToManager)
+        if (!augManager.selectedAugsWithLvls.ContainsKey(aug))
         {
-            if (!augManager.selectedAugsWithLvls.ContainsKey(aug))
-            {
-                Debug.LogError("UIAugmentation not found in selected Augs, can't remove");
-                return;
-            }
-
-            addedToManager = false;
-            augManager.selectedAugsWithLvls.Remove(aug);
-            // Add credits back depending on level and level mult
-            if (!augManager.selectedAugsWithLvls.ContainsKey(aug))
-            {
-                Debug.LogError("Tried to remove an Aug from Manager that does not exist in dict");
-            }
-            int level = augManager.selectedAugsWithLvls[aug];
-            // Clamp level - 1 to only account for extra levels cost
-            int clampedLevel = Mathf.Clamp(level - 1, 0, int.MaxValue);
-            augManager.currentResearchPoints += Mathf.FloorToInt(aug.cost + (aug.lvlCostIncrement * clampedLevel * aug.lvlCostIncrementMult)); 
-            Debug.Log("Removed an Augmentation");
+            Debug.LogError("UIAugmentation not found in selected Augs, can't remove");
+            return;
         }
+
+        augManager.selectedAugsWithLvls.Remove(aug);
+        Debug.Log("Removed an Augmentation");
 
         UpdateIconAndText();
     }
 
     public void UpdateIconAndText()
     {
+        string costOrGainText;
         Color costColor;
-        if (augManager.currentResearchPoints < aug.cost)
-            costColor = Color.red;
-        else
-            costColor = Color.green;
-        
-        if (addedToManager)
+        if (totalCost == 0)
         {
-            icon.color = addedColor;
-            nameText.color = addedColor;
-            costText.color = addedColor;
+            costOrGainText = "Not added";
+            costColor = originalTextColor/1.2f;
+            costText.text = costOrGainText;
+        }
+        else if (totalCost < 0)
+        {
+            costOrGainText = "Cost: ";
+            costColor = Color.yellow;
+            costText.text = costOrGainText + Mathf.Abs(totalCost) + " RP";  
+        }
+        else
+        {
+            costOrGainText = "Gain: ";
+            costColor = Color.green;
+            costText.text = costOrGainText + Mathf.Abs(totalCost) + " RP";  
+        }
+
+          
+        
+        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        {
+            int level = augManager.selectedAugsWithLvls[aug];
+            if (level >= 0)
+            {
+                icon.color = addedColor;
+                nameText.color = addedColor;
+                costText.color = costColor;
+            }
+            else
+            {
+                icon.color = addedNegColor;
+                nameText.color = addedNegColor;
+                costText.color = costColor;
+            }
         }
         else if (selected)
         {
@@ -150,6 +153,15 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
             icon.color = originalIconColor;
             nameText.color = originalTextColor;
             costText.color = Color.black + costColor / 2;
+        }
+
+        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        {
+            nameText.text = aug.augmentationName + " " + augManager.selectedAugsWithLvls[aug];
+        }
+        else
+        {
+            nameText.text = aug.augmentationName;
         }
     }
 }

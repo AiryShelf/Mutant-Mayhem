@@ -80,6 +80,15 @@ public static class GameTools
 
         material.mainTextureOffset = newOffset;
     }
+
+    // Returns a percentage of gain or loss, depending on the factor
+    // Ex. 1.2 = 20% and 0.8 = 20%
+    public static string FactorToPercent(float factor)
+    {
+        float percentage = (factor - 1) * 100;
+
+        return $"{Mathf.Abs(percentage):F0}%";
+    }
 }
 
 // Helper MonoBehaviour class to run coroutines

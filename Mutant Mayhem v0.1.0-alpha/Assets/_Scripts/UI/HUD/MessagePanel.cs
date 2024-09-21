@@ -5,50 +5,29 @@ using UnityEngine;
 
 public class MessagePanel : MonoBehaviour
 {
-    public static MessagePanel instance;
+    public static MessagePanel Instance;
 
     [SerializeField] TextMeshProUGUI messageText;
     [SerializeField] CanvasGroup messageCanvasGroup;
     [SerializeField] TextPulser textPulser;
-    [SerializeField] float timeToDisplay = 4f;
-
-    Coroutine flashMessage;
+    [SerializeField] float timeToDisplay = 6f;
+    [SerializeField] float pulseTime = 0.5f;
 
     void Awake()
     {
-        instance = this;
-    }
-
-    void Start()
-    {
+        Instance = this;
         messageCanvasGroup.alpha = 0;
     }
 
     public static void ShowMessage(string message, Color color)
     {
-        instance.DisplayMessage(message, color);
+        Instance.DisplayMessage(message, color);
     }
-
-    public void DisplayMessage(string message, Color color)
+    void DisplayMessage(string message, Color color)
     {
-        messageText.text = message;
-        textPulser.pulseToColor = color;
-        
-        if (flashMessage != null)
-            StopCoroutine(flashMessage);
-        flashMessage = StartCoroutine(FlashMessage());
-    }
-
-    IEnumerator FlashMessage()
-    {
-        messageCanvasGroup.alpha = 1;
-        float timeElapsed = 0;
-
-        while (timeElapsed < timeToDisplay)
-        {
-            yield return new WaitForFixedUpdate();
-            timeElapsed += Time.fixedDeltaTime;
-        }
-        messageCanvasGroup.alpha = 0;
+        if (textPulser != null)
+            textPulser.DisplayMessage(messageText, message, color, timeToDisplay, pulseTime);
+        else 
+            Debug.LogError("Could not find textPulser to show message");
     }
 }

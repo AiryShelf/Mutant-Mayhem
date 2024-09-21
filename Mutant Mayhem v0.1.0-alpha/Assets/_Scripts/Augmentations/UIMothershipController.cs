@@ -5,12 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class UIMothershipController : MonoBehaviour
 {
-    [SerializeField] Transform bkgTransform;
-    [SerializeField] Material bkgMaterial;
-    [SerializeField] Vector2 bkgMatParalaxDir;
-    [SerializeField] float bkgMatParalaxSpeed;
-    Vector2 currentOffset;
-
     AugManager augManager;
 
     void Awake()

@@ -138,6 +138,8 @@ public class Player : MonoBehaviour
         UpgradeManager.Instance.Initialize();
         TurretManager.Instance.Initialize();
         TutorialManager.Initialize();
+
+        SettingsManager.Instance.ApplyAugs();
     }
 
     void FixedUpdate()

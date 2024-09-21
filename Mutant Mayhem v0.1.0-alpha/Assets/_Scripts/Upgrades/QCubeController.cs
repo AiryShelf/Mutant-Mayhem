@@ -125,10 +125,12 @@ public class QCubeController : MonoBehaviour
                     return;
                 }
             }
-            else if (!isUpgradesOpen)
+        }
+
+        if (!isUpgradesOpen)
             {
-                MessagePanel.ShowMessage("Not close enough to access " +
-                                        "Cube. Get closer!", Color.black);
+                MessagePanel.ShowMessage("Not close enough to access the " +
+                                        "Cube. Get closer!", Color.yellow);
                 // Player is not in range, show UI message to the player
                 //Debug.Log("Player NOT in QCube Range!");
             }
@@ -137,7 +139,6 @@ public class QCubeController : MonoBehaviour
                 CloseUpgradeWindow();
                 return;
             }
-        }
     }
 
     IEnumerator OpenUpgradeWindow()

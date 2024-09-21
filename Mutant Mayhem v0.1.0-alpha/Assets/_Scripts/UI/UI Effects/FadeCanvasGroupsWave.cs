@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// This code is a mess, it's one of the first tools I've made myself
+// ** ADD REGIONS AND COMMENTS, CLEAN UP IF POSSIBLE **
+// At a recent quick glance, it looks like a state machine might work well?
 public class FadeCanvasGroupsWave : MonoBehaviour
 {
     [SerializeField] bool autoSelectFirstElement;
