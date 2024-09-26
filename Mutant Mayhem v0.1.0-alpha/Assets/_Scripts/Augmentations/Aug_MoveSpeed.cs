@@ -5,33 +5,41 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Aug_MoveSpeed_New", menuName = "Augmentations/Aug_MoveSpeed")]
 public class Aug_MoveSpeed : AugmentationBaseSO
 {
-    public float speedMult;
-    public float lvlMultIncrement = 2f;
+    public float speedMult = 1;
+    public float lvlMultIncrement = 0.1f;
 
     public override void ApplyAugmentation(AugManager augManager, int level)
     {
-        float totalCreditsAdd = speedMult + (lvlMultIncrement * (level - 1));
+        float totalMult = speedMult + lvlMultIncrement * level;
         
-        BuildingSystem.PlayerCredits += totalCreditsAdd;
+        Player player = FindObjectOfType<Player>();
+        player.stats.moveSpeed *= totalMult;
+        player.stats.strafeSpeed *= totalMult;
+        player.stats.lookSpeed *= totalMult;
 
-        Debug.Log("Aug added " + totalCreditsAdd + " Credits");
+        Debug.Log($"Aug applied {totalMult} multiplier to moveSpeed, strafeSpeed, and lookSpeed");
     }
 
     public override string GetPositiveDescription(AugManager augManager, int level)
     {
-        float totalCreditsAdd = speedMult + (lvlMultIncrement * (level - 1));
-        string value = totalCreditsAdd.ToString("N0");
-        string description = "Adds " + value +" Credits at start - Loan RP to a customer's " +
-                             "research project in exchange for Credits";
+        float totalMult = speedMult + lvlMultIncrement * level;
+        string percentage = GameTools.FactorToPercent(totalMult);
+        string description = "Adds " + percentage + " to forward movement, strafe, and rotation speed at start.  " +
+                             "Improvements to exosuit actuator and power deliver systems allow for faster movement";
         return description;
     }
 
     public override string GetNegativeDescription(AugManager augManager, int level)
     {
-        float totalCreditsMult = speedMult + (lvlMultIncrement * -(level + 1));
-        string percentage = GameTools.FactorToPercent(totalCreditsMult);
-        string description = "Reduce Credits income by " + percentage + " - Using some of the profits from tissue " +
-                             "samples, you can get a lease on some free Knowledge!";
+        float totalMult = speedMult + lvlMultIncrement * -level;
+        string percentage = GameTools.FactorToPercent(totalMult);
+        string description = "Reduces forward movement, strafe, and rotation speed by " + percentage +" at start.  " +
+                             "Less focus on optimizing exosuit movement allows for more research processing, granting some RP";
         return description;
+    }
+
+    public override string GetNeutralDescription(AugManager augManager, int level)
+    {
+        return "Raise or lower the level to adjust your foward movement, strafe, and rotation speeds";
     }
 }

@@ -9,20 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c4fb43846fec7d478546d2bac6ef6fb, type: 3}
-  m_Name: Aug_LaserDamageStart_1.15
+  m_Script: {fileID: 11500000, guid: 3d7bd2ddb7a071c488b7f358a26ff17e, type: 3}
+  m_Name: Aug_TurretTracking_1.1
   m_EditorClassIdentifier: 
-  augmentationName: Laser Tech Damage
+  augmentationName: Turret Tracking
   uiImage: {fileID: 0}
-  cost: 50
+  cost: 100
   lvlCostIncrement: 25
   lvlCostIncrementMult: 1.5
-  refund: 50
-  lvlRefundIncrement: 25
-  lvlRefundIncrementMult: 1.2
-  maxLvl: 20
-  minLvl: -6
-  family: 4
+  refund: 25
+  lvlRefundIncrement: 15
+  lvlRefundIncrementMult: 1.5
+  maxLvl: 10
+  minLvl: -10
+  family: 2
   type: 0
-  damageMult: 1
-  lvlMultIncrement: 0.15
+  lvlMultIncrement: 0.05

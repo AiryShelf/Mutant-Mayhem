@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class StatsCounterPlayer : MonoBehaviour
 {
-    public static float TimeGameTotalScaled;
+    public static float TotalPlayTime;
     public static float TimeSprintingPlayer;
 
     public static int EnemiesKilledByPlayer;
@@ -34,50 +34,65 @@ public class StatsCounterPlayer : MonoBehaviour
 
     public static Dictionary<string, float> StatsDict =
         new Dictionary<string, float>();
-        
-
-    void Awake()
-    {
-
-    }
 
     void FixedUpdate()
     {
-        TimeGameTotalScaled += Time.fixedDeltaTime;
+        TotalPlayTime += Time.fixedDeltaTime;
     }
 
-    public static void RebuildStatsDict()
+    public static void ResetStatsCounts()
     {
+        TotalPlayTime = 0;
+        TimeSprintingPlayer = 0;
+        EnemiesKilledByPlayer = 0;
+        EnemiesKilledByTurrets = 0;
+        ShotsFiredByPlayer = 0;
+        ShotsHitByPlayer = 0;
+        ShotsFiredByTurrets = 0;
+        ShotsFiredByEnemies = 0;
+        GrenadesThrownByPlayer = 0;
+        MeleeAttacksByPlayer = 0;
+        MeleeHitsByPlayer = 0;
+        MeleeDamageByPlayer = 0;
+        MeleeAttacksByEnemies = 0;
+        MeleeDamageByEnemies = 0;
+        TotalDamageByPlayerExplosions = 0;
+        EnemyDamageByPlayerProjectiles = 0;
+        DamageToPlayer = 0;
+        DamageToStructures = 0;
+        DamageToEnemies = 0;
+        StructuresBuilt = 0;
+        StructuresLost = 0;
+        
         StatsDict.Clear();
 
         StatsDict = new Dictionary<string, float>
         {
-        {"Survival Time (sec):", TimeGameTotalScaled},
-        {"Sprinting Time (sec):", TimeSprintingPlayer},
+            {"Sprinting Time (sec):", TimeSprintingPlayer},
 
-        {"Enemies Killed by Player:", EnemiesKilledByPlayer},
-        {"Enemies Killed by Turrets:", EnemiesKilledByTurrets},
+            {"Enemies Killed by Player:", EnemiesKilledByPlayer},
+            {"Enemies Killed by Turrets:", EnemiesKilledByTurrets},
 
-        {"Shots Fired by Player:", ShotsFiredByPlayer},
-        {"Shot Hits by Player:", ShotsHitByPlayer},
-        {"Shots Fired by Turrets:", ShotsFiredByTurrets },
-        {"Shots Fired by Enemies:", ShotsFiredByEnemies},
-        {"Grenades Thrown by Player:", GrenadesThrownByPlayer},
+            {"Shots Fired by Player:", ShotsFiredByPlayer},
+            {"Shot Hits by Player:", ShotsHitByPlayer},
+            {"Shots Fired by Turrets:", ShotsFiredByTurrets },
+            {"Shots Fired by Enemies:", ShotsFiredByEnemies},
+            {"Grenades Thrown by Player:", GrenadesThrownByPlayer},
 
-        {"Melee Attacks by Player:", MeleeAttacksByPlayer},
-        {"Melee Hits by Player:", MeleeHitsByPlayer},
-        {"Melee Damage by Player:", MeleeDamageByPlayer},
-        {"Melee Attacks by Enemies:", MeleeAttacksByEnemies},
-        {"Melee Damage by Enemies:", MeleeDamageByEnemies},
+            {"Melee Attacks by Player:", MeleeAttacksByPlayer},
+            {"Melee Hits by Player:", MeleeHitsByPlayer},
+            {"Melee Damage by Player:", MeleeDamageByPlayer},
+            {"Melee Attacks by Enemies:", MeleeAttacksByEnemies},
+            {"Melee Damage by Enemies:", MeleeDamageByEnemies},
 
-        {"Total Damage by Explosions:", TotalDamageByPlayerExplosions},
-        {"Projectile Damage by Player:", EnemyDamageByPlayerProjectiles},
-        {"Total Damage to Player:", DamageToPlayer},
-        {"Total Damage to Structures:", DamageToStructures},
-        {"Total Damage to Enemies:", DamageToEnemies},
+            {"Total Damage by Explosions:", TotalDamageByPlayerExplosions},
+            {"Projectile Damage by Player:", EnemyDamageByPlayerProjectiles},
+            {"Total Damage to Player:", DamageToPlayer},
+            {"Total Damage to Structures:", DamageToStructures},
+            {"Total Damage to Enemies:", DamageToEnemies},
 
-        {"Structures Built:", StructuresBuilt},
-        {"Structures Lost:", StructuresLost}
+            {"Structures Built:", StructuresBuilt},
+            {"Structures Lost:", StructuresLost}
         };
     }
 
@@ -86,7 +101,7 @@ public class StatsCounterPlayer : MonoBehaviour
         // Maybe make this a dictionary to populate the 2 aligned
         // TMP elements
         string text = 
-        "Survival Time: " + TimeGameTotalScaled +
+        "Survival Time: " + TotalPlayTime +
         "\nSprinting Time: " + TimeSprintingPlayer +
 
         "\n\nEnemies Killed by Player: " + EnemiesKilledByPlayer +

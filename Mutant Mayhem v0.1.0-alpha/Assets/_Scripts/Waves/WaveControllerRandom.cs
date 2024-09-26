@@ -16,7 +16,7 @@ public class WaveControllerRandom : MonoBehaviour
     [SerializeField] TextMeshProUGUI nextWaveText;
 
     [Header("Wave Properties")]
-    public int currentWaveCount = 0;
+    public int currentWaveIndex = 0;
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public float _timeBetweenWaves; // Amount of day-time after difficulty setting
     public float spawnRadius = 60; // Radius around the cube that enemies spawn
@@ -48,6 +48,8 @@ public class WaveControllerRandom : MonoBehaviour
         playerActionMap = player.inputAsset.FindActionMap("Player");
         nextWaveAction = playerActionMap.FindAction("NextWave");
 
+        SettingsManager.Instance.ApplyDifficultySettings();
+
         daylight = FindObjectOfType<Daylight>();
     }
 
@@ -70,7 +72,7 @@ public class WaveControllerRandom : MonoBehaviour
 
         // Testing MaserWave and dynamically building currentWave
         //waveSpawner.currentWaveSource = allWaveBases[0];
-        currentWaveCount = 0;
+        currentWaveIndex = 0;
     }
 
     void OnNextWaveInput(InputAction.CallbackContext context)
@@ -90,13 +92,19 @@ public class WaveControllerRandom : MonoBehaviour
         nextWaveFadeGroup.isTriggered = true;
 
         float countdown = _timeBetweenWaves;
-        while (countdown >= 0)
+        while (countdown > 0)
         {
-            nextWaveText.text = "Time until night " + (currentWaveCount + 1) + 
+            nextWaveText.text = "Time until night " + (currentWaveIndex + 1) + 
                 ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";
             
-            yield return new WaitForEndOfFrame();
-            countdown -= Time.deltaTime;        
+            yield return new WaitForSeconds(1);
+            countdown--;
+
+            if (countdown <= 10)
+            {
+                MessagePanel.PulseMessage(Mathf.CeilToInt(countdown) + " seconds to the next night!", Color.red);
+            }
+            
         }
 
         StopAllCoroutines();
@@ -105,6 +113,8 @@ public class WaveControllerRandom : MonoBehaviour
 
     IEnumerator StartWave()
     {
+        MessagePanel.PulseMessage("Night " + (currentWaveIndex + 1) + " started!", Color.red);
+
         daylight.StartCoroutine(daylight.PlaySunsetEffect());
         isNight = true;
         ApplyDifficultyToMult();
@@ -125,7 +135,7 @@ public class WaveControllerRandom : MonoBehaviour
         waveInfoFadeGroup.isTriggered = true;
         nextWaveFadeGroup.isTriggered = false;
         nextWaveText.enabled = false;
-        currentNightText.text = "Night " + (currentWaveCount + 1);
+        currentNightText.text = "Night " + (currentWaveIndex + 1);
 
         // Wait 5 seconds before checking wave complete
         float timeElapsed = 0;
@@ -155,7 +165,8 @@ public class WaveControllerRandom : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         isNight = false;
-        currentWaveCount++;
+        MessagePanel.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
+        currentWaveIndex++;
 
         StartCoroutine(NextWaveTimer());
 
@@ -167,17 +178,17 @@ public class WaveControllerRandom : MonoBehaviour
 
     void ApplyDifficultyToMult()
     {
-        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveCount / 
+        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveIndex / 
                           wavesPerBase / 2 * SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = multiplierStart + currentWaveCount / 20f * 
+        damageMultiplier = multiplierStart + currentWaveIndex / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult;
-        healthMultiplier = multiplierStart + currentWaveCount / 20f * 
+        healthMultiplier = multiplierStart + currentWaveIndex / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult;
-        speedMultiplier = multiplierStart + currentWaveCount / 20f *  
+        speedMultiplier = multiplierStart + currentWaveIndex / 20f *  
                            SettingsManager.Instance.WaveDifficultyMult;
-        sizeMultiplier = multiplierStart + currentWaveCount / 20f *   
+        sizeMultiplier = multiplierStart + currentWaveIndex / 20f *   
                            SettingsManager.Instance.WaveDifficultyMult;
-        spawnSpeedMult = Mathf.Clamp(multiplierStart - currentWaveCount / 20f * 
+        spawnSpeedMult = Mathf.Clamp(multiplierStart - currentWaveIndex / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);
     }
 }

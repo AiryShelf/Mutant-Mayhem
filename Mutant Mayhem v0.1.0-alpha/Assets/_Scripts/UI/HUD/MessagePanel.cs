@@ -12,21 +12,29 @@ public class MessagePanel : MonoBehaviour
     [SerializeField] TextPulser textPulser;
     [SerializeField] float timeToDisplay = 6f;
     [SerializeField] float pulseTime = 0.5f;
+    [SerializeField] float minMessageTime = 2f;
+
+    Color startColor;
 
     void Awake()
     {
         Instance = this;
         messageCanvasGroup.alpha = 0;
+        startColor = messageText.color;
     }
 
-    public static void ShowMessage(string message, Color color)
+    public static void PulseMessage(string message, Color pulseColor)
     {
-        Instance.DisplayMessage(message, color);
+        Instance.DisplayAndPulse(message, pulseColor);
     }
-    void DisplayMessage(string message, Color color)
+
+
+    void DisplayAndPulse(string message, Color pulseColor)
     {
+        messageText.text = message;
+
         if (textPulser != null)
-            textPulser.DisplayMessage(messageText, message, color, timeToDisplay, pulseTime);
+            textPulser.PulseTimedText(messageText, pulseColor, startColor, pulseTime, timeToDisplay);
         else 
             Debug.LogError("Could not find textPulser to show message");
     }

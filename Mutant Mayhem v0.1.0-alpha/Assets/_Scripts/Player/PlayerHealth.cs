@@ -12,9 +12,9 @@ public class PlayerHealth : Health
         StartCoroutine(HealthRegen());
     }
 
-    public override void ModifyHealth(float value, GameObject other)
+    public override void ModifyHealth(float value, GameObject damageDealer)
     {
-        if (!hasDied)
+        if (!player.IsDead)
             PlayPainSound(value);
 
         health += value;
@@ -22,14 +22,13 @@ public class PlayerHealth : Health
             health = maxHealth;
 
         // Stats counting
-        // Layer# 8 - PlayerProjectiles.  player, enemy
         if (value < 0)
         {
             StatsCounterPlayer.DamageToPlayer -= value;
         }
         
         // Die
-        if (health <= 0 && !hasDied)
+        if (health <= 0 && !player.IsDead)
         {
             Die();
             return;

@@ -478,19 +478,19 @@ public class AnimationControllerPlayer : MonoBehaviour
     {
         if (index == playerShooter.currentGunIndex)
         {
-            MessagePanel.ShowMessage("Weapon already selected!", Color.yellow);
+            MessagePanel.PulseMessage("Weapon already selected!", Color.yellow);
             return false;
         }
 
         if (playerShooter.gunList[index] == null)
         {
-            MessagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
+            MessagePanel.PulseMessage("Weapon not unlocked!", Color.yellow);
             return false;
         }
 
         if (!playerShooter.gunsUnlocked[index])
         {
-            MessagePanel.ShowMessage("Weapon not unlocked!", Color.yellow);
+            MessagePanel.PulseMessage("Weapon not unlocked!", Color.yellow);
             return false;
         }
 

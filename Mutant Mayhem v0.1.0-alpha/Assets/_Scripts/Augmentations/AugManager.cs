@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Unity.Collections;
 using UnityEngine;
 
@@ -68,5 +67,32 @@ public class AugManager : MonoBehaviour
         }
 
         return lvls;
+    }
+
+    public void IncrementLevel(AugmentationBaseSO aug, bool addingLevel)
+    {
+        if (addingLevel)
+        {
+            if (!selectedAugsWithLvls.ContainsKey(aug))
+                selectedAugsWithLvls.Add(aug, 1);
+            else
+                selectedAugsWithLvls[aug]++;
+        }
+        else
+        {
+            if (!selectedAugsWithLvls.ContainsKey(aug))
+                selectedAugsWithLvls.Add(aug, -1);
+            else
+                selectedAugsWithLvls[aug]--;
+        }
+
+        if (selectedAugsWithLvls.ContainsKey(aug))
+        {
+            if (selectedAugsWithLvls[aug] == 0)
+            {
+                selectedAugsWithLvls.Remove(aug);
+                Debug.Log("Removed an aug from manager");
+            }
+        }
     }
 }

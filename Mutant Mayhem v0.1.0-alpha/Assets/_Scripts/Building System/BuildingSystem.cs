@@ -33,6 +33,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] QCubeController qCubeController;
     [SerializeField] MouseLooker mouseLooker;
     [SerializeField] CameraController cameraController;
+
     [Header("Tilemaps")]
     [SerializeField] TileManager tileManager;
     [SerializeField] Tilemap structureTilemap;
@@ -41,6 +42,9 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] Tilemap previewTilemap;
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
+
+    [Header("Dynamic vars, don't set here")]
+    public float structureCostMult = 1;
 
     public static Dictionary<Structure, bool> _UnlockedStructuresDict = 
                                         new Dictionary<Structure, bool>();
@@ -164,16 +168,16 @@ public class BuildingSystem : MonoBehaviour
         else if (inRange)
         {
             if (structureInHand.actionType == ActionType.Build)
-                MessagePanel.ShowMessage("Area not clear for building", Color.yellow);
+                MessagePanel.PulseMessage("Area not clear for building", Color.yellow);
             if (structureInHand.actionType == ActionType.Destroy)
-                MessagePanel.ShowMessage("Unable to destroy", Color.yellow);
+                MessagePanel.PulseMessage("Unable to destroy", Color.yellow);
         }
         else
         {
             if (structureInHand.actionType == ActionType.Build)
-                MessagePanel.ShowMessage("Too far away to build", Color.yellow);
+                MessagePanel.PulseMessage("Too far away to build", Color.yellow);
             if (structureInHand.actionType == ActionType.Destroy)
-                MessagePanel.ShowMessage("Too far away to destroy", Color.yellow);
+                MessagePanel.PulseMessage("Too far away to destroy", Color.yellow);
         }
     }
 
@@ -341,9 +345,9 @@ public class BuildingSystem : MonoBehaviour
         // Check Turrets
         if (structureInHand.isTurret)
         {
-            if (turretManager.numTurrets >= player.stats.structureStats.maxTurrets)
+            if (turretManager.currentNumTurrets >= player.stats.structureStats.maxTurrets)
             {
-                MessagePanel.ShowMessage("Turret limit reached.  Use upgrades to increase the limit", Color.red);
+                MessagePanel.PulseMessage("Turret limit reached.  Use upgrades to increase the limit", Color.red);
                 return;
             }
         }
@@ -351,7 +355,7 @@ public class BuildingSystem : MonoBehaviour
         // Check Credits
         if (PlayerCredits < structureInHand.tileCost)
         {
-            MessagePanel.ShowMessage("Not enough Credits to build " + 
+            MessagePanel.PulseMessage("Not enough Credits to build " + 
                                      structureInHand.tileName + "!", Color.red);
             return;
         }
@@ -359,7 +363,7 @@ public class BuildingSystem : MonoBehaviour
         // Add Tile
         if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
         {
-            PlayerCredits -= structureInHand.tileCost;
+            PlayerCredits -= structureInHand.tileCost * structureCostMult;
             RemoveBuildHighlight();
 
             if (structureInHand.isTurret)
@@ -379,7 +383,7 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
-            MessagePanel.ShowMessage("Tile not clear for removal", Color.yellow);
+            MessagePanel.PulseMessage("Tile not clear for removal", Color.yellow);
             Debug.Log("Tile removal unsuccesful");
         }
     }

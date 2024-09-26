@@ -14,8 +14,8 @@ public class PlayerProfile
     public PlayerProfile(string profileName)
     {
         this.profileName = profileName;
-        this.researchPoints = 0;
-        this.playthroughs = 0;
-        this.maxWaveReached = 0;
+        researchPoints = 0;
+        playthroughs = 0;
+        maxWaveReached = 0;
     }
 }

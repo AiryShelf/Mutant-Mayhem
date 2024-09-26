@@ -467,7 +467,7 @@ public class MaxTurretsUpgrade : Upgrade
     public override void Apply(StructureStats structureStats, int level)
     {
         Debug.Log("MaxTurretsUpg applied");
-        structureStats.maxTurrets += UpgAmount;
+        structureStats.maxTurrets += (int)UpgAmount;
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)

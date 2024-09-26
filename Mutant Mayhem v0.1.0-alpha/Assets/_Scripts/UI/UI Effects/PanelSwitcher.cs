@@ -37,8 +37,8 @@ public class PanelSwitcher : MonoBehaviour
 
     void Update()
     {
-        if (Time.timeScale == 0)
-            return;
+        //if (Time.timeScale == 0)
+            //return;
         
         // Handle opening/closing 
         if (isTriggered)
@@ -202,7 +202,7 @@ public class PanelSwitcher : MonoBehaviour
             yield return null;
 
             transform.localPosition = Vector2.Lerp(startPosition, endPosition, timeElapsed / swipeDuration);
-            timeElapsed += Time.deltaTime;
+            timeElapsed += Time.unscaledDeltaTime;
         }
 
         transform.localPosition = endPosition;

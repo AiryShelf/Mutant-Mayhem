@@ -62,7 +62,7 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
         float totalGrenadesPerPurchase = Mathf.FloorToInt(grenadesPerPurchase + (lvlPerPurchaseAddInc * level));
         float totalGrenadeCost = grenadeCostMult + (lvlGrenadeCostMultInc * level);
         string description = "Start with " + totalGrenadesAtStart + " grenades.  Plus each time you purchase grenades, " +
-                             "get " + totalGrenadesPerPurchase + " grenades for " + totalGrenadeCost + " times the cost";
+                             "get " + totalGrenadesPerPurchase + " grenades for " + totalGrenadeCost + " times the cost of one";
         return description;
     }
 
@@ -95,5 +95,10 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
                           "You also can't buy any.  No grenades for you!";
                           
         return description;
+    }
+
+    public override string GetNeutralDescription(AugManager augManager, int level)
+    {
+        return "Raise or lower the level to adjust starting grenades and grenade cost";
     }
 }

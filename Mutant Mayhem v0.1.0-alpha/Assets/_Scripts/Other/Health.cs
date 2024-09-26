@@ -44,7 +44,7 @@ public class Health : MonoBehaviour
         maxHealth = value;
     }
 
-    public virtual void ModifyHealth(float value, GameObject other)
+    public virtual void ModifyHealth(float value, GameObject damageDealer)
     {
         PlayPainSound(value);
 
@@ -54,9 +54,9 @@ public class Health : MonoBehaviour
 
         // Stats counting
         // Layer# 8 - PlayerProjectiles.  player, enemy
-        if (other != null)
+        if (damageDealer != null)
         {
-            if (other.layer == 8)
+            if (damageDealer.layer == 8)
             {
                 StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
                 StatsCounterPlayer.ShotsHitByPlayer++;
@@ -69,12 +69,12 @@ public class Health : MonoBehaviour
         // Die
         if (health <= 0 && !hasDied)
         {
-            if (other != null)
+            if (damageDealer != null)
             {
                 // Structure layer 13
-                if (other.layer == 13)
+                if (damageDealer.layer == 13)
                     StatsCounterPlayer.EnemiesKilledByTurrets++;
-                else if (other.CompareTag("Player") || other.CompareTag("PlayerExplosion") || other.layer == 8)
+                else if (damageDealer.CompareTag("Player") || damageDealer.CompareTag("PlayerExplosion") || damageDealer.layer == 8)
                     StatsCounterPlayer.EnemiesKilledByPlayer++;
             }
 

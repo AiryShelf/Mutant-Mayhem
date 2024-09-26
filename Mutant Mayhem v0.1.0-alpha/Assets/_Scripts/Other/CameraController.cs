@@ -179,7 +179,8 @@ public class CameraController : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / duration);
 
             // Get the mouse position in world space
-            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
+            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePos);
             mouseWorldPosition.z = mouseLooker.transform.position.z; // Ensure the same z-plane for the 2D camera
 
             // Lerp mouseLooker to the current mouse world position
@@ -227,7 +228,7 @@ public class CameraController : MonoBehaviour
     {
         if (playerFramingTransposer == null || mouseFramingTransposer == null) 
         {
-            Debug.Log("Player or MouseLooker framing transposer not assigned");
+            Debug.Log("Player or MouseLooker's framing transposer not assigned");
             return;
         }
 

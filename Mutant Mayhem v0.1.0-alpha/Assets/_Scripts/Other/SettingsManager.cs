@@ -102,7 +102,7 @@ public class SettingsManager : MonoBehaviour
         }
 
         PlayerPrefs.Save();
-        Debug.Log("Settings Manager initialized settings");
+        Debug.Log("Settings Manager loaded settings");
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -114,7 +114,7 @@ public class SettingsManager : MonoBehaviour
             ApplyMovementSettings();
             ApplyControlSettings();
 
-            Debug.Log("Settings Manager applied settings");
+            Debug.Log("Settings Manager finished applying settings");
         }
     }
 
@@ -132,7 +132,7 @@ public class SettingsManager : MonoBehaviour
         ApplyDifficultySettings();
     }
 
-    private void ApplyDifficultySettings()
+    public void ApplyDifficultySettings()
     {
         waveController = FindObjectOfType<WaveControllerRandom>();
         if (waveController == null)
@@ -144,8 +144,7 @@ public class SettingsManager : MonoBehaviour
         switch (difficultyLevel)
         {
             case DifficultyLevel.Easy:
-                waveController._timeBetweenWaves = 
-                                waveController.timeBetweenWavesBase + 60;
+                waveController._timeBetweenWaves = waveController.timeBetweenWavesBase + 60;
                 WaveDifficultyMult = 0.7f;
                 WavesTillAddWaveBase = 1;
                 SubwaveListGrowthFactor = 0.8f;
@@ -155,8 +154,7 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Normal:
-            waveController._timeBetweenWaves = 
-                            waveController.timeBetweenWavesBase;
+                waveController._timeBetweenWaves = waveController.timeBetweenWavesBase;
                 WaveDifficultyMult = 1;
                 WavesTillAddWaveBase = 0;
                 SubwaveListGrowthFactor = 1f;
@@ -166,17 +164,20 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Hard:
-                waveController._timeBetweenWaves = 
-                                waveController.timeBetweenWavesBase - 30;
+                waveController._timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
                 WaveDifficultyMult = 1.3f;
                 WavesTillAddWaveBase = -1;
                 SubwaveListGrowthFactor = 1.2f;
                 SubwaveDelayMult = 0.8f;
-                BatchSpawnMult = 1.3f;
+                BatchSpawnMult = 1.2f;
                 CreditsMult = 1;
                 break;
         }
-        //Debug.Log("Difficulty updated");
+
+        DeathManager deathManager = FindObjectOfType<DeathManager>();
+        deathManager.ApplyDifficultyToRPGain(difficultyLevel);
+
+        Debug.Log("Difficulty updated by Settings Manager");
 
         BuildingSystem.PlayerCredits = BuildingSystem.playerStartingCredits;
     }

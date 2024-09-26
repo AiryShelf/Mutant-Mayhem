@@ -69,7 +69,7 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
     void OnMeleeAttackStart()
     {
         animControllerPlayer.MeleeAnimationPlaying(true);
-        meleeControllerPlayer.MeleeColliderToggle(true);
+        meleeControllerPlayer.SwordControllerToggle(true);
 
         meleeControllerPlayer.PlayMeleeSwingSound();
     }
@@ -81,7 +81,7 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
 
     void OnMeleeAttackEnd()
     {
-        meleeControllerPlayer.MeleeColliderToggle(false);
+        meleeControllerPlayer.SwordControllerToggle(false);
     }
 
     void OnThrowStart()

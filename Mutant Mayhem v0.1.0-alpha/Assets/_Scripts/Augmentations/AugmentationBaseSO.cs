@@ -20,6 +20,7 @@ public abstract class AugmentationBaseSO : ScriptableObject
     public abstract void ApplyAugmentation(AugManager augManager, int level);
     public abstract string GetPositiveDescription(AugManager augManager, int level);
     public abstract string GetNegativeDescription(AugManager augManager, int level);
+    public abstract string GetNeutralDescription(AugManager augManager, int level);
 }
 
 public enum AugmentationFamily

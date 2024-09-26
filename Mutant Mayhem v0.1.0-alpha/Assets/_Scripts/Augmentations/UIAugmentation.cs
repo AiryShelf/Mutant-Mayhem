@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
+public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler, 
+                              IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] Image icon;
     [SerializeField] TextMeshProUGUI nameText;
@@ -14,6 +14,7 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] Color selectedColor;
     [SerializeField] Color addedColor;
     [SerializeField] Color addedNegColor;
+    [SerializeField] Color highlightedColor = Color.white;
     Color originalIconColor;
     Color originalTextColor;
 
@@ -24,31 +25,42 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
     AugManager augManager;
     UIAugPanel augPanel;
     public bool selected;
+    bool isHovered;
 
-    public void Setup(AugmentationBaseSO augmentation, AugManager manager, 
-                      UIAugPanel panel)
+    public void Setup(AugmentationBaseSO augmentation, AugManager manager, UIAugPanel panel)
     {
         originalIconColor = icon.color;
         originalTextColor = nameText.color;
+
         aug = augmentation;
         augManager = manager;
         augPanel = panel;
         icon.sprite = augmentation.uiImage;
         nameText.text = augmentation.augmentationName;
 
-        UpdateIconAndText();                           
+        UpdateIconAndText();
     }
 
     public void OnSelect(BaseEventData data)
     {
         augPanel.SelectAugmentation(this);
         UpdateIconAndText();
-        
-        Debug.Log("Selected an Aug");
     }
     
     public void OnDeselect(BaseEventData data)
     {
+        UpdateIconAndText();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isHovered = true;
+        UpdateIconAndText();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isHovered = false;
         UpdateIconAndText();
     }
 
@@ -105,6 +117,8 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         string costOrGainText;
         Color costColor;
+
+        // Set Cost or Gain text
         if (totalCost == 0)
         {
             costOrGainText = "Not added";
@@ -122,10 +136,15 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
             costOrGainText = "Gain: ";
             costColor = Color.green;
             costText.text = costOrGainText + Mathf.Abs(totalCost) + " RP";  
-        }
+        }  
 
-          
+        if (aug == null)
+        {
+            Debug.Log("Aug is null");
+            return;
+        }
         
+        // Set button colors for selection state
         if (augManager.selectedAugsWithLvls.ContainsKey(aug))
         {
             int level = augManager.selectedAugsWithLvls[aug];
@@ -155,6 +174,14 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler
             costText.color = Color.black + costColor / 2;
         }
 
+        if (isHovered) // Highlight when hovered
+        {
+            icon.color += highlightedColor/4;
+            nameText.color += highlightedColor/4;
+            costText.color += highlightedColor/4;
+        }
+
+        // Add level number to end of name
         if (augManager.selectedAugsWithLvls.ContainsKey(aug))
         {
             nameText.text = aug.augmentationName + " " + augManager.selectedAugsWithLvls[aug];

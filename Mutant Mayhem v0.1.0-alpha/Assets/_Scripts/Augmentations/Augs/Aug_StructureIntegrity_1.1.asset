@@ -9,20 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eaa8345829fd1241a24d6fd4a1200e6, type: 3}
-  m_Name: Aug_BulletDamageStart_0.15
+  m_Script: {fileID: 11500000, guid: 0f10768a3314df149b116b1e096cb67d, type: 3}
+  m_Name: Aug_StructureIntegrity_1.1
   m_EditorClassIdentifier: 
-  augmentationName: Bullet Damage
+  augmentationName: Structure Integrity
   uiImage: {fileID: 0}
-  cost: 100
+  cost: 150
   lvlCostIncrement: 50
   lvlCostIncrementMult: 1.5
-  refund: 50
-  lvlRefundIncrement: 25
-  lvlRefundIncrementMult: 1.2
-  maxLvl: 20
-  minLvl: -6
-  family: 5
+  refund: 40
+  lvlRefundIncrement: 20
+  lvlRefundIncrementMult: 1.5
+  maxLvl: 10
+  minLvl: -9
+  family: 2
   type: 0
-  damageMultStart: 1
-  lvlMultIncrement: 0.15
+  lvlMultIncrement: 0.1

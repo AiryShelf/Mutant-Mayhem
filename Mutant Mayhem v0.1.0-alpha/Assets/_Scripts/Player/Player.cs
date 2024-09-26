@@ -10,7 +10,7 @@ public class PlayerStats
     public StructureStats structureStats;
     [HideInInspector] public Player player;
 
-    [Header("Movement stats")]
+    [Header("Movement Stats")]
     public float moveSpeed = 8;
     public float strafeSpeed = 5;
     public float sprintFactor = 1.5f;
@@ -45,7 +45,7 @@ public class StructureStats
     public TileManager tileManager;
     public float structureMaxHealthMult = 1;
     public float armour = 0;
-    public float maxTurrets = 0;
+    public int maxTurrets = 0;
     public float pulseDefenceForce = 0;
 }
 
@@ -126,20 +126,21 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        StatsCounterPlayer.ResetStatsCounts();
         SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
 
         if (SettingsManager.Instance.difficultyLevel == DifficultyLevel.Easy)
         {
             BuildingSystem.PlayerCredits += 600;
-            MessagePanel.ShowMessage("You recieved $600 to help you through easy mode", Color.cyan);
+            MessagePanel.PulseMessage("You recieved $600 to help you through easy mode", Color.cyan);
         }
 
-        RefreshMoveForces();
+        ClassManager.Instance.ApplyClassEffects(this);
         UpgradeManager.Instance.Initialize();
         TurretManager.Instance.Initialize();
-        TutorialManager.Initialize();
 
         SettingsManager.Instance.ApplyAugs();
+        RefreshMoveForces();
     }
 
     void FixedUpdate()

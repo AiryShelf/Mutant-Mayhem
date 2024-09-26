@@ -5,10 +5,12 @@ using UnityEngine;
 public class TurretManager : MonoBehaviour
 {
     public static TurretManager Instance { get; private set; }
-
+    
     public List<TurretGunSO> _turretGunListSource = new List<TurretGunSO>();
-    [HideInInspector] public List<TurretGunSO> turretGunList = new List<TurretGunSO>();
-    public int numTurrets = 0;
+    
+    [Header("Dynamic vars, don't set here")]
+    public int currentNumTurrets = 0;
+    public List<TurretGunSO> turretGunList = new List<TurretGunSO>();
     Dictionary<Vector3Int, GameObject> turrets = new Dictionary<Vector3Int, GameObject>();
     UpgradeManager upgradeManager;
 
@@ -32,7 +34,7 @@ public class TurretManager : MonoBehaviour
 
         turrets.Clear();
         turretGunList.Clear();
-        numTurrets = 0;
+        currentNumTurrets = 0;
 
         // Make working copy of TurretGunSOs
         foreach(TurretGunSO gun in _turretGunListSource)
@@ -51,7 +53,7 @@ public class TurretManager : MonoBehaviour
         }
 
         StartCoroutine(GetGameObject(rootPos));
-        numTurrets++;
+        currentNumTurrets++;
     }
 
     IEnumerator GetGameObject(Vector3Int rootPos)
@@ -71,7 +73,7 @@ public class TurretManager : MonoBehaviour
         }
 
         turrets.Remove(rootPos);
-        numTurrets--;
+        currentNumTurrets--;
     }
 
     #region Turret Upgrades

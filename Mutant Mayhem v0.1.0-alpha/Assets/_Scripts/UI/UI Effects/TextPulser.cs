@@ -5,19 +5,20 @@ using UnityEngine;
 
 public class TextPulser : MonoBehaviour
 {
-    Color pulseInColor;
+    [Header("Optional:")]
+    [SerializeField] bool pulseOnEnable;
+    [SerializeField] TextMeshProUGUI textToPulse;
+    [SerializeField] Color pulseInColor;
+    [SerializeField] Color pulseOutColor;
+    [SerializeField] float pulseTime;
+    [SerializeField] float timeToDisplay; // If zero, pulse forever
 
-    Color startColor;
     Coroutine flashMessage;
-
-    void Awake()
-    {
-        
-    }
 
     void OnEnable()
     {
-
+        if (pulseOnEnable)
+            flashMessage = StartCoroutine(PulseIn(textToPulse, pulseTime));
     }
 
     void OnDisable()
@@ -25,12 +26,11 @@ public class TextPulser : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public void DisplayMessage(TextMeshProUGUI textToPulse, string message, 
-                               Color color, float timeToDisplay, float pulseTime)
+    public void PulseTimedText(TextMeshProUGUI textToPulse, Color pulseColor, 
+                          Color startColor, float pulseTime, float timeToDisplay)
     {
-        textToPulse.text = message;
-        pulseInColor = color;
-        startColor = textToPulse.color;
+        pulseInColor = pulseColor;
+        pulseOutColor = startColor;
         
         if (flashMessage != null)
         {
@@ -50,7 +50,7 @@ public class TextPulser : MonoBehaviour
         yield return new WaitForSecondsRealtime(timeToDisplay);
 
         messageCanvasGroup.alpha = 0;
-        textToPulse.color = startColor;
+        textToPulse.color = pulseOutColor;
         StopAllCoroutines();
     }
 
@@ -59,7 +59,7 @@ public class TextPulser : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < pulseTime)
         {
-            Color newColor = Color.Lerp(startColor, pulseInColor, timeElapsed / pulseTime);
+            Color newColor = Color.Lerp(pulseOutColor, pulseInColor, timeElapsed / pulseTime);
             textToPulse.color = newColor;
             yield return null;
             timeElapsed += Time.unscaledDeltaTime;
@@ -72,7 +72,7 @@ public class TextPulser : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < pulseTime)
         {
-            Color newColor = Color.Lerp(pulseInColor, startColor, timeElapsed / pulseTime);
+            Color newColor = Color.Lerp(pulseInColor, pulseOutColor, timeElapsed / pulseTime);
             textToPulse.color = newColor;
             yield return null;
             timeElapsed += Time.unscaledDeltaTime;

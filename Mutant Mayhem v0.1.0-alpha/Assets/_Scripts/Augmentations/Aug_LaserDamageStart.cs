@@ -12,8 +12,6 @@ public class Aug_LaserDamageStart : AugmentationBaseSO
     {
         float totalDamageMult = damageMult + (lvlMultIncrement * level);
 
-        Debug.Log("LaserDamageStart attempting to apply upgrades");
-
         // Increase Player guns start damage
         Player player = FindObjectOfType<Player>();
         PlayerShooter playerShooter = player.GetComponent<PlayerShooter>();
@@ -57,5 +55,10 @@ public class Aug_LaserDamageStart : AugmentationBaseSO
         string description = "Reduces starting damage of all laser based weapons by " + percentage + 
                              " - Aquire RP by diverting processing focus from lasers into research";
         return description;
+    }
+
+    public override string GetNeutralDescription(AugManager augManager, int level)
+    {
+        return "Raise or lower the level to adjust the damage of all laser based weapons";
     }
 }

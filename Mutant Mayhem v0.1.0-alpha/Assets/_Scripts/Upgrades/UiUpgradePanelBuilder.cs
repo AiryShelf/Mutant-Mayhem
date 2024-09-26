@@ -150,11 +150,11 @@ public class UiUpgradePanelBuilder : MonoBehaviour
 
             upgradeManager.PlayUpgradeButtonEffect();
 
-            MessagePanel.ShowMessage(techUnlockMessageName + " unlocked!", Color.green);
+            MessagePanel.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
         }
         else
         {
-            MessagePanel.ShowMessage("Not enough Credits!", Color.red);
+            MessagePanel.PulseMessage("Not enough Credits!", Color.red);
         }
     }
 

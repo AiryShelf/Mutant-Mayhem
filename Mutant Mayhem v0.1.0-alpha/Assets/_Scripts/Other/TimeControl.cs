@@ -29,7 +29,7 @@ public class TimeControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.KeypadMinus) && Time.timeScale - 0.01f > epsilon)
             Time.timeScale -= 0.1f;
         Debug.Log("timeScale changed to: " + Time.timeScale.ToString("#0.0"));
-        MessagePanel.ShowMessage("For Debug: Timescale changed to: " + 
+        MessagePanel.PulseMessage("For Debug: Timescale changed to: " + 
                                  Time.timeScale.ToString("#0.0"), Color.red);
     }
 

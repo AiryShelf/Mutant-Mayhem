@@ -89,6 +89,37 @@ public static class GameTools
 
         return $"{Mathf.Abs(percentage):F0}%";
     }
+
+    // Returns a string formatted 1 hour, 4 minutes, 4 seconds
+    public static string FormatTimeFromSeconds(int totalSeconds)
+    {
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+
+        string formattedTime = "";
+        
+        if (hours > 1)
+            formattedTime += $"{hours} hours, ";
+        else if (hours > 0)
+            formattedTime += $"{hours} hour, ";
+        
+        if (minutes > 1)
+            formattedTime += $"{minutes} minutes, ";
+        else if (minutes > 0)
+            formattedTime += $"{minutes} minute, ";
+        else if (hours > 0)
+            formattedTime += $"{minutes} minutes, ";
+        
+        if (seconds > 1)
+            formattedTime += $"{seconds} seconds";
+        else if (seconds > 0)
+            formattedTime += $"{seconds} second";
+        else 
+            formattedTime += $"{seconds} seconds";
+
+        return formattedTime.Trim();
+    }
 }
 
 // Helper MonoBehaviour class to run coroutines

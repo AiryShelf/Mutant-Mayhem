@@ -63,7 +63,7 @@ public class RepairBullet : Bullet
             }
             else
             {
-                MessagePanel.ShowMessage("Not enough Credits to repair!", Color.red);
+                MessagePanel.PulseMessage("Not enough Credits to repair!", Color.red);
             }
         }
 

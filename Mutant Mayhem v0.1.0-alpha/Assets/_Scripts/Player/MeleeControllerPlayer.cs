@@ -11,7 +11,7 @@ public class MeleeControllerPlayer : MonoBehaviour
     [SerializeField] float meleeStaminaUse = 15f;
     [SerializeField] SpriteRenderer swordSR;
     public SwordController swordController;
-    [SerializeField] PlayerShooter playerShooter;
+    public PlayerShooter playerShooter;
     [SerializeField] AnimationControllerPlayer animationControllerPlayer;
     [SerializeField] SoundSO swordSwingSound;
     [SerializeField] SoundSO swordHitSound;
@@ -41,15 +41,15 @@ public class MeleeControllerPlayer : MonoBehaviour
         AudioManager.Instance.PlaySoundAt(swordSwingSound, transform.position);
     }
 
-    public void MeleeColliderToggle(bool on)
+    public void SwordControllerToggle(bool on)
     {
         if (on)
         {
-            swordController.polyCollider.enabled = true;
+            swordController.gameObject.SetActive(true);
         }
         else
         {
-            swordController.polyCollider.enabled = false;
+            swordController.gameObject.SetActive(false);
         }
     }
 

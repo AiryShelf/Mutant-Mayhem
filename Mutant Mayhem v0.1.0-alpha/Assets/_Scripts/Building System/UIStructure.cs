@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEditor.VersionControl;
 
 public class UIStructure : MonoBehaviour, ISelectHandler
 {
@@ -15,6 +16,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     [SerializeField] RectTransform myRectTransform;
     ScrollRectController scrollRectController;
     BuildingSystem buildingSystem;
+    Player player;
 
     bool initialized;
 
@@ -30,6 +32,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         scrollRectController = GetComponentInParent<ScrollRectController>();
         buildingSystem = FindObjectOfType<BuildingSystem>();
         BuildingSystem.OnPlayerCreditsChanged += SetText;
+        player = FindObjectOfType<Player>();
 
         cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
         greenColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.green) + ">";
@@ -74,6 +77,19 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         // Lock the scroll rect to this selected object.
         scrollRectController.SnapTo(myRectTransform);
         buildingSystem.ChangeStructureInHand(structureSO);
+
+        if (structureSO.isTurret)
+        {
+            int turrets = TurretManager.Instance.currentNumTurrets;
+            int maxTurrets = player.stats.structureStats.maxTurrets;
+
+            if (turrets == maxTurrets)
+                MessagePanel.PulseMessage(turrets + " of " + maxTurrets + " turrets built!  Unlock more in Struture Upgrades", Color.red);
+            else if (maxTurrets == 0)
+                MessagePanel.PulseMessage("You can't build any turrets yet!  Unlock Struture Upgrades first", Color.red);
+            else
+                MessagePanel.PulseMessage(turrets + " of " + maxTurrets + " turrets built", Color.cyan);
+        }
     }
     
     public void MakeInteractable()
@@ -94,20 +110,21 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             textInstance.GetComponent<TextMeshProUGUI>().text = structureSO.tileName;
             return;
         }
-
+        
+        int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);
         // Set yellow or red depending on affordability
-        if (playerCredits >= structureSO.tileCost)
+        if (playerCredits >= totalCost)
         {
             textInstance.GetComponent<TextMeshProUGUI>().text = 
             structureSO.tileName + "\n" +
-            yellowColorTag + "$" + structureSO.tileCost + "\n" +
+            yellowColorTag + "$" + totalCost + "\n" +
             greenColorTag + structureSO.maxHealth + " HP" + endColorTag;
         }
         else
         {
             textInstance.GetComponent<TextMeshProUGUI>().text = 
             structureSO.tileName + "\n" +
-            redColorTag + "$" + structureSO.tileCost + "\n" +
+            redColorTag + "$" + totalCost + "\n" +
             greenColorTag + structureSO.maxHealth + " HP" + endColorTag;
         }
     }

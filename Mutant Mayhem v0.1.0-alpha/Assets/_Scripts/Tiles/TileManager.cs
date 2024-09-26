@@ -31,6 +31,7 @@ public class TileManager : MonoBehaviour
     public int numberOfTilesHit;
     public int numberofTilesMissed;
 
+    BuildingSystem buildingSystem;
     TurretManager turretManager;
 
     //[SerializeField] GameObject debugDotPrefab;
@@ -62,6 +63,7 @@ public class TileManager : MonoBehaviour
     void Awake()
     {
         player = FindObjectOfType<Player>();
+        buildingSystem = FindObjectOfType<BuildingSystem>();
         turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
@@ -219,7 +221,8 @@ public class TileManager : MonoBehaviour
         // Get remaining health ratio and tile cost
         float ratio = 1 - (_TileStatsDict[gridPos].maxHealth - _TileStatsDict[gridPos].health) /
                       _TileStatsDict[gridPos].maxHealth;
-        int cost = (int)_TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
+        int cost = Mathf.FloorToInt(buildingSystem.structureCostMult * 
+                   _TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost);
 
         // Refund cost
         BuildingSystem.PlayerCredits += cost * ratio / 2;

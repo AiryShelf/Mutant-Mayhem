@@ -14,22 +14,28 @@ public class UI_SlowScroll : MonoBehaviour
 
     void Awake()
     {
+#if UNITY_STANDALONE_OSX
         player = FindObjectOfType<Player>();
         uiActionMap = player.inputAsset.FindActionMap("UI");
         scrollAction = uiActionMap.FindAction("ScrollWheel");
+#endif
     }
 
     void OnEnable()
     {
+#if UNITY_STANDALONE_OSX
         scrollAction.Enable();
         scrollAction.performed += OnScrollPerformed;
+#endif
     }
 
     void OnDisable()
     {
+#if UNITY_STANDALONE_OSX
         StopAllCoroutines();
         scrollAction.performed -= OnScrollPerformed;
         scrollAction.Disable();
+#endif
     }
 
     private void OnScrollPerformed(InputAction.CallbackContext context)

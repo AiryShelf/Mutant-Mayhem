@@ -148,7 +148,7 @@ public static class UpgStatGetter
     #region Upgrade Amounts
 
     // PlayerStats
-    public static string GetUpgAmount(PlayerStatsUpgrade playerStatsUpgrade, UpgradeManager upgradeSystem)
+    public static string GetUpgAmount(PlayerStatsUpgrade playerStatsUpgrade, UpgradeManager upgradeManager)
     {
         string amount = "null";
 
@@ -170,10 +170,10 @@ public static class UpgStatGetter
                 amount = "+" + PlayerAccuracyUpgrade.UpgAmount.ToString();
                 return amount;
             case PlayerStatsUpgrade.MeleeDamage:
-                amount = "+" + MeleeDamageUpgrade.GetUpgAmount(upgradeSystem).ToString();
+                amount = "+" + MeleeDamageUpgrade.GetUpgAmount(upgradeManager).ToString();
                 return amount;
             case PlayerStatsUpgrade.MeleeKnockback:
-                amount = "+" + KnockbackUpgrade.GetUpgAmount(upgradeSystem).ToString();
+                amount = "+" + KnockbackUpgrade.GetUpgAmount(upgradeManager).ToString();
                 return amount;
             case PlayerStatsUpgrade.StaminaMax:
                 amount = "+" + StaminaMaxUpgrade.UpgAmount.ToString();
@@ -244,14 +244,14 @@ public static class UpgStatGetter
     }
 
     // GunStats
-    public static string GetUpgAmount(Player player, GunStatsUpgrade gunStatsUpgrade, int gunIndex, UpgradeManager upgradeSystem)
+    public static string GetUpgAmount(Player player, GunStatsUpgrade gunStatsUpgrade, int gunIndex, UpgradeManager upgradeManager)
     {
         string amount = "null";
 
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                amount = "+" + GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeSystem).ToString("#0.0");
+                amount = "+" + GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeManager).ToString("#0.0");
                 return amount;
             case GunStatsUpgrade.GunKnockback:
                 amount = "+" + GunKnockbackUpgrade.GetUpgAmount(player, gunIndex).ToString("#0.0");
@@ -288,23 +288,27 @@ public static class UpgStatGetter
     #region Upgrade Costs
 
     // Consumables
-    public static int GetUpgCost(Player player, ConsumablesUpgrade consumablesUpgrade, UpgradeManager upgradeSystem)
+    public static int GetUpgCost(Player player, ConsumablesUpgrade consumablesUpgrade, UpgradeManager upgradeManager)
     {
         int cost = 0;
 
         switch (consumablesUpgrade)
         {
             case ConsumablesUpgrade.PlayerHeal:
-                cost = PlayerHealUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
+                       PlayerHealUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
                 return cost;
             case ConsumablesUpgrade.QCubeRepair:
-                cost = QCubeRepairUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
+                       QCubeRepairUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
                 return cost;
             case ConsumablesUpgrade.GrenadeBuyAmmo:
-                cost = GrenadeBuyAmmoUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
+                       GrenadeBuyAmmoUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
                 return cost;
             case ConsumablesUpgrade.SMGBuyAmmo:
-                cost = SMGBuyAmmoUpgrade.GetCost(player, upgradeSystem.consumablesUpgBaseCosts[consumablesUpgrade]);
+                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
+                       SMGBuyAmmoUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
                 return cost;
         }
 

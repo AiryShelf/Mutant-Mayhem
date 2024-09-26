@@ -30,4 +30,9 @@ public class Aug_CreditsAdd : AugmentationBaseSO
     {
         return "N/A";
     }
+
+    public override string GetNeutralDescription(AugManager augManager, int level)
+    {
+        return "Raise the level to start with more credits";
+    }
 }

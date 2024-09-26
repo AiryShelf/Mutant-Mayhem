@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Explosion : MonoBehaviour
 {
@@ -12,196 +13,186 @@ public class Explosion : MonoBehaviour
     [SerializeField] float damage;
     [SerializeField] WindZone wind;
     [SerializeField] float windTime;
+    
+    List<Vector3Int> visibleTiles = new List<Vector3Int>();
 
-    private List<Vector3Int> hitTiles = new List<Vector3Int>(); // For gizmos
-    private List<Vector3Int> obstacleTiles = new List<Vector3Int>();
+    TileManager tileManager;
 
     void Start()
     {
         // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
-
         AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
-        // Find objects in range
-        Vector2 pos = transform.position;
-        Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(pos, radius, 
-                                        LayerMask.GetMask("Enemies", "Player", "Corpses"));
-        // Loop through findings
-        foreach (Collider2D collider in objectsInRange)
-        {
-            // Apply force
-            Rigidbody2D rb = collider.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                Vector2 dir = pos - rb.position;
-                float dist = dir.magnitude;
-                dir.Normalize();
-                rb.AddForce(-dir * (force / dist), ForceMode2D.Impulse);
-
-                ApplyDamage(collider, dist);
-            }           
-        }
-
-        ApplyTileDamage(transform.position);
-    }
-    void ApplyDamage(Collider2D collider, float dist)
-    {
-        float totalDamage = Mathf.Clamp(damage / dist, 0, damage);
-
-        // Apply Enemy Damage and Trigger AI
-        EnemyBase enemy = collider.GetComponent<EnemyBase>();
-        if (enemy != null)
-        {
-            enemy.ModifyHealth(-totalDamage, gameObject);
-            enemy.StartFreeze();
-            enemy.SetAggroStatus(true);
-            enemy.EnemyChaseSOBaseInstance.StartSprint();
-
-            StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;
-        }
-        else
-        {
-            // Apply Player damage
-            Player player = collider.GetComponent<Player>();
-            if (player != null)
-            {
-                totalDamage = Mathf.Clamp(damage / 2 / dist, 0, damage);
-                Health pHealth = player.GetComponent<Health>();
-                pHealth.ModifyHealth(-totalDamage, gameObject);                   
-                StatsCounterPlayer.TotalDamageByPlayerExplosions += damage / dist;
-            }
-        }
-    }
-
-    void ApplyTileDamage(Vector2 explosionPos)
-    {
-        TileManager tileManager = FindObjectOfType<TileManager>();
+        tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)
         {
             Debug.LogError("Explosion could not find TileManager in scene");
             return;
         }
 
-        List<Vector3Int> hitList = new List<Vector3Int>();
+        // Find grid tiles in range
+        Vector2 explosionPos = transform.position;
+        List<Vector3Int> tilesToCheck = GetTilesInRadius(explosionPos, tileManager);
 
-        Vector3Int explosionCenter = tileManager.WorldToGrid(explosionPos);
+        Explode(explosionPos, tilesToCheck, tileManager);
+        ApplyDamageToEntitiesInTiles(explosionPos, visibleTiles);
+    }
+
+    void Explode(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
+    {
+        List<Vector3Int> hitTiles = new List<Vector3Int>();
+
+        // Check each tile in radius
+        foreach (Vector3Int tilePos in tilesToCheck)
+        {
+            Vector2 tileCenter = tileManager.GridCenterToWorld(tilePos);
+            Vector2 dirToTile = tileCenter - explosionPos;
+
+            // Perform a raycast from the explosion center to the tile center
+            RaycastHit2D hit = Physics2D.Raycast(explosionPos, dirToTile, 
+                               Vector2.Distance(tileCenter, explosionPos), 
+                               LayerMask.GetMask("Structures"));
+
+            if (hit.collider != null)
+            {
+                // We hit something, check if it's a structure
+                Vector2 nudge = dirToTile.normalized * 0.01f;
+                Vector2 worldPos = hit.point + nudge;
+                Vector3Int gridPos = tileManager.WorldToGrid(worldPos);
+                
+                if (tileManager.ContainsTileDictKey(gridPos))
+                {
+                    // Apply half damage to the structure if tile hasn’t been hit yet
+                    if (!hitTiles.Contains(gridPos))
+                    {
+                        Debug.Log("Explosion tried to hit a tile");
+                        float distToPoint = Vector2.Distance(explosionPos, worldPos);
+                        float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
+                        tileManager.ModifyHealthAt(worldPos, -totalDamage);
+
+                        // Add the tile to the list of hit tiles
+                        hitTiles.Add(gridPos);
+                        visibleTiles.Add(gridPos);
+                    }
+                }
+            }
+            else
+            {
+                visibleTiles.Add(tilePos);
+            }
+        }
+    }
+
+    void ApplyDamageToEntitiesInTiles(Vector2 explosionPos, List<Vector3Int> visibleTiles)
+    {
+        // Only damage player or cube once
+        bool playerWasHit = false;
+        bool cubeWasHit = false;
+
+        foreach (Vector3Int tilePos in visibleTiles)
+        {
+            // Convert the tile position back to world space
+            Vector2 tileCenter = tileManager.GridCenterToWorld(tilePos);
+
+            // Create bounds for the tile, based on tile size
+            Vector3 tileSize = tileManager.StructureGrid.cellSize;
+            Bounds tileBounds = new Bounds(tileCenter, tileSize);
+
+            // Check for enemies or player within this tile
+            Collider2D[] entitiesInTile = Physics2D.OverlapBoxAll(tileCenter, tileSize, 0, LayerMask.GetMask("Enemies", "Player", "QCube"));
+
+            
+
+            foreach (Collider2D entity in entitiesInTile)
+            {
+                // Apply damage to enemies
+                EnemyBase enemy = entity.GetComponent<EnemyBase>();
+                if (enemy != null)
+                {
+                    if (tileBounds.Contains(enemy.transform.position))
+                    {
+                        float distToPoint = Vector2.Distance(explosionPos, entity.transform.position);
+                        float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage);
+                        enemy.ModifyHealth(-totalDamage, gameObject);
+                        Debug.Log($"Enemy hit at {entity.transform.position} for {totalDamage} damage");
+                        continue;
+                    }
+                }
+
+                // Apply half damage to the player
+                Player player = entity.GetComponent<Player>();
+                if (player != null && !playerWasHit)
+                {
+                    Health pHealth = player.GetComponent<Health>();
+                    float distToPoint = Vector2.Distance(explosionPos, player.transform.position);
+                    float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
+                    pHealth.ModifyHealth(-totalDamage, gameObject);
+                    Debug.Log($"Player hit at {player.transform.position} for {totalDamage} damage");
+                    playerWasHit = true;
+                }
+
+                // Apply half damage to the Cube
+                QCubeHealth cubeHealth = entity.GetComponent<QCubeHealth>();
+                if (cubeHealth != null && !cubeWasHit)
+                {
+                    float distToPoint = Vector2.Distance(explosionPos, cubeHealth.transform.position);
+                    float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
+                    cubeHealth.ModifyHealth(-totalDamage, gameObject);
+                    Debug.Log($"QCube hit at {cubeHealth.transform.position} for {totalDamage} damage");
+                    cubeWasHit = true;
+                }
+            }
+        }
+    }
+
+    List<Vector3Int> GetTilesInRadius(Vector2 pos, TileManager tileManager)
+    {
+        List<Vector3Int> tilesInRadius = new List<Vector3Int>();
+        Vector3Int centerTile = tileManager.WorldToGrid(pos);
         int gridRadius = Mathf.CeilToInt(radius);
 
         for (int x = -gridRadius; x <= gridRadius; x++)
         {
             for (int y = -gridRadius; y <= gridRadius; y++)
             {
-                Vector3Int gridPos = explosionCenter + new Vector3Int(x, y, 0);
+                Vector3Int gridPos = centerTile + new Vector3Int(x, y, 0);
                 Vector2 tileCenter = tileManager.GridCenterToWorld(gridPos);
-                float distanceToTileCenter = Vector2.Distance(explosionPos, tileCenter);
+                float distToTile = Vector2.Distance(pos, tileCenter);
 
-                if (distanceToTileCenter <= radius)
+                // Only add tiles within the explosion's circular radius
+                if (distToTile <= radius)
                 {
-                    if (IsTileVisible(explosionCenter, gridPos, tileManager, hitList))
-                    {
-                        float totalDamage = Mathf.Clamp(damage / 2 / distanceToTileCenter, 0, damage);
-                        tileManager.ModifyHealthAt(tileCenter, -totalDamage);
-                        hitList.Add(gridPos);
-                        hitTiles.Add(gridPos);  // Add to hit tiles for Gizmos
-                    }
-                    else
-                    {
-                        obstacleTiles.Add(gridPos);  // Add to obstacle tiles for Gizmos
-                    }
+                    tilesInRadius.Add(gridPos);
                 }
             }
         }
+
+        return tilesInRadius;
     }
 
-    bool IsTileVisible(Vector3Int explosionCenter, Vector3Int targetTile, TileManager tileManager, List<Vector3Int> hitList)
-    {
-        Vector3Int direction = targetTile - explosionCenter;
-        int steps = Mathf.Max(Mathf.Abs(direction.x), Mathf.Abs(direction.y));
-
-        for (int i = 1; i <= steps; i++)
-        {
-            Vector3Int intermediateTile = explosionCenter + new Vector3Int(
-                Mathf.RoundToInt((float)direction.x / steps * i),
-                Mathf.RoundToInt((float)direction.y / steps * i),
-                0
-            );
-
-            if (hitList.Contains(intermediateTile))
-            {
-                return false;
-            }
-
-            if (tileManager.ContainsTileDictKey(intermediateTile)) // If this is a solid tile
-            {
-                return false;  // Stop the explosion from continuing past this point
-            }
-        }
-        return true;  // No obstacles, the tile is visible
-    }
-
-    // Draw gizmos to visualize hit and obstacle tiles
     void OnDrawGizmos()
-{
-    TileManager tileManager = FindObjectOfType<TileManager>();
-    if (tileManager == null) return;
-
-    // Get the size of the tile in world units
-    Vector3 tileSize = tileManager.StructureGrid.cellSize;
-
-    Gizmos.color = Color.red;
-    foreach (var tilePos in hitTiles)
     {
-        Vector2 tileCenter = tileManager.GridCenterToWorld(tilePos) + new Vector2(tileSize.x / 2, tileSize.y / 2);  // Center the box
-        Gizmos.DrawWireCube(tileCenter, tileSize);  // Adjust size to match tile size
-    }
-
-    Gizmos.color = Color.green;
-    foreach (var tilePos in obstacleTiles)
-    {
-        Vector2 tileCenter = tileManager.GridCenterToWorld(tilePos) + new Vector2(tileSize.x / 2, tileSize.y / 2);  // Center the box
-        Gizmos.DrawWireCube(tileCenter, tileSize);  // Adjust size to match tile size
-    }
-}
-}
-
-    /*  The OG method
-    void ApplyTileDamage(Vector2 explosionPos)
-    {
-        TileManager tileManager = FindObjectOfType<TileManager>();
+        // Ensure the TileManager is assigned
         if (tileManager == null)
         {
-            Debug.LogError("Explosion could not find TileManager in scene");
             return;
         }
 
-        // Keep a list of hit structures' root positions, to only hit each structure once?
-        List<Vector3Int> hitList = new List<Vector3Int>();
+        // Set the gizmo color to green to represent visible tiles
+        Gizmos.color = Color.green;
 
-        // Loop through the grid positions in explosion radius
-        Vector3Int explosionCenter = tileManager.WorldToGrid(explosionPos);
-        int gridRadius = Mathf.CeilToInt(radius); // Convert radius to grid tiles
-        
-        for (int x = -gridRadius; x <= gridRadius; x++)
+        // Loop through all visible tiles
+        foreach (Vector3Int tilePos in visibleTiles)
         {
-            for (int y = -gridRadius; y <= gridRadius; y++)
-            {
-                Vector3Int gridPos = explosionCenter + new Vector3Int(x, y, 0);
-                Vector2 worldPos = tileManager.GridToWorld(gridPos);
-                float distance = Vector2.Distance(explosionPos, worldPos);
-                
+            // Convert the tile position back to world space
+            Vector2 tileCenter = tileManager.GridCenterToWorld(tilePos);
 
-                if (distance <= radius) // Only modify tiles within the actual radius
-                {
-                    if (!hitList.Contains(gridPos) && tileManager.ContainsTileDictKey(gridPos))
-                    {
-                        float totalDamage = Mathf.Clamp(damage / 2 / distance, 0, damage);
-                        tileManager.ModifyHealthAt(worldPos, -totalDamage);
-                        hitList.Add(gridPos);
-                        Debug.Log("Explosion applied " + totalDamage + " to a tile section");
-                    }
-                }
-            }
+            // Get the size of the tile from the grid
+            Vector3 tileSize = tileManager.StructureGrid.cellSize;
+
+            // Draw a wireframe cube to represent the tile
+            Gizmos.DrawWireCube(tileCenter, tileSize);
         }
     }
-    */
-
+}
+    

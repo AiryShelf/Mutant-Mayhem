@@ -23,7 +23,7 @@ public class UIUpgrade : MonoBehaviour
 
 
     [HideInInspector] public TextMeshProUGUI upgradeText;
-    UpgradeManager upgradeSystem;
+    UpgradeManager upgradeManager;
     Player player;
     string cyanColorTag;
     string greenColorTag;
@@ -35,7 +35,7 @@ public class UIUpgrade : MonoBehaviour
 
     void Awake()
     {
-        upgradeSystem = FindObjectOfType<UpgradeManager>();
+        upgradeManager = FindObjectOfType<UpgradeManager>();
         player = FindObjectOfType<Player>();
 
         cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
@@ -69,16 +69,16 @@ public class UIUpgrade : MonoBehaviour
         switch (myUpg.upgradeFamily)
         {
             case UpgradeFamily.PlayerStats:
-                upgradeSystem.OnUpgradeButtonClicked(myUpg.playerStatsUpgrade);
+                upgradeManager.OnUpgradeButtonClicked(myUpg.playerStatsUpgrade);
                 break;
             case UpgradeFamily.StructureStats:
-                upgradeSystem.OnUpgradeButtonClicked(myUpg.structureStatsUpgrade);
+                upgradeManager.OnUpgradeButtonClicked(myUpg.structureStatsUpgrade);
                 break;
             case UpgradeFamily.Consumables:
-                upgradeSystem.OnUpgradeButtonClicked(myUpg.consumablesUpgrade);
+                upgradeManager.OnUpgradeButtonClicked(myUpg.consumablesUpgrade);
                 break;
             case UpgradeFamily.GunStats:
-                upgradeSystem.OnUpgradeButtonClicked(myUpg.gunStatsUpgrade, myUpg.playerGunIndex);
+                upgradeManager.OnUpgradeButtonClicked(myUpg.gunStatsUpgrade, myUpg.playerGunIndex);
                 break;
             default:
                 Debug.LogWarning("Unhandled upgrade family: " + myUpg.upgradeFamily);
@@ -103,8 +103,9 @@ public class UIUpgrade : MonoBehaviour
             if (upgradeFamily == UpgradeFamily.Consumables)
             {
                 // Consumables
-                upgLvl = upgradeSystem.consumablesUpgLevels[consumablesUpgrade];
-                upgCost = UpgStatGetter.GetUpgCost(player, consumablesUpgrade, upgradeSystem);
+                upgLvl = upgradeManager.consumablesUpgLevels[consumablesUpgrade];
+                upgCost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
+                          UpgStatGetter.GetUpgCost(player, consumablesUpgrade, upgradeManager));
                 statValue = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
                 upgAmount = UpgStatGetter.GetUpgAmount(player, consumablesUpgrade);
             }
@@ -116,41 +117,45 @@ public class UIUpgrade : MonoBehaviour
                 {
                     case 0:
                     {
-                        upgLvl = upgradeSystem.laserUpgLevels[gunStatsUpgrade];
-                        maxLvl = upgradeSystem.laserUpgMaxLevels[gunStatsUpgrade];
-                        upgCost = upgradeSystem.laserUpgCurrCosts[gunStatsUpgrade];
+                        upgLvl = upgradeManager.laserUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeManager.laserUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult * 
+                                  upgradeManager.laserUpgCurrCosts[gunStatsUpgrade]);
                         break;
                     }
 
                     case 1:
                     {
-                        upgLvl = upgradeSystem.bulletUpgLevels[gunStatsUpgrade];
-                        maxLvl = upgradeSystem.bulletUpgMaxLevels[gunStatsUpgrade];
-                        upgCost = upgradeSystem.bulletUpgCurrCosts[gunStatsUpgrade];
+                        upgLvl = upgradeManager.bulletUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeManager.bulletUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult * 
+                                  upgradeManager.bulletUpgCurrCosts[gunStatsUpgrade]);
                         break;
                     }
                 }
                 statValue = UpgStatGetter.GetStatValue(player, gunStatsUpgrade, playerGunIndex);
-                upgAmount = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeSystem);
+                upgAmount = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeManager);
             }
 
             else if (upgradeFamily == UpgradeFamily.PlayerStats)
             {
                 // PlayerStats
-                upgLvl = upgradeSystem.playerStatsUpgLevels[playerStatsUpgrade];
-                maxLvl = upgradeSystem.playerStatsUpgMaxLevels[playerStatsUpgrade];
-                upgCost = upgradeSystem.playerStatsUpgCurrCosts[playerStatsUpgrade];
+                upgLvl = upgradeManager.playerStatsUpgLevels[playerStatsUpgrade];
+                maxLvl = upgradeManager.playerStatsUpgMaxLevels[playerStatsUpgrade];
+                upgCost = Mathf.FloorToInt(upgradeManager.playerStatsCostMult * 
+                          upgradeManager.playerStatsUpgCurrCosts[playerStatsUpgrade]);
                 statValue = UpgStatGetter.GetStatValue(player, playerStatsUpgrade);
-                upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeSystem);
+                upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeManager);
             }
 
             else if (upgradeFamily == UpgradeFamily.StructureStats)
             {
                 // StructureStats
-                upgLvl = upgradeSystem.structureStatsUpgLevels[structureStatsUpgrade];
-                maxLvl = upgradeSystem.structureStatsUpgMaxLevels[structureStatsUpgrade];
-                upgCost = upgradeSystem.structureStatsUpgCurrCosts[structureStatsUpgrade];
-                statValue = UpgStatGetter.GetStatValue(upgradeSystem.player, structureStatsUpgrade);
+                upgLvl = upgradeManager.structureStatsUpgLevels[structureStatsUpgrade];
+                maxLvl = upgradeManager.structureStatsUpgMaxLevels[structureStatsUpgrade];
+                upgCost = Mathf.FloorToInt(upgradeManager.structureStatsCostMult * 
+                          upgradeManager.structureStatsUpgCurrCosts[structureStatsUpgrade]);
+                statValue = UpgStatGetter.GetStatValue(upgradeManager.player, structureStatsUpgrade);
                 upgAmount = UpgStatGetter.GetUpgAmount(structureStatsUpgrade);
             }
             

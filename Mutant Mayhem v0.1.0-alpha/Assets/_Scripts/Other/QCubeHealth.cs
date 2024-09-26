@@ -12,9 +12,9 @@ public class QCubeHealth : Health
         UpdateDamageSprite();        
     }
 
-    public override void ModifyHealth(float value, GameObject other)
+    public override void ModifyHealth(float value, GameObject damageDealer)
     {
-        base.ModifyHealth(value, other);
+        base.ModifyHealth(value, damageDealer);
         UpdateDamageSprite();
     }
 

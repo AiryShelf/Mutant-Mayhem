@@ -129,7 +129,7 @@ public class QCubeController : MonoBehaviour
 
         if (!isUpgradesOpen)
             {
-                MessagePanel.ShowMessage("Not close enough to access the " +
+                MessagePanel.PulseMessage("Not close enough to access the " +
                                         "Cube. Get closer!", Color.yellow);
                 // Player is not in range, show UI message to the player
                 //Debug.Log("Player NOT in QCube Range!");

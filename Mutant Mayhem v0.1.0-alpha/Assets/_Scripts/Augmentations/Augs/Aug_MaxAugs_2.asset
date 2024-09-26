@@ -9,19 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3edfa197c4ae3004c8d6927090947a3d, type: 3}
-  m_Name: Aug_CreditsMult_1.1
+  m_Script: {fileID: 11500000, guid: 5e1edb24654f2c24a9cfa2e8e75aa283, type: 3}
+  m_Name: Aug_MaxAugs_2
   m_EditorClassIdentifier: 
-  augmentationName: Credits Mod
-  uiImage: {fileID: 21300000, guid: cec9ed8c6d67b1044b6f5353cbd00a9b, type: 3}
-  cost: 100
-  lvlCostIncrement: 50
-  lvlCostIncrementMult: 1.5
-  refund: 25
+  augmentationName: Max Aug Levels
+  uiImage: {fileID: 0}
+  cost: 200
+  lvlCostIncrement: 100
+  lvlCostIncrementMult: 2
+  refund: 50
   lvlRefundIncrement: 25
   lvlRefundIncrementMult: 1.5
   maxLvl: 20
-  minLvl: -9
+  minLvl: -10
   family: 3
-  type: 0
-  lvlMultIncrement: 0.05
+  type: 1
+  lvlAddIncrement: 2
+  lvlNegIncrement: 1

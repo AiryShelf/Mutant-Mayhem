@@ -51,7 +51,11 @@ public class Aug_BulletDamageStart : AugmentationBaseSO
         string percentage = GameTools.FactorToPercent(totalDamageMult);
         string description = "Reduces starting damage of all bullet based weapons by " + percentage + 
                              " - Aquire RP by diverting processing focus from balistics into research.";
-        return description;
-        
+        return description; 
+    }
+
+    public override string GetNeutralDescription(AugManager augManager, int level)
+    {
+        return "Raise or lower the level to adjust the damage of all bullet based weapons";
     }
 }

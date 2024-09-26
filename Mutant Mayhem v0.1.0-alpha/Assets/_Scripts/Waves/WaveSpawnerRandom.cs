@@ -54,7 +54,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         currentWave.timesToTriggerSubwaves.Clear();
 
         // Add more subwaves over time, apply difficulty
-        int numOfSubwaves = Mathf.CeilToInt(numSubwavesAtStart + waveController.currentWaveCount * 
+        int numOfSubwaves = Mathf.CeilToInt(numSubwavesAtStart + waveController.currentWaveIndex * 
                          SettingsManager.Instance.SubwaveListGrowthFactor);
 
         // Build Wave
@@ -63,10 +63,10 @@ public class WaveSpawnerRandom : MonoBehaviour
         for (int i = 0; i < numOfSubwaves; i++)
         {
             // Find max index to select based on current wave, plus starting max index
-            int maxIndex = Mathf.FloorToInt(waveController.currentWaveCount / waveController.wavesPerBase) 
+            int maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex / waveController.wavesPerBase) 
                            + maxIndexToSelectAtStart - SettingsManager.Instance.WavesTillAddWaveBase;
             maxIndex = Mathf.Clamp(maxIndex, 0, waveSOBaseSource.subWaves.Count - 1);
-            Debug.Log("maxIndex for wave " + waveController.currentWaveCount + ": " + maxIndex);
+            Debug.Log("maxIndex for wave " + waveController.currentWaveIndex + ": " + maxIndex);
 
             // Select random index, wave, and style. Prevent doubles
             int subWaveIndex = Random.Range(0, maxIndex + 1);
@@ -95,13 +95,13 @@ public class WaveSpawnerRandom : MonoBehaviour
             timeInSequence += timeToNextSubWave;
             prevSubwaveIndex = subWaveIndex;
         }
-        Debug.Log("Number of SubWaves for wave " + waveController.currentWaveCount + 
+        Debug.Log("Number of SubWaves for wave " + waveController.currentWaveIndex + 
                   ": " + currentWave.subWaves.Count);
     }
 
     IEnumerator WaveTimer()
     {
-        Debug.Log("Start Wave " + waveController.currentWaveCount);
+        Debug.Log("Start Wave " + waveController.currentWaveIndex);
 
         // Initialize
         currentSubWaveIndex = 0;
@@ -117,7 +117,7 @@ public class WaveSpawnerRandom : MonoBehaviour
 
         // Find max length of time, add 5 seconds
         int maxTime = _timesToTriggerSubwaves.Max() + 5;
-        Debug.Log("MaxTime for wave " + waveController.currentWaveCount + ": " + maxTime);
+        Debug.Log("MaxTime for wave " + waveController.currentWaveIndex + ": " + maxTime);
 
         while (waveSpawning)
         {
@@ -154,7 +154,7 @@ public class WaveSpawnerRandom : MonoBehaviour
 
                 // End the wave
                 waveComplete = true;
-                Debug.Log("Wave " + waveController.currentWaveCount + " Complete");
+                Debug.Log("Wave " + waveController.currentWaveIndex + " Complete");
             }
         }
     }
