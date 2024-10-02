@@ -82,7 +82,7 @@ public class WaveControllerRandom : MonoBehaviour
         nextWaveFadeGroup.isTriggered = true;
 
         float countdown = _timeBetweenWaves;
-        while (countdown >= 0)
+        while (countdown > 0)
         {
             nextWaveText.text = "Time until night " + (currentWaveIndex + 1) + 
                 ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";
