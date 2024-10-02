@@ -28,7 +28,7 @@ public class TutorialUpgradePanel : TutorialPanel
 
     public override void OnDisableButtonClick()
     {
-        TutorialManager.TutorialDisabled = true;
+        TutorialManager.SetTutorialStateAndProfile(false);
 
         RestorePreviousSelection();
 

@@ -6,15 +6,28 @@ using TMPro;
 
 public class HUDStatsPanel : MonoBehaviour
 {
+    [SerializeField] RectTransform healthPopupsContainer;
+
     [Header("Player Stats")]
+    [SerializeField] GameObject creditsTextFlyUiPrefab;
+    [SerializeField] GameObject healthTextFlyUiPrefab;
     [SerializeField] TextMeshProUGUI creditsText;
     [SerializeField] Slider healthSlider;
+    [SerializeField] TextMeshProUGUI healthValueText;
     [SerializeField] Slider staminaSlider;
+    [SerializeField] TextMeshProUGUI staminaValueText;
 
-    [Header("Qcube Stats")]
+    [Header("QCube Stats")]
     [SerializeField] Image qCubeImage;
     [SerializeField] QCubeHealth qCubeHealthScript;
     [SerializeField] Slider qCubeHealthSlider;
+    [SerializeField] TextMeshProUGUI qCubeHealthValueText;
+
+    [Header("QCube Damage Effect")]
+    [SerializeField] Color qCubeDamageColor;
+    [SerializeField] float qCubeShakeSpeed;
+    [SerializeField] float qCubeShakeAmount;
+    [SerializeField] float qCubeShakeTime;
 
     Player player;
     PlayerStats playerStats;
@@ -28,50 +41,115 @@ public class HUDStatsPanel : MonoBehaviour
     float qCubePevHealth;
     float qCubeCurrHealth;
     float qCubeMaxHealth;
-    [SerializeField] float qCubeShakeSpeed;
-    [SerializeField] float qCubeShakeAmount;
-    [SerializeField] float qCubeShakeTime;
-    Vector2 qCubeStartPos;
+    int previousCredits;
+    int previousHealth;
+    
+    QCubeHealth qCubeHealth;
     Color qCubeStartColor;
+    Vector2 qCubeStartLocalPos;
     Coroutine shakeEffect;
+    Coroutine flashEffect;
 
-    void Start()
+    void Awake()
     {
         player = FindObjectOfType<Player>();
         playerStats = player.stats;
         playerHealthScript = player.GetComponent<Health>();
         playerStaminaScript = player.GetComponent<Stamina>();
 
-        qCubeStartPos = qCubeImage.transform.localPosition;
         qCubeStartColor = qCubeImage.color;
+        qCubeStartLocalPos = qCubeImage.transform.localPosition;
+    }
+
+    void Start()
+    {
+        UpdatePlayerStatsUI(player.stats.playerHealthScript.GetHealth());
+        UpdateStaminaStats();
+
+        qCubeHealth = FindObjectOfType<QCubeHealth>();
+        UpdateQCubeStatsUI(qCubeHealth.GetHealth());
     }
 
     void FixedUpdate()
     {
-        UpdatePlayerStatsUI();
-
-        UpdateQCubeStatsUI(); 
+        UpdateStaminaStats();
     }
 
-    void UpdatePlayerStatsUI()
+    void OnEnable()
+    {
+        BuildingSystem.OnPlayerCreditsChanged += UpdateCreditsText;
+        qCubeHealthScript.OnCubeHealthChanged += UpdateQCubeStatsUI;
+        player.stats.playerHealthScript.OnPlayerHealthChanged += UpdatePlayerStatsUI;
+        player.stats.playerHealthScript.OnPlayerMaxHealthChanged += UpdatePlayerStatsUI;
+    }
+
+    void OnDisable()
+    {
+        BuildingSystem.OnPlayerCreditsChanged -= UpdateCreditsText;
+        qCubeHealthScript.OnCubeHealthChanged -= UpdateQCubeStatsUI;
+        player.stats.playerHealthScript.OnPlayerHealthChanged -= UpdatePlayerStatsUI;
+        player.stats.playerHealthScript.OnPlayerMaxHealthChanged -= UpdatePlayerStatsUI;
+    }
+
+    void UpdateStaminaStats()
+    {
+        playerMaxStamina = playerStats.staminaMax;
+        playerStamina = playerStaminaScript.GetStamina();
+        staminaSlider.value = playerStamina / playerMaxStamina;
+        staminaValueText.text = "Energy: " + Mathf.CeilToInt(playerStamina).ToString();
+    }
+
+    void UpdatePlayerStatsUI(float playerHealth)
     {
         playerMaxHealth = playerHealthScript.GetMaxHealth();
-        playerMaxStamina = playerStats.staminaMax;
-        playerHealth = playerHealthScript.GetHealth();
-        playerStamina = playerStaminaScript.GetStamina();
 
         healthSlider.value = playerHealth / playerMaxHealth;
-        staminaSlider.value = playerStamina / playerMaxStamina;
+        healthValueText.text = "Health: " + Mathf.CeilToInt(playerHealth).ToString();
 
-        creditsText.text = "Credits: " + BuildingSystem.PlayerCredits.ToString("#0");
+        int healthChange = Mathf.CeilToInt(playerHealth - previousHealth);
+        if (healthChange > 0)
+        {
+            // Gain health effect
+            TextFly textFly = Instantiate(healthTextFlyUiPrefab, healthPopupsContainer).GetComponent<TextFly>();
+
+            float angle = (Random.Range(-45f, 45f) + 75) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+
+            textFly.Initialize("+ " + healthChange + " HP", dir, false);
+        }
+        previousHealth = Mathf.CeilToInt(playerHealth);
     }
 
-    void UpdateQCubeStatsUI()
+    void UpdateCreditsText(float playerCredits)
+    {
+        int creditsChange =  Mathf.FloorToInt(playerCredits - previousCredits);
+        if (creditsChange > 0)
+        {
+            // Gain credits effect
+            TextFly textFly = Instantiate(creditsTextFlyUiPrefab, creditsText.rectTransform).GetComponent<TextFly>();
+
+            float angle = (Random.Range(-45f, 45f) + 75) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+
+            textFly.Initialize("+ " + creditsChange + " C", dir, false);
+        }
+        else
+        {
+            // Credits cost effect
+        }
+
+        int credits = (int)BuildingSystem.PlayerCredits;
+        creditsText.text = "Credits: " + credits.ToString("#0");
+        previousCredits = credits;
+    }
+
+    void UpdateQCubeStatsUI(float cubeHealth)
     {
         qCubeCurrHealth = qCubeHealthScript.GetHealth();
         qCubeMaxHealth = qCubeHealthScript.GetMaxHealth();
 
         qCubeHealthSlider.value = qCubeCurrHealth / qCubeMaxHealth;
+        qCubeHealthValueText.text = Mathf.CeilToInt(qCubeCurrHealth).ToString();
 
         UpdateDamageImage();
     }
@@ -88,36 +166,24 @@ public class HUDStatsPanel : MonoBehaviour
         {
             if (shakeEffect != null)
                 StopCoroutine(shakeEffect);
-            shakeEffect = StartCoroutine(ShakeEffect());
+            shakeEffect = StartCoroutine(GameTools.ShakeTransform(
+                                        qCubeImage.transform, qCubeStartLocalPos,
+                                        qCubeShakeTime, qCubeShakeAmount, qCubeShakeSpeed));
+
+            if (flashEffect != null)
+                StopCoroutine(flashEffect);
+            flashEffect = StartCoroutine(GameTools.FlashSpriteOrImage(
+                                        null, qCubeImage, qCubeShakeTime, 
+                                        qCubeShakeTime/2, qCubeDamageColor, qCubeStartColor));
         }
+        else
+        {
+            // Add cube repair effect
+        }
+
         qCubePevHealth = qCubeCurrHealth;
     }
 
-    IEnumerator ShakeEffect()
-    {
-        float timeElapsed = 0;
-        Color targetColor = new Color(255, 0, 0, 0.75f);
-
-        while (timeElapsed < qCubeShakeTime)
-        {
-            qCubeImage.transform.localPosition = qCubeStartPos + 
-                                                 Random.insideUnitCircle * qCubeShakeAmount;
-
-            // Calculate the interpolation factor
-            float halfTime = qCubeShakeTime / 4;
-            float t = timeElapsed < halfTime ? 
-                    (timeElapsed / halfTime) : 
-                    ((qCubeShakeTime - timeElapsed) / halfTime);
-
-            // Interpolate the color
-            qCubeImage.color = Color.Lerp(qCubeStartColor, targetColor, t);
-
-            yield return new WaitForSeconds(qCubeShakeSpeed);
-            timeElapsed += qCubeShakeSpeed;
-        }
-
-        qCubeImage.transform.localPosition = qCubeStartPos;
-        qCubeImage.color = qCubeStartColor;
-    }
+    
 
 }

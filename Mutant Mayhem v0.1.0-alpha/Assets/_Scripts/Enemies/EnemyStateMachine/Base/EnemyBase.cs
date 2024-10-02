@@ -11,11 +11,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
     public float moveSpeedBase = 1f;
     public float rotateSpeedBase = 3f;
 
-    public bool IsAggroed { get; set; }
-    public bool IsShotAggroed { get; set; }
-    public bool IsWithinMeleeDistance { get; set; }
-    public bool IsWithinShootDistance { get; set; }
-
     #region Randomize Variables
 
     [Header("Randomize Variables")]
@@ -47,6 +42,11 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
     public EnemyChaseState ChaseState { get; set; }
     public EnemyShootState ShootState { get; set; }
     public EnemyMeleeState MeleeState { get; set; }
+
+    public bool IsAggroed { get; set; }
+    public bool IsShotAggroed { get; set; }
+    public bool IsWithinMeleeDistance { get; set; }
+    public bool IsWithinShootDistance { get; set; }
 
     #endregion
 
@@ -159,6 +159,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
     {
         health.ModifyHealth(amount, gameObject);
     }
+
     public void StartFreeze()
     {
         isHit = true;

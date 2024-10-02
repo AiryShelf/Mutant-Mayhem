@@ -10,11 +10,9 @@ public class GunSights : MonoBehaviour
 
     Player player;
 
-    void Start()
+    void Awake()
     {
         player = FindObjectOfType<Player>();
-        maxLength = player.playerShooter.gunList[playerGunIndex].bulletLifeTime *
-                    player.playerShooter.gunList[playerGunIndex].bulletSpeed;
     }
 
     void Update()
@@ -57,5 +55,9 @@ public class GunSights : MonoBehaviour
         */
     }
 
-    
+    public void RefreshSights()
+    {
+        maxLength = player.playerShooter.gunList[playerGunIndex].bulletLifeTime *
+                    player.playerShooter.gunList[playerGunIndex].bulletSpeed;
+    } 
 }

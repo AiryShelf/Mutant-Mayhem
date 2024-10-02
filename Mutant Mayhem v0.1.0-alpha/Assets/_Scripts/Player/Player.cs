@@ -103,7 +103,7 @@ public class Player : MonoBehaviour
     Throw itemToThrow;
     [HideInInspector] public bool hasFirstThrowTarget;
     [HideInInspector] public Vector2 throwTarget;
-    [HideInInspector] public int movementType;
+    [HideInInspector] public bool useStandardWASD = true;
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
     int previousGunIndex;
@@ -126,21 +126,20 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        AudioManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
+        SettingsManager.Instance.ApplyGameplaySettings();
         SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
-
-        if (SettingsManager.Instance.difficultyLevel == DifficultyLevel.Easy)
-        {
-            BuildingSystem.PlayerCredits += 600;
-            MessagePanel.PulseMessage("You recieved $600 to help you through easy mode", Color.cyan);
-        }
 
         ClassManager.Instance.ApplyClassEffects(this);
         UpgradeManager.Instance.Initialize();
         TurretManager.Instance.Initialize();
 
-        SettingsManager.Instance.ApplyAugs();
+        TutorialManager.ResetShownPanels();
+        AugManager.Instance.ApplySelectedAugmentations();
         RefreshMoveForces();
+
+        
     }
 
     void FixedUpdate()
@@ -343,6 +342,41 @@ public class Player : MonoBehaviour
         }
 
         muzzleDirToMouse.Normalize();
+    
+        // Get muzzle angle and rotation
+        muzzleAngleToMouse = Mathf.Atan2(muzzleDirToMouse.y, muzzleDirToMouse.x) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, muzzleAngleToMouse);
+
+        // Calculate the angle difference between the current and target rotation
+        float angleDifference = Quaternion.Angle(playerMainTrans.rotation, targetRotation);
+
+        // Adjust rotation speed: fast at start, slow down as it approaches the target
+        float dynamicSpeed = Mathf.Lerp(stats.lookSpeed * 3f, stats.lookSpeed, angleDifference / 180f);
+
+        // Apply the rotation using Quaternion.Slerp for smooth interpolation
+        playerMainTrans.rotation = Quaternion.Slerp(
+            playerMainTrans.rotation, targetRotation, Time.deltaTime * dynamicSpeed);
+
+        RotateHead(mousePos);
+    }
+
+/* THIS WAS TOO SLOW, ESPECIALLY FOR SMALL MOVEMENTS
+    void LookAtMouse()
+    {
+        // Find Mouse direction and angle
+        Vector3 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        
+        if ((transform.position - mousePos).magnitude > 
+            (transform.position - muzzleTrans.position).magnitude)
+        {
+            muzzleDirToMouse = mousePos - muzzleTrans.transform.position;
+        }
+        else
+        {
+            muzzleDirToMouse = mousePos - transform.position;
+        }
+
+        muzzleDirToMouse.Normalize();
        
         // Get muzzle angle and rotation
         muzzleAngleToMouse = Mathf.Atan2(muzzleDirToMouse.y, muzzleDirToMouse.x) * Mathf.Rad2Deg;
@@ -355,6 +389,7 @@ public class Player : MonoBehaviour
 
         RotateHead(mousePos);
     }
+*/
 
     void RotateHead(Vector3 mousePos)
     {
@@ -399,7 +434,7 @@ public class Player : MonoBehaviour
     {
         Vector2 moveDir;
 
-        if (movementType == 1)
+        if (useStandardWASD == true)
         {
             // Standard WASD movement
             moveDir = new Vector2(rawInput.x, rawInput.y).normalized;

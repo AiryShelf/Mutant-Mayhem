@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class DeathManager : MonoBehaviour
@@ -18,6 +19,7 @@ public class DeathManager : MonoBehaviour
     [SerializeField] List<string> cubeDeathSubtitles;
     [SerializeField] List<string> playerDeathTitles;
     [SerializeField] List<string> playerDeathSubtitles;
+    [SerializeField] AudioMixer sfxMixer;
 
     [Header("Research Points")]
     [SerializeField] int basePoints = 0;
@@ -104,6 +106,8 @@ public class DeathManager : MonoBehaviour
 
     void TransitionToPanel()
     {
+        AudioManager.Instance.FadeToDeathSnapshot();
+        
         myCanvasGroup.blocksRaycasts = true;
         pauseMenuController.isPaused = true;
         isTriggered = true;

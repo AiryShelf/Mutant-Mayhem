@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
     [SerializeField] float healthToCreditsDivisor = 1;
     [SerializeField] HitEffects hitEffectsChild;
     [SerializeField] GameObject corpsePrefab;
+    [SerializeField] GameObject deathPickupPrefab;
     public float deathTorque = 20;
     [SerializeField] SoundSO painSound;
     [SerializeField] float painSoundCooldown= 0.3f;
@@ -133,9 +134,11 @@ public class Health : MonoBehaviour
         hitEffectsChild.transform.parent = null;
         hitEffectsChild.DestroyAfterSeconds();
 
-        // Player Credits
-        BuildingSystem.PlayerCredits += Mathf.FloorToInt(maxHealth / healthToCreditsDivisor * 
-                                        SettingsManager.Instance.CreditsMult);
+        // Drop a pickup
+        Pickup pickup = Instantiate(deathPickupPrefab).GetComponent<Pickup>();
+        pickup.transform.position = transform.position;
+        pickup.pickupData.credits = Mathf.FloorToInt(maxHealth / healthToCreditsDivisor * 
+                                                     SettingsManager.Instance.CreditsMult);
         
         EnemyCounter.EnemyCount--;
         Destroy(gameObject);   

@@ -64,6 +64,11 @@ public class StatsCounterPlayer : MonoBehaviour
         StructuresBuilt = 0;
         StructuresLost = 0;
         
+        PopulateStatsDict();  
+    }
+
+    public static void PopulateStatsDict()
+    {
         StatsDict.Clear();
 
         StatsDict = new Dictionary<string, float>

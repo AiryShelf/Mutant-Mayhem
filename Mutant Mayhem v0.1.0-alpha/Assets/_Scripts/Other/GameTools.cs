@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class GameTools
 {
@@ -119,6 +121,58 @@ public static class GameTools
             formattedTime += $"{seconds} seconds";
 
         return formattedTime.Trim();
+    }
+
+    public static IEnumerator ShakeTransform(Transform transform, Vector2 startLocalPos,
+                                             float shakeTime, float shakeAmount, float shakeSpeed)
+    {
+        float timeElapsed = 0;
+
+        while (timeElapsed < shakeTime)
+        {
+            transform.localPosition = startLocalPos + Random.insideUnitCircle * shakeAmount;
+            yield return new WaitForSeconds(shakeSpeed);
+            timeElapsed += shakeSpeed;
+        }
+
+        // Reset position
+        transform.localPosition = startLocalPos;
+    }
+
+    public static IEnumerator FlashSpriteOrImage(SpriteRenderer sr, Image image, float flashTime, float flashSpeed, Color flashColor, Color startColor)
+    {
+        float timeElapsed = 0;
+
+        while (timeElapsed < flashTime)
+        {
+            // Calculate the percentage of completion for the flash cycle based on flashSpeed
+            float t = Mathf.PingPong(timeElapsed / flashSpeed, 1);
+
+            if (sr != null)
+            {
+                // Interpolate sprite color based on PingPong calculation
+                sr.color = Color.Lerp(startColor, flashColor, t);
+            }
+            else if (image != null)
+            {
+                // Interpolate image color based on PingPong calculation
+                image.color = Color.Lerp(startColor, flashColor, t);
+            }
+
+            // Wait for a frame, then increment timeElapsed
+            yield return null;
+            timeElapsed += Time.deltaTime;
+        }
+
+        // Reset color after flashing is done
+        if (sr != null)
+        {
+            sr.color = startColor;
+        }
+        else if (image != null)
+        {
+            image.color = startColor;
+        }
     }
 }
 

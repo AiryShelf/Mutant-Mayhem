@@ -22,8 +22,6 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
     public static Tilemap AnimatedTilemap;
-    public LayerMask layersForBuildClearCheck;
-    public LayerMask layersForBuildClearingArea; // Finish implementation for corpses
     [SerializeField] List<ParticleSystem> particlesToClear;
     public ParticleSystem repairEffect;
     public int amountRepairParticles = 5;
@@ -81,46 +79,38 @@ public class TileManager : MonoBehaviour
 
     public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
     {
-        if (CheckGridIsClear(gridPos, structure, layersForBuildClearCheck, true))
+        if (AddNewTileToDict(gridPos, structure))
         {
-            if (AddNewTileToDict(gridPos, structure))
+            // Set and rotate animated tile
+            AnimatedTilemap.SetTile(gridPos, 
+                _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+            StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
+
+            // Set structure tile
+            StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
+            
+            // Rotate the structure tile, find new bounds
+            StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
+            Vector2Int bounds = StructureRotator.CalculateBoundingBox(structure.cellPositions);
+
+            if (structure.cellPositions.Count > 1)
             {
-                // Set and rotate animated tile
-                AnimatedTilemap.SetTile(gridPos, 
-                    _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
-                StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
-
-                // Set structure tile
-                StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
-                
-                // Rotate the structure tile, find new bounds
-                StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
-                Vector2Int bounds = StructureRotator.CalculateBoundingBox(structure.cellPositions);
-
-                if (structure.cellPositions.Count > 1)
-                {
-                    StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
-                }
-
-                ClearParticles(gridPos);                
-                shadowCaster2DTileMap.Generate();
-                StatsCounterPlayer.StructuresBuilt++;
-                //Debug.Log("Added a Tile");
-                
-                Debug.Log("Structure tile and Animated tile placed");
-                return true;
+                StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
             }
-            else
-            {
-                Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
-                return false;
-            }
+
+            ClearParticles(gridPos);                
+            shadowCaster2DTileMap.Generate();
+            StatsCounterPlayer.StructuresBuilt++;
+            //Debug.Log("Added a Tile");
+            
+            Debug.Log("Structure tile and Animated tile placed");
+            return true;
         }
         else
         {
-            Debug.Log("Grid was not clear for building on");
+            Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
             return false;
-        }       
+        }     
     }
 
     void ClearParticles(Vector3Int gridPos)
@@ -392,7 +382,7 @@ public class TileManager : MonoBehaviour
 
     public bool CheckGridIsClear(Vector3Int rootPos, StructureSO structure, LayerMask layerMask, bool checkDict)
     {
-        Debug.Log("CheckGridIsClear started w/ rootPos and structureSO");
+        //Debug.Log("CheckGridIsClear started w/ " + structure + " at " + rootPos);
         foreach (Vector3Int pos in structure.cellPositions)
         {   
             if (checkDict)
@@ -412,12 +402,15 @@ public class TileManager : MonoBehaviour
             newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
             boxSize = StructureTilemap.cellSize * 0.9f;
 
-            Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layerMask);
+            Collider2D[] hits = Physics2D.OverlapBoxAll(newWorldPos, boxSize, 0, layerMask);
             
-            if (hit != null)
+            foreach (Collider2D col in hits)
             {
-                Debug.Log("CheckGridIsClear found a collider at the checked position");
-                return false;
+                if (col.tag != "PickupTrigger")
+                {
+                    Debug.Log("CheckGridIsClear found a collider at the checked position");
+                    return false;
+                }
             }
         }
 
@@ -445,12 +438,16 @@ public class TileManager : MonoBehaviour
         newWorldPos = new Vector2(worldPos.x + boxSize.x/2, worldPos.y + boxSize.y/2); 
         boxSize = StructureTilemap.cellSize * 0.9f;
 
-        Collider2D hit = Physics2D.OverlapBox(newWorldPos, boxSize, 0, layerMask);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(newWorldPos, boxSize, 0, layerMask);
         
-        if (hit != null)
+        foreach (Collider2D col in hits)
         {
-            //Debug.Log("Collider detected on CheckGridIsClear");
-            return false;
+            if (col.tag != "PickupTrigger")
+            {
+                //Debug.Log("Collider detected on CheckGridIsClear");
+                return false;
+            }
+            
         }
 
         return true;
@@ -583,7 +580,7 @@ public class TileManager : MonoBehaviour
 
     bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure)
     {
-        if (CheckGridIsClear(rootPos, structure, layersForBuildClearCheck, true))
+        if (CheckGridIsClear(rootPos, structure, buildingSystem.layersForBuildClearCheck, true)) // ***MAKING SOME CHANGES! 
         {                                                      
             // Add the tile's data to the dictionary at root location
             if (!_TileStatsDict.ContainsKey(rootPos))

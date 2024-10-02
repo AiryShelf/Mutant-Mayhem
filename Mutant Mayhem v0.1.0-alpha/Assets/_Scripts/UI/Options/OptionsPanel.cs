@@ -7,43 +7,40 @@ using UnityEngine.UI;
 
 public class OptionsPanel : MonoBehaviour
 {
+    public FadeCanvasGroupsWave fadeGroup;
     [SerializeField] TMP_Dropdown difficultyDropdown;
     [SerializeField] TMP_Dropdown movementTypeDropdown;
     [SerializeField] Toggle spacebarToggle;
+    [SerializeField] Toggle tutorialToggle;
 
     void Start()
     {
         Initialize();
     }
 
-    void Initialize()
+    public void Initialize()
     {
-        // Difficulty
-        if (PlayerPrefs.HasKey("DifficultyLevel"))
+        // Check if a current profile exists, set options values
+        if (ProfileManager.Instance.currentProfile != null)
         {
-            difficultyDropdown.value = PlayerPrefs.GetInt("DifficultyLevel");
+            PlayerProfile profile = ProfileManager.Instance.currentProfile;
+
+            difficultyDropdown.value = (int)profile.difficultyLevel;
+            movementTypeDropdown.value = profile.isStandardWASD ? 1 : 0;
+            tutorialToggle.isOn = profile.isTutorialEnabled;
+            spacebarToggle.isOn = profile.isSpacebarEnabled;
         }
         else
         {
-            difficultyDropdown.value = SettingsManager.Instance.startingDifficulty;
-        }
-
-        // Movement Type
-        if (PlayerPrefs.HasKey("StandardWASD"))
-        {
-            movementTypeDropdown.value = PlayerPrefs.GetInt("StandardWASD");
-        }
-        else
-        {
-            movementTypeDropdown.value = 1;
-        }
-
-        // Controls
-        if (SettingsManager.Instance.spacebarEnabled == 1)
+            difficultyDropdown.value = (int)SettingsManager.Instance.startingDifficulty;
+            movementTypeDropdown.value = 1; // Default to standard WASD
+            tutorialToggle.isOn = true;
             spacebarToggle.isOn = true;
-        else
-            spacebarToggle.isOn = false;
+        }
 
+        // Add listeners
+        tutorialToggle.onValueChanged.AddListener(delegate {
+                                            ToggleTutorial(tutorialToggle); });
         difficultyDropdown.onValueChanged.AddListener(delegate { 
                                             DifficultyValueChanged(difficultyDropdown); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
@@ -54,53 +51,28 @@ public class OptionsPanel : MonoBehaviour
 
     public void ToggleSpacebar(Toggle change)
     {
-        Debug.Log("Toggle Spacebar ran");
-        Player player = FindObjectOfType<Player>();
-        if (player == null)
+        ProfileManager.Instance.currentProfile.isSpacebarEnabled = change.isOn;
+        ProfileManager.Instance.SaveCurrentProfile();
+
+        SettingsManager.Instance.ApplyControlSettings();
+        Debug.Log("Toggled Spacebar");
+    }
+
+    public void ToggleTutorial(Toggle change)
+    {
+        if (ProfileManager.Instance.currentProfile == null)
         {
-            Debug.LogError("Player not found");
+            Debug.LogError("No current profile to save tutorial setting.");
             return;
         }
 
-        InputAction throwAction = player.inputAsset.FindActionMap("Player").FindAction("Throw");
-        if (throwAction == null)
-        {
-            Debug.LogError("Throw action not found");
-            return;
-        }
+        // Change profile settings
+        ProfileManager.Instance.currentProfile.isTutorialEnabled = change.isOn;
+        ProfileManager.Instance.SaveCurrentProfile(); // Save the profile with updated tutorial state
 
-        if (SettingsManager.Instance.spacebarEnabled == 1)
-        { 
-            Debug.Log("spacebar found enabled");
-            // Disable the spacebar
-            for (int i = 0; i < throwAction.bindings.Count; i++)
-            {
-                Debug.Log("entered for loop disable");
-                if (throwAction.bindings[i].path == "<Keyboard>/space")
-                {
-                    Debug.Log("Disbaled Spacebar");
-                    throwAction.ApplyBindingOverride(i, new InputBinding { overridePath = "" });
-                    PlayerPrefs.SetInt("SpacebarEnabled", 0);
-                    SettingsManager.Instance.spacebarEnabled = 0;
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("spacebar found disabled");
-            // Enable the spacebar
-            for (int i = 0; i < throwAction.bindings.Count; i++)
-            {
-                Debug.Log("entered for loop enable");
-                if (throwAction.bindings[i].path == "<Keyboard>/space")
-                {
-                    Debug.Log("Enabled Spacebar");
-                    throwAction.RemoveBindingOverride(i);
-                    PlayerPrefs.SetInt("SpacebarEnabled", 1);
-                    SettingsManager.Instance.spacebarEnabled = 1;
-                }
-            }
-        }
+        TutorialManager.SetTutorialStateAndProfile(change.isOn);
+        Debug.Log("Tutorial Enabled: " + change.isOn);
+        
     }
 
     void DifficultyValueChanged(TMP_Dropdown change)
@@ -108,19 +80,20 @@ public class OptionsPanel : MonoBehaviour
         switch (change.value)
         {
             case 0:
-                SettingsManager.Instance.SetDifficulty(DifficultyLevel.Easy);
+                ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Easy;
                 break;
             case 1:
-                SettingsManager.Instance.SetDifficulty(DifficultyLevel.Normal);
+                ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Normal;
                 break;
             case 2:
-                SettingsManager.Instance.SetDifficulty(DifficultyLevel.Hard);
+                ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Hard;
                 break;
             default:
                 Debug.LogError("Failed to change difficulty");
                 break;
         }
 
+        ProfileManager.Instance.SaveCurrentProfile();
         Debug.Log("Difficulty changed via Dropdown");
     }
 
@@ -129,14 +102,16 @@ public class OptionsPanel : MonoBehaviour
         switch (change.value)
         {
             case 0:
-                SettingsManager.Instance.SetMovementType(0);
+                ProfileManager.Instance.currentProfile.isStandardWASD = false;
                 break;
             case 1:
-                SettingsManager.Instance.SetMovementType(1);
+                ProfileManager.Instance.currentProfile.isStandardWASD = true;
                 break;
             default:
                 Debug.LogError("Failed to change move type");
                 break;
         }
+
+        ProfileManager.Instance.SaveCurrentProfile();
     }
 }

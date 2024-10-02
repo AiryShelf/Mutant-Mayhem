@@ -40,6 +40,7 @@ public class Explosion : MonoBehaviour
 
     void Explode(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
     {
+        
         List<Vector3Int> hitTiles = new List<Vector3Int>();
 
         // Check each tile in radius
@@ -101,8 +102,6 @@ public class Explosion : MonoBehaviour
             // Check for enemies or player within this tile
             Collider2D[] entitiesInTile = Physics2D.OverlapBoxAll(tileCenter, tileSize, 0, LayerMask.GetMask("Enemies", "Player", "QCube"));
 
-            
-
             foreach (Collider2D entity in entitiesInTile)
             {
                 // Apply damage to enemies
@@ -112,6 +111,19 @@ public class Explosion : MonoBehaviour
                     if (tileBounds.Contains(enemy.transform.position))
                     {
                         float distToPoint = Vector2.Distance(explosionPos, entity.transform.position);
+                        
+                        // Apply force
+                        Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+                        if (rb == null)
+                        {
+                            Debug.Log("Could not find enemy's Rigidbody during explosion");
+                            continue;
+                        }
+                        Vector2 direction = enemy.transform.position - transform.position;
+                        float forceMagnitude = Mathf.Clamp(force / distToPoint, 0, force);
+                        rb.AddForce(direction * forceMagnitude, ForceMode2D.Impulse);
+
+                        // Apply damage
                         float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage);
                         enemy.ModifyHealth(-totalDamage, gameObject);
                         Debug.Log($"Enemy hit at {entity.transform.position} for {totalDamage} damage");
@@ -123,12 +135,21 @@ public class Explosion : MonoBehaviour
                 Player player = entity.GetComponent<Player>();
                 if (player != null && !playerWasHit)
                 {
-                    Health pHealth = player.GetComponent<Health>();
                     float distToPoint = Vector2.Distance(explosionPos, player.transform.position);
+
+                    // Apply force
+                    Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+                    Vector2 direction = player.transform.position - transform.position;
+                    float forceMagnitude = Mathf.Clamp(force / distToPoint, 0, force);
+                    rb.AddForce(direction * forceMagnitude, ForceMode2D.Impulse);
+
+                    // Apply damage
+                    Health pHealth = player.GetComponent<Health>();
                     float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
                     pHealth.ModifyHealth(-totalDamage, gameObject);
                     Debug.Log($"Player hit at {player.transform.position} for {totalDamage} damage");
                     playerWasHit = true;
+                    continue;
                 }
 
                 // Apply half damage to the Cube

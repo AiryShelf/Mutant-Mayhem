@@ -13,19 +13,19 @@ public class Shooter : MonoBehaviour
     [SerializeField] protected LayerMask elevatedHitLayers;
     [SerializeField] protected GunRecoil gunRecoil;
     public List<int> gunsAmmoInClips = new List<int>();
-    float shootSpeed = 1.0f;
-    public float reloadTime = 2.0f; 
-    public bool isReloading;
-    public bool isElevated;
+    
 
     [Header("Dynamic vars, don't set here")]
     public List<GunSO> gunList;
-    public bool hasTarget;
     public int currentGunIndex = 0;
     public GunSO currentGunSO;
-
+    float shootSpeed = 1.0f;
+    public float TurretReloadTime = 2.0f; 
+    public bool isReloading;
+    public bool isElevated;
+    public bool hasTarget;
     protected GameObject muzzleFlash;
-    protected GameObject laserSight;
+    public GunSights laserSight;
     Coroutine reloadRoutine;
     int clipSize;
     float fireTimer;
@@ -105,12 +105,14 @@ public class Shooter : MonoBehaviour
         if (laserSight != null)
             Destroy(laserSight);
         if (gunList[i].laserSight != null)
-            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans);
-
+        {
+            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans).GetComponent<GunSights>();
+            laserSight.RefreshSights();
+        }
         // Turrets
         if (gunList[i] is TurretGunSO turretGunSO)
         {
-            reloadTime = turretGunSO.reloadSpeed;
+            TurretReloadTime = turretGunSO.reloadSpeed;
         }
         currentGunIndex = i;
         currentGunSO = gunList[i];
@@ -118,7 +120,7 @@ public class Shooter : MonoBehaviour
         clipSize = gunList[i].clipSize;
 
         fireTimer = shootSpeed;
-        reloadTimer = reloadTime;
+        reloadTimer = TurretReloadTime;
     }
 
     protected virtual void Fire()
@@ -215,7 +217,7 @@ public class Shooter : MonoBehaviour
             {
                 isReloading = false;
                 gunsAmmoInClips[currentGunIndex] = clipSize;
-                reloadTimer = reloadTime;
+                reloadTimer = TurretReloadTime;
                 reloadRoutine = null;
             }
         }

@@ -39,8 +39,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 350.47, y: -7.91}
-  m_SizeDelta: {x: 251.64, y: 503.21}
+  m_AnchoredPosition: {x: 356.9, y: -7}
+  m_SizeDelta: {x: 260.69, y: 503.21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &825911859151222173
 MonoBehaviour:
@@ -54,6 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601f3be72e1e2cc418077c2b65ed3065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseOnOpen: 1
 --- !u!222 &7087441669604054075
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -75,7 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.49803922}
+  m_Color: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 0.7529412}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -127,7 +128,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -2.0100098, y: -1.8800049}
+  m_SizeDelta: {x: -0.000061035, y: -1.88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7397514791513509800
 CanvasRenderer:
@@ -157,33 +158,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '- You are able to shoot over the Cube, but enemies will try to destroy
-    it.
-
-
-    - The Q cube can only be repaired here in the upgrade panels
-
-
-    -
-    Press ''TAB'' to open or close the QCube, when near to it
-
-
-    - Use ''Q'' and
-    ''E'' to switch betweeen upgrade panels
-
-
-    - Upgrade your tech
-
-
-    - Unlock
-    more powerful weapons and turrets
-
-
-    - Heal yourself and repair the Cube
-
-
-    -
-    Buy ammo and grenades'
+  m_text: "PROTECT THE CUBE:\n- Only explosives and enemies damage the Cube\n- Enemies
+    will try to destroy the cube\n- The Cube can only be repaired here in the upgrade
+    panels (Consumables Tab)\n\nACCESS UPGRADES:\n- Stand near and press 'TAB' to
+    open or close the upgrades panels\n- Use 'Q' and 'E' to switch betweeen upgrade
+    panels, or click the tabs near the top of the panel\n\nSELL PICKUPS AND BUY STUFF:\n-
+    Stand near to sell collected samples\n- Upgrade your tech \n- Unlock powerful
+    weapons and turrets\n- Heal yourself and repair the Cube\n- Buy ammo and grenades"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -317,7 +298,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You've accessed the Q Cube
+  m_text: "Tutorial: \nThe Q Cube"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -414,6 +395,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2046409132838391594}
   - {fileID: 7938944944386144879}
   - {fileID: 5066062092768637632}
   m_Father: {fileID: 0}
@@ -423,6 +405,81 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 32.366535}
   m_SizeDelta: {x: 441.36, y: 276.3869}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &4990979263196398284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2046409132838391594}
+  - component: {fileID: 5350806817291253269}
+  - component: {fileID: 8707849298442990882}
+  m_Layer: 5
+  m_Name: Darken Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2046409132838391594
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4990979263196398284}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3458928221112978256}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -31.7073}
+  m_SizeDelta: {x: 3011.768, y: 1202.1044}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5350806817291253269
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4990979263196398284}
+  m_CullTransparentMesh: 1
+--- !u!114 &8707849298442990882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4990979263196398284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7529412}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5827513711327066173
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,7 +539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.49803922}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7529412}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -785,7 +842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 399395890224590528, guid: 42d00476d14ec654aa063a05ba512d28, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 64.4
+      value: 64.399994
       objectReference: {fileID: 0}
     - target: {fileID: 399395890224590528, guid: 42d00476d14ec654aa063a05ba512d28, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

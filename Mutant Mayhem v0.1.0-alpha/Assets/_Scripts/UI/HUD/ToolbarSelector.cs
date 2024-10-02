@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ToolbarSelector : MonoBehaviour
 {
     [SerializeField] List<Image> boxImages;
+    [SerializeField] List<Image> gunImages;
     Image currentBox;
     Player player;
     Color unselectedColor;
@@ -15,6 +16,7 @@ public class ToolbarSelector : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
+
         currentBox = boxImages[0];
         unselectedColor = currentBox.color;
         SwitchBoxes(0);
@@ -31,5 +33,13 @@ public class ToolbarSelector : MonoBehaviour
                 currentBox.color = selectedColor;
             }
         }
+    }
+
+    public void UnlockBoxImage(int i)
+    {
+        Image image = gunImages[i];
+        image.color = new Color(1,1,1,1);
+        Debug.Log("Toolbarselector played upgEffect");
+        UpgradeManager.Instance.upgradeEffects.ToolbarUpgradeEffect((Vector2)image.transform.position);
     }
 }

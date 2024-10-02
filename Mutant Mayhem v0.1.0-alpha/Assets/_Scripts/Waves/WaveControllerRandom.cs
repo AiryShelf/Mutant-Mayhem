@@ -18,7 +18,7 @@ public class WaveControllerRandom : MonoBehaviour
     [Header("Wave Properties")]
     public int currentWaveIndex = 0;
     public float timeBetweenWavesBase = 90; // Base amount of day-time
-    public float _timeBetweenWaves; // Amount of day-time after difficulty setting
+    public float _timeBetweenWaves = 0; // Amount of day-time after difficulty setting
     public float spawnRadius = 60; // Radius around the cube that enemies spawn
     public int wavesPerBase = 2; // Affects batch multiplier and max index to choose subwaves from
 
@@ -41,30 +41,20 @@ public class WaveControllerRandom : MonoBehaviour
     public bool isNight;
     Daylight daylight;
 
+    void OnDisable()
+    {
+        if (nextWaveAction != null)
+            nextWaveAction.performed -= OnNextWaveInput;
+    }
 
-    void Awake()
+    public void Initialize()
     {
         player = FindObjectOfType<Player>();
         playerActionMap = player.inputAsset.FindActionMap("Player");
         nextWaveAction = playerActionMap.FindAction("NextWave");
-
-        SettingsManager.Instance.ApplyDifficultySettings();
+        nextWaveAction.performed += OnNextWaveInput;
 
         daylight = FindObjectOfType<Daylight>();
-    }
-
-    void OnEnable()
-    {  
-        nextWaveAction.performed += OnNextWaveInput;
-    }
-
-    void OnDisable()
-    {
-        nextWaveAction.performed -= OnNextWaveInput;
-    }
-
-    void Start()
-    {
         // Start the daytime counter
         if (nextWaveTimer != null)
             StopCoroutine(nextWaveTimer);
@@ -92,7 +82,7 @@ public class WaveControllerRandom : MonoBehaviour
         nextWaveFadeGroup.isTriggered = true;
 
         float countdown = _timeBetweenWaves;
-        while (countdown > 0)
+        while (countdown >= 0)
         {
             nextWaveText.text = "Time until night " + (currentWaveIndex + 1) + 
                 ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";

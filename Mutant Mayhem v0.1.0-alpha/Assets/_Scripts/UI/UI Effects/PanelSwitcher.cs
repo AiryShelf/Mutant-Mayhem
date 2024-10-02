@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PanelSwitcher : MonoBehaviour
 {
     public FadeCanvasGroupsWave backgroundGroupWave;
-    public RectTransform[] panels;
+    public UI_PanelBase[] panels;
     public Button[] tabButtons;
     public float swipeDuration = 0.5f;
     public FadeCanvasGroupsWave prevButton;
@@ -107,7 +108,8 @@ public class PanelSwitcher : MonoBehaviour
         isOpen = true;
         transform.localPosition = originalPosition;
         currentPanelIndex = 0;
-        panels[0].GetComponent<FadeCanvasGroupsWave>().isTriggered = true;
+        panels[0].fadeCanvasGroups.isTriggered = true;
+        panels[0].backPanelFadeGroup.isTriggered = true;
         backgroundGroupWave.isTriggered = true;
         UpdateNavButtons();
         UpdateTabHighlight();
@@ -119,9 +121,9 @@ public class PanelSwitcher : MonoBehaviour
         backgroundGroupWave.isTriggered = false;
         currentPanelIndex = 0;
 
-        foreach (RectTransform panel in panels)
+        foreach (UI_PanelBase panel in panels)
         {
-            panel.GetComponent<FadeCanvasGroupsWave>().isTriggered = false;
+            panel.fadeCanvasGroups.isTriggered = false;
         }
 
         UpdateNavButtons();
@@ -190,11 +192,11 @@ public class PanelSwitcher : MonoBehaviour
         Vector2 startPosition = transform.localPosition;
         Vector2 endPosition = originalPosition - new Vector2(targetIndex * myRect.sizeDelta.x, 0);
 
-        CanvasGroup prevCanv = panels[prevIndex].GetComponent<CanvasGroup>();
-        CanvasGroup targCanv = panels[targetIndex].GetComponent<CanvasGroup>();
-
-        prevCanv.GetComponent<FadeCanvasGroupsWave>().isTriggered = false;
-        targCanv.GetComponent<FadeCanvasGroupsWave>().isTriggered = true;
+        panels[targetIndex].fadeCanvasGroups.isTriggered = true;
+        panels[targetIndex].backPanelFadeGroup.isTriggered = true;
+        
+        panels[prevIndex].fadeCanvasGroups.isTriggered = false;
+        panels[prevIndex].backPanelFadeGroup.isTriggered = false;
 
         float timeElapsed = 0;
         while (timeElapsed < swipeDuration)

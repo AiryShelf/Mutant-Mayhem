@@ -88,6 +88,7 @@ MonoBehaviour:
   healthToCreditsDivisor: 1.8
   hitEffectsChild: {fileID: 853075169137754596}
   corpsePrefab: {fileID: 3246120828009000940, guid: 9144ac51e65349742a12fc9ba99a1aef, type: 3}
+  deathPickupPrefab: {fileID: 944402418777237882, guid: fd9ee9ab4e9ab5240a14204f297a9173, type: 3}
   deathTorque: 30
   painSound: {fileID: 11400000, guid: dc0429e7a6c0fba48956d18ff1936bda, type: 2}
   painSoundCooldown: 0.3
@@ -210,7 +211,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -439186225, guid: d123095bdc2774241bde14f09851d989, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7239679, g: 1, b: 0.5235849, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -267,7 +268,7 @@ MonoBehaviour:
   - {x: 0.039231207, y: -0.04582111, z: 0}
   m_ShapePathHash: 1377517957
   m_Mesh: {fileID: 0}
-  m_InstanceId: 86520
+  m_InstanceId: 142368
   m_LocalBounds:
     m_Center: {x: 0.00037250668, y: 0.0009024441, z: 0}
     m_Extent: {x: 0.038858704, y: 0.04746858, z: 0}

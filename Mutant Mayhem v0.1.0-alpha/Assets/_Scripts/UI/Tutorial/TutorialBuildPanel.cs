@@ -28,7 +28,5 @@ public class TutorialBuildPanel : TutorialPanel
         
         playerActionMap.Enable();
         playerFireAction.Disable();
-        
-        
     }
 }

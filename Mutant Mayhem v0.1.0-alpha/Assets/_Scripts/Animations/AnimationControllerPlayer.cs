@@ -490,6 +490,12 @@ public class AnimationControllerPlayer : MonoBehaviour
 
         if (!playerShooter.gunsUnlocked[index])
         {
+            // Repair Gun
+            if (index == 9)
+            {
+                MessagePanel.PulseMessage("Repair Gun not unlocked!  Unlock Repair Tech at the Q-Cube", Color.yellow);
+                return false;
+            }
             MessagePanel.PulseMessage("Weapon not unlocked!", Color.yellow);
             return false;
         }

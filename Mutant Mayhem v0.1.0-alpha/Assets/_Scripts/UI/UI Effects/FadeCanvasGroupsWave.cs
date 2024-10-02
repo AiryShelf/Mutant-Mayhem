@@ -12,7 +12,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 {
     [SerializeField] bool autoSelectFirstElement;
     [SerializeField] bool deactivateIndivsWithFade;
-    [SerializeField] bool fadeOutInWave = true;
+    [SerializeField] bool fadeOutInWave = false;
     public int batchSize = 1;
     [SerializeField] CanvasGroup initialGroup;
     [SerializeField] CanvasGroup myGroup;
@@ -21,7 +21,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     public List<CanvasGroup> individualElements;
 
     [SerializeField] float fadeStartDelay = 0f;
-    [SerializeField] float delayBetweenElements = 0.3f;
+    [SerializeField] float delayBetweenElements = 0.1f;
     [SerializeField] float fadeStartTime = 1f;
     [SerializeField] float fadeIndivTime = 0.5f;
     public float fadeOutAllTime = 1f;
@@ -36,10 +36,10 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
     void Start()
     {
-        Initialize();
+        InitializeToFadedOut();
     }
 
-    public void Initialize()
+    public void InitializeToFadedOut()
     {
         // Fade everything out
         if (myGroup)
@@ -66,6 +66,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         // Turn the main child off, which contains all the individuals
         if (deactivateGroup)
             deactivateGroup.SetActive(false);
+        
+        isTriggered = false;
     }
 
     void Update()
@@ -138,7 +140,6 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         {
             //initialGroup.gameObject.SetActive(false);
         }
-        
 
         // Start next Wave
         if (nextCanvasGroupsWave)
@@ -149,9 +150,12 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
         // Fades in 'batchSize' number of elements simultaneously
         int batch = batchSize;
-        foreach (CanvasGroup group in individualElements)
-        {       
-            StartCoroutine(FadeInIndividual(group));
+        foreach (CanvasGroup individual in individualElements)
+        {      
+            if (individual == null)
+                continue;
+                 
+            StartCoroutine(FadeInIndividual(individual));
             batch--;
 
             if (batch == 0)
@@ -162,19 +166,19 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         }
     }
 
-    IEnumerator FadeInIndividual(CanvasGroup group)
+    IEnumerator FadeInIndividual(CanvasGroup individual)
     {
         // Activate
         if (deactivateIndivsWithFade)
-            group.gameObject.SetActive(true);
+            individual.gameObject.SetActive(true);
 
-        group.interactable = true;
-        group.blocksRaycasts = true;
+        individual.interactable = true;
+        individual.blocksRaycasts = true;
 
         // Select first button
-        if (!hasSelectedFirst && autoSelectFirstElement && group.GetComponent<Button>())
+        if (!hasSelectedFirst && autoSelectFirstElement && individual.GetComponent<Button>())
         {
-            EventSystem.current.SetSelectedGameObject(group.gameObject);
+            EventSystem.current.SetSelectedGameObject(individual.gameObject);
             hasSelectedFirst = true;
         }
 
@@ -184,8 +188,8 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         {
 
             timeElapsed += frameTimeLength;
-            float value = Mathf.Lerp(group.alpha, 1, timeElapsed / fadeIndivTime);
-            group.alpha = value;
+            float value = Mathf.Lerp(individual.alpha, 1, timeElapsed / fadeIndivTime);
+            individual.alpha = value;
 
             yield return new WaitForSecondsRealtime(frameTimeLength);
         }

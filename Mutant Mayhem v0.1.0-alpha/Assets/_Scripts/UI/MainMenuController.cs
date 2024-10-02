@@ -9,10 +9,8 @@ using UnityEngine.UI;
 public class MainMenuController : MonoBehaviour
 {
     [SerializeField] FadeCanvasGroupsWave mainMenuFadeGroup;
-    [SerializeField] FadeCanvasGroupsWave optionsFadeGroup;
+    [SerializeField] OptionsPanel optionsPanel;
     [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
-    [SerializeField] TextMeshProUGUI currentProfileText;
-    [SerializeField] Button playButton;
     [SerializeField] InputActionAsset inputAsset;
     [SerializeField] ProfileSelectionUI profileSelectionUI;
 
@@ -33,25 +31,6 @@ public class MainMenuController : MonoBehaviour
         escapeKeyPressed.performed -= EscapeKeyPressed;
     }
 
-    void Update()
-    {
-        // Update current profile text
-        PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
-
-        if (currentProfile != null && !string.IsNullOrEmpty(currentProfile.profileName))
-        {
-            currentProfileText.text = "Current Profile: " + currentProfile.profileName;
-            currentProfileText.color = Color.green;
-            playButton.interactable = true;
-        }
-        else
-        {
-            currentProfileText.text = "Create a profile before playing!";
-            currentProfileText.color = Color.red;
-            playButton.interactable = false;
-        }
-    }
-
     public void OnStartGame()
     {
         SceneManager.LoadScene(1);
@@ -67,13 +46,14 @@ public class MainMenuController : MonoBehaviour
         if (!isOptionsOpen)
         {
             // Open options panel
-            optionsFadeGroup.isTriggered = true;
+            optionsPanel.fadeGroup.isTriggered = true;
+            optionsPanel.Initialize();
             isOptionsOpen = true;
         }
         else
         {
             // Close options panel
-            optionsFadeGroup.isTriggered = false;
+            optionsPanel.fadeGroup.isTriggered = false;
             isOptionsOpen = false;
         }
     }

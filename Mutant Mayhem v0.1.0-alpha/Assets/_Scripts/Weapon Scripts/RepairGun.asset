@@ -28,20 +28,20 @@ MonoBehaviour:
   casingLocalPos: {x: 0.31, y: 0}
   muzzleFlashTime: 0.05
   recoilAmount: {x: -0.1, y: 0}
-  damage: -200
-  damageUpgFactor: 2
+  damage: -100
+  damageUpgFactor: -50
   knockback: 0
-  knockbackUpgAmt: 0.1
-  clipSize: 50
+  knockbackUpgAmt: 0
+  clipSize: 20
   clipSizeUpgAmt: 5
-  chargeDelay: 0.2
-  chargeSpeedUpgNegAmt: 0
-  shootSpeed: 0.1
-  shootSpeedUpgNegAmt: -0.015
+  chargeDelay: 0.5
+  chargeSpeedUpgNegAmt: -0.03
+  shootSpeed: 0.2
+  shootSpeedUpgNegAmt: -0.01
   accuracy: 1
-  accuracyUpgNegAmt: -0.4
+  accuracyUpgNegAmt: -0.01
   bulletSpeed: 10
-  bulletLifeTime: 0.6
-  bulletRangeUpgAmt: 0.03
+  bulletLifeTime: 0.18
+  bulletRangeUpgAmt: 0.05
   kickback: 0
   kickbackUpgNegAmt: 0

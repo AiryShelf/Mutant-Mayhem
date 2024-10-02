@@ -42,9 +42,9 @@ public class UIStatsListBuilder : MonoBehaviour
             Destroy(statValuesGrid.transform.GetChild(i).gameObject);
         }
 
-        //StatsCounterPlayer.ResetStatsCounts();
-        // The dict rebuild might not be necessary as I think the values are referenced properly
-        // Also, I'd like to create multiple dictionaries for categories of stats
+        StatsCounterPlayer.PopulateStatsDict();
+        
+        // I'd like to create multiple dictionaries for categories of stats
 
         // Create names and values in gridLayoutGroups        
         foreach (KeyValuePair<string,float> kvp in StatsCounterPlayer.StatsDict)
@@ -58,7 +58,7 @@ public class UIStatsListBuilder : MonoBehaviour
             myFadeCanvasGroups.individualElements.Add(name.GetComponent<CanvasGroup>());
             myFadeCanvasGroups.individualElements.Add(value.GetComponent<CanvasGroup>());
         }
-        myFadeCanvasGroups.Initialize();
+        myFadeCanvasGroups.InitializeToFadedOut();
         
         //fadeCanvasGroups.isTriggered = true;
     }

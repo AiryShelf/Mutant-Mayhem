@@ -25,6 +25,7 @@ public class PlayerShooter : Shooter
     
     bool droppedGun;
     Rigidbody2D myRb;
+    ToolbarSelector toolbarSelector;
     
     [HideInInspector]public PlayerStats playerStats;
 
@@ -34,7 +35,8 @@ public class PlayerShooter : Shooter
 
     protected override void Start()
     {
-        myRb = GetComponent<Rigidbody2D>(); 
+        myRb = GetComponent<Rigidbody2D>();
+        toolbarSelector = FindObjectOfType<ToolbarSelector>(); 
 
         CopyGunList();
         StartChargingGuns();
@@ -44,6 +46,13 @@ public class PlayerShooter : Shooter
     protected override void Update()
     {
         Shoot();
+    }
+
+    public void UnlockGun(int i)
+    {
+        gunsUnlocked[i] = true;
+        toolbarSelector.UnlockBoxImage(i);
+        Debug.Log("Unlocked gun index: " + i);
     }
 
     public void DropGun()
@@ -70,7 +79,7 @@ public class PlayerShooter : Shooter
     {
         if (i < 0 || i >= gunList.Count)
         {
-            Debug.Log("Tried to switch to a gun that is not unlocked or does not exist");
+            Debug.Log("Tried to switch to a gun outside of index range");
             return;
         }
 
@@ -86,9 +95,12 @@ public class PlayerShooter : Shooter
 
         // Sights
         if (laserSight != null)
-            Destroy(laserSight);
+            Destroy(laserSight.gameObject);
         if (gunList[i].laserSight != null)
-            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans);
+        {
+            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans).GetComponent<GunSights>();
+            laserSight.RefreshSights();
+        }
 
         // This could be removed and gunIndex used instead for animation transitions
         bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);

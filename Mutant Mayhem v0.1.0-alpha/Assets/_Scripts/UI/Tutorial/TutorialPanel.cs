@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public class TutorialPanel : MonoBehaviour
 {
+    public bool pauseOnOpen;
     Player player;
     protected InputActionMap playerActionMap;
     protected InputAction playerFireAction;
@@ -24,10 +25,16 @@ public class TutorialPanel : MonoBehaviour
             return;
         }
         
-        Time.timeScale = 0;
-        playerActionMap = player.inputAsset.FindActionMap("Player");
-        playerFireAction = playerActionMap.FindAction("Fire");
-        playerActionMap.Disable();
+        if (pauseOnOpen)
+            Time.timeScale = 0;
+
+        if (player != null)
+        {
+            playerActionMap = player.inputAsset.FindActionMap("Player");
+            playerFireAction = playerActionMap.FindAction("Fire");
+            playerActionMap.Disable();
+        }
+        
         
         StartCoroutine(WaitToStoreSelection());
     }
@@ -56,25 +63,37 @@ public class TutorialPanel : MonoBehaviour
 
         RestorePreviousSelection();
 
-        Time.timeScale = 1;
-        playerActionMap.Enable();
+        if (pauseOnOpen)
+            Time.timeScale = 1;
+
+        if (player != null)
+        {
+            playerActionMap.Enable();
+        }
+        
         Destroy(gameObject);
     }
 
     IEnumerator HandleOnDisableButtonClick()
     {
         // Block input briefly to avoid unintended clicks
-        EventSystem.current.SetSelectedGameObject(null);
+        //EventSystem.current.SetSelectedGameObject(null);
         yield return new WaitForSecondsRealtime(0.1f);
 
         RestorePreviousSelection();
 
-        if (controlsPanel.isOpen)
+        if (controlsPanel != null && controlsPanel.isOpen)
             controlsPanel.TogglePanel();
 
-        Time.timeScale = 1;
-        TutorialManager.TutorialDisabled = true;
-        playerActionMap.Enable();
+        if (pauseOnOpen)
+            Time.timeScale = 1;
+
+        TutorialManager.SetTutorialStateAndProfile(false);
+        if (player != null)
+        {
+            playerActionMap.Enable();
+        }
+        
         Destroy(gameObject);
     }
 

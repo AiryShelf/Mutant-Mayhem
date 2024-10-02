@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ public class PlayerHealth : Health
 {
     [SerializeField] Player player;
     public float healthRegenPerSec = 0.5f;
+    public event Action<float> OnPlayerHealthChanged;
+    public event Action<float> OnPlayerMaxHealthChanged;
 
     void Start()
     {
@@ -33,11 +36,14 @@ public class PlayerHealth : Health
             Die();
             return;
         }
+
+        OnPlayerHealthChanged.Invoke(health);
     }
 
     public override void SetMaxHealth(float value)
     {
         maxHealth = value;
+        OnPlayerMaxHealthChanged.Invoke(maxHealth);
     }
 
     IEnumerator HealthRegen()
@@ -61,7 +67,7 @@ public class PlayerHealth : Health
         player.IsDead = true;
         myRb.freezeRotation = false;
         // Random flip 
-        int sign = Random.Range(0, 2) * 2 - 1; // Randomly 1 or -1
+        int sign = UnityEngine.Random.Range(0, 2) * 2 - 1; // Randomly 1 or -1
         myRb.AddTorque(sign * deathTorque);
     } 
 }

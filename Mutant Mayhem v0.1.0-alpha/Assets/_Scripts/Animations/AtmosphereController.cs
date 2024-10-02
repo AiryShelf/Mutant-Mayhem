@@ -11,7 +11,7 @@ public class AtmosphereController : MonoBehaviour
     WindZone wind;
     Material atmosphere;
     Vector2 atmosphereOffset;
-    Vector2 centerScreen;
+    Vector2 previousPos;
     QCubeController qCubeController;
 
     void Start()
@@ -21,7 +21,6 @@ public class AtmosphereController : MonoBehaviour
         {
             Debug.LogError("Could not find WindZone");
         }
-        windSpeed = wind.windMain / 50;
 
         atmosphere = GetComponent<SpriteRenderer>().material;
         if (atmosphere == null)
@@ -34,24 +33,23 @@ public class AtmosphereController : MonoBehaviour
         {
             Debug.LogError("Could not find qCubeController");
         }
+
+        previousPos = Camera.main.transform.position;
     }
 
-
-    void FixedUpdate()
+    void Update()
     {
-        // Scroll texture across screen
-        GameTools.TextureOffsetCentered(atmosphere, transform, qCubeController.transform, 
-                                        windDirection, windSpeed, ref atmosphereOffset);
+        // Scroll opposite of camera
+        transform.position = (Vector2)Camera.main.transform.position;
+        Vector2 cameraDir = (Vector2)transform.position - previousPos;
+        atmosphere.mainTextureOffset += cameraDir/64;
+
+        // Scroll with wind
+        windSpeed = wind.windMain / 50;
+        atmosphere.mainTextureOffset += windDirection * windSpeed * Time.deltaTime;
+
+        previousPos = transform.position;
     }
 
-    // Now in GameTools
-    void MoveAtmosphere()
-    {
-        centerScreen = Camera.main.transform.position;
-        transform.position = centerScreen;
-        atmosphereOffset += windDirection * windSpeed * Time.deltaTime;
-        Vector2 newOffset = centerScreen + atmosphereOffset;
-
-        atmosphere.mainTextureOffset = newOffset;
-    }
+    
 }
