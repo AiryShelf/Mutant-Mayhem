@@ -1,25 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class TimeControl : MonoBehaviour
 {
-    Player player;
-    InputActionMap playerActionMap;
-    InputAction timeControlAction;
+    public static TimeControl Instance;
 
-    public float gameSpeed = 1;
+    public static bool isPaused;
 
+    float previousTimeScale = 1;
     const float epsilon = 0.0001f;
 
-    void Start()
+    void Awake()
     {
-        player = FindObjectOfType<Player>();
-        playerActionMap = player.inputAsset.FindActionMap("Player");
-        timeControlAction = playerActionMap.FindAction("TimeControl");
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    public void SubscribePlayerTimeControl(Player player)
+    {
+        InputActionMap playerActionMap = player.inputAsset.FindActionMap("Player");
+        InputAction timeControlAction = playerActionMap.FindAction("TimeControl");
         timeControlAction.performed += OnTimeControl;
+    }
+
+    public void UnsubscribePlayerTimeControl(Player player)
+    {
+        InputActionMap playerActionMap = player.inputAsset.FindActionMap("Player");
+        InputAction timeControlAction = playerActionMap.FindAction("TimeControl");
+        timeControlAction.performed -= OnTimeControl;
     }
 
     void OnTimeControl(InputAction.CallbackContext context)
@@ -31,7 +49,23 @@ public class TimeControl : MonoBehaviour
         Debug.Log("timeScale changed to: " + Time.timeScale.ToString("#0.0"));
         MessagePanel.PulseMessage("For Debug: Timescale changed to: " + 
                                  Time.timeScale.ToString("#0.0"), Color.red);
+
+        previousTimeScale = Time.timeScale;
     }
 
-
+    public void PauseGame(bool pause)
+    {
+        if (pause)
+        {
+            Time.timeScale = 0;
+            isPaused = true;
+            Debug.Log("Game Paused");
+        }
+        else
+        {
+            Time.timeScale = previousTimeScale;
+            isPaused = false;
+            Debug.Log("Game Un-Paused");
+        }
+    }
 }

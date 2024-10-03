@@ -124,22 +124,33 @@ public class Player : MonoBehaviour
         IsDead = false;
     }
 
+    void OnEnable()
+    {
+        TimeControl.Instance.SubscribePlayerTimeControl(this);
+    }
+
+    void OnDisable()
+    {
+        TimeControl.Instance.UnsubscribePlayerTimeControl(this);
+    }
+
     void Start()
     {
         AudioManager.Instance.Initialize();
+        TutorialManager.ResetShownPanels();
         StatsCounterPlayer.ResetStatsCounts();
-        SettingsManager.Instance.ApplyGameplaySettings();
+        
         SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
+        SettingsManager.Instance.RefreshProfileSettings(ProfileManager.Instance.currentProfile);
 
         ClassManager.Instance.ApplyClassEffects(this);
         UpgradeManager.Instance.Initialize();
         TurretManager.Instance.Initialize();
-
-        TutorialManager.ResetShownPanels();
         AugManager.Instance.ApplySelectedAugmentations();
-        RefreshMoveForces();
 
+        FindObjectOfType<WaveControllerRandom>().Initialize();
         
+        RefreshMoveForces();
     }
 
     void FixedUpdate()

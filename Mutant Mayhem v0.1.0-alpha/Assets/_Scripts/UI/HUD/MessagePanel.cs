@@ -25,7 +25,8 @@ public class MessagePanel : MonoBehaviour
 
     public static void PulseMessage(string message, Color pulseColor)
     {
-        Instance.DisplayAndPulse(message, pulseColor);
+        if (Instance != null)
+            Instance.DisplayAndPulse(message, pulseColor);
     }
 
 

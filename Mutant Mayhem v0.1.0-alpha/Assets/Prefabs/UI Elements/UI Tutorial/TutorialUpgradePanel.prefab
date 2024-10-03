@@ -54,6 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601f3be72e1e2cc418077c2b65ed3065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
   pauseOnOpen: 1
 --- !u!222 &7087441669604054075
 CanvasRenderer:
@@ -634,7 +635,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 30.699997
+      value: 36.699997
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -651,6 +652,14 @@ PrefabInstance:
     - target: {fileID: 3018715186214051131, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Name
       value: Disable Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 7461285394841556171, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_fontSize
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7461285394841556171, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -744,7 +753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5776675130458506331, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 66.5
+      value: 72.5
       objectReference: {fileID: 0}
     - target: {fileID: 5776675130458506331, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

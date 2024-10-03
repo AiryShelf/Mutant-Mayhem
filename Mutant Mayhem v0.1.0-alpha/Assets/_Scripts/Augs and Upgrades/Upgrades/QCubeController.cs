@@ -85,6 +85,9 @@ public class QCubeController : MonoBehaviour
 
     void OnEscapePressed(InputAction.CallbackContext context)
     {
+        if (TutorialManager.NumTutorialsOpen > 0)
+            return;
+
         if (isUpgradesOpen)
         {
             StartCoroutine(WaitToCheckForPause());
@@ -144,7 +147,7 @@ public class QCubeController : MonoBehaviour
 
     IEnumerator OpenUpgradeWindow()
     {
-        if (!TutorialManager.tutorialShowedUpgrade && !TutorialManager.TutorialDisabled)
+        if (!TutorialManager.TutorialShowedUpgrade && !TutorialManager.TutorialDisabled)
         {
             StartCoroutine(DelayTutorialOpen());
         }
@@ -176,7 +179,7 @@ public class QCubeController : MonoBehaviour
 
     IEnumerator DelayTutorialOpen()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         Instantiate(tutorialUpgradePanelPrefab, gamePlayCanvas);
     }

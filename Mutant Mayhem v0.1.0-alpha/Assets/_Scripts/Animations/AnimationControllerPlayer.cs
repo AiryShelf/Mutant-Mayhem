@@ -136,6 +136,8 @@ public class AnimationControllerPlayer : MonoBehaviour
             UpdatePlayerStates();
     }
 
+    #region Player States
+
     void UpdatePlayerStates()
     {
         // Stop trowing when out of grenades
@@ -271,6 +273,10 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
 
+    #endregion Player States
+
+    #region  Build Mode
+
     public void ToggleBuildMode()
     {
         if (!playerShooter.isBuilding)
@@ -287,6 +293,8 @@ public class AnimationControllerPlayer : MonoBehaviour
                 StopCoroutine(waitToLowerWeaponCoroutine);
                 waitToLowerWeaponCoroutine = null;
             }  
+
+            fireAction.Disable();
         }
         else
         {
@@ -294,8 +302,14 @@ public class AnimationControllerPlayer : MonoBehaviour
             playerShooter.isBuilding = false;
             bodyAnim.SetBool("isBuilding", false);
             bodyAnim.SetBool("isAiming", true);
+
+            fireAction.Enable();
         }
     }
+
+    #endregion Build Mode
+
+    #region Animations
 
     IEnumerator WaitToLowerWeapon()
     {
@@ -303,8 +317,6 @@ public class AnimationControllerPlayer : MonoBehaviour
         bodyAnim.SetBool("isAiming", false);
         waitToLowerWeaponCoroutine = null;
     }
-
-    #region Animations
 
     public void MeleeAnimationPlaying(bool playing)
     {
@@ -383,6 +395,9 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     void OnEscapePressed(InputAction.CallbackContext context)
     {
+        if (TutorialManager.NumTutorialsOpen > 0)
+            return;
+            
         if (playerShooter.isBuilding)
         {
             StartCoroutine(WaitToCheckForPause());

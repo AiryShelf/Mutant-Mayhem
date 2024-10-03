@@ -6,16 +6,24 @@ public class TutorialBuildPanel : TutorialPanel
 {
     void Awake()
     {
-        if (TutorialManager.tutorialShowedBuild)
+        if (TutorialManager.TutorialShowedBuild)
         {
             Destroy(gameObject);
             //return;
+        }
+
+        Player player = FindObjectOfType<Player>();
+        if (player != null)
+        {
+            playerActionMap = player.inputAsset.FindActionMap("Player");
+            playerFireAction = playerActionMap.FindAction("Fire");
+            playerActionMap.Disable();
         }
     }
 
     public override void OnOKButtonClick()
     {
-        TutorialManager.tutorialShowedBuild = true;
+        TutorialManager.TutorialShowedBuild = true;
         base.OnOKButtonClick();
 
         playerActionMap.Enable();

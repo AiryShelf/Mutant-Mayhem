@@ -32,7 +32,7 @@ public class ProfileSelectionUI : MonoBehaviour
         InputActionMap uiActionMap = inputAsset.FindActionMap("UI");
         enterKeyPressed = uiActionMap.FindAction("Submit");
         escapeKeyPressed = uiActionMap.FindAction("Escape");
-        enterKeyPressed.performed += OnEnterKeyPressed;
+        enterKeyPressed.started += OnEnterKeyPressed;
 
         myFadeGroup = GetComponent<FadeCanvasGroupsWave>();
         inputFieldPlaceholder = newProfileNameInput.placeholder.GetComponent<TextMeshProUGUI>();
@@ -40,7 +40,7 @@ public class ProfileSelectionUI : MonoBehaviour
 
     void OnDisable()
     {
-        enterKeyPressed.performed -= OnEnterKeyPressed;
+        enterKeyPressed.started -= OnEnterKeyPressed;
     }
 
     void Start()
@@ -49,7 +49,13 @@ public class ProfileSelectionUI : MonoBehaviour
         originalInputFieldPlaceholderText = inputFieldPlaceholder.text;
         originalInputFieldPlaceholderColor = inputFieldPlaceholder.color;
 
-        ProfileManager.Instance.LoadAllProfiles();
+        //ProfileManager.Instance.LoadAllProfiles();
+        UpdateProfilePanel();
+    }
+
+    public IEnumerator DelayUpdateProfilePanel()
+    {
+        yield return new WaitForFixedUpdate();
         UpdateProfilePanel();
     }
 
@@ -69,6 +75,7 @@ public class ProfileSelectionUI : MonoBehaviour
             maxWaveReachedValueText.text = "N/A";
             clonesUsedValueText.text = "N/A";
             ProfileManager.Instance.currentProfile = null;
+            Debug.Log("ProfileSelectionUI did not find any profiles");
             return;
         }
 
@@ -76,13 +83,11 @@ public class ProfileSelectionUI : MonoBehaviour
         foreach (PlayerProfile profile in ProfileManager.Instance.profiles)
         {
             profileNames.Add(profile.profileName);
+            Debug.Log("Added " + profile.profileName + " to dropdown menu list");
         }
 
-        // Ensure there is a valid current profile after deleting
-    if (ProfileManager.Instance.currentProfile == null && ProfileManager.Instance.profiles.Count > 0)
-    {
-        ProfileManager.Instance.SetCurrentProfile(profileNames[0]); // Set the first profile as current
-    }
+        if (profileNames.Count > 0)
+            profileDropdown.AddOptions(profileNames);
 
         // Update delete button, current profile and reasearch text
         deleteButton.interactable = true;
@@ -91,7 +96,7 @@ public class ProfileSelectionUI : MonoBehaviour
         maxWaveReachedValueText.text = ProfileManager.Instance.currentProfile.maxWaveReached.ToString();
         clonesUsedValueText.text = ProfileManager.Instance.currentProfile.playthroughs.ToString();
 
-        profileDropdown.AddOptions(profileNames);
+        
         SyncDropdownWithCurrentProfile();
     }
 
@@ -114,10 +119,15 @@ public class ProfileSelectionUI : MonoBehaviour
             {
                 profileDropdown.value = index;
                 profileDropdown.RefreshShownValue(); // Refresh the dropdown to update the UI
+                Debug.Log("Dropdown Sync found profile: " + currentProfileName + ", set value to index: " + index);
             }
+            else
+                Debug.Log("Dropdown Sync did not find a profile to sync to");
+
         }
 
-        StartCoroutine(SyncComplete());
+        isDropdownSyncing = false;
+        //StartCoroutine(SyncComplete());
     }
 
     IEnumerator SyncComplete()
@@ -162,7 +172,7 @@ public class ProfileSelectionUI : MonoBehaviour
             {
                 if (profile.profileName.Equals(newProfileName, System.StringComparison.OrdinalIgnoreCase))
                 {
-                    newProfileNameInput.text = null;
+                    newProfileNameInput.text = "";
                     inputFieldPlaceholder.text = "Name already used!";
                     inputFieldPlaceholder.color = Color.red;
                     Debug.LogWarning("The new profile name is already used.");

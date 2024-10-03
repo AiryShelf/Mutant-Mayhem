@@ -67,20 +67,12 @@ public class UIBuildMenuController : MonoBehaviour
         }
     }
 
-    public void SelectInBuildList()
-    {
-
-    }
-
     public void OpenBuildMenu(bool open)
     {
         if (open)
         {
-            if (!TutorialManager.tutorialShowedBuild)
-            {
-                StartCoroutine(DelayOpen());
-                return;
-            }
+            if (!TutorialManager.TutorialShowedBuild)
+                StartCoroutine(DelayTutorialOpen());
 
             fadeCanvasGroups.isTriggered = true;
             myCanvasGroup.blocksRaycasts = true;
@@ -92,12 +84,9 @@ public class UIBuildMenuController : MonoBehaviour
         }
     }
 
-    IEnumerator DelayOpen()
+    IEnumerator DelayTutorialOpen()
     {
-        fadeCanvasGroups.isTriggered = true;
-        myCanvasGroup.blocksRaycasts = true;
-
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSeconds(0.2f);
 
         Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
     }

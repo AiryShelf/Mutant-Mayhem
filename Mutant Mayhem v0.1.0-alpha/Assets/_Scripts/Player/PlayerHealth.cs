@@ -55,7 +55,7 @@ public class PlayerHealth : Health
             // Regenerate
             if (health < maxHealth)
             {
-                health += healthRegenPerSec;
+                ModifyHealth(healthRegenPerSec, gameObject);
             }
         }
     }

@@ -109,7 +109,7 @@ public class DeathManager : MonoBehaviour
         AudioManager.Instance.FadeToDeathSnapshot();
         
         myCanvasGroup.blocksRaycasts = true;
-        pauseMenuController.isPaused = true;
+        pauseMenuController.isPauseMenuOpen = true;
         isTriggered = true;
         statsListBuilder.BuildListandText(waveController, this);
         fadeCanvasGroupsWave.isTriggered = true;

@@ -255,7 +255,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '-50
+  m_text: '-0
 
     RP'
   m_isRightToLeft: 0
@@ -533,15 +533,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 887124518}
     m_Modifications:
-    - target: {fileID: 2398335130401001899, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
-      propertyPath: m_text
-      value: "1. None of these decisions are permanent!  You can pick a new setup
-        on the next round! (5 - 20 minutes)\n\n2. You get to re-use your RP (Research
-        Points) each round.  They are never lost.\n\n3. Augs (Augmentations) can
-        have positive or negative levels:\n    - Positive levels cost RP \n    -
-        Negative levels give RP\n\n4. You have a maximum number of levels you can
-        use\n\n5. Experiment with different setups\n"
-      objectReference: {fileID: 0}
     - target: {fileID: 4410339385597614629, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_Name
       value: TutorialMothershipHelpPanel
@@ -608,7 +599,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -230.15172
+      value: -230.1517
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1643,7 +1634,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Selected:'
+  m_text: 'Selected: None'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1979,8 +1970,9 @@ MonoBehaviour:
   raiseLevelCostText: {fileID: 90166984}
   plusButton: {fileID: 1619231533}
   minusButton: {fileID: 2066310145}
+  removeButton: {fileID: 2118421981}
   descriptionText: {fileID: 123059650}
-  researchPointsText: {fileID: 1173074275}
+  rpAvailableText: {fileID: 1173074275}
   AugsAddedText: {fileID: 2042225438}
   maxAugsText: {fileID: 1370141975}
   selectFirstAug: 0
@@ -2340,7 +2332,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Current Cost:'
+  m_text: 'Current Cost: N/A'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3014,7 +3006,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '+50
+  m_text: '+0
 
     RP'
   m_isRightToLeft: 0
@@ -3458,8 +3450,8 @@ RectTransform:
   - {fileID: 1267302627}
   - {fileID: 568656875}
   - {fileID: 1102491013}
-  - {fileID: 106596098}
   - {fileID: 1330359094048962418}
+  - {fileID: 106596098}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5495,7 +5487,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1619231534}
   m_OnClick:
     m_PersistentCalls:
@@ -7151,7 +7143,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2054415983}
   - component: {fileID: 2054415982}
-  - component: {fileID: 2054415981}
+  - component: {fileID: 2054415984}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -7159,26 +7151,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2054415981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2054415980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &2054415982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7209,6 +7181,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2054415984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054415980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!224 &2065262342 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7998931929882539879, guid: e8baab5f56c1b1844a1ddb42f4b9203d, type: 3}
@@ -7293,7 +7295,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2066310146}
   m_OnClick:
     m_PersistentCalls:
@@ -7426,7 +7428,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2118421982}
   m_OnClick:
     m_PersistentCalls:
@@ -7648,38 +7650,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 887124518}
     m_Modifications:
-    - target: {fileID: 2398335130401001899, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
-      propertyPath: m_text
-      value: 'THE MISSION:
-
-        The mission is to investigate and retrieve samples
-        of strange lifeforms which were recently detected on an oxygen rich planet. 
-        Oddly enough, all lifeforms found so far have striking similarities to those
-        we find (and used to find) on Earth.  Further investigation is required to
-        find out how this is possible and how long these lifeforms have been here.
-
-
-        THE
-        SHIP CREATES CLONES:
-
-        The Mothership a fully-automated research vessel
-        driven by a highly sophisticated AI.  It produces clones and equipment to
-        carry out it''s mission.  Equipped with a Quantum Teleporter and Cloning
-        Bay, it can beam clones to planetary surfaces and support their efforts from
-        orbit.
-
-
-        THE SHIP GAINS RESEARCH POINTS:
-
-        The lifeforms,
-        dubbed "Mutants", are extremely hostile.  The AI must learn as much as it
-        can while attempting to gain a foothold on the planet.  Research Points (RP)
-        will be generated by the AI each time a clone survives a night.  The RP can
-        then be used to augment the clones and equipment before each mission.
-
-
-'
-      objectReference: {fileID: 0}
     - target: {fileID: 4410339385597614629, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_Name
       value: TutorialMothershipPanel
@@ -7714,7 +7684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 384.8886
+      value: 391.76
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7750,7 +7720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0000039935
+      value: -3.4372
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7983,6 +7953,63 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &5714823885683753057
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 629231680569775204, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_Name
+      value: TutorialManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155482425368077965, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2342000f468cb7a4ea6966bb0a6b812a, type: 3}
 --- !u!222 &5827744299930200675
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8428,3 +8455,4 @@ SceneRoots:
   - {fileID: 4572971746124425848}
   - {fileID: 93633121}
   - {fileID: 1943304504}
+  - {fileID: 5714823885683753057}

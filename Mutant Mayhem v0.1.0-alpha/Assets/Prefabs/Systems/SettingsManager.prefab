@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3878209574839751526}
   - component: {fileID: 6177104941479526016}
   - component: {fileID: 4781240415254864151}
+  - component: {fileID: 6763610489901167481}
   m_Layer: 0
   m_Name: SettingsManager
   m_TagString: Untagged
@@ -55,7 +56,7 @@ MonoBehaviour:
   SubwaveDelayMult: 1
   BatchSpawnMult: 1
   CreditsMult: 1
-  spacebarEnabled: 1
+  isSpacebarEnabled: 1
 --- !u!114 &6177104941479526016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,7 +74,11 @@ MonoBehaviour:
     profileName: 
     researchPoints: 0
     playthroughs: 0
-    highestWaveReached: 0
+    maxWaveReached: 0
+    isTutorialEnabled: 0
+    difficultyLevel: 0
+    isStandardWASD: 0
+    isSpacebarEnabled: 0
 --- !u!114 &4781240415254864151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,3 +97,15 @@ MonoBehaviour:
   buildCursorHotspot: {x: 12, y: 12}
   repairCursor: {fileID: 2800000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
   repairCursorHotspot: {x: 24, y: 24}
+--- !u!114 &6763610489901167481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553980603506277957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3e7f8cf2f613a499ae671135c6a656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

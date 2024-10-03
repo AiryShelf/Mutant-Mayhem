@@ -33,6 +33,11 @@ public class MainMenuController : MonoBehaviour
 
     public void OnStartGame()
     {
+        if (ProfileManager.Instance.currentProfile == null)
+        {
+            return;
+        }
+
         SceneManager.LoadScene(1);
     }
 

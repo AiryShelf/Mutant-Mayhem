@@ -7,17 +7,18 @@ using UnityEngine.InputSystem;
 
 public class TutorialPanel : MonoBehaviour
 {
+    [SerializeField] InputActionAsset inputAsset;
     public bool pauseOnOpen;
     Player player;
     protected InputActionMap playerActionMap;
     protected InputAction playerFireAction;
-    ControlsPanel controlsPanel;
     GameObject prevUiSelection;
+    InputAction escapeAction;
+
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
-        controlsPanel = FindObjectOfType<ControlsPanel>();
+        TutorialManager.NumTutorialsOpen++;
 
         if (TutorialManager.TutorialDisabled == true)
         {
@@ -26,24 +27,34 @@ public class TutorialPanel : MonoBehaviour
         }
         
         if (pauseOnOpen)
-            Time.timeScale = 0;
-
-        if (player != null)
-        {
-            playerActionMap = player.inputAsset.FindActionMap("Player");
-            playerFireAction = playerActionMap.FindAction("Fire");
-            playerActionMap.Disable();
-        }
+            TimeControl.Instance.PauseGame(true);
         
+        InputActionMap uIActionMap = inputAsset.FindActionMap("UI");
+        escapeAction = uIActionMap.FindAction("Escape");
+        escapeAction.started += OnEscapePressed;
         
         StartCoroutine(WaitToStoreSelection());
     }
 
     void OnDestroy() 
     {
-        // Destroy parent
+        // Destroys parent **
         GameObject parentObject = transform.parent.gameObject;
+        TutorialManager.NumTutorialsOpen--;
+
+        if (escapeAction != null)
+            escapeAction.started -= OnEscapePressed;
+
         Destroy(parentObject);
+    }
+
+    void OnEscapePressed(InputAction.CallbackContext context)
+    {
+        if (TutorialManager.escCooling)
+            return;
+
+        TutorialManager.escCooling = true;
+        OnOKButtonClick();
     }
 
     public virtual void OnOKButtonClick()
@@ -64,12 +75,7 @@ public class TutorialPanel : MonoBehaviour
         RestorePreviousSelection();
 
         if (pauseOnOpen)
-            Time.timeScale = 1;
-
-        if (player != null)
-        {
-            playerActionMap.Enable();
-        }
+            TimeControl.Instance.PauseGame(false);
         
         Destroy(gameObject);
     }
@@ -81,18 +87,10 @@ public class TutorialPanel : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
 
         RestorePreviousSelection();
-
-        if (controlsPanel != null && controlsPanel.isOpen)
-            controlsPanel.TogglePanel();
+        TutorialManager.SetTutorialStateAndProfile(false);
 
         if (pauseOnOpen)
-            Time.timeScale = 1;
-
-        TutorialManager.SetTutorialStateAndProfile(false);
-        if (player != null)
-        {
-            playerActionMap.Enable();
-        }
+            TimeControl.Instance.PauseGame(false);
         
         Destroy(gameObject);
     }

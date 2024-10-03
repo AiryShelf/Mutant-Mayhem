@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -48,22 +49,22 @@ public class SettingsManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
-        InitializeProfileSettings(ProfileManager.Instance.currentProfile);
+        if (!string.IsNullOrEmpty(ProfileManager.Instance.currentProfile.profileName))
+            RefreshProfileSettings(ProfileManager.Instance.currentProfile);
     }
 
     void OnEnable()
     {
-        ProfileManager.OnProfileIsSet += InitializeProfileSettings;
+        ProfileManager.OnProfileIsSet += RefreshProfileSettings;
     }
 
     void OnDisable()
     {
-        ProfileManager.OnProfileIsSet -= InitializeProfileSettings;
+        ProfileManager.OnProfileIsSet -= RefreshProfileSettings;
     }
 
 
-    public void InitializeProfileSettings(PlayerProfile currentProfile)
+    public void RefreshProfileSettings(PlayerProfile currentProfile)
     {
         if (currentProfile == null)
         {
@@ -74,11 +75,15 @@ public class SettingsManager : MonoBehaviour
             return;
         }
 
+        Debug.Log($"Loading settings from profile: {currentProfile.profileName}");
+
         difficultyLevel = currentProfile.difficultyLevel;
         useStandardWASD = currentProfile.isStandardWASD;
         isSpacebarEnabled = currentProfile.isSpacebarEnabled;
 
-        Debug.Log("Settings Manager loaded settings from PlayerProfile: " + currentProfile.profileName);
+        Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}");
+
+        ApplyGameplaySettings();
     }
         
     public void ApplyGameplaySettings()
@@ -87,27 +92,17 @@ public class SettingsManager : MonoBehaviour
         ApplyMovementSettings();
         ApplyControlSettings();
 
-        waveController.Initialize();
-
         Debug.Log("Settings Manager finished applying settings");
     }
 
     #region Difficulty
 
-    public void SetDifficulty(DifficultyLevel level)
-    {
-        difficultyLevel = level;
-        ProfileManager.Instance.currentProfile.difficultyLevel = level;
-        ProfileManager.Instance.SaveCurrentProfile();
-        ApplyDifficultySettings();
-    }
-
-    public void ApplyDifficultySettings()
+    void ApplyDifficultySettings()
     {
         waveController = FindObjectOfType<WaveControllerRandom>();
         if (waveController == null)
         {
-            Debug.LogError("Wave Controller not found on scene load!");
+            Debug.LogWarning("Wave Controller not found when applying difficulty settings");
             return;
         };
 
@@ -133,6 +128,7 @@ public class SettingsManager : MonoBehaviour
                 SubwaveDelayMult = 1;
                 BatchSpawnMult = 1;
                 CreditsMult = 1;
+                BuildingSystem.PlayerCredits = 0;
                 break;
 
             case DifficultyLevel.Hard:
@@ -143,36 +139,31 @@ public class SettingsManager : MonoBehaviour
                 SubwaveDelayMult = 0.8f;
                 BatchSpawnMult = 1.2f;
                 CreditsMult = 1;
+                BuildingSystem.PlayerCredits = 0;
                 break;
         }
 
         DeathManager deathManager = FindObjectOfType<DeathManager>();
         deathManager.ApplyDifficultyToRPGain(difficultyLevel);
 
-        Debug.Log("Difficulty updated by Settings Manager");
+        Debug.Log("Difficulty settings applied for " + difficultyLevel + " by Settings Manager");
     }
 
     #endregion
 
     #region Movement
 
-    public void SetMovementType(bool useStandardWASD)
-    {
-        this.useStandardWASD = useStandardWASD;
-        ApplyMovementSettings();
-    }
-
-    public void ApplyMovementSettings()
+    void ApplyMovementSettings()
     {
         Player player = FindObjectOfType<Player>();
-        if (player)
+        if (player != null)
         {
             player.useStandardWASD = useStandardWASD;
             Debug.Log("Movement Type updated: " + useStandardWASD);
         }
         else
         {
-            Debug.Log("Player not found by SettingsManager");
+            Debug.LogWarning("Player not found by SettingsManager");
         }
     }
 
@@ -180,23 +171,18 @@ public class SettingsManager : MonoBehaviour
 
     #region Controls
 
-    public void ApplyControlSettings()
+    void ApplyControlSettings()
     {
         player = FindObjectOfType<Player>();
+        if (player == null)
+        {
+            Debug.Log("Player not found by by SettingManager while applying control settings");
+            return;
+        }
+
         InputAction throwAction = player.inputAsset.FindActionMap("Player").FindAction("Throw");
 
-        if (!isSpacebarEnabled)
-        {
-            // Disable the spacebar
-            for (int i = 0; i < throwAction.bindings.Count; i++)
-            {
-                if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
-                {
-                    throwAction.ApplyBindingOverride(i, new InputBinding { overridePath = "" });
-                }
-            }
-        }
-        else
+        if (isSpacebarEnabled)
         {
             // Enable the spacebar
             for (int i = 0; i < throwAction.bindings.Count; i++)
@@ -204,6 +190,19 @@ public class SettingsManager : MonoBehaviour
                 if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
                 {
                     throwAction.RemoveBindingOverride(i);
+                    Debug.Log("Spacebar enabled");
+                }
+            }
+        }
+        else
+        {
+            // Disable the spacebar
+            for (int i = 0; i < throwAction.bindings.Count; i++)
+            {
+                if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
+                {
+                    throwAction.ApplyBindingOverride(i, new InputBinding { overridePath = "" });
+                    Debug.Log("Spacebar disabled");
                 }
             }
         }

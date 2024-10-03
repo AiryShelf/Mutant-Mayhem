@@ -9,7 +9,7 @@ public class WaveControllerRandom : MonoBehaviour
     [SerializeField] WaveSpawnerRandom waveSpawner;
 
     [Header("UI Wave Info")]
-    [SerializeField] FadeCanvasGroupsWave nextWaveFadeGroup;
+    public FadeCanvasGroupsWave nextWaveFadeGroup;
     [SerializeField] FadeCanvasGroupsWave waveInfoFadeGroup;
     [SerializeField] TextMeshProUGUI enemyCountText;
     [SerializeField] TextMeshProUGUI currentNightText;
@@ -55,6 +55,8 @@ public class WaveControllerRandom : MonoBehaviour
         nextWaveAction.performed += OnNextWaveInput;
 
         daylight = FindObjectOfType<Daylight>();
+        currentWaveIndex = 0;
+
         // Start the daytime counter
         if (nextWaveTimer != null)
             StopCoroutine(nextWaveTimer);
@@ -62,24 +64,44 @@ public class WaveControllerRandom : MonoBehaviour
 
         // Testing MaserWave and dynamically building currentWave
         //waveSpawner.currentWaveSource = allWaveBases[0];
-        currentWaveIndex = 0;
+        
     }
 
     void OnNextWaveInput(InputAction.CallbackContext context)
     {
         // When Enter is pressed to start next wave
-        if (nextWaveText.enabled)
+        if (nextWaveFadeGroup.isTriggered)
         {
             StopAllCoroutines();
             StartCoroutine(StartWave());
         }
     }
 
+    void UpdateWaveTimer(bool isNight)
+    {
+        if (isNight)
+        {
+            Debug.Log("Wave info turned on, next wave info turned off");
+            waveInfoFadeGroup.isTriggered = true;
+            //nextWaveText.enabled = false;
+            nextWaveFadeGroup.isTriggered = false;
+            
+            currentNightText.text = "Night " + (currentWaveIndex + 1);
+        }
+        else
+        {
+            Debug.Log("Wave info turned off, next wave info turned on with time: " + _timeBetweenWaves);
+            waveInfoFadeGroup.isTriggered = false;
+            //nextWaveText.enabled = true;
+            nextWaveFadeGroup.isTriggered = true;
+        }
+    }
+
     IEnumerator NextWaveTimer()
     {
-        waveInfoFadeGroup.isTriggered = false;
-        nextWaveText.enabled = true;
-        nextWaveFadeGroup.isTriggered = true;
+        yield return new WaitForFixedUpdate();
+
+        UpdateWaveTimer(false);
 
         float countdown = _timeBetweenWaves;
         while (countdown > 0)
@@ -122,10 +144,7 @@ public class WaveControllerRandom : MonoBehaviour
         waveSpawner.StartWave();
 
         // Set wave UI text
-        waveInfoFadeGroup.isTriggered = true;
-        nextWaveFadeGroup.isTriggered = false;
-        nextWaveText.enabled = false;
-        currentNightText.text = "Night " + (currentWaveIndex + 1);
+        UpdateWaveTimer(true);
 
         // Wait 5 seconds before checking wave complete
         float timeElapsed = 0;

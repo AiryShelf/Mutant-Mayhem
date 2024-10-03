@@ -17,8 +17,9 @@ public class UIAugPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI raiseLevelCostText;
     [SerializeField] Button plusButton;
     [SerializeField] Button minusButton;
+    [SerializeField] Button removeButton;
     [SerializeField] TextMeshProUGUI descriptionText;
-    [SerializeField] TextMeshProUGUI researchPointsText;
+    [SerializeField] TextMeshProUGUI rpAvailableText;
     [SerializeField] TextMeshProUGUI AugsAddedText;
     [SerializeField] TextMeshProUGUI maxAugsText;
     [SerializeField] bool selectFirstAug = true;
@@ -61,9 +62,9 @@ public class UIAugPanel : MonoBehaviour
                 Debug.Log("Auto-selected an Aug");
                 EventSystem.current.SetSelectedGameObject(uiAug.gameObject);
             }
-
-            //UpdatePanelTextandButtons();
         }
+
+        UpdateBottomInfo();
     }
 
     public void SelectAugmentation(UIAugmentation newSelection)
@@ -84,6 +85,13 @@ public class UIAugPanel : MonoBehaviour
 
     #region Update UI
 
+    void UpdateBottomInfo()
+    {
+        rpAvailableText.text = "Available RP: " + augManager.currentResearchPoints;
+        AugsAddedText.text = "Aug Levels: " + augManager.GetCurrentLevelCount();
+        maxAugsText.text = "Max Levels: " + augManager.maxAugs;
+    }
+
     public void UpdatePanelTextandButtons()
     {
         if (selectedUiAugmentation == null)
@@ -100,9 +108,7 @@ public class UIAugPanel : MonoBehaviour
 
         // Other info Text
         nameText.text = "Selected: " + aug.augmentationName;
-        researchPointsText.text = "Available RP: " + augManager.currentResearchPoints;
-        AugsAddedText.text = "Aug Levels: " + augManager.GetCurrentLevelCount();
-        maxAugsText.text = "Max Levels: " + augManager.maxAugs;
+        UpdateBottomInfo();
 
         // Update TotalCost text
         string costOrGain;
@@ -159,10 +165,16 @@ public class UIAugPanel : MonoBehaviour
             plusButton.interactable = true;
         else
             plusButton.interactable = false;
+            
         if (level > aug.minLvl)
             minusButton.interactable = true;
         else
             minusButton.interactable = false;
+        
+        if (level != 0)
+            removeButton.interactable = true;
+        else
+            removeButton.interactable = false;
         
         UpdateUIAugs();
     }

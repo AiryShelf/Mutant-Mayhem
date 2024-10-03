@@ -13,6 +13,32 @@ public class OptionsPanel : MonoBehaviour
     [SerializeField] Toggle spacebarToggle;
     [SerializeField] Toggle tutorialToggle;
 
+    void OnEnable()
+    {
+        // Add listeners
+        tutorialToggle.onValueChanged.AddListener(delegate {
+                                            ToggleTutorial(tutorialToggle); });
+        difficultyDropdown.onValueChanged.AddListener(delegate { 
+                                            DifficultyValueChanged(difficultyDropdown); });
+        movementTypeDropdown.onValueChanged.AddListener(delegate { 
+                                            MoveTypeValueChanged(movementTypeDropdown); });
+        spacebarToggle.onValueChanged.AddListener(delegate {
+                                            ToggleSpacebar(spacebarToggle); });
+    }
+
+    void OnDisable()
+    {
+        // Add listeners
+        tutorialToggle.onValueChanged.RemoveListener(delegate {
+                                            ToggleTutorial(tutorialToggle); });
+        difficultyDropdown.onValueChanged.RemoveListener(delegate { 
+                                            DifficultyValueChanged(difficultyDropdown); });
+        movementTypeDropdown.onValueChanged.RemoveListener(delegate { 
+                                            MoveTypeValueChanged(movementTypeDropdown); });
+        spacebarToggle.onValueChanged.RemoveListener(delegate {
+                                            ToggleSpacebar(spacebarToggle); });
+    }
+
     void Start()
     {
         Initialize();
@@ -38,23 +64,18 @@ public class OptionsPanel : MonoBehaviour
             spacebarToggle.isOn = true;
         }
 
-        // Add listeners
-        tutorialToggle.onValueChanged.AddListener(delegate {
-                                            ToggleTutorial(tutorialToggle); });
-        difficultyDropdown.onValueChanged.AddListener(delegate { 
-                                            DifficultyValueChanged(difficultyDropdown); });
-        movementTypeDropdown.onValueChanged.AddListener(delegate { 
-                                            MoveTypeValueChanged(movementTypeDropdown); });
-        spacebarToggle.onValueChanged.AddListener(delegate {
-                                            ToggleSpacebar(spacebarToggle); });
+        
     }
 
     public void ToggleSpacebar(Toggle change)
     {
-        ProfileManager.Instance.currentProfile.isSpacebarEnabled = change.isOn;
-        ProfileManager.Instance.SaveCurrentProfile();
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            ProfileManager.Instance.currentProfile.isSpacebarEnabled = change.isOn;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
 
-        SettingsManager.Instance.ApplyControlSettings();
+        SettingsManager.Instance.RefreshProfileSettings(ProfileManager.Instance.currentProfile);
         Debug.Log("Toggled Spacebar");
     }
 
@@ -72,7 +93,6 @@ public class OptionsPanel : MonoBehaviour
 
         TutorialManager.SetTutorialStateAndProfile(change.isOn);
         Debug.Log("Tutorial Enabled: " + change.isOn);
-        
     }
 
     void DifficultyValueChanged(TMP_Dropdown change)
@@ -94,18 +114,21 @@ public class OptionsPanel : MonoBehaviour
         }
 
         ProfileManager.Instance.SaveCurrentProfile();
+
+        MessagePanel.PulseMessage("Difficulty will be updated on the next playthrough", Color.yellow);
         Debug.Log("Difficulty changed via Dropdown");
     }
 
     void MoveTypeValueChanged(TMP_Dropdown change)
     {
+        PlayerProfile profile = ProfileManager.Instance.currentProfile;
         switch (change.value)
         {
             case 0:
-                ProfileManager.Instance.currentProfile.isStandardWASD = false;
+                profile.isStandardWASD = false;
                 break;
             case 1:
-                ProfileManager.Instance.currentProfile.isStandardWASD = true;
+                profile.isStandardWASD = true;
                 break;
             default:
                 Debug.LogError("Failed to change move type");
@@ -113,5 +136,8 @@ public class OptionsPanel : MonoBehaviour
         }
 
         ProfileManager.Instance.SaveCurrentProfile();
+        SettingsManager.Instance.RefreshProfileSettings(profile);
+
+        Debug.Log("useStandardWASD set to: " + change.value);
     }
 }

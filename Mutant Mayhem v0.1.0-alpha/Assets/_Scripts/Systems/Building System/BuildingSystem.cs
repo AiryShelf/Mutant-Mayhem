@@ -62,7 +62,7 @@ public class BuildingSystem : MonoBehaviour
     TurretManager turretManager;
 
     Coroutine clearStructureInHand;
-    GameObject lastSelectedUiObject;
+    public GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
 
     void OnEnable()
@@ -89,15 +89,6 @@ public class BuildingSystem : MonoBehaviour
         cheatCodeCreditsAction.started += OnCheatCodeCredits; 
     }
 
-    void Start()
-    {
-        turretManager = TurretManager.Instance;
-        if (turretManager == null)
-        {
-            Debug.LogError("BuildingSystem could not find TurretManager in scene");
-        }
-    }
-
     void OnDisable()
     {
         toolbarAction.started -= OnToolbarUsed;
@@ -106,6 +97,15 @@ public class BuildingSystem : MonoBehaviour
         cheatCodeCreditsAction.started -= OnCheatCodeCredits;
    
         _UnlockedStructuresDict.Clear();   
+    }
+
+    void Start()
+    {
+        turretManager = TurretManager.Instance;
+        if (turretManager == null)
+        {
+            Debug.LogError("BuildingSystem could not find TurretManager in scene");
+        }
     }
 
     void FixedUpdate()
@@ -136,23 +136,20 @@ public class BuildingSystem : MonoBehaviour
         }
 
         // Prevent mouse input from deselecting UI element **THIS DOESNT APPEAR TO WORK**
-        if (Input.GetMouseButtonDown(0))
-        {
+        //if (Input.GetMouseButtonDown(0))
+        //{
             // Check if the pointer is over a UI element
-            if (!EventSystem.current.IsPointerOverGameObject())
-            {
-                if (lastSelectedUiObject != null)
-                {
-                    StartCoroutine(DelayUIReselect());
-                }
-            }
-        }
+        //    if (!EventSystem.current.IsPointerOverGameObject())
+        //    {
+        //        StartCoroutine(DelayUIReselect());
+        //    }
+        //}
 
         // Build
         if (allHighlited)
         {   
-            if (!EventSystem.current.IsPointerOverGameObject())
-            {
+            //if (!EventSystem.current.IsPointerOverGameObject())
+            //{
                 if (structureInHand.actionType == ActionType.Build)
                 {
                     Build(highlightedTilePos);
@@ -161,7 +158,7 @@ public class BuildingSystem : MonoBehaviour
                 {
                     RemoveTile(destroyPositions[0]);
                 }
-            }
+            //}
         }
         // Failed to build or destroy messages
         else if (inRange)
@@ -170,6 +167,7 @@ public class BuildingSystem : MonoBehaviour
                 MessagePanel.PulseMessage("Area not clear for building", Color.yellow);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.PulseMessage("Unable to destroy", Color.yellow);
+            StartCoroutine(DelayUIReselect());
         }
         else
         {
@@ -177,13 +175,15 @@ public class BuildingSystem : MonoBehaviour
                 MessagePanel.PulseMessage("Too far away to build", Color.yellow);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.PulseMessage("Too far away to destroy", Color.yellow);
+            StartCoroutine(DelayUIReselect());
         }
     }
 
     IEnumerator DelayUIReselect()
     {
         yield return new WaitForFixedUpdate();
-        EventSystem.current.SetSelectedGameObject(lastSelectedUiObject);
+        if (lastSelectedUiObject != null)
+            EventSystem.current.SetSelectedGameObject(lastSelectedUiObject);
     }
 
     void OnRotate(InputAction.CallbackContext context)
@@ -232,7 +232,9 @@ public class BuildingSystem : MonoBehaviour
             else
             {
                 if (lastStructureInHand == null)
+                {
                     return;
+                }
                 // Switch back to previously selected structure
                 ChangeStructureInHand(lastStructureInHand);
                 Debug.Log("Switched to destroy tool");
@@ -263,10 +265,11 @@ public class BuildingSystem : MonoBehaviour
             //previousGunIndex = player.playerShooter.currentGunIndex;
             player.playerShooter.isBuilding = true;
             //player.playerShooter.SwitchGuns(9);
+            lastStructureInHand = AllStructureSOs[2];
             buildMenuController.OpenBuildMenu(true);
             qCubeController.CloseUpgradeWindow();
             //Debug.Log("Opened Build Panel");
-            lastStructureInHand = AllStructureSOs[2];
+            
         }
         else
         {
@@ -308,6 +311,7 @@ public class BuildingSystem : MonoBehaviour
     public void ChangeStructureInHand(StructureSO structure)
     {
         Rotate(structure);
+        Debug.Log("Changed structure in hand to: " + structure.tileName);
     }
 
     void BuildStructsAvailDict()
@@ -347,6 +351,7 @@ public class BuildingSystem : MonoBehaviour
             if (turretManager.currentNumTurrets >= player.stats.structureStats.maxTurrets)
             {
                 MessagePanel.PulseMessage("Turret limit reached.  Use upgrades to increase the limit", Color.red);
+                StartCoroutine(DelayUIReselect());
                 return;
             }
         }
@@ -356,6 +361,7 @@ public class BuildingSystem : MonoBehaviour
         {
             MessagePanel.PulseMessage("Not enough Credits to build " + 
                                      structureInHand.tileName + "!", Color.red);
+            StartCoroutine(DelayUIReselect());
             return;
         }
 
@@ -369,7 +375,9 @@ public class BuildingSystem : MonoBehaviour
             {
                 turretManager.AddTurret(gridPos);
             }
-        }   
+        }
+
+        StartCoroutine(DelayUIReselect());
     }
 
     void RemoveTile(Vector3Int gridPos)
@@ -385,6 +393,8 @@ public class BuildingSystem : MonoBehaviour
             MessagePanel.PulseMessage("Tile not clear for removal", Color.yellow);
             Debug.Log("Tile removal unsuccesful");
         }
+
+        DelayUIReselect();
     }
 
     #endregion

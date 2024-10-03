@@ -28,8 +28,18 @@ public class ProfileManager : MonoBehaviour
         }
 
         Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
+        ClearAllPlayerPrefsForEditor();
 
         Initialize();
+    }
+
+    void ClearAllPlayerPrefsForEditor()
+    {
+        #if UNITY_EDITOR
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save(); // Ensure changes are written to disk
+        Debug.Log("All PlayerPrefs have been cleared.");
+        #endif
     }
 
     void Initialize()
@@ -61,6 +71,11 @@ public class ProfileManager : MonoBehaviour
         else
         {
             Debug.Log("No last used profile found.");
+            if (profiles.Count > 0)
+            {
+                SetCurrentProfile(profiles[0].profileName);
+                Debug.Log("Profile set to index 0");
+            }
         }
     }
 
@@ -82,18 +97,24 @@ public class ProfileManager : MonoBehaviour
         else
         {
             profiles = new List<PlayerProfile>();
-            Debug.Log("No profile file found, initializing an empty list.");
+            Debug.Log("No profile file found, started a new list.");
         }
     }
 
     // Set the current profile by profile name
     public void SetCurrentProfile(string profileName)
     {
+        Debug.Log($"Attempting to set profile: {profileName}");
+
         // Find profile in loaded list
         foreach (PlayerProfile profile in profiles)
         {
             if (profile == null)
+            {
+                Debug.LogError("Profile is null, remove and skip...");
+                profiles.Remove(profile);
                 continue;
+            }
 
             if (profile.profileName == profileName)
             {
@@ -105,15 +126,16 @@ public class ProfileManager : MonoBehaviour
 
                 Debug.Log($"Profile '{profileName}' set as the current profile.");
                 if (OnProfileIsSet != null)
+                {
+                    Debug.Log("Invoking OnProfileIsSet event.");
                     OnProfileIsSet.Invoke(currentProfile);
+                }
                 return;
             }
         }
 
         // Handle no profiles remaining
         Debug.LogWarning("No profile with name " + profileName + " found to set!");
-        if (OnProfileIsSet != null)
-            OnProfileIsSet.Invoke(currentProfile);
     }
 
     // Saves all profiles to JSON
@@ -141,13 +163,12 @@ public class ProfileManager : MonoBehaviour
             }
             else
             {
+                return;
                 // If for some reason the current profile is not found, add it
-                profiles.Add(currentProfile);
-                Debug.LogError("Could not find current profile in list.  Added it to list.");
+                //profiles.Add(currentProfile);
+                //Debug.LogError("Could not find current profile in list.  Added it to list.");
             }
 
-            if (OnProfileIsSet != null)
-                OnProfileIsSet.Invoke(currentProfile);
             SaveAllProfiles(); // Save all profiles including the updated current profile
             Debug.Log($"Current profile '{currentProfile.profileName}' has been saved.");
         }
@@ -167,13 +188,20 @@ public class ProfileManager : MonoBehaviour
         if (profiles == null)
         {
             Debug.LogError("Profiles list is null during profile creation!");
-            profiles = new List<PlayerProfile>(); // Ensure it's initialized
+            profiles = new List<PlayerProfile>();
         }
 
         PlayerProfile newProfile = new PlayerProfile(profileName);
+
         profiles.Add(newProfile);
-        SaveAllProfiles();
         SetCurrentProfile(newProfile.profileName);
+        SaveCurrentProfile();
+
+        ProfileSelectionUI profileSelectionUI = FindObjectOfType<ProfileSelectionUI>();
+        if (profileSelectionUI != null)
+            profileSelectionUI.UpdateProfilePanel();
+
+        Debug.Log($"Created new profile with default settings: {profileName}");
     }
 
     public void RemoveProfile(string profileName)
@@ -202,7 +230,7 @@ public class ProfileManager : MonoBehaviour
         }
 
         // Check if any profiles remain
-        if (profiles.Count > 0)
+        if (profiles.Count >= 1)
         {
             // Set the first profile in the list as the new current profile
             SetCurrentProfile(profiles[0].profileName);
@@ -216,6 +244,8 @@ public class ProfileManager : MonoBehaviour
             // Optionally, prompt the player to create a new profile
             // You could display a message or open the create profile panel
         }
+
+        OnProfileIsSet.Invoke(currentProfile);
     }
 
     #endregion Add, Remove

@@ -68,14 +68,15 @@ MonoBehaviour:
   m_text: "The Mothership has just teleported a clone (you) to the surface with a
     Quantum Matter Exchange Interface, or Q-Cube (That's the blue square on the screen).   
     \n\nDEFEND THE CUBE:\nThe Cube is your connection back to the ship.  Defend it
-    at all costs.  iF it's destroyed, the AI ship will terminate you since your are
+    at all costs.  If it's destroyed, the AI ship will terminate you since your are
     no longer of value to the mission.   \n\nKILL MUTANTS AND SELL THEIR GUTS:\nCollect
     samples of the alien lifeform tissues and bring them to the Cube.  Teleport them
     back to your ship in exchange for Credits by standing near the Cube.\n\nBUILD
     DEFENCES AND BUY UPGRADES:\nOnce you have some credits, you will need to build
     defences (press 'B') and buy upgrades for your gear.  Stand next to the Cube
-    and press 'TAB' to access the upgrades you'll need to survive.  \n\nThe Mutants
-    are drawn to the Cube's energy signature at night, and are extremely hostile.\n\nGood
+    and press 'TAB' to access the upgrades you'll need to survive.  The controls
+    are on the bottom left of the screen (Press 'H' to toggle).\n\nThe Mutants are
+    drawn to the Cube's energy signature at night, and are extremely hostile.\n\nGood
     luck"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -333,6 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c9c816a6c48ae468dbd6cf6ad0d9dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
   pauseOnOpen: 1
 --- !u!222 &6327912729112627152
 CanvasRenderer:
@@ -445,7 +447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -22.23}
+  m_AnchoredPosition: {x: 0, y: -22.229996}
   m_SizeDelta: {x: -12.04, y: -55.5499}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1069657796254461487
@@ -576,7 +578,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5776675130458506331, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 28.40001
+      value: 34.199997
       objectReference: {fileID: 0}
     - target: {fileID: 5776675130458506331, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -788,7 +790,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 28.40001
+      value: 34.199997
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -805,6 +807,18 @@ PrefabInstance:
     - target: {fileID: 3018715186214051131, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Name
       value: Disable Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 7461285394841556171, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_fontSize
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7461285394841556171, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415995984996701033, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -19.599998
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

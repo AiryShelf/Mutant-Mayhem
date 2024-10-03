@@ -6,36 +6,36 @@ public class TutorialUpgradePanel : TutorialPanel
 {
     void Awake()
     {
-        if (TutorialManager.tutorialShowedUpgrade)
+        if (TutorialManager.TutorialShowedUpgrade)
         {
             Destroy(gameObject);
             return;
+        }
+
+        Player player = FindObjectOfType<Player>();
+        if (player != null)
+        {
+            playerActionMap = player.inputAsset.FindActionMap("Player");
+            playerFireAction = playerActionMap.FindAction("Fire");
+            playerActionMap.Disable();
         }
     }
 
     public override void OnOKButtonClick()
     {
-        TutorialManager.tutorialShowedUpgrade = true;
+        TutorialManager.TutorialShowedUpgrade = true;
 
-        RestorePreviousSelection();
+        base.OnOKButtonClick();
 
-        Time.timeScale = 1;
         playerActionMap.Enable();
         playerFireAction.Disable();
-
-        Destroy(gameObject);
     }
 
     public override void OnDisableButtonClick()
     {
-        TutorialManager.SetTutorialStateAndProfile(false);
+        base.OnDisableButtonClick();
 
-        RestorePreviousSelection();
-
-        Time.timeScale = 1;
         playerActionMap.Enable();
         playerFireAction.Disable();
-
-        Destroy(gameObject);
     }
 }

@@ -18,8 +18,8 @@ public class PauseMenuController : MonoBehaviour
     InputActionMap playerActionMap;
     InputActionMap uIActionMap;
     InputAction escapeAction;
-    public bool isPaused;
-    public bool isOptionsOpen;
+    public bool isPauseMenuOpen = false;
+    public bool isOptionsOpen = false;
 
     void Awake()
     {
@@ -52,37 +52,40 @@ public class PauseMenuController : MonoBehaviour
 
     void EscapePressed(InputAction.CallbackContext context)
     {
+        if (TutorialManager.NumTutorialsOpen > 0)
+            return;
+
         if (isOptionsOpen)
-            {
-                ToggleOptionsMenu();
-                return;
-            }
+        {
+            ToggleOptionsMenu();
+            return;
+        }
+
         //Debug.Log("escape pressed");
         if (!player.IsDead && !buildingSystem.inBuildMode 
             && !qCubeController.isUpgradesOpen)
         {
             //Debug.Log("Pause passed checks");
-            if (!isPaused)
+            if (!isPauseMenuOpen)
                 OpenPauseMenu(true);
             else
                 OpenPauseMenu(false);
         }
     }
 
-    public void OpenPauseMenu(bool open)
+    void OpenPauseMenu(bool open)
     {
         if (open)
-        {
-            fadeCanvasGroups.isTriggered = true;
-            myCanvasGroup.blocksRaycasts = true;
-            Pause(true);
-        }
+            playerActionMap.Disable();
         else
-        {
-            fadeCanvasGroups.isTriggered = false;
-            myCanvasGroup.blocksRaycasts = false;
-            Pause(false);
-        }
+            playerActionMap.Enable();
+    
+        fadeCanvasGroups.isTriggered = open;
+        myCanvasGroup.blocksRaycasts = open;
+        TimeControl.Instance.PauseGame(open);
+        isPauseMenuOpen = open;
+        
+        Debug.Log("Pause Menu open: " + open);
     }
 
     public void Continue()
@@ -92,19 +95,19 @@ public class PauseMenuController : MonoBehaviour
 
     public void Restart()
     {
-        Pause(false);
+        TimeControl.Instance.PauseGame(false);
         SceneManager.LoadScene(2);
     }
 
     public void BackToShip()
     {
-        Pause(false);
+        TimeControl.Instance.PauseGame(false);
         SceneManager.LoadScene(1);
     }
 
     public void MainMenu()
     {
-        Pause(false);
+        TimeControl.Instance.PauseGame(false);
         SceneManager.LoadScene(0);
     }
 
@@ -129,14 +132,16 @@ public class PauseMenuController : MonoBehaviour
         {
             playerActionMap.Disable();
             Time.timeScale = 0;
-            isPaused = true;
+            isPauseMenuOpen = true;
+            Debug.Log("Game paused");
         }
         else
         {
             EventSystem.current.SetSelectedGameObject(null);
             playerActionMap.Enable();
             Time.timeScale = 1;
-            isPaused = false;
+            isPauseMenuOpen = false;
+            Debug.Log("Game unpaused");
         }
     }
 
@@ -147,11 +152,13 @@ public class PauseMenuController : MonoBehaviour
             isOptionsOpen = true;
             optionsPanel.Initialize();
             optionsPanel.fadeGroup.isTriggered = true;
+            Debug.Log("Opened options menu");
         }
         else
         {
             isOptionsOpen = false;
             optionsPanel.fadeGroup.isTriggered = false;
+            Debug.Log("Closed options menu");
         }
     }
 }
