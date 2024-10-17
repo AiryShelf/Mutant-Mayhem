@@ -126,7 +126,7 @@ public class Explosion : MonoBehaviour
                         // Apply damage
                         float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage);
                         enemy.ModifyHealth(-totalDamage, gameObject);
-                        Debug.Log($"Enemy hit at {entity.transform.position} for {totalDamage} damage");
+                        //Debug.Log($"Enemy hit at {entity.transform.position} for {totalDamage} damage");
                         continue;
                     }
                 }

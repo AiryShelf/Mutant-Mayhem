@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LaserPistol
   m_EditorClassIdentifier: 
   gunType: 0
-  bulletPrefab: {fileID: 145518261742128944, guid: 07cdcb54209e84c4589fa7ee1c3c0774, type: 3}
+  bulletPoolName: BulletLaser_Pistol
   uiName: Laser Pistol
   sprite: {fileID: 21300000, guid: ea72f50661ead4b43ba21d0106f94813, type: 3}
   uiSprite: {fileID: 21300000, guid: 4a3275a517110794da0275231cfee2e9, type: 3}
@@ -25,19 +25,20 @@ MonoBehaviour:
   laserSight: {fileID: 0}
   muzzleLocalPos: {x: 0, y: -0.01}
   bulletCasingPrefab: {fileID: 1136685630353648448, guid: 6e0dec1a382c9fc4cb40bc957c9ce5e5, type: 3}
+  FXManagerCasingMethodName: PlayLaserCasing_Pistol
   casingLocalPos: {x: 0.31, y: 0}
-  muzzleFlashTime: 0.1
+  muzzleFlashTime: 0.06
   recoilAmount: {x: -0.15, y: 0}
-  damage: 25
+  damage: 20
   damageUpgFactor: 0.5
   knockback: 0
   knockbackUpgAmt: 0.1
   clipSize: 20
   clipSizeUpgAmt: 5
-  chargeDelay: 0.7
-  chargeSpeedUpgNegAmt: -0.04
-  shootSpeed: 0.3
-  shootSpeedUpgNegAmt: -0.015
+  chargeDelay: 0.583
+  chargeSpeedUpgNegAmt: -0.0292
+  shootSpeed: 0.25
+  shootSpeedUpgNegAmt: -0.0125
   accuracy: 4
   accuracyUpgNegAmt: -0.35
   bulletSpeed: 80

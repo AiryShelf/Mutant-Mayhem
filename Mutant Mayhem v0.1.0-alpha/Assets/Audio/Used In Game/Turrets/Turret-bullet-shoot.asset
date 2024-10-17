@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
   m_Name: Turret-bullet-shoot
   m_EditorClassIdentifier: 
-  soundName: PlayerBulletShoot
+  soundName: TurretBulletShoot
   soundType: 1
   mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
   - {fileID: 8300000, guid: d32bf865d3952da4bb9e7cac86419792, type: 3}
   loop: 0
-  volume: 0.7
+  volume: 0.25
   pitch: 1
-  pitchRandRange: 0.1
+  pitchRandRange: 0.15
   spatialBlend: 1
   minDistance: 10
   maxDistance: 100

@@ -7,7 +7,7 @@ public class BulletCasingFly : MonoBehaviour
     
     [SerializeField] float scaleFactor = 0.5f;
     [SerializeField] float durationSensitivity;
-    [SerializeField] float rotationAmount;
+    [SerializeField] float rotateSpeed;
     [SerializeField] float flyDist;
     [SerializeField] Vector2 flyDir;
     [SerializeField] float targetAccuracy = 1.5f;
@@ -18,25 +18,21 @@ public class BulletCasingFly : MonoBehaviour
     [SerializeField] float minScale = 1f;
     [SerializeField] float duration;
     [SerializeField] float stopSpeed = 1f;
-    ParticleSystem casingPS;
+    [SerializeField] string casingMethodName;
+    public Transform casingTrans;
     Quaternion rot;
     float deg;
 
     void Start()
     {
-        casingPS = GetComponentInParent<ParticleSystem>();
-        if (casingPS == null)
-            casingPS = GetComponentInChildren<ParticleSystem>();
-        
         deg = Random.Range(0, 360);
         rot = Quaternion.Euler(0, 0, deg);
         transform.rotation = rot;
 
-        Transform casingTrans = casingPS.transform;
         Vector3 randomCirc = Random.insideUnitCircle * targetAccuracy;
 
-        Vector3 localDir = casingTrans.TransformDirection(flyDir.normalized)*flyDist + randomCirc;
-        Vector3 target = casingTrans.position + localDir;
+        Vector3 worldDir = casingTrans.TransformDirection(flyDir.normalized)*flyDist + randomCirc;
+        Vector3 target = casingTrans.position + worldDir;
 
         StartCoroutine(Fly(startHeight, peakHeight, duration));
 
@@ -45,13 +41,13 @@ public class BulletCasingFly : MonoBehaviour
         float dist = (transform.position - target).magnitude;
         myRb.AddForce(dir * dist / durationSensitivity, ForceMode2D.Impulse);
 
-        rotationAmount = Random.Range(-rotationAmount, rotationAmount);
+        rotateSpeed = Random.Range(-rotateSpeed, rotateSpeed);
         transform.parent = null;
     }
-    
+
     void FixedUpdate()
     {
-        deg += rotationAmount;
+        deg += rotateSpeed;
         rot = Quaternion.Euler(0, 0, deg);
         transform.rotation = rot;
     }
@@ -83,11 +79,8 @@ public class BulletCasingFly : MonoBehaviour
             yield return null;
         }
 
-        var emitParams = new ParticleSystem.EmitParams();
-        emitParams.position = transform.position;
-        emitParams.rotation = -transform.rotation.eulerAngles.z;
-        
-        casingPS.Emit(emitParams, 1);
+        ParticleManager.Instance.PlayCasingEffectByName(casingMethodName, 
+                                    transform, transform.rotation, false);
         Destroy(gameObject);
     }
 }

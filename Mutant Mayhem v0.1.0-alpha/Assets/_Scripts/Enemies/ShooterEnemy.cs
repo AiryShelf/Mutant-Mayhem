@@ -64,20 +64,27 @@ public class ShooterEnemy : MonoBehaviour
     {
         while (true)
         {
-            GameObject bullet = Instantiate(currentGun.bulletPrefab, gun.transform.position, transform.rotation);
-            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-            Vector2 dir = ApplyAccuracy(transform.right);
-            rb.velocity = dir * currentGun.bulletSpeed;
-            StartCoroutine(KeepBulletTrail(bullet, currentGun.bulletLifeTime));
-            Destroy(bullet, currentGun.bulletLifeTime);
+            GameObject obj = PoolManager.Instance.GetFromPool(currentGun.bulletPoolName);
+            obj.transform.position = gun.transform.position;
+            obj.transform.rotation = gun.transform.rotation;
 
+            Bullet bullet = obj.GetComponent<Bullet>();
+            bullet.objectPoolName = currentGun.bulletPoolName;
+            
+            Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+            Vector2 dir = ApplyAccuracy(transform.right);
+            bullet.velocity = dir * currentGun.bulletSpeed;
+
+            bullet.Fly();
+
+            StartCoroutine(KeepBulletTrail(obj, currentGun.bulletLifeTime));
             StartCoroutine(MuzzleFlash());
 
             yield return new WaitForSeconds(currentGun.shootSpeed);
         }
     }
 
-    // OLD CODE!  Use BulletEffectsHandler
+    // OLD CODE!  Use BulletEffectsHandler  
     
     IEnumerator KeepBulletTrail(GameObject bullet, float lifeTime)
     {
@@ -87,8 +94,11 @@ public class ShooterEnemy : MonoBehaviour
         if (bullet != null)
         {
             BulletEffectsHandler bulletFX = bullet.GetComponent<BulletEffectsHandler>();
+            if (bulletFX == null)
+                yield break;
+
             bulletFX.transform.parent = null;
-            bulletFX.DestroyAfterSeconds();
+            //bulletFX.DestroyAfterSeconds();
         }  
     }
 

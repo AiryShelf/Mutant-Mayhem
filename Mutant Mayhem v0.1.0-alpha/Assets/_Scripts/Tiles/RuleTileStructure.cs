@@ -10,7 +10,7 @@ public class RuleTileStructure : RuleTile
     public StructureSO structureSO;
     public List<AnimatedTile> damagedTiles;
     public GameObject corpsePrefab;
-    public GameObject hitEffectsPrefab;
+    
     [Header("Optional")]
     public AnimatedTile buildUiTile;
 

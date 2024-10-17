@@ -36,9 +36,9 @@ public class ProfileManager : MonoBehaviour
     void ClearAllPlayerPrefsForEditor()
     {
         #if UNITY_EDITOR
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save(); // Ensure changes are written to disk
-        Debug.Log("All PlayerPrefs have been cleared.");
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save(); // Ensure changes are written to disk
+            Debug.Log("All PlayerPrefs have been cleared.");
         #endif
     }
 

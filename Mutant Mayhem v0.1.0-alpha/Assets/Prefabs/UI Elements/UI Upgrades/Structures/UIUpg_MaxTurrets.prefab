@@ -286,6 +286,7 @@ MonoBehaviour:
   structureStatsUpgrade: 3
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
+  myButton: {fileID: 2290349589213084410}
   UiName: Max Turrets
   tooltipDescription: Increases the maximum amount of turrets that can be supported.
   showLevelsText: 1
@@ -449,6 +450,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3564340016473378526}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: InvokeOnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 3564340016473378526}
     - target: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -466,6 +479,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+--- !u!114 &2290349589213084410 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 2353019738414428722}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3143411427020922176 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 808465359057252210, guid: c68b552e96894a148a099deb438bfcca, type: 3}

@@ -567,7 +567,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 398.9264
+      value: 402.8867
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -599,11 +599,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -230.1517
+      value: -205.3
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.1444
+      value: 0.13703
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -685,7 +685,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'Description: Select an Augmentation and raise or lower it''s level to
-    allocate or gain Research Points (RP)'
+    use or gain Research Points (RP)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -925,7 +925,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 99
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1250,7 +1250,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7654,6 +7654,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TutorialMothershipPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 4410339385597614629, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7680,11 +7684,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 553
+      value: 494.3619
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 391.76
+      value: 402.89
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7716,11 +7720,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.87612
+      value: 15.7286
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.4372
+      value: 0.13704
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: 12db88c9c5786d74e82f75ea5b7b3e9c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8398,7 +8402,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 388, y: 200}
+  m_AnchoredPosition: {x: 224.5, y: -237.7}
   m_SizeDelta: {x: 123.81, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &8690805605552099906
@@ -8437,7 +8441,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 388, y: -200}
+  m_AnchoredPosition: {x: 400.4, y: -237.7}
   m_SizeDelta: {x: 123.81, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1660057539 &9223372036854775807

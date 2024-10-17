@@ -7,13 +7,19 @@ public class CorpseController : MonoBehaviour
     [SerializeField] Sprite[] corpseSprites;
     [SerializeField] float timeToStartFade;
     [SerializeField] float timeForFade;
+    [SerializeField] string corpsePoolName = "";
 
     SpriteRenderer mySr;
+    Color startColor;
 
-    void Start()
+    void Awake()
+    {
+        mySr = GetComponent<SpriteRenderer>();
+    }
+
+    void OnEnable()
     {
         // Select random corpseSprite
-        mySr = GetComponent<SpriteRenderer>();
         int randIndex = Random.Range(0, corpseSprites.Length);
         mySr.sprite = corpseSprites[randIndex];
 
@@ -29,13 +35,17 @@ public class CorpseController : MonoBehaviour
         Color color = mySr.color;
         Color.RGBToHSV(color, out float h, out float s, out float v);
         v *= 0.9f;
-        
         Color newColor = Color.HSVToRGB(h, s, v);
         newColor.a = 0.9f;
-
         mySr.color = newColor;
-        
+
         StartCoroutine(WaitToFade());
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
+        mySr.color = startColor;
     }
 
     IEnumerator WaitToFade()
@@ -46,19 +56,20 @@ public class CorpseController : MonoBehaviour
 
     IEnumerator FadeOut()
     {
-        Color startColor = mySr.color;
+        startColor = mySr.color;
         float timeElapsed = 0;
 
         while (timeElapsed < timeForFade)
         {
-            yield return new WaitForFixedUpdate();
-            timeElapsed += Time.fixedDeltaTime;
+            yield return new WaitForSeconds(0.25f);
+            timeElapsed += 0.25f;
 
             Color newColor = Color.Lerp(startColor, 
-                             new Color(0,0,0,0), timeElapsed / timeForFade);
+                             new Color(startColor.r, startColor.g, startColor.b, 0), timeElapsed / timeForFade);
             
             mySr.color = newColor;
         }
-        Destroy(gameObject);
+
+        PoolManager.Instance.ReturnToPool(corpsePoolName, gameObject);
     }
 }

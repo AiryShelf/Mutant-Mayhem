@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TurretGun SMG
   m_EditorClassIdentifier: 
   gunType: 1
-  bulletPrefab: {fileID: 145518261742128944, guid: 1e9ac2e9097fb0d47a8559940a92e36f, type: 3}
+  bulletPoolName: BulletGun_Turret
   uiName: Gun Turret
   sprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   uiSprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
@@ -25,11 +25,12 @@ MonoBehaviour:
   laserSight: {fileID: 0}
   muzzleLocalPos: {x: 1, y: 0}
   bulletCasingPrefab: {fileID: 4080447890916436050, guid: 8a83884c62a405549ac12c59ccdd00a9, type: 3}
+  FXManagerCasingMethodName: PlayBulletCasingFly_Rifle
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
   recoilAmount: {x: 0, y: 0}
   damage: 40
-  damageUpgFactor: 0.6
+  damageUpgFactor: 0.5
   knockback: 2
   knockbackUpgAmt: 0.3
   clipSize: 30

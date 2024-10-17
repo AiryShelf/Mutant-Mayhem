@@ -58,6 +58,7 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 5
+  myButton: {fileID: 4719054383445545675}
   UiName: Accuracy
   tooltipDescription: Magnetic rifling and impossibly smooth super-surfaces of the
     barrel help keep the trajectory as intended
@@ -222,6 +223,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 8583491618918240745}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: InvokeOnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 8583491618918240745}
     - target: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -239,6 +252,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+--- !u!114 &4719054383445545675 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 9084355115555019267}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8442598029604173169 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 808465359057252210, guid: c68b552e96894a148a099deb438bfcca, type: 3}

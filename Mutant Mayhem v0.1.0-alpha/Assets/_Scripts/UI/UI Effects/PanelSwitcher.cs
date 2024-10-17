@@ -91,7 +91,6 @@ public class PanelSwitcher : MonoBehaviour
     {
         for (int i = 0; i < tabButtons.Length; i++)
         {
-            
             // Highlight selected tab only
             if (i == currentPanelIndex)
             {
@@ -161,7 +160,7 @@ public class PanelSwitcher : MonoBehaviour
             StartCoroutine(SwipeToPanel(currentPanelIndex, 0));
         }
         else
-        {
+        {       
             currentPanelIndex--;
             StartCoroutine(SwipeToPanel(currentPanelIndex, currentPanelIndex + 1));
         }

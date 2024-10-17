@@ -71,12 +71,18 @@ public class MeleeControllerPlayer : MonoBehaviour
         if (enemy != null)
         {     
             enemy.Knockback((Vector2)enemy.transform.position - point, stats.knockback);
-            enemy.MeleeHitEffect(point, transform.right);
-            enemy.ModifyHealth(-stats.meleeDamage, gameObject);
             enemy.StartFreeze();
+            enemy.ModifyHealth(-stats.meleeDamage, gameObject);
+
+            // Should play a melee hit effect, like laser sword lightning here *****
+            ParticleManager.Instance.PlayMeleeBlood(point, transform.right);
 
             StatsCounterPlayer.MeleeDamageByPlayer += stats.meleeDamage;
             StatsCounterPlayer.MeleeHitsByPlayer++;
+        }
+        else
+        {
+            Debug.LogWarning("EnemyBase not found on melee hit from player");
         }
     }
 

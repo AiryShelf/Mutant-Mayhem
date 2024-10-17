@@ -43,7 +43,7 @@ public class PlayerHealth : Health
     public override void SetMaxHealth(float value)
     {
         maxHealth = value;
-        OnPlayerMaxHealthChanged.Invoke(maxHealth);
+        OnPlayerMaxHealthChanged.Invoke(health);
     }
 
     IEnumerator HealthRegen()

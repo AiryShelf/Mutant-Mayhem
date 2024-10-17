@@ -63,8 +63,6 @@ public class OptionsPanel : MonoBehaviour
             tutorialToggle.isOn = true;
             spacebarToggle.isOn = true;
         }
-
-        
     }
 
     public void ToggleSpacebar(Toggle change)
@@ -75,7 +73,7 @@ public class OptionsPanel : MonoBehaviour
             ProfileManager.Instance.SaveCurrentProfile();
         }
 
-        SettingsManager.Instance.RefreshProfileSettings(ProfileManager.Instance.currentProfile);
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         Debug.Log("Toggled Spacebar");
     }
 
@@ -91,32 +89,38 @@ public class OptionsPanel : MonoBehaviour
         ProfileManager.Instance.currentProfile.isTutorialEnabled = change.isOn;
         ProfileManager.Instance.SaveCurrentProfile(); // Save the profile with updated tutorial state
 
-        TutorialManager.SetTutorialStateAndProfile(change.isOn);
+        TutorialManager.SetProfileAndTutorialState(change.isOn);
         Debug.Log("Tutorial Enabled: " + change.isOn);
     }
 
     void DifficultyValueChanged(TMP_Dropdown change)
     {
-        switch (change.value)
+        if ((DifficultyLevel)change.value != ProfileManager.Instance.currentProfile.difficultyLevel)
         {
-            case 0:
-                ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Easy;
-                break;
-            case 1:
-                ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Normal;
-                break;
-            case 2:
-                ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Hard;
-                break;
-            default:
-                Debug.LogError("Failed to change difficulty");
-                break;
+            Debug.Log("Difficulty changed via Dropdown");
+            switch (change.value)
+            {
+                case 0:
+                    ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Easy;
+                    break;
+                case 1:
+                    ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Normal;
+                    break;
+                case 2:
+                    ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Hard;
+                    break;
+                default:
+                    Debug.LogError("Failed to change difficulty");
+                    return;
+            }
+        
+
+            ProfileManager.Instance.SaveCurrentProfile();
+
+            MessagePanel.PulseMessage("Difficulty changed to " + (DifficultyLevel)change.value + 
+                                    ", saved to currentProfile", Color.yellow);
+            
         }
-
-        ProfileManager.Instance.SaveCurrentProfile();
-
-        MessagePanel.PulseMessage("Difficulty will be updated on the next playthrough", Color.yellow);
-        Debug.Log("Difficulty changed via Dropdown");
     }
 
     void MoveTypeValueChanged(TMP_Dropdown change)
@@ -136,7 +140,7 @@ public class OptionsPanel : MonoBehaviour
         }
 
         ProfileManager.Instance.SaveCurrentProfile();
-        SettingsManager.Instance.RefreshProfileSettings(profile);
+        SettingsManager.Instance.RefreshSettingsFromProfile(profile);
 
         Debug.Log("useStandardWASD set to: " + change.value);
     }

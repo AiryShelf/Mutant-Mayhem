@@ -15,6 +15,11 @@ public class EnemyAggroTrigger : MonoBehaviour
         PlayerTarget = GameObject.FindGameObjectWithTag("Player");
     }
 
+    void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
     private void OnTriggerEnter2D(Collider2D other) 
     {
         // This object should be on AiTriggers layer

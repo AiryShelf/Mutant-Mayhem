@@ -5,33 +5,63 @@ using UnityEngine;
 public class MeleeControllerEnemy : MonoBehaviour
 {
     public float meleeDamage = 20f;
+    float meleeDamageStart;
     public float knockback = 10f;
+    float knockbackStart;
     [SerializeField] float selfKnockback = 5f;
     [SerializeField] float timeBetweenAttacks = 1f;
     [SerializeField] float meleeTileDotProdRange = 0.5f;
     [SerializeField] Collider2D meleeCollider;
-    [SerializeField] Animator meleeAnim;
+    public Animator meleeAnimator;
     [SerializeField] SoundSO meleeSound;
 
     Health myHealth;
     TileManager tileManager;
-    bool waitToAttack;
+
+    [Header("Dynamic, don't set here")]
+    public bool waitToAttack;
 
     void Awake()
     {
         myHealth = GetComponentInParent<Health>();
         tileManager = FindObjectOfType<TileManager>();
+
+        meleeDamageStart = meleeDamage;
+        knockbackStart = knockback;
+    }
+
+    void OnEnable()
+    {
+        meleeDamage = meleeDamageStart;
+        knockback = knockbackStart;
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    public void Reset()
+    {
+        meleeAnimator.Rebind();
+        //meleeAnimator.Play("No Attack", 0, 0.0f);
+        //meleeAnimator.ResetTrigger("Melee");
+        
+        waitToAttack = false;
     }
 
     public void Hit(Health otherHealth, Vector2 point)
     {   
         waitToAttack = true;
-        StartCoroutine(AttackTimer());
-        meleeAnim.SetTrigger("Melee");   
+        if (gameObject.activeSelf)
+            StartCoroutine(AttackTimer());
+        meleeAnimator.SetTrigger("Melee");   
         myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback);
         otherHealth.Knockback((Vector2)otherHealth.transform.position - point, knockback);
-        otherHealth.MeleeHitEffect(point, transform.right);
         otherHealth.ModifyHealth(-meleeDamage, gameObject);
+
+        if (otherHealth.tag == "Player")
+            ParticleManager.Instance.PlayMeleeBlood(point, transform.right);
 
         PlayMeleeSound(point);
 
@@ -53,10 +83,10 @@ public class MeleeControllerEnemy : MonoBehaviour
         {
             waitToAttack = true;
             StartCoroutine(AttackTimer());
-            meleeAnim.SetTrigger("Melee"); 
+            meleeAnimator.SetTrigger("Melee"); 
             myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback * 0.8f);
             tileManager.ModifyHealthAt(point, -meleeDamage);
-            tileManager.MeleeHitEffectAt(point, transform.right);
+            ParticleManager.Instance.PlayMeleeHitWall(point, transform.right);
 
             PlayMeleeSound(point);
 

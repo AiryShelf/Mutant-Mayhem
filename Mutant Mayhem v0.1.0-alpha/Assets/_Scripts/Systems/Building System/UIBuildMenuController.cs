@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
@@ -9,10 +10,13 @@ public class UIBuildMenuController : MonoBehaviour
     public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
     [HideInInspector] public List<GameObject> structureButtonInstances;
+    [SerializeField] ScrollRectController scrollRectController;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
     [SerializeField] GameObject tutorialBuildPanelPrefab;
     [SerializeField] RectTransform gamePlayCanvas;
+
+    BuildingSystem buildingSystem;
 
     void Awake()
     {
@@ -27,6 +31,7 @@ public class UIBuildMenuController : MonoBehaviour
             Destroy(textLayoutGrid.transform.GetChild(i).gameObject);
         }
 
+        buildingSystem = FindObjectOfType<BuildingSystem>();
         InitializeBuildList();             
     }
 
@@ -44,9 +49,10 @@ public class UIBuildMenuController : MonoBehaviour
             // Create button in button layout group
             GameObject newButton = Instantiate(obj, buttonLayoutGrid.transform);
             structureButtonInstances.Add(newButton);
+            UIStructure uIStructure = newButton.GetComponent<UIStructure>();
+            uIStructure.Initialize(buildingSystem, scrollRectController);
 
             // Create text in text layout group
-            UIStructure uIStructure = newButton.GetComponent<UIStructure>();
             uIStructure.textInstance = Instantiate(uIStructure.textPrefab, 
                                                    textLayoutGrid.transform);
 
@@ -89,5 +95,24 @@ public class UIBuildMenuController : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
+    }
+
+    public void SetMenuSelection(StructureSO structure)
+    {
+        foreach (Transform trans in buttonLayoutGrid.transform)
+        {
+            UIStructure UiStructure = trans.GetComponent<UIStructure>();
+            if (UiStructure == null)
+                continue;
+            
+            if (structure == UiStructure.structureSO.ruleTileStructure.structureSO)
+            {
+                EventSystem.current.SetSelectedGameObject(trans.gameObject);
+                Debug.Log("BuildMenu selection forced to " + trans.name);
+                return;
+            }
+            
+        }
+        Debug.Log("BuildMenu selection force failed");
     }
 }

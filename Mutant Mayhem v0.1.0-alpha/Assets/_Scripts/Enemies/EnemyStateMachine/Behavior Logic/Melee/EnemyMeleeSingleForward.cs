@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Melee-Single Forward", menuName = "Enemy Logic/Melee Logic/Single Forward Melee")]
 public class EnemyMelee : EnemyMeleeSOBase
 {  
-    [SerializeField] private OLDMeleeControllerEnemy meleeControllerEnemy;
+    [SerializeField] private MeleeControllerEnemy meleeControllerEnemy;
     [SerializeField] private float _timeBetweenAttack = 1f;   
     [SerializeField] private float _timeTillExit = 3f;
 
@@ -36,7 +36,7 @@ public class EnemyMelee : EnemyMeleeSOBase
             _timer = 0f;
 
             Vector2 dir = (playerTransform.position - enemyBase.transform.position).normalized;
-            meleeControllerEnemy.isAttacking = true;
+            //meleeControllerEnemy.isAttacking = true;
         }
         
         if (_exitTimer >= _timeTillExit)

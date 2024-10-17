@@ -11,15 +11,17 @@ public class WaveSpawnerRandom : MonoBehaviour
     [SerializeField] Tilemap structureTilemap;
     [SerializeField] LayerMask checkClearLayers;
     public Transform qCubeTrans;
-    public WaveSOBase waveSOBaseSource;
+    public WaveSOBase masterWave;
     [SerializeField] int maxIndexToSelectAtStart;
     [SerializeField] WaveSOBase currentWave;
     [SerializeField] int numSubwavesAtStart;
     [SerializeField] int timeToNextSubWave;
+    [SerializeField] int minTimeToNextSubWave;
 
     public int currentSubWaveIndex;
     public int currentConstantWaveIndex;
     public bool waveSpawning;
+    public int numberOfSubwaves;
     public bool waveComplete;
 
     Vector2 centerPoint;
@@ -31,7 +33,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         centerPoint = qCubeTrans.position;
 
         // Copy the master wave
-        currentWave = Instantiate(waveSOBaseSource, transform);       
+        currentWave = Instantiate(masterWave, transform);       
     }
 
     #region Build Wave
@@ -54,18 +56,18 @@ public class WaveSpawnerRandom : MonoBehaviour
         currentWave.timesToTriggerSubwaves.Clear();
 
         // Add more subwaves over time, apply difficulty
-        int numOfSubwaves = Mathf.CeilToInt(numSubwavesAtStart + waveController.currentWaveIndex * 
+        numberOfSubwaves = Mathf.CeilToInt(numSubwavesAtStart + waveController.currentWaveIndex * 
                          SettingsManager.Instance.SubwaveListGrowthFactor);
 
         // Build Wave
         int prevSubwaveIndex = 0;
         int timeInSequence = 0;
-        for (int i = 0; i < numOfSubwaves; i++)
+        for (int i = 0; i < numberOfSubwaves; i++)
         {
             // Find max index to select based on current wave, plus starting max index
-            int maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex / waveController.wavesPerBase) 
+            int maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex / waveController.wavesTillAddBase) 
                            + maxIndexToSelectAtStart - SettingsManager.Instance.WavesTillAddWaveBase;
-            maxIndex = Mathf.Clamp(maxIndex, 0, waveSOBaseSource.subWaves.Count - 1);
+            maxIndex = Mathf.Clamp(maxIndex, 0, masterWave.subWaves.Count - 1);
             Debug.Log("maxIndex for wave " + waveController.currentWaveIndex + ": " + maxIndex);
 
             // Select random index, wave, and style. Prevent doubles
@@ -77,22 +79,26 @@ public class WaveSpawnerRandom : MonoBehaviour
                     subWaveIndex = Random.Range(0, maxIndex + 1);
                 }
             }
-            SubWaveSO waveToAdd = waveSOBaseSource.subWaves[subWaveIndex];
+            SubWaveSO waveToAdd = masterWave.subWaves[subWaveIndex];
 
             // Allow for extra waveSyles to select from
             int styleIndex = Random.Range(0, maxIndex + 1);
-            styleIndex = Mathf.Clamp(styleIndex, 0, waveSOBaseSource.subWaveStyles.Count - 1);
-            SubWaveStyleSO styleToAdd = waveSOBaseSource.subWaveStyles[styleIndex];
+            styleIndex = Mathf.Clamp(styleIndex, 0, masterWave.subWaveStyles.Count - 1);
+            SubWaveStyleSO styleToAdd = masterWave.subWaveStyles[styleIndex];
 
             // Add selection to list
             currentWave.subWaves.Add(waveToAdd);
-            currentWave.subWaveMultipliers.Add(waveSOBaseSource.subWaveMultipliers[subWaveIndex]);
+            currentWave.subWaveMultipliers.Add(masterWave.subWaveMultipliers[subWaveIndex]);
             //Debug.Log("Added SubWave: " + waveToAdd.name);
             currentWave.subWaveStyles.Add(styleToAdd);
             //Debug.Log("Added SubWave Style: " + styleToAdd.name);
             currentWave.timesToTriggerSubwaves.Add(timeInSequence);
 
-            timeInSequence += timeToNextSubWave;
+            // Find next time slot
+            int delay = Mathf.CeilToInt(timeToNextSubWave * waveController.subwaveDelayMult);
+            delay = Mathf.Clamp(delay, minTimeToNextSubWave, int.MaxValue);
+            timeInSequence += delay;
+
             prevSubwaveIndex = subWaveIndex;
         }
         Debug.Log("Number of SubWaves for wave " + waveController.currentWaveIndex + 
@@ -127,6 +133,7 @@ public class WaveSpawnerRandom : MonoBehaviour
                 currentSubWaveIndex = 
                     _timesToTriggerSubwaves.IndexOf(waveSeconds);
                 StartCoroutine(SpawnSubWave(currentSubWaveIndex));
+                Debug.Log($"Subwave {currentSubWaveIndex} started at {waveSeconds} seconds");
             }
             // If current wave seconds has constantWave to trigger
             if (_timesToTriggerConstantWaves.Contains(waveSeconds))
@@ -170,8 +177,8 @@ public class WaveSpawnerRandom : MonoBehaviour
         List<int> _timesToTriggerSubWaves = new List<int>();
         foreach (int timeToTrigger in currentWave.timesToTriggerSubwaves)
         {
-            // This gives each wave its own time-slot to spawn in, doubles dont work.
-            int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMult * 
+            // This gives each wave its own time-slot to spawn in, since doubles dont work.
+            int time = (int)Mathf.Floor(timeToTrigger * waveController.subwaveDelayMult * 
                                         SettingsManager.Instance.SubwaveDelayMult);
             while (time <= prevTime)
                 time++;
@@ -191,7 +198,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         foreach (int timeToTrigger in currentWave.timesToTriggerConstantWaves)
         {
             // This gives each wave its own time-slot to spawn in, doubles dont work.
-            int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMult * 
+            int time = (int)Mathf.Floor(timeToTrigger * waveController.subwaveDelayMult * 
                                         SettingsManager.Instance.SubwaveDelayMult);
             if (time == prevTime)
                 time++;
@@ -230,11 +237,10 @@ public class WaveSpawnerRandom : MonoBehaviour
         SubWaveStyleSO subWaveStyle = currentWave.subWaveStyles[subWaveIndex];
         
         // Make copy of wave to be created
-        List<GameObject> _enemyPrefabList = 
-                                   new List<GameObject>(subWave.enemyPrefabList);
+        List<GameObject> _enemyPrefabList = new List<GameObject>(subWave.enemyPrefabList);
         List<int> _numberToSpawn = new List<int>(subWave.numberToSpawn);
 
-        // Get batchMult
+        // Get batchMultiplier
         float batchMult = GetBatchMultiplier(subWaveIndex, true);
 
         // Apply batchMult to SubWave numbers to spawn
@@ -257,6 +263,7 @@ public class WaveSpawnerRandom : MonoBehaviour
                         spawnRadius, spawnAngle, subWaveStyle.spreadForNextBatch, 
                         subWaveStyle.randomizeNextBatchSpread);
             spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, spawnPos - (Vector2)transform.position);
 
             // Lock batch to local point
             float batchAngle = spawnAngle;
@@ -324,6 +331,7 @@ public class WaveSpawnerRandom : MonoBehaviour
 
     IEnumerator SpawnConstantWave(int constantWaveIndex)
     {
+        //  *****  NOT IN USE  *****
         SubWaveSO subWave = currentWave.constantWaves[constantWaveIndex];
         SubWaveStyleSO subWaveStyle = currentWave.constantWaveStyles[constantWaveIndex];
         yield return null;
@@ -351,7 +359,18 @@ public class WaveSpawnerRandom : MonoBehaviour
         if (tileManager.CheckGridIsClear(gridPos, checkClearLayers, true))
         {
             EnemyCounter.EnemyCount++;
-            Instantiate(subWave.enemyPrefabList[index], spawnPos, Quaternion.identity);
+
+            EnemyBase enemyBase = subWave.enemyPrefabList[index].GetComponent<EnemyBase>();
+            if (enemyBase == null)
+            {
+                Debug.LogError("Could not find EnemyBase in prefab when spawning enemy");
+                return false;
+            }
+
+            GameObject enemyObj = PoolManager.Instance.GetFromPool(enemyBase.objectPoolName);
+            //enemyObj.GetComponent<EnemyBase>().RandomizeStats();
+            enemyObj.transform.position = spawnPos;
+            
             return true;
         }
         else

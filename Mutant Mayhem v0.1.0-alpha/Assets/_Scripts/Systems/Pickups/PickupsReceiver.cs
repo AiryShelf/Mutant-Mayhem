@@ -14,10 +14,12 @@ public class PickupsReceiver : PickupsContainerBase
         int credits = pickup.pickupData.credits;
         BuildingSystem.PlayerCredits += credits;
         PlayCreditsEffects(credits);
-        Debug.Log("Added " + credits + " Credits");
+        //Debug.Log("Added " + credits + " Credits");
 
         container.Remove(pickup);
-        Destroy(pickup.gameObject);
+
+        // Return pickup to pool
+        PoolManager.Instance.ReturnToPool("Pickup", pickup.gameObject);
     }
 
     void PlayCreditsEffects(int credits)

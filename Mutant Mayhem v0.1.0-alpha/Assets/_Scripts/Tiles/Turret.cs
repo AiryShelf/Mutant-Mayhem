@@ -20,14 +20,20 @@ public class Turret : MonoBehaviour
     float detectionRangeSqrd;
     Coroutine searchRoutine;
     Coroutine scanRoutine;
+    [HideInInspector] public Player player;
+
+    bool initialized = false;
 
     void Start()
     {
-        InitializeTurret();
+        //InitializeTurret();
     }
 
     void FixedUpdate()
     {
+        if (!initialized)
+            return;
+
         // Tracking
         if (hasTarget)
         {
@@ -40,7 +46,7 @@ public class Turret : MonoBehaviour
         }
 
         // Reload Image
-        if (shooter.gunsAmmoInClips[shooter.currentGunIndex] < 1)
+        if (shooter.isReloading)
         {
             reloadImageSr.enabled = true;
         }
@@ -50,8 +56,20 @@ public class Turret : MonoBehaviour
         }
     }
 
-    void InitializeTurret()
+    public void InitializeTurret()
     {
+        TurretShooter turretShooter = (TurretShooter)shooter;
+
+        if (player != null)
+        {
+            turretShooter.player = player;
+            Debug.Log("Turret: Player was set in TurretShooter");
+        }
+        else
+        {
+            Debug.LogError("Turret: Player was null when initializing");
+        }
+        
         myGun = (TurretGunSO)shooter.gunList[0];
         
         // Initialize gun
@@ -92,6 +110,8 @@ public class Turret : MonoBehaviour
             Debug.Log("Non-turret gun found in TurretShooter");
             
         detectionCollider.radius = 0f;
+
+        initialized = true;
     }
 
     public void UpdateStructure()
@@ -108,7 +128,7 @@ public class Turret : MonoBehaviour
 
     void TrackTarget()
     {
-        if (target == null || (transform.position - target.position).sqrMagnitude > detectionRangeSqrd + 20)
+        if (!target.gameObject.activeSelf || (transform.position - target.position).sqrMagnitude > detectionRangeSqrd + 20)
         {
             // Target is dead or out of range
             hasTarget = false;
@@ -124,7 +144,7 @@ public class Turret : MonoBehaviour
 
     IEnumerator SearchForTarget()
     {
-        Debug.Log("Turret search routine ran");
+        //Debug.Log("Turret search routine ran");
         if (scanRoutine != null)
             StopCoroutine(scanRoutine);
         scanRoutine = StartCoroutine(RandomScanning());
@@ -136,6 +156,7 @@ public class Turret : MonoBehaviour
             if (detectionCollider.radius > myGun.detectRange)
             {
                 detectionCollider.radius = myGun.detectRange;
+                yield break;
             }
             yield return new WaitForSeconds(expansionDelay);
         }

@@ -3,37 +3,37 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerCheckable
 {
+    public string objectPoolName;
     public AnimationControllerEnemy animControllerEnemy;
     public MeleeControllerEnemy meleeController;
-    public SpriteRenderer sR;
-    public Rigidbody2D rB { get; set; }
+    public SpriteRenderer sr;
+    public Rigidbody2D rb { get; set; }
     public Vector2 facingDirection { get; set; }
+
+    [Header("Movement")]
+    public float moveSpeedBaseStart;
     public float moveSpeedBase = 1f;
+    public float rotateSpeedBaseStart = 3f;
     public float rotateSpeedBase = 3f;
+    public float startMass; // For debug, dont set
 
-    #region Randomize Variables
-
-    [Header("Randomize Variables")]
+    [Header("Randomize")]
     public bool randomize;
-    public float randSpeedFactor = 0.1f;
+    public float randSpeedRange = 0.1f;
+    public Vector3 startLocalScale;
     public float minSize;
-    public float randColorFactor;
+    public float randColorRange;
     public float gaussMeanSize;
     public float gaussStdDev;
 
-    #endregion 
-
-    #region Health Variables
-
-    [field: Header("Health Variables")]
+    [field: Header("Health")]
     [field: SerializeField] public Health health { get; set; }
     public bool isHit { get; set; }
     [field: SerializeField] public float unfreezeTime { get; set; }
     public Coroutine unfreezeAfterTime { get; set; }
 
-    #endregion
 
-    #region State Machine Variables
+    #region State Machine
 
     [Header("State Machine Logic")]
     [SerializeField] string CurrentSMStateDebug;
@@ -65,6 +65,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #endregion
 
+    #region Initialize
+
     WaveControllerRandom waveController;
 
     void Awake()
@@ -78,13 +80,29 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         //EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
 
         StateMachine = new EnemyStateMachine();
-
         IdleState = new EnemyIdleState(this, StateMachine);
         ChaseState = new EnemyChaseState(this, StateMachine);
         ShootState = new EnemyShootState(this, StateMachine);
         //MeleeState = new EnemyMeleeState(this, StateMachine);
 
-        rB = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
+
+        startMass = rb.mass;
+        startLocalScale = transform.localScale;
+        moveSpeedBaseStart = moveSpeedBase;
+
+        StateMachine.Initialze(IdleState);
+    }
+
+    void OnEnable() 
+    {
+        ResetStats();
+        RandomizeStats();
+    }
+
+    void OnDisable() 
+    {
+        StopAllCoroutines();
     }
 
     void Start()
@@ -93,10 +111,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         EnemyChaseSOBaseInstance.Initialize(gameObject, this);
         EnemyShootSOBaseInstance.Initialize(gameObject, this);
         //EnemyMeleeSOBaseInstance.Initialize(gameObject, this);
-
-        StateMachine.Initialze(IdleState);
-
-        RandomizeStats();
     }
 
     void Update()
@@ -110,50 +124,71 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         //CurrentSMStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
-    #region Randomize Stats
+    #endregion
+
+    #region Reset / Randomize
+
+    public void ResetStats()
+    {
+        isHit = false;
+        health.hasDied = false;
+        health.SetMaxHealth(health.startMaxHealth);
+        health.SetHealth(health.GetMaxHealth());
+        moveSpeedBase = moveSpeedBaseStart;
+        rb.mass = startMass;
+        transform.localScale = startLocalScale;
+        meleeController.Reset();
+
+        StateMachine.ChangeState(IdleState);
+    }
 
     public void RandomizeStats()
     {
-        if (randomize)
-        {
-            // Randomize speed
-            moveSpeedBase *= Random.Range(1 - randSpeedFactor, 1 + randSpeedFactor);
+        //Debug.Log($"Randomize stats started with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
+        
+        // Randomize speed
+        moveSpeedBase *= Random.Range(1 - randSpeedRange, 1 + randSpeedRange);
 
-            // Randomize color
-            float randomColorRed = Random.Range(-randColorFactor, randColorFactor);
-            float randomColorGreen = Random.Range(-randColorFactor, randColorFactor);
-            float randomColorBlue = Random.Range(-randColorFactor, randColorFactor);
-            sR.color = new Color(sR.color.r + randomColorRed,
-                                 sR.color.g + randomColorGreen,
-                                 sR.color.b + randomColorBlue);
-            
-            // Randomize size with multipliers
-            GaussianRandom _gaussianRandomm = new GaussianRandom();
-            float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
-            randomSizeFactor *= waveController.sizeMultiplier;
-            randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
-            transform.localScale *= randomSizeFactor;
+        // Randomize color, allowing it to change more drastically over time
+        float red = sr.color.r;
+        float green = sr.color.g;
+        float blue = sr.color.b;
 
-            // Randomize stats by size and multipliers
-            moveSpeedBase *= randomSizeFactor * waveController.speedMultiplier;
+        red += Random.Range(-randColorRange, randColorRange);
+        if (red < 0.15f)
+            red += 0.2f;
+        green += Random.Range(-randColorRange, randColorRange);
+        if (green < 0.15f)
+            green += 0.2f;
+        blue += Random.Range(-randColorRange, randColorRange);
+        if (blue < 0.15f)
+            blue += 0.2f;
+        sr.color = new Color(red, green, blue);
+        
+        // Randomize size, apply multipliers
+        GaussianRandom _gaussianRandomm = new GaussianRandom();
+        float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
+        randomSizeFactor *= waveController.sizeMultiplier;
+        randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
+        transform.localScale *= randomSizeFactor;
 
-            health.SetMaxHealth(health.GetMaxHealth() 
-                * randomSizeFactor * waveController.healthMultiplier);
-            health.SetHealth(health.GetMaxHealth());
+        // Set stats by random size factor
+        moveSpeedBase *= randomSizeFactor * waveController.speedMultiplier;
+        health.SetMaxHealth(health.startMaxHealth * 
+                            randomSizeFactor * waveController.healthMultiplier);
+        health.SetHealth(health.GetMaxHealth());
+        meleeController.meleeDamage *= randomSizeFactor * waveController.damageMultiplier;
+        meleeController.knockback *= randomSizeFactor;
+        //meleeController.selfKnockback *= randomSizeFactor; no good?
+        rb.mass = startMass * randomSizeFactor;
+        animControllerEnemy.animSpeedFactor /= randomSizeFactor;
 
-            meleeController.meleeDamage *= randomSizeFactor * waveController.damageMultiplier;
-            meleeController.knockback *= randomSizeFactor;
-            //meleeController.selfKnockback *= randomSizeFactor; no good?
-
-            rB.mass *= randomSizeFactor;
-
-            animControllerEnemy.animSpeedFactor /= randomSizeFactor;
-        }
+        //Debug.Log($"Randomize stats finished with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
     }
 
     #endregion
 
-    #region Health / Hit
+    #region Health / Hit / Die
 
     public void ModifyHealth(float amount, GameObject gameObject)
     {
@@ -183,19 +218,11 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         health.Knockback(dir, knockback);
     }
 
-    public void BulletHitEffect(Vector2 hitPos, Vector2 hitDir)
-    {
-        health.BulletHitEffect(hitPos, hitDir);
-    }
-
-    public void MeleeHitEffect(Vector2 hitPos, Vector2 hitDir)
-    {
-        health.MeleeHitEffect(hitPos, hitDir);
-    }
-
     public void Die()
     {
-        health.Die();
+        ResetStats();
+        
+        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 
     #endregion
@@ -208,13 +235,13 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         if (!isHit)
         {
             if (EnemyChaseSOBaseInstance.isSprinting)
-                rB.AddForce(moveSpeedBase * velocity); 
+                rb.AddForce(moveSpeedBase * velocity); 
             else 
             {
                 Vector2 force = moveSpeedBase * velocity;
-                Vector2 acc = force / rB.mass;
+                Vector2 acc = force / rb.mass;
                 Vector2 deltaV = acc * Time.fixedDeltaTime;
-                rB.velocity += deltaV;  
+                rb.velocity += deltaV;  
             }
         }  
     }
@@ -225,7 +252,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
         {
             float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
             Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y,
-                                    Mathf.LerpAngle(rB.rotation, angle, 
+                                    Mathf.LerpAngle(rb.rotation, angle, 
                                     Time.fixedDeltaTime * rotateSpeedBase * speedMultipliers));
             transform.rotation = Quaternion.Euler(rotator);
             facingDirection = velocity.normalized;

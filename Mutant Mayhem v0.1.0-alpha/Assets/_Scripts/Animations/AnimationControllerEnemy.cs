@@ -9,14 +9,14 @@ public class AnimationControllerEnemy : MonoBehaviour
     [SerializeField] float switchToRunBuffer = 1.1f;
     [SerializeField] float maxAnimSpeed = 10;
 
-    Animator myAnimator;
-    OLDEnemy enemy;
+    public Animator myAnimator;
+    EnemyBase enemy;
     Rigidbody2D enemyRb;
     float baseSpeed;
 
     void Start()
     {
-        enemy = GetComponent<OLDEnemy>();
+        enemy = GetComponent<EnemyBase>();
         myAnimator = GetComponentInChildren<Animator>();
 
         if (enemy != null)

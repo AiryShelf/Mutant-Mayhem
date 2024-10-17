@@ -45,10 +45,11 @@ public class TimeControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.KeypadPlus))
             Time.timeScale += 0.1f;
         if (Input.GetKeyDown(KeyCode.KeypadMinus) && Time.timeScale - 0.01f > epsilon)
-            Time.timeScale -= 0.1f;
-        Debug.Log("timeScale changed to: " + Time.timeScale.ToString("#0.0"));
-        MessagePanel.PulseMessage("For Debug: Timescale changed to: " + 
-                                 Time.timeScale.ToString("#0.0"), Color.red);
+            if (Time.timeScale > 0.1f)
+                Time.timeScale -= 0.1f;
+        //Debug.Log("timeScale changed to: " + Time.timeScale.ToString("#0.0"));
+        MessagePanel.PulseMessage("Timescale changed to: " + 
+                                  Time.timeScale.ToString("#0.0"), Color.red);
 
         previousTimeScale = Time.timeScale;
     }

@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {   
+    public float startMaxHealth;
     [SerializeField] protected float maxHealth = 100f;
-    [SerializeField] float healthToCreditsDivisor = 1;
-    [SerializeField] HitEffects hitEffectsChild;
-    [SerializeField] GameObject corpsePrefab;
-    [SerializeField] GameObject deathPickupPrefab;
+    [SerializeField] protected float healthToCreditsDivisor = 1;
     public float deathTorque = 20;
     [SerializeField] SoundSO painSound;
     [SerializeField] float painSoundCooldown= 0.3f;
@@ -17,11 +15,13 @@ public class Health : MonoBehaviour
 
     protected float health;
     protected Rigidbody2D myRb;
-    protected bool hasDied;
+    public bool hasDied;
 
-    void Awake()
-    {
+    protected virtual void Awake()
+    {   
         myRb = GetComponent<Rigidbody2D>();
+
+        maxHealth = startMaxHealth;
         health = maxHealth;
     }
 
@@ -43,10 +43,12 @@ public class Health : MonoBehaviour
     public virtual void SetMaxHealth(float value)
     {
         maxHealth = value;
+        //Debug.Log($"MaxHealth was set to {value}");
     }
 
     public virtual void ModifyHealth(float value, GameObject damageDealer)
     {
+        //Debug.Log($"Modifying {health} health by {value}.  Max health: {maxHealth}");
         PlayPainSound(value);
 
         health += value;
@@ -99,48 +101,10 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void BulletHitEffect(Vector2 hitPos, Vector2 hitDir)
-    {
-        hitEffectsChild.PlayBulletHitEffect(hitPos, hitDir);
-    }
-
-    public void MeleeHitEffect(Vector2 hitPos, Vector2 hitDir)
-    {
-        hitEffectsChild.PlayMeleeHitEffect(hitPos, hitDir);
-    }
-
     public void Knockback(Vector2 dir, float knockback)
     {
         myRb.AddForce(dir * knockback, ForceMode2D.Impulse);
     }
 
-    public virtual void Die()
-    {
-        if (corpsePrefab)
-        {
-            hasDied = true;
-            // Create corpse and pass scale
-            corpsePrefab = Instantiate(corpsePrefab, transform.position, transform.rotation);
-            corpsePrefab.transform.localScale = transform.localScale;
-            // Pass physics to corpse
-            Rigidbody2D corpseRb = corpsePrefab.GetComponent<Rigidbody2D>();
-            corpseRb.velocity = myRb.velocity;
-            corpseRb.angularVelocity = myRb.angularVelocity;
-            corpseRb.mass = myRb.mass * 2;
-        }
-        
-        corpsePrefab.GetComponentInChildren<SpriteRenderer>().color = 
-                                                GetComponent<SpriteRenderer>().color;
-        hitEffectsChild.transform.parent = null;
-        hitEffectsChild.DestroyAfterSeconds();
-
-        // Drop a pickup
-        Pickup pickup = Instantiate(deathPickupPrefab).GetComponent<Pickup>();
-        pickup.transform.position = transform.position;
-        pickup.pickupData.credits = Mathf.FloorToInt(maxHealth / healthToCreditsDivisor * 
-                                                     SettingsManager.Instance.CreditsMult);
-        
-        EnemyCounter.EnemyCount--;
-        Destroy(gameObject);   
-    }
+    public virtual void Die() { }
 }

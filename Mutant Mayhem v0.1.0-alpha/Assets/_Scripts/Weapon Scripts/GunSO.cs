@@ -14,7 +14,7 @@ public enum GunType
 public class GunSO : ScriptableObject
 {
     public GunType gunType;
-    public GameObject bulletPrefab;
+    public string bulletPoolName;
     public string uiName;
 
     [Header("For Player")]
@@ -33,6 +33,7 @@ public class GunSO : ScriptableObject
     public GameObject laserSight;
     public Vector2 muzzleLocalPos;
     public GameObject bulletCasingPrefab;
+    public string FXManagerCasingMethodName;
     public Vector2 casingLocalPos;
     public float muzzleFlashTime;
     public Vector2 recoilAmount;

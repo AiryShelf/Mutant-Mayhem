@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RepairGun
   m_EditorClassIdentifier: 
   gunType: 10
-  bulletPrefab: {fileID: 145518261742128944, guid: a541e93f5f717e44dac9311f6d529a18, type: 3}
+  bulletPoolName: BulletRepair
   uiName: Repair Gun
   sprite: {fileID: 21300000, guid: 2eb6dc60541c920449efa7ffcd7d740b, type: 3}
   uiSprite: {fileID: 21300000, guid: 33ba324b557c3494c96f3ba3bfee6981, type: 3}
@@ -25,23 +25,24 @@ MonoBehaviour:
   laserSight: {fileID: 2462978180868395494, guid: 2103369fd556cec4084b6fc80a2c606f, type: 3}
   muzzleLocalPos: {x: -0.052, y: -0.02}
   bulletCasingPrefab: {fileID: 1136685630353648448, guid: 66d2439bcd59ab0429a4cee0f21593d7, type: 3}
+  FXManagerCasingMethodName: PlayRepairCasing_Gun
   casingLocalPos: {x: 0.31, y: 0}
   muzzleFlashTime: 0.05
   recoilAmount: {x: -0.1, y: 0}
-  damage: -100
+  damage: -150
   damageUpgFactor: -50
   knockback: 0
   knockbackUpgAmt: 0
   clipSize: 20
   clipSizeUpgAmt: 5
-  chargeDelay: 0.5
-  chargeSpeedUpgNegAmt: -0.03
-  shootSpeed: 0.2
+  chargeDelay: 0.3
+  chargeSpeedUpgNegAmt: -0.02
+  shootSpeed: 0.15
   shootSpeedUpgNegAmt: -0.01
   accuracy: 1
   accuracyUpgNegAmt: -0.01
   bulletSpeed: 10
-  bulletLifeTime: 0.18
+  bulletLifeTime: 0.28
   bulletRangeUpgAmt: 0.05
   kickback: 0
   kickbackUpgNegAmt: 0

@@ -26,10 +26,10 @@ public class Shooter : MonoBehaviour
     public bool hasTarget;
     protected GameObject muzzleFlash;
     public GunSights laserSight;
-    Coroutine reloadRoutine;
-    int clipSize;
+    protected Coroutine reloadRoutine;
+    protected int clipSize;
     float fireTimer;
-    float reloadTimer;
+    protected float reloadTimer;
     Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
 
     protected virtual void Awake()
@@ -52,24 +52,25 @@ public class Shooter : MonoBehaviour
         if (isReloading)
         {
             if (reloadRoutine == null)
-                reloadRoutine = StartCoroutine(ReloadRoutine());
+                ReloadShooter();
             return;
         }
 
         if (!hasTarget)
             return;
 
+        // Start reloading after firing a certain number of shots
+        if (ShouldReload())
+        {
+            isReloading = true;
+            return;
+        }
+
         fireTimer -= Time.deltaTime;
         if (fireTimer <= 0 && gunsAmmoInClips[currentGunIndex] > 0)
         {
             Fire();
             fireTimer = shootSpeed;
-
-            // Start reloading after firing a certain number of shots
-            if (ShouldReload())
-            {
-                isReloading = true;
-            }
         }
     }
 
@@ -84,6 +85,52 @@ public class Shooter : MonoBehaviour
                 gunList.Add(g);
             }
         }
+    }
+
+    #region Fire / Switch Gun
+
+    protected virtual void Fire()
+    {
+        // Use ammo
+        gunsAmmoInClips[currentGunIndex]--;
+
+        // Create bullet and casing
+        GameObject bulletObj = PoolManager.Instance.GetFromPool(currentGunSO.bulletPoolName);
+        bulletObj.transform.position = muzzleTrans.position;
+        bulletObj.transform.rotation = muzzleTrans.rotation;
+
+        if (!string.IsNullOrEmpty(currentGunSO.FXManagerCasingMethodName))
+        {
+            ParticleManager.Instance.PlayCasingEffectByName(currentGunSO.FXManagerCasingMethodName, 
+                                                            casingEjectorTrans,
+                                                            gunTrans.rotation, isElevated);
+            //Debug.Log("Shooter attempted to play casing effect");
+        }
+
+        Bullet bullet = bulletObj.GetComponent<Bullet>();
+
+        // Check if elevated for shooting over walls
+        if (isElevated)
+        {
+            bullet.hitLayers = elevatedHitLayers;
+        }
+        
+        // Apply stats and effects
+        bullet.objectPoolName = currentGunSO.bulletPoolName;
+        bullet.damage = currentGunSO.damage;
+        //Debug.Log("Bullet damage: " + bullet.damage);
+        bullet.origin = this.transform;
+        bullet.knockback = currentGunSO.knockback;
+        bullet.destroyTime = currentGunSO.bulletLifeTime;
+        
+        Vector2 dir = ApplyAccuracy(muzzleTrans.right);
+        bullet.velocity = dir * currentGunSO.bulletSpeed;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        bullet.Fly();
+
+        StartCoroutine(MuzzleFlash());
     }
 
     public virtual void SwitchGuns(int i)
@@ -123,50 +170,6 @@ public class Shooter : MonoBehaviour
         reloadTimer = TurretReloadTime;
     }
 
-    protected virtual void Fire()
-    {
-        // Use ammo
-        gunsAmmoInClips[currentGunIndex]--;
-
-        // Create bullet and casing
-        GameObject bulletObj = Instantiate(currentGunSO.bulletPrefab, 
-                                           muzzleTrans.position, muzzleTrans.rotation);
-        if (currentGunSO.bulletCasingPrefab != null)
-        {
-            GameObject casingObj = Instantiate(currentGunSO.bulletCasingPrefab, 
-                                               casingEjectorTrans.position, 
-                                               gunTrans.rotation, casingEjectorTrans);
-
-            // If elevated, all shells go over walls                
-            if (isElevated)
-            {
-                casingObj.layer = LayerMask.NameToLayer("Default");
-            }
-        }
-
-        Bullet bullet = bulletObj.GetComponent<Bullet>();
-
-        // Check if elevated for shooting over walls
-        if (isElevated)
-        {
-            bullet.hitLayers = elevatedHitLayers;
-        }
-        
-        // Apply stats and effects
-        bullet.damage = currentGunSO.damage;
-        //Debug.Log("Bullet damage: " + bullet.damage);
-        bullet.origin = this.transform;
-        bullet.knockback = currentGunSO.knockback;
-        bullet.destroyTime = currentGunSO.bulletLifeTime;
-        
-        Vector2 dir = ApplyAccuracy(muzzleTrans.right);
-        bullet.velocity = dir * currentGunSO.bulletSpeed;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
-
-        StartCoroutine(MuzzleFlash());
-    }
-
     protected IEnumerator MuzzleFlash()
     {
         //Debug.Log("Muzzle Flash");
@@ -176,7 +179,14 @@ public class Shooter : MonoBehaviour
         //currentGun.muzzleFlash.enabled = false;
     }
 
-    #region Charge and Reload
+    protected void SetCasingSystem()
+    {
+        
+    }
+
+    #endregion
+
+    #region Charge / Reload
 
     protected Vector2 ApplyAccuracy(Vector2 dir)
     {
@@ -204,7 +214,12 @@ public class Shooter : MonoBehaviour
             return false;
     }
 
-    protected IEnumerator ReloadRoutine()
+    protected virtual void ReloadShooter()
+    {
+        reloadRoutine = StartCoroutine(ReloadRoutine());
+    }
+
+    protected virtual IEnumerator ReloadRoutine()
     {
         DropClip();
 
@@ -229,6 +244,16 @@ public class Shooter : MonoBehaviour
         {
             GameObject obj = Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
                                          gunTrans.rotation, clipEjectorTrans);
+            BulletCasingFly casingFly = obj.GetComponent<BulletCasingFly>();
+            if (casingFly != null)
+            {
+                casingFly.casingTrans = clipEjectorTrans;
+            }
+            else
+            {
+                Debug.LogWarning("CasingFly not found on clip");
+            }
+
             if (isElevated)
             {
                 obj.layer = LayerMask.NameToLayer("Default");

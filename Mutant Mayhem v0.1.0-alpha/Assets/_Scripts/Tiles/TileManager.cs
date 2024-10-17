@@ -103,7 +103,7 @@ public class TileManager : MonoBehaviour
             StatsCounterPlayer.StructuresBuilt++;
             //Debug.Log("Added a Tile");
             
-            Debug.Log("Structure tile and Animated tile placed");
+            //Debug.Log("Structure tile and Animated tile placed");
             return true;
         }
         else
@@ -306,17 +306,20 @@ public class TileManager : MonoBehaviour
         else 
         {
             int layerMask = LayerMask.GetMask("PlayerOnly");
-            Collider2D tileObj = Physics2D.OverlapPoint(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
-            if (tileObj)
+            Collider2D[] cols = Physics2D.OverlapPointAll(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
+            foreach (Collider2D col in cols)
             {
-                //Debug.Log("TileObject found at: " + rootPos);
-                tileObj.GetComponent<TileObject>().UpdateHealthRatio(GetTileHealthRatio(rootPos));
+                TileObject obj = col.GetComponent<TileObject>();
+                if (obj != null)
+                {
+                    //Debug.Log("TileObject found at: " + rootPos);
+                    obj.UpdateHealthRatio(GetTileHealthRatio(rootPos));
+                }
+                else
+                {
+                    //Debug.Log("TileObject not found");
+                }
             }
-            else
-            {
-                Debug.Log("TileObject not found");
-            }
-            
         }
     }
 
@@ -414,7 +417,7 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        Debug.Log("CheckGrid returned clear");
+        //Debug.Log("CheckGrid returned clear");
         return true;
     }
 
@@ -490,65 +493,6 @@ public class TileManager : MonoBehaviour
 
     #endregion
 
-    #region Effects
-
-    public void BulletHitEffectAt(Vector2 point, Vector2 hitDir)
-    {
-        Vector3Int gridPos = WorldToGrid(point);
-        //Debug.Log("HitEffects called");
-        if (_TileStatsDict.ContainsKey(gridPos))
-        {
-            TileStats stats = _TileStatsDict[gridPos];
-            GameObject effect = stats.ruleTileStructure.hitEffectsPrefab;
-            float angle = Mathf.Atan2(-hitDir.y, -hitDir.x) * Mathf.Rad2Deg;
-            effect = Instantiate(effect, point, Quaternion.Euler(0, 0, angle));
-            HitEffects hitfx = effect.GetComponent<HitEffects>();
-            hitfx.PlayBulletHitEffect(point, hitDir);
-            hitfx.DestroyAfterSeconds();
-        }
-        else
-        {
-            //Debug.Log("Key not found: " + gridPos + " when shooting a tile");
-        }
-    }
-
-    public void MeleeHitEffectAt(Vector2 point, Vector2 hitDir)
-    {
-        Vector3Int gridPos = WorldToGrid(point);
-        //Debug.Log("HitEffects called");
-        if (_TileStatsDict.ContainsKey(gridPos))
-        {
-            TileStats stats = _TileStatsDict[gridPos];
-            GameObject effect = stats.ruleTileStructure.hitEffectsPrefab;
-            float angle = Mathf.Atan2(-hitDir.y, -hitDir.x) * Mathf.Rad2Deg;
-            effect = Instantiate(effect, point, Quaternion.Euler(0, 0, angle));
-            HitEffects hitfx = effect.GetComponent<HitEffects>();
-            hitfx.PlayMeleeHitEffect(point, hitDir);
-            hitfx.DestroyAfterSeconds();
-        }
-        else
-        {
-            //Debug.Log("Key not found: " + gridPos + " when meleeing a tile");
-        }
-    }
-
-    public void RepairEffectAt(Vector2 point)
-    {
-        Vector3Int gridPos = WorldToGrid(point);
-        //Debug.Log("HitEffects called");
-        if (_TileStatsDict.ContainsKey(gridPos))
-        {
-            repairEffect.transform.position = point;
-            repairEffect.Emit(amountRepairParticles);
-        }
-        else
-        {
-            //Debug.Log("Key not found: " + gridPos + " when repairing a tile");
-        }
-    }
-
-    #endregion
-
     #region Tile Dictionary
 
     // To load tile data from pre-set scene tiles, they must be placed on StructureTilemap
@@ -598,7 +542,7 @@ public class TileManager : MonoBehaviour
                     rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0)
                 });
 
-                Debug.Log("Structure added to structures list and dict");
+                //Debug.Log("Structure added to structures list and dict");
             }
             else
             {

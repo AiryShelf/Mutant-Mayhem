@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -39,9 +40,19 @@ public class TutorialManager : MonoBehaviour
         escapeAction.started += OnEscapePressed;
     }
 
+    void OnEnable()
+    {
+        ProfileManager.OnProfileIsSet += SyncTutorialToProfile;
+    }
+
+    void OnDisable()
+    {
+        ProfileManager.OnProfileIsSet -= SyncTutorialToProfile;
+    }
+
     void Start()
     {
-        SetTutorialStateAndProfile(ProfileManager.Instance.currentProfile.isTutorialEnabled);
+        SetProfileAndTutorialState(ProfileManager.Instance.currentProfile.isTutorialEnabled);
     }
 
     void OnEscapePressed(InputAction.CallbackContext context)
@@ -49,13 +60,22 @@ public class TutorialManager : MonoBehaviour
         StartCoroutine(EscapeKeyCooldown());
     }
 
-    public static void SetTutorialStateAndProfile(bool isOn)
+    void SyncTutorialToProfile(PlayerProfile playerProfile)
     {
-        TutorialShowedBuild = !isOn;
-        TutorialShowedUpgrade = !isOn;
-        TutorialDisabled = !isOn;
-        ProfileManager.Instance.currentProfile.isTutorialEnabled = isOn;
+        TutorialDisabled = !playerProfile.isTutorialEnabled;
+        if (!TutorialDisabled)
+        {
+            ResetShownPanels();
+        }
+    }
+
+    public static void SetProfileAndTutorialState(bool isOn)
+    {
+        PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
+        currentProfile.isTutorialEnabled = isOn;
         ProfileManager.Instance.SaveCurrentProfile();
+        
+        Instance.SyncTutorialToProfile(currentProfile);
     }
 
     public static void ResetShownPanels()

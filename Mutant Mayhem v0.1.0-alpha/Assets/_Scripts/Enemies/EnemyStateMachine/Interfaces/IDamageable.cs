@@ -20,10 +20,6 @@ public interface IDamageable
 
     void Knockback(Vector2 dir, float knockback);
 
-    void BulletHitEffect(Vector2 hitPos, Vector2 hitDir);
-
-    void MeleeHitEffect(Vector2 hitPos, Vector2 hitDir);
-
     void Die();
 
 }

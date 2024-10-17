@@ -8,6 +8,8 @@ public class TextFly : MonoBehaviour
     public float moveSpeed = 8f;
     [SerializeField] float moveSpeedVariation = 5f; 
     public float fadeDuration = 2f;
+    [SerializeField] float fadeStart = 1f;
+    [SerializeField] float fadeEnd = 0f;
     TextMeshPro tmpTextWorld;
     TextMeshProUGUI tmpTextUi;
     Color textColor;
@@ -60,7 +62,7 @@ public class TextFly : MonoBehaviour
                 // Convert world space to screen space and move the text
                 Vector3 worldPos = initialPosition + flyDir * moveSpeed * easedT;
                 transform.position = new Vector3(worldPos.x, worldPos.y, transform.position.z);
-                float alpha = Mathf.Lerp(1f, 0f, t);
+                float alpha = Mathf.Lerp(fadeStart, fadeEnd, t);
                 tmpTextWorld.color = new Color(textColor.r, textColor.g, textColor.b, alpha);
             }
             else
@@ -68,7 +70,7 @@ public class TextFly : MonoBehaviour
                 // Move in canvas
                 Vector2 newPos = initialPosition + flyDir * moveSpeed * easedT;
                 rectTransform.anchoredPosition = newPos;
-                float alpha = Mathf.Lerp(1f, 0f, t);
+                float alpha = Mathf.Lerp(fadeStart, fadeEnd, t);
                 tmpTextUi.color = new Color(textColor.r, textColor.g, textColor.b, alpha);
             }
 

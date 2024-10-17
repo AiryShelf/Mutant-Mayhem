@@ -8,25 +8,32 @@ public class RepairBullet : Bullet
     [Header("Repair Bullet Settings")]
     [SerializeField] float speed = 10;
     [SerializeField] int repairCost = 5;
+    [SerializeField] BulletEffectsHandler effectsHandler;
 
-    Vector3 target;
+    Vector2 target;
     float targetDist;
     
-    protected override void Start()
+    public override void Fly()
     {
+        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
+
         target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        target.z = 0; // Ensure the Z position is zero for 2D.
 
-        // Calculate the distance to the target
-        Vector3 dir = target - transform.position;
-        targetDist = dir.magnitude;
-        targetDist = Mathf.Clamp(targetDist, 0, destroyTime * speed);
-
-        // Set the bullet's velocity to move straight out of the gun
+        // If distance to target is above max, set target to max distance
+        float targetDist = Vector2.Distance((Vector2)transform.position, target);
+        float maxTravelDistance = destroyTime * speed;
+        if (targetDist > maxTravelDistance)
+        {
+            //Vector3 normalizedDir = targetDir.normalized;
+            target = transform.position + transform.right * maxTravelDistance;
+            targetDist = maxTravelDistance;
+        }
+        
         rb.velocity = transform.right * speed;
 
         // Start the coroutine to check the distance traveled
-        StartCoroutine(CheckDistanceTravelled());
+        StartCoroutine(CheckDistanceTravelled(targetDist));
+        
     }
 
     protected override void CheckCollisions()
@@ -39,14 +46,19 @@ public class RepairBullet : Bullet
         // Do nothing
     }
 
-    private IEnumerator CheckDistanceTravelled()
+    private IEnumerator CheckDistanceTravelled(float travelDistance)
     {
         Vector3 startPosition = transform.position;
 
-        while (Vector3.Distance(startPosition, transform.position) < targetDist)
+        float distanceTravelled = 0;
+        while (distanceTravelled < travelDistance)
         {
+            distanceTravelled = Vector3.Distance(startPosition, transform.position);
             yield return new WaitForEndOfFrame(); // Wait for the next frame
         }
+
+        // Lock to target pos to avoid missses
+        transform.position = target;
 
         // Modify tile health 
         if (!tileManager.CheckTileFullHealth(transform.position))
@@ -55,7 +67,7 @@ public class RepairBullet : Bullet
             {
                 Vector2 pos = transform.position;
                 tileManager.ModifyHealthAt(pos, -damage);
-                tileManager.RepairEffectAt(pos);
+                ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
                 BuildingSystem.PlayerCredits -= repairCost;
 
                 AudioManager.Instance.PlaySoundAt(hitSound, pos);
@@ -67,8 +79,8 @@ public class RepairBullet : Bullet
             }
         }
 
-        effectsHandler.DestroyAfterSeconds();
+        //effectsHandler.DestroyAfterSeconds();
 
-        Destroy(gameObject);
+        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 }

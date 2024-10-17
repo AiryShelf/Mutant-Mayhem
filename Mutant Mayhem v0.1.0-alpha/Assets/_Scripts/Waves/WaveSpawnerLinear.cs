@@ -51,7 +51,7 @@ public class WaveSpawnerLinear : MonoBehaviour
         foreach (int timeToTrigger in currentWave.timesToTriggerSubwaves)
         {
             // This gives each wave its own time-slot to spawn in, doubles dont work.
-            int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMult);
+            int time = (int)Mathf.Floor(timeToTrigger * waveController.subwaveDelayMult);
             while (time <= prevTime)
                 time++;
             prevTime = time;
@@ -62,7 +62,7 @@ public class WaveSpawnerLinear : MonoBehaviour
         foreach (int timeToTrigger in currentWave.timesToTriggerConstantWaves)
         {
             // This gives each wave its own time-slot to spawn in, doubles dont work.
-            int time = (int)Mathf.Floor(timeToTrigger * waveController.spawnSpeedMult);
+            int time = (int)Mathf.Floor(timeToTrigger * waveController.subwaveDelayMult);
             if (time == prevTime)
                 time++;
             _timesToTriggerConstantWaves.Add(time);
@@ -208,11 +208,11 @@ public class WaveSpawnerLinear : MonoBehaviour
                 spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
 
                 yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn * 
-                                                waveController.spawnSpeedMult);
+                                                waveController.subwaveDelayMult);
             }
 
             yield return new WaitForSeconds(subWaveStyle.timeToNextBatch * 
-                                            waveController.spawnSpeedMult);
+                                            waveController.subwaveDelayMult);
         }
         
         //Debug.Log("Finished SubWave");

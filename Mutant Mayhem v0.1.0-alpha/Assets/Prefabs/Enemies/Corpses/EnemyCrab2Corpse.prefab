@@ -53,8 +53,9 @@ MonoBehaviour:
   - {fileID: 443010922, guid: 7d450c452d9bc0940a24059cf98dbf3c, type: 3}
   - {fileID: -1164272055, guid: 7d450c452d9bc0940a24059cf98dbf3c, type: 3}
   - {fileID: 1903094524, guid: 7d450c452d9bc0940a24059cf98dbf3c, type: 3}
-  timeToStartFade: 110
-  timeForFade: 10
+  timeToStartFade: 50
+  timeForFade: 20
+  corpsePoolName: Crab2_Corpse
 --- !u!50 &-3464740676881263840
 Rigidbody2D:
   serializedVersion: 4
@@ -64,7 +65,7 @@ Rigidbody2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3246120828009000940}
   m_BodyType: 0
-  m_Simulated: 1
+  m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 2
@@ -89,7 +90,7 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3246120828009000940}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

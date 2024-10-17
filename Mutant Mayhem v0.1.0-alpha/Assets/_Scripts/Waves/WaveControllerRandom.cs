@@ -18,19 +18,21 @@ public class WaveControllerRandom : MonoBehaviour
     [Header("Wave Properties")]
     public int currentWaveIndex = 0;
     public float timeBetweenWavesBase = 90; // Base amount of day-time
-    public float _timeBetweenWaves = 0; // Amount of day-time after difficulty setting
+    public float timeBetweenWaves = 0; // Amount of day-time after difficulty setting
     public float spawnRadius = 60; // Radius around the cube that enemies spawn
-    public int wavesPerBase = 2; // Affects batch multiplier and max index to choose subwaves from
+    public float wavesTillAddBase = 1; // Affects batch multiplier and max index to choose subwaves from
+    public float spawnSpeedStart = 1f;
+    public float subwaveDelayMult = 1;
 
     [Header("Enemy Multipliers")]
     public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
     public int batchMultiplier = 5; // Current batch multiplier
-    public int multiplierStart = 1; // Applies it's multiplier to enemy stats multipliers below
-    public float damageMultiplier = 1;
+    public int enemyStatMultStart = 1; // Applies it's multiplier to enemy stats multipliers below
+    public float damageMultiplier = 1; // Current multipliers
     public float healthMultiplier = 1;
     public float speedMultiplier = 1;
     public float sizeMultiplier = 1;
-    public float spawnSpeedMult = 1;
+    
 
     InputActionMap playerActionMap;
     InputAction nextWaveAction;
@@ -81,7 +83,7 @@ public class WaveControllerRandom : MonoBehaviour
     {
         if (isNight)
         {
-            Debug.Log("Wave info turned on, next wave info turned off");
+            //Debug.Log("Wave info turned on, next wave info turned off");
             waveInfoFadeGroup.isTriggered = true;
             //nextWaveText.enabled = false;
             nextWaveFadeGroup.isTriggered = false;
@@ -90,7 +92,7 @@ public class WaveControllerRandom : MonoBehaviour
         }
         else
         {
-            Debug.Log("Wave info turned off, next wave info turned on with time: " + _timeBetweenWaves);
+            //Debug.Log("Wave info turned off, next wave info turned on with time: " + timeBetweenWaves);
             waveInfoFadeGroup.isTriggered = false;
             //nextWaveText.enabled = true;
             nextWaveFadeGroup.isTriggered = true;
@@ -103,7 +105,7 @@ public class WaveControllerRandom : MonoBehaviour
 
         UpdateWaveTimer(false);
 
-        float countdown = _timeBetweenWaves;
+        float countdown = timeBetweenWaves;
         while (countdown > 0)
         {
             nextWaveText.text = "Time until night " + (currentWaveIndex + 1) + 
@@ -129,7 +131,7 @@ public class WaveControllerRandom : MonoBehaviour
 
         daylight.StartCoroutine(daylight.PlaySunsetEffect());
         isNight = true;
-        ApplyDifficultyToMult();
+        IncrementWaveDifficulty();
 
         // Switch Spawner to new WaveBase
         //int index = (int)Mathf.Floor(currentWave / wavesPerBase);
@@ -185,19 +187,18 @@ public class WaveControllerRandom : MonoBehaviour
         daylight.StartCoroutine(daylight.PlaySunriseEffect());
     }
 
-    void ApplyDifficultyToMult()
+    void IncrementWaveDifficulty()
     {
-        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveIndex / 
-                          wavesPerBase / 2 * SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = multiplierStart + currentWaveIndex / 20f * 
+        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveIndex / 2 * SettingsManager.Instance.WaveDifficultyMult);
+        damageMultiplier = enemyStatMultStart + currentWaveIndex / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult;
-        healthMultiplier = multiplierStart + currentWaveIndex / 20f * 
+        healthMultiplier = enemyStatMultStart + currentWaveIndex / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult;
-        speedMultiplier = multiplierStart + currentWaveIndex / 20f *  
+        speedMultiplier = enemyStatMultStart + currentWaveIndex / 20f *  
                            SettingsManager.Instance.WaveDifficultyMult;
-        sizeMultiplier = multiplierStart + currentWaveIndex / 20f *   
+        sizeMultiplier = enemyStatMultStart + currentWaveIndex / 20f *   
                            SettingsManager.Instance.WaveDifficultyMult;
-        spawnSpeedMult = Mathf.Clamp(multiplierStart - currentWaveIndex / 20f * 
+        subwaveDelayMult = Mathf.Clamp(spawnSpeedStart - currentWaveIndex / 40f * 
                            SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);
     }
 }

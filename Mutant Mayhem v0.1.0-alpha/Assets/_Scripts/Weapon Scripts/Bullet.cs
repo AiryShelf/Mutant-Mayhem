@@ -5,6 +5,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public LayerMask hitLayers;
+    LayerMask hitLayersStart;
+    [SerializeField] GunType gunType;
+    public string objectPoolName;
     [HideInInspector] public float damage = 10;
     [HideInInspector] public float knockback = 1f;
     [HideInInspector] public float destroyTime;
@@ -12,7 +15,6 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public Transform origin;
 
     [SerializeField] protected Rigidbody2D rb;
-    [SerializeField] protected BulletEffectsHandler effectsHandler;
     [SerializeField] protected SoundSO shootSound;
     [SerializeField] protected SoundSO hitSound;
 
@@ -24,16 +26,25 @@ public class Bullet : MonoBehaviour
 
     void Awake()
     {
+        hitLayersStart = hitLayers;
         tileManager = FindObjectOfType<TileManager>();
     }
 
-    void OnEnable()
+    protected virtual void OnDisable()
     {
-        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
+        hitLayers = hitLayersStart;
+        StopAllCoroutines();
     }
 
-    protected virtual void Start()
+    protected virtual void FixedUpdate()
     {
+        CheckCollisions();
+    }
+
+    public virtual void Fly()
+    {
+        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
+
         // Check origin point for collision
         Collider2D other = Physics2D.OverlapPoint(transform.position, hitLayers);
         if (other)
@@ -42,23 +53,16 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        StartCoroutine(DestroyAfterSeconds());
+        StartCoroutine(RepoolAfterSeconds());
         rb.velocity = velocity;
     }
 
-    protected virtual void FixedUpdate()
-    {
-        CheckCollisions();
-    }
-
-    protected IEnumerator DestroyAfterSeconds()
+    protected IEnumerator RepoolAfterSeconds()
     {
         //Debug.Log("Destroying bullet after seconds: " + destroyTime);
         yield return new WaitForSeconds(destroyTime);
 
-        effectsHandler.DestroyAfterSeconds();
-
-        Destroy(gameObject);
+        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 
     protected virtual void CheckCollisions()
@@ -82,11 +86,12 @@ public class Bullet : MonoBehaviour
         if (enemy)
         {
             enemy.Knockback(hitDir, knockback);
-            enemy.BulletHitEffect(point, hitDir);
-            enemy.ModifyHealth(-damage, gameObject);
+            ParticleManager.Instance.PlayBulletBlood(point, hitDir);
             enemy.StartFreeze();
             enemy.EnemyChaseSOBaseInstance.StartSprint();
 
+            enemy.ModifyHealth(-damage, gameObject);
+            
             // Layer# 8 - PlayerProjectiles
             if (this.gameObject.layer == 8)
                 StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damage;
@@ -103,7 +108,7 @@ public class Bullet : MonoBehaviour
         // Structures Layer #12
         else if (otherCollider.gameObject.layer == 12)
         { 
-            tileManager.BulletHitEffectAt(point, hitDir);
+            ParticleManager.Instance.PlayBulletHitWall(point, hitDir);
 
             // If player projectile, do 1/3 damage
             if (otherCollider.gameObject.layer == LayerMask.NameToLayer("PlayerProjectiles"))
@@ -122,12 +127,10 @@ public class Bullet : MonoBehaviour
         }
 
         // Play bullet hit effect
-        effectsHandler.DestroyAfterSeconds();
-        effectsHandler.PlayBulletHitEffectAt(point);
-
+        ParticleManager.Instance.PlayBulletHitEffect(gunType, point, hitDir);
         AudioManager.Instance.PlaySoundAt(hitSound, point);
         
-        gameObject.SetActive(false);
-        Destroy(gameObject);
+        // Return to pool
+        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 }

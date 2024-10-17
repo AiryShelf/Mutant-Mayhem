@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SMG
   m_EditorClassIdentifier: 
   gunType: 1
-  bulletPrefab: {fileID: 145518261742128944, guid: 2f34aec5bd679f64e81317a4522430ea, type: 3}
+  bulletPoolName: BulletGun_SMG
   uiName: SMG
   sprite: {fileID: 21300000, guid: cd66e9e5790dfb04e89fb3ebed3f14e2, type: 3}
   uiSprite: {fileID: 21300000, guid: bf7343c908608ae4b98e98372a200b1b, type: 3}
@@ -29,11 +29,12 @@ MonoBehaviour:
   laserSight: {fileID: 0}
   muzzleLocalPos: {x: 0.022, y: 0}
   bulletCasingPrefab: {fileID: 4080447890916436050, guid: cba583d53adb8f340927905d88e1af40, type: 3}
+  FXManagerCasingMethodName: PlayBulletCasingFly_SMG
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
   recoilAmount: {x: -0.25, y: 0}
   damage: 40
-  damageUpgFactor: 0.6
+  damageUpgFactor: 0.5
   knockback: 2
   knockbackUpgAmt: 0.3
   clipSize: 30

@@ -6,7 +6,7 @@ public class TutorialUpgradePanel : TutorialPanel
 {
     void Awake()
     {
-        if (TutorialManager.TutorialShowedUpgrade)
+        if (TutorialManager.TutorialShowedUpgrade || TutorialManager.TutorialDisabled)
         {
             Destroy(gameObject);
             return;

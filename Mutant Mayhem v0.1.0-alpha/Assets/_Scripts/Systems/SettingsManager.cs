@@ -25,7 +25,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Difficulty Multipliers")]
     public float WaveDifficultyMult = 1; // Multiplies enemy stats on spawning
-    public int WavesTillAddWaveBase = 0; // down harder, hard enemies faster
+    public int WavesTillAddWaveBase = 0; // down harder, hard enemies appear sooner
     public float SubwaveListGrowthFactor = 0; // up harder, more waves added over time
     public float SubwaveDelayMult = 1; // Time between Subwaves
     public float BatchSpawnMult = 1; // Multiplies number of enemies per batch in each Subwave
@@ -49,22 +49,25 @@ public class SettingsManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    void Start()
+    {
         if (!string.IsNullOrEmpty(ProfileManager.Instance.currentProfile.profileName))
-            RefreshProfileSettings(ProfileManager.Instance.currentProfile);
+            RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
     }
 
     void OnEnable()
     {
-        ProfileManager.OnProfileIsSet += RefreshProfileSettings;
+        ProfileManager.OnProfileIsSet += RefreshSettingsFromProfile;
     }
 
     void OnDisable()
     {
-        ProfileManager.OnProfileIsSet -= RefreshProfileSettings;
+        ProfileManager.OnProfileIsSet -= RefreshSettingsFromProfile;
     }
 
-
-    public void RefreshProfileSettings(PlayerProfile currentProfile)
+    public void RefreshSettingsFromProfile(PlayerProfile currentProfile)
     {
         if (currentProfile == null)
         {
@@ -82,8 +85,6 @@ public class SettingsManager : MonoBehaviour
         isSpacebarEnabled = currentProfile.isSpacebarEnabled;
 
         Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}");
-
-        ApplyGameplaySettings();
     }
         
     public void ApplyGameplaySettings()
@@ -109,37 +110,33 @@ public class SettingsManager : MonoBehaviour
         switch (difficultyLevel)
         {
             case DifficultyLevel.Easy:
-                waveController._timeBetweenWaves = waveController.timeBetweenWavesBase + 60;
+                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase + 60;
                 WaveDifficultyMult = 0.7f;
                 WavesTillAddWaveBase = 1;
                 SubwaveListGrowthFactor = 0.8f;
                 SubwaveDelayMult = 1.2f;
                 BatchSpawnMult = 0.7f;
-                CreditsMult = 1.5f;
-                BuildingSystem.PlayerCredits = 600;
-                MessagePanel.PulseMessage("You recieved $600 to help you through easy mode", Color.cyan);
+                CreditsMult = 2f;
                 break;
 
             case DifficultyLevel.Normal:
-                waveController._timeBetweenWaves = waveController.timeBetweenWavesBase;
+                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase;
                 WaveDifficultyMult = 1;
                 WavesTillAddWaveBase = 0;
                 SubwaveListGrowthFactor = 1f;
                 SubwaveDelayMult = 1;
                 BatchSpawnMult = 1;
                 CreditsMult = 1;
-                BuildingSystem.PlayerCredits = 0;
                 break;
 
             case DifficultyLevel.Hard:
-                waveController._timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
+                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
                 WaveDifficultyMult = 1.3f;
                 WavesTillAddWaveBase = -1;
                 SubwaveListGrowthFactor = 1.2f;
                 SubwaveDelayMult = 0.8f;
                 BatchSpawnMult = 1.2f;
                 CreditsMult = 1;
-                BuildingSystem.PlayerCredits = 0;
                 break;
         }
 

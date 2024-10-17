@@ -17,6 +17,8 @@ public class PlayerShooter : Shooter
     public int[] gunsAmmo;
     Coroutine shootingCoroutine;
     bool waitToShoot;
+    float reloadNotificationTimer = 0;
+
     public bool isShooting;
     public bool isAiming;
     public bool isBuilding;
@@ -154,14 +156,30 @@ public class PlayerShooter : Shooter
 
     void Shoot()
     {
+        reloadNotificationTimer -= Time.deltaTime;
+
         // If no ammo
         if (gunsAmmoInClips[currentGunIndex] < 1)
         {
-            // Reload?
-            if (gunsAmmo[currentGunIndex] > 0)
+            // Reload notification
+            if (currentGunSO.gunType == GunType.Bullet)
             {
-                animControllerPlayer.ReloadTrigger();
+                if (reloadNotificationTimer < 0)
+                {
+                    reloadNotificationTimer = MessagePanel.TimeToDisplay * 1.1f;
+                    
+                    // Reload or out of ammo
+                    if (gunsAmmo[currentGunIndex] > 0)
+                    {
+                        MessagePanel.PulseMessage("Clip is empty!  Press 'R' to reload!", Color.yellow);
+                        //animControllerPlayer.ReloadTrigger();
+                    }
+                    else
+                        MessagePanel.PulseMessage("Out of ammo!  Buy more at the Cube!", Color.red);
+                }
             }
+            
+
             // Stop shooting coroutine and return
             if (shootingCoroutine != null)
             {

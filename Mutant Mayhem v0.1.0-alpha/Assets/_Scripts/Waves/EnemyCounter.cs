@@ -7,6 +7,8 @@ public class EnemyCounter : MonoBehaviour
     [SerializeField] int maxEnemies = 150;
     public static int EnemyCount;
     public static int MaxEnemies;
+    public static int PickupCounter;
+    public static int PickupDropThreshold;
 
     void Start()
     {

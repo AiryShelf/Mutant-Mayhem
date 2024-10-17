@@ -43,7 +43,7 @@ public class DeathManager : MonoBehaviour
     void OnDisable()
     {
         Player.OnPlayerDestroyed -= TransitionToPlayerDeath;
-        QCubeController.OnCubeDestroyed-= TransitionToCubeDeath;
+        QCubeController.OnCubeDestroyed -= TransitionToCubeDeath;
     }
 
     void Start()
@@ -87,9 +87,9 @@ public class DeathManager : MonoBehaviour
     {
         if (destroyed && !isTriggered)
         {
-            TransitionToPanel();   
-            RandomizeDeathMessages(playerDeathTitles, playerDeathSubtitles); 
-            ApplyDeathPoints();       
+            TransitionToPanel();
+            RandomizeDeathMessages(playerDeathTitles, playerDeathSubtitles);
+            ApplyDeathPoints();
         }
     }
 

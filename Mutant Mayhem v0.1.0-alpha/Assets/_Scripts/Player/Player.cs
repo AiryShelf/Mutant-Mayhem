@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 [System.Serializable]
@@ -110,6 +111,9 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        //KillAllEnemies();
+        //Time.timeScale = 1;
+
         stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
         myRb = GetComponent<Rigidbody2D>();
@@ -124,9 +128,33 @@ public class Player : MonoBehaviour
         IsDead = false;
     }
 
-    void OnEnable()
+    void Start()
     {
+        ParticleManager.Instance.ClearAllChildrenParticleSystems();
         TimeControl.Instance.SubscribePlayerTimeControl(this);
+        AudioManager.Instance.Initialize();
+        TutorialManager.ResetShownPanels();
+        StatsCounterPlayer.ResetStatsCounts();
+        
+        SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        SettingsManager.Instance.ApplyGameplaySettings();
+
+        ClassManager.Instance.ApplyClassEffects(this);
+        UpgradeManager.Instance.Initialize();
+        AugManager.Instance.ApplySelectedAugmentations();
+        TurretManager.Instance.Initialize(this);
+        FindObjectOfType<WaveControllerRandom>().Initialize();
+        
+        RefreshMoveForces();
+
+        StartCoroutine(DelayInitializePool());
+    }
+
+    IEnumerator DelayInitializePool()
+    {
+        yield return new WaitForFixedUpdate();
+        PoolManager.Instance.ResetAllPools();
     }
 
     void OnDisable()
@@ -134,23 +162,19 @@ public class Player : MonoBehaviour
         TimeControl.Instance.UnsubscribePlayerTimeControl(this);
     }
 
-    void Start()
+    void KillAllEnemies()
     {
-        AudioManager.Instance.Initialize();
-        TutorialManager.ResetShownPanels();
-        StatsCounterPlayer.ResetStatsCounts();
-        
-        SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
-        SettingsManager.Instance.RefreshProfileSettings(ProfileManager.Instance.currentProfile);
-
-        ClassManager.Instance.ApplyClassEffects(this);
-        UpgradeManager.Instance.Initialize();
-        TurretManager.Instance.Initialize();
-        AugManager.Instance.ApplySelectedAugmentations();
-
-        FindObjectOfType<WaveControllerRandom>().Initialize();
-        
-        RefreshMoveForces();
+        bool enemiesExist = true;
+        while (enemiesExist)
+        {
+            EnemyBase enemy = FindObjectOfType<EnemyBase>();
+            if (enemy != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+            else
+                enemiesExist = false;
+        }
     }
 
     void FixedUpdate()
@@ -428,7 +452,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (sprintStaminaUse <= myStamina.GetStamina())
+            if (sprintStaminaUse <= myStamina.GetStamina() && rawInput.sqrMagnitude > 0)
             {
                 StatsCounterPlayer.TimeSprintingPlayer += Time.fixedDeltaTime;
                 sprintSpeedAmount = stats.sprintFactor;

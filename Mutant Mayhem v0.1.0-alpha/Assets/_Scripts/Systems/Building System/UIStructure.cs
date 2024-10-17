@@ -27,12 +27,6 @@ public class UIStructure : MonoBehaviour, ISelectHandler
 
     void Awake()
     {
-        image.sprite = structureSO.uiImage;
-        scrollRectController = GetComponentInParent<ScrollRectController>();
-        buildingSystem = FindObjectOfType<BuildingSystem>();
-        BuildingSystem.OnPlayerCreditsChanged += SetText;
-        player = FindObjectOfType<Player>();
-
         cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
         greenColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.green) + ">";
         yellowColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.yellow) + ">";
@@ -57,7 +51,6 @@ public class UIStructure : MonoBehaviour, ISelectHandler
 
     void Start()
     {
-        initialized = true;
         // If unlocked to player
         if (BuildingSystem._UnlockedStructuresDict[structureSO.structureType])
         {
@@ -71,11 +64,30 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         SetText(BuildingSystem.PlayerCredits);
     }
 
+    public void Initialize(BuildingSystem buildingSystem, ScrollRectController scrollRectController)
+    {
+        initialized = true;
+        image.sprite = structureSO.uiImage;
+        this.scrollRectController = scrollRectController;
+        this.buildingSystem = buildingSystem;
+        BuildingSystem.OnPlayerCreditsChanged += SetText;
+        player = FindObjectOfType<Player>();
+    }
+
     public void OnSelect(BaseEventData data)
     {
+        if (!initialized)
+            return;
+
+        buildingSystem.StartCoroutine(buildingSystem.DelayUIReselect());
         // Lock the scroll rect to this selected object.
         scrollRectController.SnapTo(myRectTransform);
+
+        if (!button.interactable)
+            return;
+
         buildingSystem.ChangeStructureInHand(structureSO);
+        //Debug.Log("OnSelect ran");
 
         if (structureSO.isTurret)
         {
@@ -89,6 +101,9 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             else
                 MessagePanel.PulseMessage(turrets + " of " + maxTurrets + " turrets built", Color.cyan);
         }
+
+        // Force selection
+        //EventSystem.current.SetSelectedGameObject(this.gameObject);
     }
     
     public void MakeInteractable()

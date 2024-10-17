@@ -31,9 +31,8 @@ public class PickupsContainerPlayer : PickupsContainerBase
         if (trigger == null || !trigger.isEnterTrigger)
             return;
         
-        Vector2 impulseDir = transform.position - col.transform.position;
         ToggleUnloading(true);
-        StartCoroutine(UnloadPickups(impulseDir));
+        StartCoroutine(UnloadPickups(col.transform));
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -57,30 +56,34 @@ public class PickupsContainerPlayer : PickupsContainerBase
         myGravity.enabled = !unloading;
     }
 
-    IEnumerator UnloadPickups(Vector2 impulseDir)
+    IEnumerator UnloadPickups(Transform receiverTrans)
     {
         
-        while (container.Count > 0)
+        while (true)
         {
-            Pickup pickup = container[0];
-            pickup.unloading = true;
-            pickup.gameObject.SetActive(true);
+            if (container.Count > 0)
+            {
+                Pickup pickup = container[0];
+                pickup.unloading = true;
+                pickup.gameObject.SetActive(true);
 
-            // Impulse to left or right
-            int left = Random.Range(0,2);
-            Vector2 adjustedImpulseDir;
-            if (left == 1)
-            {
-                adjustedImpulseDir = new Vector2(-impulseDir.y, impulseDir.x);
+                // Impulse to left or right
+                Vector2 receiverDir = transform.position - receiverTrans.position;
+                int left = Random.Range(0,2);
+                Vector2 impulseDir;
+                if (left == 1)
+                {
+                    impulseDir = new Vector2(-receiverDir.y, receiverDir.x);
+                }
+                else
+                {
+                    impulseDir = new Vector2(receiverDir.y, -receiverDir.x);
+                }
+                  
+                pickup.GetComponent<Rigidbody2D>().AddForce(impulseDir * unloadForce, ForceMode2D.Impulse);
+                pickup.transform.SetParent(null);
+                container.RemoveAt(0);
             }
-            else
-            {
-                adjustedImpulseDir = new Vector2(impulseDir.y, -impulseDir.x);
-            }
-            // Id like impulse dir to be adjusted to 90 degrees left or right.  
-            pickup.GetComponent<Rigidbody2D>().AddForce(adjustedImpulseDir * unloadForce, ForceMode2D.Impulse);
-            pickup.transform.SetParent(null);
-            container.RemoveAt(0);
 
             yield return new WaitForSeconds(unloadDelay);
         }

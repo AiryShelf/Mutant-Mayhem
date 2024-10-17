@@ -53,8 +53,9 @@ MonoBehaviour:
   timeBetweenAttacks: 1
   meleeTileDotProdRange: 0.5
   meleeCollider: {fileID: 10070538269960853}
-  meleeAnim: {fileID: 1899956248810806691}
+  meleeAnimator: {fileID: 1899956248810806691}
   meleeSound: {fileID: 11400000, guid: 6a3e0d5445d7e404b87530c84e4e7443, type: 2}
+  waitToAttack: 0
 --- !u!212 &8762316274977813352
 SpriteRenderer:
   m_ObjectHideFlags: 0

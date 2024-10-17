@@ -42,6 +42,12 @@ public class QCubeHealth : Health
         UpdateDamageSprite();        
     }
 
+    public override void SetMaxHealth(float value)
+    {
+        maxHealth = value;
+        OnCubeHealthChanged.Invoke(health);
+    }
+
     public override void ModifyHealth(float amount, GameObject damageDealer)
     {
         base.ModifyHealth(amount, damageDealer);

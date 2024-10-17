@@ -12,6 +12,7 @@ public class TurretManager : MonoBehaviour
     public int currentNumTurrets = 0;
     public List<TurretGunSO> turretGunList = new List<TurretGunSO>();
     Dictionary<Vector3Int, GameObject> turrets = new Dictionary<Vector3Int, GameObject>();
+    Player player;
 
     void Awake()
     {
@@ -27,8 +28,9 @@ public class TurretManager : MonoBehaviour
         }
     }
 
-    public void Initialize()
+    public void Initialize(Player player)
     {
+        this.player = player;
         turrets.Clear();
         turretGunList.Clear();
         currentNumTurrets = 0;
@@ -59,6 +61,25 @@ public class TurretManager : MonoBehaviour
 
         GameObject obj = TileManager.StructureTilemap.GetInstantiatedObject(rootPos);
         turrets.Add(rootPos, obj);
+
+        // Link turret with player for ammo use
+        Turret turret = obj.GetComponentInChildren<Turret>();
+        if (turret != null)
+        {
+            if (player != null)
+            {
+                turret.player = player;
+                Debug.Log("Player set in turret");
+            }
+            else
+            {
+                Debug.LogError("Turret Manager: Player was null when adding turret");
+            }
+
+            turret.InitializeTurret();
+        }
+
+        
     }
 
     public void RemoveTurret(Vector3Int rootPos)

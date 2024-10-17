@@ -265,11 +265,11 @@ public class AnimationControllerPlayer : MonoBehaviour
         // Set extra gun collider for walls
         if ((!isMotion && !bodyAnim.GetBool("isAiming")) || isBuilding)
         {
-            player.gunCollider.enabled = false;
+            //player.gunCollider.enabled = false;
         }
         else
         {
-            player.gunCollider.enabled = true;
+            //player.gunCollider.enabled = true;
         }
     }
 

@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileObject : MonoBehaviour
+public abstract class TileObject : MonoBehaviour
 {
-    public virtual void UpdateHealthRatio(float healthRatio)
-    {
-
-    }
+    public abstract void UpdateHealthRatio(float healthRatio);
     
 }

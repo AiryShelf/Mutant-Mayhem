@@ -13,14 +13,31 @@ public class MessagePanel : MonoBehaviour
     [SerializeField] float timeToDisplay = 6f;
     [SerializeField] float pulseTime = 0.5f;
     [SerializeField] float minMessageTime = 2f;
+    public static float TimeToDisplay;
 
     Color startColor;
 
     void Awake()
     {
+        // Still gets detroyed on load
         Instance = this;
+
+        TimeToDisplay = timeToDisplay;
+
         messageCanvasGroup.alpha = 0;
         startColor = messageText.color;
+    }
+
+    public void DelayMessage(string message, Color color, float delay)
+    {
+        StartCoroutine(DelayMessageRoutine(message, color, delay));
+    }
+
+    IEnumerator DelayMessageRoutine(string message, Color color, float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        PulseMessage(message, color);
     }
 
     public static void PulseMessage(string message, Color pulseColor)

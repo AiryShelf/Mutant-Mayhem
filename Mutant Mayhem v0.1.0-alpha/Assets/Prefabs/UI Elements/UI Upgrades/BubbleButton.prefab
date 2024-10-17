@@ -30,7 +30,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3959050615552990509}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -101,7 +102,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0, g: 1, b: 0, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -119,16 +120,110 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3077068755420810402}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIUpgrade, Assembly-CSharp
-        m_MethodName: InvokeOnClick
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UIUpgrade, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!1001 &32860559818252799
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 808465359057252210}
+    m_Modifications:
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 210
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 80.24148
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4308895499361264479, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4570993287249086664}
+    - target: {fileID: 6072824704215376246, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+      propertyPath: m_Name
+      value: ClickableArea_Upgrade
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+--- !u!224 &3959050615552990509 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3928793701685771474, guid: fdf910c4c9765284d93b7ff85c197fd2, type: 3}
+  m_PrefabInstance: {fileID: 32860559818252799}
+  m_PrefabAsset: {fileID: 0}

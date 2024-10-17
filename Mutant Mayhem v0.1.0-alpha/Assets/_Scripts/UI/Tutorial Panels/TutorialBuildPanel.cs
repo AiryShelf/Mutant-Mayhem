@@ -6,10 +6,10 @@ public class TutorialBuildPanel : TutorialPanel
 {
     void Awake()
     {
-        if (TutorialManager.TutorialShowedBuild)
+        if (TutorialManager.TutorialShowedBuild || TutorialManager.TutorialDisabled)
         {
             Destroy(gameObject);
-            //return;
+            return;
         }
 
         Player player = FindObjectOfType<Player>();

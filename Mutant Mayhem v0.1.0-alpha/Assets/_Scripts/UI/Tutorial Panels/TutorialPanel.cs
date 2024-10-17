@@ -87,7 +87,7 @@ public class TutorialPanel : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
 
         RestorePreviousSelection();
-        TutorialManager.SetTutorialStateAndProfile(false);
+        TutorialManager.SetProfileAndTutorialState(false);
 
         if (pauseOnOpen)
             TimeControl.Instance.PauseGame(false);
