@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class ParticleManager : MonoBehaviour
 {
@@ -50,6 +52,21 @@ public class ParticleManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneUnloaded += ClearParticles;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneUnloaded -= ClearParticles;
+    }
+
+    void ClearParticles(Scene current)
+    {
+        ClearAllChildrenParticleSystems();
     }
 
     public void ClearAllChildrenParticleSystems()

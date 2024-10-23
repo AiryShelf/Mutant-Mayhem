@@ -111,7 +111,7 @@ public class PlayerShooter : Shooter
         currentGunIndex = i;
         currentGunSO = gunList[i];
 
-        AudioManager.Instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
+        SFXManager.Instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
         //Debug.Log("Current gun damage: " + currentGunSO.damage); 
 
         // Set cursor
@@ -217,7 +217,7 @@ public class PlayerShooter : Shooter
 
     public void OnReloadSound(int index)
     {
-        AudioManager.Instance.PlaySoundAt(currentGunSO.reloadSounds[index], transform.position);
+        SFXManager.Instance.PlaySoundAt(currentGunSO.reloadSounds[index], transform.position);
     }
 
     #endregion

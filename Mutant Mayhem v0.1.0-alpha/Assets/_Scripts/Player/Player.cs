@@ -130,9 +130,9 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        ParticleManager.Instance.ClearAllChildrenParticleSystems();
+        //ParticleManager.Instance.ClearAllChildrenParticleSystems();
         TimeControl.Instance.SubscribePlayerTimeControl(this);
-        AudioManager.Instance.Initialize();
+        SFXManager.Instance.Initialize();
         TutorialManager.ResetShownPanels();
         StatsCounterPlayer.ResetStatsCounts();
         
@@ -160,6 +160,7 @@ public class Player : MonoBehaviour
     void OnDisable()
     {
         TimeControl.Instance.UnsubscribePlayerTimeControl(this);
+        //ParticleManager.Instance.ClearAllChildrenParticleSystems();
     }
 
     void KillAllEnemies()
@@ -196,7 +197,7 @@ public class Player : MonoBehaviour
         // Need check for ground type
         if (Time.time - lastFootstepTime >= footstepCooldown)
         {
-            AudioManager.Instance.PlaySoundAt(walkGrassSound, transform.position);
+            SFXManager.Instance.PlaySoundAt(walkGrassSound, transform.position);
             lastFootstepTime = Time.time;
         }
     }

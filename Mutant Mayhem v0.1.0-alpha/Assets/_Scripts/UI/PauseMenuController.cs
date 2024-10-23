@@ -20,6 +20,7 @@ public class PauseMenuController : MonoBehaviour
     InputAction escapeAction;
     public bool isPauseMenuOpen = false;
     public bool isOptionsOpen = false;
+    bool wasMusicPlaying;
 
     void Awake()
     {
@@ -76,9 +77,20 @@ public class PauseMenuController : MonoBehaviour
     void OpenPauseMenu(bool open)
     {
         if (open)
+        {
             playerActionMap.Disable();
+
+            wasMusicPlaying = !MusicManager.Instance.isPaused;
+            if (wasMusicPlaying)
+                MusicManager.Instance.PlayOrPausePressed();
+        }
         else
+        {
             playerActionMap.Enable();
+            
+            if (wasMusicPlaying)
+                MusicManager.Instance.PlayOrPausePressed();
+        }
     
         fadeCanvasGroups.isTriggered = open;
         myCanvasGroup.blocksRaycasts = open;

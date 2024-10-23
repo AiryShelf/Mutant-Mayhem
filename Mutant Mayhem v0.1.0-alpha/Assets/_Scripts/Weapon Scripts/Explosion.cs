@@ -21,7 +21,7 @@ public class Explosion : MonoBehaviour
     void Start()
     {
         // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
-        AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
+        SFXManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
         tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)

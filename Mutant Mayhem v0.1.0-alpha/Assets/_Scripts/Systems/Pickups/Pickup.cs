@@ -34,7 +34,7 @@ public class Pickup : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        // Do nothing with triggers
+        // Set collider to trigger to go over walls
         PickupsReceiverTrigger trigger = col.GetComponent<PickupsReceiverTrigger>();
         if (trigger != null)
         {

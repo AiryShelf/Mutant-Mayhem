@@ -51,17 +51,24 @@ public class OptionsPanel : MonoBehaviour
         {
             PlayerProfile profile = ProfileManager.Instance.currentProfile;
 
+            difficultyDropdown.SetValueWithoutNotify((int)profile.difficultyLevel);
+            movementTypeDropdown.SetValueWithoutNotify(profile.isStandardWASD ? 1 : 0);
+            tutorialToggle.SetIsOnWithoutNotify(profile.isTutorialEnabled);
+            spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
+
+/*
             difficultyDropdown.value = (int)profile.difficultyLevel;
             movementTypeDropdown.value = profile.isStandardWASD ? 1 : 0;
             tutorialToggle.isOn = profile.isTutorialEnabled;
             spacebarToggle.isOn = profile.isSpacebarEnabled;
+*/
         }
         else
         {
-            difficultyDropdown.value = (int)SettingsManager.Instance.startingDifficulty;
-            movementTypeDropdown.value = 1; // Default to standard WASD
-            tutorialToggle.isOn = true;
-            spacebarToggle.isOn = true;
+            difficultyDropdown.SetValueWithoutNotify((int)SettingsManager.Instance.startingDifficulty);
+            movementTypeDropdown.SetValueWithoutNotify(1); // Default to standard WASD
+            tutorialToggle.SetIsOnWithoutNotify(true);
+            spacebarToggle.SetIsOnWithoutNotify(true);
         }
     }
 

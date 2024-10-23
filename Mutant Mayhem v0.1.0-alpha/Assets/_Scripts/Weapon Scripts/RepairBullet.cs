@@ -15,7 +15,7 @@ public class RepairBullet : Bullet
     
     public override void Fly()
     {
-        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
+        SFXManager.Instance.PlaySoundFollow(shootSound, transform);
 
         target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -70,7 +70,7 @@ public class RepairBullet : Bullet
                 ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
                 BuildingSystem.PlayerCredits -= repairCost;
 
-                AudioManager.Instance.PlaySoundAt(hitSound, pos);
+                SFXManager.Instance.PlaySoundAt(hitSound, pos);
                 Debug.Log("Ran repair code");
             }
             else

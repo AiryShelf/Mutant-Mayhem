@@ -42,12 +42,12 @@ public class EnemyHealth : Health
         }
 
         // Increment Drop Counter
-        int value = Mathf.FloorToInt(maxHealth / healthToCreditsDivisor * SettingsManager.Instance.CreditsMult);
-        EnemyCounter.PickupCounter += value;
+        int deathValue = Mathf.FloorToInt(maxHealth / healthToCreditsDivisor * SettingsManager.Instance.CreditsMult);
+        EnemyCounter.PickupCounter += deathValue;
 
         // Increment Drop Threshold
-        if (EnemyCounter.PickupDropThreshold < value * 1.5f)
-            EnemyCounter.PickupDropThreshold = Mathf.FloorToInt(value * 1.5f);
+        if (EnemyCounter.PickupDropThreshold < deathValue)
+            EnemyCounter.PickupDropThreshold = Mathf.FloorToInt(deathValue);
         
         // Drop Pickup
         if (EnemyCounter.PickupCounter >= EnemyCounter.PickupDropThreshold || EnemyCounter.EnemyCount <= 1)

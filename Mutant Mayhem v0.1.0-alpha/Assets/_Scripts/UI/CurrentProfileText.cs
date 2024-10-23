@@ -6,6 +6,7 @@ using UnityEngine;
 public class CurrentProfileText : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI currentProfileText;
+    [SerializeField] bool showLeadText = true;
 
     void OnEnable()
     {
@@ -27,7 +28,10 @@ public class CurrentProfileText : MonoBehaviour
         // Update current profile text
         if (currentProfile != null && !string.IsNullOrEmpty(currentProfile.profileName))
         {
-            currentProfileText.text = "Current Profile: " + currentProfile.profileName;
+            if (showLeadText)
+                currentProfileText.text = "Current Profile: " + currentProfile.profileName;
+            else
+                currentProfileText.text = currentProfile.profileName;
             currentProfileText.color = Color.green;
         }
         else

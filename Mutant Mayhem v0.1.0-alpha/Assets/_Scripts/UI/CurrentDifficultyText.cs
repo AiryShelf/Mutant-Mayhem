@@ -6,6 +6,7 @@ using UnityEngine;
 public class CurrentDifficultyText : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI currentDifficultyText;
+    [SerializeField] bool showLeadText = true;
 
     void OnEnable()
     {
@@ -24,11 +25,29 @@ public class CurrentDifficultyText : MonoBehaviour
 
     public void UpdateDifficultyText(PlayerProfile currentProfile)
     {
-        // Update current difficulty text
         if (currentProfile != null && !string.IsNullOrEmpty(currentProfile.profileName))
         {
-            currentDifficultyText.text = "Difficulty: " + currentProfile.difficultyLevel;
-            currentDifficultyText.color = Color.cyan;
+            // Set text
+            if (showLeadText)
+                currentDifficultyText.text = "Difficulty: " + currentProfile.difficultyLevel;
+            else
+                currentDifficultyText.text = currentProfile.difficultyLevel.ToString();
+
+            // Set color
+            switch (currentProfile.difficultyLevel)
+            {
+                case DifficultyLevel.Easy:
+                currentDifficultyText.color = Color.green;
+                break;
+
+                case DifficultyLevel.Normal:
+                currentDifficultyText.color = Color.cyan;
+                break;
+
+                case DifficultyLevel.Hard:
+                currentDifficultyText.color = Color.red;
+                break;
+            }
         }
         else
         {

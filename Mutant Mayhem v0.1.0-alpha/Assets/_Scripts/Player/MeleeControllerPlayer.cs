@@ -38,7 +38,7 @@ public class MeleeControllerPlayer : MonoBehaviour
 
     public void PlayMeleeSwingSound()
     {
-        AudioManager.Instance.PlaySoundAt(swordSwingSound, transform.position);
+        SFXManager.Instance.PlaySoundAt(swordSwingSound, transform.position);
     }
 
     public void SwordControllerToggle(bool on)
@@ -63,7 +63,7 @@ public class MeleeControllerPlayer : MonoBehaviour
     {
         if (Time.time - lastMeleeSoundTime >= meleeSoundCooldown)
         {
-            AudioManager.Instance.PlaySoundAt(swordHitSound, point);
+            SFXManager.Instance.PlaySoundAt(swordHitSound, point);
             lastMeleeSoundTime = Time.time;
         }
 

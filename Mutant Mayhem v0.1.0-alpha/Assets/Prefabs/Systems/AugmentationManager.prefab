@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6577897168960586367}
   - component: {fileID: 4606883219285718897}
+  - component: {fileID: 6268487869753537347}
   m_Layer: 0
   m_Name: AugmentationManager
   m_TagString: Untagged
@@ -59,3 +60,16 @@ MonoBehaviour:
   currentResearchPoints: 0
   grenadeAmmoMult: 1
   grenadeCostMult: 1
+--- !u!114 &6268487869753537347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6713695955034710775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650b8d5364a386f4692cbd3332616fd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedClass: 1
