@@ -12,12 +12,12 @@ public class MusicManager : MonoBehaviour
     public float sfxStartDb = -1;
     [SerializeField] UI_MusicPlayerPanel musicPlayerPanel;
 
-    public List<PlaylistSO> mainMenuPlaylists;
-    public List<PlaylistSO> mothershipPlaylists;
-    public List<PlaylistSO> gamePlaylists;
-    public List<PlaylistSO> deathPlaylists;
+    public List<PlaylistSO> mainMenuPlaylists = new List<PlaylistSO>();
+    public List<PlaylistSO> mothershipPlaylists = new List<PlaylistSO>();
+    public List<PlaylistSO> gamePlaylists = new List<PlaylistSO>();
+    public List<PlaylistSO> deathPlaylists = new List<PlaylistSO>();
 
-    public List<PlaylistSO> currentPlaylists;
+    public List<PlaylistSO> currentPlaylists = new List<PlaylistSO>();
     public PlaylistSO currentPlaylist;
     [SerializeField] AudioSource[] audioSources;
     [SerializeField] float crossFadeDuration;
@@ -34,10 +34,11 @@ public class MusicManager : MonoBehaviour
     public int currentSourceIndex = 0;
 
     public bool isPaused;
-    public bool isShuffleSongsOn;
-    public bool isShuffleAllOn;
+    public bool isShuffleSongsOn = true;
+    public bool isShuffleAllOn = true;
 
     Coroutine waitForSongToEnd;
+    [HideInInspector] public Player player;
 
     void Awake()
     {
@@ -75,11 +76,14 @@ public class MusicManager : MonoBehaviour
             break;
 
             default:
+                player = FindObjectOfType<Player>();
+                musicPlayerPanel.player = player;
+                
                 SwitchCurrentPlaylists(gamePlaylists);
             break;
         }
 
-        StartPlaying();
+        PlayFirstSong(crossFadeDuration);
     }
 
     void OnDisable()
@@ -93,32 +97,15 @@ public class MusicManager : MonoBehaviour
         StopAllPlaying();
         songHistory.Clear();
         playlistHistory.Clear();
+        historyIndex = 0;
     }
 
     #region Controls
 
-    void StartPlaying()
-    {
-        if (currentPlaylist == null || currentPlaylist.songList.Count == 0)
-        {
-            Debug.LogWarning("No songs available in the playlist.");
-            return;
-        }
-
-        // Play first song
-        SongSO firstSong = currentPlaylist.songList[currentSongIndex];
-        StartCoroutine(FadeIn(firstSong, crossFadeDuration));
-        waitForSongToEnd = StartCoroutine(WaitForSongToEnd(firstSong));
-
-        musicPlayerPanel.UpdateTrackInfo(currentPlaylist, firstSong);
-
-        AddToHistory(firstSong);
-    }
-
     public void NextSongPressed()
     {
         //StopAllPlaying();
-        PlayNextSong();
+        PlayNextSong(0.1f);
     }
 
     public void PrevSongPressed()
@@ -163,6 +150,7 @@ public class MusicManager : MonoBehaviour
             break;
 
             default:
+                
                 SwitchCurrentPlaylists(gamePlaylists);
             break;
         }
@@ -174,6 +162,8 @@ public class MusicManager : MonoBehaviour
 
     public void PlayOrPausePressed()
     {
+        StopAllCoroutines();
+
         if (!isPaused)
         {
             SetAllPause(true);
@@ -181,8 +171,8 @@ public class MusicManager : MonoBehaviour
         }
         else
         {
-            audioSources[currentSourceIndex].Play();
             isPaused = false;
+            ResumePlaying(currentPlaylist.songList[currentSongIndex]);
         }
     }
 
@@ -197,6 +187,23 @@ public class MusicManager : MonoBehaviour
         }
     }
 
+    void ResumePlaying(SongSO currentSong)
+    {
+        if (currentSong == null || audioSources[currentSourceIndex].clip == null)
+        {
+            Debug.LogError("Music Manager: Could not resume playing, song or audiosource is null");
+        }
+
+        // Calculate remaining time in track
+        float elapsedTime = audioSources[currentSourceIndex].time;
+        float totalDuration = currentSong.audioClip.length * currentSong.numberOfLoops;
+        float remainingTime = totalDuration - elapsedTime;
+
+        // Restart playback
+        audioSources[currentSourceIndex].Play();
+        StartCoroutine(WaitForSongToEnd(remainingTime));
+    }
+
     public void StopAllPlaying()
     {
         foreach (AudioSource source in audioSources)
@@ -209,12 +216,13 @@ public class MusicManager : MonoBehaviour
 
     public void PlaylistSelected(int playlistIndex)
     {
-        StopAllPlaying();
+        //StopAllPlaying();
 
         if (playlistIndex >= 0 && playlistIndex < currentPlaylists.Count)
         {
+            historyIndex++;
             SwitchPlaylist(playlistIndex);
-            PlayNextSong();
+            PlayFirstSong(0.1f);
         }
         else
         {
@@ -236,23 +244,26 @@ public class MusicManager : MonoBehaviour
 
     #region Fades
 
-    void CrossFade(SongSO song)
+    void CrossFade(SongSO newSong, float fadeDuration)
     {
         StopAllCoroutines();
 
         GetNextAudioSource();
-        StartCoroutine(FadeOut(crossFadeDuration));
-        StartCoroutine(FadeIn(song, crossFadeDuration));
+        StartCoroutine(FadeOut(fadeDuration));
+        StartCoroutine(FadeIn(newSong, fadeDuration));
 
-        waitForSongToEnd = StartCoroutine(WaitForSongToEnd(song));
+        waitForSongToEnd = StartCoroutine(WaitForSongToEnd(newSong.audioClip.length * newSong.numberOfLoops - crossFadeDuration));
     }
 
     IEnumerator FadeIn(SongSO song, float fadeDuration)
     {
         isPaused = false;
 
-        musicPlayerPanel.UpdateTrackInfo(currentPlaylist, song);
-        musicPlayerPanel.UpdatePlayButton();
+        if (musicPlayerPanel != null)
+        {
+            musicPlayerPanel.UpdateTrackInfo(currentPlaylist, song);
+            musicPlayerPanel.UpdatePlayButton();
+        }
 
         AudioSource audioSource = audioSources[currentSourceIndex];
         audioSource.clip = song.audioClip;
@@ -264,7 +275,7 @@ public class MusicManager : MonoBehaviour
         float currentTime = 0;
         while (currentTime < fadeDuration)
         {
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             audioSource.volume = Mathf.Lerp(0, targetVolume, currentTime / fadeDuration);
             yield return null;
         }
@@ -285,7 +296,7 @@ public class MusicManager : MonoBehaviour
         float currentTime = 0;
         while (currentTime < fadeDuration)
         {
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             audioSource.volume = Mathf.Lerp(startVolume, 0, currentTime / fadeDuration);
             yield return null;
         }
@@ -297,8 +308,33 @@ public class MusicManager : MonoBehaviour
     #endregion
 
     #region Switch Song/Playlist
+
+    void PlayFirstSong(float fadeTime)
+    {
+        // Trim everything ahead of current History Index, replace current history index
+        if (historyIndex < songHistory.Count - 1)
+        {
+            songHistory.RemoveRange(historyIndex, songHistory.Count - (historyIndex + 1));
+            playlistHistory.RemoveRange(historyIndex, playlistHistory.Count - (historyIndex + 1));
+        }
+
+        if (currentPlaylist == null || currentPlaylist.songList.Count == 0)
+        {
+            Debug.LogWarning("No songs available in the playlist.");
+            return;
+        }
+
+        // Play first song
+        SongSO firstSong = currentPlaylist.songList[currentSongIndex];
+        CrossFade(firstSong, fadeTime);
+        
+        if (musicPlayerPanel != null)
+            musicPlayerPanel.UpdateTrackInfo(currentPlaylist, firstSong);
+
+        AddToHistory(firstSong);
+    }
     
-    void PlayNextSong()
+    void PlayNextSong(float fadeTime)
     {
         // Play next in history
         historyIndex++;
@@ -307,7 +343,7 @@ public class MusicManager : MonoBehaviour
             SwitchPlaylistInHistory(playlistHistory[historyIndex]);
             currentSongIndex = currentPlaylist.songList.IndexOf(songHistory[historyIndex]);
 
-            CrossFade(currentPlaylist.songList[currentSongIndex]);
+            CrossFade(currentPlaylist.songList[currentSongIndex], fadeTime);
 
             return;
         }
@@ -329,7 +365,7 @@ public class MusicManager : MonoBehaviour
         SongSO song = currentPlaylist.songList[currentSongIndex];
         AddToHistory(song);
 
-        CrossFade(song);
+        CrossFade(song, fadeTime);
     }
 
     void PlayPrevSong()
@@ -338,19 +374,17 @@ public class MusicManager : MonoBehaviour
         if (audioSources[currentSourceIndex].time > 3.0f)
         {
             audioSources[currentSourceIndex].time = 0;
-            StartCoroutine(FadeIn(currentPlaylist.songList[currentSongIndex], crossFadeDuration / 2)); 
+            StartCoroutine(FadeIn(currentPlaylist.songList[currentSongIndex], 0.1f)); 
             return;
         }
 
         if (historyIndex > 0)
         {
-            
-
             historyIndex--;
-            currentPlaylistIndex = currentPlaylists.IndexOf(playlistHistory[historyIndex]);
+            SwitchPlaylistInHistory(playlistHistory[historyIndex]);
             currentSongIndex = currentPlaylist.songList.IndexOf(songHistory[historyIndex]);
 
-            CrossFade(currentPlaylist.songList[currentSongIndex]);
+            CrossFade(currentPlaylist.songList[currentSongIndex], 0.1f);
         }
         else
         {
@@ -360,13 +394,12 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-
-    IEnumerator WaitForSongToEnd(SongSO currentSong)
+    IEnumerator WaitForSongToEnd(float seconds)
     {
         // Wait for the duration of the song (AudioSource.clip.length)
-        yield return new WaitForSeconds(currentSong.audioClip.length * currentSong.numberOfLoops - crossFadeDuration);
+        yield return new WaitForSecondsRealtime(seconds);
 
-        PlayNextSong();
+        PlayNextSong(crossFadeDuration);
     }
 
     void SwitchPlaylist(int index)
@@ -392,6 +425,9 @@ public class MusicManager : MonoBehaviour
         foreach (PlaylistSO list in newList)
             currentPlaylists.Add(Instantiate(list, transform));
 
+        if (musicPlayerPanel != null)
+            musicPlayerPanel.ResetPlaylistDropdown();
+
         if (isShuffleAllOn)
             SwitchPlaylist(Random.Range(0, currentPlaylists.Count));
         else
@@ -401,8 +437,8 @@ public class MusicManager : MonoBehaviour
     void AddToHistory(SongSO song)
     {
         songHistory.Add(song);
-        PlaylistSO list = currentPlaylist;
-        playlistHistory.Add(list);
+
+        playlistHistory.Add(currentPlaylist);
     }
 
     void GetNextAudioSource()

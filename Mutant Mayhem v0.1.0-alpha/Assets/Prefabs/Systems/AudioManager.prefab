@@ -68,13 +68,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a45e02e2450a40c46adef340b6a86fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicStartDb: -4
-  sfxStartDb: -1
+  musicStartDb: -10
+  sfxStartDb: -4
   musicPlayerPanel: {fileID: 0}
   mainMenuPlaylists: []
   mothershipPlaylists: []
   gamePlaylists:
   - {fileID: 11400000, guid: b00c1aa9a3f8b804fb32fd9213b6b670, type: 2}
+  - {fileID: 11400000, guid: b429c832daf8af8479483dcadd4496f7, type: 2}
+  - {fileID: 11400000, guid: d27902129de53ff459a3d09e872ca499, type: 2}
+  - {fileID: 11400000, guid: 22f6bd344bb52bc40ad93d7c83381955, type: 2}
   deathPlaylists: []
   currentPlaylists: []
   currentPlaylist: {fileID: 0}
@@ -82,6 +85,7 @@ MonoBehaviour:
   - {fileID: 2478435841473616227}
   - {fileID: 6288686567119485698}
   crossFadeDuration: 3
+  mainMixer: {fileID: 24100000, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   songHistory: []
   playlistHistory: []
   historyIndex: 0
@@ -90,8 +94,8 @@ MonoBehaviour:
   currentSongTitle: 
   currentSourceIndex: 0
   isPaused: 0
-  isShuffleSongsOn: 0
-  isShuffleAllOn: 0
+  isShuffleSongsOn: 1
+  isShuffleAllOn: 1
 --- !u!82 &2478435841473616227
 AudioSource:
   m_ObjectHideFlags: 0

@@ -18,9 +18,7 @@ public class ProfileSelectionUI : MonoBehaviour
     [SerializeField] FadeCanvasGroupsWave areYouSureFadeGroup;
     [SerializeField] InputActionAsset inputAsset;
     
-    FadeCanvasGroupsWave myFadeGroup;
     InputAction enterKeyPressed;
-    InputAction escapeKeyPressed;
     TextMeshProUGUI inputFieldPlaceholder;
     string originalInputFieldPlaceholderText;
     Color originalInputFieldPlaceholderColor;
@@ -31,10 +29,8 @@ public class ProfileSelectionUI : MonoBehaviour
     {
         InputActionMap uiActionMap = inputAsset.FindActionMap("UI");
         enterKeyPressed = uiActionMap.FindAction("Submit");
-        escapeKeyPressed = uiActionMap.FindAction("Escape");
         enterKeyPressed.started += OnEnterKeyPressed;
 
-        myFadeGroup = GetComponent<FadeCanvasGroupsWave>();
         inputFieldPlaceholder = newProfileNameInput.placeholder.GetComponent<TextMeshProUGUI>();
     }
 
@@ -117,7 +113,7 @@ public class ProfileSelectionUI : MonoBehaviour
             // If the profile is found, set it as the selected value
             if (index >= 0)
             {
-                profileDropdown.value = index;
+                profileDropdown.SetValueWithoutNotify(index);
                 profileDropdown.RefreshShownValue(); // Refresh the dropdown to update the UI
                 Debug.Log("Dropdown Sync found profile: " + currentProfileName + ", set value to index: " + index);
             }
@@ -153,7 +149,7 @@ public class ProfileSelectionUI : MonoBehaviour
         }
     }
 
-    // Called when the player clicks creates a new profile
+    // Called when the player clicks create new profile
     public void CreateNewProfile()
     {
         string newProfileName = newProfileNameInput.text.Trim();

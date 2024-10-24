@@ -138,7 +138,7 @@ public class PauseMenuController : MonoBehaviour
             Application.Quit();
     }
 
-    public void Pause(bool pause)
+    /*public void Pause(bool pause)
     {
         if (pause)
         {
@@ -155,7 +155,7 @@ public class PauseMenuController : MonoBehaviour
             isPauseMenuOpen = false;
             Debug.Log("Game unpaused");
         }
-    }
+    }*/
 
     public void ToggleOptionsMenu()
     {

@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_MusicPlayerPanel : MonoBehaviour
+public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI artistText;
@@ -26,9 +25,6 @@ public class UI_MusicPlayerPanel : MonoBehaviour
     [SerializeField] Button playButton;
     [SerializeField] Sprite spr_playButton;
     [SerializeField] Sprite spr_pauseButton;
-    [SerializeField] Button stopButton;
-    [SerializeField] Button nextButton;
-    [SerializeField] Button backButton;
     [SerializeField] TextMeshProUGUI shuffleButtonText;
     [SerializeField] Color buttonDisabledColor = new Color(0.75f, 0.75f, 0.75f);
     [SerializeField] float sliderDecibelsMin = -24f;
@@ -36,6 +32,8 @@ public class UI_MusicPlayerPanel : MonoBehaviour
     public AudioMixer mainMixer;
     bool sfxMuted;
     bool musicMuted;
+
+    [HideInInspector] public Player player;
 
     void Start()
     {
@@ -45,9 +43,11 @@ public class UI_MusicPlayerPanel : MonoBehaviour
         mainMixer.SetFloat("sfxVolume", MusicManager.Instance.sfxStartDb);
 
         UpdateShuffleButton();
-        UpdatePlayButton();
+        //UpdatePlayButton();
         UpdateVolumeSliders();
     }
+
+    #region Controls
 
     public void OnMuteSFXButton()
     {
@@ -101,7 +101,8 @@ public class UI_MusicPlayerPanel : MonoBehaviour
 
     public void OnPlaylistSelected()
     {
-        UpdatePlayButton();
+        MusicManager.Instance.PlaylistSelected(playlistsDropdown.value);
+        //UpdatePlayButton();
         DeselectButton();
     }
 
@@ -145,6 +146,10 @@ public class UI_MusicPlayerPanel : MonoBehaviour
         DeselectButton();
     }
 
+    #endregion
+
+    #region Set / Get 
+
     void SetSFXVolume(float value)
     {
         // Convert to decibels
@@ -183,18 +188,36 @@ public class UI_MusicPlayerPanel : MonoBehaviour
         return value;
     }
 
+    #endregion
+
+    #region Update UI
+
     public void UpdateTrackInfo(PlaylistSO playlist, SongSO song)
     {
         titleText.text = song.title;
         artistText.text = song.artist;
 
         int playlistIndex = MusicManager.Instance.currentPlaylists.IndexOf(playlist);
+
         if (playlistIndex != -1)
-            playlistsDropdown.value = playlistIndex;
+            playlistsDropdown.SetValueWithoutNotify(playlistIndex);
         else
             Debug.LogError("Could not find index of playlist for dropdown");
 
         DeselectButton();
+    }
+
+    public void ResetPlaylistDropdown()
+    {
+        playlistsDropdown.ClearOptions();
+
+        List<string> newList = new List<string>();
+        foreach (PlaylistSO list in MusicManager.Instance.currentPlaylists)
+        {
+            newList.Add(list.playlistName);
+        }
+
+        playlistsDropdown.AddOptions(newList);
     }
 
     public void UpdatePlayButton()
@@ -261,4 +284,16 @@ public class UI_MusicPlayerPanel : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null);
     }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        player.stats.playerShooter.canShoot = false;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        player.stats.playerShooter.canShoot = true;
+    }
+
+    #endregion
 }

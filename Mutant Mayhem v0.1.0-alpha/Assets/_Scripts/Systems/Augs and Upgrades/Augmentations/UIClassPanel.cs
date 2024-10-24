@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIClassPanel : MonoBehaviour
@@ -19,20 +18,9 @@ public class UIClassPanel : MonoBehaviour
     [TextArea(5,5)]
     [SerializeField] string builderDescription;
 
-    void OnEnable()
+    void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.buildIndex == 1) // Mothership
-            UpdateButtonsAndText();
+        UpdateButtonsAndText();
     }
 
     public void OnFighterClicked()

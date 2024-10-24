@@ -1200,20 +1200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Weapon tech upgrades cost 20% less
-
-    Structures and structure tech
-    upgrades cost 20% more
-
-    3
-
-    4
-
-    5
-
-    6
-
-    7'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5892,7 +5879,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Fighter class:'
+  m_text: 'Choose a Class:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6540,6 +6527,7 @@ MonoBehaviour:
 
     Start with
     the Repair Gun '
+  selectionMade: 0
 --- !u!114 &1901434547
 MonoBehaviour:
   m_ObjectHideFlags: 0

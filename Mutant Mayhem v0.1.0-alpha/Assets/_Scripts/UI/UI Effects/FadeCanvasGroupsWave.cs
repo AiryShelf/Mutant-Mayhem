@@ -110,6 +110,10 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         
         if (initialGroup != null)
         {
+            // Stop any fade ins.
+            //FadeCanvasGroupsWave initialFadeGroup = initialGroup.GetComponent<FadeCanvasGroupsWave>();
+            //initialFadeGroup.isTriggered = false;
+
             initialGroup.interactable = false;
             initialGroup.blocksRaycasts = false;
         }
@@ -138,11 +142,11 @@ public class FadeCanvasGroupsWave : MonoBehaviour
 
         if (initialGroup != null)
         {
-            //initialGroup.gameObject.SetActive(false);
+            initialGroup.alpha = 0;
         }
 
         // Start next Wave
-        if (nextCanvasGroupsWave)
+        if (nextCanvasGroupsWave != null)
         {
             nextCanvasGroupsWave.gameObject.SetActive(true);
             nextCanvasGroupsWave.isTriggered = true;
@@ -270,7 +274,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             initialGroup.blocksRaycasts = true;  
         }
 
-        if (myGroup)
+        if (myGroup != null)
         {
             myGroup.interactable = false;
             myGroup.blocksRaycasts = false;
@@ -333,7 +337,7 @@ public class FadeCanvasGroupsWave : MonoBehaviour
             initialGroup.blocksRaycasts = true;        
         }
 
-        if (myGroup)
+        if (myGroup != null)
         {
             myGroup.interactable = false;
             myGroup.blocksRaycasts = false;

@@ -19,6 +19,7 @@ public class PlayerShooter : Shooter
     bool waitToShoot;
     float reloadNotificationTimer = 0;
 
+    public bool canShoot = true;
     public bool isShooting;
     public bool isAiming;
     public bool isBuilding;
@@ -157,6 +158,9 @@ public class PlayerShooter : Shooter
     void Shoot()
     {
         reloadNotificationTimer -= Time.deltaTime;
+
+        if (!canShoot)
+            return;
 
         // If no ammo
         if (gunsAmmoInClips[currentGunIndex] < 1)
