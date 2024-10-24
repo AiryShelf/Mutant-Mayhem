@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -17,7 +18,7 @@ public class MusicManager : MonoBehaviour
     public List<PlaylistSO> gamePlaylists = new List<PlaylistSO>();
     public List<PlaylistSO> deathPlaylists = new List<PlaylistSO>();
 
-    public List<PlaylistSO> currentPlaylists = new List<PlaylistSO>();
+    public List<PlaylistSO> currentScenePlaylists = new List<PlaylistSO>();
     public PlaylistSO currentPlaylist;
     [SerializeField] AudioSource[] audioSources;
     [SerializeField] float crossFadeDuration;
@@ -68,18 +69,21 @@ public class MusicManager : MonoBehaviour
         switch (current.buildIndex)
         {
             case 0:
-                SwitchCurrentPlaylists(mainMenuPlaylists);
+                SwitchScenePlaylists(mainMenuPlaylists);
+                TurnShuffleSongsOn();
             break;
 
             case 1:
-                SwitchCurrentPlaylists(mothershipPlaylists);
+                SwitchScenePlaylists(mothershipPlaylists);
+                TurnShuffleSongsOn();
             break;
 
             default:
                 player = FindObjectOfType<Player>();
                 musicPlayerPanel.player = player;
                 
-                SwitchCurrentPlaylists(gamePlaylists);
+                SwitchScenePlaylists(gamePlaylists);
+                TurnShuffleAllOn();
             break;
         }
 
@@ -114,21 +118,39 @@ public class MusicManager : MonoBehaviour
         PlayPrevSong();
     }
 
-    public void TurnShuffleSongsOn()
+    public void ShufflePressed()
+    {
+        if (!isShuffleSongsOn)
+            TurnShuffleSongsOn();
+        else if (!isShuffleAllOn)
+            TurnShuffleAllOn();
+        else 
+            TurnShuffleOff();
+    }
+
+    void TurnShuffleSongsOn()
     {
         isShuffleSongsOn = true;
         isShuffleAllOn = false;
+
+        SongSO currentSong = currentPlaylist.songList[currentSongIndex];
+        
         currentPlaylist.ShufflePlaylist();
+        currentSongIndex = currentPlaylist.songList.IndexOf(currentSong);
     }
 
-    public void TurnShuffleAllOn()
+    void TurnShuffleAllOn()
     {
         isShuffleSongsOn = true;
         isShuffleAllOn = true;
+
+        SongSO currentSong = currentPlaylist.songList[currentSongIndex];
+        
         currentPlaylist.ShufflePlaylist();
+        currentSongIndex = currentPlaylist.songList.IndexOf(currentSong);
     }
 
-    public void TurnShuffleOff()
+    void TurnShuffleOff()
     {
         isShuffleSongsOn = false;
         isShuffleAllOn = false;
@@ -137,27 +159,17 @@ public class MusicManager : MonoBehaviour
         int currPlaylistIndex = currentPlaylistIndex;
         SongSO currentSong = currentPlaylist.songList[currentSongIndex];
 
-        // Reset entire list of playlists
-        Scene currentScene = SceneManager.GetActiveScene();
-        switch (currentScene.buildIndex)
+        // Unshuffle all playlists
+        foreach (PlaylistSO list in currentScenePlaylists)
         {
-            case 0:
-                SwitchCurrentPlaylists(mainMenuPlaylists);
-            break;
-
-            case 1:
-                SwitchCurrentPlaylists(mothershipPlaylists);
-            break;
-
-            default:
-                
-                SwitchCurrentPlaylists(gamePlaylists);
-            break;
+            list.UnShufflePlaylist();
         }
 
         // Set playlist and songIndex
-        SwitchPlaylist(currPlaylistIndex);
+        //SwitchPlaylist(currPlaylistIndex);
         currentSongIndex = currentPlaylist.songList.IndexOf(currentSong);
+
+        musicPlayerPanel.UpdateTrackInfo(currentPlaylist, currentSong);
     }
 
     public void PlayOrPausePressed()
@@ -218,26 +230,16 @@ public class MusicManager : MonoBehaviour
     {
         //StopAllPlaying();
 
-        if (playlistIndex >= 0 && playlistIndex < currentPlaylists.Count)
+        if (playlistIndex >= 0 && playlistIndex < currentScenePlaylists.Count)
         {
             historyIndex++;
             SwitchPlaylist(playlistIndex);
-            PlayFirstSong(0.1f);
+            PlayFirstSong(0.5f);
         }
         else
         {
             Debug.LogError("Invalid playlist index.");
         }
-    }
-
-    public void ShufflePressed()
-    {
-        if (!isShuffleSongsOn)
-            TurnShuffleSongsOn();
-        else if (!isShuffleAllOn)
-            TurnShuffleAllOn();
-        else 
-            TurnShuffleOff();
     }
 
     #endregion
@@ -311,11 +313,12 @@ public class MusicManager : MonoBehaviour
 
     void PlayFirstSong(float fadeTime)
     {
-        // Trim everything ahead of current History Index, replace current history index
+        // Trim history at and ahead of current historyIndex
         if (historyIndex < songHistory.Count - 1)
         {
-            songHistory.RemoveRange(historyIndex, songHistory.Count - (historyIndex + 1));
-            playlistHistory.RemoveRange(historyIndex, playlistHistory.Count - (historyIndex + 1));
+            Debug.Log($"trimming {songHistory.Count - historyIndex} song history");
+            songHistory.RemoveRange(historyIndex, songHistory.Count - historyIndex);
+            playlistHistory.RemoveRange(historyIndex, playlistHistory.Count - historyIndex);
         }
 
         if (currentPlaylist == null || currentPlaylist.songList.Count == 0)
@@ -352,7 +355,7 @@ public class MusicManager : MonoBehaviour
         currentSongIndex++;
 
         if (isShuffleAllOn)
-            SwitchPlaylist(Random.Range(0, currentPlaylists.Count)); 
+            SwitchPlaylist(Random.Range(0, currentScenePlaylists.Count)); 
         else if (currentSongIndex >= currentPlaylist.songList.Count)
         {
             // Loop back to beginning of playlist and reshuffle
@@ -404,7 +407,7 @@ public class MusicManager : MonoBehaviour
 
     void SwitchPlaylist(int index)
     {
-        currentPlaylist = currentPlaylists[index];
+        currentPlaylist = currentScenePlaylists[index];
         currentPlaylistIndex = index;
         
         currentSongIndex = 0;
@@ -413,25 +416,29 @@ public class MusicManager : MonoBehaviour
             currentPlaylist.ShufflePlaylist();
     }
 
-    void SwitchPlaylistInHistory(PlaylistSO playlist)
+    void SwitchScenePlaylists(List<PlaylistSO> newList)
     {
-        currentPlaylist = playlist;
-        currentPlaylistIndex = currentPlaylists.IndexOf(playlist);
-    }
-
-    void SwitchCurrentPlaylists(List<PlaylistSO> newList)
-    {
-        currentPlaylists.Clear();
+        currentScenePlaylists.Clear();
         foreach (PlaylistSO list in newList)
-            currentPlaylists.Add(Instantiate(list, transform));
+            currentScenePlaylists.Add(Instantiate(list, transform));
 
         if (musicPlayerPanel != null)
             musicPlayerPanel.ResetPlaylistDropdown();
 
         if (isShuffleAllOn)
-            SwitchPlaylist(Random.Range(0, currentPlaylists.Count));
+            SwitchPlaylist(Random.Range(0, currentScenePlaylists.Count));
         else
             SwitchPlaylist(0);
+    }
+
+    #endregion
+
+    #region History / Sources
+
+    void SwitchPlaylistInHistory(PlaylistSO playlist)
+    {
+        currentPlaylist = playlist;
+        currentPlaylistIndex = currentScenePlaylists.IndexOf(playlist);
     }
 
     void AddToHistory(SongSO song)

@@ -6,7 +6,9 @@ using UnityEngine;
 public class PlaylistSO : ScriptableObject
 {
     public string playlistName;
+    [SerializeField] List<SongSO> songListMaster;
     public List<SongSO> songList;
+    
 
     public void ShufflePlaylist()
     {
@@ -16,6 +18,16 @@ public class PlaylistSO : ScriptableObject
             int randomIndex = Random.Range(i, songList.Count);
             songList[i] = songList[randomIndex];
             songList[randomIndex] = temp;
+        }
+    }
+
+    public void UnShufflePlaylist()
+    {
+        //songList = new List<SongSO>(songListMaster);
+
+        for (int i = 0; i < songListMaster.Count; i++)
+        {
+            songList[i] = songListMaster[i];
         }
     }
 }

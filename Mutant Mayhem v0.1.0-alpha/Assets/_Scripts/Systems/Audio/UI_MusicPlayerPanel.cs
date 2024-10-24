@@ -49,6 +49,18 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
 
     #region Controls
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (player != null)
+            player.stats.playerShooter.canShoot = false;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (player != null)
+            player.stats.playerShooter.canShoot = true;
+    }
+
     public void OnMuteSFXButton()
     {
         if (!sfxMuted)
@@ -197,7 +209,7 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
         titleText.text = song.title;
         artistText.text = song.artist;
 
-        int playlistIndex = MusicManager.Instance.currentPlaylists.IndexOf(playlist);
+        int playlistIndex = MusicManager.Instance.currentScenePlaylists.IndexOf(playlist);
 
         if (playlistIndex != -1)
             playlistsDropdown.SetValueWithoutNotify(playlistIndex);
@@ -212,7 +224,7 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
         playlistsDropdown.ClearOptions();
 
         List<string> newList = new List<string>();
-        foreach (PlaylistSO list in MusicManager.Instance.currentPlaylists)
+        foreach (PlaylistSO list in MusicManager.Instance.currentScenePlaylists)
         {
             newList.Add(list.playlistName);
         }
@@ -283,16 +295,6 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
     void DeselectButton()
     {
         EventSystem.current.SetSelectedGameObject(null);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        player.stats.playerShooter.canShoot = false;
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        player.stats.playerShooter.canShoot = true;
     }
 
     #endregion

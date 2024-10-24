@@ -71,15 +71,17 @@ MonoBehaviour:
   musicStartDb: -10
   sfxStartDb: -4
   musicPlayerPanel: {fileID: 0}
-  mainMenuPlaylists: []
-  mothershipPlaylists: []
+  mainMenuPlaylists:
+  - {fileID: 11400000, guid: 0c135731df88fd141be74695f93095f9, type: 2}
+  mothershipPlaylists:
+  - {fileID: 11400000, guid: 09e2323dac2a6ed4ba98b16a035a21e3, type: 2}
   gamePlaylists:
   - {fileID: 11400000, guid: b00c1aa9a3f8b804fb32fd9213b6b670, type: 2}
   - {fileID: 11400000, guid: b429c832daf8af8479483dcadd4496f7, type: 2}
   - {fileID: 11400000, guid: d27902129de53ff459a3d09e872ca499, type: 2}
   - {fileID: 11400000, guid: 22f6bd344bb52bc40ad93d7c83381955, type: 2}
   deathPlaylists: []
-  currentPlaylists: []
+  currentScenePlaylists: []
   currentPlaylist: {fileID: 0}
   audioSources:
   - {fileID: 2478435841473616227}
@@ -96,6 +98,7 @@ MonoBehaviour:
   isPaused: 0
   isShuffleSongsOn: 1
   isShuffleAllOn: 1
+  player: {fileID: 0}
 --- !u!82 &2478435841473616227
 AudioSource:
   m_ObjectHideFlags: 0

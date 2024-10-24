@@ -7,12 +7,15 @@ using UnityEngine.UI;
 
 public class ProfileSelectionUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI noProfilesText;
+    [Header("Current Profile")]
+    public TMP_Dropdown profileDropdown;
+    [SerializeField] Button deleteButton;
     [SerializeField] TextMeshProUGUI researchPointsValueText;
     [SerializeField] TextMeshProUGUI maxWaveReachedValueText;
     [SerializeField] TextMeshProUGUI clonesUsedValueText;
-    [SerializeField] Button deleteButton;
-    public TMP_Dropdown profileDropdown;
+    
+    [Header("New Profile")]
+    [SerializeField] TextMeshProUGUI noProfilesText;
     public TMP_InputField newProfileNameInput;
     [SerializeField] string emptyProfileListWarning;
     [SerializeField] FadeCanvasGroupsWave areYouSureFadeGroup;
