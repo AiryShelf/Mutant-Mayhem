@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae421a5e734c6440b128cabf443e737, type: 3}
+  m_Name: Objective_Upgrades
+  m_EditorClassIdentifier: 
+  objectiveTitle: Upgrades and Cube Repair
+  objectiveDescription: 'Stand next to the Cube and press ''TAB'' to open the upgrades
+    panel
+
+
+    Consumables panel allows you to heal, repair, and buy ammo
+
+
+    Switch
+    panels with ''Q'' and ''E''
+
+
+    Exosuit Upgrades panel allows you to increase
+    you max health, stamina, and more
+
+
+    Close the upgrades panel with either
+    ''TAB'', ''Right Click'', or by walking away'
+  taskPrefabs:
+  - {fileID: 936962933341166503, guid: 5bfd2225bb89e194697fbce7027fcb6c, type: 3}
+  - {fileID: 936962933341166503, guid: 4c43c06ff9af20d4d8d22d8b04c46747, type: 3}
+  - {fileID: 936962933341166503, guid: 94efa88867271884a85dfeabfcf121f0, type: 3}
+  - {fileID: 936962933341166503, guid: e1f93301708a4d74882370eae2b8f531, type: 3}
+  - {fileID: 936962933341166503, guid: a0263b4437349fd4b92a8e01d73a509d, type: 3}

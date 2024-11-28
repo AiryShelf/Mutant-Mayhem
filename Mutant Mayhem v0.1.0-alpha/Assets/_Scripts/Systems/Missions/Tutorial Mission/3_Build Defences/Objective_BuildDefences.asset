@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae421a5e734c6440b128cabf443e737, type: 3}
+  m_Name: Objective_BuildDefences
+  m_EditorClassIdentifier: 
+  objectiveTitle: Build Defences
+  objectiveDescription: 'Open the build menu with ''B''
+
+
+    Select structures in
+    the build menu with the mouse wheel
+
+
+    Rotate with ''Q'' and ''E'' before
+    placing
+
+
+    Place with ''Left Click''
+
+
+    Close the build menu with either
+    ''B'', ''TAB'', or ''Right Click'''
+  taskPrefabs:
+  - {fileID: 936962933341166503, guid: 56fb759dad897cb4db4dad46a426c13c, type: 3}
+  - {fileID: 936962933341166503, guid: fd1be177425f3a148a0c10c088a6549f, type: 3}
+  - {fileID: 936962933341166503, guid: ddf72e3ee2453884a82cec850491db5f, type: 3}
+  - {fileID: 936962933341166503, guid: 3408eb998a41cc446bfbea3d7f48adae, type: 3}
+  - {fileID: 936962933341166503, guid: b8093dca65affc64fb9ad3ed3f89d28e, type: 3}
+  - {fileID: 936962933341166503, guid: 52f54e9824eb3a84597594d56760be73, type: 3}

@@ -95,7 +95,7 @@ public class WaveSpawnerRandom : MonoBehaviour
             currentWave.timesToTriggerSubwaves.Add(timeInSequence);
 
             // Find next time slot
-            int delay = Mathf.CeilToInt(timeToNextSubWave * waveController.subwaveDelayMult);
+            int delay = Mathf.CeilToInt(timeToNextSubWave);
             delay = Mathf.Clamp(delay, minTimeToNextSubWave, int.MaxValue);
             timeInSequence += delay;
 

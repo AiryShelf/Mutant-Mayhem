@@ -13,7 +13,7 @@ public class UIBuildMenuController : MonoBehaviour
     [SerializeField] ScrollRectController scrollRectController;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
-    [SerializeField] GameObject tutorialBuildPanelPrefab;
+    //[SerializeField] GameObject tutorialBuildPanelPrefab;
     [SerializeField] RectTransform gamePlayCanvas;
 
     BuildingSystem buildingSystem;
@@ -60,6 +60,43 @@ public class UIBuildMenuController : MonoBehaviour
             fadeCanvasGroups.individualElements.Add(uIStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
         }
+
+        SetButtonNavigation();
+    }
+
+    void SetButtonNavigation()
+    {
+        for (int i = 0; i < structureButtonInstances.Count; i++)
+        {
+            Button button = structureButtonInstances[i].GetComponent<Button>();
+            Navigation nav = button.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            if (i == 0)
+            {
+                // First button - no upward navigation
+                nav.selectOnUp = null;
+                nav.selectOnDown = structureButtonInstances[i + 1].GetComponent<Button>();
+
+                button.navigation = nav;
+            }
+            else if (i == structureButtonInstances.Count - 1)
+            {
+                // Last button - no downward navigation
+                nav.selectOnUp = structureButtonInstances[i - 1].GetComponent<Button>();
+                nav.selectOnDown = null;
+
+                button.navigation = nav;
+            }
+            else
+            {
+                // Middle buttons - navigate both up and down
+                //nav.selectOnUp = structureButtonInstances[i - 1].GetComponent<Button>();
+                //nav.selectOnDown = structureButtonInstances[i + 1].GetComponent<Button>();
+            }
+
+            //button.navigation = nav;
+        }
     }
 
     public void RefreshBuildList()
@@ -77,8 +114,8 @@ public class UIBuildMenuController : MonoBehaviour
     {
         if (open)
         {
-            if (!TutorialManager.TutorialShowedBuild)
-                StartCoroutine(DelayTutorialOpen());
+            //if (!TutorialManager.TutorialShowedBuild)
+                //StartCoroutine(DelayTutorialOpen());
 
             fadeCanvasGroups.isTriggered = true;
             myCanvasGroup.blocksRaycasts = true;
@@ -94,7 +131,7 @@ public class UIBuildMenuController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
 
-        Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
+        //Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
     }
 
     public void SetMenuSelection(StructureSO structure)

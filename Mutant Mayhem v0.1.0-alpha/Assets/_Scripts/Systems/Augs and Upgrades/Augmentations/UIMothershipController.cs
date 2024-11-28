@@ -5,17 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class UIMothershipController : MonoBehaviour
 {
-    AugManager augManager;
-
     void Awake()
     {
-        augManager = AugManager.Instance;
-        if (augManager == null)
-        {
-            Debug.LogError("Could not find augManager");
-        }
-
-        augManager.Initialize();
+        AugManager.Instance.Initialize();
     }
 
     public void OnLaunch()

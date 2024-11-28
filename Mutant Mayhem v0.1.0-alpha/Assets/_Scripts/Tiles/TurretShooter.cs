@@ -28,7 +28,7 @@ public class TurretShooter : Shooter
         StatsCounterPlayer.ShotsFiredByTurrets++;
     }
 
-    protected override void ReloadShooter()
+    protected override void Reload()
     {
         reloadRoutine = StartCoroutine(ReloadRoutine());
     }

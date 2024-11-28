@@ -44,7 +44,7 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
 
     void OnReloaded()
     {
-        playerShooter.Reload();
+        playerShooter.ReloadPlayer();
     }
 
     void OnReloadEnd()

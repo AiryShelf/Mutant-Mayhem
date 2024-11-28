@@ -11,6 +11,9 @@ public class Health : MonoBehaviour
     public float deathTorque = 20;
     [SerializeField] SoundSO painSound;
     [SerializeField] float painSoundCooldown= 0.3f;
+    [SerializeField] protected Color textFlyHealthGainColor;
+    [SerializeField] protected Color textFlyHealthLossColor;
+    [SerializeField] protected float textFlyAlphaMax = 0.25f;
     float lastPainSoundTime;
 
     protected float health;
@@ -49,23 +52,35 @@ public class Health : MonoBehaviour
     public virtual void ModifyHealth(float value, GameObject damageDealer)
     {
         //Debug.Log($"Modifying {health} health by {value}.  Max health: {maxHealth}");
-        PlayPainSound(value);
+
+        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+        textFly.transform.position = transform.position;
+        if (value < 0)
+        {
+            float angle = (Random.Range(-45f, 45f) - 90) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+
+            textFly.Initialize(value.ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true);
+            textFly.alphaMax = textFlyAlphaMax;
+            PlayPainSound();
+        }
+        else
+        {
+            float angle = (Random.Range(-45f, 45f) + 90) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+
+            textFly.Initialize("+" + value.ToString("#0"), textFlyHealthGainColor, textFlyAlphaMax, dir, true);
+            textFly.alphaMax = textFlyAlphaMax;
+        }
 
         health += value;
         if (health > maxHealth)
             health = maxHealth;
 
         // Stats counting
-        // Layer# 8 - PlayerProjectiles.  player, enemy
         if (damageDealer != null)
         {
-            if (damageDealer.layer == 8)
-            {
-                StatsCounterPlayer.EnemyDamageByPlayerProjectiles -= value;
-                StatsCounterPlayer.ShotsHitByPlayer++;
-                //Debug.Log("Player prjectile damage: " + value);
-            }
-            else if (this.CompareTag("Enemy"))
+            if (this.CompareTag("Enemy"))
                 StatsCounterPlayer.DamageToEnemies -= value;
         }
         
@@ -86,17 +101,14 @@ public class Health : MonoBehaviour
         }
     }
 
-    protected void PlayPainSound(float value)
+    protected void PlayPainSound()
     {
-        if (value < 0)
+        if (painSound != null)
         {
-            if (painSound != null)
+            if (Time.time - lastPainSoundTime >= painSoundCooldown)
             {
-                if (Time.time - lastPainSoundTime >= painSoundCooldown)
-                {
-                    SFXManager.Instance.PlaySoundAt(painSound, transform.position);
-                    lastPainSoundTime = Time.time;
-                }
+                SFXManager.Instance.PlaySoundAt(painSound, transform.position);
+                lastPainSoundTime = Time.time;
             }
         }
     }

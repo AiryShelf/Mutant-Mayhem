@@ -30,6 +30,8 @@ public class PoolManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        InitializePools();
     }
 
     void ClearPools()
@@ -55,6 +57,8 @@ public class PoolManager : MonoBehaviour
         {
             CreatePool(poolNames[i], poolPrefabs[i], poolCounts[i]);
         }
+
+        Debug.Log("PoolManager Initialized");
     }
 
     public void ResetAllPools()
@@ -87,7 +91,7 @@ public class PoolManager : MonoBehaviour
         GameObject obj = Instantiate(prefab);
         obj.SetActive(false);
         if (poolParent != null)
-            obj.transform.parent = poolParent;
+            obj.transform.SetParent(poolParent);
 
         pools[poolKey].Enqueue(obj);
 
@@ -112,7 +116,7 @@ public class PoolManager : MonoBehaviour
                     AddToPool(poolKey, copyObj);
                 }
 
-                Debug.Log($"Added {amountToAddWhenEmpty} new objects to {poolKey}.  " +
+                Debug.LogWarning($"Added {amountToAddWhenEmpty} new objects to {poolKey}.  " +
                           "It was nearly empty and now totals " +
                           $"{totalsCreated[poolKey]} objects created.");
             }

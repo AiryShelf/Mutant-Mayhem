@@ -60,7 +60,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         otherHealth.Knockback((Vector2)otherHealth.transform.position - point, knockback);
         otherHealth.ModifyHealth(-meleeDamage, gameObject);
 
-        if (otherHealth.tag == "Player")
+        if (otherHealth.CompareTag("Player"))
             ParticleManager.Instance.PlayMeleeBlood(point, transform.right);
 
         PlayMeleeSound(point);
@@ -91,7 +91,7 @@ public class MeleeControllerEnemy : MonoBehaviour
             PlayMeleeSound(point);
 
             StatsCounterPlayer.MeleeAttacksByEnemies++;
-            StatsCounterPlayer.DamageToStructures += meleeDamage;
+            //StatsCounterPlayer.DamageToStructures += meleeDamage;
         }
     }
 

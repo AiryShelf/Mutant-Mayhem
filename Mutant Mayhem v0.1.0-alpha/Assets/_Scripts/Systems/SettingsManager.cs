@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public enum DifficultyLevel
 {
@@ -113,7 +112,7 @@ public class SettingsManager : MonoBehaviour
                 WaveDifficultyMult = 0.7f;
                 WavesTillAddWaveBase = 1;
                 SubwaveListGrowthFactor = 0.8f;
-                SubwaveDelayMult = 1.2f;
+                SubwaveDelayMult = 1.3f;
                 BatchSpawnMult = 0.7f;
                 CreditsMult = 2f;
                 break;

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae421a5e734c6440b128cabf443e737, type: 3}
+  m_Name: Objective_DefendTheCube
+  m_EditorClassIdentifier: 
+  objectiveTitle: Defend the Cube
+  objectiveDescription: 'Use ''Left Click'' to fire your gun
+
+
+    ''Right Click''
+    swings your laser sword
+
+
+    ''Middle Click'' or ''Spacebar'' will throw to
+    the mouse position
+
+
+    Collect samples from dead mutants
+
+
+    Sell samples
+    by standing next to the Cube'
+  taskPrefabs:
+  - {fileID: 936962933341166503, guid: c073817d20af6a848b18f867a8726407, type: 3}
+  - {fileID: 936962933341166503, guid: cd7eab6f71433b248a1719f4a51bbc96, type: 3}
+  - {fileID: 936962933341166503, guid: 07ee910710605244f8b83cdf19ce958d, type: 3}
+  - {fileID: 936962933341166503, guid: ed840cd1d3fca844d8872c6e3cf7cb1b, type: 3}

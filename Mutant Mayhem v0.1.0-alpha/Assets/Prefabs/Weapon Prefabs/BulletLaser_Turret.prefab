@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5849723771186189829}
   m_Layer: 8
   m_Name: BulletLaser_Turret
-  m_TagString: Untagged
+  m_TagString: TurretBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,13 +52,14 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 4224
+  gunType: 0
+  objectPoolName: 
   damage: 20
   knockback: 0.5
   destroyTime: 0
   velocity: {x: 0, y: 0}
   origin: {fileID: 0}
   rb: {fileID: 2082839547474369568}
-  effectsHandler: {fileID: 6192966097811384621}
   shootSound: {fileID: 11400000, guid: f1714f3cf7752a6458b978d9c56ded82, type: 2}
   hitSound: {fileID: 11400000, guid: 6ffb3c9e7bd64ec4f978af323e6aea7a, type: 2}
   AiTrggerPrefab: {fileID: 5148803634519629604, guid: 04afd8a7aa8f9fa40a307da430558e55, type: 3}
@@ -414,12 +415,8 @@ MonoBehaviour:
   timeToDestroyParticleTrail: 0.3
   timeToDestroyLineRenderer: 0
   timeToDestroyAll: 0.3
-  bulletHitEffect: {fileID: 4802335928411661607}
-  bulletHitEffectSplash: {fileID: 7886229964236836433}
   particleTrail: {fileID: 420588502394216304}
   trailRenderer: {fileID: 6817592958975258843}
-  amountOfParticles: 5
-  amountOfParticlesSplash: 15
 --- !u!1 &1674543390805450761
 GameObject:
   m_ObjectHideFlags: 0

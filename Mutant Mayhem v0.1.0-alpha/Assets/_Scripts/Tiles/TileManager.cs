@@ -100,7 +100,6 @@ public class TileManager : MonoBehaviour
 
             ClearParticles(gridPos);                
             shadowCaster2DTileMap.Generate();
-            StatsCounterPlayer.StructuresBuilt++;
             //Debug.Log("Added a Tile");
             
             //Debug.Log("Structure tile and Animated tile placed");
@@ -226,16 +225,23 @@ public class TileManager : MonoBehaviour
         //Debug.Log("modify health called");
         if (_TileStatsDict.ContainsKey(gridPos))
         {
-            if (amount < 0)
-            {
-                numberOfTilesHit++;
-            }
-            
             Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
+            float healthAtStart = _TileStatsDict[rootPos].health;
             _TileStatsDict[rootPos].health += amount;
             _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 
                                                          0, _TileStatsDict[rootPos].maxHealth);
             //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
+
+            float healthDifference = _TileStatsDict[rootPos].health - healthAtStart;
+            if (healthDifference < 0)
+            {
+                StatsCounterPlayer.DamageToStructures += -healthDifference;
+                numberOfTilesHit++;
+            }
+            else
+            {
+                StatsCounterPlayer.AmountRepaired += healthDifference;
+            }
 
             if (_TileStatsDict[rootPos].health == 0)
             {

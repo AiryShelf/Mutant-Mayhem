@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class OptionsPanel : MonoBehaviour
 {
     public FadeCanvasGroupsWave fadeGroup;
-    [SerializeField] TMP_Dropdown difficultyDropdown;
     [SerializeField] TMP_Dropdown movementTypeDropdown;
     [SerializeField] Toggle spacebarToggle;
     [SerializeField] Toggle tutorialToggle;
@@ -18,8 +17,6 @@ public class OptionsPanel : MonoBehaviour
         // Add listeners
         tutorialToggle.onValueChanged.AddListener(delegate {
                                             ToggleTutorial(tutorialToggle); });
-        difficultyDropdown.onValueChanged.AddListener(delegate { 
-                                            DifficultyValueChanged(difficultyDropdown); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
         spacebarToggle.onValueChanged.AddListener(delegate {
@@ -31,8 +28,6 @@ public class OptionsPanel : MonoBehaviour
         // Add listeners
         tutorialToggle.onValueChanged.RemoveListener(delegate {
                                             ToggleTutorial(tutorialToggle); });
-        difficultyDropdown.onValueChanged.RemoveListener(delegate { 
-                                            DifficultyValueChanged(difficultyDropdown); });
         movementTypeDropdown.onValueChanged.RemoveListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
         spacebarToggle.onValueChanged.RemoveListener(delegate {
@@ -51,7 +46,6 @@ public class OptionsPanel : MonoBehaviour
         {
             PlayerProfile profile = ProfileManager.Instance.currentProfile;
 
-            difficultyDropdown.SetValueWithoutNotify((int)profile.difficultyLevel);
             movementTypeDropdown.SetValueWithoutNotify(profile.isStandardWASD ? 1 : 0);
             tutorialToggle.SetIsOnWithoutNotify(profile.isTutorialEnabled);
             spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
@@ -65,7 +59,6 @@ public class OptionsPanel : MonoBehaviour
         }
         else
         {
-            difficultyDropdown.SetValueWithoutNotify((int)SettingsManager.Instance.startingDifficulty);
             movementTypeDropdown.SetValueWithoutNotify(1); // Default to standard WASD
             tutorialToggle.SetIsOnWithoutNotify(true);
             spacebarToggle.SetIsOnWithoutNotify(true);
@@ -96,7 +89,7 @@ public class OptionsPanel : MonoBehaviour
         ProfileManager.Instance.currentProfile.isTutorialEnabled = change.isOn;
         ProfileManager.Instance.SaveCurrentProfile(); // Save the profile with updated tutorial state
 
-        TutorialManager.SetProfileAndTutorialState(change.isOn);
+        TutorialManager.SetTutorialState(change.isOn);
         Debug.Log("Tutorial Enabled: " + change.isOn);
     }
 
@@ -104,7 +97,6 @@ public class OptionsPanel : MonoBehaviour
     {
         if ((DifficultyLevel)change.value != ProfileManager.Instance.currentProfile.difficultyLevel)
         {
-            Debug.Log("Difficulty changed via Dropdown");
             switch (change.value)
             {
                 case 0:
@@ -126,7 +118,7 @@ public class OptionsPanel : MonoBehaviour
 
             MessagePanel.PulseMessage("Difficulty changed to " + (DifficultyLevel)change.value + 
                                     ", saved to currentProfile", Color.yellow);
-            
+            Debug.Log($"Difficulty changed to {(DifficultyLevel)change.value} via Dropdown");
         }
     }
 

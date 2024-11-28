@@ -31,6 +31,7 @@ public class UIAugPanel : MonoBehaviour
     void Start()
     {
         PopulateAugsList(AugManager.Instance.availableAugmentations);
+        UpdateRPAndLevelInfo();
     }
 
     public void PopulateAugsList(List<AugmentationBaseSO> augmentations)
@@ -62,9 +63,7 @@ public class UIAugPanel : MonoBehaviour
                 Debug.Log("Auto-selected an Aug");
                 EventSystem.current.SetSelectedGameObject(uiAug.gameObject);
             }
-        }
-
-        UpdateBottomInfo();
+        } 
     }
 
     public void SelectAugmentation(UIAugmentation newSelection)
@@ -85,7 +84,7 @@ public class UIAugPanel : MonoBehaviour
 
     #region Update UI
 
-    void UpdateBottomInfo()
+    void UpdateRPAndLevelInfo()
     {
         rpAvailableText.text = "Available RP: " + augManager.currentResearchPoints;
         AugsAddedText.text = "Aug Levels: " + augManager.GetCurrentLevelCount();
@@ -94,8 +93,13 @@ public class UIAugPanel : MonoBehaviour
 
     public void UpdatePanelTextandButtons()
     {
+        UpdateRPAndLevelInfo();
+
         if (selectedUiAugmentation == null)
-            Debug.LogWarning("No Aug selected");
+        {
+            Debug.LogWarning("No Aug selected on UI panel update");
+            return;
+        }
 
         // Get aug and level
         AugmentationBaseSO aug = selectedUiAugmentation.aug;
@@ -106,11 +110,8 @@ public class UIAugPanel : MonoBehaviour
         else
             level = 0;
 
-        // Other info Text
+        // Update name and TotalCost text
         nameText.text = "Selected: " + aug.augmentationName;
-        UpdateBottomInfo();
-
-        // Update TotalCost text
         string costOrGain;
         Color costTextColor;
         if (_totalCost <= 0)

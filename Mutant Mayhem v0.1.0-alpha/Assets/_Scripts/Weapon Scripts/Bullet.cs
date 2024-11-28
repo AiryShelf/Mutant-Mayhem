@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
 {
     public LayerMask hitLayers;
     LayerMask hitLayersStart;
-    [SerializeField] GunType gunType;
+    public GunType gunType;
     public string objectPoolName;
     [HideInInspector] public float damage = 10;
     [HideInInspector] public float knockback = 1f;
@@ -92,9 +92,14 @@ public class Bullet : MonoBehaviour
 
             enemy.ModifyHealth(-damage, gameObject);
             
-            // Layer# 8 - PlayerProjectiles
-            if (this.gameObject.layer == 8)
+            // Stat Counting
+            if (this.gameObject.CompareTag("PlayerBullet"))
+            {
                 StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damage;
+                StatsCounterPlayer.ShotsHitByPlayer++;
+            }
+            else if (this.gameObject.CompareTag("TurretBullet"))
+                StatsCounterPlayer.EnemyDamageByTurrets += damage;
 
             // Create AI Trigger
             if (AiTrggerPrefab != null)
@@ -121,7 +126,7 @@ public class Bullet : MonoBehaviour
             }
             
 
-            StatsCounterPlayer.DamageToStructures += damage;
+            //StatsCounterPlayer.DamageToStructures += damage;
 
             //Debug.Log("TILE HIT");
         }

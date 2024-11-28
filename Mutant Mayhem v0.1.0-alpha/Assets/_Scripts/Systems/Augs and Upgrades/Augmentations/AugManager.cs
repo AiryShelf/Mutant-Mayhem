@@ -37,9 +37,9 @@ public class AugManager : MonoBehaviour
 
     public void Initialize()
     {
-        // Only reset if profile has changed
-        if (lastUsedProfile != null && lastUsedProfile.Equals(ProfileManager.Instance.currentProfile.profileName))
-            return;
+        // Only reset if profile has changed *** doesnt work
+        //if (lastUsedProfile != null && lastUsedProfile.Equals(ProfileManager.Instance.currentProfile.profileName))
+            //return;
         
         //Reset
         selectedAugsWithLvls.Clear();

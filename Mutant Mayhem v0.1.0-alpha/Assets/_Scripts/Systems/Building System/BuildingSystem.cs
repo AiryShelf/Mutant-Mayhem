@@ -49,7 +49,7 @@ public class BuildingSystem : MonoBehaviour
 
     public static Dictionary<Structure, bool> _UnlockedStructuresDict = 
                                         new Dictionary<Structure, bool>();
-    public bool inBuildMode;
+    public bool isInBuildMode;
     public int currentRotation;
     private Vector3Int highlightedTilePos;
     public bool allHighlited;
@@ -153,7 +153,7 @@ public class BuildingSystem : MonoBehaviour
 
     void OnBuild(InputAction.CallbackContext context)
     {
-        if (!inBuildMode)
+        if (!isInBuildMode)
         {
             return;
         }
@@ -201,7 +201,7 @@ public class BuildingSystem : MonoBehaviour
     void OnRotate(InputAction.CallbackContext context)
     {
         // Return if not in build mode or is holding destroy tool
-        if (!inBuildMode || structureInHand.structureType == AllStructureSOs[2].structureType)
+        if (!isInBuildMode || structureInHand.structureType == AllStructureSOs[2].structureType)
             return;
 
         if (context.control.name == "q")
@@ -228,7 +228,7 @@ public class BuildingSystem : MonoBehaviour
 
     void OnToolbarUsed(InputAction.CallbackContext context)
     {
-        if (!inBuildMode)
+        if (!isInBuildMode)
             return;
 
         if (Input.GetKeyDown("x"))
@@ -276,7 +276,7 @@ public class BuildingSystem : MonoBehaviour
 
             //currentRotation = 0;
             buildRangeCircle.EnableBuildCircle(true);
-            inBuildMode = true;
+            isInBuildMode = true;
             //previousGunIndex = player.playerShooter.currentGunIndex;
             player.playerShooter.isBuilding = true;
             //player.playerShooter.SwitchGuns(9);
@@ -297,7 +297,7 @@ public class BuildingSystem : MonoBehaviour
             mouseLooker.lockedToPlayer = false;
 
             buildRangeCircle.EnableBuildCircle(false);
-            inBuildMode = false;
+            isInBuildMode = false;
             player.playerShooter.isBuilding = false;
             // Only switch guns if not repair gun
             //if (previousGunIndex != 9)
@@ -412,9 +412,36 @@ public class BuildingSystem : MonoBehaviour
             {
                 turretManager.AddTurret(gridPos);
             }
+
+            AddToStatCounter();
         }
         else
             MessagePanel.Instance.DelayMessage("Unable to build there.  It's blocked!", Color.red, 0.1f);
+    }
+
+    void AddToStatCounter()
+    {
+        StatsCounterPlayer.StructuresBuilt++;
+
+        if (structureInHand.structureType == Structure.OneByFourWall || 
+            structureInHand.structureType == Structure.OneByOneCorner || 
+            structureInHand.structureType == Structure.OneByOneWall || 
+            structureInHand.structureType == Structure.TwoByEightWall ||
+            structureInHand.structureType == Structure.TwoByTwoCorner || 
+            structureInHand.structureType == Structure.TwoByTwoWall)
+        {
+            StatsCounterPlayer.WallsBuilt++;
+        }
+        else if (structureInHand.structureType == Structure.Door || 
+                 structureInHand.structureType == Structure.BlastDoor)
+        {
+            StatsCounterPlayer.DoorsBuilt++;
+        }
+        else if (structureInHand.structureType == Structure.LaserTurret ||
+                 structureInHand.structureType == Structure.GunTurret)
+        {
+            StatsCounterPlayer.TurretsBuilt++;
+        }
     }
 
     void RemoveTile(Vector3Int gridPos)

@@ -7,20 +7,19 @@ using UnityEngine.InputSystem;
 public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance { get; private set; }
-    
-    public static bool TutorialDisabled {  get; private set; }
+    public static bool IsTutorialDisabled { get; private set; }
+
+    public Mission tutorialMission;
 
     [Header("Tutorial Tracking")]
-    public static bool TutorialShowedBuild = false;
-    public static bool TutorialShowedUpgrade = false; 
     public static int NumTutorialsOpen = 0;
 
     [Header("Tutorial Control")]
     [SerializeField] InputActionAsset inputAsset;
     [SerializeField] float escKeyCooldown = 0.1f;
-    public static bool escCooling;
+    [HideInInspector] public static bool escIsCooling;
     InputAction escapeAction;
-    
+    static UI_MissionPanelController missionPanelController;
 
     void Awake()
     {
@@ -52,7 +51,7 @@ public class TutorialManager : MonoBehaviour
 
     void Start()
     {
-        SetProfileAndTutorialState(ProfileManager.Instance.currentProfile.isTutorialEnabled);
+        SetTutorialState(ProfileManager.Instance.currentProfile.isTutorialEnabled);
     }
 
     void OnEscapePressed(InputAction.CallbackContext context)
@@ -62,31 +61,39 @@ public class TutorialManager : MonoBehaviour
 
     void SyncTutorialToProfile(PlayerProfile playerProfile)
     {
-        TutorialDisabled = !playerProfile.isTutorialEnabled;
-        if (!TutorialDisabled)
-        {
-            ResetShownPanels();
-        }
+        IsTutorialDisabled = !playerProfile.isTutorialEnabled;
     }
 
-    public static void SetProfileAndTutorialState(bool isOn)
+    public static void SetTutorialState(bool isOn)
     {
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
-        currentProfile.isTutorialEnabled = isOn;
-        ProfileManager.Instance.SaveCurrentProfile();
-        
-        Instance.SyncTutorialToProfile(currentProfile);
+        if (currentProfile != null)
+            Instance.SyncTutorialToProfile(currentProfile);
     }
 
-    public static void ResetShownPanels()
+    public static void ResetTutorialPanel()
     {
-        TutorialShowedBuild = false;
-        TutorialShowedUpgrade = false;
+        missionPanelController = FindObjectOfType<UI_MissionPanelController>();
+        if (missionPanelController == null)
+        {
+            Debug.LogError("TutorialManager could not find MissionPanel");
+            return;
+        }
+
+        if (!IsTutorialDisabled)
+        {
+            missionPanelController.gameObject.SetActive(true);
+            missionPanelController.StartMission(Instance.tutorialMission);
+        }
+        else
+        {
+            missionPanelController.StartPlanetMission();
+        }
     }
 
     IEnumerator EscapeKeyCooldown()
     {
         yield return new WaitForSecondsRealtime(escKeyCooldown);
-        escCooling = false;
+        escIsCooling = false;
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHealth : Health
@@ -17,8 +16,8 @@ public class PlayerHealth : Health
 
     public override void ModifyHealth(float value, GameObject damageDealer)
     {
-        if (!player.IsDead)
-            PlayPainSound(value);
+        if (player.IsDead)
+            return;
 
         health += value;
         if (health > maxHealth)
@@ -27,6 +26,14 @@ public class PlayerHealth : Health
         // Stats counting
         if (value < 0)
         {
+            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+            textFly.transform.position = transform.position;
+            float angle = (UnityEngine.Random.Range(-45f, 45f) - 90) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+
+            textFly.Initialize(value.ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true);
+
+            PlayPainSound();
             StatsCounterPlayer.DamageToPlayer -= value;
         }
         

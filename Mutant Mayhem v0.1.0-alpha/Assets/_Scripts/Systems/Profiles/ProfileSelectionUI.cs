@@ -16,6 +16,7 @@ public class ProfileSelectionUI : MonoBehaviour
     
     [Header("New Profile")]
     [SerializeField] TextMeshProUGUI noProfilesText;
+    public TMP_Dropdown chooseDifficultyDropdown;
     public TMP_InputField newProfileNameInput;
     [SerializeField] string emptyProfileListWarning;
     [SerializeField] FadeCanvasGroupsWave areYouSureFadeGroup;
@@ -180,9 +181,12 @@ public class ProfileSelectionUI : MonoBehaviour
             }
 
         // Create new profile and set as current
-        ProfileManager.Instance.CreateProfile(newProfileNameInput.text);
+        ProfileManager.Instance.CreateProfile(newProfileNameInput.text, (DifficultyLevel)chooseDifficultyDropdown.value);
         newProfileNameInput.text = "";
+        chooseDifficultyDropdown.value = (int)DifficultyLevel.Normal;
         UpdateProfilePanel();
+
+        MessagePanel.PulseMessage("New profile created!", Color.green);
 
         // Refresh input field placehold in case of failed input entry
         inputFieldPlaceholder.text = originalInputFieldPlaceholderText;

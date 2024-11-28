@@ -71,10 +71,13 @@ public class UIUpgrade : MonoBehaviour
 
     // This allows the enum to be referenced via UI button OnClick
     public void InvokeOnClick(UIUpgrade myUpg)
-    {
+    {  
         if (!myButton.interactable)
+        {
+            MessagePanel.PulseMessage("Upgrade/Consumable is locked!  Unlock the associated tech first", Color.yellow);
             return;
-            
+        }
+
         //Debug.Log("OnClick called");
         switch (upgradeFamily)
         {
@@ -117,8 +120,17 @@ public class UIUpgrade : MonoBehaviour
     {
         if (upgradeText == null)
         {
-            //Debug.Log("UpgradeText was not found");
+            //Debug.LogError("UiUpgrade could not find it's upgradeText");
             return;
+        }
+
+        if (!myButton.interactable)
+        {
+            upgradeText.color = Color.grey;
+        }
+        else
+        {
+            upgradeText.color = Color.white;
         }
 
         int upgLvl = 1;
@@ -193,7 +205,7 @@ public class UIUpgrade : MonoBehaviour
             upgAmount = UpgStatGetter.GetUpgAmount(structureStatsUpgrade);
         }
         
-        // Change text color depending on affordability
+        // Change cost text color depending on affordability
         string costColorTag;
         if (playerCredits >= upgCost)
             costColorTag = yellowColorTag;

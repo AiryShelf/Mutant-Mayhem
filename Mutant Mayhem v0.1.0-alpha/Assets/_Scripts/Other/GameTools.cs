@@ -83,8 +83,14 @@ public static class GameTools
         material.mainTextureOffset = newOffset;
     }
 
-    // Returns a percentage of gain or loss, depending on the factor
-    // Ex. 1.2 = 20% and 0.8 = 20%
+    /// <summary>
+    /// Returns a percentage of gain or loss from a base factor of 1
+    /// </summary>
+    /// <param name="factor"></param>
+    /// <returns>
+    /// 1.2 returns "20%" and 0.8 returns "20%"
+    /// </returns>
+
     public static string FactorToPercent(float factor)
     {
         float percentage = (factor - 1) * 100;

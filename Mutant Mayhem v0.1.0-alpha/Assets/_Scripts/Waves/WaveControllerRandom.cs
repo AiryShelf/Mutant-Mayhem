@@ -33,7 +33,6 @@ public class WaveControllerRandom : MonoBehaviour
     public float speedMultiplier = 1;
     public float sizeMultiplier = 1;
     
-
     InputActionMap playerActionMap;
     InputAction nextWaveAction;
     Player player;

@@ -25,12 +25,17 @@ public class StatsCounterPlayer : MonoBehaviour
 
     public static float TotalDamageByPlayerExplosions;
     public static float EnemyDamageByPlayerProjectiles;
+    public static float EnemyDamageByTurrets;
     public static float DamageToPlayer;
     public static float DamageToStructures;
     public static float DamageToEnemies;
 
     public static int StructuresBuilt;
     public static int StructuresLost;
+    public static float AmountRepaired;
+    public static int DoorsBuilt;
+    public static int WallsBuilt;
+    public static int TurretsBuilt;
 
     public static Dictionary<string, float> StatsDict =
         new Dictionary<string, float>();
@@ -58,11 +63,16 @@ public class StatsCounterPlayer : MonoBehaviour
         MeleeDamageByEnemies = 0;
         TotalDamageByPlayerExplosions = 0;
         EnemyDamageByPlayerProjectiles = 0;
+        EnemyDamageByTurrets = 0;
         DamageToPlayer = 0;
         DamageToStructures = 0;
         DamageToEnemies = 0;
         StructuresBuilt = 0;
         StructuresLost = 0;
+        AmountRepaired = 0;
+        DoorsBuilt = 0;
+        WallsBuilt = 0;
+        TurretsBuilt = 0;
         
         PopulateStatsDict();  
     }
@@ -73,7 +83,7 @@ public class StatsCounterPlayer : MonoBehaviour
 
         StatsDict = new Dictionary<string, float>
         {
-            {"Sprinting Time (sec):", TimeSprintingPlayer},
+            {"Time Spent Sprinting: (sec):", TimeSprintingPlayer},
 
             {"Enemies Killed by Player:", EnemiesKilledByPlayer},
             {"Enemies Killed by Turrets:", EnemiesKilledByTurrets},
@@ -97,7 +107,11 @@ public class StatsCounterPlayer : MonoBehaviour
             {"Total Damage to Enemies:", DamageToEnemies},
 
             {"Structures Built:", StructuresBuilt},
-            {"Structures Lost:", StructuresLost}
+            {"Structures Lost:", StructuresLost},
+            {"Amount Repaired:", AmountRepaired},
+            {"Doors Built", DoorsBuilt},
+            {"Walls Built", WallsBuilt},
+            {"Turrets Build", TurretsBuilt},
         };
     }
 

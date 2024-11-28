@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New SubWave Style", 
-                 menuName = "Waves/SubWaveStyleSO")]
+                 menuName = "Game/Waves/SubWaveStyleSO")]
 public class SubWaveStyleSO : ScriptableObject
 {
     public SelectionType selectionType;

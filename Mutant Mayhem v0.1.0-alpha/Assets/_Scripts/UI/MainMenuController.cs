@@ -35,6 +35,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (ProfileManager.Instance.currentProfile == null)
         {
+            ToggleProfiles();
             return;
         }
 
@@ -70,6 +71,7 @@ public class MainMenuController : MonoBehaviour
             // Open profiles panel
             profileFadeGroup.isTriggered = true;
             isProfilesOpen = true;
+            profileSelectionUI.UpdateProfilePanel();
         }
         else
         {
@@ -92,9 +94,9 @@ public class MainMenuController : MonoBehaviour
     {
         if (isOptionsOpen)
             ToggleOptions();
-        if (profileSelectionUI.isAreYouSurePanelOpen)
+        else if (profileSelectionUI.isAreYouSurePanelOpen)
             profileSelectionUI.OnCancelDeleteProfile();
-        else
+        else if (isProfilesOpen)
             ToggleProfiles();
     }
 }

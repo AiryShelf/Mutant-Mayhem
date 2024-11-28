@@ -94,6 +94,9 @@ MonoBehaviour:
   deathTorque: 20
   painSound: {fileID: 11400000, guid: d9275a96bf51bad45881b1b0963795ab, type: 2}
   painSoundCooldown: 0.3
+  textFlyHealthGainColor: {r: 0, g: 1, b: 0, a: 0.5019608}
+  textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
+  textFlyAlphaMax: 0.5
   hasDied: 0
   corpsePoolName: Crab1_Corpse
 --- !u!114 &8299610102731463758
@@ -267,20 +270,20 @@ MonoBehaviour:
   m_SelfShadows: 0
   m_ApplyToSortingLayers: 00000000473099c06959b35277918778bb1f0873f33c0f815d220d4faf41a11b0ba2f4fbe91bfeef
   m_ShapePath:
-  - {x: -0.039819345, y: -0.029904675, z: 0}
-  - {x: -0.039716724, y: 0.029775327, z: 0}
-  - {x: -0.029591132, y: 0.050054826, z: 0}
-  - {x: 0.020075483, y: 0.05020773, z: 0}
-  - {x: 0.039829116, y: 0.019816486, z: 0}
-  - {x: 0.039928123, y: -0.020262271, z: 0}
-  - {x: 0.019988395, y: -0.04995171, z: 0}
-  - {x: -0.029802991, y: -0.04973983, z: 0}
-  m_ShapePathHash: -1288890029
+  - {x: -0.03459488, y: -0.03274358, z: 0}
+  - {x: -0.034686238, y: 0.027475484, z: 0}
+  - {x: -0.02490573, y: 0.045412283, z: 0}
+  - {x: 0.014838165, y: 0.04535836, z: 0}
+  - {x: 0.03517372, y: 0.020010462, z: 0}
+  - {x: 0.035078757, y: -0.020262271, z: 0}
+  - {x: 0.014945052, y: -0.04568427, z: 0}
+  - {x: -0.025125083, y: -0.045585968, z: 0}
+  m_ShapePathHash: -232648934
   m_Mesh: {fileID: 0}
-  m_InstanceId: 130560
+  m_InstanceId: 47548
   m_LocalBounds:
-    m_Center: {x: 0.00005438924, y: 0.00012800843, z: 0}
-    m_Extent: {x: 0.039873734, y: 0.05007972, z: 0}
+    m_Center: {x: 0.00024374202, y: -0.00013599545, z: 0}
+    m_Extent: {x: 0.03492998, y: 0.045548275, z: 0}
 --- !u!1001 &1675829156198210814
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.Universal;
 
 public class QCubeController : MonoBehaviour
 {
@@ -32,7 +31,7 @@ public class QCubeController : MonoBehaviour
     }
    
     [Header("Interaction")]
-    [SerializeField] PanelSwitcher panelSwitcher;
+    public PanelSwitcher panelSwitcher;
     [SerializeField] float interactRadius = 1.5f;
     [SerializeField] float leaveRadius = 2f;
     public bool isUpgradesOpen;
@@ -147,10 +146,10 @@ public class QCubeController : MonoBehaviour
 
     IEnumerator OpenUpgradeWindow()
     {
-        if (!TutorialManager.TutorialShowedUpgrade && !TutorialManager.TutorialDisabled)
-        {
-            StartCoroutine(DelayTutorialOpen());
-        }
+        //if (!TutorialManager.TutorialShowedUpgrade && !TutorialManager.TutorialDisabled)
+        //{
+            //StartCoroutine(DelayTutorialOpen());
+        //}
         yield return new WaitForFixedUpdate();
         
         fireAction.Disable();

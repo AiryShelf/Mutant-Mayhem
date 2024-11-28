@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
         //ParticleManager.Instance.ClearAllChildrenParticleSystems();
         TimeControl.Instance.SubscribePlayerTimeControl(this);
         SFXManager.Instance.Initialize();
-        TutorialManager.ResetShownPanels();
+        TutorialManager.ResetTutorialPanel();
         StatsCounterPlayer.ResetStatsCounts();
         
         SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
@@ -148,7 +148,8 @@ public class Player : MonoBehaviour
         
         RefreshMoveForces();
 
-        StartCoroutine(DelayInitializePool());
+        //StartCoroutine(DelayInitializePool());
+        //PoolManager.Instance.ResetAllPools();
     }
 
     IEnumerator DelayInitializePool()

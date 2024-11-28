@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Wave", 
-                 menuName = "Waves/WaveSOBase")]
+                 menuName = "Game/Waves/WaveSOBase")]
 [System.Serializable]
 public class WaveSOBase : ScriptableObject
 {

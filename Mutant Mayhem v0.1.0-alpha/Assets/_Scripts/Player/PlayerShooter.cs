@@ -29,10 +29,7 @@ public class PlayerShooter : Shooter
     bool droppedGun;
     Rigidbody2D myRb;
     ToolbarSelector toolbarSelector;
-    
     [HideInInspector]public PlayerStats playerStats;
-
-    [SerializeField] float showDamage;
 
     protected override void Awake() { }
 
@@ -120,7 +117,7 @@ public class PlayerShooter : Shooter
             CursorManager.Instance.SetAimCursor();  
     }
 
-    public void Reload()
+    public void ReloadPlayer()
     {
         if (currentGunIndex != 0)
         {
@@ -171,8 +168,6 @@ public class PlayerShooter : Shooter
                 if (reloadNotificationTimer < 0)
                 {
                     reloadNotificationTimer = MessagePanel.TimeToDisplay * 1.1f;
-                    
-                    // Reload or out of ammo
                     if (gunsAmmo[currentGunIndex] > 0)
                     {
                         MessagePanel.PulseMessage("Clip is empty!  Press 'R' to reload!", Color.yellow);
@@ -183,8 +178,6 @@ public class PlayerShooter : Shooter
                 }
             }
             
-
-            // Stop shooting coroutine and return
             if (shootingCoroutine != null)
             {
                 StopCoroutine(shootingCoroutine);
@@ -211,7 +204,10 @@ public class PlayerShooter : Shooter
     {
         base.Fire();
         
-        StatsCounterPlayer.ShotsFiredByPlayer++;
+        // if not repair gun (index 9)
+        if (currentGunIndex != 9)
+            StatsCounterPlayer.ShotsFiredByPlayer++;
+
         Kickback();
         bool oneHand = isMeleeing || !isAiming;
         gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);

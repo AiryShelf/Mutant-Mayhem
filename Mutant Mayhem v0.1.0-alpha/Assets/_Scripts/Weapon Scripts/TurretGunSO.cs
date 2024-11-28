@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Guns/TurretGunSO", fileName = "NewTurretGun")]
+[CreateAssetMenu(menuName = "Game/Guns/TurretGunSO", fileName = "NewTurretGun")]
 public class TurretGunSO : GunSO
 {
     [Header("Turret Stats")]

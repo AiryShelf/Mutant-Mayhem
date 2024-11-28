@@ -14,15 +14,14 @@ public class PlayerProfile
     public bool isStandardWASD;
     public bool isSpacebarEnabled;
 
-    // Constructor for easy creation
-    public PlayerProfile(string profileName)
+    public PlayerProfile(string profileName, DifficultyLevel difficulty)
     {
         this.profileName = profileName;
         researchPoints = 0;
         playthroughs = 0;
         maxWaveReached = 0;
         isTutorialEnabled = true;
-        difficultyLevel = DifficultyLevel.Normal;
+        difficultyLevel = difficulty;
         isStandardWASD = true;
         isSpacebarEnabled = true;
     }

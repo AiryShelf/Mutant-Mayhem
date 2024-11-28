@@ -21,8 +21,9 @@ public class Pickup : MonoBehaviour
     [SerializeField] Collider2D myCollider;
 
     public bool unloading;
+    public TileManager tileManager;
 
-    void Start()
+    void OnEnable()
     {
         // Randomize sprite
         int i = Random.Range(0, sprites.Count);
@@ -30,6 +31,26 @@ public class Pickup : MonoBehaviour
         int rot = Random.Range(0, 360);
         Quaternion q = Quaternion.Euler(0, 0, rot);
         transform.rotation = q;
+    }
+
+    public void RepositionIfNecessary()
+    {
+        Vector3Int gridPos = tileManager.WorldToGrid(transform.position);
+        
+        // Try repositioning if the initial spot is over a structure
+        while (!tileManager.CheckGridIsClear(gridPos, LayerMask.GetMask("Structures"), true))
+        {
+            Debug.LogWarning("Pickup spawned over a structure, repositioning...");
+            Reposition();
+            gridPos = tileManager.WorldToGrid(transform.position); // Update grid position after repositioning
+        }
+    }
+
+    void Reposition()
+    {
+        // Generate a new random position for the pickup
+        Vector2 offset = Random.insideUnitCircle * 0.5f;
+        transform.position = new Vector3(transform.position.x + offset.x, transform.position.y + offset.y, transform.position.z);
     }
 
     void OnTriggerEnter2D(Collider2D col)

@@ -11,6 +11,10 @@ public class CurrentDifficultyText : MonoBehaviour
     void OnEnable()
     {
         ProfileManager.OnProfileIsSet += UpdateDifficultyText;
+
+        if (ProfileManager.Instance != null)
+            if (ProfileManager.Instance.currentProfile != null)
+                UpdateDifficultyText(ProfileManager.Instance.currentProfile);
     }
 
     void OnDisable()
@@ -51,7 +55,7 @@ public class CurrentDifficultyText : MonoBehaviour
         }
         else
         {
-            currentDifficultyText.text = "Create a profile before playing!";
+            currentDifficultyText.text = "No profile selected";
             currentDifficultyText.color = Color.red;
         }
     }

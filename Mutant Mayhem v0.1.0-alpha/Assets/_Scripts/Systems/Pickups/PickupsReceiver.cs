@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PickupsReceiver : PickupsContainerBase
 {
-    [SerializeField] GameObject textFlyPrefab;
-
+    [SerializeField] Color creditsColor;
+    [SerializeField] float textFlyAlphaMax;
     public override void AddToContainer(Pickup pickup)
     {
         base.AddToContainer(pickup);
@@ -24,10 +24,12 @@ public class PickupsReceiver : PickupsContainerBase
 
     void PlayCreditsEffects(int credits)
     {
-        GameObject textFly = Instantiate(textFlyPrefab, transform.position, Quaternion.identity);
+        GameObject textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Credits");
         float angle = Random.Range(0f, Mathf.PI * 2);
         Vector2 flyDir = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));
-        textFly.GetComponent<TextFly>().Initialize("+ " + credits + " C", flyDir, true);
+        textFly.transform.position = transform.position;
+        textFly.GetComponent<TextFly>().Initialize("+ " + credits + " C", creditsColor, textFlyAlphaMax, flyDir, true);
+        
     }
 
 }

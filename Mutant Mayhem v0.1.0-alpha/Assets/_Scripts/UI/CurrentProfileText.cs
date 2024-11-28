@@ -11,6 +11,7 @@ public class CurrentProfileText : MonoBehaviour
     void OnEnable()
     {
         ProfileManager.OnProfileIsSet += UpdateProfileText;
+        UpdateProfileText(ProfileManager.Instance.currentProfile);
     }
 
     void OnDisable()
@@ -25,7 +26,6 @@ public class CurrentProfileText : MonoBehaviour
 
     public void UpdateProfileText(PlayerProfile currentProfile)
     {
-        // Update current profile text
         if (currentProfile != null && !string.IsNullOrEmpty(currentProfile.profileName))
         {
             if (showLeadText)

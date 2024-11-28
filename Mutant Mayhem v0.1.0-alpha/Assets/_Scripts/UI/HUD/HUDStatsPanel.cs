@@ -6,16 +6,18 @@ using TMPro;
 
 public class HUDStatsPanel : MonoBehaviour
 {
-    [SerializeField] RectTransform healthPopupsContainer;
+    [SerializeField] float textFlyAlphaMax;
 
     [Header("Player Stats")]
-    [SerializeField] GameObject creditsTextFlyUiPrefab;
-    [SerializeField] GameObject healthTextFlyUiPrefab;
     [SerializeField] TextMeshProUGUI creditsText;
     [SerializeField] Slider healthSlider;
     [SerializeField] TextMeshProUGUI healthValueText;
     [SerializeField] Slider staminaSlider;
     [SerializeField] TextMeshProUGUI staminaValueText;
+    [SerializeField] Color textFlyCreditsGainColor;
+    [SerializeField] Color textFlyCreditsLossColor;
+    [SerializeField] Color textFlyHealthGainColor;
+    [SerializeField] Color textFlyHealthLossColor;
 
     [Header("QCube Stats")]
     [SerializeField] Image qCubeImage;
@@ -61,20 +63,6 @@ public class HUDStatsPanel : MonoBehaviour
         qCubeStartLocalPos = qCubeImage.transform.localPosition;
     }
 
-    void Start()
-    {
-        UpdatePlayerStatsUI(player.stats.playerHealthScript.GetHealth());
-        UpdateStaminaStats();
-
-        qCubeHealth = FindObjectOfType<QCubeHealth>();
-        UpdateQCubeStatsUI(qCubeHealth.GetHealth());
-    }
-
-    void FixedUpdate()
-    {
-        UpdateStaminaStats();
-    }
-
     void OnEnable()
     {
         BuildingSystem.OnPlayerCreditsChanged += UpdateCreditsText;
@@ -89,6 +77,20 @@ public class HUDStatsPanel : MonoBehaviour
         qCubeHealthScript.OnCubeHealthChanged -= UpdateQCubeStatsUI;
         player.stats.playerHealthScript.OnPlayerHealthChanged -= UpdatePlayerStatsUI;
         player.stats.playerHealthScript.OnPlayerMaxHealthChanged -= UpdatePlayerStatsUI;
+    }
+
+    void Start()
+    {
+        UpdatePlayerStatsUI(player.stats.playerHealthScript.GetHealth());
+        UpdateStaminaStats();
+
+        qCubeHealth = FindObjectOfType<QCubeHealth>();
+        UpdateQCubeStatsUI(qCubeHealth.GetHealth());
+    }
+
+    void FixedUpdate()
+    {
+        UpdateStaminaStats();
     }
 
     void UpdateStaminaStats()
@@ -107,15 +109,22 @@ public class HUDStatsPanel : MonoBehaviour
         healthValueText.text = "Health: " + Mathf.CeilToInt(playerHealth).ToString();
 
         int healthChange = Mathf.CeilToInt(playerHealth - previousHealth);
-        if (healthChange > 0)
+        if (healthChange != 0)
         {
+            Color textColor;
             // Gain health effect
-            TextFly textFly = Instantiate(healthTextFlyUiPrefab, healthPopupsContainer).GetComponent<TextFly>();
+            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Health").GetComponent<TextFly>();
+            if (healthChange >= 0)
+                textColor = textFlyHealthGainColor;
+            else
+                textColor = textFlyHealthLossColor;
 
             float angle = (Random.Range(-45f, 45f) + 75) * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 
-            textFly.Initialize("+ " + healthChange + " HP", dir, false);
+            textFly.transform.position = healthValueText.transform.position;
+            textFly.transform.SetParent(transform);
+            textFly.Initialize("+ " + healthChange + " HP", textColor, textFlyAlphaMax, dir, false);
         }
         previousHealth = Mathf.CeilToInt(playerHealth);
     }
@@ -123,19 +132,23 @@ public class HUDStatsPanel : MonoBehaviour
     void UpdateCreditsText(float playerCredits)
     {
         int creditsChange =  Mathf.FloorToInt(playerCredits - previousCredits);
-        if (creditsChange > 0)
+        if (creditsChange != 0)
         {
+            Color textColor;
+            if (creditsChange >= 0)
+                textColor = textFlyCreditsGainColor;
+            else
+                textColor = textFlyCreditsLossColor;
+
             // Gain credits effect
-            TextFly textFly = Instantiate(creditsTextFlyUiPrefab, creditsText.rectTransform).GetComponent<TextFly>();
+            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Credits").GetComponent<TextFly>();
 
             float angle = (Random.Range(-45f, 45f) + 75) * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+            textFly.transform.position = creditsText.transform.position;
+            textFly.transform.SetParent(transform);
 
-            textFly.Initialize("+ " + creditsChange + " C", dir, false);
-        }
-        else
-        {
-            // Credits cost effect
+            textFly.Initialize("+ " + creditsChange + " C", textColor, textFlyAlphaMax, dir, false);
         }
 
         int credits = (int)BuildingSystem.PlayerCredits;

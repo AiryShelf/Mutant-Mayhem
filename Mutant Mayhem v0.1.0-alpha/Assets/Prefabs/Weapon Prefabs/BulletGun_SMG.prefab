@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5849723771186189829}
   m_Layer: 8
   m_Name: BulletGun_SMG
-  m_TagString: Untagged
+  m_TagString: PlayerBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -53,6 +53,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4224
   gunType: 1
+  objectPoolName: 
   damage: 80
   knockback: 1.5
   destroyTime: 0

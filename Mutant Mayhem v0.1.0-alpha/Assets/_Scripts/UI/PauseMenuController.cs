@@ -63,7 +63,7 @@ public class PauseMenuController : MonoBehaviour
         }
 
         //Debug.Log("escape pressed");
-        if (!player.IsDead && !buildingSystem.inBuildMode 
+        if (!player.IsDead && !buildingSystem.isInBuildMode 
             && !qCubeController.isUpgradesOpen)
         {
             //Debug.Log("Pause passed checks");
@@ -137,25 +137,6 @@ public class PauseMenuController : MonoBehaviour
         #endif
             Application.Quit();
     }
-
-    /*public void Pause(bool pause)
-    {
-        if (pause)
-        {
-            playerActionMap.Disable();
-            Time.timeScale = 0;
-            isPauseMenuOpen = true;
-            Debug.Log("Game paused");
-        }
-        else
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-            playerActionMap.Enable();
-            Time.timeScale = 1;
-            isPauseMenuOpen = false;
-            Debug.Log("Game unpaused");
-        }
-    }*/
 
     public void ToggleOptionsMenu()
     {

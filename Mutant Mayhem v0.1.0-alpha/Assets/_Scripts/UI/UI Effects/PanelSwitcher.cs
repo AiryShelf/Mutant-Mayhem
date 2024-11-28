@@ -15,8 +15,8 @@ public class PanelSwitcher : MonoBehaviour
     public bool isTriggered;
     bool isOpen;
 
-    private int currentPanelIndex = 0;
-    private Vector2 originalPosition;
+    public int currentPanelIndex = 0;
+    Vector2 originalPosition;
     ColorBlock defaultColorBlock;
     ColorBlock highlightedColorBlock;
 

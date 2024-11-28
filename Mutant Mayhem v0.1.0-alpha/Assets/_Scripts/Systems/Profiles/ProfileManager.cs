@@ -183,7 +183,7 @@ public class ProfileManager : MonoBehaviour
     #region Add, Remove
 
     // Create a new profile
-    public void CreateProfile(string profileName)
+    public void CreateProfile(string profileName, DifficultyLevel difficulty)
     {
         if (profiles == null)
         {
@@ -191,7 +191,7 @@ public class ProfileManager : MonoBehaviour
             profiles = new List<PlayerProfile>();
         }
 
-        PlayerProfile newProfile = new PlayerProfile(profileName);
+        PlayerProfile newProfile = new PlayerProfile(profileName, difficulty);
 
         profiles.Add(newProfile);
         SetCurrentProfile(newProfile.profileName);

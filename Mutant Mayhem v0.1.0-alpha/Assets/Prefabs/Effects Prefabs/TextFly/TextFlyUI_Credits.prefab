@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 4415535309081398380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 13.873901, y: 13.873901, z: 13.873901}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db39d20457ed34346bca5e8f1a870988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectPoolName: TextFlyUI_Credits
   moveSpeed: 30
   moveSpeedVariation: 10
   fadeDuration: 2
@@ -110,8 +111,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.1
-  m_fontSizeBase: 1.1
+  m_fontSize: 1
+  m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

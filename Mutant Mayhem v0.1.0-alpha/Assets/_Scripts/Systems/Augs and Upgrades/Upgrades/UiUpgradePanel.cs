@@ -11,13 +11,13 @@ public class UiUpgradePanel : UI_PanelBase
     [SerializeField] GridLayoutGroup buttonsGrid;
     [SerializeField] GridLayoutGroup textGrid;
     [SerializeField] PanelSwitcher panelSwitcher;
-    public bool unlocked = false;
+    public bool isUnlocked = false;
 
     [Header("Unlockables (Optional)")]
     [SerializeField] GameObject unlockPanel;
     [SerializeField] TextMeshProUGUI unlockCostText;
     [SerializeField] int unlockCost;
-    [SerializeField] string techUnlockMessageName;
+    public string techUnlockMessageName;
 
     [Header("Unlock Gun")]
     [SerializeField] UpgradeFamily upgradeFamily;
@@ -105,7 +105,7 @@ public class UiUpgradePanel : UI_PanelBase
 
         // Update unlock cost text color as per afforadability
         // Could be handled by new Event OnPlayerCreditsChanged
-        if (!unlocked && unlockPanel != null)
+        if (!isUnlocked && unlockPanel != null)
         {
             Color color;
             if (playerCredits >= unlockCost)
@@ -134,10 +134,10 @@ public class UiUpgradePanel : UI_PanelBase
     {
         float playerCredits = BuildingSystem.PlayerCredits;
 
-        if (playerCredits >= unlockCost && !unlocked)
+        if (playerCredits >= unlockCost && !isUnlocked)
         {
             BuildingSystem.PlayerCredits -= unlockCost;
-            unlocked = true;
+            isUnlocked = true;
 
             // Unlock gun
             if (upgradeFamily == UpgradeFamily.GunStats)

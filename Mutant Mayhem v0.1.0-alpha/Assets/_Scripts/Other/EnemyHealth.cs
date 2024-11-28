@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class EnemyHealth : Health
 {
     [SerializeField] string corpsePoolName;
     EnemyBase enemyBase;
+
+    TileManager tileManager;
 
     protected override void Awake()
     {
@@ -17,6 +20,8 @@ public class EnemyHealth : Health
         {
             Debug.LogError("EnemyBase not found by EnemyHealth on Awake");
         }
+
+        tileManager = FindObjectOfType<TileManager>();
     }
 
     public override void Die()
@@ -64,6 +69,9 @@ public class EnemyHealth : Health
         Pickup pickup = obj.GetComponent<Pickup>();
         pickup.transform.position = transform.position;
         pickup.pickupData.credits = value;
+
+        pickup.tileManager = tileManager;
+        pickup.RepositionIfNecessary();
 
         EnemyCounter.PickupCounter = 0;
     }

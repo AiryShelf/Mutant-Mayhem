@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3886594428026681670}
   - component: {fileID: 3878209574839751526}
   - component: {fileID: 6177104941479526016}
+  - component: {fileID: 7573413234809880969}
   - component: {fileID: 4781240415254864151}
   - component: {fileID: 6763610489901167481}
   m_Layer: 0
@@ -79,6 +80,21 @@ MonoBehaviour:
     difficultyLevel: 0
     isStandardWASD: 0
     isSpacebarEnabled: 0
+--- !u!114 &7573413234809880969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553980603506277957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07728d5a0c720af42a256aaf02b58bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planets:
+  - {fileID: 11400000, guid: b7efa2ea19572d24eb9c7f975ae2fc9f, type: 2}
+  currentPlanet: {fileID: 0}
 --- !u!114 &4781240415254864151
 MonoBehaviour:
   m_ObjectHideFlags: 0

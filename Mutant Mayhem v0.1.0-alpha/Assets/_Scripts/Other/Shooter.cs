@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Shooter : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class Shooter : MonoBehaviour
     float fireTimer;
     protected float reloadTimer;
     Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
+    float laserDamageMult = 1f;
+    float bulletDamageMult = 1f;
 
     protected virtual void Awake()
     {
@@ -40,6 +43,26 @@ public class Shooter : MonoBehaviour
         SwitchGuns(0);
         gunsAmmoInClips[0] = 0;
         isReloading = true;
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // If on a planet
+        if (scene.buildIndex > 1)
+        {
+            laserDamageMult = PlanetManager.Instance.currentPlanet.laserDamageMultiplier;
+            bulletDamageMult = PlanetManager.Instance.currentPlanet.bulletDamageMultiplier;
+        }
     }
 
     protected virtual void Start()
@@ -52,7 +75,7 @@ public class Shooter : MonoBehaviour
         if (isReloading)
         {
             if (reloadRoutine == null)
-                ReloadShooter();
+                Reload();
             return;
         }
 
@@ -116,12 +139,21 @@ public class Shooter : MonoBehaviour
         }
         
         // Apply stats and effects
-        bullet.objectPoolName = currentGunSO.bulletPoolName;
-        bullet.damage = currentGunSO.damage;
-        //Debug.Log("Bullet damage: " + bullet.damage);
+        float damage = currentGunSO.damage;
+        switch (bullet.gunType)
+        {
+            case GunType.Laser:
+                damage *= laserDamageMult;
+                break;
+            case GunType.Bullet:
+                damage *= bulletDamageMult;
+                break;
+        }
+        bullet.damage = damage;
         bullet.origin = this.transform;
         bullet.knockback = currentGunSO.knockback;
         bullet.destroyTime = currentGunSO.bulletLifeTime;
+        bullet.objectPoolName = currentGunSO.bulletPoolName;
         
         Vector2 dir = ApplyAccuracy(muzzleTrans.right);
         bullet.velocity = dir * currentGunSO.bulletSpeed;
@@ -214,7 +246,7 @@ public class Shooter : MonoBehaviour
             return false;
     }
 
-    protected virtual void ReloadShooter()
+    protected virtual void Reload()
     {
         reloadRoutine = StartCoroutine(ReloadRoutine());
     }
@@ -261,8 +293,7 @@ public class Shooter : MonoBehaviour
         }
     }
 
-    // Call this whenever adding new charging weapon 
-    // or charging ability to non-charge weapon
+    // Call this whenever adding new charging weapon
     protected void StartChargingGuns()
     {
         for (int i = 0; i < gunList.Count; i++)

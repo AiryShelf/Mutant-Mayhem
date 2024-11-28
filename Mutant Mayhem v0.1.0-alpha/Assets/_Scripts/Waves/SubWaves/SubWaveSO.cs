@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New SubWave", 
-                 menuName = "Waves/SubWaveSO")]
+                 menuName = "Game/Waves/SubWaveSO")]
 public class SubWaveSO : ScriptableObject
 {
     public List<GameObject> enemyPrefabList;
