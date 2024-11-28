@@ -17,10 +17,9 @@ public class ReadmeGenerator : IPostprocessBuildWithReport
         string readmePath = Path.Combine(report.summary.outputPath, "README.txt");
 
         // Content for the README file, including the version number
-        string content = $"Welcome to [Your Game Title]!\n\n" +
+        string content = $"Welcome to Mutant Mayhem!\n\n" +
                          $"Version: {version}\n" +
-                         "Instructions: ...\n" +
-                         "Support: [Your Contact or Support Email]\n\n" +
+                         "Support: KamJamGames@Gmail.com\n\n" +
                          "Enjoy the game!";
 
         // Write the content to the README file

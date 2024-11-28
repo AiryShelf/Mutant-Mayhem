@@ -61,7 +61,6 @@ public class Health : MonoBehaviour
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 
             textFly.Initialize(value.ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true);
-            textFly.alphaMax = textFlyAlphaMax;
             PlayPainSound();
         }
         else
@@ -70,7 +69,6 @@ public class Health : MonoBehaviour
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 
             textFly.Initialize("+" + value.ToString("#0"), textFlyHealthGainColor, textFlyAlphaMax, dir, true);
-            textFly.alphaMax = textFlyAlphaMax;
         }
 
         health += value;

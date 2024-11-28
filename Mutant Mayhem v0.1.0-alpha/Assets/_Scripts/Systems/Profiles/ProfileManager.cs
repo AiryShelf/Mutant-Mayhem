@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ProfileManager : MonoBehaviour
 {
-    public static ProfileManager Instance;
+    public static ProfileManager Instance { get; private set; }
     private string savePath => Path.Combine(Application.persistentDataPath, "profiles.json");
     public List<PlayerProfile> profiles = new List<PlayerProfile>();
     public PlayerProfile currentProfile;
@@ -16,10 +16,13 @@ public class ProfileManager : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log($"Awake called on ProfileManager: {gameObject.name}, Instance is currently: {Instance}");
+        Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            Debug.Log($"ProfileManager Instance initialized to {Instance}");
         }
         else
         {

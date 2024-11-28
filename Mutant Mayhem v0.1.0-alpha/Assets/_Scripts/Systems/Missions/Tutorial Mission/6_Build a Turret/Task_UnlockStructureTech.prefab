@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32fe1db7c587f374b9c589061ba49fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskText: {fileID: 0}
-  progressText: {fileID: 0}
-  checkmarkImage: {fileID: 0}
+  taskText: {fileID: 8687659578073550834}
+  progressText: {fileID: 3370169023408024958}
+  checkmarkImage: {fileID: 5657859157811836529}
   isComplete: 0
   progress: 0
   tutorialPanelController: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 8102609008828241846}
   - component: {fileID: 8687659578073550834}
   m_Layer: 0
-  m_Name: Objective Text
+  m_Name: Task Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -441,6 +441,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed51d5c9ecd0b21439d75e76ea4c5c8c, type: 3}
+--- !u!114 &3370169023408024958 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2011671420565814325, guid: ed51d5c9ecd0b21439d75e76ea4c5c8c, type: 3}
+  m_PrefabInstance: {fileID: 3832522194465050955}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8767821237099257048 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5513061627727875475, guid: ed51d5c9ecd0b21439d75e76ea4c5c8c, type: 3}

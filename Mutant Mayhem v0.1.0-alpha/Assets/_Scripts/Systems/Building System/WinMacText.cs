@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class WinMacText : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI textToReplace;
     [TextArea(5,10)]
     [SerializeField] string replacementText;
-
-    [SerializeField] TextMeshProUGUI TMPText;
 
     void Start()
     {
@@ -17,7 +16,7 @@ public class WinMacText : MonoBehaviour
             Application.platform == RuntimePlatform.OSXEditor)
         {
             // Display controls for macOS users
-            TMPText.text = replacementText;
+            textToReplace.text = replacementText;
         }
     }
 }

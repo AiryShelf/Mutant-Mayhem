@@ -11,7 +11,8 @@ public class CurrentProfileText : MonoBehaviour
     void OnEnable()
     {
         ProfileManager.OnProfileIsSet += UpdateProfileText;
-        UpdateProfileText(ProfileManager.Instance.currentProfile);
+        if (ProfileManager.Instance != null)
+            UpdateProfileText(ProfileManager.Instance.currentProfile);
     }
 
     void OnDisable()

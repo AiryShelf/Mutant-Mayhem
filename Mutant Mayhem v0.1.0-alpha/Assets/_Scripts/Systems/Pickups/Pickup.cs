@@ -35,6 +35,11 @@ public class Pickup : MonoBehaviour
 
     public void RepositionIfNecessary()
     {
+        StartCoroutine(RepositionRoutine());
+    }
+
+    IEnumerator RepositionRoutine()
+    {
         Vector3Int gridPos = tileManager.WorldToGrid(transform.position);
         
         // Try repositioning if the initial spot is over a structure
@@ -42,8 +47,10 @@ public class Pickup : MonoBehaviour
         {
             Debug.LogWarning("Pickup spawned over a structure, repositioning...");
             Reposition();
-            gridPos = tileManager.WorldToGrid(transform.position); // Update grid position after repositioning
+            gridPos = tileManager.WorldToGrid(transform.position);
+            yield return null;
         }
+        
     }
 
     void Reposition()

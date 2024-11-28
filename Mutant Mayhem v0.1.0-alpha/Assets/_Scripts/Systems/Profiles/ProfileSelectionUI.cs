@@ -62,12 +62,38 @@ public class ProfileSelectionUI : MonoBehaviour
     // Updates the dropdown with the current list of profiles, toggles delete button, sets other text
     public void UpdateProfilePanel()
     {
+        if (ProfileManager.Instance == null)
+        {
+            Debug.LogError("ProfileManager.Instance is null!");
+            return;
+        }
+
+        Debug.Log("ProfileManager.Instance is valid.");
+
+        if (ProfileManager.Instance.profiles == null)
+        {
+            Debug.LogError("ProfileManager.Instance.profiles is null!");
+            return;
+        }
+
+        Debug.Log($"ProfileManager.Instance.profiles.Count: {ProfileManager.Instance.profiles.Count}");
+
+        if (ProfileManager.Instance.profiles.Count == 0)
+        {
+            Debug.LogWarning("No profiles found in ProfileManager.");
+        }
+
+        if (ProfileManager.Instance.currentProfile == null)
+        {
+            Debug.LogWarning("Current profile is null.");
+        }
+
         // Clear and ensure that the lsit is not null
         profileDropdown.ClearOptions();
         List<string> profileNames = new List<string>();
 
         // Handle empty profile list
-        if (ProfileManager.Instance.profiles == null || ProfileManager.Instance.profiles.Count < 1)
+        if (ProfileManager.Instance.profiles.Count < 1)
         {
             deleteButton.interactable = false;
             noProfilesText.text = emptyProfileListWarning;
