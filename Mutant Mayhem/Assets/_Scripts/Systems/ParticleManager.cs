@@ -278,7 +278,7 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayMeleeBlood(Vector2 hitPos, Vector2 hitDir)
     {
-        Debug.Log("MeleeBlood played");
+        //Debug.Log("MeleeBlood played");
         SetPositionAndRotation(meleeBlood, hitPos, hitDir);
         meleeBlood.Emit(11);
         SetPositionAndRotation(bloodSpray, hitPos, hitDir);

@@ -9,6 +9,9 @@ public class MeleeControllerPlayer : MonoBehaviour
     public PlayerStats stats;
     
     [SerializeField] float meleeStaminaUse = 15f;
+    [SerializeField] float meleeAccuracyLoss = 6f;
+    [Range(0, 1)]
+    [SerializeField] float damageVariance = 0.15f;
     [SerializeField] SpriteRenderer swordSR;
     public SwordController swordController;
     public PlayerShooter playerShooter;
@@ -18,10 +21,12 @@ public class MeleeControllerPlayer : MonoBehaviour
     [SerializeField] float meleeSoundCooldown = 0.1f;
     float lastMeleeSoundTime;
     public Stamina myStamina;
+    CriticalHit criticalHit;
     
     void Start()
     {
         swordSR.enabled = false;
+        criticalHit = GetComponent<CriticalHit>();
     }
 
     void Update()
@@ -53,14 +58,27 @@ public class MeleeControllerPlayer : MonoBehaviour
         }
     }
 
-    public void UseStamina()
+    public void UseStaminaAndAccuracy()
     {
         myStamina.ModifyStamina(-meleeStaminaUse);
         StatsCounterPlayer.MeleeAttacksByPlayer++;
+
+        stats.playerShooter.currentAccuracy += meleeAccuracyLoss * playerShooter.playerStats.weaponHandling;
     }
 
     public void Hit(Collider2D other, Vector2 point)
     {
+        // Half critical chance for player melee
+        bool isCritical = false;
+        float critMult = 1;
+        if (criticalHit != null)
+            (isCritical, critMult) = criticalHit.RollForCrit(playerShooter.playerStats.criticalHitChanceMult / 2,
+                                                             playerShooter.playerStats.criticalHitDamageMult);
+        
+        float damage = stats.meleeDamage;
+        damage *= 1 + Random.Range(-damageVariance, damageVariance);
+        damage *= critMult;
+
         if (Time.time - lastMeleeSoundTime >= meleeSoundCooldown)
         {
             SFXManager.Instance.PlaySoundAt(swordHitSound, point);
@@ -69,20 +87,23 @@ public class MeleeControllerPlayer : MonoBehaviour
 
         EnemyBase enemy = other.GetComponent<EnemyBase>();
         if (enemy != null)
-        {     
-            enemy.Knockback((Vector2)enemy.transform.position - point, stats.knockback);
+        {
+            Vector2 hitDir = (Vector2)enemy.transform.position - point;
+            enemy.Knockback(hitDir, stats.knockback);
             enemy.StartFreeze();
-            enemy.ModifyHealth(-stats.meleeDamage, gameObject);
+
+            float damageScale = damage / stats.meleeDamage;
+            enemy.ModifyHealth(-damage, damageScale, hitDir, gameObject);
 
             // Should play a melee hit effect, like laser sword lightning here *****
             ParticleManager.Instance.PlayMeleeBlood(point, transform.right);
 
-            StatsCounterPlayer.MeleeDamageByPlayer += stats.meleeDamage;
+            StatsCounterPlayer.MeleeDamageByPlayer += damage;
             StatsCounterPlayer.MeleeHitsByPlayer++;
         }
         else
         {
-            Debug.LogWarning("EnemyBase not found on melee hit from player");
+            Debug.LogError("EnemyBase not found on melee hit from player");
         }
     }
 

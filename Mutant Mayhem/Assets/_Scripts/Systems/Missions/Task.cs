@@ -14,7 +14,7 @@ public class Task : MonoBehaviour
     [Header("Dynamic vars")]
     public bool isComplete = false;
     public float progress = 0; // 0 to 1 value
-    public UI_MissionPanelController tutorialPanelController;
+    public UI_MissionPanelController missionPanelController;
 
     public void OnTaskComplete(InputAction.CallbackContext context)
     {
@@ -31,7 +31,7 @@ public class Task : MonoBehaviour
         taskText.color = Color.grey;
         progressText.color = Color.white;
 
-        tutorialPanelController.CheckIfObjectiveComplete();
+        missionPanelController.CheckIfObjectiveComplete();
 
         Debug.Log("Task completed");
     }

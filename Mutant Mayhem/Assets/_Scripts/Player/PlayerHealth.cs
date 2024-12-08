@@ -6,6 +6,7 @@ public class PlayerHealth : Health
 {
     [SerializeField] Player player;
     public float healthRegenPerSec = 0.5f;
+    [SerializeField] float hitAccuracyLoss = 3f;
     public event Action<float> OnPlayerHealthChanged;
     public event Action<float> OnPlayerMaxHealthChanged;
 
@@ -14,7 +15,7 @@ public class PlayerHealth : Health
         StartCoroutine(HealthRegen());
     }
 
-    public override void ModifyHealth(float value, GameObject damageDealer)
+    public override void ModifyHealth(float value, float textPulseScaleMax, Vector2 hitDir, GameObject damageDealer)
     {
         if (player.IsDead)
             return;
@@ -28,13 +29,18 @@ public class PlayerHealth : Health
         {
             TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
             textFly.transform.position = transform.position;
-            float angle = (UnityEngine.Random.Range(-45f, 45f) - 90) * Mathf.Deg2Rad;
-            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+            float angle = UnityEngine.Random.Range(-45f, 45f) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(
+                hitDir.x * Mathf.Cos(angle) - hitDir.y * Mathf.Sin(angle),
+                hitDir.x * Mathf.Sin(angle) + hitDir.y * Mathf.Cos(angle)
+            ).normalized;
 
-            textFly.Initialize(value.ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true);
+            textFly.Initialize(Mathf.Abs(value).ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true, textPulseScaleMax);
 
             PlayPainSound();
             StatsCounterPlayer.DamageToPlayer -= value;
+
+            player.playerShooter.currentAccuracy += hitAccuracyLoss * player.stats.weaponHandling;
         }
         
         // Die
@@ -62,7 +68,7 @@ public class PlayerHealth : Health
             // Regenerate
             if (health < maxHealth)
             {
-                ModifyHealth(healthRegenPerSec, gameObject);
+                ModifyHealth(healthRegenPerSec, 1, Vector2.one, gameObject);
             }
         }
     }

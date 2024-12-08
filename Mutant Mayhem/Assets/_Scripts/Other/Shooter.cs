@@ -14,6 +14,9 @@ public class Shooter : MonoBehaviour
     [SerializeField] protected LayerMask elevatedHitLayers;
     [SerializeField] protected GunRecoil gunRecoil;
     public List<int> gunsAmmoInClips = new List<int>();
+
+    [Header("For Non-Player Dynamic Accuracy:")]
+    public float accuracyHoningSpeed = 4;
     
 
     [Header("Dynamic vars, don't set here")]
@@ -26,7 +29,7 @@ public class Shooter : MonoBehaviour
     public bool isElevated;
     public bool hasTarget;
     protected GameObject muzzleFlash;
-    public GunSights laserSight;
+    public GunSights gunSights;
     protected Coroutine reloadRoutine;
     protected int clipSize;
     float fireTimer;
@@ -34,6 +37,10 @@ public class Shooter : MonoBehaviour
     Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
     float laserDamageMult = 1f;
     float bulletDamageMult = 1f;
+    protected CriticalHit criticalHit;
+    public float currentAccuracy;
+    protected PlayerShooter playerShooter;
+    protected TurretShooter turretShooter;
 
     protected virtual void Awake()
     {
@@ -43,6 +50,8 @@ public class Shooter : MonoBehaviour
         SwitchGuns(0);
         gunsAmmoInClips[0] = 0;
         isReloading = true;
+
+        criticalHit = GetComponent<CriticalHit>();
     }
 
     void OnEnable()
@@ -150,12 +159,24 @@ public class Shooter : MonoBehaviour
                 break;
         }
         bullet.damage = damage;
+        bullet.damageVariance = currentGunSO.damageVariance;
         bullet.origin = this.transform;
         bullet.knockback = currentGunSO.knockback;
         bullet.destroyTime = currentGunSO.bulletLifeTime;
         bullet.objectPoolName = currentGunSO.bulletPoolName;
-        
-        Vector2 dir = ApplyAccuracy(muzzleTrans.right);
+        bullet.criticalHit = criticalHit;
+
+        Vector2 dir;
+        if (playerShooter)
+        {
+            dir = ApplyAccuracy(muzzleTrans.right, currentAccuracy);
+            bullet.critChanceMult = playerShooter.playerStats.criticalHitChanceMult;
+            bullet.critDamageMult = playerShooter.playerStats.criticalHitDamageMult;
+        }
+        else if (turretShooter)
+            dir = ApplyAccuracy(muzzleTrans.right, currentGunSO.accuracy * 1.5f);
+        else
+            dir = ApplyAccuracy(muzzleTrans.right, currentGunSO.accuracy);
         bullet.velocity = dir * currentGunSO.bulletSpeed;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
@@ -181,12 +202,12 @@ public class Shooter : MonoBehaviour
         muzzleFlash.SetActive(false);
 
         // Sights
-        if (laserSight != null)
-            Destroy(laserSight);
+        if (gunSights != null)
+            Destroy(gunSights);
         if (gunList[i].laserSight != null)
         {
-            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans).GetComponent<GunSights>();
-            laserSight.RefreshSights();
+            gunSights = Instantiate(gunList[i].laserSight, muzzleTrans).GetComponent<GunSights>();
+            gunSights.Initialize(null);
         }
         // Turrets
         if (gunList[i] is TurretGunSO turretGunSO)
@@ -211,22 +232,25 @@ public class Shooter : MonoBehaviour
         //currentGun.muzzleFlash.enabled = false;
     }
 
-    protected void SetCasingSystem()
+    protected void UpdateDynamicAccuracy()
     {
-        
+        if (playerShooter)
+            currentAccuracy -= Time.deltaTime * playerShooter.player.stats.accuracyHoningSpeed;
+        else
+            currentAccuracy -= Time.deltaTime * accuracyHoningSpeed;
+
+        currentAccuracy = Mathf.Clamp(currentAccuracy, 0, currentGunSO.accuracy * 
+                                      playerShooter.playerStats.weaponHandling);
+        gunSights.SetAccuracy(currentAccuracy);
     }
 
-    #endregion
-
-    #region Charge / Reload
-
-    protected Vector2 ApplyAccuracy(Vector2 dir)
+    protected Vector2 ApplyAccuracy(Vector2 dir, float accuracy)
     {
         // Vector to radians to degrees
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         // Implement accuracy randomness
-        angle += Random.Range(-currentGunSO.accuracy, currentGunSO.accuracy);
+        angle += Random.Range(-accuracy, accuracy);
 
         // Convert back to radians to vector
         float radians = angle * Mathf.Deg2Rad;
@@ -234,6 +258,10 @@ public class Shooter : MonoBehaviour
 
         return dir;
     }
+
+    #endregion
+
+    #region Charge / Reload
 
     bool ShouldReload()
     {

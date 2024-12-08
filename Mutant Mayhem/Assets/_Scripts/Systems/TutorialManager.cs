@@ -19,7 +19,6 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] float escKeyCooldown = 0.1f;
     [HideInInspector] public static bool escIsCooling;
     InputAction escapeAction;
-    static UI_MissionPanelController missionPanelController;
 
     void Awake()
     {
@@ -51,7 +50,8 @@ public class TutorialManager : MonoBehaviour
 
     void Start()
     {
-        SetTutorialState(ProfileManager.Instance.currentProfile.isTutorialEnabled);
+        //SetTutorialState(ProfileManager.Instance.currentProfile.isTutorialEnabled);
+        SyncTutorialToProfile(ProfileManager.Instance.currentProfile);
     }
 
     void OnEscapePressed(InputAction.CallbackContext context)
@@ -67,28 +67,40 @@ public class TutorialManager : MonoBehaviour
     public static void SetTutorialState(bool isOn)
     {
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
-        if (currentProfile != null)
-            Instance.SyncTutorialToProfile(currentProfile);
-    }
-
-    public static void ResetTutorialPanel()
-    {
-        missionPanelController = FindObjectOfType<UI_MissionPanelController>();
-        if (missionPanelController == null)
+        if (currentProfile == null)
         {
-            Debug.LogError("TutorialManager could not find MissionPanel");
+            Debug.LogError("No current profile to save tutorial setting.");
             return;
         }
 
-        if (!IsTutorialDisabled)
+        //Instance.SyncTutorialToProfile(currentProfile);
+
+        Instance.ToggleTutorial(isOn);
+    }
+
+    void ToggleTutorial(bool isOn)
+    {
+        IsTutorialDisabled = !isOn;
+        // Change profile settings
+        ProfileManager.Instance.currentProfile.isTutorialEnabled = isOn;
+        ProfileManager.Instance.SaveCurrentProfile(); // Save the profile with updated tutorial state
+
+        Debug.Log("Tutorial Enabled: " + isOn);
+
+        UI_MissionPanelController missionPanelController = FindObjectOfType<UI_MissionPanelController>();
+        if (missionPanelController == null)
         {
-            missionPanelController.gameObject.SetActive(true);
-            missionPanelController.StartMission(Instance.tutorialMission);
+            Debug.LogWarning("TutorialManager: missionPanelController is null");
+            return;
         }
-        else
+
+        if (isOn && !missionPanelController.missions.Contains(tutorialMission))
         {
-            missionPanelController.StartPlanetMission();
+            missionPanelController.AddMission(tutorialMission, true);
+            missionPanelController.StartMission();
         }
+        else if (!isOn && missionPanelController.missions.Contains(tutorialMission))
+            missionPanelController.EndMission();
     }
 
     IEnumerator EscapeKeyCooldown()

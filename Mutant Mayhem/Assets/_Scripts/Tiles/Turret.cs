@@ -46,7 +46,7 @@ public class Turret : MonoBehaviour
         }
 
         // Reload Image
-        if (shooter.isReloading)
+        if (shooter.gunsAmmoInClips[0] <= 0)
         {
             reloadImageSr.enabled = true;
         }

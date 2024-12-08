@@ -49,13 +49,6 @@ public class OptionsPanel : MonoBehaviour
             movementTypeDropdown.SetValueWithoutNotify(profile.isStandardWASD ? 1 : 0);
             tutorialToggle.SetIsOnWithoutNotify(profile.isTutorialEnabled);
             spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
-
-/*
-            difficultyDropdown.value = (int)profile.difficultyLevel;
-            movementTypeDropdown.value = profile.isStandardWASD ? 1 : 0;
-            tutorialToggle.isOn = profile.isTutorialEnabled;
-            spacebarToggle.isOn = profile.isSpacebarEnabled;
-*/
         }
         else
         {
@@ -79,18 +72,7 @@ public class OptionsPanel : MonoBehaviour
 
     public void ToggleTutorial(Toggle change)
     {
-        if (ProfileManager.Instance.currentProfile == null)
-        {
-            Debug.LogError("No current profile to save tutorial setting.");
-            return;
-        }
-
-        // Change profile settings
-        ProfileManager.Instance.currentProfile.isTutorialEnabled = change.isOn;
-        ProfileManager.Instance.SaveCurrentProfile(); // Save the profile with updated tutorial state
-
         TutorialManager.SetTutorialState(change.isOn);
-        Debug.Log("Tutorial Enabled: " + change.isOn);
     }
 
     void DifficultyValueChanged(TMP_Dropdown change)

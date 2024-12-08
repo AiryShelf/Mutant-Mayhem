@@ -45,9 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d100e8f418a9b64caae57630d6cb4fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 4935681527257414367}
+  lineRendererCenter: {fileID: 4935681527257414367}
+  lineRendererLeftEdge: {fileID: 0}
+  lineRendererRightEdge: {fileID: 0}
+  edgeLengthFactor: 0
   playerGunIndex: 9
-  maxLength: 0
+  distToMouse: 1
+  defaultDist: 0
 --- !u!120 &4935681527257414367
 LineRenderer:
   serializedVersion: 2
@@ -113,8 +117,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 1, b: 0, a: 1}
-      key1: {r: 0, g: 1, b: 0, a: 1}
+      key0: {r: 0, g: 1, b: 0, a: 0.7529412}
+      key1: {r: 0, g: 1, b: 0, a: 0.7529412}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}

@@ -8,6 +8,7 @@ public class Planet : ScriptableObject
     public string planetName;
     public string description;
     public Sprite planetIcon;
+    public Mission planetMission;
 
     [Header("Planet Effects")]
     public float playerMoveSpeedMultiplier = 1f;

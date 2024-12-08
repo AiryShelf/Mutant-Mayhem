@@ -148,14 +148,16 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MoveSpeed] = 50;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.StrafeSpeed] = 50;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.SprintFactor] = 20;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 10;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerAccuracy] = 10;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 10; // Deprecated
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.WeaponHandling] = 20;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeDamage] = 150;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeKnockback] = 150;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.StaminaMax] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.StaminaRegen] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthMax] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthRegen] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.CriticalHitChance] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.CriticalHitDamage] = 100;
 
         // Structures
         structureStatsUpgMaxLevels[StructureStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
@@ -178,7 +180,7 @@ public class UpgradeManager : MonoBehaviour
         laserUpgMaxLevels[GunStatsUpgrade.ChargeSpeed] = 10;
         laserUpgMaxLevels[GunStatsUpgrade.GunAccuracy] = 10;
         laserUpgMaxLevels[GunStatsUpgrade.GunRange] = 10;
-        laserUpgMaxLevels[GunStatsUpgrade.Recoil] = 10;
+        laserUpgMaxLevels[GunStatsUpgrade.Recoil] = 10; // Deprecated
 
         bulletUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
         bulletUpgMaxLevels[GunStatsUpgrade.GunKnockback] = 100;
@@ -187,7 +189,7 @@ public class UpgradeManager : MonoBehaviour
         bulletUpgMaxLevels[GunStatsUpgrade.ChargeSpeed] = 10;
         bulletUpgMaxLevels[GunStatsUpgrade.GunAccuracy] = 10;
         bulletUpgMaxLevels[GunStatsUpgrade.GunRange] = 10;
-        bulletUpgMaxLevels[GunStatsUpgrade.Recoil] = 10;
+        bulletUpgMaxLevels[GunStatsUpgrade.Recoil] = 10; // Deprecated
         bulletUpgMaxLevels[GunStatsUpgrade.TurretReloadSpeed] = 10;
 
         repairGunUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
@@ -197,7 +199,7 @@ public class UpgradeManager : MonoBehaviour
         repairGunUpgMaxLevels[GunStatsUpgrade.ChargeSpeed] = 10;
         repairGunUpgMaxLevels[GunStatsUpgrade.GunAccuracy] = 10;
         repairGunUpgMaxLevels[GunStatsUpgrade.GunRange] = 10;
-        repairGunUpgMaxLevels[GunStatsUpgrade.Recoil] = 10;
+        repairGunUpgMaxLevels[GunStatsUpgrade.Recoil] = 10; // Deprecated
 
         // Initialize upgrade levels
         foreach(PlayerStatsUpgrade type in playerStatsUpgrades)
@@ -232,14 +234,16 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MoveSpeed] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StrafeSpeed] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.SprintFactor] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerAccuracy] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 200; // Deprecated
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.WeaponHandling] = 300;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeKnockback] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaMax] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaRegen] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthMax] = 150;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthMax] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitChance] = 250;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitDamage] = 250;
 
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
@@ -340,8 +344,12 @@ public class UpgradeManager : MonoBehaviour
                 return new HealthMaxUpgrade();
             case PlayerStatsUpgrade.HealthRegen:
                 return new HealthRegenUpgrade();
-            case PlayerStatsUpgrade.PlayerAccuracy:
-                return new PlayerAccuracyUpgrade();
+            case PlayerStatsUpgrade.WeaponHandling:
+                return new WeaponHandlingUpgrade();
+            case PlayerStatsUpgrade.CriticalHitChance:
+                return new CriticalHitChanceUpgrade();
+            case PlayerStatsUpgrade.CriticalHitDamage:
+                return new CriticalHitDamageUpgrade();
 
             default:
                 return null;

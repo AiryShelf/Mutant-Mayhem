@@ -388,14 +388,15 @@ public class BuildingSystem : MonoBehaviour
         {
             if (turretManager.currentNumTurrets >= player.stats.structureStats.maxTurrets)
             {
-                MessagePanel.Instance.DelayMessage("Turret limit reached.  " +
-                                        "Use upgrades to increase the limit", Color.red, 0.1f);
+                MessagePanel.Instance.DelayMessage("Turret limit reached.  Use Structure "+
+                                      "upgrades to increase the limit", Color.red, 0.1f);
                 return;
             }
         }
 
         // Check Credits
-        if (PlayerCredits < structureInHand.tileCost * structureCostMult)
+        if (PlayerCredits < structureInHand.tileCost * structureCostMult *
+                            PlanetManager.Instance.currentPlanet.buildCostMultiplier)
         {
             MessagePanel.Instance.DelayMessage("Not enough Credits to build " + 
                                      structureInHand.tileName + "!", Color.red, 0.1f);
@@ -405,7 +406,8 @@ public class BuildingSystem : MonoBehaviour
         // Add Tile
         if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
         {
-            PlayerCredits -= structureInHand.tileCost * structureCostMult;
+            PlayerCredits -= structureInHand.tileCost * structureCostMult *
+                             PlanetManager.Instance.currentPlanet.buildCostMultiplier;
             RemoveBuildHighlight();
 
             if (structureInHand.isTurret)

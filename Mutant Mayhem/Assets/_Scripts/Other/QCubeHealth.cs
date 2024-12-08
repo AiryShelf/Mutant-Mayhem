@@ -48,9 +48,10 @@ public class QCubeHealth : Health
         OnCubeHealthChanged.Invoke(health);
     }
 
-    public override void ModifyHealth(float amount, GameObject damageDealer)
+    public override void ModifyHealth(float amount, float textPulseScaleMax, Vector2 textDir, GameObject damageDealer)
     {
-        base.ModifyHealth(amount, damageDealer);
+        base.ModifyHealth(amount, textPulseScaleMax, textDir, damageDealer);
+        
         UpdateDamageSprite();
         UpdateCubeLight(0);
         if (amount < 0)
@@ -85,8 +86,8 @@ public class QCubeHealth : Health
         // Flash Cube
         if (flashCubeEffect != null)
             StopCoroutine(flashCubeEffect);
-        flashCubeEffect = StartCoroutine(GameTools.FlashSpriteOrImage(
-                                mySr, null, cubeDamageShakeTime, 
+        flashCubeEffect = StartCoroutine(GameTools.FlashSprite(
+                                mySr, cubeDamageShakeTime, 
                                 cubeDamageShakeTime/2, cubeDamageColor, cubeStartColor));
 
         // Flash Cube light

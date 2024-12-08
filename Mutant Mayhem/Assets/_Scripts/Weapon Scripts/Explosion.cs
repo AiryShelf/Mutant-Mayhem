@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Explosion : MonoBehaviour
 {
@@ -68,8 +67,10 @@ public class Explosion : MonoBehaviour
                     {
                         Debug.Log("Explosion tried to hit a tile");
                         float distToPoint = Vector2.Distance(explosionPos, worldPos);
-                        float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
+                        float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage / 2);
                         tileManager.ModifyHealthAt(worldPos, -totalDamage);
+
+                        StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;
 
                         // Add the tile to the list of hit tiles
                         hitTiles.Add(gridPos);
@@ -125,7 +126,10 @@ public class Explosion : MonoBehaviour
 
                         // Apply damage
                         float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage);
-                        enemy.ModifyHealth(-totalDamage, gameObject);
+                        float damageScale = totalDamage / damage + 1;
+                        enemy.ModifyHealth(-totalDamage, damageScale, direction, gameObject);
+
+                        StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;
                         //Debug.Log($"Enemy hit at {entity.transform.position} for {totalDamage} damage");
                         continue;
                     }
@@ -146,8 +150,9 @@ public class Explosion : MonoBehaviour
                     // Apply damage
                     Health pHealth = player.GetComponent<Health>();
                     float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
-                    pHealth.ModifyHealth(-totalDamage, gameObject);
-                    Debug.Log($"Player hit at {player.transform.position} for {totalDamage} damage");
+                    float damageScale = totalDamage / (damage / 2) + 1;
+                    pHealth.ModifyHealth(-totalDamage, damageScale, direction, gameObject);
+                    //Debug.Log($"Player hit at {player.transform.position} for {totalDamage} damage");
                     playerWasHit = true;
                     continue;
                 }
@@ -158,8 +163,10 @@ public class Explosion : MonoBehaviour
                 {
                     float distToPoint = Vector2.Distance(explosionPos, cubeHealth.transform.position);
                     float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
-                    cubeHealth.ModifyHealth(-totalDamage, gameObject);
-                    Debug.Log($"QCube hit at {cubeHealth.transform.position} for {totalDamage} damage");
+                    float damageScale = totalDamage / (damage / 2) + 1;
+                    Vector2 hitDir = cubeHealth.transform.position - transform.position;
+                    cubeHealth.ModifyHealth(-totalDamage, damageScale, hitDir, gameObject);
+                    //Debug.Log($"QCube hit at {cubeHealth.transform.position} for {totalDamage} damage");
                     cubeWasHit = true;
                 }
             }

@@ -22,7 +22,7 @@ MonoBehaviour:
   selectedSound: {fileID: 11400000, guid: 650f8700c7f89b1478a0a9b7376652e6, type: 2}
   emptyClipPrefab: {fileID: 0}
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: eea213e6abd7839408143e3d97f642c2, type: 3}
-  laserSight: {fileID: 0}
+  laserSight: {fileID: 2462978180868395494, guid: 3f40e17835f1b42489fd08a045ee279c, type: 3}
   muzzleLocalPos: {x: 0, y: -0.01}
   bulletCasingPrefab: {fileID: 1136685630353648448, guid: 6e0dec1a382c9fc4cb40bc957c9ce5e5, type: 3}
   FXManagerCasingMethodName: PlayLaserCasing_Pistol
@@ -30,7 +30,8 @@ MonoBehaviour:
   muzzleFlashTime: 0.06
   recoilAmount: {x: -0.15, y: 0}
   damage: 20
-  damageUpgFactor: 0.5
+  damageVariance: 0.25
+  damageUpgFactor: 0.2
   knockback: 0
   knockbackUpgAmt: 0.1
   clipSize: 20
@@ -39,8 +40,9 @@ MonoBehaviour:
   chargeSpeedUpgNegAmt: -0.0292
   shootSpeed: 0.25
   shootSpeedUpgNegAmt: -0.0125
-  accuracy: 4
+  accuracy: 8
   accuracyUpgNegAmt: -0.35
+  firingAccuracyLoss: 3
   bulletSpeed: 80
   bulletLifeTime: 0.17
   bulletRangeUpgAmt: 0.03

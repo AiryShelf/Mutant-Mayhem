@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 4415535309081398380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 9.6795, y: 1.5055}
+  m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1937699068751001237
 MonoBehaviour:
@@ -51,11 +51,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPoolName: TextFlyUI_Health
-  moveSpeed: 30
+  moveSpeed: 20
   moveSpeedVariation: 10
-  fadeDuration: 2.5
-  fadeStart: 1
-  fadeEnd: 0
+  fadeDuration: 2
+  fadeAlphaStart: 1
+  fadeAlphaEnd: 0
+  alphaMax: 0.5
 --- !u!222 &8339017683356346833
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -111,8 +112,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1
-  m_fontSizeBase: 1
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

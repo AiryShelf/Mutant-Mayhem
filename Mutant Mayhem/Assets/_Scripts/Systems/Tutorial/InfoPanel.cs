@@ -12,6 +12,7 @@ public class InfoPanel : MonoBehaviour
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
     public Button disableTutorialButton;
+    [SerializeField] bool isTutorialPanel = false;
     [SerializeField] InputActionAsset inputAsset;
     public bool pauseOnOpen;
     protected InputActionMap playerActionMap;
@@ -31,7 +32,7 @@ public class InfoPanel : MonoBehaviour
 
         TutorialManager.NumTutorialsOpen++;
 
-        if (TutorialManager.IsTutorialDisabled == true)
+        if (isTutorialPanel && TutorialManager.IsTutorialDisabled == true)
         {
             gameObject.SetActive(false);
             return;
@@ -90,7 +91,7 @@ public class InfoPanel : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
 
         RestorePreviousSelection();
-        TutorialManager.SetTutorialState(false);
+        //TutorialManager.SetTutorialState(false);
 
         if (pauseOnOpen)
             TimeControl.Instance.PauseGame(false);

@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class UI_MissionPanelController : MonoBehaviour
 {
-    public Mission currentMission;
+    public List<Mission> missions;
+    [SerializeField] Mission currentMission;
     List<Task> _tasks = new List<Task>();
     [SerializeField] TextMeshProUGUI missionTitle;
     [SerializeField] TextMeshProUGUI objectiveTitle;
@@ -20,7 +21,30 @@ public class UI_MissionPanelController : MonoBehaviour
 
     void Start()
     {
-        
+        foreach (Transform child in objectivesGrid)
+        {
+            _tasks.Add(child.GetComponent<Task>());
+            Debug.Log("Added task at start");
+        }
+
+        AddMission(PlanetManager.Instance.currentPlanet.planetMission, false);
+
+        if (!TutorialManager.IsTutorialDisabled && !missions.Contains(TutorialManager.Instance.tutorialMission))
+        {
+            AddMission(TutorialManager.Instance.tutorialMission, true);
+        }
+
+        StartMission();
+    }
+
+    public void AddMission(Mission mission, bool setAsCurrentMission)
+    {
+        if (setAsCurrentMission)
+            missions.Insert(0, mission);
+        else
+            missions.Add(mission);
+
+        Debug.Log("Added mission: " + mission);
     }
 
     public void OnShowInfoClicked()
@@ -31,10 +55,52 @@ public class UI_MissionPanelController : MonoBehaviour
     public void OnDisableTutorialClicked()
     {
         TutorialManager.SetTutorialState(false);
-        EndMission();
+        if (currentMission.isTutorial)
+            EndMission();
     }
 
-    public void ObjectiveComplete()
+    public void StartMission()
+    {
+        //ClearTasksGrid();
+        currentMission = missions[0];
+        DisplayObjective(0);
+    }
+
+    void DisplayObjective(int index)
+    {
+        completedStamp.alpha = 0;
+        currentObjectiveIndex = index;
+
+        objectiveTitle.text = currentMission.objectives[index].objectiveTitle;
+        missionTitle.text = currentMission.missionTitle;
+
+        ClearTasksGrid();
+
+        // Set back panel size
+        foreach (GameObject obj in currentMission.objectives[index].taskPrefabs)
+        {
+            Task task = Instantiate(obj, objectivesGrid).GetComponent<Task>();
+            if (task != null)
+            {
+                _tasks.Add(task);
+                task.missionPanelController = this;
+                Debug.Log("Added a task");
+                
+                // Adjust panel size
+                RectTransform rect = obj.GetComponent<RectTransform>();
+                if (rect == null)
+                {
+                    Debug.LogError("Could not find rect transform on objective!");
+                    return;
+                }
+
+                float newHeight = backPanel.sizeDelta.y + rect.sizeDelta.y;
+                backPanel.sizeDelta = new Vector2(backPanel.sizeDelta.x, newHeight);
+            }
+        }
+    }
+
+    void ObjectiveComplete()
     {
         completedStamp.alpha = 1;
         StartCoroutine(DisplayCompletedForTime());
@@ -42,8 +108,18 @@ public class UI_MissionPanelController : MonoBehaviour
 
     public void EndMission()
     {
-        // Should display a "Mission Completed" effect here
-        gameObject.SetActive(false);
+        // Should display a "Mission Completed" effect here, maybe with title text?
+        //ClearTasksGrid();
+        Debug.Log("Ending Mission: " + missions[0]);
+
+        missions.RemoveAt(0);
+        if (missions.Count == 0)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+        
+        StartMission();
     }
 
     IEnumerator DisplayCompletedForTime()
@@ -57,50 +133,6 @@ public class UI_MissionPanelController : MonoBehaviour
         else 
         {
             EndMission();
-        }
-    }
-
-    public void StartMission(Mission mission)
-    {
-        currentMission = mission;
-        DisplayObjective(0);
-    }
-
-    public void StartPlanetMission()
-    {
-        
-    }
-
-    public void DisplayObjective(int index)
-    {
-        completedStamp.alpha = 0;
-        currentObjectiveIndex = index;
-
-        objectiveTitle.text = currentMission.objectives[index].objectiveTitle;
-        missionTitle.text = currentMission.missionTitle;
-
-        ClearTasksGrid();
-
-        // Set back panel size
-        foreach (GameObject obj in currentMission.objectives[index].taskPrefabs)
-        {
-            Task objective = Instantiate(obj, objectivesGrid).GetComponent<Task>();
-            if (objective != null)
-            {
-                _tasks.Add(objective);
-                objective.tutorialPanelController = this;
-                
-                // Adjust panel size
-                RectTransform rect = obj.GetComponent<RectTransform>();
-                if (rect == null)
-                {
-                    Debug.LogError("Could not find rect transform on objective!");
-                    return;
-                }
-
-                float newHeight = backPanel.sizeDelta.y + rect.sizeDelta.y;
-                backPanel.sizeDelta = new Vector2(backPanel.sizeDelta.x, newHeight);
-            }
         }
     }
 
@@ -119,11 +151,9 @@ public class UI_MissionPanelController : MonoBehaviour
 
     void ClearTasksGrid()
     {
-        _tasks.Clear();
-
-        foreach (Transform child in objectivesGrid)
+        foreach (Task task in _tasks)
         {
-            RectTransform rect = child.GetComponent<RectTransform>();
+            RectTransform rect = task.GetComponent<RectTransform>();
             if (rect == null)
             {
                 Debug.LogError("Could not find rect transform on objective!");
@@ -133,8 +163,11 @@ public class UI_MissionPanelController : MonoBehaviour
             float newHeight = backPanel.sizeDelta.y - rect.sizeDelta.y;
             backPanel.sizeDelta = new Vector2(backPanel.sizeDelta.x, newHeight);
 
-            Destroy(child.gameObject);
+            Destroy(task.gameObject);
+            Debug.Log("Removed a task");
         }
+
+        _tasks.Clear();
     }
 
     public void CheckIfObjectiveComplete()

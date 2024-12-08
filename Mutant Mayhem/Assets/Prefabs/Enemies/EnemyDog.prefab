@@ -58,7 +58,7 @@ MonoBehaviour:
   meleeController: {fileID: 6433497888709922468}
   sr: {fileID: 1437740919546126437}
   moveSpeedBaseStart: 1
-  moveSpeedBase: 5
+  moveSpeedBase: 4
   rotateSpeedBaseStart: 3
   rotateSpeedBase: 3
   startMass: 0
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startMaxHealth: 40
   maxHealth: 40
-  healthToCreditsDivisor: 2.2
+  healthToCreditsDivisor: 1.2
   deathTorque: 20
   painSound: {fileID: 11400000, guid: 7bf8998c624df904b95402985e56da6c, type: 2}
   painSoundCooldown: 0.3
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 0.85
+  animSpeedFactor: 1.1
   switchToRunBuffer: 0.4
   maxAnimSpeed: 3
   myAnimator: {fileID: 0}

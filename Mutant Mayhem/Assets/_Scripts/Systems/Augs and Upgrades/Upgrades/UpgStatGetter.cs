@@ -25,8 +25,8 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.PlayerReloadSpeed:
                 stat = player.stats.reloadFactor.ToString("#0.0");
                 return stat;
-            case PlayerStatsUpgrade.PlayerAccuracy:
-                stat = (1 - player.stats.accuracy).ToString("#0.0");
+            case PlayerStatsUpgrade.WeaponHandling:
+                stat = player.stats.accuracyHoningSpeed.ToString("#0.00");
                 return stat;
             case PlayerStatsUpgrade.MeleeDamage:
                 stat = player.stats.meleeDamage.ToString("#0.0");
@@ -45,6 +45,12 @@ public static class UpgStatGetter
                 return stat;
             case PlayerStatsUpgrade.HealthRegen:
                 stat = player.stats.playerHealthScript.healthRegenPerSec.ToString("#0.00");
+                return stat;
+            case PlayerStatsUpgrade.CriticalHitChance:
+                stat = player.stats.criticalHitChanceMult.ToString("#0.00");
+                return stat;
+            case PlayerStatsUpgrade.CriticalHitDamage:
+                stat = player.stats.criticalHitDamageMult.ToString("#0.00");
                 return stat;
         }
 
@@ -126,7 +132,7 @@ public static class UpgStatGetter
                 return stat;
             case GunStatsUpgrade.GunAccuracy:
                 stat = (player.stats.playerShooter._gunListSource[gunIndex].accuracy -
-                       player.stats.playerShooter.gunList[gunIndex].accuracy).ToString("#0.0");
+                       player.stats.playerShooter.gunList[gunIndex].accuracy).ToString("#0.00");
                 return stat;
             case GunStatsUpgrade.GunRange:
                 float range = player.stats.playerShooter.gunList[gunIndex].bulletLifeTime *
@@ -167,8 +173,8 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.PlayerReloadSpeed:
                 amount = "+" + PlayerReloadSpeedUpgrade.UpgAmount.ToString("#0.0");
                 return amount;
-            case PlayerStatsUpgrade.PlayerAccuracy:
-                amount = "+" + PlayerAccuracyUpgrade.UpgAmount.ToString("#0.0");
+            case PlayerStatsUpgrade.WeaponHandling:
+                amount = "+" + WeaponHandlingUpgrade.UpgAmount.ToString("#0.00");
                 return amount;
             case PlayerStatsUpgrade.MeleeDamage:
                 amount = "+" + MeleeDamageUpgrade.GetUpgAmount(upgradeManager).ToString("#0.0");
@@ -186,7 +192,13 @@ public static class UpgStatGetter
                 amount = "+" + HealthMaxUpgrade.UpgAmount.ToString("#0");
                 return amount;
             case PlayerStatsUpgrade.HealthRegen:
-                amount = "+" +HealthRegenUpgrade.UpgAmount.ToString("#0");
+                amount = "+" + HealthRegenUpgrade.UpgAmount.ToString("#0.0");
+                return amount;
+            case PlayerStatsUpgrade.CriticalHitChance:
+                amount = "+" + CriticalHitChanceUpgrade.UpgAmount.ToString("#0.00");
+                return amount;
+            case PlayerStatsUpgrade.CriticalHitDamage:
+                amount = "+" + CriticalHitDamageUpgrade.UpgAmount.ToString("#0.00");
                 return amount;
         }
 
@@ -267,7 +279,7 @@ public static class UpgStatGetter
                 amount = "-" + Mathf.Abs(ChargeDelayUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.00");
                 return amount;
             case GunStatsUpgrade.GunAccuracy:
-                amount = "+" + Mathf.Abs(GunAccuracyUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
+                amount = "+" + Mathf.Abs(GunAccuracyUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.00");
                 return amount;
             case GunStatsUpgrade.GunRange:
                 amount = "+" + (RangeUpgrade.GetUpgAmount(player, gunIndex) *

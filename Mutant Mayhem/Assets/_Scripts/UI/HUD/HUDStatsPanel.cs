@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UIElements.Experimental;
 
 public class HUDStatsPanel : MonoBehaviour
 {
     [SerializeField] float textFlyAlphaMax;
+    [SerializeField] float textPulseScaleMax = 1.5f;
 
     [Header("Player Stats")]
     [SerializeField] TextMeshProUGUI creditsText;
@@ -67,21 +69,21 @@ public class HUDStatsPanel : MonoBehaviour
     {
         BuildingSystem.OnPlayerCreditsChanged += UpdateCreditsText;
         qCubeHealthScript.OnCubeHealthChanged += UpdateQCubeStatsUI;
-        player.stats.playerHealthScript.OnPlayerHealthChanged += UpdatePlayerStatsUI;
-        player.stats.playerHealthScript.OnPlayerMaxHealthChanged += UpdatePlayerStatsUI;
+        player.stats.playerHealthScript.OnPlayerHealthChanged += UpdateHealthStats;
+        player.stats.playerHealthScript.OnPlayerMaxHealthChanged += UpdateHealthStats;
     }
 
     void OnDisable()
     {
         BuildingSystem.OnPlayerCreditsChanged -= UpdateCreditsText;
         qCubeHealthScript.OnCubeHealthChanged -= UpdateQCubeStatsUI;
-        player.stats.playerHealthScript.OnPlayerHealthChanged -= UpdatePlayerStatsUI;
-        player.stats.playerHealthScript.OnPlayerMaxHealthChanged -= UpdatePlayerStatsUI;
+        player.stats.playerHealthScript.OnPlayerHealthChanged -= UpdateHealthStats;
+        player.stats.playerHealthScript.OnPlayerMaxHealthChanged -= UpdateHealthStats;
     }
 
     void Start()
     {
-        UpdatePlayerStatsUI(player.stats.playerHealthScript.GetHealth());
+        UpdateHealthStats(player.stats.playerHealthScript.GetHealth());
         UpdateStaminaStats();
 
         qCubeHealth = FindObjectOfType<QCubeHealth>();
@@ -101,7 +103,7 @@ public class HUDStatsPanel : MonoBehaviour
         staminaValueText.text = "Energy: " + Mathf.CeilToInt(playerStamina).ToString();
     }
 
-    void UpdatePlayerStatsUI(float playerHealth)
+    void UpdateHealthStats(float playerHealth)
     {
         playerMaxHealth = playerHealthScript.GetMaxHealth();
 
@@ -109,46 +111,56 @@ public class HUDStatsPanel : MonoBehaviour
         healthValueText.text = "Health: " + Mathf.CeilToInt(playerHealth).ToString();
 
         int healthChange = Mathf.CeilToInt(playerHealth - previousHealth);
-        if (healthChange != 0)
+        if (Mathf.Abs(healthChange) < 1)
+            return;
+
+        // TextFly setup
+        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Health").GetComponent<TextFly>();
+        textFly.transform.SetParent(transform);
+        Color textColor;
+        Vector3 newPos = healthValueText.transform.position;
+        //RectTransform rectTrans = (RectTransform)transform;
+        newPos.x += 2;
+        textFly.transform.position = newPos;
+
+        if (healthChange < 0)
         {
-            Color textColor;
-            // Gain health effect
-            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Health").GetComponent<TextFly>();
-            if (healthChange >= 0)
-                textColor = textFlyHealthGainColor;
-            else
-                textColor = textFlyHealthLossColor;
-
-            float angle = (Random.Range(-45f, 45f) + 75) * Mathf.Deg2Rad;
+            textColor = textFlyHealthLossColor;
+            float angle = Random.Range(-45f, -15f) * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
-
-            textFly.transform.position = healthValueText.transform.position;
-            textFly.transform.SetParent(transform);
-            textFly.Initialize("+ " + healthChange + " HP", textColor, textFlyAlphaMax, dir, false);
+            textFly.Initialize(healthChange + " HP", textColor, textFlyAlphaMax, dir, false, textPulseScaleMax);
+        }
+        else
+        {
+            textColor = textFlyHealthGainColor;
+            float angle = Random.Range(15, 45f) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+            textFly.Initialize("+" + healthChange + " HP", textColor, textFlyAlphaMax, dir, false, textPulseScaleMax);
         }
         previousHealth = Mathf.CeilToInt(playerHealth);
     }
 
     void UpdateCreditsText(float playerCredits)
     {
+        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Credits").GetComponent<TextFly>();
+        textFly.transform.SetParent(transform);
+        Color textColor;
+        textFly.transform.position = creditsText.transform.position;
+
         int creditsChange =  Mathf.FloorToInt(playerCredits - previousCredits);
-        if (creditsChange != 0)
+        if (creditsChange < 0)
         {
-            Color textColor;
-            if (creditsChange >= 0)
-                textColor = textFlyCreditsGainColor;
-            else
-                textColor = textFlyCreditsLossColor;
-
-            // Gain credits effect
-            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Credits").GetComponent<TextFly>();
-
+            textColor = textFlyCreditsLossColor;
+            float angle = (Random.Range(-45f, 45f) - 75) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+            textFly.Initialize("-" + creditsChange + " C", textColor, textFlyAlphaMax, dir, false, textPulseScaleMax);
+        }
+        else
+        {
+            textColor = textFlyCreditsGainColor;
             float angle = (Random.Range(-45f, 45f) + 75) * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
-            textFly.transform.position = creditsText.transform.position;
-            textFly.transform.SetParent(transform);
-
-            textFly.Initialize("+ " + creditsChange + " C", textColor, textFlyAlphaMax, dir, false);
+            textFly.Initialize("+" + creditsChange + " C", textColor, textFlyAlphaMax, dir, false, textPulseScaleMax);
         }
 
         int credits = (int)BuildingSystem.PlayerCredits;
@@ -185,8 +197,8 @@ public class HUDStatsPanel : MonoBehaviour
 
             if (flashEffect != null)
                 StopCoroutine(flashEffect);
-            flashEffect = StartCoroutine(GameTools.FlashSpriteOrImage(
-                                        null, qCubeImage, qCubeShakeTime, 
+            flashEffect = StartCoroutine(GameTools.FlashImage(
+                                        qCubeImage, qCubeShakeTime, 
                                         qCubeShakeTime/2, qCubeDamageColor, qCubeStartColor));
         }
         else

@@ -129,12 +129,12 @@ public class SettingsManager : MonoBehaviour
 
             case DifficultyLevel.Hard:
                 waveController.timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
-                WaveDifficultyMult = 1.3f;
+                WaveDifficultyMult = 1.5f;
                 WavesTillAddWaveBase = -1;
                 SubwaveListGrowthFactor = 1.2f;
                 SubwaveDelayMult = 0.8f;
                 BatchSpawnMult = 1.2f;
-                CreditsMult = 1;
+                CreditsMult = 0.7f;
                 break;
         }
 

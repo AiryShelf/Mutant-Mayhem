@@ -11,6 +11,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     [SerializeField] Button button;
     [SerializeField] Image image;
     public GameObject textPrefab;
+    [SerializeField] float textLockedAlpha = 0.3f;
     [HideInInspector] public GameObject textInstance;
     [SerializeField] RectTransform myRectTransform;
     ScrollRectController scrollRectController;
@@ -117,6 +118,15 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         if (textInstance == null)
             return;
         //Debug.Log("SetText ran in UiStructure");
+
+        // Set text for locked/unlock
+        
+        bool unlocked = BuildingSystem._UnlockedStructuresDict[structureSO.structureType];
+        TextMeshProUGUI text = textInstance.GetComponent<TextMeshProUGUI>();
+        if (unlocked)
+            text.alpha = 1;
+        else
+            text.alpha = textLockedAlpha;
         
         // Set structure info text
         if (structureSO.actionType != ActionType.Build)
@@ -125,7 +135,8 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             return;
         }
         
-        int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);
+        int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult * 
+                                         PlanetManager.Instance.currentPlanet.buildCostMultiplier);
         // Set yellow or red depending on affordability
         if (playerCredits >= totalCost)
         {

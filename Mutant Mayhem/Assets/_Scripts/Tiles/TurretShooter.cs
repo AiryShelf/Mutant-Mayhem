@@ -6,6 +6,12 @@ public class TurretShooter : Shooter
 {
     [HideInInspector] public Player player;
 
+    protected override void Start()
+    {
+        turretShooter = this;
+        StartChargingGuns();
+    }
+
     protected override void Fire()
     {
         // Use bullet ammo
@@ -20,8 +26,7 @@ public class TurretShooter : Shooter
 
             player.stats.playerShooter.gunsAmmo[1]--;
         }
-        */
-                
+        */      
         
         base.Fire();
 

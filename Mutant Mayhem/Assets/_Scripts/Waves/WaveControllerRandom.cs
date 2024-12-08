@@ -189,13 +189,13 @@ public class WaveControllerRandom : MonoBehaviour
     void IncrementWaveDifficulty()
     {
         batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveIndex / 2 * SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = enemyStatMultStart + currentWaveIndex / 20f * 
+        damageMultiplier = enemyStatMultStart + currentWaveIndex / 5f * 
                            SettingsManager.Instance.WaveDifficultyMult;
         healthMultiplier = enemyStatMultStart + currentWaveIndex / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult;
         speedMultiplier = enemyStatMultStart + currentWaveIndex / 20f *  
                            SettingsManager.Instance.WaveDifficultyMult;
-        sizeMultiplier = enemyStatMultStart + currentWaveIndex / 20f *   
+        sizeMultiplier = enemyStatMultStart + currentWaveIndex / 40f *   
                            SettingsManager.Instance.WaveDifficultyMult;
         subwaveDelayMult = Mathf.Clamp(spawnSpeedStart - currentWaveIndex / 40f * 
                            SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);

@@ -4,24 +4,9 @@ using UnityEngine;
 
 public class PickupsContainerPlayer : PickupsContainerBase
 {
-    
     [SerializeField] GravityField myGravity;
-    [SerializeField] Collider2D myCollider;
     [SerializeField] float unloadDelay;
     [SerializeField] float unloadForce;
-
-    bool isUnloading = false;
-
-    void Awake()
-    {
-
-    }
-
-    public override void AddToContainer(Pickup pickup)
-    {
-        base.AddToContainer(pickup);
-
-    }
 
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -52,7 +37,6 @@ public class PickupsContainerPlayer : PickupsContainerBase
 
     void ToggleUnloading(bool unloading)
     {
-        isUnloading = unloading;
         myGravity.enabled = !unloading;
     }
 

@@ -40,6 +40,8 @@ public class GunSO : ScriptableObject
     
     [Header("Gun Stats")]
     public float damage;
+    [Range(0, 1)]
+    public float damageVariance = 0.15f;
     public float damageUpgFactor;
     public float knockback;
     public float knockbackUpgAmt;
@@ -51,6 +53,7 @@ public class GunSO : ScriptableObject
     public float shootSpeedUpgNegAmt;
     public float accuracy;
     public float accuracyUpgNegAmt;
+    public float firingAccuracyLoss = 2;
     public float bulletSpeed;
     public float bulletLifeTime;
     public float bulletRangeUpgAmt;

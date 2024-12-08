@@ -30,7 +30,8 @@ MonoBehaviour:
   muzzleFlashTime: 0.05
   recoilAmount: {x: -0.1, y: 0}
   damage: -150
-  damageUpgFactor: -50
+  damageVariance: 0.15
+  damageUpgFactor: -25
   knockback: 0
   knockbackUpgAmt: 0
   clipSize: 20
@@ -41,6 +42,7 @@ MonoBehaviour:
   shootSpeedUpgNegAmt: -0.01
   accuracy: 1
   accuracyUpgNegAmt: -0.01
+  firingAccuracyLoss: 1
   bulletSpeed: 10
   bulletLifeTime: 0.28
   bulletRangeUpgAmt: 0.05

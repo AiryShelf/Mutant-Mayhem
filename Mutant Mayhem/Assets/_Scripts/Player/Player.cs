@@ -35,8 +35,18 @@ public class PlayerStats
     [Header("Shooting Stats")]
     public PlayerShooter playerShooter;
     public float reloadFactor = 1f;
-    public float accuracy = 1f;
     public int grenadeAmmo = 12;
+
+    [Header("Accuracy Stats")]
+    [Range(1, 0)]
+    public float weaponHandling = 1f;
+    public float accuracy = 1f;
+    public float sprintAccuracyLoss = 4f;
+    public float accuracyHoningSpeed = 5f;
+
+    [Header("Crit Hit Stats")]
+    public float criticalHitChanceMult = 1f;
+    public float criticalHitDamageMult = 1f;
 }
 
 [System.Serializable]
@@ -77,6 +87,7 @@ public class Player : MonoBehaviour
     public AnimationControllerPlayer animControllerPlayer;
     public MeleeControllerPlayer meleeController;  
     [SerializeField] ToolbarSelector toolbarSelector; 
+    [SerializeField] float throwAccuracyLoss = 6f;
 
     [SerializeField] float experimentRotationConstant; 
     
@@ -133,7 +144,7 @@ public class Player : MonoBehaviour
         //ParticleManager.Instance.ClearAllChildrenParticleSystems();
         TimeControl.Instance.SubscribePlayerTimeControl(this);
         SFXManager.Instance.Initialize();
-        TutorialManager.ResetTutorialPanel();
+        //TutorialManager.ResetTutorialPanel();
         StatsCounterPlayer.ResetStatsCounts();
         
         SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
@@ -344,6 +355,8 @@ public class Player : MonoBehaviour
         itemToThrow.StartFly();
         stats.grenadeAmmo--;
         StatsCounterPlayer.GrenadesThrownByPlayer++;
+
+        playerShooter.currentAccuracy += throwAccuracyLoss;
     }
 
     void OnMove(InputValue value)
@@ -368,8 +381,11 @@ public class Player : MonoBehaviour
         // Find Mouse direction and angle
         Vector3 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
         
+        //muzzleDirToMouse = mousePos - transform.position;
+
+        
         if ((transform.position - mousePos).magnitude > 
-            (transform.position - muzzleTrans.position).magnitude)
+            (transform.position - muzzleTrans.position).magnitude + 0.5f)
         {
             muzzleDirToMouse = mousePos - muzzleTrans.transform.position;
         }
@@ -377,6 +393,7 @@ public class Player : MonoBehaviour
         {
             muzzleDirToMouse = mousePos - transform.position;
         }
+        
 
         muzzleDirToMouse.Normalize();
     
@@ -456,9 +473,12 @@ public class Player : MonoBehaviour
         {
             if (sprintStaminaUse <= myStamina.GetStamina() && rawInput.sqrMagnitude > 0)
             {
-                StatsCounterPlayer.TimeSprintingPlayer += Time.fixedDeltaTime;
+                float time = Time.fixedDeltaTime;
+                StatsCounterPlayer.TimeSprintingPlayer += time;
                 sprintSpeedAmount = stats.sprintFactor;
                 myStamina.ModifyStamina(-sprintStaminaUse);
+
+                playerShooter.currentAccuracy += time * stats.sprintAccuracyLoss * stats.weaponHandling;
             }
             else
                 sprintSpeedAmount = 1;

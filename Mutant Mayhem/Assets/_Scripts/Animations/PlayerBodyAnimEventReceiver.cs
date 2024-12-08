@@ -76,7 +76,7 @@ public class PlayerBodyAnimEventReceiver : MonoBehaviour
 
     void OnMeleeAttackStamina()
     {
-        meleeControllerPlayer.UseStamina();
+        meleeControllerPlayer.UseStaminaAndAccuracy();
     }
 
     void OnMeleeAttackEnd()

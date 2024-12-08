@@ -5,6 +5,8 @@ using UnityEngine;
 public class MeleeControllerEnemy : MonoBehaviour
 {
     public float meleeDamage = 20f;
+    [Range(0, 1)]
+    [SerializeField] float damageVariance = 0.15f;
     float meleeDamageStart;
     public float knockback = 10f;
     float knockbackStart;
@@ -17,6 +19,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     Health myHealth;
     TileManager tileManager;
+    CriticalHit criticalHit;
 
     [Header("Dynamic, don't set here")]
     public bool waitToAttack;
@@ -25,6 +28,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     {
         myHealth = GetComponentInParent<Health>();
         tileManager = FindObjectOfType<TileManager>();
+        criticalHit = GetComponent<CriticalHit>();
 
         meleeDamageStart = meleeDamage;
         knockbackStart = knockback;
@@ -52,13 +56,26 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     public void Hit(Health otherHealth, Vector2 point)
     {   
+        bool isCritical = false;
+        float critMult = 1;
+        if (criticalHit != null)
+            (isCritical, critMult) = criticalHit.RollForCrit(1, 1);
+        
+        float damage = meleeDamage;
+        damage *= 1 + Random.Range(-damageVariance, damageVariance);
+        damage *= critMult;
+
         waitToAttack = true;
         if (gameObject.activeSelf)
             StartCoroutine(AttackTimer());
-        meleeAnimator.SetTrigger("Melee");   
+
+        meleeAnimator.SetTrigger("Melee");
         myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback);
-        otherHealth.Knockback((Vector2)otherHealth.transform.position - point, knockback);
-        otherHealth.ModifyHealth(-meleeDamage, gameObject);
+        Vector2 hitDir = (Vector2)otherHealth.transform.position - point;
+        otherHealth.Knockback(hitDir, knockback);
+
+        float damageScale = damage / meleeDamage;
+        otherHealth.ModifyHealth(-damage, damageScale, hitDir, gameObject);
 
         if (otherHealth.CompareTag("Player"))
             ParticleManager.Instance.PlayMeleeBlood(point, transform.right);
@@ -66,7 +83,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         PlayMeleeSound(point);
 
         StatsCounterPlayer.MeleeAttacksByEnemies++;
-        StatsCounterPlayer.MeleeDamageByEnemies += meleeDamage;
+        StatsCounterPlayer.MeleeDamageByEnemies += damage;
     }
 
     public void HitStructure(Vector2 point)

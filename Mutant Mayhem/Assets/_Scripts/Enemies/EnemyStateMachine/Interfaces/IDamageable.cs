@@ -5,21 +5,10 @@ using UnityEngine;
 public interface IDamageable
 {
     Health health { get; set; }
-
     bool isHit { get; set; }
 
-    float unfreezeTime { get; set; }
-
-    Coroutine unfreezeAfterTime { get; set; }
-
-    void ModifyHealth(float amount, GameObject gameObject);
-
-    void StartFreeze();
-
-    IEnumerator UnfreezeAfterTime();
-
+    void ModifyHealth(float amount, float damageScale, Vector2 hitDir, GameObject gameObject);
     void Knockback(Vector2 dir, float knockback);
-
     void Die();
 
 }

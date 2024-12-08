@@ -209,7 +209,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'MIssion Info
+  m_text: 'Mission Info
 
 '
   m_isRightToLeft: 0
@@ -376,7 +376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3458928221112978256
 RectTransform:
   m_ObjectHideFlags: 0
@@ -413,6 +413,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleText: {fileID: 2345845451889605395}
   descriptionText: {fileID: 8967683745733546166}
+  disableTutorialButton: {fileID: 6402981178052755220}
+  isTutorialPanel: 0
   inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
   pauseOnOpen: 1
 --- !u!1 &5827513711327066173
@@ -791,16 +793,40 @@ PrefabInstance:
     m_TransformParent: {fileID: 91333183862252421}
     m_Modifications:
     - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 5422591254970403954}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnDisableButtonClick
       objectReference: {fileID: 0}
     - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnDisableTutorialClicked
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: TutorialInfoPanel, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UI_MissionPanelController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Pivot.x
@@ -908,6 +934,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
   m_PrefabInstance: {fileID: 6501823320315580145}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6402981178052755220 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+  m_PrefabInstance: {fileID: 6501823320315580145}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7257963023421345601
 PrefabInstance:
   m_ObjectHideFlags: 0

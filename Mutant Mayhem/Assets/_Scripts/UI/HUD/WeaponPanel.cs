@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEngine.UI;
 
 public class WeaponPanel : MonoBehaviour
 {
     [SerializeField] PlayerShooter playerShooter;
-    [SerializeField] UnityEngine.UI.Image currentGunImage;
-    [SerializeField] UnityEngine.UI.Image ammoRadialImage;
+    [SerializeField] Image currentGunImage;
+    [SerializeField] Image ammoRadialImage;
     [SerializeField] float radialFillSpeed;
     [SerializeField] float radialAlpha = 0.2f;
     [SerializeField] TextMeshProUGUI ammoCountText;
@@ -22,11 +21,6 @@ public class WeaponPanel : MonoBehaviour
     int ammoTotal;
     int ammoInClip;
     float currentAmmoFillAmount;
-
-    void Start()
-    {
-        
-    }
 
     void Update()
     {

@@ -24,10 +24,10 @@ MonoBehaviour:
   minLvl: -4
   family: 0
   type: 0
-  grenadesAddAtStart: 6
-  grenadesPerPurchase: 1
-  grenadeCostMult: 1
-  lvlStartIncrement: 2
-  lvlPerPurchaseAddInc: 1
-  lvlGrenadeCostMultInc: 0.3
-  lvlGrenadeCostNegInc: 1
+  grenadesAtStart: 2
+  grenadesPerPurchaseDefault: 1
+  perLvlStartAddIncrement: 2
+  perLvlStartNegIncrement: 0.5
+  perLvlPurchaseAddInc: 1
+  perLvlGrenadeCostMultInc: 0.5
+  perLvlGrenadeCostNegInc: 0.5

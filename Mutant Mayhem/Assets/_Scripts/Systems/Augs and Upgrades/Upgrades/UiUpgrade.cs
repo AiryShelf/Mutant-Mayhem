@@ -176,11 +176,13 @@ public class UIUpgrade : MonoBehaviour
                     maxLvl = upgradeManager.repairGunUpgMaxLevels[gunStatsUpgrade];
                     // No cost mult for Repair gun, yet
                     upgCost = upgradeManager.repairGunUpgCurrCosts[gunStatsUpgrade];
-                    if (player.playerShooter.laserSight != null)
-                        player.playerShooter.laserSight.RefreshSights();
                     break;
                 }
             }
+            
+            if (player.playerShooter.gunSights != null)
+                        player.playerShooter.gunSights.RefreshSettings();
+
             statValue = UpgStatGetter.GetStatValue(player, gunStatsUpgrade, playerGunIndex);
             upgAmount = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeManager);
         }

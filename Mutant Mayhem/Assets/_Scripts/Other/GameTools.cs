@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Helper MonoBehaviour class to run coroutines
+public class CoroutineHandler : MonoBehaviour { }
+
 public static class GameTools
 {
-    // Reference to a GameObject that runs coroutines
     private static CoroutineHandler coroutineHandler;
 
     // Initialize the coroutine handler
@@ -17,23 +21,34 @@ public static class GameTools
         GameObject coroutineObject = new GameObject("CoroutineHandler");
         coroutineHandler = coroutineObject.AddComponent<CoroutineHandler>();
 
-        // Prevent it from being destroyed on scene change
         GameObject.DontDestroyOnLoad(coroutineObject);
     }
 
-    // Public method to start a coroutine from anywhere
+    // Start a coroutine from anywhere
     public static Coroutine StartCoroutine(IEnumerator coroutine)
     {
         return coroutineHandler.StartCoroutine(coroutine);
     }
 
-    // Public method to stop a coroutine
     public static void StopCoroutine(Coroutine coroutine)
     {
         if (coroutine != null)
         {
             coroutineHandler.StopCoroutine(coroutine);
         }
+    }
+
+    public static Vector2 RotateVector2(Vector2 v, float angle)
+    {
+        float radians = angle * Mathf.Deg2Rad; // Convert angle to radians
+        float cos = Mathf.Cos(radians);
+        float sin = Mathf.Sin(radians);
+
+        // Apply 2D rotation formula
+        return new Vector2(
+            v.x * cos - v.y * sin,
+            v.x * sin + v.y * cos
+        );
     }
 
     // Example of a lerp coroutine
@@ -128,6 +143,11 @@ public static class GameTools
 
         return formattedTime.Trim();
     }
+    
+    public static bool RollForCrit(float critChance)
+    {
+        return Random.value <= critChance;
+    }
 
     public static IEnumerator ShakeTransform(Transform transform, Vector2 startLocalPos,
                                              float shakeTime, float shakeAmount, float shakeSpeed)
@@ -145,42 +165,104 @@ public static class GameTools
         transform.localPosition = startLocalPos;
     }
 
-    public static IEnumerator FlashSpriteOrImage(SpriteRenderer sr, Image image, float flashTime, float flashSpeed, Color flashColor, Color startColor)
+    #region Flash / Pulse
+
+    public static IEnumerator FlashSprite(SpriteRenderer sr, float flashTime, float flashSpeed, Color flashColor, Color startColor)
     {
+        if (sr == null)
+        {
+            Debug.LogError("GameTools: Sprite is null for FlashSprite()");
+            yield break;
+        }
         float timeElapsed = 0;
 
         while (timeElapsed < flashTime)
         {
-            // Calculate the percentage of completion for the flash cycle based on flashSpeed
             float t = Mathf.PingPong(timeElapsed / flashSpeed, 1);
+            sr.color = Color.Lerp(startColor, flashColor, t);
+            yield return null;
+            timeElapsed += Time.deltaTime;
+        }
+            
+        
+        sr.color = startColor;
+    }
 
-            if (sr != null)
-            {
-                // Interpolate sprite color based on PingPong calculation
-                sr.color = Color.Lerp(startColor, flashColor, t);
-            }
-            else if (image != null)
-            {
-                // Interpolate image color based on PingPong calculation
-                image.color = Color.Lerp(startColor, flashColor, t);
-            }
+    public static IEnumerator FlashImage(Image image, float flashTime, float flashSpeed, Color flashColor, Color startColor)
+    {
+        if (image == null)
+        {
+            Debug.LogError("GameTools: Image is null for FlashImage()");
+            yield break;
+        }
 
-            // Wait for a frame, then increment timeElapsed
+        float timeElapsed = 0;
+        while (timeElapsed < flashTime)
+        {
+            float t = Mathf.PingPong(timeElapsed / flashSpeed, 1);
+            image.color = Color.Lerp(startColor, flashColor, t);
             yield return null;
             timeElapsed += Time.deltaTime;
         }
 
-        // Reset color after flashing is done
-        if (sr != null)
-        {
-            sr.color = startColor;
-        }
-        else if (image != null)
-        {
-            image.color = startColor;
-        }
+        image.color = startColor;
     }
+
+    public static IEnumerator FlashWorldText(TextMeshPro text, float flashTime, float flashSpeed, Color flashColor, Color startColor)
+    {
+        if (text = null)
+        {
+            Debug.LogError("GameTools: Text is null for FlashText()");
+            yield break;
+        }
+
+        float timeElapsed = 0;
+        while (timeElapsed < flashTime)
+        {
+            float t = Mathf.PingPong(timeElapsed / flashSpeed, 1);
+            text.color = Color.Lerp(startColor, flashColor, t);
+            yield return null;
+            timeElapsed += Time.deltaTime;
+        }
+
+        text.color = startColor;
+    }
+
+    public static IEnumerator PulseEffect(Transform transform, float pulseDuration, Vector3 pulseScaleMin, Vector3 pulseScaleMax)
+    {
+        float elapsedTime = 0f;
+        Vector3 scaleStart = transform.localScale;
+
+        while (elapsedTime < pulseDuration)
+        {
+            float t = elapsedTime / pulseDuration;
+            float easedT;
+
+            // Different easing functions for expansion and contraction
+            if (t < 0.25f)
+            {
+                float expansionT = t * 4;
+                //easedT = 1 - Mathf.Pow(1 - expansionT, 3); // Fast In
+                easedT = expansionT;
+            }
+            else
+            {
+                float contractionT = (t - 0.25f) * (1 / 0.75f);
+                easedT = 1 - contractionT; // Slow out
+            }
+
+            Vector3 scale = Vector3.Lerp(pulseScaleMin, pulseScaleMax, easedT);
+            transform.localScale = scale;
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = scaleStart;
+    }
+
+    #endregion
 }
 
-// Helper MonoBehaviour class to run coroutines
-public class CoroutineHandler : MonoBehaviour { }
+
+

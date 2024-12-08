@@ -13,8 +13,8 @@ public class EnemyHealth : Health
 
     protected override void Awake()
     {
-        myRb = GetComponent<Rigidbody2D>();
-
+        base.Awake();
+        
         enemyBase = GetComponent<EnemyBase>();
         if (enemyBase == null)
         {

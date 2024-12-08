@@ -22,7 +22,7 @@ public class Task_RepairTheCube : Task
         healthAtStart = cubeHealth.GetHealth();
         if (healthAtStart == cubeHealth.GetMaxHealth())
         {
-            cubeHealth.ModifyHealth(-1, null);
+            cubeHealth.ModifyHealth(-1, 1, Vector2.one, null);
             healthAtStart = cubeHealth.GetHealth();
         }
 

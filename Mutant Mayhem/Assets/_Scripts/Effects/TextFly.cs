@@ -9,8 +9,8 @@ public class TextFly : MonoBehaviour
     public float moveSpeed = 8f;
     [SerializeField] float moveSpeedVariation = 5f; 
     public float fadeDuration = 2f;
-    [SerializeField] float fadeStart = 1f;
-    [SerializeField] float fadeEnd = 0f;
+    [SerializeField] float fadeAlphaStart = 1f;
+    [SerializeField] float fadeAlphaEnd = 0f;
     public float alphaMax = 0.5f;
     TextMeshPro tmpTextWorld;
     TextMeshProUGUI tmpTextUi;
@@ -24,12 +24,7 @@ public class TextFly : MonoBehaviour
         moveSpeed += Random.Range(moveSpeed - moveSpeedVariation, moveSpeed + moveSpeedVariation);
     }
 
-    void OnEnable()
-    {
-        alphaMax = 0.5f;
-    }
-
-    public void Initialize(string text, Color color, float alphaMax, Vector2 dir, bool isWorldSpace)
+    public void Initialize(string text, Color color, float alphaMax, Vector2 dir, bool isWorldSpace, float pulseMaxScale)
     {
         if (isWorldSpace)
         {
@@ -53,37 +48,34 @@ public class TextFly : MonoBehaviour
 
         this.isWorldSpace = isWorldSpace;
         flyDir = dir;
-        this.alphaMax = alphaMax;
 
-        StartCoroutine(FadeAndMove());
+        StartCoroutine(FadeAndMove(alphaMax));
+
+        Vector3 scaleMax = new Vector3(pulseMaxScale, pulseMaxScale, pulseMaxScale);
+        GameTools.StartCoroutine(GameTools.PulseEffect(transform, fadeDuration, Vector3.one, scaleMax));
     }
 
-    private IEnumerator FadeAndMove()
+    private IEnumerator FadeAndMove(float alphaMax)
     {
-        
         float elapsedTime = 0f;
 
         while (elapsedTime < fadeDuration)
         {
             float t = elapsedTime / fadeDuration;
             float easedT = 1f - Mathf.Pow(1f - t, 2f);
+            Vector2 newPos = initialPosition + flyDir * moveSpeed * easedT;
+            float alpha = Mathf.Lerp(fadeAlphaStart, fadeAlphaEnd, t);
+            alpha = Mathf.Clamp(alpha, 0, alphaMax);
 
             // Update based on space type
             if (isWorldSpace)
             {
-                // Convert world space to screen space and move the text
-                Vector3 worldPos = initialPosition + flyDir * moveSpeed * easedT;
-                transform.position = new Vector3(worldPos.x, worldPos.y, transform.position.z);
-                float alpha = Mathf.Lerp(fadeStart, fadeEnd, t);
-                alpha = Mathf.Clamp(alpha, 0, alphaMax);
+                transform.position = new Vector3(newPos.x, newPos.y, transform.position.z);
                 tmpTextWorld.color = new Color(textColor.r, textColor.g, textColor.b, alpha);
             }
             else
             {
-                // Move in canvas
-                Vector2 newPos = initialPosition + flyDir * moveSpeed * easedT;
                 rectTransform.anchoredPosition = newPos;
-                float alpha = Mathf.Lerp(fadeStart, fadeEnd, t);
                 tmpTextUi.color = new Color(textColor.r, textColor.g, textColor.b, alpha);
             }
 

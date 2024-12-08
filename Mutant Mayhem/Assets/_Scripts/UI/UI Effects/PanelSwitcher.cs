@@ -191,6 +191,23 @@ public class PanelSwitcher : MonoBehaviour
         Vector2 startPosition = transform.localPosition;
         Vector2 endPosition = originalPosition - new Vector2(targetIndex * myRect.sizeDelta.x, 0);
 
+        
+        if (panels[targetIndex] is UiUpgradePanel uiUpgradePanel) 
+        {
+            CanvasGroup buttonGroup = uiUpgradePanel.buttonsGrid.GetComponent<CanvasGroup>();
+            CanvasGroup textGroup = uiUpgradePanel.textGrid.GetComponent<CanvasGroup>();
+            if (uiUpgradePanel.isUnlocked)
+            {
+                buttonGroup.alpha = 1;
+                textGroup.alpha = 1;
+            }
+            else
+            {
+                buttonGroup.alpha = 0;
+                textGroup.alpha = 0;
+            }
+        }
+            
         panels[targetIndex].fadeCanvasGroups.isTriggered = true;
         panels[targetIndex].backPanelFadeGroup.isTriggered = true;
         

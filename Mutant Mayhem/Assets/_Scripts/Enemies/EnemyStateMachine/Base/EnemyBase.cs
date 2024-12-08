@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerCheckable
+public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable, ITriggerCheckable
 {
     public string objectPoolName;
     public AnimationControllerEnemy animControllerEnemy;
@@ -190,9 +190,9 @@ public class EnemyBase : MonoBehaviour, IDamageable, IEnemyMoveable, ITriggerChe
 
     #region Health / Hit / Die
 
-    public void ModifyHealth(float amount, GameObject gameObject)
+    public void ModifyHealth(float amount, float damageScale, Vector2 hitDir, GameObject gameObject)
     {
-        health.ModifyHealth(amount, gameObject);
+        health.ModifyHealth(amount, damageScale, hitDir, gameObject);
     }
 
     public void StartFreeze()

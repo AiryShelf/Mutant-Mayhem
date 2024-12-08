@@ -49,18 +49,29 @@ public class Health : MonoBehaviour
         //Debug.Log($"MaxHealth was set to {value}");
     }
 
-    public virtual void ModifyHealth(float value, GameObject damageDealer)
+    public virtual void ModifyHealth(float value, float textPulseScaleMax, Vector2 textDir, GameObject damageDealer)
     {
         //Debug.Log($"Modifying {health} health by {value}.  Max health: {maxHealth}");
+        float healthChange = value;
+        float healthStart = health;
+        health += value;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+            healthChange = health - healthStart;
+        }
 
         TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
         textFly.transform.position = transform.position;
-        if (value < 0)
+        if (healthChange < 0)
         {
-            float angle = (Random.Range(-45f, 45f) - 90) * Mathf.Deg2Rad;
-            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+            float angle = Random.Range(-30f, 30f) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(
+                textDir.x * Mathf.Cos(angle) - textDir.y * Mathf.Sin(angle),
+                textDir.x * Mathf.Sin(angle) + textDir.y * Mathf.Cos(angle)
+            ).normalized;
 
-            textFly.Initialize(value.ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true);
+            textFly.Initialize(Mathf.Abs(healthChange).ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true, textPulseScaleMax);
             PlayPainSound();
         }
         else
@@ -68,12 +79,8 @@ public class Health : MonoBehaviour
             float angle = (Random.Range(-45f, 45f) + 90) * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 
-            textFly.Initialize("+" + value.ToString("#0"), textFlyHealthGainColor, textFlyAlphaMax, dir, true);
+            textFly.Initialize("+" + healthChange.ToString("#0"), textFlyHealthGainColor, textFlyAlphaMax, dir, true, textPulseScaleMax);
         }
-
-        health += value;
-        if (health > maxHealth)
-            health = maxHealth;
 
         // Stats counting
         if (damageDealer != null)

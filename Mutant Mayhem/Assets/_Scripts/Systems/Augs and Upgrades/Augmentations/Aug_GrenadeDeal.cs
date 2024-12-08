@@ -5,13 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Aug_GrenadeDeal_New", menuName = "Augmentations/Aug_GrenadeDeal")]
 public class Aug_GrenadeDeal : AugmentationBaseSO
 {
-    public int grenadesAddAtStart; // Should match player's starting grenades*
-    public int grenadesPerPurchase;
-    public float grenadeCostMult;
-    public int lvlStartIncrement = 2;
-    public float lvlPerPurchaseAddInc = 0.5f;
-    public float lvlGrenadeCostMultInc = 0.5f;
-    public float lvlGrenadeCostNegInc = 0.5f;
+    public int grenadesAtStart; // Should match player's starting grenades*
+    public int grenadesPerPurchaseDefault = 1;
+    public int perLvlStartAddIncrement = 2;
+    public float perLvlStartNegIncrement = 1;
+    public float perLvlPurchaseAddInc = 0.5f;
+    public float perLvlGrenadeCostMultInc = 0.5f;
+    public float perLvlGrenadeCostNegInc = -0.5f;
 
     public override void ApplyAugmentation(AugManager augManager, int level)
     {
@@ -30,12 +30,11 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
             return;
         }
 
-        // Adjust grenade purchases for negative and positive levels
-        player.stats.grenadeAmmo += Mathf.FloorToInt(grenadesAddAtStart + (lvlStartIncrement * level));
+        // Adjust grenade ammo and purchases for negative and positive levels
         if (level < 0)
         {
+            player.stats.grenadeAmmo = grenadesAtStart + Mathf.CeilToInt(perLvlStartNegIncrement * level);
             // Force ammo mult to be 1 for negative levels, so it's not zero until min level
-            
             if (level <= minLvl)
             {
                 augManager.grenadeAmmoMult = 0;
@@ -44,13 +43,15 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
             else
             {
                 augManager.grenadeAmmoMult = 1;
-                augManager.grenadeCostMult = grenadeCostMult + Mathf.Abs(lvlGrenadeCostNegInc * level);
+                augManager.grenadeCostMult = 1 + Mathf.Abs(perLvlGrenadeCostNegInc * level);
             }
         }
         else
         {
-            augManager.grenadeAmmoMult = Mathf.FloorToInt(grenadesPerPurchase + (lvlPerPurchaseAddInc * level));
-            augManager.grenadeCostMult = grenadeCostMult + (lvlGrenadeCostMultInc * level);
+            player.stats.grenadeAmmo = grenadesAtStart + Mathf.FloorToInt(perLvlStartAddIncrement * level);
+
+            augManager.grenadeAmmoMult = grenadesPerPurchaseDefault + Mathf.FloorToInt(perLvlPurchaseAddInc * level);
+            augManager.grenadeCostMult = 1 + perLvlGrenadeCostMultInc * level;
         }
 
         Debug.Log("Aug applied Grenade Deal.  Ammo mult: " + augManager.grenadeAmmoMult + ", Cost mult: " + augManager.grenadeCostMult);
@@ -58,9 +59,9 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
 
     public override string GetPositiveDescription(AugManager augManager, int level)
     {
-        float totalGrenadesAtStart = grenadesAddAtStart + (lvlStartIncrement * level);
-        float totalGrenadesPerPurchase = Mathf.FloorToInt(grenadesPerPurchase + (lvlPerPurchaseAddInc * level));
-        float totalGrenadeCost = grenadeCostMult + (lvlGrenadeCostMultInc * level);
+        float totalGrenadesAtStart = grenadesAtStart + (perLvlStartAddIncrement * level);
+        float totalGrenadesPerPurchase = grenadesPerPurchaseDefault + Mathf.FloorToInt(perLvlPurchaseAddInc * level);
+        float totalGrenadeCost = 1 + perLvlGrenadeCostMultInc * level;
         string description = "Start with " + totalGrenadesAtStart + " grenades.  Plus each time you purchase grenades, " +
                              "get " + totalGrenadesPerPurchase + " grenades for " + totalGrenadeCost + " times the cost of one";
         return description;
@@ -68,7 +69,7 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
 
     public override string GetNegativeDescription(AugManager augManager, int level)
     {
-        float totalGrenadesAtStart = Mathf.Clamp(Mathf.FloorToInt(grenadesAddAtStart + (lvlStartIncrement * level)), 0, int.MaxValue);
+        float totalGrenadesAtStart = Mathf.Clamp(grenadesAtStart + Mathf.CeilToInt(perLvlStartNegIncrement * level), 0, int.MaxValue);
 
         // Make it so player can still buy grenades at negative levels, but can't at min level
         float totalGrenadesPerPurchase;
@@ -79,7 +80,7 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
         else
             totalGrenadesPerPurchase = 0;
 
-        float totalGrenadeCost = grenadeCostMult + (lvlGrenadeCostNegInc * -level);
+        float totalGrenadeCost = 1 + perLvlGrenadeCostNegInc * -level;
 
         // Handle different text for not being able to buy any grenades
         string description;

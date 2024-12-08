@@ -9,14 +9,12 @@ public class PlayerShooter : Shooter
     [SerializeField] SpriteRenderer gunSR;
     public Light2D flashlight1;
     public Light2D flashlight2;
-    [SerializeField] ParticleSystem bulletCasingsPS;
-    [SerializeField] float casingToGroundTime;
-    [SerializeField] AnimationControllerPlayer animControllerPlayer;
     [SerializeField] Animator bodyAnim;
     public int[] gunsAmmo;
     Coroutine shootingCoroutine;
     bool waitToShoot;
     float reloadNotificationTimer = 0;
+    [SerializeField] float reloadAccuracyLoss = 8f;
 
     public bool canShoot = true;
     public bool isShooting;
@@ -28,15 +26,20 @@ public class PlayerShooter : Shooter
     bool droppedGun;
     Rigidbody2D myRb;
     ToolbarSelector toolbarSelector;
-    [HideInInspector]public PlayerStats playerStats;
+    [HideInInspector] public PlayerStats playerStats;
+    [HideInInspector] public Player player;
 
-    protected override void Awake() { }
+    protected override void Awake() 
+    {
+        criticalHit = GetComponent<CriticalHit>();
+        player = GetComponent<Player>();
+        myRb = GetComponent<Rigidbody2D>();
+        toolbarSelector = FindObjectOfType<ToolbarSelector>();
+        playerShooter = this;
+    }
 
     protected override void Start()
     {
-        myRb = GetComponent<Rigidbody2D>();
-        toolbarSelector = FindObjectOfType<ToolbarSelector>(); 
-
         CopyGunList();
         StartChargingGuns();
         SwitchGuns(0);
@@ -44,6 +47,7 @@ public class PlayerShooter : Shooter
 
     protected override void Update()
     {
+        UpdateDynamicAccuracy();
         Shoot();
     }
 
@@ -78,7 +82,7 @@ public class PlayerShooter : Shooter
     {
         if (i < 0 || i >= gunList.Count)
         {
-            Debug.Log("Tried to switch to a gun outside of index range");
+            Debug.LogError("Tried to switch to a gun outside of index range");
             return;
         }
 
@@ -93,12 +97,12 @@ public class PlayerShooter : Shooter
         muzzleFlash.SetActive(false);
 
         // Sights
-        if (laserSight != null)
-            Destroy(laserSight.gameObject);
+        if (gunSights != null)
+            Destroy(gunSights.gameObject);
         if (gunList[i].laserSight != null)
         {
-            laserSight = Instantiate(gunList[i].laserSight, muzzleTrans).GetComponent<GunSights>();
-            laserSight.RefreshSights();
+            gunSights = Instantiate(gunList[i].laserSight, muzzleTrans).GetComponent<GunSights>();
+            gunSights.Initialize(player);
         }
 
         // This could be removed and gunIndex used instead for animation transitions
@@ -107,13 +111,16 @@ public class PlayerShooter : Shooter
 
         currentGunIndex = i;
         currentGunSO = gunList[i];
+        currentAccuracy =  currentGunSO.accuracy;
 
         SFXManager.Instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
         //Debug.Log("Current gun damage: " + currentGunSO.damage); 
 
         // Set cursor
         if (!isBuilding)
-            CursorManager.Instance.SetAimCursor();  
+            CursorManager.Instance.SetAimCursor(); 
+
+        Debug.Log("PlayerShooter: CurrentGunSO: " + currentGunSO); 
     }
 
     public void ReloadPlayer()
@@ -132,6 +139,8 @@ public class PlayerShooter : Shooter
                 gunsAmmoInClips[currentGunIndex] += numBullets;
                 gunsAmmo[currentGunIndex] -= numBullets;
             }
+
+            currentAccuracy += currentGunSO.accuracy * playerStats.weaponHandling;
         }
     }
 
@@ -210,6 +219,8 @@ public class PlayerShooter : Shooter
         Kickback();
         bool oneHand = isMeleeing || !isAiming;
         gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
+
+        currentAccuracy += currentGunSO.firingAccuracyLoss * playerStats.weaponHandling;
     }
 
     #region Sounds

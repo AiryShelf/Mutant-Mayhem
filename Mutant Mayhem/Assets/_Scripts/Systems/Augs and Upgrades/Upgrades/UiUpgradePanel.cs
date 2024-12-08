@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class UiUpgradePanel : UI_PanelBase
 {
     [SerializeField] List<GameObject> UIUpgradePrefabs;
-    [SerializeField] GridLayoutGroup buttonsGrid;
-    [SerializeField] GridLayoutGroup textGrid;
+    public GridLayoutGroup buttonsGrid;
+    public GridLayoutGroup textGrid;
     [SerializeField] PanelSwitcher panelSwitcher;
     public bool isUnlocked = false;
 
@@ -51,17 +51,20 @@ public class UiUpgradePanel : UI_PanelBase
 
     void Start()
     {
+        Initialize();
+
         // Show unlock panel
         if (unlockPanel != null)
         {
             //unlockPanel.gameObject.SetActive(false);
             unlockPanel.gameObject.SetActive(true);
+            //fadeCanvasGroups.enabled = false;
             UpdateUnlockCostTextColor(BuildingSystem.PlayerCredits);
             return;
         }
 
         // Initialize upgrade panel
-        Initialize();
+        
     }
 
     void OnEnable()
@@ -76,6 +79,8 @@ public class UiUpgradePanel : UI_PanelBase
 
     void Initialize()
     {
+        //fadeCanvasGroups.enabled = true;
+
         // Initialize upgrade lists into UI
         foreach (GameObject upgrade in UIUpgradePrefabs)
         {
@@ -149,7 +154,8 @@ public class UiUpgradePanel : UI_PanelBase
                 player.stats.structureStats.maxTurrets++;
 
             // Initialize and open upgrades panel
-            Initialize();
+            buttonsGrid.GetComponent<CanvasGroup>().alpha = 1;
+            textGrid.GetComponent<CanvasGroup>().alpha = 1;
             StartCoroutine(DelayFadeGroupTrigger());
             //StartCoroutine(DelayTrigger());
             Destroy(unlockPanel.gameObject);

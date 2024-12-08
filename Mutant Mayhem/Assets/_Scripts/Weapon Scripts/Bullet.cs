@@ -9,10 +9,14 @@ public class Bullet : MonoBehaviour
     public GunType gunType;
     public string objectPoolName;
     [HideInInspector] public float damage = 10;
+    [HideInInspector] public float damageVariance;
     [HideInInspector] public float knockback = 1f;
     [HideInInspector] public float destroyTime;
     [HideInInspector] public Vector2 velocity;
     [HideInInspector] public Transform origin;
+    [HideInInspector] public CriticalHit criticalHit;
+    [HideInInspector] public float critChanceMult = 1;
+    [HideInInspector] public float critDamageMult = 1;
 
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected SoundSO shootSound;
@@ -79,9 +83,17 @@ public class Bullet : MonoBehaviour
 
     protected virtual void Hit(Collider2D otherCollider, Vector2 point)
     {
-        Vector2 hitDir = transform.right;
+        bool isCritical = false;
+        float critMult = 1;
+        if (criticalHit != null)
+            (isCritical, critMult) = criticalHit.RollForCrit(critChanceMult, critDamageMult);
+        
+        float damageNew = damage;
+        damageNew *= 1 + Random.Range(-damageVariance, damageVariance);
+        damageNew *= critMult;
 
         // Enemies
+        Vector2 hitDir = transform.right;
         EnemyBase enemy = otherCollider.GetComponent<EnemyBase>();
         if (enemy)
         {
@@ -90,16 +102,17 @@ public class Bullet : MonoBehaviour
             enemy.StartFreeze();
             enemy.EnemyChaseSOBaseInstance.StartSprint();
 
-            enemy.ModifyHealth(-damage, gameObject);
+            float damageScale = damageNew / damage;
+            enemy.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
             
             // Stat Counting
             if (this.gameObject.CompareTag("PlayerBullet"))
             {
-                StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damage;
+                StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damageNew;
                 StatsCounterPlayer.ShotsHitByPlayer++;
             }
             else if (this.gameObject.CompareTag("TurretBullet"))
-                StatsCounterPlayer.EnemyDamageByTurrets += damage;
+                StatsCounterPlayer.EnemyDamageByTurrets += damageNew;
 
             // Create AI Trigger
             if (AiTrggerPrefab != null)
@@ -118,11 +131,11 @@ public class Bullet : MonoBehaviour
             // If player projectile, do 1/3 damage
             if (otherCollider.gameObject.layer == LayerMask.NameToLayer("PlayerProjectiles"))
             {
-                tileManager.ModifyHealthAt(point, -damage / 3);
+                tileManager.ModifyHealthAt(point, -damageNew / 3);
             }
             else
             {
-                tileManager.ModifyHealthAt(point, -damage);
+                tileManager.ModifyHealthAt(point, -damageNew);
             }
             
 
