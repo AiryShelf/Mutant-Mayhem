@@ -11,7 +11,7 @@ public class UI_PlanetPanel : MonoBehaviour
     [SerializeField] GameObject modifierTextPrefab;
     [SerializeField] Color buffModifierColor = Color.green;
     [SerializeField] Color debuffModifierColor = Color.red;
-    [SerializeField] TextMeshProUGUI missionText;
+    [SerializeField] TextMeshProUGUI toPassMissionText;
 
     void Start()
     {
@@ -29,6 +29,8 @@ public class UI_PlanetPanel : MonoBehaviour
     public void LoadPropertyCards(Planet planet)
     {
         ClearInfoPanel();
+        planetNameText.text = PlanetManager.Instance.currentPlanet.planetName;
+        toPassMissionText.text = PlanetManager.Instance.currentPlanet.mission.toPassText;
 
         foreach (PlanetPropertySO planetProperty in PlanetManager.Instance.currentPlanet.properties)
         {
