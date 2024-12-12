@@ -20,7 +20,7 @@ public class Turret : MonoBehaviour
     float detectionRangeSqrd;
     Coroutine searchRoutine;
     Coroutine scanRoutine;
-    [HideInInspector] public Player player;
+    Player player;
 
     bool initialized = false;
 
@@ -56,20 +56,16 @@ public class Turret : MonoBehaviour
         }
     }
 
-    public void InitializeTurret()
+    public void InitializeTurret(Player player)
     {
-        TurretShooter turretShooter = (TurretShooter)shooter;
+        if (player == null)
+        {
+            Debug.LogError("Turret: Player is null on Initialize");
+            return;
+        }
 
-        if (player != null)
-        {
-            turretShooter.player = player;
-            Debug.Log("Turret: Player was set in TurretShooter");
-        }
-        else
-        {
-            Debug.LogError("Turret: Player was null when initializing");
-        }
-        
+        TurretShooter turretShooter = (TurretShooter)shooter;
+        turretShooter.player = player;
         myGun = (TurretGunSO)shooter.gunList[0];
         
         // Initialize gun

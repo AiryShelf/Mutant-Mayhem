@@ -27,7 +27,7 @@ public class UI_MissionPanelController : MonoBehaviour
             Debug.Log("Added task at start");
         }
 
-        AddMission(PlanetManager.Instance.currentPlanet.planetMission, false);
+        AddMission(PlanetManager.Instance.currentPlanet.mission, false);
 
         if (!TutorialManager.IsTutorialDisabled && !missions.Contains(TutorialManager.Instance.tutorialMission))
         {

@@ -21,16 +21,20 @@ public class WaveControllerRandom : MonoBehaviour
     public float timeBetweenWaves = 0; // Amount of day-time after difficulty setting
     public float spawnRadius = 60; // Radius around the cube that enemies spawn
     public float wavesTillAddBase = 1; // Affects batch multiplier and max index to choose subwaves from
-    public float spawnSpeedStart = 1f;
+    public float subwaveDelayMultStart = 1f;
     public float subwaveDelayMult = 1;
+    public int spawnRadiusBuffer = 16;
 
     [Header("Enemy Multipliers")]
-    public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
+    public int batchMultStart = 5; // Starting batch multiplier for each Subwave
     public int batchMultiplier = 5; // Current batch multiplier
-    public int enemyStatMultStart = 1; // Applies it's multiplier to enemy stats multipliers below
-    public float damageMultiplier = 1; // Current multipliers
+    public float damageMultStart = 1;
+    public float damageMultiplier = 1;
+    public float healthMultStart = 1;
     public float healthMultiplier = 1;
+    public float speedMultStart = 1;
     public float speedMultiplier = 1;
+    public float sizeMultStart = 1;
     public float sizeMultiplier = 1;
     
     InputActionMap playerActionMap;
@@ -188,16 +192,21 @@ public class WaveControllerRandom : MonoBehaviour
 
     void IncrementWaveDifficulty()
     {
-        batchMultiplier = Mathf.FloorToInt(batchMultiplierStart + currentWaveIndex / 2 * SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = enemyStatMultStart + currentWaveIndex / 5f * 
-                           SettingsManager.Instance.WaveDifficultyMult;
-        healthMultiplier = enemyStatMultStart + currentWaveIndex / 20f * 
-                           SettingsManager.Instance.WaveDifficultyMult;
-        speedMultiplier = enemyStatMultStart + currentWaveIndex / 20f *  
-                           SettingsManager.Instance.WaveDifficultyMult;
-        sizeMultiplier = enemyStatMultStart + currentWaveIndex / 40f *   
-                           SettingsManager.Instance.WaveDifficultyMult;
-        subwaveDelayMult = Mathf.Clamp(spawnSpeedStart - currentWaveIndex / 40f * 
+        batchMultiplier = Mathf.FloorToInt(batchMultStart + currentWaveIndex / 2 * 
+                          SettingsManager.Instance.WaveDifficultyMult);
+        damageMultiplier = damageMultStart + currentWaveIndex / 5f * 
+                           SettingsManager.Instance.WaveDifficultyMult *
+                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];
+        healthMultiplier = healthMultStart + currentWaveIndex / 20f * 
+                           SettingsManager.Instance.WaveDifficultyMult *
+                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];
+        speedMultiplier = speedMultStart + currentWaveIndex / 20f *  
+                          SettingsManager.Instance.WaveDifficultyMult *
+                          PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyMoveSpeed];
+        sizeMultiplier = sizeMultStart + currentWaveIndex / 40f *   
+                         SettingsManager.Instance.WaveDifficultyMult *
+                         PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize];
+        subwaveDelayMult = Mathf.Clamp(subwaveDelayMultStart - currentWaveIndex / 40f * 
                            SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);
     }
 }

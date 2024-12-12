@@ -151,22 +151,17 @@ public class Player : MonoBehaviour
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         SettingsManager.Instance.ApplyGameplaySettings();
 
-        ClassManager.Instance.ApplyClassEffects(this);
-        UpgradeManager.Instance.Initialize();
-        AugManager.Instance.ApplySelectedAugmentations();
         TurretManager.Instance.Initialize(this);
+        UpgradeManager.Instance.Initialize();
+        ClassManager.Instance.ApplyClassEffects(this);
+        AugManager.Instance.ApplySelectedAugmentations();
+        //PlanetManager.Instance.InitializeStatMultipliers();
+        PlanetManager.Instance.ApplyPlanetProperties();
+        
         FindObjectOfType<WaveControllerRandom>().Initialize();
         
         RefreshMoveForces();
-
-        //StartCoroutine(DelayInitializePool());
         //PoolManager.Instance.ResetAllPools();
-    }
-
-    IEnumerator DelayInitializePool()
-    {
-        yield return new WaitForFixedUpdate();
-        PoolManager.Instance.ResetAllPools();
     }
 
     void OnDisable()

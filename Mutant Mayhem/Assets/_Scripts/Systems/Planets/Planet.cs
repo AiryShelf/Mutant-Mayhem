@@ -7,16 +7,28 @@ public class Planet : ScriptableObject
 {
     public string planetName;
     public string description;
-    public Sprite planetIcon;
-    public Mission planetMission;
+    public GameObject icon;
+    public GameObject propertyPrefab;
+    public List<PlanetPropertySO> properties;
+    public Mission mission;
 
-    [Header("Planet Effects")]
-    public float playerMoveSpeedMultiplier = 1f;
-    public float buildCostMultiplier = 1f;
-    public float laserDamageMultiplier = 1f;
-    public float bulletDamageMultiplier = 1f;
+    [Header("Research Points:")]
+    public int basePoints = 0;
+    public int pointsPerWave = 20;
+    public float growthControlFactor = 0.05f;
+    public int difficultyAdjustHard = 10; // These two are depricated
+    public int difficultyAdjustEasy = -10; // " "
 
-    [Header("Other Properties")]
-    public bool isSwampy = false;
-    public bool hasElectromagneticField = false;
+    [Header("WaveController Settings:")]
+    [Header("Wave Properties")]
+    public float timeBetweenWavesBase = 90; // Base amount of day-time
+    public float wavesTillAddBase = 1; 
+    public float subwaveDelayMultStart = 1f;
+    public int spawnRadiusBuffer = 16;
+    [Header("Enemy Multipliers")]
+    public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
+    public float damageMultiplier = 1;
+    public float healthMultiplier = 1;
+    public float speedMultiplier = 1;
+    public float sizeMultiplier = 1; // Smaller is harder
 }

@@ -65,21 +65,9 @@ public class TurretManager : MonoBehaviour
         // Link turret with player for ammo use
         Turret turret = obj.GetComponentInChildren<Turret>();
         if (turret != null)
-        {
-            if (player != null)
-            {
-                turret.player = player;
-                Debug.Log("Player set in turret");
-            }
-            else
-            {
-                Debug.LogError("Turret Manager: Player was null when adding turret");
-            }
-
-            turret.InitializeTurret();
-        }
-
-        
+            turret.InitializeTurret(player);
+        else
+            Debug.LogError("TurretManager: Couldn't find Turret component on turret");
     }
 
     public void RemoveTurret(Vector3Int rootPos)
@@ -120,7 +108,7 @@ public class TurretManager : MonoBehaviour
             shooter.SwitchGuns(shooter.currentGunIndex);
             
             UpgradeManager.Instance.upgradeEffects.PlayStructureUpgradeEffectAt(obj.transform.position);
-            Debug.Log("Finished upgrading a turret's guns");
+            //Debug.Log("Finished upgrading a turret's guns");
         }
     }
 
@@ -166,7 +154,7 @@ public class TurretManager : MonoBehaviour
                 turretGun.reloadSpeed += turretGun.reloadSpeedUpgNegAmt;
                 break;
         }
-        Debug.Log("Upgraded Turret Gun");
+        //Debug.Log("Upgraded Turret Gun");
     }
 
     public void UpgradeTurretStructures(StructureStatsUpgrade upgType)
@@ -204,12 +192,14 @@ public class TurretManager : MonoBehaviour
         {
             case StructureStatsUpgrade.TurretRotSpeed:
                 turretGun.rotationSpeed += turretGun.rotSpeedUpgAmt;
-                Debug.Log("Upgraded turret rotation stat");
+                //Debug.Log("Upgraded turret rotation stat");
                 break;
             case StructureStatsUpgrade.TurretSensors:
-                turretGun.detectRange += turretGun.detectRangeUpgAmt;
-                turretGun.expansionDelay += turretGun.expansionDelayUpgNegAmt;
-                Debug.Log("Upgraded turret sensors stat");
+                turretGun.detectRange += turretGun.detectRangeUpgAmt * 
+                                         PlanetManager.Instance.statMultipliers[PlanetStatModifier.TurretSensors];
+                turretGun.expansionDelay += turretGun.expansionDelayUpgNegAmt * 
+                                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.TurretSensors];
+                //Debug.Log("Upgraded turret sensors stat");
                 break;
         }
     }

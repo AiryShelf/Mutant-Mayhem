@@ -136,21 +136,23 @@ public class UIUpgrade : MonoBehaviour
         int upgLvl = 1;
         int maxLvl = int.MaxValue;
         int upgCost = 1;
-        string upgAmount = "";
-        string statValue = "";
+        string upgAmountString = "";
+        string statValueString = "";
         
         // Check for families
         if (upgradeFamily == UpgradeFamily.Consumables)
         {
             // Consumables
             upgLvl = upgradeManager.consumablesUpgLevels[consumablesUpgrade];
-            upgCost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
-                        UpgStatGetter.GetUpgCost(player, consumablesUpgrade, upgradeManager));
-            statValue = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
-            upgAmount = UpgStatGetter.GetUpgAmount(player, consumablesUpgrade);
+            upgCost = UpgStatGetter.GetUpgCost(player, consumablesUpgrade, upgradeManager);
+            statValueString = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
+            upgAmountString = UpgStatGetter.GetUpgAmount(player, consumablesUpgrade);
         }
         else if (upgradeFamily == UpgradeFamily.GunStats)
         {
+            statValueString = UpgStatGetter.GetStatValue(player, gunStatsUpgrade, playerGunIndex);
+            upgAmountString = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeManager);
+
             // GunStats
             switch (playerGunIndex)
             {
@@ -159,7 +161,7 @@ public class UIUpgrade : MonoBehaviour
                     upgLvl = upgradeManager.laserUpgLevels[gunStatsUpgrade];
                     maxLvl = upgradeManager.laserUpgMaxLevels[gunStatsUpgrade];
                     upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult * 
-                                upgradeManager.laserUpgCurrCosts[gunStatsUpgrade]);
+                              upgradeManager.laserUpgCurrCosts[gunStatsUpgrade]);
                     break;
                 }
                 case 1:
@@ -167,7 +169,7 @@ public class UIUpgrade : MonoBehaviour
                     upgLvl = upgradeManager.bulletUpgLevels[gunStatsUpgrade];
                     maxLvl = upgradeManager.bulletUpgMaxLevels[gunStatsUpgrade];
                     upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult * 
-                                upgradeManager.bulletUpgCurrCosts[gunStatsUpgrade]);
+                              upgradeManager.bulletUpgCurrCosts[gunStatsUpgrade]);
                     break;
                 }
                 case 9:
@@ -181,10 +183,7 @@ public class UIUpgrade : MonoBehaviour
             }
             
             if (player.playerShooter.gunSights != null)
-                        player.playerShooter.gunSights.RefreshSettings();
-
-            statValue = UpgStatGetter.GetStatValue(player, gunStatsUpgrade, playerGunIndex);
-            upgAmount = UpgStatGetter.GetUpgAmount(player, gunStatsUpgrade, playerGunIndex, upgradeManager);
+                player.playerShooter.gunSights.RefreshSettings();
         }
         else if (upgradeFamily == UpgradeFamily.PlayerStats)
         {
@@ -193,8 +192,8 @@ public class UIUpgrade : MonoBehaviour
             maxLvl = upgradeManager.playerStatsUpgMaxLevels[playerStatsUpgrade];
             upgCost = Mathf.FloorToInt(upgradeManager.playerStatsCostMult * 
                         upgradeManager.playerStatsUpgCurrCosts[playerStatsUpgrade]);
-            statValue = UpgStatGetter.GetStatValue(player, playerStatsUpgrade);
-            upgAmount = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeManager);
+            statValueString = UpgStatGetter.GetStatValue(player, playerStatsUpgrade);
+            upgAmountString = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeManager);
         }
         else if (upgradeFamily == UpgradeFamily.StructureStats)
         {
@@ -203,8 +202,8 @@ public class UIUpgrade : MonoBehaviour
             maxLvl = upgradeManager.structureStatsUpgMaxLevels[structureStatsUpgrade];
             upgCost = Mathf.FloorToInt(upgradeManager.structureStatsCostMult * 
                         upgradeManager.structureStatsUpgCurrCosts[structureStatsUpgrade]);
-            statValue = UpgStatGetter.GetStatValue(upgradeManager.player, structureStatsUpgrade);
-            upgAmount = UpgStatGetter.GetUpgAmount(structureStatsUpgrade);
+            statValueString = UpgStatGetter.GetStatValue(upgradeManager.player, structureStatsUpgrade);
+            upgAmountString = UpgStatGetter.GetUpgAmount(structureStatsUpgrade);
         }
         
         // Change cost text color depending on affordability
@@ -220,19 +219,19 @@ public class UIUpgrade : MonoBehaviour
             // Levels text
             if (upgLvl + 1 > maxLvl)
             {
-                upgradeText.text = UiName + ": " + greenColorTag + statValue + 
+                upgradeText.text = UiName + ": " + greenColorTag + statValueString + 
                                     "\n" + "Max level reached!" + endColorTag;
             }
             else
             {
-                upgradeText.text = UiName + ": " + greenColorTag + statValue + " " + cyanColorTag + upgAmount + endColorTag + 
+                upgradeText.text = UiName + ": " + greenColorTag + statValueString + " " + cyanColorTag + upgAmountString + endColorTag + 
                                     "\nLvl " + (upgLvl + 1) + ": " + costColorTag + "$" + upgCost + endColorTag;
             }
         }
         else
         {
             // No levels text
-            upgradeText.text = UiName + ": " + greenColorTag + statValue + " " + cyanColorTag + upgAmount + endColorTag +
+            upgradeText.text = UiName + ": " + greenColorTag + statValueString + " " + cyanColorTag + upgAmountString + endColorTag +
                                 "\n" + costColorTag + "$" + upgCost + endColorTag; 
         }
 

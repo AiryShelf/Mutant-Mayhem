@@ -246,12 +246,12 @@ public class WaveSpawnerRandom : MonoBehaviour
         // Apply batchMult to SubWave numbers to spawn
         for (int i = 0; i < _numberToSpawn.Count; i++)
         {
-            _numberToSpawn[i] *= Mathf.FloorToInt(batchMult);
+            _numberToSpawn[i] = Mathf.FloorToInt(_numberToSpawn[i] * batchMult);
             //Debug.Log("Number to spawn of index " + i + ": " + _numberToSpawn[i]);
         }
 
         // Get starting point, angle, radius
-        float spawnRadius = waveController.spawnRadius;
+        float spawnRadius = CalculateSpawnRadiusAndCenter();
         Vector2 spawnPos = GetPointOnCircumference(spawnRadius, 0, 1, true);
         float spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
 
@@ -270,7 +270,7 @@ public class WaveSpawnerRandom : MonoBehaviour
             
             // Style's batchAmount start value is increasing with waveController Mult
             int batchSize = Mathf.FloorToInt(subWaveStyle.batchAmount * batchMult / 
-                                             waveController.batchMultiplierStart);
+                                             waveController.batchMultStart);
 
             // Spawn batch
             for (int i = 0; i < batchSize; i++)
@@ -380,8 +380,42 @@ public class WaveSpawnerRandom : MonoBehaviour
         }
     }
 
-    Vector2 GetPointOnCircumference(float radius, float startRadAngle, 
-                                    float radSpread, bool randomize)
+    float CalculateSpawnRadiusAndCenter()
+    {
+        Vector3 minBounds = Vector3.positiveInfinity;
+        Vector3 maxBounds = Vector3.negativeInfinity;
+
+        List<Vector3Int> allPositions = tileManager.GetAllStructurePositions();
+        allPositions.Add(new Vector3Int((int)qCubeTrans.position.x, (int)qCubeTrans.position.y, (int)qCubeTrans.position.z));
+
+        if (allPositions == null || allPositions.Count == 0)
+        {
+            Debug.LogWarning("No structure positions found. Using default spawn radius.");
+            centerPoint = qCubeTrans.position;
+            return waveController.spawnRadiusBuffer;
+        }
+
+        foreach (Vector3 structurePosition in allPositions)
+        {
+            minBounds = Vector3.Min(minBounds, structurePosition);
+            maxBounds = Vector3.Max(maxBounds, structurePosition);
+        }
+
+        centerPoint = (minBounds + maxBounds) / 2;
+        float maxDistance = Mathf.Max(
+            Mathf.Abs(centerPoint.x - minBounds.x),
+            Mathf.Abs(centerPoint.y - minBounds.y),
+            Mathf.Abs(centerPoint.x - maxBounds.x),
+            Mathf.Abs(centerPoint.y - maxBounds.y)
+        );
+
+        // Add a buffer to ensure enemies spawn outside the base
+        float spawnRadius = maxDistance + waveController.spawnRadiusBuffer;
+        Debug.Log("CalculatedSpawnRadius: " + spawnRadius);
+        return spawnRadius;
+    }
+
+    Vector2 GetPointOnCircumference(float radius, float startRadAngle, float radSpread, bool randomize)
     {
         if (randomize)
             startRadAngle += Random.Range(-radSpread * Mathf.PI, radSpread * Mathf.PI);

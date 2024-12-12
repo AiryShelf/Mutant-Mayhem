@@ -29,7 +29,7 @@ public static class UpgStatGetter
                 stat = player.stats.accuracyHoningSpeed.ToString("#0.00");
                 return stat;
             case PlayerStatsUpgrade.MeleeDamage:
-                stat = player.stats.meleeDamage.ToString("#0.0");
+                stat = player.stats.meleeDamage.ToString("#0.00");
                 return stat;
             case PlayerStatsUpgrade.MeleeKnockback:
                 stat = player.stats.knockback.ToString("#0.0");
@@ -114,7 +114,7 @@ public static class UpgStatGetter
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                stat = Mathf.Abs(player.stats.playerShooter.gunList[gunIndex].damage).ToString("#0.0");
+                stat = Mathf.Abs(player.stats.playerShooter.gunList[gunIndex].damage).ToString("#0.00");
                 return stat;
             case GunStatsUpgrade.GunKnockback:
                 stat = player.stats.playerShooter.gunList[gunIndex].knockback.ToString("#0.0");
@@ -162,7 +162,7 @@ public static class UpgStatGetter
         switch (playerStatsUpgrade)
         {
             case PlayerStatsUpgrade.MoveSpeed:
-                amount = "+" + MoveSpeedUpgrade.UpgAmount.ToString("#0.00");
+                amount = "+" + MoveSpeedUpgrade.GetUpgAmount().ToString("#0.00");
                 return amount;
             case PlayerStatsUpgrade.StrafeSpeed:
                 amount = "+" + StrafeSpeedUpgrade.UpgAmount.ToString("#0.00");
@@ -177,7 +177,7 @@ public static class UpgStatGetter
                 amount = "+" + WeaponHandlingUpgrade.UpgAmount.ToString("#0.00");
                 return amount;
             case PlayerStatsUpgrade.MeleeDamage:
-                amount = "+" + MeleeDamageUpgrade.GetUpgAmount(upgradeManager).ToString("#0.0");
+                amount = "+" + MeleeDamageUpgrade.GetUpgAmount(upgradeManager).ToString("#0.00");
                 return amount;
             case PlayerStatsUpgrade.MeleeKnockback:
                 amount = "+" + KnockbackUpgrade.GetUpgAmount(upgradeManager).ToString("#0.0");
@@ -249,7 +249,7 @@ public static class UpgStatGetter
                 amount = "+" + TurretRotSpeedUpgrade.UpgAmount.ToString("#0");
                 return amount;
             case StructureStatsUpgrade.TurretSensors:
-                amount = "+" + TurretSensorsUpgrade.UpgAmount.ToString("#0.0");
+                amount = "+" + TurretSensorsUpgrade.GetUpgAmount().ToString("#0.0");
                 return amount;
         }
 
@@ -260,11 +260,28 @@ public static class UpgStatGetter
     public static string GetUpgAmount(Player player, GunStatsUpgrade gunStatsUpgrade, int gunIndex, UpgradeManager upgradeManager)
     {
         string amount = "null";
+        float planetDamageMult = 1;
+        float planetRangeMult = 1;
+
+        switch (gunIndex)
+        {
+            case 0:
+                planetDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                planetRangeMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserRange];
+                break;
+            case 1:
+                planetDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                planetRangeMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletRange];
+                break;
+            case 9:
+                planetDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                break;
+        }
 
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                amount = "+" + Mathf.Abs(GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeManager)).ToString("#0.0");
+                amount = "+" + Mathf.Abs(GunDamageUpgrade.GetUpgAmount(player, gunIndex, upgradeManager)).ToString("#0.00");
                 return amount;
             case GunStatsUpgrade.GunKnockback:
                 amount = "+" + GunKnockbackUpgrade.GetUpgAmount(player, gunIndex).ToString("#0.0");
@@ -308,24 +325,20 @@ public static class UpgStatGetter
         switch (consumablesUpgrade)
         {
             case ConsumablesUpgrade.PlayerHeal:
-                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
-                       PlayerHealUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
+                cost = PlayerHealUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
                 return cost;
             case ConsumablesUpgrade.QCubeRepair:
-                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
-                       QCubeRepairUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
+                cost = QCubeRepairUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
                 return cost;
             case ConsumablesUpgrade.GrenadeBuyAmmo:
-                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
-                       GrenadeBuyAmmoUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
+                cost = GrenadeBuyAmmoUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
                 return cost;
             case ConsumablesUpgrade.SMGBuyAmmo:
-                cost = Mathf.FloorToInt(upgradeManager.consumablesCostMult * 
-                       SMGBuyAmmoUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]));
+                cost = SMGBuyAmmoUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
                 return cost;
         }
 
-        return cost;
+        return Mathf.CeilToInt(cost * upgradeManager.consumablesCostMult);
     }
 
     #endregion

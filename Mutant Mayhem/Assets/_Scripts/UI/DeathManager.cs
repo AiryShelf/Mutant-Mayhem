@@ -12,7 +12,7 @@ public class DeathManager : MonoBehaviour
     [SerializeField] StatsCounterPlayer statsCounterPlayer;
     [SerializeField] CanvasGroup myCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroupsWave;
-    [SerializeField] UIStatsListBuilder statsListBuilder;
+    [SerializeField] UI_DeathStatsListBuilder statsListBuilder;
     [SerializeField] PauseMenuController pauseMenuController;
     [SerializeField] TextMeshProUGUI deathTitleText;
     [SerializeField] TextMeshProUGUI deathSubtitleText;
@@ -24,23 +24,20 @@ public class DeathManager : MonoBehaviour
     [SerializeField] float deathSFXFadeTime = 3f;
     [SerializeField] float deathSFXFadeAmount = -4f;
 
-    [Header("Research Points")]
-    [SerializeField] int basePoints = 0;
-    [SerializeField] int incrementPerWave = 20;
-    [SerializeField] int difficultyAdjustHard = 20;
-    [SerializeField] int difficultyAdjustEasy = -10;
-
-    int adjustedIncPerWave;
+    int adjustedPointsPerWave;
     bool isTriggered;
     float storedSFXVolume;
 
     WaveControllerRandom waveController;
+    Planet currentPlanet;
 
     void OnEnable()
     {
+        waveController = FindObjectOfType<WaveControllerRandom>();
+        currentPlanet = PlanetManager.Instance.currentPlanet;
+
         Player.OnPlayerDestroyed += TransitionToPlayerDeath;
         QCubeController.OnCubeDestroyed += TransitionToCubeDeath;
-        waveController = FindObjectOfType<WaveControllerRandom>();
     }
 
     void OnDisable()
@@ -94,9 +91,9 @@ public class DeathManager : MonoBehaviour
     {
         if (destroyed && !isTriggered)
         {
+            ApplyDeathPoints();
             TransitionToPanel();
             RandomizeDeathMessages(playerDeathTitles, playerDeathSubtitles);
-            ApplyDeathPoints();
         }
     }
 
@@ -105,9 +102,9 @@ public class DeathManager : MonoBehaviour
         if (destroyed && !isTriggered)
         {
             player.IsDead = true;
+            ApplyDeathPoints();
             TransitionToPanel();
             RandomizeDeathMessages(cubeDeathTitles, cubeDeathSubtitles);
-            ApplyDeathPoints();
         }
     }
 
@@ -143,38 +140,46 @@ public class DeathManager : MonoBehaviour
 
     public void ApplyDifficultyToRPGain(DifficultyLevel difficultyLevel)
     {
+        /*
         switch (difficultyLevel)
         {
             case DifficultyLevel.Easy:
-                adjustedIncPerWave = incrementPerWave + difficultyAdjustEasy;
+                adjustedPointsPerWave = currentPlanet.pointsPerWave + currentPlanet.difficultyAdjustEasy;
             break;
             case DifficultyLevel.Normal:
-                adjustedIncPerWave = incrementPerWave;
+                adjustedPointsPerWave = currentPlanet.pointsPerWave;
             break;
             case DifficultyLevel.Hard:
-                adjustedIncPerWave = incrementPerWave + difficultyAdjustHard;
+                adjustedPointsPerWave = currentPlanet.pointsPerWave + currentPlanet.difficultyAdjustHard;
             break;
         }
+        */
 
-        Debug.Log("RP per wave set to " + adjustedIncPerWave);
+        adjustedPointsPerWave = currentPlanet.pointsPerWave;
+        Debug.Log("RP per wave set to " + adjustedPointsPerWave + " for planet " + currentPlanet);
     }
 
     void ApplyDeathPoints()
     {
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
+        currentProfile.playthroughs++;
+
+        if (waveController.currentWaveIndex < 1)
+        {
+            Debug.Log("Player died without passing Night 1");
+            return;
+        }
 
         // Apply research points to profile
         int points = GetResearchPointsGain();
         currentProfile.researchPoints += points;
-        Debug.Log("Added " + points + " research points to current profile");
+        Debug.Log("DeathManager: Added " + points + " research points to current profile");
 
-        // Apply max wave reached to profile
-        if (currentProfile.maxWaveReached < waveController.currentWaveIndex)
+        // Apply max wave survived to profile
+        if (currentProfile.maxWaveSurvived < waveController.currentWaveIndex)
         {
-            currentProfile.maxWaveReached = waveController.currentWaveIndex;
+            currentProfile.maxWaveSurvived = waveController.currentWaveIndex;
         }
-
-        currentProfile.playthroughs++;
 
         // Save changes to profile
         ProfileManager.Instance.SaveCurrentProfile();
@@ -182,7 +187,8 @@ public class DeathManager : MonoBehaviour
 
     public int GetResearchPointsGain()
     {
-        int pointsToGive = basePoints + Mathf.CeilToInt(adjustedIncPerWave * waveController.currentWaveIndex * 1.5f);
+        int pointsToGive = currentPlanet.basePoints + Mathf.CeilToInt(adjustedPointsPerWave * waveController.currentWaveIndex * 
+                                                        (1 + waveController.currentWaveIndex * currentPlanet.growthControlFactor));
         return pointsToGive;
     }
 }

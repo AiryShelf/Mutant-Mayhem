@@ -107,6 +107,11 @@ public class UpgradeManager : MonoBehaviour
 
     public void Initialize()
     {
+        playerStatsCostMult = 1;
+        structureStatsCostMult = 1;
+        consumablesCostMult = 1;
+        gunStatsCostMult = 1;
+
         // Reset references
         player = FindObjectOfType<Player>();
         playerShooter = player.playerShooter;
@@ -235,15 +240,15 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StrafeSpeed] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.SprintFactor] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 200; // Deprecated
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.WeaponHandling] = 300;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.WeaponHandling] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeKnockback] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaMax] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaRegen] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthMax] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitChance] = 250;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitDamage] = 250;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitChance] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitDamage] = 200;
 
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
@@ -533,40 +538,42 @@ public class UpgradeManager : MonoBehaviour
 
         if (BuildingSystem.PlayerCredits >= cost)
         {
-            // Check max level
-            if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
-            {
-                Debug.LogError("Consumable int maxed out: " + upgType);
-                MessagePanel.PulseMessage("Reached max value for integers. You either bought this over 32,000 times " + 
-                                         "or there is a bug!  Let me know!", Color.red);
-                return;
-            }
-
-            
-            if (upgrade.Apply(player.stats))
-            {
-                BuildingSystem.PlayerCredits -= cost;
-                consumablesUpgLevels[upgType]++;
-
-                
-                upgradeEffects.PlayUpgradeButtonEffect();
-                
-                
-                consumablesUpgCurrCosts[upgType] = cost;
-
-                //Debug.Log("Consumable applied: " + upgType);
-                MessagePanel.PulseMessage("Consumabled applied!", Color.cyan);
-            }
-            else
-            {
-                //Debug.Log(upgType + " already full");
-                MessagePanel.PulseMessage("It's already full", Color.yellow);
-            }
+            CheckAndApplyConsumable(upgrade, upgType, cost);
         }
+        
         else
         {
             //Debug.Log("Not enough credits for: " + upgType);
             MessagePanel.PulseMessage("Not enough Credits!", Color.red);
+        }
+    }
+
+    private void CheckAndApplyConsumable(Upgrade upgrade, ConsumablesUpgrade upgType, int cost)
+    {
+        // Check max level
+        if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
+        {
+            Debug.LogError("Consumable int maxed out: " + upgType);
+            MessagePanel.PulseMessage("Reached max value for integers. You either bought this over " +
+                                      "32,000 times or there is a bug!  Let me know!", Color.red);
+            return;
+        }
+        
+        if (upgrade.Apply(player.stats))
+        {
+            BuildingSystem.PlayerCredits -= cost;
+            consumablesUpgLevels[upgType]++;
+            consumablesUpgCurrCosts[upgType] = cost;
+
+            upgradeEffects.PlayUpgradeButtonEffect();
+
+            //Debug.Log("Consumable applied: " + upgType);
+            MessagePanel.PulseMessage("Consumabled applied!", Color.cyan);
+        }
+        else
+        {
+            //Debug.Log(upgType + " already full");
+            MessagePanel.PulseMessage("It's already full", Color.yellow);
         }
     }
 
@@ -643,12 +650,6 @@ public class UpgradeManager : MonoBehaviour
             MessagePanel.PulseMessage("Not enough Credits!", Color.red);
         }
     }
-
-    #endregion
-
-    #region Effects
-
-    
 
     #endregion
 }

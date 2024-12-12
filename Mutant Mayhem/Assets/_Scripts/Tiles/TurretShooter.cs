@@ -40,6 +40,12 @@ public class TurretShooter : Shooter
 
     protected override IEnumerator ReloadRoutine()
     {
+        if (player == null)
+        {
+            Debug.LogWarning("Player is null.  It's okay once here, but not excessively");
+            yield break;
+        }
+
         // Wait for ammo to use
         while (player.stats.playerShooter.gunsAmmo[1] <= 0)
             yield return new WaitForSeconds(0.2f);

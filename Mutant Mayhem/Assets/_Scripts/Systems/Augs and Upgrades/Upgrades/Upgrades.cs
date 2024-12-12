@@ -85,7 +85,7 @@ public abstract class Upgrade
     protected Upgrade(GunStatsUpgrade type)
     {
         GunStatsUpgType = type;
-    }    
+    }
 
     public virtual void Apply(PlayerStats playerStats, int level) { }
     public virtual void Apply(StructureStats structureStats, int level) { }
@@ -111,9 +111,14 @@ public class MoveSpeedUpgrade : Upgrade
 
     public static float UpgAmount = 0.2f;
 
+    public static float GetUpgAmount()
+    {
+        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
+    }
+
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.moveSpeed += UpgAmount;
+        playerStats.moveSpeed += UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
         playerStats.lookSpeed += 0.1f;
         playerStats.player.RefreshMoveForces();
     }
@@ -125,9 +130,14 @@ public class StrafeSpeedUpgrade : Upgrade
 
     public static float UpgAmount = 0.17f;
 
+    public static float GetUpgAmount()
+    {
+        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
+    }
+
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.strafeSpeed += UpgAmount;
+        playerStats.strafeSpeed += UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
         playerStats.player.RefreshMoveForces();
     }
 }
@@ -201,13 +211,14 @@ public class MeleeDamageUpgrade : Upgrade
 
     public static float GetUpgAmount(UpgradeManager upgradeManager)
     {
-        float upgAmount = 0.2f * (upgradeManager.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 2);
+        float upgAmount = 0.2f * (upgradeManager.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 2) *
+                          PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
         return upgAmount;
     }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.meleeDamage += 0.25f * (level + 1);
+        playerStats.meleeDamage += 0.2f * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -618,6 +629,11 @@ public class TurretSensorsUpgrade : Upgrade
 
     public static float UpgAmount = 0.5f;
 
+    public static float GetUpgAmount()
+    {
+        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.TurretSensors];
+    }
+
     public override void Apply(StructureStats structureStats, int level)
     {
         Debug.Log("TurretDetectRangeUpg applied");
@@ -650,16 +666,19 @@ public class GunDamageUpgrade : Upgrade
         switch (gunIndex)
         {
             case 0:
-                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
-                            (upgradeManager.laserUpgLevels[GunStatsUpgrade.GunDamage] + 2);
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor * 
+                            (upgradeManager.laserUpgLevels[GunStatsUpgrade.GunDamage] + 2) *
+                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
                 return upgAmount;
             case 1:
-                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
-                            (upgradeManager.bulletUpgLevels[GunStatsUpgrade.GunDamage] + 2);
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor * 
+                            (upgradeManager.bulletUpgLevels[GunStatsUpgrade.GunDamage] + 2) *
+                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
                 return upgAmount;
             case 9:
-                // upgAmount should not scale up for repair gun
-                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor;
+                // upgAmount does not scale up for repair gun
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
+                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
                 return upgAmount;
             default:
                 return upgAmount; 
@@ -668,12 +687,18 @@ public class GunDamageUpgrade : Upgrade
 
     public override void Apply(GunSO gunSO, int level)
     {
-        if (gunSO.uiName == "Repair Gun")
-            gunSO.damage += gunSO.damageUpgFactor;
-        else
+        switch (gunSO.gunType)
         {
-            gunSO.damage += gunSO.damageUpgFactor * (level + 1);
-            TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
+            case GunType.Laser:
+                gunSO.damage += gunSO.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                break;
+            case GunType.Bullet:
+                gunSO.damage += gunSO.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                break;
+            case GunType.RepairGun:
+                gunSO.damage += gunSO.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
+                break;
         }
     }
 

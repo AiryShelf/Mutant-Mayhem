@@ -235,6 +235,9 @@ public static class GameTools
 
         while (elapsedTime < pulseDuration)
         {
+            if (transform == null)
+                yield break;
+
             float t = elapsedTime / pulseDuration;
             float easedT;
 

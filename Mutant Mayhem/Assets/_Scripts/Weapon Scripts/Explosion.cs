@@ -67,7 +67,8 @@ public class Explosion : MonoBehaviour
                     {
                         Debug.Log("Explosion tried to hit a tile");
                         float distToPoint = Vector2.Distance(explosionPos, worldPos);
-                        float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage / 2);
+                        float tmpDamage = damage * PlanetManager.Instance.statMultipliers[PlanetStatModifier.ExplosionDamage];
+                        float totalDamage = Mathf.Clamp(tmpDamage / distToPoint, 0, tmpDamage);
                         tileManager.ModifyHealthAt(worldPos, -totalDamage);
 
                         StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;

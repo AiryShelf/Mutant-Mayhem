@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIStatsListBuilder : MonoBehaviour
+public class UI_DeathStatsListBuilder : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI survivedForText;
     [SerializeField] TextMeshProUGUI nightReachedText;
@@ -22,13 +22,13 @@ public class UIStatsListBuilder : MonoBehaviour
         // Set progress texts
         string time = GameTools.FormatTimeFromSeconds(Mathf.FloorToInt(StatsCounterPlayer.TotalPlayTime));
         survivedForText.text = "You survived for " + time;
-        int nightReached = waveController.currentWaveIndex + 1;
-        nightReachedText.text = "Night Reached: " + nightReached;
-        int previousRecord = ProfileManager.Instance.currentProfile.maxWaveReached;
+        int nightsSurvived = waveController.currentWaveIndex;
+        nightReachedText.text = "Nights Survived: " + nightsSurvived;
+        int previousRecord = ProfileManager.Instance.currentProfile.maxWaveSurvived;
         previourRecordText.text = "Previous Record: " + previousRecord;
         int researchPointsGained = deathManager.GetResearchPointsGain();
         researchPointsGainedText.text = "Research Points Gained: " + researchPointsGained;
-        int totalResearchPoints = ProfileManager.Instance.currentProfile.researchPoints + researchPointsGained;
+        int totalResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
         totalResearchPointsText.text = "Total Research Points: " + totalResearchPoints;
 
         // Clear objects in stats layout groups

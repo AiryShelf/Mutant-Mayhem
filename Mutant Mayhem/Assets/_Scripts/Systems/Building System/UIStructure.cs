@@ -135,8 +135,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             return;
         }
         
-        int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult * 
-                                         PlanetManager.Instance.currentPlanet.buildCostMultiplier);
+        int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);
         // Set yellow or red depending on affordability
         if (playerCredits >= totalCost)
         {

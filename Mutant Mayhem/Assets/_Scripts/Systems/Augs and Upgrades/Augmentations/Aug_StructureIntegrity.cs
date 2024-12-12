@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Aug_StructureIntegrity_New", menuName = "Augmentations/Aug_StructureIntegrity")]
+[CreateAssetMenu(fileName = "Aug_StructureInte grity_New", menuName = "Augmentations/Aug_StructureIntegrity")]
 public class Aug_StructureIntegrity : AugmentationBaseSO
 {
     public float lvlMultIncrement = 0.1f;

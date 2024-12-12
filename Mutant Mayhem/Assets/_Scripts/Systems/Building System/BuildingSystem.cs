@@ -395,19 +395,17 @@ public class BuildingSystem : MonoBehaviour
         }
 
         // Check Credits
-        if (PlayerCredits < structureInHand.tileCost * structureCostMult *
-                            PlanetManager.Instance.currentPlanet.buildCostMultiplier)
+        if (PlayerCredits < structureInHand.tileCost * structureCostMult)
         {
             MessagePanel.Instance.DelayMessage("Not enough Credits to build " + 
-                                     structureInHand.tileName + "!", Color.red, 0.1f);
+                                  structureInHand.tileName + "!", Color.red, 0.1f);
             return;
         }
 
         // Add Tile
         if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
         {
-            PlayerCredits -= structureInHand.tileCost * structureCostMult *
-                             PlanetManager.Instance.currentPlanet.buildCostMultiplier;
+            PlayerCredits -= structureInHand.tileCost * structureCostMult;
             RemoveBuildHighlight();
 
             if (structureInHand.isTurret)

@@ -8,7 +8,7 @@ public class PlayerProfile
     public string profileName;
     public int researchPoints;
     public int playthroughs;
-    public int maxWaveReached;
+    public int maxWaveSurvived;
     public bool isTutorialEnabled;
     public DifficultyLevel difficultyLevel;
     public bool isStandardWASD;
@@ -19,7 +19,7 @@ public class PlayerProfile
         this.profileName = profileName;
         researchPoints = 0;
         playthroughs = 0;
-        maxWaveReached = 0;
+        maxWaveSurvived = 0;
         isTutorialEnabled = true;
         difficultyLevel = difficulty;
         isStandardWASD = true;

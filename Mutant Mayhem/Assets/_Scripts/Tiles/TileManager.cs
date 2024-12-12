@@ -17,7 +17,7 @@ public class TileManager : MonoBehaviour
     // the Structures Tilemap (on "Structures" layer)
     private static Dictionary<Vector3Int, TileStats> _TileStatsDict = 
                                             new Dictionary<Vector3Int, TileStats>();
-    private static List<Vector3Int> _Structures = new List<Vector3Int>();
+    private static List<Vector3Int> _StructurePositions = new List<Vector3Int>();
     public Player player;
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
@@ -191,8 +191,8 @@ public class TileManager : MonoBehaviour
         // Remove from list and dict
         foreach (var pos in rotatedPositions)
         {
-            if (_Structures.Contains(pos))
-                _Structures.Remove(rootPos + pos);
+            if (_StructurePositions.Contains(pos))
+                _StructurePositions.Remove(rootPos + pos);
             _TileStatsDict.Remove(rootPos + pos);
             StructureTilemap.SetTile(rootPos + pos, null);           
         }
@@ -262,7 +262,7 @@ public class TileManager : MonoBehaviour
 
     public void ModifyMaxHealthAll(float factor)
     {
-        foreach (Vector3Int rootPos in _Structures)
+        foreach (Vector3Int rootPos in _StructurePositions)
         {
             ModifyMaxHealthAt(rootPos, factor);
         }
@@ -332,6 +332,11 @@ public class TileManager : MonoBehaviour
     #endregion
 
     #region Checks and Getters
+
+    public List<Vector3Int> GetAllStructurePositions()
+    {
+        return _StructurePositions;
+    }
 
     public bool ContainsTileDictKey(Vector3Int gridPos)
     {
@@ -536,7 +541,7 @@ public class TileManager : MonoBehaviour
             if (!_TileStatsDict.ContainsKey(rootPos))
             {
                 // Add to structures list
-                _Structures.Add(rootPos);
+                _StructurePositions.Add(rootPos);
 
                 float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthMult;
                 // Add to TileStats

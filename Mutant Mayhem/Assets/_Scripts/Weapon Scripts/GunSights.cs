@@ -69,12 +69,12 @@ public class GunSights : MonoBehaviour
         
         Vector2 leftDir = GameTools.RotateVector2(transform.right, accuracy);
         Vector2 rightDir = GameTools.RotateVector2(transform.right, -accuracy);
-        float edgeDist = defaultDist * edgeLengthFactor;
+        float edgeDist = length * edgeLengthFactor;
 
         lineRendererLeftEdge.SetPosition(0, (Vector2)transform.position);
-        lineRendererLeftEdge.SetPosition(1, (Vector2)transform.position + leftDir * edgeDist);
+        lineRendererLeftEdge.SetPosition(1, (Vector2)transform.position + (leftDir * edgeDist));
         
         lineRendererRightEdge.SetPosition(0, (Vector2)transform.position);
-        lineRendererRightEdge.SetPosition(1, (Vector2)transform.position + rightDir * edgeDist);
+        lineRendererRightEdge.SetPosition(1, (Vector2)transform.position + (rightDir * edgeDist));
     }
 }

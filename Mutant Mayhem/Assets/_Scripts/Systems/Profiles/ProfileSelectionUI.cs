@@ -119,7 +119,7 @@ public class ProfileSelectionUI : MonoBehaviour
         deleteButton.interactable = true;
         noProfilesText.text = "";
         researchPointsValueText.text = ProfileManager.Instance.currentProfile.researchPoints.ToString();
-        maxWaveReachedValueText.text = ProfileManager.Instance.currentProfile.maxWaveReached.ToString();
+        maxWaveReachedValueText.text = ProfileManager.Instance.currentProfile.maxWaveSurvived.ToString();
         clonesUsedValueText.text = ProfileManager.Instance.currentProfile.playthroughs.ToString();
 
         
