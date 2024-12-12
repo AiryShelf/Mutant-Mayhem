@@ -261,7 +261,8 @@ public static class GameTools
             yield return null;
         }
 
-        transform.localScale = scaleStart;
+        if (transform)
+            transform.localScale = scaleStart;
     }
 
     #endregion
