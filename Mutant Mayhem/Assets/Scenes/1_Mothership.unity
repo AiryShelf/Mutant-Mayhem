@@ -2249,7 +2249,7 @@ MonoBehaviour:
   modifierTextPrefab: {fileID: 2881962604365935191, guid: b2b1c8fa5c9683a44a2bf4ead2714a9f, type: 3}
   buffModifierColor: {r: 0, g: 1, b: 0, a: 1}
   debuffModifierColor: {r: 1, g: 0, b: 0, a: 1}
-  toPassMissionText: {fileID: 0}
+  toPassMissionText: {fileID: 787136356}
 --- !u!224 &568656875 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 886930125334324057, guid: 2269998deff820640abbd51481e2b6d4, type: 3}
@@ -6756,7 +6756,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Show Map
+  m_text: More planets coming soon
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6783,8 +6783,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 15
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6869,8 +6869,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000026972, y: 23.5}
-  m_SizeDelta: {x: 123.81, y: 30}
+  m_AnchoredPosition: {x: -0.000026972, y: 23.499996}
+  m_SizeDelta: {x: 207.43, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1528386528
 MonoBehaviour:
@@ -6915,19 +6915,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1528386529}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1267302628}
-        m_TargetAssemblyTypeName: UIMothershipController, Assembly-CSharp
-        m_MethodName: OnLaunch
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1528386529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9445,7 +9433,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!223 &2139997969
 Canvas:
   m_ObjectHideFlags: 0
