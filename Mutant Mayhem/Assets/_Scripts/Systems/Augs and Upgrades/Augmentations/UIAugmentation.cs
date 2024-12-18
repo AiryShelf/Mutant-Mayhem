@@ -115,27 +115,23 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     public void UpdateIconAndText()
     {
-        string costOrGainText;
         Color costColor;
 
         // Set Cost or Gain text
         if (totalCost == 0)
         {
-            costOrGainText = "Not added";
             costColor = originalTextColor/1.2f;
-            costText.text = costOrGainText;
+            costText.text = "";
         }
         else if (totalCost < 0)
         {
-            costOrGainText = "Cost: ";
             costColor = Color.yellow;
-            costText.text = costOrGainText + Mathf.Abs(totalCost) + " RP";  
+            costText.text = "-" + Mathf.Abs(totalCost) + " RP";  
         }
         else
         {
-            costOrGainText = "Gain: ";
             costColor = Color.green;
-            costText.text = costOrGainText + Mathf.Abs(totalCost) + " RP";  
+            costText.text = "+" + Mathf.Abs(totalCost) + " RP";  
         }  
 
         if (aug == null)
