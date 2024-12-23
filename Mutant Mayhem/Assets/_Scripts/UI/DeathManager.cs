@@ -29,7 +29,7 @@ public class DeathManager : MonoBehaviour
     float storedSFXVolume;
 
     WaveControllerRandom waveController;
-    Planet currentPlanet;
+    PlanetSO currentPlanet;
 
     void OnEnable()
     {

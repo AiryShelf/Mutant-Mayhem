@@ -29,12 +29,16 @@ public class FadeCanvasGroupsWave : MonoBehaviour
     
     Coroutine fadeIn;
     Coroutine fadeOut;
-    public bool isTriggered;
+    [HideInInspector] public bool isTriggered;
+    public bool startTriggered = false;
     
     bool hasSelectedFirst;
 
     void Start()
     {
+        if (startTriggered)
+            return;
+            
         InitializeToFadedOut();
     }
 
