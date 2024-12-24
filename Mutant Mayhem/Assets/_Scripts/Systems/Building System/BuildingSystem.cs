@@ -27,7 +27,7 @@ public class BuildingSystem : MonoBehaviour
             }
         }
     }
-    public BuildRangeCircle buildRangeCircle;
+    public LineRendererCircle buildRangeCircle;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersForRemoveClearCheck;
     [SerializeField] UIBuildMenuController buildMenuController;
@@ -275,7 +275,7 @@ public class BuildingSystem : MonoBehaviour
             mouseLooker.lockedToPlayer = true;
 
             //currentRotation = 0;
-            buildRangeCircle.EnableBuildCircle(true);
+            buildRangeCircle.EnableCircle(true);
             isInBuildMode = true;
             //previousGunIndex = player.playerShooter.currentGunIndex;
             player.playerShooter.isBuilding = true;
@@ -296,7 +296,7 @@ public class BuildingSystem : MonoBehaviour
             cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
             mouseLooker.lockedToPlayer = false;
 
-            buildRangeCircle.EnableBuildCircle(false);
+            buildRangeCircle.EnableCircle(false);
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;
             // Only switch guns if not repair gun

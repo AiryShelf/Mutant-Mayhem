@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public PlanetSO planetSO;
+    [SerializeField] LineRendererCircle selectableCircle;
     [SerializeField] GameObject highlightPrefab;
     [SerializeField] GameObject highlightLockedPrefab;
     [SerializeField] GameObject selectedHighlightPrefab;
@@ -15,20 +16,21 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
     GameObject selectedHighlightInstance;
     public bool unlocked = false;
 
-    void Awake()
-    {
-        
-    }
-
     void Start()
     {
         unlocked = ProfileManager.Instance.IsPlanetUnlocked(planetSO.prerequisitePlanets);
 
         GameObject highlight;
         if (unlocked)
+        {
             highlight = highlightPrefab;
+            selectableCircle.EnableCircle(true);
+        }
         else
+        {
             highlight = highlightLockedPrefab;
+            selectableCircle.EnableCircle(false);
+        }
 
         highlightInstance = Instantiate(highlight, transform.position, Quaternion.identity, parentTransform);
         highlightInstance.transform.localScale = Vector3.one; 
