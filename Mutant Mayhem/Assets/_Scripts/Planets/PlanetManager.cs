@@ -5,8 +5,7 @@ using UnityEngine;
 public class PlanetManager : MonoBehaviour
 {
     public static PlanetManager Instance;
-
-    public List<PlanetSO> planets;
+    public List<PlanetSO> planetsSource;
     public PlanetSO currentPlanet { get; private set; }
 
     [Header("Current Multipliers")]
@@ -38,16 +37,16 @@ public class PlanetManager : MonoBehaviour
 
     public void SetCurrentPlanet(int index)
     {
-        currentPlanet = planets[index];
+        currentPlanet = planetsSource[index];
         GetPlanetProperties();
     }
 
     public void SetCurrentPlanet(PlanetSO planet)
     {
-        int index = planets.IndexOf(planet);
+        int index = planetsSource.IndexOf(planet);
         if (index != -1)
         {
-            currentPlanet = planets[index];
+            currentPlanet = planetsSource[index];
             GetPlanetProperties();
         }
         else
@@ -72,6 +71,7 @@ public class PlanetManager : MonoBehaviour
                 if (statMultipliers.ContainsKey(entry.statModifier))
                 {
                     statMultipliers[entry.statModifier] *= entry.multiplier;
+                    statMultipliers[entry.statModifier] = Mathf.Clamp(statMultipliers[entry.statModifier], 0 , float.MaxValue);
                 }
                 else
                 {
@@ -101,7 +101,14 @@ public class PlanetManager : MonoBehaviour
             return;
         }
 
+        float maxHealth = player.stats.playerHealthScript.GetMaxHealth();
+        maxHealth *= statMultipliers[PlanetStatModifier.PlayerHealth];
+        player.stats.playerHealthScript.SetMaxHealth(maxHealth);
+        player.stats.playerHealthScript.SetHealth(maxHealth);
+
         player.stats.moveSpeed *= statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
+        player.stats.strafeSpeed *= statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
+        player.GetComponent<Rigidbody2D>().drag *= statMultipliers[PlanetStatModifier.PlayerDrag];
         player.stats.meleeDamage *= statMultipliers[PlanetStatModifier.LaserDamage];
         player.stats.structureStats.structureMaxHealthMult *= statMultipliers[PlanetStatModifier.StructureIntegrity];
 
@@ -173,14 +180,14 @@ public class PlanetManager : MonoBehaviour
         }
 
         waveController.timeBetweenWavesBase = currentPlanet.timeBetweenWavesBase; // Base amount of day-time
-        waveController.wavesTillAddBase = currentPlanet.wavesTillAddBase; // Affects batch multiplier and max index to choose subwaves from
+        waveController.wavesTillAddBase = currentPlanet.wavesTillAddBase; // Affects max index to choose subwaves from
         waveController.subwaveDelayMultStart = currentPlanet.subwaveDelayMultStart;
         waveController.spawnRadiusBuffer = currentPlanet.spawnRadiusBuffer;
 
         waveController.batchMultStart = currentPlanet.batchMultiplierStart; // Starting batch multiplier for each Subwave 
-        waveController.damageMultStart = currentPlanet.damageMultiplier; 
-        waveController.healthMultStart = currentPlanet.healthMultiplier;
-        waveController.speedMultStart = currentPlanet.speedMultiplier;
-        waveController.sizeMultStart = currentPlanet.sizeMultiplier;
+        waveController.damageMultStart = currentPlanet.damageMultiplier * statMultipliers[PlanetStatModifier.EnemyDamage]; 
+        waveController.healthMultStart = currentPlanet.healthMultiplier * statMultipliers[PlanetStatModifier.EnemyHealth];
+        waveController.speedMultStart = currentPlanet.speedMultiplier * statMultipliers[PlanetStatModifier.EnemyMoveSpeed];
+        waveController.sizeMultStart = currentPlanet.sizeMultiplier * statMultipliers[PlanetStatModifier.EnemySize];
     }
 }

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_PropertyCard : MonoBehaviour
+public class UI_PlanetPropertyCard : MonoBehaviour
 {
     public TextMeshProUGUI propertyNameText;
     public Transform modifierLayoutGroup;

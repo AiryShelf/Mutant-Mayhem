@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5066062092768637632}
-  - component: {fileID: 825911859151222173}
   - component: {fileID: 7087441669604054075}
   - component: {fileID: 360185015566833025}
   m_Layer: 0
@@ -43,20 +42,6 @@ RectTransform:
   m_AnchoredPosition: {x: 355.79, y: -48.72}
   m_SizeDelta: {x: 258.46, y: 495.03}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &825911859151222173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 374281164789130411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 601f3be72e1e2cc418077c2b65ed3065, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
-  pauseOnOpen: 1
 --- !u!222 &7087441669604054075
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -641,10 +626,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5066062092768637632}
     m_Modifications:
-    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 825911859151222173}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -759,10 +740,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: OK Button
       objectReference: {fileID: 0}
-    - target: {fileID: 5616794115253936715, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 825911859151222173}
     - target: {fileID: 5776675130458506331, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

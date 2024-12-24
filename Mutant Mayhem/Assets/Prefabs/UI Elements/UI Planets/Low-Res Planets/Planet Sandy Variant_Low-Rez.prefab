@@ -114,7 +114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4759676269996704154, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_Name
-      value: Planet Sandy Variant
+      value: Planet Sandy Variant_Low-Rez
       objectReference: {fileID: 0}
     - target: {fileID: 5205301605607662913, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 29e89f41cdbef41caa11c13ad0cd3d7b, type: 2}
+    - target: {fileID: 8741508093978214478, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
+      propertyPath: planetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: a547c5fe3f0a54a9c820ebbf5f7bd5d4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

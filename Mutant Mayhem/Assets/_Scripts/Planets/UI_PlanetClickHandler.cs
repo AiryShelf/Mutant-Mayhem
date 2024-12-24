@@ -1,23 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public PlanetSO planetSO;
     [SerializeField] GameObject highlightPrefab;
+    [SerializeField] GameObject highlightLockedPrefab;
     [SerializeField] GameObject selectedHighlightPrefab;
     [SerializeField] Transform parentTransform;
     GameObject highlightInstance;
     GameObject selectedHighlightInstance;
+    public bool unlocked = false;
+
+    void Awake()
+    {
+        
+    }
 
     void Start()
     {
-        highlightInstance = Instantiate(highlightPrefab, transform.position, Quaternion.identity, parentTransform);
+        unlocked = ProfileManager.Instance.IsPlanetUnlocked(planetSO.prerequisitePlanets);
+
+        GameObject highlight;
+        if (unlocked)
+            highlight = highlightPrefab;
+        else
+            highlight = highlightLockedPrefab;
+
+        highlightInstance = Instantiate(highlight, transform.position, Quaternion.identity, parentTransform);
         highlightInstance.transform.localScale = Vector3.one; 
         highlightInstance.SetActive(false);
 
@@ -58,6 +71,12 @@ public class PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPointerE
     {
         if (UI_PlanetPanel.Instance == null) return;
 
+        if (!unlocked)
+        {
+            MessagePanel.PulseMessage("Planet is locked!  Conquer the previous planets first!", Color.red);
+            return;
+        }
+
         PlanetManager.Instance.SetCurrentPlanet(planetSO);
         if (PlanetManager.Instance.currentPlanet != planetSO)
         {
@@ -66,5 +85,33 @@ public class PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPointerE
         }
         else
             selectedHighlightInstance.SetActive(true);
+    }
+
+    void SetHighlightColor(Color color)
+    {
+        Image image = highlightInstance.GetComponent<Image>();
+        if (image != null)
+        {
+            // Ensure the Image has its own material instance
+            if (image.material == null || image.material.name == image.defaultMaterial.name)
+            {
+                image.material = new Material(image.defaultMaterial);
+            }
+
+            // Set the color property on the material instance
+            if (image.material.HasProperty("_BaseColor"))
+            {
+                image.material.SetColor("_BaseColor", color);
+                image.material.renderQueue -= 1;
+            }
+            else
+            {
+                Debug.LogWarning("SetHighlightColor: The material does not have a _Color property.");
+            }
+        }
+        else
+        {
+            Debug.LogError("PlanetClickHandler: Image component not found on highlightInstance.");
+        }
     }
 }

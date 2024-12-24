@@ -301,10 +301,15 @@ public class HealthMaxUpgrade : Upgrade
 
     public static float UpgAmount = 20;
 
+    public static float GetUpgAmount()
+    {
+        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerHealth];
+    }
+
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.playerHealthScript.SetMaxHealth(
-            playerStats.playerHealthScript.GetMaxHealth() + UpgAmount);
+            playerStats.playerHealthScript.GetMaxHealth() + GetUpgAmount());
     }
 }
 

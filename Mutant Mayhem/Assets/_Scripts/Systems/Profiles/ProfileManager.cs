@@ -7,17 +7,17 @@ using UnityEngine;
 public class ProfileManager : MonoBehaviour
 {
     public static ProfileManager Instance { get; private set; }
-    private string savePath => Path.Combine(Application.persistentDataPath, "profiles.json");
+    
+    [SerializeField] bool clearPlayerPrefsInEditor = false;
     public List<PlayerProfile> profiles = new List<PlayerProfile>();
     public PlayerProfile currentProfile;
     public static event Action<PlayerProfile> OnProfileIsSet;
 
     const string LastUsedProfileKey = "LastUsedProfile";
+    string savePath => Path.Combine(Application.persistentDataPath, "profiles.json");
 
     void Awake()
     {
-        Debug.Log($"Awake called on ProfileManager: {gameObject.name}, Instance is currently: {Instance}");
-        Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
         if (Instance == null)
         {
             Instance = this;
@@ -29,10 +29,11 @@ public class ProfileManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        
+        if (clearPlayerPrefsInEditor)
+            ClearAllPlayerPrefsForEditor();
 
         Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
-        ClearAllPlayerPrefsForEditor();
-
         Initialize();
     }
 
@@ -252,6 +253,49 @@ public class ProfileManager : MonoBehaviour
     }
 
     #endregion Add, Remove
+
+    #region Planets
+
+    public bool IsPlanetUnlocked(List<PlanetSO> prerequisitePlanets)
+    {
+        if (prerequisitePlanets == null)
+        {
+            Debug.LogWarning("ProfileManager: Prerequisites is null on checking if planet unlocked");
+            return true;
+        }
+
+        if (currentProfile.completedPlanets == null)
+            currentProfile.completedPlanets = new List<string>();
+    
+        foreach(var planet in prerequisitePlanets)
+        {
+            if (!currentProfile.completedPlanets.Contains(planet.bodyName))
+                return false;
+        }
+
+        return true;
+    }
+
+    public void SetPlanetCompleted(string planetName)
+    {
+        if (currentProfile.completedPlanets == null)
+            currentProfile.completedPlanets = new List<string>();
+
+        if (currentProfile.completedPlanets.Contains(planetName))
+        {
+            Debug.Log($"ProfileManager: Planet {planetName} found and already set to completed!");
+        }
+        else
+        {
+            currentProfile.completedPlanets.Add(planetName);
+            Debug.Log($"ProfileManager: Planet {planetName} not found in Profile!  Added and set to completed!");
+        }
+
+        SaveCurrentProfile();
+        Debug.Log("Planet Completed: " + planetName);
+    }
+
+    #endregion
 }
 
 // Wrapper class for serializing the list of PlayerProfile objects

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &9038653958892990730
+--- !u!1001 &6122200316611733450
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -50,23 +50,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1837661468406174839, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.16
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1837661468406174839, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.16
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1837661468406174839, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.16
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1837661468406174839, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.7
+      value: -0.36
       objectReference: {fileID: 0}
     - target: {fileID: 1837661468406174839, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.49
+      value: 1.2299999
       objectReference: {fileID: 0}
     - target: {fileID: 1837661468406174839, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -114,7 +114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4759676269996704154, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_Name
-      value: Planet BarrenMoon 3 Variant
+      value: Planet BarrenMoon 3 Variant_Low-Rez
       objectReference: {fileID: 0}
     - target: {fileID: 5205301605607662913, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -127,7 +127,7 @@ PrefabInstance:
     - target: {fileID: 5894762514541115551, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 839727c26eed0415e89b653f5058a6b5, type: 2}
+      objectReference: {fileID: 2100000, guid: f8665ed1706b748df87319e175548b79, type: 2}
     - target: {fileID: 7137469745657032509, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 004a0028155304d9d8e4f082f87ba459, type: 2}
+    - target: {fileID: 8741508093978214478, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
+      propertyPath: planetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: c5ccf25ab676145cc89952f91743e239, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

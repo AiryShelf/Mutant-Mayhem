@@ -20,6 +20,8 @@ public enum PlanetStatModifier
     EnemyHealth,
     EnemySize,
     StructureIntegrity,
+    PlayerDrag,
+    PlayerHealth,
 }
 
 [System.Serializable]

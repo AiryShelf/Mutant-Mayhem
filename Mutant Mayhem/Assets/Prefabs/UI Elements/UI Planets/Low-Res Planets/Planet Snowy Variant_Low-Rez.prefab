@@ -114,7 +114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4759676269996704154, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_Name
-      value: Planet Snowy Variant
+      value: Planet Snowy Variant_Low-Rez
       objectReference: {fileID: 0}
     - target: {fileID: 5205301605607662913, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 85e6414d0c1f44c0e9a6867969dd57f1, type: 2}
+    - target: {fileID: 8741508093978214478, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
+      propertyPath: planetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 7478ab236b78b48c18b48d8de7fc5c8b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -50,6 +50,7 @@ public class FadeRenderers : MonoBehaviour
             Color color = renderer.material.color;
             color.a = 0;
             renderer.material.color = color;
+            renderer.gameObject.SetActive(false);
         }
     }
 

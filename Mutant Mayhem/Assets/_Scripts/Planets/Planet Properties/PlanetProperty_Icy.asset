@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7439bc7875504601b5d38b365cc27d7, type: 3}
+  m_Name: PlanetProperty_Icy
+  m_EditorClassIdentifier: 
+  propertyName: Icy
+  statModifierEntries:
+  - modifierUiName: -70% Move Speed
+    isDebuff: 1
+    statModifier: 0
+    multiplier: 0.3
+  - modifierUiName: -85% Player Traction
+    isDebuff: 1
+    statModifier: 16
+    multiplier: 0.15

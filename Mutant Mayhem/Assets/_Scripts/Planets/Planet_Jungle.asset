@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
+  m_Name: Planet_Jungle
+  m_EditorClassIdentifier: 
+  typeOfBody: Planet
+  bodyName: Verdara
+  description: Test world
+  properties:
+  - {fileID: 11400000, guid: ffeedde48b38f4a4fb80032f1a1cb002, type: 2}
+  mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  highRezPlanetPrefab: {fileID: 6406680207806220279, guid: 1dc3fe7cfe47c41bd8b84deb654cd5f7, type: 3}
+  prerequisitePlanets:
+  - {fileID: 11400000, guid: b7efa2ea19572d24eb9c7f975ae2fc9f, type: 2}
+  basePoints: 50
+  pointsPerWave: 10
+  growthControlFactor: 0.1
+  timeBetweenWavesBase: 110
+  wavesTillAddBase: 1
+  batchMultiplierStart: 3
+  subwaveDelayMultStart: 1
+  spawnRadiusBuffer: 40
+  damageMultiplier: 1
+  healthMultiplier: 1
+  speedMultiplier: 1
+  sizeMultiplier: 1

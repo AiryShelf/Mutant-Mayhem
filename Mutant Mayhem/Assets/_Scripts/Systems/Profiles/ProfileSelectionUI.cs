@@ -68,7 +68,7 @@ public class ProfileSelectionUI : MonoBehaviour
             return;
         }
 
-        Debug.Log("ProfileManager.Instance is valid.");
+        //Debug.Log("ProfileManager.Instance is valid.");
 
         if (ProfileManager.Instance.profiles == null)
         {
@@ -109,7 +109,7 @@ public class ProfileSelectionUI : MonoBehaviour
         foreach (PlayerProfile profile in ProfileManager.Instance.profiles)
         {
             profileNames.Add(profile.profileName);
-            Debug.Log("Added " + profile.profileName + " to dropdown menu list");
+            Debug.Log("Added " + profile.profileName + " Profile to dropdown menu list");
         }
 
         if (profileNames.Count > 0)

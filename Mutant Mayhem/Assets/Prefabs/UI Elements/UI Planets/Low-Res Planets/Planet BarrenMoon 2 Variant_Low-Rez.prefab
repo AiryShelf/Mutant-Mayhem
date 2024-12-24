@@ -138,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4759676269996704154, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_Name
-      value: Planet BarrenMoon 2 Variant
+      value: Planet BarrenMoon 2 Variant_Low-Rez
       objectReference: {fileID: 0}
     - target: {fileID: 5205301605607662913, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -188,6 +188,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c5aa9360e596947969dfa7c84d2209d2, type: 2}
+    - target: {fileID: 8741508093978214478, guid: ca1acb0f4965c4aab850fd82a124e7c3, type: 3}
+      propertyPath: planetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 0a468734fc5a24976aeced050bc74eb2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

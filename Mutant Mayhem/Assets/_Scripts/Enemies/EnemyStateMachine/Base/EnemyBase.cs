@@ -65,7 +65,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     #endregion
 
-    #region Initialize
+    #region Initialize / Reset
 
     WaveControllerRandom waveController;
 
@@ -124,10 +124,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         //CurrentSMStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
-    #endregion
-
-    #region Reset / Randomize
-
     public void ResetStats()
     {
         isHit = false;
@@ -141,6 +137,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
         StateMachine.ChangeState(IdleState);
     }
+
+    #endregion
+
+    #region Randomize
 
     public void RandomizeStats()
     {

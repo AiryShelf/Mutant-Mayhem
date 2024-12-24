@@ -8,7 +8,8 @@ public class UI_PlanetPanel : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI mapButtonText;
     [SerializeField] Transform highRezPlanetsGroup;
-    [SerializeField] TextMeshProUGUI planetNameText;
+    [SerializeField] TextMeshProUGUI bodyTypeText;
+    [SerializeField] TextMeshProUGUI bodyNameText;
     [SerializeField] Transform infoPanel;
     [SerializeField] GameObject propertyCardPrefab;
     [SerializeField] GameObject modifierTextPrefab;
@@ -40,7 +41,7 @@ public class UI_PlanetPanel : MonoBehaviour
 
     void Start()
     {
-        foreach (PlanetSO planet in PlanetManager.Instance.planets)
+        foreach (PlanetSO planet in PlanetManager.Instance.planetsSource)
         {
             if (planet.highRezPlanetPrefab == null) continue;
 
@@ -67,12 +68,13 @@ public class UI_PlanetPanel : MonoBehaviour
         if (planet == null) return;
         
         Instance.ClearInfoPanel();
-        Instance.planetNameText.text = planet.planetName;
+        Instance.bodyTypeText.text = planet.typeOfBody;
+        Instance.bodyNameText.text = planet.bodyName;
         Instance.toPassMissionText.text = planet.mission.toPassText;
 
         foreach (PlanetPropertySO planetProperty in planet.properties)
         {
-            UI_PropertyCard propertyCard = Instantiate(Instance.propertyCardPrefab, Instance.infoPanel).GetComponent<UI_PropertyCard>();
+            UI_PlanetPropertyCard propertyCard = Instantiate(Instance.propertyCardPrefab, Instance.infoPanel).GetComponent<UI_PlanetPropertyCard>();
             propertyCard.propertyNameText.text = planetProperty.propertyName;
 
             foreach (StatModifierEntry entry in planetProperty.statModifierEntries)

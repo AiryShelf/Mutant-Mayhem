@@ -37,8 +37,6 @@ public class HUDStatsPanel : MonoBehaviour
     PlayerStats playerStats;
     Health playerHealthScript;
     Stamina playerStaminaScript;
-    float playerHealth;
-    float playerMaxHealth;
     float playerStamina;
     float playerMaxStamina;
 
@@ -83,16 +81,22 @@ public class HUDStatsPanel : MonoBehaviour
 
     void Start()
     {
-        UpdateHealthStats(player.stats.playerHealthScript.GetHealth());
-        UpdateStaminaStats();
-
-        qCubeHealth = FindObjectOfType<QCubeHealth>();
-        UpdateQCubeStatsUI(qCubeHealth.GetHealth());
+        StartCoroutine(DelayStatsUpdate());
     }
 
     void FixedUpdate()
     {
         UpdateStaminaStats();
+    }
+
+    IEnumerator DelayStatsUpdate()
+    {
+        yield return null;
+
+        UpdateHealthStats(player.stats.playerHealthScript.GetHealth());
+
+        qCubeHealth = FindObjectOfType<QCubeHealth>();
+        UpdateQCubeStatsUI(qCubeHealth.GetHealth());
     }
 
     void UpdateStaminaStats()
@@ -105,7 +109,7 @@ public class HUDStatsPanel : MonoBehaviour
 
     void UpdateHealthStats(float playerHealth)
     {
-        playerMaxHealth = playerHealthScript.GetMaxHealth();
+        float playerMaxHealth = playerHealthScript.GetMaxHealth();
 
         healthSlider.value = playerHealth / playerMaxHealth;
         healthValueText.text = "Health: " + Mathf.CeilToInt(playerHealth).ToString();

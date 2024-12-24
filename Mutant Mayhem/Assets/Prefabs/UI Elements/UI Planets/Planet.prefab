@@ -249,6 +249,9 @@ PrefabInstance:
       addedObject: {fileID: 8741508093978214478}
     - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 596916cd46182415bb1d207c52c5cd0f, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 242470396284417463}
+    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 596916cd46182415bb1d207c52c5cd0f, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 8170629137807480940}
   m_SourcePrefab: {fileID: 100100000, guid: 596916cd46182415bb1d207c52c5cd0f, type: 3}
 --- !u!1 &3930196914781156986 stripped
@@ -270,8 +273,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetSO: {fileID: 0}
   highlightPrefab: {fileID: 841221398534738489, guid: 297f7142d24b4410ab6d79f144d839b5, type: 3}
+  highlightLockedPrefab: {fileID: 841221398534738489, guid: 30b9d12b983864674b2b1698f84fd7a3, type: 3}
   selectedHighlightPrefab: {fileID: 841221398534738489, guid: e9be01f62e97949f3aeff846db0ef40c, type: 3}
   parentTransform: {fileID: 1837661468406174839}
+  unlocked: 0
+--- !u!114 &242470396284417463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3930196914781156986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ac547b7dc65478aaab989cf441df08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  solarSystem: {fileID: 0}
+  lineRendererPrefab: {fileID: 4435944418858851372, guid: 49e9172e555d7421e95f0b52452c2679, type: 3}
 --- !u!135 &8170629137807480940
 SphereCollider:
   m_ObjectHideFlags: 0

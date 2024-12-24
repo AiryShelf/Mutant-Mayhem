@@ -22,7 +22,7 @@ public class Task_SurviveNight : Task
 
         progress = (float)waveController.currentWaveIndex / nightToComplete;
 
-        if (waveController.currentWaveIndex > nightToComplete)
+        if (waveController.currentWaveIndex + 1 > nightToComplete)
         {
             progress = 1;
             SetTaskComplete();

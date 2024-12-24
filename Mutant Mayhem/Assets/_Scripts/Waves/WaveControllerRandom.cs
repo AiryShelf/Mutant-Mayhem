@@ -20,7 +20,7 @@ public class WaveControllerRandom : MonoBehaviour
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public float timeBetweenWaves = 0; // Amount of day-time after difficulty setting
     public float spawnRadius = 60; // Radius around the cube that enemies spawn
-    public float wavesTillAddBase = 1; // Affects batch multiplier and max index to choose subwaves from
+    public float wavesTillAddBase = 1; // Affects max index to choose subwaves from
     public float subwaveDelayMultStart = 1f;
     public float subwaveDelayMult = 1;
     public int spawnRadiusBuffer = 16;
