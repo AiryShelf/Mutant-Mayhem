@@ -130,14 +130,24 @@ public class UIAugPanel : MonoBehaviour
 
         // Description Text
         string description = "";
+        Color descriptionColor = Color.white;
         if (level == 0)
+        {
             description = aug.GetNeutralDescription(augManager, level);
+        }
         else if (level > 0)
+        {
+            descriptionColor = Color.cyan;
             description = aug.GetPositiveDescription(augManager, level);
+        }
         else if (level < 0)
+        {
+            descriptionColor = Color.red;
             description = aug.GetNegativeDescription(augManager, level);
+        }
 
         descriptionText.text = "Description: " + description;
+        descriptionText.color = descriptionColor;
 
         // Level valueText, lvlcostText, and +/- buttons
         Color lvlTextColor;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Aug_BulletDamageStart_New", 
                  menuName = "Augmentations/Aug_BulletDamageStart")]
-public class Aug_BulletDamageStart : AugmentationBaseSO
+public class Aug_BulletDamage : AugmentationBaseSO
 {
     public float damageMultStart;
     public float lvlMultIncrement = 0.15f;
@@ -41,7 +41,7 @@ public class Aug_BulletDamageStart : AugmentationBaseSO
         float totalDamageMult = damageMultStart + (lvlMultIncrement * level);
         string percentage = GameTools.FactorToPercent(totalDamageMult);
         string description = "Increases starting damage of all bullet based weapons by " + percentage +
-                             " - Focus RP into balistics to develop stronger starting weaponry";
+                             " - Focus RP into balistics to develop stronger balistic weaponry";
         return description;
     }
 

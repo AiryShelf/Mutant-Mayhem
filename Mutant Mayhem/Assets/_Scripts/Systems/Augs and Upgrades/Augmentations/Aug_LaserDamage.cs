@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Aug_LaserDamageStart_New", menuName = "Augmentations/Aug_LaserDamageStart")]
-public class Aug_LaserDamageStart : AugmentationBaseSO
+public class Aug_LaserDamage : AugmentationBaseSO
 {
     public float damageMult;
     public float lvlMultIncrement = 0.15f;
@@ -44,7 +44,7 @@ public class Aug_LaserDamageStart : AugmentationBaseSO
         float totalDamageMult = damageMult + (lvlMultIncrement * level);
         string percentage = GameTools.FactorToPercent(totalDamageMult);
         string description = "Increases starting damage of all laser based weapons by " + percentage + 
-                             " - Focus RP into photonics to develop stronger starting laser weaponry";
+                             " - Focus RP into photonics to develop stronger laser weaponry";
         return description;
     }
 
