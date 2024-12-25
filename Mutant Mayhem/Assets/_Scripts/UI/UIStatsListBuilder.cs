@@ -58,9 +58,9 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
         newGroupObj = Instantiate(valueGroupPrefab, layoutGroup.transform);
         VerticalLayoutGroup newValueGroup = newGroupObj.GetComponent<VerticalLayoutGroup>();
 
-        // Create group, add title entry
-        StatGroupWrapper statGroup = new StatGroupWrapper(newNameGroup, newValueGroup, groupTitleTextPrefab, nameTextPrefab, valueTextPrefab);
-        statGroup.AddTitle(groupName);
+        // Create group, add entries
+        StatGroupWrapper statGroup = new StatGroupWrapper(newNameGroup, newValueGroup, nameTextPrefab, valueTextPrefab);
+        statGroup.AddTitle(groupName, groupTitleTextPrefab);
 
         foreach (var kvp in stats)
         {

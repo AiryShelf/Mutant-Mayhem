@@ -52,7 +52,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c37504dab6d614ed19bbdd6a402023ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapButton: {fileID: 4471261071027649879}
   mapButtonText: {fileID: 167467213312988752}
+  backToShipButtonColors:
+    m_NormalColor: {r: 0.39215687, g: 0, b: 0, a: 0.627451}
+    m_HighlightedColor: {r: 0.5882353, g: 0, b: 0, a: 0.8784314}
+    m_PressedColor: {r: 0.39215687, g: 0, b: 0, a: 1}
+    m_SelectedColor: {r: 0.39215687, g: 0, b: 0, a: 0.627451}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0.627451}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0
   highRezPlanetsGroup: {fileID: 0}
   bodyTypeText: {fileID: 8739289594273031898}
   bodyNameText: {fileID: 1263969340308468430}

@@ -1937,6 +1937,7 @@ MonoBehaviour:
   fadeOutAllTime: 0.2
   lerpOutStopThreshold: 0.1
   isTriggered: 0
+  startTriggered: 0
 --- !u!224 &191865043471534942 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4882761678303406109, guid: 80057b45f9649544cbac2a0a11158b38, type: 3}
@@ -2474,6 +2475,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1942698707}
     m_Modifications:
+    - target: {fileID: 675346691756952784, guid: 80057b45f9649544cbac2a0a11158b38, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 869429126908863096, guid: 80057b45f9649544cbac2a0a11158b38, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0.10601807

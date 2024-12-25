@@ -15,7 +15,6 @@ public abstract class AugmentationBaseSO : ScriptableObject
     public int maxLvl;
     public int minLvl;
     public AugmentationFamily family;
-    public AugmentationType type = AugmentationType.Other;
     
     public abstract void ApplyAugmentation(AugManager augManager, int level);
     public abstract string GetPositiveDescription(AugManager augManager, int level);
@@ -33,12 +32,4 @@ public enum AugmentationFamily
     BulletTech,
     ExplosiveTech,
     Drone
-}
-
-// This is used to resolve potential conflicts between 2 or more augs 
-// augs by preventing selecting 2 of the same type, or control edge cases
-public enum AugmentationType
-{
-    Other,
-    MaxAugs,
 }

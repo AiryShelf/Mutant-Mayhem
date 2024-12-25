@@ -72,19 +72,6 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
             return false;
         } 
 
-        // Check for duplicate type that isn't 'other'
-        if (aug.type != AugmentationType.Other)
-        {
-            foreach (KeyValuePair<AugmentationBaseSO, int> kvp in augManager.selectedAugsWithLvls)
-            {
-                if (kvp.Key.type == aug.type)
-                {
-                    Debug.LogWarning("Tried to select Aug of conflicting Type");
-                    return false;
-                }
-            }
-        }
-
         // Check for duplicates
         if (augManager.selectedAugsWithLvls.ContainsKey(aug))
         {

@@ -11,7 +11,7 @@ public class AugManager : MonoBehaviour
     [SerializeField] int maxAugmentationsStart;
     public Dictionary<AugmentationBaseSO, int> selectedAugsWithLvls = new Dictionary<AugmentationBaseSO, int>();
 
-    [Header("Dynamic values to apply Augs, don't set here")]
+    [Header("Dynamic vars, don't set here")]
     public int maxAugs;
     public int currentResearchPoints;
 
