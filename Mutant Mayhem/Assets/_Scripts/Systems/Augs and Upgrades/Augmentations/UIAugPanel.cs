@@ -9,27 +9,35 @@ public class UIAugPanel : MonoBehaviour
 {
     [SerializeField] GameObject augmentationButtonPrefab;
     [SerializeField] Transform buttonContainer;
-    [SerializeField] Transform selectedContainer;
+
+    [Header("Details Section:")]
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI totalCostGainText;
+    [SerializeField] TextMeshProUGUI descriptionText;
+    [SerializeField] TextMeshProUGUI rpAvailableText;
+    [SerializeField] TextMeshProUGUI AugsAddedText;
+    [SerializeField] TextMeshProUGUI maxAugsText;
+
+    [Header("Adjust Level Section:")]
+    [SerializeField] Image levelPanel;
+    [SerializeField] Color levelPanelSelectedColor;
     [SerializeField] TextMeshProUGUI levelValueText;
     [SerializeField] TextMeshProUGUI lowerLevelCostText;
     [SerializeField] TextMeshProUGUI raiseLevelCostText;
     [SerializeField] Button plusButton;
     [SerializeField] Button minusButton;
     [SerializeField] Button removeButton;
-    [SerializeField] TextMeshProUGUI descriptionText;
-    [SerializeField] TextMeshProUGUI rpAvailableText;
-    [SerializeField] TextMeshProUGUI AugsAddedText;
-    [SerializeField] TextMeshProUGUI maxAugsText;
+    Color levelPanelStartColor;
+    
     [SerializeField] bool selectFirstAug = true;
 
     AugManager augManager;
     public UIAugmentation selectedUiAugmentation;
-    public int augLvlsAdded;
+    int augLvlsAdded;
 
     void Start()
     {
+        levelPanelStartColor = levelPanel.color;
         PopulateAugsList(AugManager.Instance.availableAugmentations);
         UpdateRPAndLevelInfo();
     }
@@ -94,12 +102,15 @@ public class UIAugPanel : MonoBehaviour
     public void UpdatePanelTextandButtons()
     {
         UpdateRPAndLevelInfo();
+        levelPanel.color = levelPanelStartColor;
 
         if (selectedUiAugmentation == null)
         {
             Debug.LogWarning("No Aug selected on UI panel update");
             return;
         }
+
+        levelPanel.color = levelPanelSelectedColor;
 
         // Get aug and level
         AugmentationBaseSO aug = selectedUiAugmentation.aug;

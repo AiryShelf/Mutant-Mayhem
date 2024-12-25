@@ -39,7 +39,6 @@ public class Explosion : MonoBehaviour
 
     void Explode(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
     {
-        
         List<Vector3Int> hitTiles = new List<Vector3Int>();
 
         // Check each tile in radius
@@ -71,7 +70,7 @@ public class Explosion : MonoBehaviour
                         float totalDamage = Mathf.Clamp(tmpDamage / distToPoint, 0, tmpDamage);
                         tileManager.ModifyHealthAt(worldPos, -totalDamage);
 
-                        StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;
+                        //StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;
 
                         // Add the tile to the list of hit tiles
                         hitTiles.Add(gridPos);
@@ -130,7 +129,8 @@ public class Explosion : MonoBehaviour
                         float damageScale = totalDamage / damage + 1;
                         enemy.ModifyHealth(-totalDamage, damageScale, direction, gameObject);
 
-                        StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;
+                        StatsCounterPlayer.EnemyDamageByPlayerExplosions += totalDamage;
+                        StatsCounterPlayer.DamageToEnemies += totalDamage;
                         //Debug.Log($"Enemy hit at {entity.transform.position} for {totalDamage} damage");
                         continue;
                     }

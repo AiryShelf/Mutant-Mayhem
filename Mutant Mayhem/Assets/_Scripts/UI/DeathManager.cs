@@ -117,7 +117,8 @@ public class DeathManager : MonoBehaviour
         myCanvasGroup.blocksRaycasts = true;
         pauseMenuController.isPauseMenuOpen = true;
         isTriggered = true;
-        statsListBuilder.BuildListandText(waveController, this);
+        
+        statsListBuilder.BuildListAndText();
         fadeCanvasGroupsWave.isTriggered = true;
     }
 

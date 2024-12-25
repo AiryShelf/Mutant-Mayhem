@@ -5,12 +5,24 @@ using UnityEngine.SceneManagement;
 
 public class UIMothershipController : MonoBehaviour
 {
-    void Awake()
+    [SerializeField] FadeCanvasGroupsWave areYouSurePanel;
+    void Start()
     {
         AugManager.Instance.Initialize();
     }
 
     public void OnLaunch()
+    {
+        if (AugManager.Instance.selectedAugsWithLvls.Count < 1)
+        {
+            areYouSurePanel.isTriggered = true;
+            return;
+        }
+
+        SceneManager.LoadScene(2);
+    }
+
+    public void OnConfirmLaunch()
     {
         SceneManager.LoadScene(2);
     }

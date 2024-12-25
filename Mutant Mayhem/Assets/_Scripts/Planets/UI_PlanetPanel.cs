@@ -6,7 +6,12 @@ using UnityEngine.UI;
 
 public class UI_PlanetPanel : MonoBehaviour
 {
+    [SerializeField] Button mapButton;
     [SerializeField] TextMeshProUGUI mapButtonText;
+    [Header("Back To Ship Button Colors")]
+    [SerializeField] ColorBlock backToShipButtonColors;
+    ColorBlock showMapButtonStartColors;
+    [Space][Space]
     [SerializeField] Transform highRezPlanetsGroup;
     [SerializeField] TextMeshProUGUI bodyTypeText;
     [SerializeField] TextMeshProUGUI bodyNameText;
@@ -41,6 +46,8 @@ public class UI_PlanetPanel : MonoBehaviour
 
     void Start()
     {
+        showMapButtonStartColors = mapButton.colors;
+
         foreach (PlanetSO planet in PlanetManager.Instance.planetsSource)
         {
             if (planet.highRezPlanetPrefab == null) continue;
@@ -101,6 +108,7 @@ public class UI_PlanetPanel : MonoBehaviour
     {
         if (isMapOpen)
         {
+            // Close Map
             mainFadeRenderers.FadeIn();
             mainFadeGroup.isTriggered = true;
             mapFadeRenderers.FadeOut();
@@ -109,19 +117,13 @@ public class UI_PlanetPanel : MonoBehaviour
             trailFader.FadeOut();
             isMapOpen = false;
             mapButtonText.text = "System Map";
+            mapButton.colors = showMapButtonStartColors;
 
-            // Show high-rez planet
-            if (_highRezPlanets.ContainsKey(PlanetManager.Instance.currentPlanet))
-            {
-                _highRezPlanets[PlanetManager.Instance.currentPlanet].SetActive(true);
-            }
-            else
-            {
-                Debug.LogError($"UI_PlanetPanel: Could not find {PlanetManager.Instance.currentPlanet} in _highRezPlanets");
-            }
+            ShowHighRezPlanet(true);
         }
         else
         {
+            // Open Map
             mainFadeRenderers.FadeOut();
             mainFadeGroup.isTriggered = false;
             mapFadeRenderers.FadeIn();
@@ -130,16 +132,21 @@ public class UI_PlanetPanel : MonoBehaviour
             trailFader.FadeIn();
             isMapOpen = true;
             mapButtonText.text = "Back to Ship";
+            mapButton.colors = backToShipButtonColors;
 
-            // Hide high-rez planet
-            if (_highRezPlanets.ContainsKey(PlanetManager.Instance.currentPlanet))
-            {
-                _highRezPlanets[PlanetManager.Instance.currentPlanet].SetActive(false);
-            }
-            else
-            {
-                Debug.LogError($"UI_PlanetPanel: Could not find {PlanetManager.Instance.currentPlanet} in _highRezPlanets");
-            }
+            ShowHighRezPlanet(false);
         }
     } 
+
+    void ShowHighRezPlanet(bool show)
+    {
+        if (_highRezPlanets.ContainsKey(PlanetManager.Instance.currentPlanet))
+        {
+            _highRezPlanets[PlanetManager.Instance.currentPlanet].SetActive(show);
+        }
+        else
+        {
+            Debug.LogError($"UI_PlanetPanel: Could not find {PlanetManager.Instance.currentPlanet} in _highRezPlanets");
+        }
+    }
 }
