@@ -23,8 +23,6 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
     [SerializeField] GameObject groupTitleTextPrefab;
     [SerializeField] GameObject nameTextPrefab;
     [SerializeField] GameObject valueTextPrefab;
-    const string Padding = "\u00A0";
-    const string Paddingx5 = "\u00A0 \u00A0\u00A0\u00A0\u00A0";
 
     public void BuildListAndText()
     {
@@ -43,11 +41,11 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
         ClearAllStatGroups();
         StatsCounterPlayer.PopulateStatsDict();
 
-        CreateStatGroup("MISC" + Paddingx5 + Padding + Padding, StatsCounterPlayer.GetMiscStats(), horizontalLayoutGroup);
+        CreateStatGroup("MISC", StatsCounterPlayer.GetMiscStats(), horizontalLayoutGroup);
         CreateStatGroup("PROJECTILES", StatsCounterPlayer.GetProjectilesStats(), horizontalLayoutGroup);
-        CreateStatGroup("MELEE" + Paddingx5 + Padding, StatsCounterPlayer.GetMeleeStats(), horizontalLayoutGroup);
-        CreateStatGroup("DAMAGE" + Paddingx5, StatsCounterPlayer.GetDamageStats(), horizontalLayoutGroup2);
-        CreateStatGroup("STRUCTURES" + Padding, StatsCounterPlayer.GetStructuresStats(), horizontalLayoutGroup2);
+        CreateStatGroup("MELEE", StatsCounterPlayer.GetMeleeStats(), horizontalLayoutGroup);
+        CreateStatGroup("DAMAGE", StatsCounterPlayer.GetDamageStats(), horizontalLayoutGroup2);
+        CreateStatGroup("STRUCTURES", StatsCounterPlayer.GetStructuresStats(), horizontalLayoutGroup2);
     }
 
     void CreateStatGroup(string groupName, Dictionary<string, float> stats, HorizontalLayoutGroup layoutGroup)
@@ -70,9 +68,9 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
 
     public void ClearAllStatGroups()
     {
-        foreach (GameObject obj in horizontalLayoutGroup.transform)
+        foreach (Transform transform in horizontalLayoutGroup.transform)
         {
-            Destroy(obj);
+            Destroy(transform.gameObject);
         }
 
         foreach (GameObject obj in horizontalLayoutGroup2.transform)

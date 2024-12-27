@@ -44,6 +44,7 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
     public void OnSelect(BaseEventData data)
     {
         augPanel.SelectAugmentation(this);
+        augPanel.FlashLevelPanel();
         UpdateIconAndText();
     }
     
@@ -159,9 +160,9 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
         if (isHovered) // Highlight when hovered
         {
-            icon.color += highlightedColor/4;
-            nameText.color += highlightedColor/4;
-            costText.color += highlightedColor/4;
+            icon.color += highlightedColor/2;
+            nameText.color += highlightedColor/2;
+            costText.color += highlightedColor/2;
         }
 
         // Add level number to end of name

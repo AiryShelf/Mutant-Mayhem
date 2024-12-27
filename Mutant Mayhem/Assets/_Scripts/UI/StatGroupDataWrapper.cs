@@ -66,10 +66,4 @@ public class StatGroupWrapper
         tmp.text = value;
         tmp.color = valueColor;
     }
-
-    public void RefreshLayout(GameObject objectToRefresh)
-    {
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(objectToRefresh.GetComponent<RectTransform>());
-    }
 }

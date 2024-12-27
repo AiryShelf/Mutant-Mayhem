@@ -35,6 +35,11 @@ public class AugManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        Initialize();
+    }
+
     public void Initialize()
     {
         // Only reset if profile has changed *** doesnt work

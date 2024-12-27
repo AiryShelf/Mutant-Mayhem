@@ -8,7 +8,7 @@ public class UIMothershipController : MonoBehaviour
     [SerializeField] FadeCanvasGroupsWave areYouSurePanel;
     void Start()
     {
-        AugManager.Instance.Initialize();
+        //AugManager.Instance.Initialize();
     }
 
     public void OnLaunch()

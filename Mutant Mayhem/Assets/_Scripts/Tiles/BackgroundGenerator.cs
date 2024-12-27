@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 

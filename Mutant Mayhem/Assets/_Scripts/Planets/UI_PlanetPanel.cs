@@ -47,6 +47,9 @@ public class UI_PlanetPanel : MonoBehaviour
     void Start()
     {
         showMapButtonStartColors = mapButton.colors;
+        LoadPropertyCards(PlanetManager.Instance.currentPlanet);
+
+        if (highRezPlanetsGroup == null) return;
 
         foreach (PlanetSO planet in PlanetManager.Instance.planetsSource)
         {
@@ -58,8 +61,6 @@ public class UI_PlanetPanel : MonoBehaviour
 
             _highRezPlanets.Add(planet, obj);
         }
-
-        LoadPropertyCards(PlanetManager.Instance.currentPlanet);
     }
 
     void ClearInfoPanel()
@@ -94,15 +95,7 @@ public class UI_PlanetPanel : MonoBehaviour
                     modifierText.color = Instance.buffModifierColor;
             }
         }
-
-        Instance.RefreshLayout();
-    }  
-
-    public void RefreshLayout()
-    {
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
-    }
+    } 
 
     public void OnShowMapPressed()
     {

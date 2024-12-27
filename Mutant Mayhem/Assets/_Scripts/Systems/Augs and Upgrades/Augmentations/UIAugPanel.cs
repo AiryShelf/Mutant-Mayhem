@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -464,8 +465,11 @@ public class UIAugPanel : MonoBehaviour
 
             return levelRefund;
         }
+    }
 
-        
+    public void FlashLevelPanel()
+    {
+        GameTools.FlashImage(levelPanel, 0.5f, 0.25f, Color.cyan, levelPanel.color);
     }
 
     #endregion

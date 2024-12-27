@@ -41,7 +41,6 @@ public class UI_AugInfoPanel : MonoBehaviour
 
             string value = $"Lvl {level}";
             statGroup.AddStat($"{kvp.Key.augmentationName}", value, textColor);
-            statGroup.RefreshLayout(gameObject);
         }
     }
 }
