@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 public class BuildingSystem : MonoBehaviour
 {
@@ -52,7 +50,7 @@ public class BuildingSystem : MonoBehaviour
     public bool isInBuildMode;
     public int currentRotation;
     private Vector3Int highlightedTilePos;
-    public bool allHighlited;
+    public bool allHighlighted;
     bool inRange;
     Player player;
     InputActionMap playerActionMap;
@@ -110,8 +108,6 @@ public class BuildingSystem : MonoBehaviour
         {
             Debug.LogError("BuildingSystem could not find TurretManager in scene");
         }
-
-        SetStartingCredits();
     }
 
     void FixedUpdate()
@@ -120,23 +116,6 @@ public class BuildingSystem : MonoBehaviour
         if (structureInHand != null)
         {
             HighlightTile();
-        }
-    }
-
-    public void SetStartingCredits()
-    {
-        switch (ProfileManager.Instance.currentProfile.difficultyLevel)
-        {
-            case DifficultyLevel.Easy:
-                PlayerCredits = 1000;
-                MessagePanel.PulseMessage("You recieved $1000 to help you through easy mode", Color.cyan);
-            break;
-            case DifficultyLevel.Normal:
-                PlayerCredits = 0;
-            break;
-            case DifficultyLevel.Hard:
-                PlayerCredits = 0;
-            break;
         }
     }
 
@@ -159,7 +138,7 @@ public class BuildingSystem : MonoBehaviour
         }
 
         // Build
-        if (allHighlited)
+        if (allHighlighted)
         {
             if (structureInHand.actionType == ActionType.Build)
             {
@@ -485,7 +464,7 @@ public class BuildingSystem : MonoBehaviour
         if (!InRange(player.transform.position, mouseWorldPos, 6f))
         {
             inRange = false;
-            allHighlited = false;
+            allHighlighted = false;
             return;
         }
 
@@ -512,7 +491,7 @@ public class BuildingSystem : MonoBehaviour
         if (currentAction == ActionType.Destroy && !CheckHighlightConditions(
             structureTilemap.GetTile<RuleTileStructure>(highlightedTilePos), structureInHand))
         { 
-            allHighlited = false;
+            allHighlighted = false;
             return;
         }
 
@@ -532,7 +511,7 @@ public class BuildingSystem : MonoBehaviour
         }
 
         // Highlight the tiles for building
-        allHighlited = true;
+        allHighlighted = true;
         if (currentAction == ActionType.Build)
         {
             foreach (Vector3Int pos in structureInHand.cellPositions)
@@ -549,7 +528,7 @@ public class BuildingSystem : MonoBehaviour
                     // Show X where grid is not clear
                     Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
                     highlightTilemap.SetTile(highlightedTilePos + newPos, destroyTileAsset);
-                    allHighlited = false;
+                    allHighlighted = false;
                 }   
             }
         }             
@@ -577,7 +556,7 @@ public class BuildingSystem : MonoBehaviour
             highlightTilemap.SetTile(highlightedTilePos + newPos, null);               
         }
         
-        allHighlited = false;
+        allHighlighted = false;
     }
 
     void RemoveDestroyHighlight()
@@ -591,7 +570,7 @@ public class BuildingSystem : MonoBehaviour
             }
             destroyPositions.Clear();
         }
-        allHighlited = false;
+        allHighlighted = false;
     }
 
     void HighlightForDestroy(Vector3Int gridPos)
@@ -605,11 +584,11 @@ public class BuildingSystem : MonoBehaviour
                 Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
                 highlightTilemap.SetTile(newPos, destroyTileAsset);
             }
-            allHighlited = true;
+            allHighlighted = true;
         }
         else
         {
-            allHighlited = false;
+            allHighlighted = false;
         }
     }
 

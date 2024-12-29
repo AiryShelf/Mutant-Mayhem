@@ -15,7 +15,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public float moveSpeedBase = 1f;
     public float rotateSpeedBaseStart = 3f;
     public float rotateSpeedBase = 3f;
-    public float startMass; // For debug, dont set
+    public float startMass; // For debug, don't set
 
     [Header("Randomize")]
     public bool randomize;
@@ -36,7 +36,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     #region State Machine
 
     [Header("State Machine Logic")]
-    [SerializeField] string CurrentSMStateDebug;
+    [SerializeField] string CurrentStateDebug;
     public EnemyStateMachine StateMachine { get; set; }
     public EnemyIdleState IdleState { get; set; }
     public EnemyChaseState ChaseState { get; set; }
@@ -91,7 +91,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         startLocalScale = transform.localScale;
         moveSpeedBaseStart = moveSpeedBase;
 
-        StateMachine.Initialze(IdleState);
+        StateMachine.Initialize(IdleState);
     }
 
     void OnEnable() 
@@ -121,7 +121,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     {
         StateMachine.CurrentEnemyState.PhysicsUpdate();
         // For SM debug
-        //CurrentSMStateDebug = StateMachine.CurrentEnemyState.ToString();
+        //CurrentStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
     public void ResetStats()
@@ -166,8 +166,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         sr.color = new Color(red, green, blue);
         
         // Randomize size, apply multipliers
-        GaussianRandom _gaussianRandomm = new GaussianRandom();
-        float randomSizeFactor = (float)_gaussianRandomm.NextDouble(gaussMeanSize, gaussStdDev);
+        GaussianRandom _gaussianRandom = new GaussianRandom();
+        float randomSizeFactor = (float)_gaussianRandom.NextDouble(gaussMeanSize, gaussStdDev);
         randomSizeFactor *= waveController.sizeMultiplier;
         randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
         transform.localScale *= randomSizeFactor;
