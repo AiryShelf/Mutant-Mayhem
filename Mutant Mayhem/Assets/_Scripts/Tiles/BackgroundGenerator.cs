@@ -7,7 +7,7 @@ public class BackgroundGenerator : MonoBehaviour
 {
     [SerializeField] GameObject EditorObjectToClear;
     [SerializeField] Tilemap tilemap;
-    [SerializeField] List<Tile> tiles;
+    public Tile terrainTile;
     [SerializeField] Vector2Int startPos;
     [SerializeField] Transform followCamera;
     [SerializeField] int chunkSizeX;
@@ -34,7 +34,7 @@ public class BackgroundGenerator : MonoBehaviour
                 Tile tile = tileBase as Tile;
                 if (tile == null)
                 {
-                    tilemap.SetTile(new Vector3Int(x, y, 0), tiles[0]);
+                    tilemap.SetTile(new Vector3Int(x, y, 0), terrainTile);
                 }
                 
             }

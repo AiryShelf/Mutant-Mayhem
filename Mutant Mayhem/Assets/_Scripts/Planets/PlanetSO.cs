@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "Planet_New", menuName = "Game/Planet")]
 public class PlanetSO : ScriptableObject
@@ -9,6 +10,7 @@ public class PlanetSO : ScriptableObject
     public string bodyName;
     public string description;
     public List<PlanetPropertySO> properties;
+    public Tile terrainTile;
     public Mission mission;
     public GameObject highRezPlanetPrefab;
     public List<PlanetSO> prerequisitePlanets;

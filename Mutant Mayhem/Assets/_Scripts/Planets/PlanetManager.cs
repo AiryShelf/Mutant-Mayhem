@@ -90,6 +90,7 @@ public class PlanetManager : MonoBehaviour
         ApplyToBuildingSystem();
         ApplyToTurretManager(); 
         ApplyToWaveController();
+        ApplyToBkgGenerator();
     }
     
     void ApplyToPlayer()
@@ -189,5 +190,17 @@ public class PlanetManager : MonoBehaviour
         waveController.healthMultStart = currentPlanet.healthMultiplier * statMultipliers[PlanetStatModifier.EnemyHealth];
         waveController.speedMultStart = currentPlanet.speedMultiplier * statMultipliers[PlanetStatModifier.EnemyMoveSpeed];
         waveController.sizeMultStart = currentPlanet.sizeMultiplier * statMultipliers[PlanetStatModifier.EnemySize];
+    }
+
+    void ApplyToBkgGenerator()
+    {
+        BackgroundGenerator bkgGenerator = FindObjectOfType<BackgroundGenerator>();
+        if (bkgGenerator == null)
+        {
+            Debug.LogError("PlanetManager: Could not find BackgroundGenerator in scene");
+            return;
+        }
+
+        bkgGenerator.terrainTile = currentPlanet.terrainTile;
     }
 }
