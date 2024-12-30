@@ -20,9 +20,9 @@ Approach each play as a customized clone created by an AI powered Mothership on 
 
 ## <span style="color: white;"> Video Trailer </span>
 
-[![Watch the demo](https://img.youtube.com/vi/cPmlhL2QJg8/hqdefault.jpg)](https://www.youtube.com/watch?v=cPmlhL2QJg8)  
+[![Watch the demo](https://img.youtube.com/vi/QrIcqxv9Lm8/hqdefault.jpg)](https://www.youtube.com/watch?v=QrIcqxv9Lm8)  
 <span style="color: cyan;">_Click the image to watch a gameplay demo!_</span>
-
+https://youtu.be/QrIcqxv9Lm8
 ## <span style="color: white;"> Current Features </span>
 
 - Challenging fast paced top-down shooting action
