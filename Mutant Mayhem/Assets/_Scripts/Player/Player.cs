@@ -82,7 +82,6 @@ public class Player : MonoBehaviour
     [SerializeField] Transform headImageTrans;
     [SerializeField] Transform playerMainTrans;
     [SerializeField] Transform muzzleTrans;
-    public CapsuleCollider2D gunCollider;
     [SerializeField] Transform leftHandTrans;
     public AnimationControllerPlayer animControllerPlayer;
     public MeleeControllerPlayer meleeController;  
@@ -375,10 +374,8 @@ public class Player : MonoBehaviour
     {
         // Find Mouse direction and angle
         Vector3 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        
         //muzzleDirToMouse = mousePos - transform.position;
 
-        
         if ((transform.position - mousePos).magnitude > 
             (transform.position - muzzleTrans.position).magnitude + 0.5f)
         {
@@ -388,7 +385,6 @@ public class Player : MonoBehaviour
         {
             muzzleDirToMouse = mousePos - transform.position;
         }
-        
 
         muzzleDirToMouse.Normalize();
     

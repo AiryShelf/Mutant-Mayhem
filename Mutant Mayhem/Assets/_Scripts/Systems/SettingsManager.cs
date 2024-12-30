@@ -115,6 +115,8 @@ public class SettingsManager : MonoBehaviour
                 SubwaveDelayMult = 1.3f;
                 BatchSpawnMult = 0.7f;
                 CreditsMult = 2f;
+                BuildingSystem.PlayerCredits = 1000;
+                MessagePanel.PulseMessage($"You received $1000 to help you through easy mode", Color.cyan);
                 break;
 
             case DifficultyLevel.Normal:
@@ -125,6 +127,7 @@ public class SettingsManager : MonoBehaviour
                 SubwaveDelayMult = 1;
                 BatchSpawnMult = 1;
                 CreditsMult = 1;
+                BuildingSystem.PlayerCredits = 0;
                 break;
 
             case DifficultyLevel.Hard:
@@ -135,6 +138,7 @@ public class SettingsManager : MonoBehaviour
                 SubwaveDelayMult = 0.8f;
                 BatchSpawnMult = 1.2f;
                 CreditsMult = 0.7f;
+                BuildingSystem.PlayerCredits = 0;
                 break;
         }
 

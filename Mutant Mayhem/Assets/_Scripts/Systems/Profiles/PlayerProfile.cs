@@ -13,6 +13,7 @@ public class PlayerProfile
     public DifficultyLevel difficultyLevel;
     public bool isStandardWASD;
     public bool isSpacebarEnabled;
+    public List<string> completedPlanets = new List<string>();
 
     public PlayerProfile(string profileName, DifficultyLevel difficulty)
     {

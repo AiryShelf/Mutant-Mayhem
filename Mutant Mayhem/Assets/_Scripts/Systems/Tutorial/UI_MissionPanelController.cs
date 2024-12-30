@@ -115,6 +115,8 @@ public class UI_MissionPanelController : MonoBehaviour
         missions.RemoveAt(0);
         if (missions.Count == 0)
         {
+            ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
+
             gameObject.SetActive(false);
             return;
         }

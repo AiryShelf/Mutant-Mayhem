@@ -189,7 +189,7 @@ public static class UpgStatGetter
                 amount = "+" + StaminaRegenUpgrade.UpgAmount.ToString("#0.0");
                 return amount;
             case PlayerStatsUpgrade.HealthMax:
-                amount = "+" + HealthMaxUpgrade.UpgAmount.ToString("#0");
+                amount = "+" + HealthMaxUpgrade.GetUpgAmount().ToString("#0");
                 return amount;
             case PlayerStatsUpgrade.HealthRegen:
                 amount = "+" + HealthRegenUpgrade.UpgAmount.ToString("#0.0");

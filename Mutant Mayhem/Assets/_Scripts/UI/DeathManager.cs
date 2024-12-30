@@ -29,7 +29,7 @@ public class DeathManager : MonoBehaviour
     float storedSFXVolume;
 
     WaveControllerRandom waveController;
-    Planet currentPlanet;
+    PlanetSO currentPlanet;
 
     void OnEnable()
     {
@@ -117,7 +117,8 @@ public class DeathManager : MonoBehaviour
         myCanvasGroup.blocksRaycasts = true;
         pauseMenuController.isPauseMenuOpen = true;
         isTriggered = true;
-        statsListBuilder.BuildListandText(waveController, this);
+        
+        statsListBuilder.BuildListAndText();
         fadeCanvasGroupsWave.isTriggered = true;
     }
 
@@ -164,12 +165,6 @@ public class DeathManager : MonoBehaviour
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
         currentProfile.playthroughs++;
 
-        if (waveController.currentWaveIndex < 1)
-        {
-            Debug.Log("Player died without passing Night 1");
-            return;
-        }
-
         // Apply research points to profile
         int points = GetResearchPointsGain();
         currentProfile.researchPoints += points;
@@ -187,6 +182,12 @@ public class DeathManager : MonoBehaviour
 
     public int GetResearchPointsGain()
     {
+        if (waveController.currentWaveIndex < 1)
+        {
+            Debug.Log("Player died without passing Night 1");
+            return 0;
+        }
+
         int pointsToGive = currentPlanet.basePoints + Mathf.CeilToInt(adjustedPointsPerWave * waveController.currentWaveIndex * 
                                                         (1 + waveController.currentWaveIndex * currentPlanet.growthControlFactor));
         return pointsToGive;

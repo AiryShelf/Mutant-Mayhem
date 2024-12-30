@@ -54,7 +54,7 @@ MonoBehaviour:
   deathSnapshot: {fileID: -4763721442933824587, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   snapshotFadeTime: 4
   poolSizeMusic: 2
-  poolSizeSFX: 30
+  poolSizeSFX: 40
   poolSizeUI: 5
 --- !u!114 &6293564672853078454
 MonoBehaviour:
@@ -68,9 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a45e02e2450a40c46adef340b6a86fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicStartDb: -10
-  sfxStartDb: -5
-  musicPlayerPanel: {fileID: 0}
+  musicStartDb: -15
+  sfxStartDb: -10
   mainMenuPlaylists:
   - {fileID: 11400000, guid: 0c135731df88fd141be74695f93095f9, type: 2}
   mothershipPlaylists:

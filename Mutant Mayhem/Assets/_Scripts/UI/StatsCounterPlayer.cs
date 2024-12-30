@@ -5,31 +5,35 @@ using UnityEngine.UI;
 
 public class StatsCounterPlayer : MonoBehaviour
 {
+    [Header("Misc")]
     public static float TotalPlayTime;
-    public static float TimeSprintingPlayer;
-
     public static int EnemiesKilledByPlayer;
     public static int EnemiesKilledByTurrets;
+    public static float TimeSprintingPlayer;
 
+    [Header("Projectiles")]
     public static int ShotsFiredByPlayer;
     public static int ShotsHitByPlayer;
     public static int ShotsFiredByTurrets;
     public static int ShotsFiredByEnemies;
     public static int GrenadesThrownByPlayer;
 
+    [Header("Melee")]
     public static int MeleeAttacksByPlayer;
     public static int MeleeHitsByPlayer;
     public static float MeleeDamageByPlayer;
     public static int MeleeAttacksByEnemies;
     public static float MeleeDamageByEnemies;
 
-    public static float TotalDamageByPlayerExplosions;
+    [Header("Damage")]
+    public static float EnemyDamageByPlayerExplosions;
     public static float EnemyDamageByPlayerProjectiles;
     public static float EnemyDamageByTurrets;
     public static float DamageToPlayer;
     public static float DamageToStructures;
     public static float DamageToEnemies;
 
+    [Header("Structures")]
     public static int StructuresBuilt;
     public static int StructuresLost;
     public static float AmountRepaired;
@@ -37,12 +41,21 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int WallsBuilt;
     public static int TurretsBuilt;
 
-    public static Dictionary<string, float> StatsDict =
-        new Dictionary<string, float>();
+    static Dictionary<string, float> MiscStats = new Dictionary<string, float>();
+    static Dictionary<string, float> ProjectilesStats = new Dictionary<string, float>();
+    static Dictionary<string, float> MeleeStats = new Dictionary<string, float>();
+    static Dictionary<string, float> DamageStats = new Dictionary<string, float>();
+    static Dictionary<string, float> StructuresStats = new Dictionary<string, float>();
 
-    void FixedUpdate()
+    void Start()
     {
-        TotalPlayTime += Time.fixedDeltaTime;
+        StartCoroutine(TimeCounter());
+    }
+
+    IEnumerator TimeCounter()
+    {
+        yield return new WaitForSeconds(1);
+        TotalPlayTime++;
     }
 
     public static void ResetStatsCounts()
@@ -61,7 +74,7 @@ public class StatsCounterPlayer : MonoBehaviour
         MeleeDamageByPlayer = 0;
         MeleeAttacksByEnemies = 0;
         MeleeDamageByEnemies = 0;
-        TotalDamageByPlayerExplosions = 0;
+        EnemyDamageByPlayerExplosions = 0;
         EnemyDamageByPlayerProjectiles = 0;
         EnemyDamageByTurrets = 0;
         DamageToPlayer = 0;
@@ -79,72 +92,79 @@ public class StatsCounterPlayer : MonoBehaviour
 
     public static void PopulateStatsDict()
     {
-        StatsDict.Clear();
+        MiscStats.Clear();
+        ProjectilesStats.Clear();
+        MeleeStats.Clear();
+        DamageStats.Clear();
+        StructuresStats.Clear();
 
-        StatsDict = new Dictionary<string, float>
+        MiscStats = new Dictionary<string, float>
         {
-            {"Time Spent Sprinting: (sec):", TimeSprintingPlayer},
+            {"Player Kills:", EnemiesKilledByPlayer},
+            {"Turret Kills:", EnemiesKilledByTurrets},
+            {"Seconds Sprinting:", TimeSprintingPlayer},
+        };
 
-            {"Enemies Killed by Player:", EnemiesKilledByPlayer},
-            {"Enemies Killed by Turrets:", EnemiesKilledByTurrets},
+        ProjectilesStats = new Dictionary<string, float>
+        {
+            {"Shots by Player:", ShotsFiredByPlayer},
+            {"Hits by Player:", ShotsHitByPlayer},
+            {"Shots by Turrets:", ShotsFiredByTurrets },
+            {"Shots by Enemies:", ShotsFiredByEnemies},
+            {"Grenades Thrown:", GrenadesThrownByPlayer},
+            // Player Accuracy
+        };
 
-            {"Shots Fired by Player:", ShotsFiredByPlayer},
-            {"Shot Hits by Player:", ShotsHitByPlayer},
-            {"Shots Fired by Turrets:", ShotsFiredByTurrets },
-            {"Shots Fired by Enemies:", ShotsFiredByEnemies},
-            {"Grenades Thrown by Player:", GrenadesThrownByPlayer},
+        MeleeStats = new Dictionary<string, float>
+        {
+            {"Attacks by Player:", MeleeAttacksByPlayer},
+            {"Hits by Player:", MeleeHitsByPlayer},
+            {"Damage by Player:", MeleeDamageByPlayer},
+            {"Attacks by Enemies:", MeleeAttacksByEnemies},
+            {"Damage by Enemies:", MeleeDamageByEnemies},
+        };
 
-            {"Melee Attacks by Player:", MeleeAttacksByPlayer},
-            {"Melee Hits by Player:", MeleeHitsByPlayer},
-            {"Melee Damage by Player:", MeleeDamageByPlayer},
-            {"Melee Attacks by Enemies:", MeleeAttacksByEnemies},
-            {"Melee Damage by Enemies:", MeleeDamageByEnemies},
+        DamageStats = new Dictionary<string, float>
+        {
+            {"By Player Explosions:", EnemyDamageByPlayerExplosions},
+            {"By Player Projectiles:", EnemyDamageByPlayerProjectiles},
+            {"Total to Player:", DamageToPlayer},
+            {"Total to Structures:", DamageToStructures},
+            {"Total to Enemies:", DamageToEnemies},
+        };
 
-            {"Total Damage by Explosions:", TotalDamageByPlayerExplosions},
-            {"Projectile Damage by Player:", EnemyDamageByPlayerProjectiles},
-            {"Total Damage to Player:", DamageToPlayer},
-            {"Total Damage to Structures:", DamageToStructures},
-            {"Total Damage to Enemies:", DamageToEnemies},
-
-            {"Structures Built:", StructuresBuilt},
-            {"Structures Lost:", StructuresLost},
-            {"Amount Repaired:", AmountRepaired},
+        StructuresStats = new Dictionary<string, float>
+        {
+            {"Total Built:", StructuresBuilt},
+            {"Total Lost:", StructuresLost},
+            {"Damage Repaired:", AmountRepaired},
             {"Doors Built", DoorsBuilt},
             {"Walls Built", WallsBuilt},
-            {"Turrets Build", TurretsBuilt},
+            {"Turrets Built", TurretsBuilt},
         };
     }
 
-    public string GetStatsString()
+    public static Dictionary<string, float> GetMiscStats()
     {
-        // Maybe make this a dictionary to populate the 2 aligned
-        // TMP elements
-        string text = 
-        "Survival Time: " + TotalPlayTime +
-        "\nSprinting Time: " + TimeSprintingPlayer +
+        return MiscStats;
+    }
+    public static Dictionary<string, float> GetProjectilesStats()
+    {
+        return ProjectilesStats;
+    }
 
-        "\n\nEnemies Killed by Player: " + EnemiesKilledByPlayer +
-        "\nEnemies Killed by Turrets: " + EnemiesKilledByTurrets +
+    public static Dictionary<string, float> GetMeleeStats()
+    {
+        return MeleeStats;
+    }
 
-        "\n\nShots Fired by Player: " + ShotsFiredByPlayer +
-        "\nShot Hits by Player: " + ShotsHitByPlayer +
-        "\nShots Fired by Turrets: " + ShotsFiredByTurrets +
-        "\nShots Fired by Enemies: " + ShotsFiredByEnemies +
-        "\nGrenades Thrown by Player: " + GrenadesThrownByPlayer +
+    public static Dictionary<string, float> GetDamageStats()
+    {
+        return DamageStats;
+    }
 
-        "\n\nMelee Attacks by Player: " + MeleeAttacksByPlayer +
-        "\nMelee Hits by Player: " + MeleeHitsByPlayer +
-        "\nMelee Damage by Player: " + MeleeDamageByPlayer +
-        "\nMelee Attacks by Enemies: " + MeleeDamageByEnemies +
-
-        "\n\nTotal Damage by Explosions: " + TotalDamageByPlayerExplosions +
-        "\nProjectile Damage by Player: " + EnemyDamageByPlayerProjectiles +
-        "\nTotal Damage to Player: " + DamageToPlayer +
-        "\nTotal Damage to Structures: " + DamageToStructures +
-        "\nTotal Damage to Enemies: " + DamageToEnemies +
-
-        "\n\nStructures Built: " + StructuresBuilt +
-        "\nStructures Lost: " + StructuresLost;
-        return text;
+    public static Dictionary<string, float> GetStructuresStats()
+    {
+        return StructuresStats;
     }
 }

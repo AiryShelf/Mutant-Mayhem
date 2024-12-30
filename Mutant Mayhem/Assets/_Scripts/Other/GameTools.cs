@@ -99,13 +99,37 @@ public static class GameTools
     }
 
     /// <summary>
+    /// Converts a float into a formatted string with "k" for thousands or "M" for millions.
+    /// </summary>
+    /// <param name="value">The float value to convert.</param>
+    /// <returns>A string representing the formatted value.</returns>
+    public static string ConvertToStatValue(float value)
+    {
+        float absValue = Mathf.Abs(value);
+        
+        if (absValue > 999_999)
+        {
+            float millions = Mathf.Floor(value / 1_000_000f * 100f) / 100f; // Two decimal precision
+            return $"{millions} M";
+        }
+        else if (absValue > 999)
+        {
+            float thousands = Mathf.Floor(value / 1_000f * 100f) / 100f; // Two decimal precision
+            return $"{thousands} k";
+        }
+        else
+        {
+            return Mathf.Floor(value).ToString();
+        }
+    }
+
+    /// <summary>
     /// Returns a percentage of gain or loss from a base factor of 1
     /// </summary>
     /// <param name="factor"></param>
     /// <returns>
     /// 1.2 returns "20%" and 0.8 returns "20%"
     /// </returns>
-
     public static string FactorToPercent(float factor)
     {
         float percentage = (factor - 1) * 100;
@@ -113,7 +137,7 @@ public static class GameTools
         return $"{Mathf.Abs(percentage):F0}%";
     }
 
-    // Returns a string formatted 1 hour, 4 minutes, 4 seconds
+    // Returns a string formatted 4 hour, 2 minutes, 0 seconds
     public static string FormatTimeFromSeconds(int totalSeconds)
     {
         int hours = totalSeconds / 3600;

@@ -2,22 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildRangeCircle : MonoBehaviour
+[RequireComponent(typeof(LineRenderer))]
+public class LineRendererCircle : MonoBehaviour
 {
     public int segments = 50;
     public float radius = 5f;
     public float dotSize = 0.2f;
+    public bool startOn = false;
     private LineRenderer lineRenderer;
 
-    void Start()
+    void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = segments + 1;
         lineRenderer.loop = true;
         CreateCircle();
+        if (startOn)
+            lineRenderer.enabled = true;
+        else
+            lineRenderer.enabled = false;
     }
 
-    public void EnableBuildCircle(bool enable)
+    public void EnableCircle(bool enable)
     {
         lineRenderer.enabled = enable;
     }
@@ -43,7 +49,6 @@ public class BuildRangeCircle : MonoBehaviour
         // Adjust the main texture scale to repeat the texture along the length of the line
         float textureRepeatCount = circumference / dotSize;  // Number of times the texture should repeat
         lineRenderer.material.mainTextureScale = new Vector2(textureRepeatCount, 1);
-        lineRenderer.enabled = false;
     }
 
     void Update()

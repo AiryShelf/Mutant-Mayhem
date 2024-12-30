@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
+  m_Name: Planet_Arid
+  m_EditorClassIdentifier: 
+  typeOfBody: Planet
+  bodyName: Aridion
+  description: Test world
+  properties:
+  - {fileID: 11400000, guid: 7e2f80d85981b48dbba3e9b48ea7b032, type: 2}
+  - {fileID: 11400000, guid: e11315d0651de4901b950aea74698ee8, type: 2}
+  - {fileID: 11400000, guid: 42db63a5d3f244e6094b0076ef0558a6, type: 2}
+  - {fileID: 11400000, guid: d2798e024c4604707b1286087f88cc0e, type: 2}
+  terrainTile: {fileID: 11400000, guid: a442f2a844511412399b68309d3e378e, type: 2}
+  mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  highRezPlanetPrefab: {fileID: 3583423802647692733, guid: 486b50a8441cb4bcd8367eddc18b034e, type: 3}
+  prerequisitePlanets:
+  - {fileID: 11400000, guid: eaa58cf9c0d504131a622a2025c0c2f9, type: 2}
+  basePoints: 50
+  pointsPerWave: 10
+  growthControlFactor: 0.1
+  timeBetweenWavesBase: 110
+  wavesTillAddBase: 1
+  batchMultiplierStart: 3
+  subwaveDelayMultStart: 1
+  spawnRadiusBuffer: 40
+  damageMultiplier: 1
+  healthMultiplier: 1
+  speedMultiplier: 1
+  sizeMultiplier: 1

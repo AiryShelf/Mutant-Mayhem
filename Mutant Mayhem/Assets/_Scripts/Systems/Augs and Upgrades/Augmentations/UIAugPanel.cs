@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,27 +10,35 @@ public class UIAugPanel : MonoBehaviour
 {
     [SerializeField] GameObject augmentationButtonPrefab;
     [SerializeField] Transform buttonContainer;
-    [SerializeField] Transform selectedContainer;
+
+    [Header("Details Section:")]
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI totalCostGainText;
+    [SerializeField] TextMeshProUGUI descriptionText;
+    [SerializeField] TextMeshProUGUI rpAvailableText;
+    [SerializeField] TextMeshProUGUI AugsAddedText;
+    [SerializeField] TextMeshProUGUI maxAugsText;
+
+    [Header("Adjust Level Section:")]
+    [SerializeField] Image levelPanel;
+    [SerializeField] Color levelPanelSelectedColor;
     [SerializeField] TextMeshProUGUI levelValueText;
     [SerializeField] TextMeshProUGUI lowerLevelCostText;
     [SerializeField] TextMeshProUGUI raiseLevelCostText;
     [SerializeField] Button plusButton;
     [SerializeField] Button minusButton;
     [SerializeField] Button removeButton;
-    [SerializeField] TextMeshProUGUI descriptionText;
-    [SerializeField] TextMeshProUGUI rpAvailableText;
-    [SerializeField] TextMeshProUGUI AugsAddedText;
-    [SerializeField] TextMeshProUGUI maxAugsText;
+    Color levelPanelStartColor;
+    
     [SerializeField] bool selectFirstAug = true;
 
     AugManager augManager;
     public UIAugmentation selectedUiAugmentation;
-    public int augLvlsAdded;
+    int augLvlsAdded;
 
     void Start()
     {
+        levelPanelStartColor = levelPanel.color;
         PopulateAugsList(AugManager.Instance.availableAugmentations);
         UpdateRPAndLevelInfo();
     }
@@ -94,12 +103,15 @@ public class UIAugPanel : MonoBehaviour
     public void UpdatePanelTextandButtons()
     {
         UpdateRPAndLevelInfo();
+        levelPanel.color = levelPanelStartColor;
 
         if (selectedUiAugmentation == null)
         {
             Debug.LogWarning("No Aug selected on UI panel update");
             return;
         }
+
+        levelPanel.color = levelPanelSelectedColor;
 
         // Get aug and level
         AugmentationBaseSO aug = selectedUiAugmentation.aug;
@@ -130,14 +142,24 @@ public class UIAugPanel : MonoBehaviour
 
         // Description Text
         string description = "";
+        Color descriptionColor = Color.white;
         if (level == 0)
+        {
             description = aug.GetNeutralDescription(augManager, level);
+        }
         else if (level > 0)
+        {
+            descriptionColor = Color.cyan;
             description = aug.GetPositiveDescription(augManager, level);
+        }
         else if (level < 0)
+        {
+            descriptionColor = Color.red;
             description = aug.GetNegativeDescription(augManager, level);
+        }
 
         descriptionText.text = "Description: " + description;
+        descriptionText.color = descriptionColor;
 
         // Level valueText, lvlcostText, and +/- buttons
         Color lvlTextColor;
@@ -443,8 +465,11 @@ public class UIAugPanel : MonoBehaviour
 
             return levelRefund;
         }
+    }
 
-        
+    public void FlashLevelPanel()
+    {
+        GameTools.FlashImage(levelPanel, 0.5f, 0.25f, Color.cyan, levelPanel.color);
     }
 
     #endregion
