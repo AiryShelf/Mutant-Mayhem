@@ -73,9 +73,9 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
             Destroy(transform.gameObject);
         }
 
-        foreach (GameObject obj in horizontalLayoutGroup2.transform)
+        foreach (Transform trans in horizontalLayoutGroup2.transform)
         {
-            Destroy(obj);
+            Destroy(trans.gameObject);
         }
     }
 }

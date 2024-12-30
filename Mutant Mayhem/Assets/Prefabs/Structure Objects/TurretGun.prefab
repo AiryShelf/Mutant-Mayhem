@@ -63,6 +63,7 @@ MonoBehaviour:
     m_Bits: 128
   gunRecoil: {fileID: 0}
   gunsAmmoInClips: 00000000
+  accuracyHoningSpeed: 4
   gunList: []
   currentGunIndex: 0
   currentGunSO: {fileID: 0}
@@ -70,7 +71,9 @@ MonoBehaviour:
   isReloading: 0
   isElevated: 1
   hasTarget: 0
-  laserSight: {fileID: 0}
+  gunSights: {fileID: 0}
+  currentAccuracy: 0
+  player: {fileID: 0}
 --- !u!114 &1448709218999936095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,14 +502,6 @@ PrefabInstance:
     - target: {fileID: 311083868903950613, guid: acf14e3fca0435145add3fc5c0a5555b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 3141119068776915564, guid: acf14e3fca0435145add3fc5c0a5555b, type: 3}
-      propertyPath: m_ShadowIntensityEnabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4603836130407574771, guid: acf14e3fca0435145add3fc5c0a5555b, type: 3}
-      propertyPath: m_ShadowIntensityEnabled
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6657267675385680040, guid: acf14e3fca0435145add3fc5c0a5555b, type: 3}
       propertyPath: m_Name

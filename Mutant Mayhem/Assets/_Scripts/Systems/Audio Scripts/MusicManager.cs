@@ -9,8 +9,8 @@ public class MusicManager : MonoBehaviour
 {
     public static MusicManager Instance;
 
-    public float musicStartDb = -4;
-    public float sfxStartDb = -1;
+    public float musicStartDb = -8;
+    public float sfxStartDb = -6;
 
     public List<PlaylistSO> mainMenuPlaylists = new List<PlaylistSO>();
     public List<PlaylistSO> mothershipPlaylists = new List<PlaylistSO>();
