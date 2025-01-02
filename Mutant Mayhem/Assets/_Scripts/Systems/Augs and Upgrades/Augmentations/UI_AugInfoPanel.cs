@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_AugInfoPanel : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI classText;
     [SerializeField] VerticalLayoutGroup nameGroup;
     [SerializeField] VerticalLayoutGroup valueGroup;
     [SerializeField] GameObject namePrefab;
@@ -12,9 +14,23 @@ public class UI_AugInfoPanel : MonoBehaviour
 
     void Start()
     {
+        switch (ClassManager.Instance.selectedClass)
+        {
+            case PlayerClass.Fighter:
+                classText.text = "Fighter Class";
+                break;
+            case PlayerClass.Neutral:
+                classText.text = "Neutral Class";
+                break;
+            case PlayerClass.Builder:
+                classText.text = "Builder Class";
+                break;
+            
+        }
+
         Dictionary<AugmentationBaseSO, int> augsWithLevels = AugManager.Instance.selectedAugsWithLvls;
 
-        // Create group, add entries
+        // Create stat group, add entries
         StatGroupWrapper statGroup = new StatGroupWrapper(nameGroup, valueGroup, namePrefab, valuePrefab);
 
         if (augsWithLevels.Count < 1)

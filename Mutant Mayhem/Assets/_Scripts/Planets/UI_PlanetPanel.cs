@@ -31,19 +31,6 @@ public class UI_PlanetPanel : MonoBehaviour
     bool isMapOpen = false;
     Dictionary<PlanetSO, GameObject> _highRezPlanets = new Dictionary<PlanetSO, GameObject>();
 
-    public static UI_PlanetPanel Instance;
-
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-    }
-
     void Start()
     {
         showMapButtonStartColors = mapButton.colors;
@@ -71,28 +58,28 @@ public class UI_PlanetPanel : MonoBehaviour
         }
     }
 
-    public static void LoadPropertyCards(PlanetSO planet)
+    public void LoadPropertyCards(PlanetSO planet)
     {
         if (planet == null) return;
         
-        Instance.ClearInfoPanel();
-        Instance.bodyTypeText.text = planet.typeOfBody;
-        Instance.bodyNameText.text = planet.bodyName;
-        Instance.toPassMissionText.text = planet.mission.toPassText;
+        ClearInfoPanel();
+        bodyTypeText.text = planet.typeOfBody;
+        bodyNameText.text = planet.bodyName;
+        toPassMissionText.text = planet.mission.toPassText;
 
         foreach (PlanetPropertySO planetProperty in planet.properties)
         {
-            UI_PlanetPropertyCard propertyCard = Instantiate(Instance.propertyCardPrefab, Instance.infoPanel).GetComponent<UI_PlanetPropertyCard>();
+            UI_PlanetPropertyCard propertyCard = Instantiate(propertyCardPrefab, infoPanel).GetComponent<UI_PlanetPropertyCard>();
             propertyCard.propertyNameText.text = planetProperty.propertyName;
 
             foreach (StatModifierEntry entry in planetProperty.statModifierEntries)
             {
-                TextMeshProUGUI modifierText = Instantiate(Instance.modifierTextPrefab, propertyCard.modifierLayoutGroup).GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI modifierText = Instantiate(modifierTextPrefab, propertyCard.modifierLayoutGroup).GetComponent<TextMeshProUGUI>();
                 modifierText.text = "    " + entry.modifierUiName;
                 if (entry.isDebuff)
-                    modifierText.color = Instance.debuffModifierColor;
+                    modifierText.color = debuffModifierColor;
                 else
-                    modifierText.color = Instance.buffModifierColor;
+                    modifierText.color = buffModifierColor;
             }
         }
     } 

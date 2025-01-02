@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,6 +23,7 @@ public class UIAugPanel : MonoBehaviour
     [Header("Adjust Level Section:")]
     [SerializeField] Image levelPanel;
     [SerializeField] Color levelPanelSelectedColor;
+    [SerializeField] Color levelPanelFlashColor;
     [SerializeField] TextMeshProUGUI levelValueText;
     [SerializeField] TextMeshProUGUI lowerLevelCostText;
     [SerializeField] TextMeshProUGUI raiseLevelCostText;
@@ -242,16 +244,24 @@ public class UIAugPanel : MonoBehaviour
 
     public void OnRemoveClicked()
     {
+        // Check RP available to remove aug
+        if (augManager.currentResearchPoints - selectedUiAugmentation.totalCost < 0)
+        {
+            Debug.Log("Not enough RP to remove selected Aug");
+            MessagePanel.PulseMessage("Can't remove Aug.  Not enough RP available!", Color.red);
+            return;
+        }
+
         // Handle maxAugs
         if (selectedUiAugmentation.aug is Aug_MaxAugs _maxAugs)
         {
             if (!augManager.selectedAugsWithLvls.ContainsKey(selectedUiAugmentation.aug))
             {
-                Debug.LogAssertion("Did not find Max Augs in dictionary");
+                Debug.LogError("Did not find Max Augs in dictionary");
                 return;
             }
 
-            // Make sure removing maxAugs doesnt bring current count below max.
+            // Make sure removing maxAugs doesn't bring current count below max.
             int currentLvl = augManager.selectedAugsWithLvls[selectedUiAugmentation.aug];
             if (augManager.GetCurrentLevelCount() - currentLvl <= augManager.maxAugs - augLvlsAdded)
             {
@@ -469,7 +479,7 @@ public class UIAugPanel : MonoBehaviour
 
     public void FlashLevelPanel()
     {
-        GameTools.FlashImage(levelPanel, 0.5f, 0.25f, Color.cyan, levelPanel.color);
+        GameTools.StartCoroutine(GameTools.FlashImage(levelPanel, 0.4f, 0.2f, levelPanelFlashColor, levelPanelSelectedColor));
     }
 
     #endregion

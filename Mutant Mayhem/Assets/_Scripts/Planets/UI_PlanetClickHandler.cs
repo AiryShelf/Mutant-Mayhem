@@ -14,11 +14,16 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
     [SerializeField] Transform parentTransform;
     GameObject highlightInstance;
     GameObject selectedHighlightInstance;
+    UI_PlanetPanel planetPanel;
     public bool unlocked = false;
 
     void Start()
     {
         unlocked = ProfileManager.Instance.IsPlanetUnlocked(planetSO.prerequisitePlanets);
+        planetPanel = FindObjectOfType<UI_PlanetPanel>();
+
+        if (planetPanel == null)
+            Debug.LogWarning("UI_PlanetClickHandler: Could not find PlanetPanel in scene");
 
         GameObject highlight;
         if (unlocked)
@@ -56,7 +61,7 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (PlanetManager.Instance.currentPlanet != planetSO)
-            UI_PlanetPanel.LoadPropertyCards(planetSO);
+            planetPanel.LoadPropertyCards(planetSO);
 
         highlightInstance.SetActive(true);
     }
@@ -64,14 +69,14 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
     public void OnPointerExit(PointerEventData eventData)
     {
         if (PlanetManager.Instance.currentPlanet != planetSO)
-            UI_PlanetPanel.LoadPropertyCards(PlanetManager.Instance.currentPlanet);
+            planetPanel.LoadPropertyCards(PlanetManager.Instance.currentPlanet);
 
         highlightInstance.SetActive(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (UI_PlanetPanel.Instance == null) return;
+        if (planetPanel == null) return;
 
         if (!unlocked)
         {
@@ -82,7 +87,7 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
         PlanetManager.Instance.SetCurrentPlanet(planetSO);
         if (PlanetManager.Instance.currentPlanet != planetSO)
         {
-            UI_PlanetPanel.LoadPropertyCards(planetSO);
+            planetPanel.LoadPropertyCards(planetSO);
             selectedHighlightInstance.SetActive(false);
         }
         else

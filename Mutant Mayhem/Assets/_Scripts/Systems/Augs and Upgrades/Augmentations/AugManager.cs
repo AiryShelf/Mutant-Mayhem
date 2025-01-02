@@ -35,6 +35,16 @@ public class AugManager : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        ProfileManager.OnProfileIsSet += ResetAugManager;
+    }
+
+    void OnDisable()
+    {
+        ProfileManager.OnProfileIsSet -= ResetAugManager;
+    }
+
     void Start()
     {
         Initialize();
@@ -55,6 +65,11 @@ public class AugManager : MonoBehaviour
         grenadeCostMult = 1;
     }
 
+    void ResetAugManager(PlayerProfile profile)
+    {
+        Initialize();
+    }
+
     public void ApplySelectedAugmentations()
     {
         foreach (KeyValuePair<AugmentationBaseSO, int> kvp in selectedAugsWithLvls)
@@ -68,6 +83,9 @@ public class AugManager : MonoBehaviour
         int lvls = 0;
         foreach (KeyValuePair<AugmentationBaseSO, int> kvp in selectedAugsWithLvls)
         {
+            if (kvp.Key is Aug_MaxAugs)
+                continue;
+                
             lvls += Mathf.Abs(kvp.Value);
         }
 
