@@ -211,14 +211,14 @@ public class MeleeDamageUpgrade : Upgrade
 
     public static float GetUpgAmount(UpgradeManager upgradeManager)
     {
-        float upgAmount = 0.2f * (upgradeManager.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 2) *
+        float upgAmount = 0.1f * (upgradeManager.playerStatsUpgLevels[PlayerStatsUpgrade.MeleeDamage] + 2) *
                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
         return upgAmount;
     }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.meleeDamage += 0.2f * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+        playerStats.meleeDamage += 0.1f * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)

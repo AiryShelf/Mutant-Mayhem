@@ -241,7 +241,7 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.SprintFactor] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 200; // Deprecated
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.WeaponHandling] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 250;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeKnockback] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaMax] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaRegen] = 200;
