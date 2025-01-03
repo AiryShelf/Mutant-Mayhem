@@ -25,15 +25,15 @@ MonoBehaviour:
   highRezPlanetPrefab: {fileID: 3093592181185446272, guid: 89d1dc71c4d5748b9b06d9f3e5dd6bb1, type: 3}
   prerequisitePlanets:
   - {fileID: 11400000, guid: eaa58cf9c0d504131a622a2025c0c2f9, type: 2}
-  basePoints: 50
-  pointsPerWave: 10
-  growthControlFactor: 0.1
+  basePoints: 150
+  pointsPerWave: 18
+  growthControlFactor: 0.14
   timeBetweenWavesBase: 110
   wavesTillAddBase: 1
   batchMultiplierStart: 3
   subwaveDelayMultStart: 1
   spawnRadiusBuffer: 40
-  damageMultiplier: 1
-  healthMultiplier: 1
-  speedMultiplier: 1
+  damageMultiplier: 1.6
+  healthMultiplier: 1.6
+  speedMultiplier: 1.6
   sizeMultiplier: 1

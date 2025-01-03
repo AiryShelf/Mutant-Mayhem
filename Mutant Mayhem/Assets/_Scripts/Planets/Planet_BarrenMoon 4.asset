@@ -20,13 +20,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb42734f9c19b4d3088c2ba8a6d5fbde, type: 2}
   - {fileID: 11400000, guid: b21c583d2f34d49228dd989b7c86c45b, type: 2}
   terrainTile: {fileID: 11400000, guid: e44794305818745d5aa59eda637fb018, type: 2}
-  mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  mission: {fileID: 11400000, guid: 7fb026761eebc4073be042f225a6b178, type: 2}
   highRezPlanetPrefab: {fileID: 4567349013123969168, guid: a9d18f8b08dc04661ba1b3ea382ccd3b, type: 3}
   prerequisitePlanets:
   - {fileID: 11400000, guid: b7efa2ea19572d24eb9c7f975ae2fc9f, type: 2}
   basePoints: 75
-  pointsPerWave: 15
-  growthControlFactor: 0.1
+  pointsPerWave: 12
+  growthControlFactor: 0.11
   timeBetweenWavesBase: 110
   wavesTillAddBase: 1
   batchMultiplierStart: 3
@@ -35,4 +35,4 @@ MonoBehaviour:
   damageMultiplier: 1.2
   healthMultiplier: 1.2
   speedMultiplier: 1.2
-  sizeMultiplier: 0.95
+  sizeMultiplier: 1
