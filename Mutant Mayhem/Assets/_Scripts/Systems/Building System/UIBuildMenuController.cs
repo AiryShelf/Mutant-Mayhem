@@ -92,7 +92,8 @@ public class UIBuildMenuController : MonoBehaviour
 
         //SetButtonNavigation();
     }
-
+    
+    /*
     void SetButtonNavigation()
     {
         for (int i = 0; i < uiStructureList.Count; i++)
@@ -127,6 +128,7 @@ public class UIBuildMenuController : MonoBehaviour
             //button.navigation = nav;
         }
     }
+    */
 
     public void RefreshBuildList()
     {
