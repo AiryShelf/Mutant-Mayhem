@@ -9,12 +9,13 @@ public class GunSights : MonoBehaviour
     public LineRenderer lineRendererRightEdge;
     [SerializeField] float edgeLengthFactor = 0.7f;
     [SerializeField] int playerGunIndex;
-    [SerializeField] bool distToMouse = false;
+    [SerializeField] bool repairGun = false;
     [SerializeField] LayerMask collisionMask;
 
     [Header("If not to mouse:")]
     [SerializeField] float defaultDist = 5;
 
+    public bool isElevated;
     Player player;
     PlayerShooter playerShooter;
     float maxLength;
@@ -32,7 +33,7 @@ public class GunSights : MonoBehaviour
     {
         float baseLength;
         
-        if (distToMouse)
+        if (repairGun)
         {
             Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             target.z = 0;
@@ -45,6 +46,17 @@ public class GunSights : MonoBehaviour
 
         baseLength = Mathf.Clamp(baseLength, 0, maxLength);
 
+        var (centerLength, leftLength, rightLength) =
+            !isElevated
+                ? RaycastLines(baseLength)
+                : (baseLength, baseLength, baseLength);
+
+        RefreshSettings();
+        UpdateSights(centerLength, leftLength, rightLength);
+    }
+
+    public (float centerLength, float leftLength, float rightLength) RaycastLines(float baseLength)
+    {
         float centerLength = baseLength;
         RaycastHit2D centerHit = Physics2D.Raycast(
             transform.position, 
@@ -55,7 +67,7 @@ public class GunSights : MonoBehaviour
 
         if (centerHit.collider != null)
         {
-            centerLength = centerHit.distance;
+            centerLength = centerHit.distance + 0.5f;
         }
 
         float leftLength = baseLength * edgeLengthFactor;
@@ -70,7 +82,7 @@ public class GunSights : MonoBehaviour
 
         if (leftHit.collider != null)
         {
-            leftLength = leftHit.distance;
+            leftLength = leftHit.distance + 0.5f;
         }
         float rightLength = baseLength * edgeLengthFactor;
         Vector2 rightDir = GameTools.RotateVector2(transform.right, -accuracy);
@@ -84,11 +96,10 @@ public class GunSights : MonoBehaviour
 
         if (rightHit.collider != null)
         {
-            rightLength = rightHit.distance;
+            rightLength = rightHit.distance + 1;
         }
-
-        RefreshSettings();
-        UpdateSights(centerLength, leftLength, rightLength);
+        
+        return (centerLength, leftLength, rightLength);
     }
 
     public void RefreshSettings()

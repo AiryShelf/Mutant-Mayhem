@@ -23,6 +23,7 @@ public class ShootingPlatform : MonoBehaviour
         {
             Debug.Log("Player entered platform");
             playerShooter.isElevated = true;
+            playerShooter.gunSights.isElevated = true;
             flashlight1.shadowsEnabled = false;
             flashlight2.shadowsEnabled = false;
         }
@@ -34,6 +35,7 @@ public class ShootingPlatform : MonoBehaviour
         {
             Debug.Log("Player exitted platform");
             playerShooter.isElevated = false;
+            playerShooter.gunSights.isElevated = false;
             flashlight1.shadowsEnabled = true;
             flashlight2.shadowsEnabled = true;
         }
