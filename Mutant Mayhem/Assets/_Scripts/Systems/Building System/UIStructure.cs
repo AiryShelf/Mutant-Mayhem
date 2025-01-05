@@ -84,13 +84,13 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     {
         if (!initialized)
         {
-            Debug.LogError("UIStructure was not initialized on selection");
+            //Debug.LogError("UIStructure was not initialized on selection");
             return false;
         }
 
         if (!button.interactable)
         {
-            Debug.LogError("UIStructure was not interactable on selection");
+            //Debug.LogError("UIStructure was not interactable on selection");
             return false;
         }
 
