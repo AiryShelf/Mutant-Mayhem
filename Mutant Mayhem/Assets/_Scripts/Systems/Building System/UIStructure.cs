@@ -77,15 +77,26 @@ public class UIStructure : MonoBehaviour, ISelectHandler
 
     public void OnSelect(BaseEventData data)
     {
-        if (!initialized)
-            return;
+        TryToSelect();
+    }
 
-        buildingSystem.StartCoroutine(buildingSystem.DelayUIReselect());
-        // Lock the scroll rect to this selected object.
-        scrollRectController.SnapTo(myRectTransform);
+    public bool TryToSelect()
+    {
+        if (!initialized)
+        {
+            Debug.LogError("UIStructure was not initialized on selection");
+            return false;
+        }
 
         if (!button.interactable)
-            return;
+        {
+            Debug.LogError("UIStructure was not interactable on selection");
+            return false;
+        }
+
+        buildingSystem.StartCoroutine(buildingSystem.DelayUIReselect());
+        // Lock the scroll rect to this selected object.        
+        scrollRectController.SnapTo(myRectTransform);
 
         buildingSystem.ChangeStructureInHand(structureSO);
         //Debug.Log("OnSelect ran");
@@ -103,8 +114,11 @@ public class UIStructure : MonoBehaviour, ISelectHandler
                 MessagePanel.PulseMessage(turrets + " of " + maxTurrets + " turrets built", Color.cyan);
         }
 
+        button.Select();
+        return true;
+
         // Force selection
-        //EventSystem.current.SetSelectedGameObject(this.gameObject);
+        
     }
     
     public void MakeInteractable()

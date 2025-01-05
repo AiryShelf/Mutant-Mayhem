@@ -43,17 +43,4 @@ public class ScrollRectController : MonoBehaviour
             targetPosition = new Vector2(rectTrans.anchoredPosition.x, newPos.y);
         }
     }
-    /*
-    public void OnScrollSecondaryInput(Vector2 input)
-    {
-        // Apply the scroll speed multiplier to scale down the input
-        float scaledInput = input.y * scrollSpeed;
-        targetPosition.y += scaledInput;
-
-        // Ensure the targetPosition.y stays within the bounds of your content
-        float minY = 0; // Define your min Y position
-        float maxY = rectTrans.rect.height; // Define your max Y position
-        targetPosition.y = Mathf.Clamp(targetPosition.y, minY, maxY);
-    }
-    */
 }

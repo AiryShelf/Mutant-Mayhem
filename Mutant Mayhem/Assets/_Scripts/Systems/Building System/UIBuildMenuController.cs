@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
@@ -9,17 +10,22 @@ public class UIBuildMenuController : MonoBehaviour
     public GridLayoutGroup buttonLayoutGrid;
     public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
-    [HideInInspector] public List<GameObject> structureButtonInstances;
+    public List<UIStructure> uiStructureList;
     [SerializeField] ScrollRectController scrollRectController;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
     //[SerializeField] GameObject tutorialBuildPanelPrefab;
-    [SerializeField] RectTransform gamePlayCanvas;
 
+    int currentIndex;
+    Player player;
     BuildingSystem buildingSystem;
+    InputAction scrollAction;
+    InputAction swapWithDestroyAction;
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
+
         // Clear objects in layout groups
         for (int i = buttonLayoutGrid.transform.childCount - 1; i >= 0; i--)
         {
@@ -33,6 +39,29 @@ public class UIBuildMenuController : MonoBehaviour
 
         buildingSystem = FindObjectOfType<BuildingSystem>();
         InitializeBuildList();             
+    }
+    
+    void OnEnable()
+    {
+        if (player == null)
+        {
+            Debug.LogError("BuildMenuController did not find Player in scene");
+            return;
+        }
+        //PlayerCredits = playerStartingCredits;
+
+        InputActionMap uiActionMap = player.inputAsset.FindActionMap("UI");
+        scrollAction = uiActionMap.FindAction("Scroll");
+        InputActionMap playerActionMap = player.inputAsset.FindActionMap("Player");
+        swapWithDestroyAction = playerActionMap.FindAction("Toolbar");
+
+        scrollAction.performed += OnScroll;
+        swapWithDestroyAction.performed += buildingSystem.SwapWithDestroyTool;
+    }
+
+    void OnDisable()
+    {
+        scrollAction.performed -= OnScroll;
     }
 
     void Start()
@@ -48,27 +77,27 @@ public class UIBuildMenuController : MonoBehaviour
         {
             // Create button in button layout group
             GameObject newButton = Instantiate(obj, buttonLayoutGrid.transform);
-            structureButtonInstances.Add(newButton);
-            UIStructure uIStructure = newButton.GetComponent<UIStructure>();
-            uIStructure.Initialize(buildingSystem, scrollRectController);
+            UIStructure uiStructure = newButton.GetComponent<UIStructure>();
+            uiStructure.Initialize(buildingSystem, scrollRectController);
+            uiStructureList.Add(uiStructure);
 
             // Create text in text layout group
-            uIStructure.textInstance = Instantiate(uIStructure.textPrefab, 
+            uiStructure.textInstance = Instantiate(uiStructure.textPrefab, 
                                                    textLayoutGrid.transform);
 
             // Initialize FadeCanvasGroup list
-            fadeCanvasGroups.individualElements.Add(uIStructure.textInstance.GetComponent<CanvasGroup>());
+            fadeCanvasGroups.individualElements.Add(uiStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
         }
 
-        SetButtonNavigation();
+        //SetButtonNavigation();
     }
 
     void SetButtonNavigation()
     {
-        for (int i = 0; i < structureButtonInstances.Count; i++)
+        for (int i = 0; i < uiStructureList.Count; i++)
         {
-            Button button = structureButtonInstances[i].GetComponent<Button>();
+            Button button = uiStructureList[i].GetComponent<Button>();
             Navigation nav = button.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
@@ -76,14 +105,14 @@ public class UIBuildMenuController : MonoBehaviour
             {
                 // First button - no upward navigation
                 nav.selectOnUp = null;
-                nav.selectOnDown = structureButtonInstances[i + 1].GetComponent<Button>();
+                nav.selectOnDown = uiStructureList[i + 1].GetComponent<Button>();
 
                 button.navigation = nav;
             }
-            else if (i == structureButtonInstances.Count - 1)
+            else if (i == uiStructureList.Count - 1)
             {
                 // Last button - no downward navigation
-                nav.selectOnUp = structureButtonInstances[i - 1].GetComponent<Button>();
+                nav.selectOnUp = uiStructureList[i - 1].GetComponent<Button>();
                 nav.selectOnDown = null;
 
                 button.navigation = nav;
@@ -101,12 +130,11 @@ public class UIBuildMenuController : MonoBehaviour
 
     public void RefreshBuildList()
     {
-        foreach (GameObject obj in structureButtonInstances)
+        foreach (UIStructure structure in uiStructureList)
         {
             // Make unlocked structures interactable
-            UIStructure uiStructure = obj.GetComponent<UIStructure>();
-            if (BuildingSystem._UnlockedStructuresDict[uiStructure.structureSO.structureType])
-                uiStructure.MakeInteractable();
+            if (BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
+                structure.MakeInteractable();
         }
     }
 
@@ -114,9 +142,6 @@ public class UIBuildMenuController : MonoBehaviour
     {
         if (open)
         {
-            //if (!TutorialManager.TutorialShowedBuild)
-                //StartCoroutine(DelayTutorialOpen());
-
             fadeCanvasGroups.isTriggered = true;
             myCanvasGroup.blocksRaycasts = true;
         }
@@ -127,29 +152,79 @@ public class UIBuildMenuController : MonoBehaviour
         }
     }
 
-    IEnumerator DelayTutorialOpen()
+    public bool SetMenuSelection(StructureSO structure)
     {
-        yield return new WaitForSeconds(0.2f);
-
-        //Instantiate(tutorialBuildPanelPrefab, gamePlayCanvas);
-    }
-
-    public void SetMenuSelection(StructureSO structure)
-    {
-        foreach (Transform trans in buttonLayoutGrid.transform)
+        foreach (UIStructure uiStructure in uiStructureList)
         {
-            UIStructure UiStructure = trans.GetComponent<UIStructure>();
-            if (UiStructure == null)
+            if (uiStructure == null)
                 continue;
             
-            if (structure == UiStructure.structureSO.ruleTileStructure.structureSO)
+            if (uiStructure.structureSO.tileName == structure.tileName)
             {
-                EventSystem.current.SetSelectedGameObject(trans.gameObject);
-                Debug.Log("BuildMenu selection forced to " + trans.name);
-                return;
+                if (!uiStructure.TryToSelect())
+                    return false;
+                    
+                currentIndex = uiStructureList.IndexOf(uiStructure);
+                Debug.Log("BuildMenu selection changed to " + uiStructure.name);
+                return true;
             }
-            
         }
-        Debug.Log("BuildMenu selection force failed");
+
+        Debug.LogError("UIBuildMenuController: SetMenuSelection failed");
+        return false;
+    }
+
+    void OnScroll(InputAction.CallbackContext context)
+    {
+        if (!player.stats.playerShooter.isBuilding)
+            return;
+
+        float scrollDelta = context.ReadValue<float>();
+
+        // Compare
+        if (scrollDelta > 0)
+        {
+            ScrollUp();
+        }
+        else if (scrollDelta < 0)
+        {
+            ScrollDown();
+        }
+    }
+
+    void ScrollDown()
+    {
+        if (currentIndex >= uiStructureList.Count - 1)
+            return;
+
+        int startIndex = currentIndex;
+        currentIndex++;
+        
+        for (int i = currentIndex; i < uiStructureList.Count; i++) 
+        {
+            if (SetMenuSelection(uiStructureList[i].structureSO))
+                return;
+            currentIndex++;
+        }
+
+        currentIndex = startIndex;        
+    }
+
+    void ScrollUp()
+    {
+        if (currentIndex <= 0)
+            return;
+
+        int startIndex = currentIndex;
+        currentIndex--;
+        
+        for (int i = currentIndex; i >= 0; i--) 
+        {
+            if (SetMenuSelection(uiStructureList[i].structureSO))
+                return;
+            currentIndex--;
+        }
+
+        currentIndex = startIndex;  
     }
 }
