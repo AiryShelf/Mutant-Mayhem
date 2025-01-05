@@ -264,7 +264,7 @@ public class StaminaMaxUpgrade : Upgrade
 {
     public StaminaMaxUpgrade() : base(PlayerStatsUpgrade.StaminaMax) { }
 
-    public static float UpgAmount = 3;
+    public static float UpgAmount = 5;
 
     public override void Apply(PlayerStats playerStats, int level)
     {
