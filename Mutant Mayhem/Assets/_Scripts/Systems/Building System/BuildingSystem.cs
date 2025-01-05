@@ -28,7 +28,7 @@ public class BuildingSystem : MonoBehaviour
     public LineRendererCircle buildRangeCircle;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersForRemoveClearCheck;
-    [SerializeField] UIBuildMenuController buildMenuController;
+    public UIBuildMenuController buildMenuController;
     [SerializeField] QCubeController qCubeController;
     [SerializeField] MouseLooker mouseLooker;
     [SerializeField] CameraController cameraController;
@@ -78,13 +78,11 @@ public class BuildingSystem : MonoBehaviour
         //PlayerCredits = playerStartingCredits;
 
         playerActionMap = player.inputAsset.FindActionMap("Player");
-        toolbarAction = playerActionMap.FindAction("Toolbar");
         buildAction = playerActionMap.FindAction("BuildStructure");
         rotateStructureAction = playerActionMap.FindAction("RotateStructure");
         cheatCodeCreditsAction = playerActionMap.FindAction("CheatCodeCredits");
 
         rotateStructureAction.started += OnRotate;
-        toolbarAction.started += OnToolbarUsed;
         buildAction.started += OnBuild;
         cheatCodeCreditsAction.started += OnCheatCodeCredits; 
 
@@ -93,7 +91,6 @@ public class BuildingSystem : MonoBehaviour
 
     void OnDisable()
     {
-        toolbarAction.started -= OnToolbarUsed;
         rotateStructureAction.started -= OnRotate;
         buildAction.started -= OnBuild;
         cheatCodeCreditsAction.started -= OnCheatCodeCredits;
@@ -205,7 +202,7 @@ public class BuildingSystem : MonoBehaviour
         //lastStructureInHand = structureInHand;
     }
 
-    void OnToolbarUsed(InputAction.CallbackContext context)
+    public void SwapWithDestroyTool(InputAction.CallbackContext context)
     {
         if (!isInBuildMode)
             return;
@@ -234,7 +231,6 @@ public class BuildingSystem : MonoBehaviour
                 Debug.Log("Switched back from destroy tool");
             }
         }
-        
     }
 
     #endregion
@@ -253,18 +249,15 @@ public class BuildingSystem : MonoBehaviour
             cameraController.ZoomAndFocus(player.transform, 0, 1, 0.5f, true, false);
             mouseLooker.lockedToPlayer = true;
 
-            //currentRotation = 0;
             buildRangeCircle.EnableCircle(true);
             isInBuildMode = true;
-            //previousGunIndex = player.playerShooter.currentGunIndex;
             player.playerShooter.isBuilding = true;
-            //player.playerShooter.SwitchGuns(9);
-            //lastStructureInHand = AllStructureSOs[2];
             buildMenuController.OpenBuildMenu(true);
             qCubeController.CloseUpgradeWindow();
             //Debug.Log("Opened Build Panel");
             structureInHand = lastStructureInHand;
-            StartCoroutine(DelayMenuSelection()); // So that FadeCanvasGroupsWave can turn the menu on
+            
+            StartCoroutine(DelayMenuSelection()); // So that FadeCanvasGroupsWave can turn the elements on
         }
         else
         {
@@ -298,23 +291,9 @@ public class BuildingSystem : MonoBehaviour
 
     IEnumerator DelayMenuSelection()
     {
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSeconds(0.1f);
 
-        // Find the UI button which holds the lastStructureInHand
-        foreach (Transform button in buildMenuController.buttonLayoutGrid.transform)
-        {
-            UIStructure uiStructure = button.GetComponent<UIStructure>();
-            if (uiStructure == null)
-                continue;
-            
-            if (uiStructure.structureSO.ruleTileStructure.structureSO == 
-                lastStructureInHand.ruleTileStructure.structureSO)
-            {
-                EventSystem.current.SetSelectedGameObject(button.gameObject);
-                //Debug.Log("EventSystem selection forced to " + button.name);
-                break;
-            }
-        }
+        buildMenuController.SetMenuSelection(lastStructureInHand);
     }
 
     IEnumerator ClearSelection(float time)

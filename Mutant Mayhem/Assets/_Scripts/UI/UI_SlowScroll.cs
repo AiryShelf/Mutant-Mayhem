@@ -17,7 +17,7 @@ public class UI_SlowScroll : MonoBehaviour
         #if UNITY_STANDALONE_OSX
             player = FindObjectOfType<Player>();
             uiActionMap = player.inputAsset.FindActionMap("UI");
-            scrollAction = uiActionMap.FindAction("ScrollWheel");
+            scrollAction = uiActionMap.FindAction("Scroll");
         #endif
     }
 

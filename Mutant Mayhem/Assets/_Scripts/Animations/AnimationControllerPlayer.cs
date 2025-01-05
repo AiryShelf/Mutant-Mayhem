@@ -279,6 +279,9 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void ToggleBuildMode()
     {
+        if (player.IsDead)
+            return;
+            
         if (!playerShooter.isBuilding)
         {
             buildingSystemController.ToggleBuildMenu(true);
