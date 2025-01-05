@@ -12,6 +12,8 @@ public class Task_UseGrenade : Task
 
     void Start()
     {
+        Player player = FindObjectOfType<Player>();
+        player.stats.grenadeAmmo++;
         UpdateProgressText();
 
         //timesUsedAtStart = StatsCounterPlayer.GrenadesThrownByPlayer;

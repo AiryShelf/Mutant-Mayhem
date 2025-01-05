@@ -51,6 +51,9 @@ MonoBehaviour:
   edgeLengthFactor: 1
   playerGunIndex: 9
   distToMouse: 1
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 4096
   defaultDist: 0
 --- !u!120 &4935681527257414367
 LineRenderer:
@@ -142,7 +145,7 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
