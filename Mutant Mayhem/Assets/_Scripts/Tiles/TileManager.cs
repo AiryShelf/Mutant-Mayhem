@@ -22,7 +22,8 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
     public static Tilemap AnimatedTilemap;
-    public static Tilemap DestructionTilemap;
+    [SerializeField] Tilemap DestroyedTilemap;
+    [SerializeField] Tilemap DamageTilemap;
     [SerializeField] List<ParticleSystem> particlesToClear;
     public ParticleSystem repairEffect;
     public int amountRepairParticles = 5;
@@ -66,7 +67,7 @@ public class TileManager : MonoBehaviour
         turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
-        DestructionTilemap = GameObject.Find("DestructionTilemap").GetComponent<Tilemap>();
+        DestroyedTilemap = GameObject.Find("DestroyedTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
             Debug.LogError("Error when trying to read the starting tilemap to dict");
         //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
@@ -112,55 +113,6 @@ public class TileManager : MonoBehaviour
         }     
     }
 
-    void ClearParticlesAndDebris(Vector3Int gridPos)
-    {
-        List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
-        foreach (ParticleSystem ps in particlesToClear)
-        {
-            // Access the particles from the particle system
-            ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.main.maxParticles];
-            int particleCount = ps.GetParticles(particles);
-
-            for (int i = 0; i < particleCount; i++)
-            {
-                Vector3 particlePosition = particles[i].position;
-
-                // Check if the particle is within any of the defined overlap boxes
-                foreach (Vector3Int pos in positions)
-                {
-                    Vector2 boxCenter = StructureTilemap.CellToWorld(pos);
-                    boxCenter = new Vector2(boxCenter.x + 0.5f, boxCenter.y + 0.5f);
-
-                    if (IsParticleInBox(particlePosition, boxCenter, Vector2.one))
-                    {
-                        //particles[i].startLifetime = -1f;
-                        //particles[i].startSize = 0;
-                        //particles[i].startColor = new Color(0, 0, 0, 0);
-                        particles[i].remainingLifetime = 0; // Remove the particle by setting its remaining lifetime to zero
-                        break;
-                    }
-                }
-            }
-            ps.SetParticles(particles, particleCount);
-        }
-
-        foreach (Vector3Int pos in positions)
-        {
-            DestructionTilemap.SetTile(pos, null);
-        }
-    }
-
-    bool IsParticleInBox(Vector3 particlePosition, Vector2 boxCenter, Vector2 boxSize)
-    {
-        
-        bool inBox = particlePosition.x >= boxCenter.x - boxSize.x / 2 && 
-                     particlePosition.x <= boxCenter.x + boxSize.x / 2 &&
-                     particlePosition.y >= boxCenter.y - boxSize.y / 2 && 
-                     particlePosition.y <= boxCenter.y + boxSize.y / 2;
-        Debug.Log("Particle box check: " + inBox);
-        return inBox;
-    }
-
     IEnumerator RotateTileObject(Vector3Int gridPos, int rotation)
     {
         yield return new WaitForFixedUpdate();
@@ -181,8 +133,8 @@ public class TileManager : MonoBehaviour
     public void SetRubbleTileAt(Vector3Int rootPos)
     {
         int rotation = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
-        DestructionTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
-        StructureRotator.RotateTileAt(DestructionTilemap, rootPos, -rotation);
+        DestroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
+        StructureRotator.RotateTileAt(DestroyedTilemap, rootPos, -rotation);
 
         StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
         if (type == StructureType.OneByOneWall ||
@@ -192,7 +144,7 @@ public class TileManager : MonoBehaviour
         {
             float randomRotationZ = Random.Range(0f, 360f);  
             Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));
-            DestructionTilemap.SetTransformMatrix(rootPos, rotationMatrix);
+            DestroyedTilemap.SetTransformMatrix(rootPos, rotationMatrix);
         }
     }
 
@@ -275,7 +227,13 @@ public class TileManager : MonoBehaviour
                 return;
             }
 
-            UpdateAnimatedTile(rootPos);
+            StructureType type = _TileStatsDict[gridPos].ruleTileStructure.structureSO.structureType;
+            if (type == StructureType.OneByOneWall || type == StructureType.OneByOneCorner)
+            {
+                // Update DamageTilemap
+            }
+            else
+                UpdateAnimatedTile(rootPos);
         }
         else
         {
@@ -608,6 +566,59 @@ public class TileManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    #endregion
+
+    #region Tools
+
+    void ClearParticlesAndDebris(Vector3Int gridPos)
+    {
+        List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
+        foreach (ParticleSystem ps in particlesToClear)
+        {
+            // Access the particles from the particle system
+            ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.main.maxParticles];
+            int particleCount = ps.GetParticles(particles);
+
+            for (int i = 0; i < particleCount; i++)
+            {
+                Vector3 particlePosition = particles[i].position;
+
+                // Check if the particle is within any of the defined overlap boxes
+                foreach (Vector3Int pos in positions)
+                {
+                    Vector2 boxCenter = StructureTilemap.CellToWorld(pos);
+                    boxCenter = new Vector2(boxCenter.x + 0.5f, boxCenter.y + 0.5f);
+
+                    if (IsParticleInBox(particlePosition, boxCenter, Vector2.one))
+                    {
+                        //particles[i].startLifetime = -1f;
+                        //particles[i].startSize = 0;
+                        //particles[i].startColor = new Color(0, 0, 0, 0);
+                        particles[i].remainingLifetime = 0; // Remove the particle by setting its remaining lifetime to zero
+                        break;
+                    }
+                }
+            }
+            ps.SetParticles(particles, particleCount);
+        }
+
+        foreach (Vector3Int pos in positions)
+        {
+            DestroyedTilemap.SetTile(pos, null);
+        }
+    }
+
+    bool IsParticleInBox(Vector3 particlePosition, Vector2 boxCenter, Vector2 boxSize)
+    {
+        
+        bool inBox = particlePosition.x >= boxCenter.x - boxSize.x / 2 && 
+                     particlePosition.x <= boxCenter.x + boxSize.x / 2 &&
+                     particlePosition.y >= boxCenter.y - boxSize.y / 2 && 
+                     particlePosition.y <= boxCenter.y + boxSize.y / 2;
+        Debug.Log("Particle box check: " + inBox);
+        return inBox;
     }
 
     #endregion
