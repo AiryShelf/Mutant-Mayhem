@@ -10,6 +10,7 @@ public class AugManager : MonoBehaviour
     public List<AugmentationBaseSO> availableAugmentations;
     [SerializeField] int maxAugmentationsStart;
     public Dictionary<AugmentationBaseSO, int> selectedAugsWithLvls = new Dictionary<AugmentationBaseSO, int>();
+    public Dictionary<AugmentationBaseSO, int> selectedAugsTotalCosts = new Dictionary<AugmentationBaseSO, int>();
 
     [Header("Dynamic vars, don't set here")]
     public int maxAugs;
@@ -47,7 +48,7 @@ public class AugManager : MonoBehaviour
 
     void Start()
     {
-        Initialize();
+        ResetAugManager(ProfileManager.Instance.currentProfile);
     }
 
     public void Initialize()
@@ -57,17 +58,25 @@ public class AugManager : MonoBehaviour
             //return;
         
         //Reset
-        selectedAugsWithLvls.Clear();
-        maxAugs = maxAugmentationsStart;
-        currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
-
+        //selectedAugsWithLvls.Clear();
+        //maxAugs = maxAugmentationsStart;
+        //currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
         grenadeAmmoMult = 1;
         grenadeCostMult = 1;
+        
     }
 
     void ResetAugManager(PlayerProfile profile)
     {
-        Initialize();
+        //Debug.Log("AugManager has been reset");
+        selectedAugsWithLvls.Clear();
+        selectedAugsTotalCosts.Clear();
+        if (profile == null)
+            return;
+
+        maxAugs = maxAugmentationsStart;
+        currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
+        
     }
 
     public void ApplySelectedAugmentations()
@@ -114,7 +123,7 @@ public class AugManager : MonoBehaviour
             if (selectedAugsWithLvls[aug] == 0)
             {
                 selectedAugsWithLvls.Remove(aug);
-                Debug.Log("Removed an aug from manager");
+                //Debug.Log("Removed an aug from manager");
             }
         }
     }

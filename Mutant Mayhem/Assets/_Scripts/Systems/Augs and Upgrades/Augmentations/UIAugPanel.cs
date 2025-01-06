@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -37,6 +38,11 @@ public class UIAugPanel : MonoBehaviour
     int augLvlsAdded;
 
     void Start()
+    {
+        Initialize();
+    }
+
+    public void Initialize()
     {
         levelPanelStartColor = levelPanel.color;
         PopulateAugsList(AugManager.Instance.availableAugmentations);
@@ -114,7 +120,7 @@ public class UIAugPanel : MonoBehaviour
         levelPanel.color = levelPanelSelectedColor;
 
         // Get aug and level
-        AugmentationBaseSO aug = selectedUiAugmentation.aug;
+        AugmentationBaseSO aug = selectedUiAugmentation.augBaseSO;
         int _totalCost = selectedUiAugmentation.totalCost;
         int level;
         if (augManager.selectedAugsWithLvls.ContainsKey(aug))
@@ -251,16 +257,16 @@ public class UIAugPanel : MonoBehaviour
         }
 
         // Handle maxAugs
-        if (selectedUiAugmentation.aug is Aug_MaxAugs _maxAugs)
+        if (selectedUiAugmentation.augBaseSO is Aug_MaxAugs _maxAugs)
         {
-            if (!augManager.selectedAugsWithLvls.ContainsKey(selectedUiAugmentation.aug))
+            if (!augManager.selectedAugsWithLvls.ContainsKey(selectedUiAugmentation.augBaseSO))
             {
                 Debug.LogError("Did not find Max Augs in dictionary");
                 return;
             }
 
             // Make sure removing maxAugs doesn't bring current count below max.
-            int currentLvl = augManager.selectedAugsWithLvls[selectedUiAugmentation.aug];
+            int currentLvl = augManager.selectedAugsWithLvls[selectedUiAugmentation.augBaseSO];
             if (augManager.GetCurrentLevelCount() - currentLvl <= augManager.maxAugs - augLvlsAdded)
             {
                 augManager.maxAugs -= augLvlsAdded;
@@ -290,7 +296,7 @@ public class UIAugPanel : MonoBehaviour
         }
 
         // Find level, do checks
-        AugmentationBaseSO aug = selectedUiAugmentation.aug;
+        AugmentationBaseSO aug = selectedUiAugmentation.augBaseSO;
         int level = 0;
         int currentLvlCount = augManager.GetCurrentLevelCount();
         if (augManager.selectedAugsWithLvls.ContainsKey(aug))
@@ -360,7 +366,7 @@ public class UIAugPanel : MonoBehaviour
         }
 
         // Find level, do checks
-        AugmentationBaseSO aug = selectedUiAugmentation.aug;
+        AugmentationBaseSO aug = selectedUiAugmentation.augBaseSO;
         int level = 0;
         int currentLvlCount = augManager.GetCurrentLevelCount();
         if (augManager.selectedAugsWithLvls.ContainsKey(aug))
@@ -430,6 +436,54 @@ public class UIAugPanel : MonoBehaviour
     #endregion
 
     #region Tools
+
+    public void TrackRPCosts()
+    {
+        foreach (Transform trans in buttonContainer)
+        {
+            UIAugmentation uiAug = trans.gameObject.GetComponent<UIAugmentation>();
+            if (uiAug == null)
+            {
+                Debug.LogError("AugPanel: Could not find UIAugmentation in buttonContainer");
+                return;
+            }
+
+            AugmentationBaseSO aug = uiAug.augBaseSO;
+            foreach (var kvp in AugManager.Instance.selectedAugsWithLvls)
+            {
+                if (kvp.Key.augmentationName == aug.augmentationName)
+                    AugManager.Instance.selectedAugsTotalCosts.Add(aug, uiAug.totalCost);
+            }
+        }
+    }
+
+    public void RefreshRPCosts()
+    {
+        foreach (Transform trans in buttonContainer)
+        {
+            UIAugmentation uiAug = trans.gameObject.GetComponent<UIAugmentation>();
+            if (uiAug == null)
+            {
+                Debug.LogError("AugPanel: Could not find UIAugmentation in buttonContainer");
+                return;
+            }
+
+            AugmentationBaseSO aug = uiAug.augBaseSO;
+            if (aug == null)
+            {
+                Debug.LogError("AugPanel: Could not find AugmentationBaseSO in UIAugmentation");
+                return;
+            }
+
+            foreach (var kvp in AugManager.Instance.selectedAugsTotalCosts)
+            {
+                if (kvp.Key.augmentationName == aug.augmentationName)
+                {
+                    uiAug.totalCost = kvp.Value;
+                }
+            }
+        }
+    }
 
     int GetLevelCost(AugmentationBaseSO aug, int level, bool addingLevel)
     {

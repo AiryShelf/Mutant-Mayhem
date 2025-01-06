@@ -161,7 +161,7 @@ public class Shooter : MonoBehaviour
         }
     }
 
-    #region Fire / Switch Gun
+    #region Fire
 
     protected virtual void Fire()
     {
@@ -227,6 +227,10 @@ public class Shooter : MonoBehaviour
 
         StartCoroutine(MuzzleFlash());
     }
+
+    #endregion
+
+    #region Switch Guns
 
     public virtual void SwitchGuns(int i)
     {

@@ -219,7 +219,7 @@ public static class UpgStatGetter
                 amount = "+" + QCubeRepairUpgrade.GetUpgAmount(player.stats.structureStats.cubeHealthScript).ToString();
                 return amount;
             case ConsumablesUpgrade.GrenadeBuyAmmo:
-                amount = "+" + GrenadeBuyAmmoUpgrade.AmmoAmount.ToString();
+                amount = "+" + GrenadeBuyAmmoUpgrade.GetUpgAmount().ToString();
                 return amount;
             case ConsumablesUpgrade.SMGBuyAmmo:
                 amount = "+" + SMGBuyAmmoUpgrade.AmmoAmount.ToString();

@@ -19,7 +19,7 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
     Color originalTextColor;
 
     [Header("Dynamic from UIAugPanel, don't set here")]
-    public AugmentationBaseSO aug;
+    public AugmentationBaseSO augBaseSO;
     public int totalCost;
 
     AugManager augManager;
@@ -32,7 +32,7 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
         originalIconColor = icon.color;
         originalTextColor = nameText.color;
 
-        aug = augmentation;
+        augBaseSO = augmentation;
         augManager = manager;
         augPanel = panel;
         icon.sprite = augmentation.uiImage;
@@ -67,21 +67,21 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     public bool AddToSelectedAugs(int level)
     {
-        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
             Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
             return false;
         } 
 
         // Check for duplicates
-        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
             Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
             return false;
         }
 
-        augManager.selectedAugsWithLvls.Add(aug, level);
-        Debug.Log("Added Augmentation: " + aug.augmentationName);
+        augManager.selectedAugsWithLvls.Add(augBaseSO, level);
+        Debug.Log("Added Augmentation: " + augBaseSO.augmentationName);
 
         UpdateIconAndText();
         return true;
@@ -89,13 +89,13 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     public void RemoveFromSelectedAugs()
     {
-        if (!augManager.selectedAugsWithLvls.ContainsKey(aug))
+        if (!augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
             Debug.LogError("UIAugmentation not found in selected Augs, can't remove");
             return;
         }
 
-        augManager.selectedAugsWithLvls.Remove(aug);
+        augManager.selectedAugsWithLvls.Remove(augBaseSO);
         Debug.Log("Removed an Augmentation");
 
         UpdateIconAndText();
@@ -122,16 +122,16 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
             costText.text = "+" + Mathf.Abs(totalCost) + " RP";  
         }  
 
-        if (aug == null)
+        if (augBaseSO == null)
         {
             Debug.Log("Aug is null");
             return;
         }
         
         // Set button colors for selection state
-        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
-            int level = augManager.selectedAugsWithLvls[aug];
+            int level = augManager.selectedAugsWithLvls[augBaseSO];
             if (level >= 0)
             {
                 icon.color = addedColor;
@@ -166,13 +166,13 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
         }
 
         // Add level number to end of name
-        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
-            nameText.text = aug.augmentationName + " " + augManager.selectedAugsWithLvls[aug];
+            nameText.text = augBaseSO.augmentationName + " " + augManager.selectedAugsWithLvls[augBaseSO];
         }
         else
         {
-            nameText.text = aug.augmentationName;
+            nameText.text = augBaseSO.augmentationName;
         }
     }
 }

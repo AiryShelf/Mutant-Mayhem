@@ -25,6 +25,7 @@ public class GunSights : MonoBehaviour
     {
         this.player = player;
         playerShooter = player.playerShooter;
+        isElevated = playerShooter.isElevated;
             
         RefreshSettings();
     }

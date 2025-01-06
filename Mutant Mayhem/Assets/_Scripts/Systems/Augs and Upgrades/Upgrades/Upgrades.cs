@@ -482,7 +482,12 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
 {
     public GrenadeBuyAmmoUpgrade() : base(ConsumablesUpgrade.GrenadeBuyAmmo) { }
 
-    public static int AmmoAmount = 1 * AugManager.Instance.grenadeAmmoMult;
+    public static int AmmoAmount = 1;
+
+    public static float GetUpgAmount()
+    {
+        return AmmoAmount * AugManager.Instance.grenadeAmmoMult;
+    }
 
     public override bool Apply(PlayerStats playerStats)
     {
