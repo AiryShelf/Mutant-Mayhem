@@ -9,7 +9,7 @@ public class RuleTileStructure : RuleTile
     [Header("Tile Settings")]
     public StructureSO structureSO;
     public List<AnimatedTile> damagedTiles;
-    public GameObject corpsePrefab;
+    public AnimatedTile destroyedTile;
     
     [Header("Optional")]
     public AnimatedTile buildUiTile;

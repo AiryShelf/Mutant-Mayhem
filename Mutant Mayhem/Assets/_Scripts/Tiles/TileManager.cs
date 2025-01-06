@@ -22,6 +22,7 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
     public static Tilemap AnimatedTilemap;
+    public static Tilemap DestructionTilemap;
     [SerializeField] List<ParticleSystem> particlesToClear;
     public ParticleSystem repairEffect;
     public int amountRepairParticles = 5;
@@ -65,6 +66,7 @@ public class TileManager : MonoBehaviour
         turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
+        DestructionTilemap = GameObject.Find("DestructionTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
             Debug.LogError("Error when trying to read the starting tilemap to dict");
         //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
@@ -82,8 +84,7 @@ public class TileManager : MonoBehaviour
         if (AddNewTileToDict(gridPos, structure))
         {
             // Set and rotate animated tile
-            AnimatedTilemap.SetTile(gridPos, 
-                _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+            AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
             StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
 
             // Set structure tile
@@ -91,14 +92,13 @@ public class TileManager : MonoBehaviour
             
             // Rotate the structure tile, find new bounds
             StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
-            Vector2Int bounds = StructureRotator.CalculateBoundingBox(structure.cellPositions);
 
-            if (structure.cellPositions.Count > 1)
-            {
-                StartCoroutine(RotateTileObject(gridPos, bounds, rotation));
-            }
+            //if (structure.cellPositions.Count > 1)
+            //{
+                StartCoroutine(RotateTileObject(gridPos, rotation));
+            //}
 
-            ClearParticles(gridPos);                
+            ClearParticlesAndDebris(gridPos);                
             shadowCaster2DTileMap.Generate();
             //Debug.Log("Added a Tile");
             
@@ -112,7 +112,7 @@ public class TileManager : MonoBehaviour
         }     
     }
 
-    void ClearParticles(Vector3Int gridPos)
+    void ClearParticlesAndDebris(Vector3Int gridPos)
     {
         List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
         foreach (ParticleSystem ps in particlesToClear)
@@ -143,18 +143,25 @@ public class TileManager : MonoBehaviour
             }
             ps.SetParticles(particles, particleCount);
         }
+
+        foreach (Vector3Int pos in positions)
+        {
+            DestructionTilemap.SetTile(pos, null);
+        }
     }
 
     bool IsParticleInBox(Vector3 particlePosition, Vector2 boxCenter, Vector2 boxSize)
     {
         
-        bool inBox = particlePosition.x >= boxCenter.x - boxSize.x / 2 && particlePosition.x <= boxCenter.x + boxSize.x / 2 &&
-                     particlePosition.y >= boxCenter.y - boxSize.y / 2 && particlePosition.y <= boxCenter.y + boxSize.y / 2;
+        bool inBox = particlePosition.x >= boxCenter.x - boxSize.x / 2 && 
+                     particlePosition.x <= boxCenter.x + boxSize.x / 2 &&
+                     particlePosition.y >= boxCenter.y - boxSize.y / 2 && 
+                     particlePosition.y <= boxCenter.y + boxSize.y / 2;
         Debug.Log("Particle box check: " + inBox);
         return inBox;
     }
 
-    IEnumerator RotateTileObject(Vector3Int gridPos, Vector2Int bounds, int rotation)
+    IEnumerator RotateTileObject(Vector3Int gridPos, int rotation)
     {
         yield return new WaitForFixedUpdate();
 
@@ -163,12 +170,29 @@ public class TileManager : MonoBehaviour
         // Rotate and position GameObject
         if (tileObj != null)
         {
-            //StructureRotator.RepositionGameObject(StructureTilemap, tileObj, gridPos, bounds, rotation);
             tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
         else
         {
             //Debug.Log("TileObject not found");
+        }
+    }
+
+    public void SetRubbleTileAt(Vector3Int rootPos)
+    {
+        int rotation = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
+        DestructionTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
+        StructureRotator.RotateTileAt(DestructionTilemap, rootPos, -rotation);
+
+        StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
+        if (type == StructureType.OneByOneWall ||
+            type == StructureType.OneByOneCorner ||
+            type == StructureType.TwoByTwoWall ||
+            type == StructureType.TwoByTwoCorner)
+        {
+            float randomRotationZ = Random.Range(0f, 360f);  
+            Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));
+            DestructionTilemap.SetTransformMatrix(rootPos, rotationMatrix);
         }
     }
 
@@ -246,6 +270,7 @@ public class TileManager : MonoBehaviour
             if (_TileStatsDict[rootPos].health == 0)
             {
                 StatsCounterPlayer.StructuresLost++;
+                SetRubbleTileAt(rootPos);
                 RemoveTileAt(rootPos);
                 return;
             }

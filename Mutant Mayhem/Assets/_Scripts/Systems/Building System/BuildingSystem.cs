@@ -45,8 +45,8 @@ public class BuildingSystem : MonoBehaviour
     [Header("Dynamic vars, don't set here")]
     public float structureCostMult = 1;
 
-    public static Dictionary<Structure, bool> _UnlockedStructuresDict = 
-                                        new Dictionary<Structure, bool>();
+    public static Dictionary<StructureType, bool> _UnlockedStructuresDict = 
+                                        new Dictionary<StructureType, bool>();
     public bool isInBuildMode;
     public int currentRotation;
     private Vector3Int highlightedTilePos;
@@ -83,7 +83,7 @@ public class BuildingSystem : MonoBehaviour
         cheatCodeCreditsAction = playerActionMap.FindAction("CheatCodeCredits");
 
         rotateStructureAction.started += OnRotate;
-        buildAction.started += OnBuild;
+        buildAction.performed += OnBuild;
         cheatCodeCreditsAction.started += OnCheatCodeCredits; 
 
         lastStructureInHand = AllStructureSOs[2];
@@ -92,7 +92,7 @@ public class BuildingSystem : MonoBehaviour
     void OnDisable()
     {
         rotateStructureAction.started -= OnRotate;
-        buildAction.started -= OnBuild;
+        buildAction.performed -= OnBuild;
         cheatCodeCreditsAction.started -= OnCheatCodeCredits;
    
         _UnlockedStructuresDict.Clear();   
@@ -134,7 +134,7 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
 
-        // Build
+        // Build`
         if (allHighlighted)
         {
             if (structureInHand.actionType == ActionType.Build)
@@ -246,7 +246,7 @@ public class BuildingSystem : MonoBehaviour
             CursorManager.Instance.SetBuildCursor();
 
             // Lock camera to player
-            cameraController.ZoomAndFocus(player.transform, 0, 1, 0.5f, true, false);
+            cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
             mouseLooker.lockedToPlayer = true;
 
             buildRangeCircle.EnableCircle(true);
@@ -284,7 +284,7 @@ public class BuildingSystem : MonoBehaviour
 
             RemoveBuildHighlight();
             lastStructureInHand = structureInHand;
-            structureInHand = AllStructureSOs[(int)Structure.SelectTool];
+            structureInHand = AllStructureSOs[(int)StructureType.SelectTool];
             //Debug.Log("Closed Build Panel");
         }
     }
@@ -322,9 +322,9 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    public void UnlockStructures(List<Structure> structures)
+    public void UnlockStructures(List<StructureType> structures)
     {
-        foreach (Structure structure in structures)
+        foreach (StructureType structure in structures)
             _UnlockedStructuresDict[structure] = true;
 
         buildMenuController.RefreshBuildList();
@@ -381,22 +381,22 @@ public class BuildingSystem : MonoBehaviour
     {
         StatsCounterPlayer.StructuresBuilt++;
 
-        if (structureInHand.structureType == Structure.OneByFourWall || 
-            structureInHand.structureType == Structure.OneByOneCorner || 
-            structureInHand.structureType == Structure.OneByOneWall || 
-            structureInHand.structureType == Structure.TwoByEightWall ||
-            structureInHand.structureType == Structure.TwoByTwoCorner || 
-            structureInHand.structureType == Structure.TwoByTwoWall)
+        if (structureInHand.structureType == StructureType.OneByFourWall || 
+            structureInHand.structureType == StructureType.OneByOneCorner || 
+            structureInHand.structureType == StructureType.OneByOneWall || 
+            structureInHand.structureType == StructureType.TwoByEightWall ||
+            structureInHand.structureType == StructureType.TwoByTwoCorner || 
+            structureInHand.structureType == StructureType.TwoByTwoWall)
         {
             StatsCounterPlayer.WallsBuilt++;
         }
-        else if (structureInHand.structureType == Structure.Door || 
-                 structureInHand.structureType == Structure.BlastDoor)
+        else if (structureInHand.structureType == StructureType.Door || 
+                 structureInHand.structureType == StructureType.BlastDoor)
         {
             StatsCounterPlayer.DoorsBuilt++;
         }
-        else if (structureInHand.structureType == Structure.LaserTurret ||
-                 structureInHand.structureType == Structure.GunTurret)
+        else if (structureInHand.structureType == StructureType.LaserTurret ||
+                 structureInHand.structureType == StructureType.GunTurret)
         {
             StatsCounterPlayer.TurretsBuilt++;
         }

@@ -24,7 +24,7 @@ public class UiUpgradePanel : UI_PanelBase
     [SerializeField] int playerGunIndex;
 
     [Header("Unlock Structure")]
-    [SerializeField] List<Structure> structuresToUnlock;
+    [SerializeField] List<StructureType> structuresToUnlock;
     [SerializeField] bool addTurretSlot;
 
     [Header("Unlock Buttons")]
