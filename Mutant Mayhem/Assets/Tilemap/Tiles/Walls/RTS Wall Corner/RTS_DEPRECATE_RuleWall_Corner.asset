@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 720049fd6494a42448765485637eaf85, type: 3}
+  m_Name: RTS_DEPRECATE_RuleWall_Corner
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: 08de0e2708d2b488aaeae3c23ec8d0f1, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules: []
+  structureSO: {fileID: 11400000, guid: 7bcfa10a10c6df04f9803191197d6380, type: 2}
+  damagedTiles:
+  - {fileID: 11400000, guid: 2eaba2ddd109641bd861447f273454b2, type: 2}
+  - {fileID: 11400000, guid: 0dcb0a1dd9a4644c4bdb7fd667622579, type: 2}
+  - {fileID: 11400000, guid: c976026be9466408788fbeebf74f2216, type: 2}
+  - {fileID: 11400000, guid: f0af9e33ad9104ea2acb312522a63a87, type: 2}
+  destroyedTile: {fileID: 11400000, guid: 2ee435b2c76804b678fc5e40fd133283, type: 2}
+  buildUiTile: {fileID: 11400000, guid: 0da7dc10f67372a4693ad102afba9ab7, type: 2}
+  allowedNeighbors: []

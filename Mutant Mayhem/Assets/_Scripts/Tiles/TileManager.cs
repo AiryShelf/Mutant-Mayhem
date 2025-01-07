@@ -78,6 +78,7 @@ public class TileManager : MonoBehaviour
         _TileStatsDict.Clear();
     }
 
+
     #region Alter Tiles
 
     public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
@@ -85,19 +86,22 @@ public class TileManager : MonoBehaviour
         if (AddNewTileToDict(gridPos, structure))
         {
             // Set and rotate animated tile
-            AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+            if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
+            {
+                AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+                AnimatedTilemap.RefreshAllTiles();
+                RefreshSurroundingTiles(gridPos);
+            }
+            else
+                AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+
             StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
 
             // Set structure tile
             StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
-            
-            // Rotate the structure tile, find new bounds
             StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
 
-            //if (structure.cellPositions.Count > 1)
-            //{
-                StartCoroutine(RotateTileObject(gridPos, rotation));
-            //}
+            StartCoroutine(RotateTileObject(gridPos, rotation));
 
             ClearParticlesAndDebris(gridPos);                
             shadowCaster2DTileMap.Generate();
@@ -178,6 +182,9 @@ public class TileManager : MonoBehaviour
         else
             Debug.LogError("shadowCaster2DTileMap is null");
 
+        RefreshSurroundingTiles(rootPos);
+        DamageTilemap.SetTile(rootPos, null);
+
         //Debug.Log("DESTROYED A TILE");
     }
 
@@ -227,13 +234,7 @@ public class TileManager : MonoBehaviour
                 return;
             }
 
-            StructureType type = _TileStatsDict[gridPos].ruleTileStructure.structureSO.structureType;
-            if (type == StructureType.OneByOneWall || type == StructureType.OneByOneCorner)
-            {
-                // Update DamageTilemap
-            }
-            else
-                UpdateAnimatedTile(rootPos);
+            UpdateAnimatedTile(rootPos);
         }
         else
         {
@@ -268,12 +269,47 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    void UpdateDamageTile(Vector3Int rootPos)
+    {
+        float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
+                                 _TileStatsDict[rootPos].maxHealth);
+        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+
+        int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
+        index = Mathf.Clamp(index, 0, dTiles.Count - 1);
+
+        // Keep original rotation
+        Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+
+        if (AnimatedTilemap.GetTile(rootPos) != null)
+        {
+            AnimatedTilemap.SetTile(rootPos, null);
+        }
+
+        AnimatedTilemap.SetTile(rootPos, 
+            _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+        AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
+    }
+
     void UpdateAnimatedTile(Vector3Int rootPos)
     {
         // AnimatedTilemap.GetTile(rootPos);
         float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
                                  _TileStatsDict[rootPos].maxHealth);
-        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+
+        Tilemap tilemap;
+        List<AnimatedTile> dTiles;
+        if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Wall")
+        {
+            tilemap = DamageTilemap;
+            dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+        }
+        else
+        {
+            tilemap = AnimatedTilemap;
+            dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+        }
+
 
         if (dTiles.Count > 1)
         {
@@ -283,26 +319,26 @@ public class TileManager : MonoBehaviour
             // Keep original rotation
             Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
 
-            if (AnimatedTilemap.GetTile(rootPos) != null)
+            if (tilemap.GetTile(rootPos) != null)
             {
-                AnimatedTilemap.SetTile(rootPos, null);
+                tilemap.SetTile(rootPos, null);
             }
 
-            AnimatedTilemap.SetTile(rootPos, 
-                _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
-            AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
+            tilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+            tilemap.SetTransformMatrix(rootPos, matrix);
         }
         else 
         {
+            // This handles doors and TileObjects
             int layerMask = LayerMask.GetMask("PlayerOnly");
             Collider2D[] cols = Physics2D.OverlapPointAll(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
             foreach (Collider2D col in cols)
             {
-                TileObject obj = col.GetComponent<TileObject>();
-                if (obj != null)
+                TileObject tileObj = col.GetComponent<TileObject>();
+                if (tileObj != null)
                 {
                     //Debug.Log("TileObject found at: " + rootPos);
-                    obj.UpdateHealthRatio(GetTileHealthRatio(rootPos));
+                    tileObj.UpdateHealthRatio(GetTileHealthRatio(rootPos));
                 }
                 else
                 {
@@ -311,6 +347,45 @@ public class TileManager : MonoBehaviour
             }
         }
     }
+
+    public void RefreshSurroundingTiles(Vector3Int gridPos)
+{
+    // Refresh the tile itself
+    AnimatedTilemap.RefreshTile(gridPos);
+
+    // Refresh its neighbors
+    Vector3Int[] directions = new Vector3Int[]
+    {
+        Vector3Int.zero,
+        Vector3Int.up,
+        Vector3Int.down,
+        Vector3Int.left,
+        Vector3Int.right,
+        Vector3Int.up + Vector3Int.left,
+        Vector3Int.up + Vector3Int.right,
+        Vector3Int.down + Vector3Int.left,
+        Vector3Int.down + Vector3Int.right
+    };
+
+    bool neighborExists = false;
+
+    foreach (Vector3Int direction in directions)
+    {
+        Vector3Int neighborPos = gridPos + direction;
+        if (AnimatedTilemap.HasTile(neighborPos))
+        {
+            neighborExists = true;
+            AnimatedTilemap.RefreshTile(neighborPos);
+        }
+    }
+
+    // Fallback for solo tiles: Ensure it updates even without neighbors
+    if (!neighborExists)
+    {
+        Debug.Log($"Solo tile refresh triggered at {gridPos}");
+        AnimatedTilemap.RefreshTile(gridPos);
+    }
+}
 
     #endregion
 
