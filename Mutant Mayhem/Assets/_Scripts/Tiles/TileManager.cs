@@ -22,7 +22,8 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
     public static Tilemap AnimatedTilemap;
-    public static Tilemap DestructionTilemap;
+    [SerializeField] Tilemap DestroyedTilemap;
+    [SerializeField] Tilemap DamageTilemap;
     [SerializeField] List<ParticleSystem> particlesToClear;
     public ParticleSystem repairEffect;
     public int amountRepairParticles = 5;
@@ -66,7 +67,7 @@ public class TileManager : MonoBehaviour
         turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
-        DestructionTilemap = GameObject.Find("DestructionTilemap").GetComponent<Tilemap>();
+        DestroyedTilemap = GameObject.Find("DestroyedTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
             Debug.LogError("Error when trying to read the starting tilemap to dict");
         //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
@@ -77,6 +78,7 @@ public class TileManager : MonoBehaviour
         _TileStatsDict.Clear();
     }
 
+
     #region Alter Tiles
 
     public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
@@ -84,19 +86,22 @@ public class TileManager : MonoBehaviour
         if (AddNewTileToDict(gridPos, structure))
         {
             // Set and rotate animated tile
-            AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+            if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
+            {
+                AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+                AnimatedTilemap.RefreshAllTiles();
+                RefreshSurroundingTiles(gridPos);
+            }
+            else
+                AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+
             StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
 
             // Set structure tile
             StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
-            
-            // Rotate the structure tile, find new bounds
             StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
 
-            //if (structure.cellPositions.Count > 1)
-            //{
-                StartCoroutine(RotateTileObject(gridPos, rotation));
-            //}
+            StartCoroutine(RotateTileObject(gridPos, rotation));
 
             ClearParticlesAndDebris(gridPos);                
             shadowCaster2DTileMap.Generate();
@@ -110,55 +115,6 @@ public class TileManager : MonoBehaviour
             Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
             return false;
         }     
-    }
-
-    void ClearParticlesAndDebris(Vector3Int gridPos)
-    {
-        List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
-        foreach (ParticleSystem ps in particlesToClear)
-        {
-            // Access the particles from the particle system
-            ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.main.maxParticles];
-            int particleCount = ps.GetParticles(particles);
-
-            for (int i = 0; i < particleCount; i++)
-            {
-                Vector3 particlePosition = particles[i].position;
-
-                // Check if the particle is within any of the defined overlap boxes
-                foreach (Vector3Int pos in positions)
-                {
-                    Vector2 boxCenter = StructureTilemap.CellToWorld(pos);
-                    boxCenter = new Vector2(boxCenter.x + 0.5f, boxCenter.y + 0.5f);
-
-                    if (IsParticleInBox(particlePosition, boxCenter, Vector2.one))
-                    {
-                        //particles[i].startLifetime = -1f;
-                        //particles[i].startSize = 0;
-                        //particles[i].startColor = new Color(0, 0, 0, 0);
-                        particles[i].remainingLifetime = 0; // Remove the particle by setting its remaining lifetime to zero
-                        break;
-                    }
-                }
-            }
-            ps.SetParticles(particles, particleCount);
-        }
-
-        foreach (Vector3Int pos in positions)
-        {
-            DestructionTilemap.SetTile(pos, null);
-        }
-    }
-
-    bool IsParticleInBox(Vector3 particlePosition, Vector2 boxCenter, Vector2 boxSize)
-    {
-        
-        bool inBox = particlePosition.x >= boxCenter.x - boxSize.x / 2 && 
-                     particlePosition.x <= boxCenter.x + boxSize.x / 2 &&
-                     particlePosition.y >= boxCenter.y - boxSize.y / 2 && 
-                     particlePosition.y <= boxCenter.y + boxSize.y / 2;
-        Debug.Log("Particle box check: " + inBox);
-        return inBox;
     }
 
     IEnumerator RotateTileObject(Vector3Int gridPos, int rotation)
@@ -181,8 +137,8 @@ public class TileManager : MonoBehaviour
     public void SetRubbleTileAt(Vector3Int rootPos)
     {
         int rotation = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
-        DestructionTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
-        StructureRotator.RotateTileAt(DestructionTilemap, rootPos, -rotation);
+        DestroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
+        StructureRotator.RotateTileAt(DestroyedTilemap, rootPos, -rotation);
 
         StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
         if (type == StructureType.OneByOneWall ||
@@ -192,7 +148,7 @@ public class TileManager : MonoBehaviour
         {
             float randomRotationZ = Random.Range(0f, 360f);  
             Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));
-            DestructionTilemap.SetTransformMatrix(rootPos, rotationMatrix);
+            DestroyedTilemap.SetTransformMatrix(rootPos, rotationMatrix);
         }
     }
 
@@ -225,6 +181,9 @@ public class TileManager : MonoBehaviour
             shadowCaster2DTileMap.Generate();
         else
             Debug.LogError("shadowCaster2DTileMap is null");
+
+        RefreshSurroundingTiles(rootPos);
+        DamageTilemap.SetTile(rootPos, null);
 
         //Debug.Log("DESTROYED A TILE");
     }
@@ -310,12 +269,47 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    void UpdateDamageTile(Vector3Int rootPos)
+    {
+        float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
+                                 _TileStatsDict[rootPos].maxHealth);
+        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+
+        int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
+        index = Mathf.Clamp(index, 0, dTiles.Count - 1);
+
+        // Keep original rotation
+        Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+
+        if (AnimatedTilemap.GetTile(rootPos) != null)
+        {
+            AnimatedTilemap.SetTile(rootPos, null);
+        }
+
+        AnimatedTilemap.SetTile(rootPos, 
+            _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+        AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
+    }
+
     void UpdateAnimatedTile(Vector3Int rootPos)
     {
         // AnimatedTilemap.GetTile(rootPos);
         float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
                                  _TileStatsDict[rootPos].maxHealth);
-        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+
+        Tilemap tilemap;
+        List<AnimatedTile> dTiles;
+        if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Wall")
+        {
+            tilemap = DamageTilemap;
+            dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+        }
+        else
+        {
+            tilemap = AnimatedTilemap;
+            dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+        }
+
 
         if (dTiles.Count > 1)
         {
@@ -325,26 +319,26 @@ public class TileManager : MonoBehaviour
             // Keep original rotation
             Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
 
-            if (AnimatedTilemap.GetTile(rootPos) != null)
+            if (tilemap.GetTile(rootPos) != null)
             {
-                AnimatedTilemap.SetTile(rootPos, null);
+                tilemap.SetTile(rootPos, null);
             }
 
-            AnimatedTilemap.SetTile(rootPos, 
-                _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
-            AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
+            tilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+            tilemap.SetTransformMatrix(rootPos, matrix);
         }
         else 
         {
+            // This handles doors and TileObjects
             int layerMask = LayerMask.GetMask("PlayerOnly");
             Collider2D[] cols = Physics2D.OverlapPointAll(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
             foreach (Collider2D col in cols)
             {
-                TileObject obj = col.GetComponent<TileObject>();
-                if (obj != null)
+                TileObject tileObj = col.GetComponent<TileObject>();
+                if (tileObj != null)
                 {
                     //Debug.Log("TileObject found at: " + rootPos);
-                    obj.UpdateHealthRatio(GetTileHealthRatio(rootPos));
+                    tileObj.UpdateHealthRatio(GetTileHealthRatio(rootPos));
                 }
                 else
                 {
@@ -353,6 +347,45 @@ public class TileManager : MonoBehaviour
             }
         }
     }
+
+    public void RefreshSurroundingTiles(Vector3Int gridPos)
+{
+    // Refresh the tile itself
+    AnimatedTilemap.RefreshTile(gridPos);
+
+    // Refresh its neighbors
+    Vector3Int[] directions = new Vector3Int[]
+    {
+        Vector3Int.zero,
+        Vector3Int.up,
+        Vector3Int.down,
+        Vector3Int.left,
+        Vector3Int.right,
+        Vector3Int.up + Vector3Int.left,
+        Vector3Int.up + Vector3Int.right,
+        Vector3Int.down + Vector3Int.left,
+        Vector3Int.down + Vector3Int.right
+    };
+
+    bool neighborExists = false;
+
+    foreach (Vector3Int direction in directions)
+    {
+        Vector3Int neighborPos = gridPos + direction;
+        if (AnimatedTilemap.HasTile(neighborPos))
+        {
+            neighborExists = true;
+            AnimatedTilemap.RefreshTile(neighborPos);
+        }
+    }
+
+    // Fallback for solo tiles: Ensure it updates even without neighbors
+    if (!neighborExists)
+    {
+        Debug.Log($"Solo tile refresh triggered at {gridPos}");
+        AnimatedTilemap.RefreshTile(gridPos);
+    }
+}
 
     #endregion
 
@@ -608,6 +641,59 @@ public class TileManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    #endregion
+
+    #region Tools
+
+    void ClearParticlesAndDebris(Vector3Int gridPos)
+    {
+        List<Vector3Int> positions = GetStructurePositions(StructureTilemap, gridPos);
+        foreach (ParticleSystem ps in particlesToClear)
+        {
+            // Access the particles from the particle system
+            ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.main.maxParticles];
+            int particleCount = ps.GetParticles(particles);
+
+            for (int i = 0; i < particleCount; i++)
+            {
+                Vector3 particlePosition = particles[i].position;
+
+                // Check if the particle is within any of the defined overlap boxes
+                foreach (Vector3Int pos in positions)
+                {
+                    Vector2 boxCenter = StructureTilemap.CellToWorld(pos);
+                    boxCenter = new Vector2(boxCenter.x + 0.5f, boxCenter.y + 0.5f);
+
+                    if (IsParticleInBox(particlePosition, boxCenter, Vector2.one))
+                    {
+                        //particles[i].startLifetime = -1f;
+                        //particles[i].startSize = 0;
+                        //particles[i].startColor = new Color(0, 0, 0, 0);
+                        particles[i].remainingLifetime = 0; // Remove the particle by setting its remaining lifetime to zero
+                        break;
+                    }
+                }
+            }
+            ps.SetParticles(particles, particleCount);
+        }
+
+        foreach (Vector3Int pos in positions)
+        {
+            DestroyedTilemap.SetTile(pos, null);
+        }
+    }
+
+    bool IsParticleInBox(Vector3 particlePosition, Vector2 boxCenter, Vector2 boxSize)
+    {
+        
+        bool inBox = particlePosition.x >= boxCenter.x - boxSize.x / 2 && 
+                     particlePosition.x <= boxCenter.x + boxSize.x / 2 &&
+                     particlePosition.y >= boxCenter.y - boxSize.y / 2 && 
+                     particlePosition.y <= boxCenter.y + boxSize.y / 2;
+        Debug.Log("Particle box check: " + inBox);
+        return inBox;
     }
 
     #endregion
