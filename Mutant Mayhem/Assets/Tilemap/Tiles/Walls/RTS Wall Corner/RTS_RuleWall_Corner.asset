@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
-  m_Name: RTS_Wall_Corner
+  m_Script: {fileID: 11500000, guid: 720049fd6494a42448765485637eaf85, type: 3}
+  m_Name: RTS_RuleWall_Corner
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 21300000, guid: 08de0e2708d2b488aaeae3c23ec8d0f1, type: 3}
   m_DefaultGameObject: {fileID: 0}
@@ -23,4 +23,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c976026be9466408788fbeebf74f2216, type: 2}
   - {fileID: 11400000, guid: f0af9e33ad9104ea2acb312522a63a87, type: 2}
   destroyedTile: {fileID: 11400000, guid: 2ee435b2c76804b678fc5e40fd133283, type: 2}
-  buildUiTile: {fileID: 0}
+  buildUiTile: {fileID: 11400000, guid: 0da7dc10f67372a4693ad102afba9ab7, type: 2}
+  allowedNeighbors: []
