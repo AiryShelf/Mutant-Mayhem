@@ -229,7 +229,7 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
     public void UpdateTrackInfo(PlaylistSO playlist, SongSO song)
     {
         titleText.text = song.title;
-        artistText.text = song.artist;
+        artistText.text = "By: " + song.artist;
 
         int playlistIndex = MusicManager.Instance.currentScenePlaylists.IndexOf(playlist);
 

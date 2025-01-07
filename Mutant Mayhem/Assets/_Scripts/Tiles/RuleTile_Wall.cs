@@ -15,20 +15,13 @@ public class RuleTile_Wall : RuleTileStructure
             return true;
 
         // Custom behavior: Check if the tile is in the allowedNeighbors list
-        if (neighbor == TilingRule.Neighbor.This)
+        if (neighbor == TilingRule.Neighbor.This && tile is AnimatedTile animatedTile)
         {
+            // Check if the tile exists in the allowedNeighbors list
             foreach (var allowedTile in allowedNeighbors)
             {
-                if (tile == allowedTile)
+                if (animatedTile == allowedTile)
                     return true;
-
-                // Additional check: Match if the tile is a RuleTileStructure and matches an allowed neighbor
-                if (allowedTile is AnimatedTile && tile is AnimatedTile)
-                {
-                    // Ensure both tiles share the same type or identifier (e.g., name, type, etc.)
-                    if (allowedTile.GetType() == tile.GetType())
-                        return true;
-                }
             }
         }
 

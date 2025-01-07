@@ -45,6 +45,7 @@ public enum StructureType
     RocketTurret,
     GunTurret2,
     RocketTurret2,
+    Window,
     None
 }
 

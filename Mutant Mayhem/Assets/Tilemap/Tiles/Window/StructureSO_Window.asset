@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
-  m_Name: StructureSO_Door
+  m_Name: StructureSO_Window
   m_EditorClassIdentifier: 
-  uiImage: {fileID: 1705434313, guid: 7a12fc301ddd5c94f8ec89d8ff32cf1a, type: 3}
-  tileName: Door
-  description: An automatic door that opens only for you.  Kind of flimsy
+  uiImage: {fileID: -1123146700, guid: 0cc13cf0c47c146968a3604457fad583, type: 3}
+  tileName: Window
+  description: A barred window for shooting through
   tileCost: 100
   maxHealth: 1000
   health: 1000
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: -1, z: 0}
-  ruleTileStructure: {fileID: 11400000, guid: f8e78a4700223194181c7e54d0a8aad4, type: 2}
-  structureType: 10
+  ruleTileStructure: {fileID: 11400000, guid: 34a4dedb1917b4e578a7fbcfa34646ea, type: 2}
+  structureType: 19
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}

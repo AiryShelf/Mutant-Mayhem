@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: af128f88a28c00446931240e9f950620
+guid: 67ba70710b29f4147beed00241df892c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,11 +43,11 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
+  alignment: 9
+  spritePivot: {x: 0.25, y: 0.75}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
@@ -121,122 +121,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: 1x1Wall Corner_Damage_0
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 1
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -16, y: 2}
-        - {x: -16, y: 16}
-        - {x: 15, y: 16}
-        - {x: -16, y: -15}
-      tessellationDetail: 0
-      bones: []
-      spriteID: be876ed91b6e27c4e9b981d8d0f21cbc
-      internalID: -1864880907
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 1x1Wall Corner_Damage_1
-      rect:
-        serializedVersion: 2
-        x: 35
-        y: 1
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -16, y: 2}
-        - {x: -16, y: 16}
-        - {x: 15, y: 16}
-        - {x: -16, y: -15}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 19039d930171ede47b3af092eb4f3360
-      internalID: -2003557256
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 1x1Wall Corner_Damage_2
-      rect:
-        serializedVersion: 2
-        x: 69
-        y: 1
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -16, y: 2}
-        - {x: -16, y: 16}
-        - {x: 15, y: 16}
-        - {x: -16, y: -15}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3004b8bd443632e4f9a1d614f2d1914e
-      internalID: 1802380695
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 1x1Wall Corner_Damage_3
-      rect:
-        serializedVersion: 2
-        x: 103
-        y: 1
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -16, y: 2}
-        - {x: -16, y: 16}
-        - {x: 15, y: 16}
-        - {x: -16, y: -15}
-      tessellationDetail: 0
-      bones: []
-      spriteID: cd3d271b00fbd7d459b3eb78ce58e638
-      internalID: -358652935
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      1x1Wall Corner_Damage_0: -1864880907
-      1x1Wall Corner_Damage_1: -2003557256
-      1x1Wall Corner_Damage_2: 1802380695
-      1x1Wall Corner_Damage_3: -358652935
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
