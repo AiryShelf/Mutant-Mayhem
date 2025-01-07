@@ -22,6 +22,9 @@ public class EnemyAggroTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
+        if (!gameObject.activeInHierarchy) 
+            return;
+
         // This object should be on AiTriggers layer
 
         // Can raycast here for line-of-sight check?  Would require constant checking to

@@ -34,12 +34,6 @@ public class MeleeControllerEnemy : MonoBehaviour
         knockbackStart = knockback;
     }
 
-    void OnEnable()
-    {
-        meleeDamage = meleeDamageStart;
-        knockback = knockbackStart;
-    }
-
     void OnDisable()
     {
         StopAllCoroutines();
@@ -48,10 +42,11 @@ public class MeleeControllerEnemy : MonoBehaviour
     public void Reset()
     {
         meleeAnimator.Rebind();
-        //meleeAnimator.Play("No Attack", 0, 0.0f);
-        //meleeAnimator.ResetTrigger("Melee");
         
         waitToAttack = false;
+        meleeCollider.enabled = true;
+        meleeDamage = meleeDamageStart;
+        knockback = knockbackStart;
     }
 
     public void Hit(Health otherHealth, Vector2 point)
@@ -65,9 +60,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         damage *= 1 + Random.Range(-damageVariance, damageVariance);
         damage *= critMult;
 
-        waitToAttack = true;
-        if (gameObject.activeSelf)
-            StartCoroutine(AttackTimer());
+        StartCoroutine(AttackTimer());
 
         meleeAnimator.SetTrigger("Melee");
         myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback);
@@ -98,7 +91,6 @@ public class MeleeControllerEnemy : MonoBehaviour
 
         if (dotProduct > meleeTileDotProdRange)
         {
-            waitToAttack = true;
             StartCoroutine(AttackTimer());
             meleeAnimator.SetTrigger("Melee"); 
             myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback * 0.8f);
@@ -112,8 +104,11 @@ public class MeleeControllerEnemy : MonoBehaviour
         }
     }
 
-    void OnTriggerStay2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
+        if (!gameObject.activeInHierarchy) 
+            return;
+
         if (waitToAttack)
             return;
 
@@ -147,7 +142,10 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     IEnumerator AttackTimer()
     {
+        waitToAttack = true;
+        meleeCollider.enabled = false;
         yield return new WaitForSeconds(timeBetweenAttacks);
         waitToAttack = false;
+        meleeCollider.enabled = true;
     }
 }

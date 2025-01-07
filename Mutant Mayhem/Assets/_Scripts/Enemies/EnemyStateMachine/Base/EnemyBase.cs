@@ -220,7 +220,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     public void Die()
     {
-        ResetStats();
+        //ResetStats();
         
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
