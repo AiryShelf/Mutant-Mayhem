@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f112489c4b09cd48a1067f22604b5ef, type: 3}
-  m_Name: Aug_CreditsAdd_1000
+  m_Name: Aug_CreditsAdd_500
   m_EditorClassIdentifier: 
   augmentationName: Starting Credits
   uiImage: {fileID: 21300000, guid: 41ff62d31772e8e4692cc6ed7b96e610, type: 3}
   cost: 100
   lvlCostIncrement: 50
-  lvlCostIncrementMult: 1.5
-  refund: 0
-  lvlRefundIncrement: 0
-  lvlRefundIncrementMult: 0
+  lvlCostIncrementPower: 1
+  refund: 75
+  lvlRefundIncrement: 75
+  lvlRefundIncrementPower: 1
   maxLvl: 20
-  minLvl: 0
-  family: 3
-  type: 0
-  amountToAdd: 1000
-  lvlAddIncrement: 1000
+  minLvl: -5
+  amountToAdd: 500
+  lvlAddIncrement: 500

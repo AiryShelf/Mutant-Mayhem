@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f10768a3314df149b116b1e096cb67d, type: 3}
-  m_Name: Aug_StructureIntegrity_1.1
+  m_Name: Aug_StructureIntegrity_1.05
   m_EditorClassIdentifier: 
   augmentationName: Structure Integrity
   uiImage: {fileID: 535712138, guid: b2575fe84843531439e39dc1be326ae3, type: 3}
   cost: 150
   lvlCostIncrement: 50
-  lvlCostIncrementMult: 1.5
+  lvlCostIncrementPower: 1
   refund: 40
   lvlRefundIncrement: 20
-  lvlRefundIncrementMult: 1.5
+  lvlRefundIncrementPower: 1
   maxLvl: 10
   minLvl: -9
-  family: 2
-  type: 0
-  lvlMultIncrement: 0.1
+  lvlMultIncrement: 0.05

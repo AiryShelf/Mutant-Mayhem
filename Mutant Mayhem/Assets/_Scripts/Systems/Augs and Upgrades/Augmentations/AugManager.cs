@@ -76,7 +76,16 @@ public class AugManager : MonoBehaviour
 
         maxAugs = maxAugmentationsStart;
         currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
-        
+    }
+
+    public void RefreshCurrentRP()
+    {
+        currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
+
+        foreach (var kvp in selectedAugsTotalCosts)
+        {
+            currentResearchPoints += kvp.Value;
+        }
     }
 
     public void ApplySelectedAugmentations()

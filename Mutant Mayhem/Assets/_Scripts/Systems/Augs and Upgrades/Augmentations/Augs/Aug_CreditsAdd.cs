@@ -28,7 +28,11 @@ public class Aug_CreditsAdd : AugmentationBaseSO
 
     public override string GetNegativeDescription(AugManager augManager, int level)
     {
-        return "N/A";
+        float totalCreditsCost = amountToAdd + (lvlAddIncrement * (level - 1));
+        string value = totalCreditsCost.ToString("N0");
+        string description = "Go " + value +" Credits into debt at start - In exchange for " +
+                             "a bunch of RP, of course!  WARNING: This can make things very difficult";
+        return description;
     }
 
     public override string GetNeutralDescription(AugManager augManager, int level)

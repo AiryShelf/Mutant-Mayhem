@@ -83,7 +83,6 @@ public class BuildingSystem : MonoBehaviour
         cheatCodeCreditsAction = playerActionMap.FindAction("CheatCodeCredits");
 
         rotateStructureAction.started += OnRotate;
-        buildAction.performed += OnBuild;
         cheatCodeCreditsAction.started += OnCheatCodeCredits; 
 
         lastStructureInHand = AllStructureSOs[2];
@@ -92,7 +91,6 @@ public class BuildingSystem : MonoBehaviour
     void OnDisable()
     {
         rotateStructureAction.started -= OnRotate;
-        buildAction.performed -= OnBuild;
         cheatCodeCreditsAction.started -= OnCheatCodeCredits;
    
         _UnlockedStructuresDict.Clear();   
@@ -109,10 +107,15 @@ public class BuildingSystem : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!isInBuildMode)
+            return;
+            
         // Highlight a tile
         if (structureInHand != null)
         {
             HighlightTile();
+            if (buildAction.IsPressed())
+                OnBuild();
         }
     }
 
@@ -127,8 +130,9 @@ public class BuildingSystem : MonoBehaviour
 
     #region Inputs
 
-    void OnBuild(InputAction.CallbackContext context)
+    void OnBuild()
     {
+        Debug.LogWarning("OnBuild ran");
         if (!isInBuildMode)
         {
             return;

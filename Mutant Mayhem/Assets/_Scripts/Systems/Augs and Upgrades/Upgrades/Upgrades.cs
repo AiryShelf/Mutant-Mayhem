@@ -299,7 +299,7 @@ public class HealthMaxUpgrade : Upgrade
 {
     public HealthMaxUpgrade() : base(PlayerStatsUpgrade.HealthMax) { }
 
-    public static float UpgAmount = 20;
+    public static float UpgAmount = 25;
 
     public static float GetUpgAmount()
     {

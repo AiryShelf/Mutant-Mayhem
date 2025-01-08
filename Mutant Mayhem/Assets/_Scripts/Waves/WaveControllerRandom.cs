@@ -30,6 +30,8 @@ public class WaveControllerRandom : MonoBehaviour
     public int batchMultiplier = 5; // Current batch multiplier
     public float damageMultStart = 1;
     public float damageMultiplier = 1;
+    public float attackDelayStart = 1;
+    public float attackDelayMult = 1;
     public float healthMultStart = 1;
     public float healthMultiplier = 1;
     public float speedMultStart = 1;
@@ -66,10 +68,6 @@ public class WaveControllerRandom : MonoBehaviour
         if (nextWaveTimer != null)
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
-
-        // Testing MaserWave and dynamically building currentWave
-        //waveSpawner.currentWaveSource = allWaveBases[0];
-        
     }
 
     void OnNextWaveInput(InputAction.CallbackContext context)
@@ -86,18 +84,14 @@ public class WaveControllerRandom : MonoBehaviour
     {
         if (isNight)
         {
-            //Debug.Log("Wave info turned on, next wave info turned off");
             waveInfoFadeGroup.isTriggered = true;
-            //nextWaveText.enabled = false;
             nextWaveFadeGroup.isTriggered = false;
             
             currentNightText.text = "Night " + (currentWaveIndex + 1);
         }
         else
         {
-            //Debug.Log("Wave info turned off, next wave info turned on with time: " + timeBetweenWaves);
             waveInfoFadeGroup.isTriggered = false;
-            //nextWaveText.enabled = true;
             nextWaveFadeGroup.isTriggered = true;
         }
     }
@@ -135,13 +129,6 @@ public class WaveControllerRandom : MonoBehaviour
         daylight.StartCoroutine(daylight.PlaySunsetEffect());
         isNight = true;
         IncrementWaveDifficulty();
-
-        // Switch Spawner to new WaveBase
-        //int index = (int)Mathf.Floor(currentWave / wavesPerBase);
-        //index = Mathf.Clamp(index, 0, allWaveBases.Count - 1);
-        //waveSpawner.currentWaveSource = allWaveBases[index];
-        // Need to add logic to handle the end of the list.
-        // Maybe restart with larger multipliers?  Or a random new list?
 
         if (nextWaveTimer != null)
             StopCoroutine(nextWaveTimer);
@@ -197,6 +184,10 @@ public class WaveControllerRandom : MonoBehaviour
         damageMultiplier = damageMultStart + currentWaveIndex / 5f * 
                            SettingsManager.Instance.WaveDifficultyMult *
                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];
+        // Doubles the attack speed in 30 waves
+        attackDelayMult = attackDelayStart - currentWaveIndex / 60f / 
+                           SettingsManager.Instance.WaveDifficultyMult;
+        attackDelayMult = Mathf.Clamp(attackDelayMult, 0.2f, float.MaxValue);
         healthMultiplier = healthMultStart + currentWaveIndex / 20f * 
                            SettingsManager.Instance.WaveDifficultyMult *
                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];

@@ -5,14 +5,15 @@ using UnityEngine;
 public class MeleeControllerEnemy : MonoBehaviour
 {
     public float meleeDamage = 20f;
+    public float meleeDamageStart;
     [Range(0, 1)]
     [SerializeField] float damageVariance = 0.15f;
-    float meleeDamageStart;
     public float knockback = 10f;
-    float knockbackStart;
+    public float knockbackStart;
     [SerializeField] float selfKnockback = 5f;
-    [SerializeField] float timeBetweenAttacks = 1f;
-    [SerializeField] float meleeTileDotProdRange = 0.5f;
+    public float attackDelay = 1f;
+    public float attackDelayStart = 1;
+    [SerializeField] float meleeTile_DotProdRange = 0.5f;
     [SerializeField] Collider2D meleeCollider;
     public Animator meleeAnimator;
     [SerializeField] SoundSO meleeSound;
@@ -29,9 +30,6 @@ public class MeleeControllerEnemy : MonoBehaviour
         myHealth = GetComponentInParent<Health>();
         tileManager = FindObjectOfType<TileManager>();
         criticalHit = GetComponent<CriticalHit>();
-
-        meleeDamageStart = meleeDamage;
-        knockbackStart = knockback;
     }
 
     void OnDisable()
@@ -44,9 +42,10 @@ public class MeleeControllerEnemy : MonoBehaviour
         meleeAnimator.Rebind();
         
         waitToAttack = false;
-        meleeCollider.enabled = true;
         meleeDamage = meleeDamageStart;
         knockback = knockbackStart;
+        attackDelay = attackDelayStart;
+        //attackDelay = 1;
     }
 
     public void Hit(Health otherHealth, Vector2 point)
@@ -89,7 +88,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         // The could be improved to avoid the odd tile miss on corners.
         point += dir / 20;
 
-        if (dotProduct > meleeTileDotProdRange)
+        if (dotProduct > meleeTile_DotProdRange)
         {
             StartCoroutine(AttackTimer());
             meleeAnimator.SetTrigger("Melee"); 
@@ -144,7 +143,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     {
         waitToAttack = true;
         meleeCollider.enabled = false;
-        yield return new WaitForSeconds(timeBetweenAttacks);
+        yield return new WaitForSeconds(attackDelay);
         waitToAttack = false;
         meleeCollider.enabled = true;
     }

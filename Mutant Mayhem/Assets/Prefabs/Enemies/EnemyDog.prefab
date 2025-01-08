@@ -68,10 +68,10 @@ MonoBehaviour:
   minSize: 1.5
   randColorRange: 0.2
   gaussMeanSize: 2
-  gaussStdDev: 0.4
+  gaussStdDev: 0.3
   <health>k__BackingField: {fileID: -3465499167211957796}
   <unfreezeTime>k__BackingField: 0.25
-  CurrentSMStateDebug: 
+  CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
   EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
@@ -219,7 +219,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 313940739, guid: 86b5d7a7e198d904e825aaf212438f47, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.8160377, b: 0.8160377, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -278,7 +278,7 @@ MonoBehaviour:
   - {x: 0.08678463, y: -0.019966379, z: 0}
   m_ShapePathHash: -2108260162
   m_Mesh: {fileID: 0}
-  m_InstanceId: 337284
+  m_InstanceId: 400810
   m_LocalBounds:
     m_Center: {x: 0.0088474825, y: 0.0002141241, z: 0}
     m_Extent: {x: 0.08640965, y: 0.020342423, z: 0}
@@ -388,6 +388,18 @@ PrefabInstance:
     - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: selfKnockback
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: knockbackStart
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: attackDelayStart
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: meleeDamageStart
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalScale.x

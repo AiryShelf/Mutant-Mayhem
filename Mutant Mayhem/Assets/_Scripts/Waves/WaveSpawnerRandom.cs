@@ -368,7 +368,7 @@ public class WaveSpawnerRandom : MonoBehaviour
             }
 
             GameObject enemyObj = PoolManager.Instance.GetFromPool(enemyBase.objectPoolName);
-            //enemyObj.GetComponent<EnemyBase>().RandomizeStats();
+            enemyObj.GetComponent<EnemyBase>().ResetStats();
             enemyObj.transform.position = spawnPos;
             
             return true;

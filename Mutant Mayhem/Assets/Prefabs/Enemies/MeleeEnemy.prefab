@@ -49,11 +49,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meleeDamage: 10
+  meleeDamageStart: 0
   damageVariance: 0.25
   knockback: 20
+  knockbackStart: 0
   selfKnockback: 2
-  timeBetweenAttacks: 0.5
-  meleeTileDotProdRange: 0.5
+  attackDelay: 0.75
+  attackDelayStart: 0
+  meleeTile_DotProdRange: 0.5
   meleeCollider: {fileID: 10070538269960853}
   meleeAnimator: {fileID: 1899956248810806691}
   meleeSound: {fileID: 11400000, guid: 6a3e0d5445d7e404b87530c84e4e7443, type: 2}

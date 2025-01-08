@@ -71,7 +71,7 @@ MonoBehaviour:
   gaussStdDev: 0.3
   <health>k__BackingField: {fileID: -8614638230977953302}
   <unfreezeTime>k__BackingField: 0.1
-  CurrentSMStateDebug: 
+  CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   EnemyChaseSOBase: {fileID: 11400000, guid: e800cd9523d9f6344b43d6463422dd23, type: 2}
   EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
@@ -219,7 +219,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -439186225, guid: d123095bdc2774241bde14f09851d989, type: 3}
-  m_Color: {r: 0.5254902, g: 1, b: 0.95651764, a: 1}
+  m_Color: {r: 0.7688679, g: 1, b: 0.978988, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -280,7 +280,7 @@ MonoBehaviour:
   - {x: 0.01524747, y: -0.045341525, z: 0}
   m_ShapePathHash: -346284597
   m_Mesh: {fileID: 0}
-  m_InstanceId: 47712
+  m_InstanceId: 400708
   m_LocalBounds:
     m_Center: {x: 0.00025871396, y: 0.0000718385, z: 0}
     m_Extent: {x: 0.035007473, y: 0.045518838, z: 0}
@@ -331,6 +331,18 @@ PrefabInstance:
     - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: selfKnockback
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: knockbackStart
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: attackDelayStart
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: meleeDamageStart
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalPosition.x

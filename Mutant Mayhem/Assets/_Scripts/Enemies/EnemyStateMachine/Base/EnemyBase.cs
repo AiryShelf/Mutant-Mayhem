@@ -94,12 +94,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         StateMachine.Initialize(IdleState);
     }
 
-    void OnEnable() 
-    {
-        ResetStats();
-        RandomizeStats();
-    }
-
     void OnDisable() 
     {
         StopAllCoroutines();
@@ -136,13 +130,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         meleeController.Reset();
 
         StateMachine.ChangeState(IdleState);
+        RandomizeStats();
     }
 
     #endregion
 
     #region Randomize
 
-    public void RandomizeStats()
+    void RandomizeStats()
     {
         //Debug.Log($"Randomize stats started with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
         
@@ -172,12 +167,13 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
         transform.localScale *= randomSizeFactor;
 
-        // Set stats by random size factor (negates planet property size multiplier from health)
+        // Set these stats by random size factor (negates planet property size multiplier from health)
         moveSpeedBase *= randomSizeFactor * waveController.speedMultiplier;
         health.SetMaxHealth(randomSizeFactor / PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize] * 
                             health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
         meleeController.meleeDamage *= randomSizeFactor * waveController.damageMultiplier;
+        meleeController.attackDelay = meleeController.attackDelayStart * waveController.attackDelayMult;
         meleeController.knockback *= randomSizeFactor;
         //meleeController.selfKnockback *= randomSizeFactor; no good?
         rb.mass = startMass * randomSizeFactor;

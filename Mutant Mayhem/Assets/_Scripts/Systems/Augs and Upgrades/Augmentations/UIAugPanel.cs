@@ -44,6 +44,9 @@ public class UIAugPanel : MonoBehaviour
 
     public void Initialize()
     {
+        augManager = AugManager.Instance;
+        augManager.RefreshCurrentRP();
+
         levelPanelStartColor = levelPanel.color;
         PopulateAugsList(AugManager.Instance.availableAugmentations);
         UpdateRPAndLevelInfo();
@@ -51,8 +54,6 @@ public class UIAugPanel : MonoBehaviour
 
     public void PopulateAugsList(List<AugmentationBaseSO> augmentations)
     {
-        augManager = AugManager.Instance;
-
         // Clear any children inside the buttonContainer
         foreach (Transform child in buttonContainer)
         {
@@ -129,7 +130,10 @@ public class UIAugPanel : MonoBehaviour
             level = 0;
 
         // Update name and TotalCost text
-        nameText.text = "Selected: " + aug.augmentationName;
+        if (aug == null)
+            nameText.text = "Selected: None";
+        else
+            nameText.text = "Selected: " + aug.augmentationName;
         string costOrGain;
         Color costTextColor;
         if (_totalCost <= 0)
@@ -179,12 +183,13 @@ public class UIAugPanel : MonoBehaviour
         levelValueText.text = level.ToString();
         levelValueText.color = lvlTextColor;
 
-        int raiseLvlCost = Mathf.Abs(GetLevelCost(aug, level + 1, true));
-        int lowerLvlCost = Mathf.Abs(GetLevelCost(aug, level - 1, false));
+        int raiseLvlCost = GetLevelCost(aug, level + 1, true);
+        int lowerLvlCost = GetLevelCost(aug, level - 1, false);
         if (raiseLvlCost <= augManager.currentResearchPoints)
             costTextColor = Color.yellow;
         else
             costTextColor = Color.red;
+
         raiseLevelCostText.text = "-" + raiseLvlCost + "\n" + "RP";
         raiseLevelCostText.color = costTextColor;
         lowerLevelCostText.text = "+" + lowerLvlCost + "\n" + "RP";
@@ -439,6 +444,8 @@ public class UIAugPanel : MonoBehaviour
 
     public void TrackRPCosts()
     {
+        AugManager.Instance.selectedAugsTotalCosts.Clear();
+
         foreach (Transform trans in buttonContainer)
         {
             UIAugmentation uiAug = trans.gameObject.GetComponent<UIAugmentation>();
@@ -492,17 +499,22 @@ public class UIAugPanel : MonoBehaviour
             int levelCost;
             if (level > 0)
             {
-                levelCost = Mathf.FloorToInt(aug.cost + (level - 1) * 
-                        (aug.lvlCostIncrement * aug.lvlCostIncrementMult));
+                // Progressive cost increase formula for adding levels
+                levelCost = Mathf.FloorToInt(
+                    aug.cost + Mathf.Pow((level - 1) * aug.lvlCostIncrement, aug.lvlCostIncrementPower)
+                );
             }
             else if (level == 0)
             {
+                // Base refund when no levels are added
                 levelCost = aug.refund;
             }
             else
             {
-                levelCost = Mathf.FloorToInt(aug.refund + -(level) * 
-                        (aug.lvlRefundIncrement * aug.lvlRefundIncrementMult));
+                // Refund calculation for negative levels
+                levelCost = Mathf.FloorToInt(
+                    aug.refund + Mathf.Pow(-level * aug.lvlRefundIncrement, aug.lvlRefundIncrementPower)
+                );
             }
 
             return levelCost;
@@ -512,17 +524,22 @@ public class UIAugPanel : MonoBehaviour
             int levelRefund;
             if (level > 0)
             {
-                levelRefund = Mathf.FloorToInt(aug.cost + level * 
-                            (aug.lvlCostIncrement * aug.lvlCostIncrementMult));
+                // Refund calculation for positive levels
+                levelRefund = Mathf.FloorToInt(
+                    aug.cost + Mathf.Pow(level * aug.lvlCostIncrement, aug.lvlCostIncrementPower)
+                );
             }
             else if (level == 0)
             {
+                // Refund when level is at the base
                 levelRefund = aug.cost;
             }
             else
             {
-                levelRefund = Mathf.FloorToInt(aug.refund + -(level + 1) * 
-                            (aug.lvlRefundIncrement * aug.lvlRefundIncrementMult));
+                // Progressive refund logic for negative levels
+                levelRefund = Mathf.FloorToInt(
+                    aug.refund + Mathf.Pow(-(level + 1) * aug.lvlRefundIncrement, aug.lvlRefundIncrementPower)
+                );
             }
 
             return levelRefund;

@@ -103,15 +103,16 @@ public class StatsCounterPlayer : MonoBehaviour
             {"Player Kills:", EnemiesKilledByPlayer},
             {"Turret Kills:", EnemiesKilledByTurrets},
             {"Seconds Sprinting:", TimeSprintingPlayer},
+            {"Grenades Thrown:", GrenadesThrownByPlayer},
         };
 
         ProjectilesStats = new Dictionary<string, float>
         {
             {"Shots by Player:", ShotsFiredByPlayer},
             {"Hits by Player:", ShotsHitByPlayer},
+            {"Damage by Player:", EnemyDamageByPlayerProjectiles},
             {"Shots by Turrets:", ShotsFiredByTurrets },
             {"Shots by Enemies:", ShotsFiredByEnemies},
-            {"Grenades Thrown:", GrenadesThrownByPlayer},
             // Player Accuracy
         };
 
@@ -127,7 +128,6 @@ public class StatsCounterPlayer : MonoBehaviour
         DamageStats = new Dictionary<string, float>
         {
             {"By Player Explosions:", EnemyDamageByPlayerExplosions},
-            {"By Player Projectiles:", EnemyDamageByPlayerProjectiles},
             {"Total to Player:", DamageToPlayer},
             {"Total to Structures:", DamageToStructures},
             {"Total to Enemies:", DamageToEnemies},

@@ -16,6 +16,9 @@ public class CubeInteractEffect : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) 
     {
+        if (!gameObject.activeInHierarchy)
+            return;
+
         if (other.CompareTag("Player"))
         {
             if (fadeCoroutine != null)
@@ -26,6 +29,9 @@ public class CubeInteractEffect : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other) 
     {
+        if (!gameObject.activeInHierarchy)
+            return;
+            
         if (other.CompareTag("Player"))
         {
             if (!gameObject.activeSelf)

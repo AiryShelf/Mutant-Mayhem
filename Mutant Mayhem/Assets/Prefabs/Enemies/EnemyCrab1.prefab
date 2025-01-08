@@ -71,7 +71,7 @@ MonoBehaviour:
   gaussStdDev: 0.3
   <health>k__BackingField: {fileID: 7349244352346262760}
   <unfreezeTime>k__BackingField: 0.5
-  CurrentSMStateDebug: 
+  CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
   EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
@@ -219,7 +219,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1753738897, guid: 44a4f2321fd54094a8b665462f06687c, type: 3}
-  m_Color: {r: 0.74337935, g: 0.504717, b: 1, a: 1}
+  m_Color: {r: 0.899434, g: 0.8066038, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -280,10 +280,10 @@ MonoBehaviour:
   - {x: -0.025125083, y: -0.045585968, z: 0}
   m_ShapePathHash: -232648934
   m_Mesh: {fileID: 0}
-  m_InstanceId: 47548
+  m_InstanceId: 400616
   m_LocalBounds:
-    m_Center: {x: 0.000243742, y: -0.0001359954, z: 0}
-    m_Extent: {x: 0.03492998, y: 0.04554828, z: 0}
+    m_Center: {x: 0.00024374202, y: -0.00013599545, z: 0}
+    m_Extent: {x: 0.03492998, y: 0.045548275, z: 0}
 --- !u!1001 &1675829156198210814
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -406,6 +406,18 @@ PrefabInstance:
     - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: selfKnockback
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: knockbackStart
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: attackDelayStart
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: meleeDamageStart
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalPosition.x

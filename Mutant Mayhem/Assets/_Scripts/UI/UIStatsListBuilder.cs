@@ -41,9 +41,9 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
         ClearAllStatGroups();
         StatsCounterPlayer.PopulateStatsDict();
 
-        CreateStatGroup("MISC", StatsCounterPlayer.GetMiscStats(), horizontalLayoutGroup);
         CreateStatGroup("PROJECTILES", StatsCounterPlayer.GetProjectilesStats(), horizontalLayoutGroup);
         CreateStatGroup("MELEE", StatsCounterPlayer.GetMeleeStats(), horizontalLayoutGroup);
+        CreateStatGroup("MISC", StatsCounterPlayer.GetMiscStats(), horizontalLayoutGroup);
         CreateStatGroup("DAMAGE", StatsCounterPlayer.GetDamageStats(), horizontalLayoutGroup2);
         CreateStatGroup("STRUCTURES", StatsCounterPlayer.GetStructuresStats(), horizontalLayoutGroup2);
     }
