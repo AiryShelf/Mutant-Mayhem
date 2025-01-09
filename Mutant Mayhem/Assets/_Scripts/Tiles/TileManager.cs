@@ -92,7 +92,7 @@ public class TileManager : MonoBehaviour
             return false;
         }
 
-        _TileStatsDict[gridPos].health = 1;
+        _TileStatsDict[gridPos].health *= 0.1f;
 
         if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
         {
@@ -106,8 +106,8 @@ public class TileManager : MonoBehaviour
         StructureRotator.RotateTileAt(blueprintTilemap, gridPos, rotation);
 
         // Set structure tile
-        //StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
-        //StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
+        StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
+        StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
 
         StartCoroutine(RotateTileObject(gridPos, rotation));
 
@@ -152,6 +152,7 @@ public class TileManager : MonoBehaviour
 
         ClearParticlesAndDebris(gridPos);                
         shadowCaster2DTileMap.Generate();
+        UpdateAnimatedTile(gridPos);
         
         return true;
     }
@@ -197,7 +198,7 @@ public class TileManager : MonoBehaviour
 
         AnimatedTilemap.SetTile(rootPos, null);
         if (blueprintTilemap.GetTile(rootPos))
-            ConstructionManager.Instance.RemoveBuildJobAt(GridCenterToWorld(rootPos));
+            //ConstructionManager.Instance.RemoveBuildJobAt(GridCenterToWorld(rootPos));
         blueprintTilemap.SetTile(rootPos, null);
 
         // Check for turrets
@@ -245,20 +246,20 @@ public class TileManager : MonoBehaviour
 
     #region Modify Health
 
-    public bool BuildBlueprintAt(Vector2 pos, float amount)
+    public bool BuildBlueprintAt(DroneBuildJob buildJob, float amount)
     {
-        Vector3Int rootpos = GridToRootPos(WorldToGrid(pos));
+        Vector3Int rootpos = GridToRootPos(WorldToGrid(buildJob.jobPosition));
         if (!_TileStatsDict.ContainsKey(rootpos))
         {
-            Debug.LogError($"TileManager: No blueprint fround at {pos} to build");
+            Debug.LogError($"TileManager: No blueprint fround at {buildJob.jobPosition} to build");
             return true;  // To return the drone home for next task
         }
 
         _TileStatsDict[rootpos].health += amount;
+
         if (_TileStatsDict[rootpos].health >= _TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount)
         {
-            DroneBuildJob buildJob = ConstructionManager.Instance.GetBuildJobAt(pos);
-            blueprintTilemap.SetTile(WorldToGrid(pos), null);
+            blueprintTilemap.SetTile(WorldToGrid(buildJob.jobPosition), null);
             AddTileAt(rootpos, _TileStatsDict[rootpos].ruleTileStructure.structureSO, buildJob.rotation);
             return true;
         }
@@ -341,28 +342,6 @@ public class TileManager : MonoBehaviour
     #endregion
 
     #region Update Tiles
-
-    void UpdateDamageTile(Vector3Int rootPos)
-    {
-        float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
-                                 _TileStatsDict[rootPos].maxHealth);
-        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
-
-        int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
-        index = Mathf.Clamp(index, 0, dTiles.Count - 1);
-
-        // Keep original rotation
-        Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
-
-        if (AnimatedTilemap.GetTile(rootPos) != null)
-        {
-            AnimatedTilemap.SetTile(rootPos, null);
-        }
-
-        AnimatedTilemap.SetTile(rootPos, 
-            _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
-        AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
-    }
 
     void UpdateAnimatedTile(Vector3Int rootPos)
     {
@@ -666,7 +645,7 @@ public class TileManager : MonoBehaviour
 
     bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure)
     {
-        if (CheckGridIsClear(rootPos, structure, buildingSystem.layersForBuildClearCheck, true)) // ***MAKING SOME CHANGES! 
+        if (CheckGridIsClear(rootPos, structure, buildingSystem.layersForBuildClearCheck, true))
         {                                                      
             // Add the tile's data to the dictionary at root location
             if (!_TileStatsDict.ContainsKey(rootPos))

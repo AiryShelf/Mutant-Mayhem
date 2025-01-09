@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -41,6 +42,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] Tilemap previewTilemap;
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
+    [SerializeField] GameObject debugDotPrefab;
 
     [Header("Dynamic vars, don't set here")]
     public float structureCostMult = 1;
@@ -239,7 +241,7 @@ public class BuildingSystem : MonoBehaviour
 
     #endregion
 
-    #region Build Menu and Unlock
+    #region Menu / Unlock
 
     public void ToggleBuildMenu(bool on)
     {
@@ -341,7 +343,7 @@ public class BuildingSystem : MonoBehaviour
 
     #endregion
 
-    #region Build and Remove
+    #region Build / Remove
 
     void Build(Vector3Int gridPos)
     {
@@ -368,6 +370,13 @@ public class BuildingSystem : MonoBehaviour
         if (tileManager.AddBlueprintAt(gridPos, structureInHand, currentRotation))
         {
             DroneBuildJob job = new DroneBuildJob(DroneJobType.Build, tileManager.GridCenterToWorld(gridPos), currentRotation);
+            if (job == null)
+            {
+                Debug.LogError("BuildingSystem: Blueprint job creation failed");
+                MessagePanel.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
+                return;
+            }
+            Instantiate(debugDotPrefab, job.jobPosition, quaternion.identity);
             ConstructionManager.Instance.buildJobs.Add(job);
 
             PlayerCredits -= structureInHand.tileCost * structureCostMult;
@@ -426,7 +435,7 @@ public class BuildingSystem : MonoBehaviour
 
     #endregion
 
-    #region Highlight and Preview
+    #region Highlight / Preview
 
     private void HighlightTile()
     {

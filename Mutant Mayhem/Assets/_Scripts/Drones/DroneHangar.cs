@@ -19,42 +19,80 @@ public class DroneHangar : MonoBehaviour
     {
         while (true)
         {
-            DroneJob buildJob = ConstructionManager.Instance.GetBuildJob();
-            DroneJob repairJob = ConstructionManager.Instance.GetRepairJob();
-            // Can add here for attack or other jobs
-
+            DroneJob job = null;
+            Drone foundDrone = null;
             foreach (Drone drone in dockedDrones)
             {
-                if (drone.currentJob != null)
+                if (drone.currentJob.jobType != DroneJobType.None)
                     continue;
 
-                if (drone.droneType == DroneType.Builder)
-                {
-                    // Assign build job over repair
-                    var job = repairJob;
-                    if (buildJob != null)
-                        job = buildJob;
-                    
-                    if (job == null)
+                job = GetJob(drone);
+
+                if (job == null)
                         continue;
 
-                    LaunchDrone(drone);
-                    AssignJob(drone, job);
-                }
+                foundDrone = drone;
+                break;                
+            }
+            if (foundDrone != null)
+            {
+                LaunchDrone(foundDrone);
+                AssignJob(foundDrone, job);
             }
             yield return new WaitForSeconds(1);
         }
     } 
 
-    void LaunchDrone(Drone drone)
+    public bool LookForJobInArea(Drone drone, Vector2 pos)
     {
-        if (dockedDrones.Contains(drone))
+        DroneJob closestJob = null;
+
+        if (drone.droneType == DroneType.Builder)
+            closestJob = SearchForConstructionJobs(pos);
+
+        if (closestJob != null)
         {
-            drone.Launch();
-            dockedDrones.Remove(drone);
+            AssignJob(drone, closestJob);
+            return true;
         }
-        else
-            Debug.LogError("DroneHangar: No drone found to launch!");
+
+        return false;
+    }
+
+    DroneJob SearchForConstructionJobs(Vector2 pos)
+    {
+        DroneJob closestJob = null;
+        float closestDistance = Mathf.Infinity;
+
+        // Check build jobs first (priority)
+        foreach (DroneBuildJob buildJob in ConstructionManager.Instance.buildJobs)
+        {
+            float distance = Vector2.Distance(pos, buildJob.jobPosition);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestJob = buildJob;
+            }
+        }
+
+        // If a build job is found nearby, skip checking repair jobs
+        if (closestJob != null)
+        {
+            return closestJob;
+        }
+
+        // If no build job is nearby, check repair jobs
+        foreach (DroneJob repairJob in ConstructionManager.Instance.repairJobs)
+        {
+            float distance = Vector2.Distance(pos, repairJob.jobPosition);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestJob = repairJob;
+            }
+        }
+
+        return closestJob;
     }
 
     public DroneJob GetDroneJob(DroneType droneType)
@@ -69,6 +107,18 @@ public class DroneHangar : MonoBehaviour
         return job;
     }
 
+    void LaunchDrone(Drone drone)
+    {
+        Debug.Log("Drone Launch attempted");
+        if (dockedDrones.Contains(drone))
+        {
+            drone.Launch();
+            dockedDrones.Remove(drone);
+        }
+        else
+            Debug.LogError("DroneHangar: No drone found to launch!");
+    }
+
     void AssignJob(Drone drone, DroneJob job)
     {
         if (job.jobType == DroneJobType.Build)
@@ -78,8 +128,27 @@ public class DroneHangar : MonoBehaviour
 
         drone.SetJob(job);
     }
+
+    DroneJob GetJob(Drone drone)
+    {
+        DroneJob job = null;
+        DroneBuildJob buildJob = ConstructionManager.Instance.GetBuildJob();
+        DroneJob repairJob = ConstructionManager.Instance.GetRepairJob();
+
+        if (drone.droneType == DroneType.Builder)
+        {
+            Debug.Log("Builder drone found");
+            // Assign build job over repair
+            job = buildJob;
+            if (buildJob == null)
+                job = repairJob;
+        }
+
+        return job;
+    }
 }
 
+[System.Serializable]
 public class DroneJob
 {
     public DroneJobType jobType;
@@ -92,6 +161,7 @@ public class DroneJob
     }
 }
 
+[System.Serializable]
 public class DroneBuildJob : DroneJob
 {
     public int rotation;

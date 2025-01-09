@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ConstructionManager : MonoBehaviour
 {
-    public List<DroneBuildJob> buildJobs;
-    public List<DroneJob> repairJobs;
+    public List<DroneBuildJob> buildJobs = new List<DroneBuildJob>();
+    public List<DroneJob> repairJobs = new List<DroneJob>();
 
     TileManager tileManager;
     BuildingSystem buildingSystem;
@@ -18,7 +18,7 @@ public class ConstructionManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -40,7 +40,7 @@ public class ConstructionManager : MonoBehaviour
         if (buildJobs.Count > 0)
         {
             job = buildJobs[0];
-            buildJobs.Remove(job);
+            //buildJobs.Remove(job);
             return job;
         }
         else 
@@ -54,17 +54,16 @@ public class ConstructionManager : MonoBehaviour
         if (repairJobs.Count > 0)
         {
             job = repairJobs[0];
-            repairJobs.Remove(job);
+            //repairJobs.Remove(job);
             return job;
         }
         else
             return null;
     }
 
-    public bool BuildBlueprint(DroneJob buildJob, float buildAmount)
+    public bool BuildBlueprint(DroneBuildJob buildJob, float buildAmount)
     {
-        if (buildJob is DroneBuildJob job)
-        if (tileManager.BuildBlueprintAt(job.jobPosition, buildAmount))
+        if (tileManager.BuildBlueprintAt(buildJob, buildAmount))
         {
             return true;
         }
@@ -74,38 +73,44 @@ public class ConstructionManager : MonoBehaviour
 
     public void RemoveBuildJobAt(Vector2 pos)
     {
-        bool found = false;
+        List<DroneBuildJob> jobs = new List<DroneBuildJob>();
         foreach (DroneBuildJob job in buildJobs)
         {
             if (job.jobPosition == pos)
             {
-                if (found == true)
-                    Debug.LogError($"ConstructionManager: Found multiple building jobs at {pos}");
-                found = true;
-                buildJobs.Remove(job);
+                jobs.Add(job);
             }
         }
 
-        if (found == false)
+        if (jobs.Count > 1)
+            Debug.LogError($"ConstructionManager: Found multiple building jobs at {pos}");
+
+        if (jobs.Count == 0)
             Debug.LogError($"ConstructionManager: no building job found at {pos} to remove");
+
+        foreach (DroneBuildJob found in jobs)
+            buildJobs.Remove(found);
     }
 
     public void RemoveRepairJobAt(Vector2 pos)
     {
-        bool found = false;
+        List<DroneJob> jobs = new List<DroneJob>();;
         foreach (DroneJob job in repairJobs)
         {
             if (job.jobPosition == pos)
             {
-                if (found == true)
-                    Debug.LogError($"ConstructionManager: Found multiple repair jobs at {pos}");
-                found = true;
-                repairJobs.Remove(job);
+                jobs.Add(job);
             }
         }
 
-        if (found == false)
+        if (jobs.Count > 1)
+            Debug.LogError($"ConstructionManager: Found multiple repair jobs at {pos}");
+
+        if (jobs.Count == 0)
             Debug.LogError($"ConstructionManager: no repair job found at {pos} to remove");
+
+        foreach (DroneBuildJob found in jobs)
+            repairJobs.Remove(found);
     }
 
     public DroneBuildJob GetBuildJobAt(Vector2 pos)
