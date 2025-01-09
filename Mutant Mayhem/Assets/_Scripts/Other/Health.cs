@@ -71,7 +71,8 @@ public class Health : MonoBehaviour
                 textDir.x * Mathf.Sin(angle) + textDir.y * Mathf.Cos(angle)
             ).normalized;
 
-            textFly.Initialize(Mathf.Abs(healthChange).ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true, textPulseScaleMax);
+            textFly.Initialize(Mathf.Abs(healthChange).ToString("#0"), textFlyHealthLossColor, 
+                               textFlyAlphaMax, dir, true, textPulseScaleMax);
             PlayPainSound();
         }
         else
@@ -86,7 +87,7 @@ public class Health : MonoBehaviour
         if (damageDealer != null)
         {
             if (this.CompareTag("Enemy"))
-                StatsCounterPlayer.DamageToEnemies -= value;
+                StatsCounterPlayer.DamageToEnemies -= healthChange;
         }
         
         // Die

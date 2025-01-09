@@ -92,9 +92,11 @@ public class Bullet : MonoBehaviour
         damageNew *= 1 + Random.Range(-damageVariance, damageVariance);
         damageNew *= critMult;
 
-        // Enemies
+        
         Vector2 hitDir = transform.right;
         EnemyBase enemy = otherCollider.GetComponent<EnemyBase>();
+        float damageScale = 1;
+        // Enemies
         if (enemy)
         {
             enemy.Knockback(hitDir, knockback);
@@ -102,7 +104,7 @@ public class Bullet : MonoBehaviour
             enemy.StartFreeze();
             enemy.EnemyChaseSOBaseInstance.StartSprint();
 
-            float damageScale = damageNew / damage;
+            damageScale = damageNew / damage;
             enemy.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
             
             // Stat Counting
@@ -131,11 +133,11 @@ public class Bullet : MonoBehaviour
             // If player projectile, do 1/3 damage
             if (otherCollider.gameObject.layer == LayerMask.NameToLayer("PlayerProjectiles"))
             {
-                tileManager.ModifyHealthAt(point, -damageNew / 3);
+                tileManager.ModifyHealthAt(point, -damageNew / 3, damageScale, hitDir);
             }
             else
             {
-                tileManager.ModifyHealthAt(point, -damageNew);
+                tileManager.ModifyHealthAt(point, -damageNew, damageScale, hitDir);
             }
             
 

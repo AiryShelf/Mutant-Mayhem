@@ -32,6 +32,9 @@ public class GunSights : MonoBehaviour
 
     void LateUpdate()
     {
+        if (repairGun)
+            isElevated = true;
+            
         float baseLength;
         
         if (repairGun)

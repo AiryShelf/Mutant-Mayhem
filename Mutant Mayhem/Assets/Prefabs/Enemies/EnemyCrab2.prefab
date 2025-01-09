@@ -55,7 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectPoolName: Crab2
   animControllerEnemy: {fileID: 8299610102731463758}
-  meleeController: {fileID: 6433497888709922468}
+  meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
   moveSpeedBaseStart: 1
   moveSpeedBase: 3.3
@@ -280,7 +280,7 @@ MonoBehaviour:
   - {x: 0.01524747, y: -0.045341525, z: 0}
   m_ShapePathHash: -346284597
   m_Mesh: {fileID: 0}
-  m_InstanceId: 400708
+  m_InstanceId: 155008
   m_LocalBounds:
     m_Center: {x: 0.00025871396, y: 0.0000718385, z: 0}
     m_Extent: {x: 0.035007473, y: 0.045518838, z: 0}
@@ -294,15 +294,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.x
-      value: 0.08878231
+      value: 0.06795828
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.y
-      value: 0.26412594
+      value: 0.23871824
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.x
-      value: -0.020182163
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.y
@@ -315,6 +315,22 @@ PrefabInstance:
     - target: {fileID: 10070538269960853, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 0.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_Size.x
+      value: 0.074427724
+      objectReference: {fileID: 0}
+    - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_Size.y
+      value: 0.23764974
+      objectReference: {fileID: 0}
+    - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.047213867
+      objectReference: {fileID: 0}
+    - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: knockback
@@ -345,8 +361,20 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.107
+      value: 0.0451
       objectReference: {fileID: 0}
     - target: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalPosition.y
@@ -388,6 +416,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: MeleeNew
       objectReference: {fileID: 0}
+    - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: knockbackStart
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: attackDelayStart
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: meleeDamageStart
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7871392400316664067, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.13
+      objectReference: {fileID: 0}
     - target: {fileID: 8762316274977813352, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -405,9 +449,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
---- !u!114 &6433497888709922468 stripped
+--- !u!114 &1577211972681514796 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2901627763780225480, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
   m_PrefabInstance: {fileID: 8146104825269962604}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

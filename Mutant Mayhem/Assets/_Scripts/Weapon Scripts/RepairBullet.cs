@@ -49,6 +49,7 @@ public class RepairBullet : Bullet
     private IEnumerator CheckDistanceTravelled(float travelDistance)
     {
         Vector3 startPosition = transform.position;
+        Vector2 hitDir = (target - (Vector2)startPosition).normalized;
 
         float distanceTravelled = 0;
         while (distanceTravelled < travelDistance)
@@ -66,7 +67,7 @@ public class RepairBullet : Bullet
             if (BuildingSystem.PlayerCredits >= repairCost)
             {
                 Vector2 pos = transform.position;
-                tileManager.ModifyHealthAt(pos, -damage);
+                tileManager.ModifyHealthAt(pos, -damage, 2, hitDir);
                 ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
                 BuildingSystem.PlayerCredits -= repairCost;
 

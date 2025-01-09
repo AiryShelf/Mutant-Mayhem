@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Aug_CreditsAdd_New", menuName = "Augmentations/Aug_CreditsAdd")]
@@ -29,8 +30,8 @@ public class Aug_CreditsAdd : AugmentationBaseSO
     public override string GetNegativeDescription(AugManager augManager, int level)
     {
         float totalCreditsCost = amountToAdd + (lvlAddIncrement * (level - 1));
-        string value = totalCreditsCost.ToString("N0");
-        string description = "Go " + value +" Credits into debt at start - In exchange for " +
+        string value = Mathf.Abs(totalCreditsCost).ToString("N0");
+        string description = "Go " + value + " Credits into debt at start - In exchange for " +
                              "a bunch of RP, of course!  WARNING: This can make things very difficult";
         return description;
     }

@@ -27,6 +27,9 @@ public class TileManager : MonoBehaviour
     [SerializeField] List<ParticleSystem> particlesToClear;
     public ParticleSystem repairEffect;
     public int amountRepairParticles = 5;
+    [SerializeField] Color textFlyHealthLossColor;
+    [SerializeField] Color textFlyHealthGainColor;
+    [SerializeField] float textFlyAlphaMax;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -202,46 +205,51 @@ public class TileManager : MonoBehaviour
         //Debug.Log("Refunded a tile");
     }
 
-    public void ModifyHealthAt(Vector2 point, float amount)
+    public void ModifyHealthAt(Vector2 point, float value, float textPulseScaleMax, Vector2 hitDir)
     {
         Vector3Int gridPos = WorldToGrid(point);
-        //Debug.Log("modify health called");
-        if (_TileStatsDict.ContainsKey(gridPos))
+        if (!_TileStatsDict.ContainsKey(gridPos))
         {
-            Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
-            float healthAtStart = _TileStatsDict[rootPos].health;
-            _TileStatsDict[rootPos].health += amount;
-            _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 
-                                                         0, _TileStatsDict[rootPos].maxHealth);
-            //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
+            numberofTilesMissed++;
+            return;
+        }
 
-            float healthDifference = _TileStatsDict[rootPos].health - healthAtStart;
-            if (healthDifference < 0)
-            {
-                StatsCounterPlayer.DamageToStructures += -healthDifference;
-                numberOfTilesHit++;
-            }
-            else
-            {
-                StatsCounterPlayer.AmountRepaired += healthDifference;
-            }
+        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+        textFly.transform.position = point;
 
-            if (_TileStatsDict[rootPos].health == 0)
-            {
-                StatsCounterPlayer.StructuresLost++;
-                SetRubbleTileAt(rootPos);
-                RemoveTileAt(rootPos);
-                return;
-            }
+        Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
+        float healthAtStart = _TileStatsDict[rootPos].health;
+        _TileStatsDict[rootPos].health += value;
+        _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 
+                                                        0, _TileStatsDict[rootPos].maxHealth);
+        //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
 
-            UpdateAnimatedTile(rootPos);
+        float healthDifference = _TileStatsDict[rootPos].health - healthAtStart;
+        Color color;
+        if (healthDifference < 0)
+        {
+            color = textFlyHealthLossColor;
+            StatsCounterPlayer.DamageToStructures += -healthDifference;
+            numberOfTilesHit++;
         }
         else
         {
-            // For debug
-            numberofTilesMissed++;
-            //Debug.Log("Key not found: " + gridPos);
+            color = textFlyHealthGainColor;
+            StatsCounterPlayer.AmountRepaired += healthDifference;
         }
+
+        textFly.Initialize(Mathf.Abs(healthDifference).ToString("#0"), color, 
+                           textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);
+
+        if (_TileStatsDict[rootPos].health == 0)
+        {
+            StatsCounterPlayer.StructuresLost++;
+            SetRubbleTileAt(rootPos);
+            RemoveTileAt(rootPos);
+            return;
+        }
+
+        UpdateAnimatedTile(rootPos);
     }
 
     public void ModifyMaxHealthAll(float factor)

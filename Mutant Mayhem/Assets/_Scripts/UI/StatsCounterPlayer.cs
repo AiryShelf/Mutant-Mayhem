@@ -49,13 +49,19 @@ public class StatsCounterPlayer : MonoBehaviour
 
     void Start()
     {
+
         StartCoroutine(TimeCounter());
     }
 
     IEnumerator TimeCounter()
     {
-        yield return new WaitForSeconds(1);
-        TotalPlayTime++;
+        while (true)
+        {
+            if (!TimeControl.isPaused)
+                TotalPlayTime++;
+
+            yield return new WaitForSecondsRealtime(1);
+        }
     }
 
     public static void ResetStatsCounts()
