@@ -114,6 +114,7 @@ public class BuildingSystem : MonoBehaviour
         if (structureInHand != null)
         {
             HighlightTile();
+                
             if (buildAction.IsPressed())
                 OnBuild();
         }
@@ -132,7 +133,6 @@ public class BuildingSystem : MonoBehaviour
 
     void OnBuild()
     {
-        Debug.LogWarning("OnBuild ran");
         if (!isInBuildMode)
         {
             return;
@@ -365,14 +365,17 @@ public class BuildingSystem : MonoBehaviour
         }
 
         // Add Tile
-        if (tileManager.AddTileAt(gridPos, structureInHand, currentRotation))
+        if (tileManager.AddBlueprintAt(gridPos, structureInHand, currentRotation))
         {
+            DroneBuildJob job = new DroneBuildJob(DroneJobType.Build, tileManager.GridCenterToWorld(gridPos), currentRotation);
+            ConstructionManager.Instance.buildJobs.Add(job);
+
             PlayerCredits -= structureInHand.tileCost * structureCostMult;
             RemoveBuildHighlight();
 
             if (structureInHand.isTurret)
             {
-                turretManager.AddTurret(gridPos);
+                turretManager.currentNumTurrets++;
             }
 
             AddToStatCounter();
@@ -431,10 +434,10 @@ public class BuildingSystem : MonoBehaviour
         mouseGridPos.z = 0;
         ActionType currentAction = structureInHand.actionType;
         
-        // Replace the highlight
+        // Replace the highlight position for build or destroy
         RemoveBuildHighlight();
         if (currentAction != ActionType.Build && tileManager.ContainsTileDictKey(mouseGridPos))
-            highlightedTilePos = tileManager.GetRootPos(mouseGridPos);
+            highlightedTilePos = tileManager.GridToRootPos(mouseGridPos);
         else 
             highlightedTilePos = mouseGridPos;
 
@@ -458,9 +461,8 @@ public class BuildingSystem : MonoBehaviour
             
             if (tileManager.ContainsTileDictKey(highlightedTilePos))
             {
-                Vector3Int rootPos = tileManager.GetRootPos(highlightedTilePos);
+                Vector3Int rootPos = tileManager.GridToRootPos(highlightedTilePos);
 
-                // Probably not finding the tile
                 Matrix4x4 matrix = animatedTilemap.GetTransformMatrix(highlightedTilePos);
                 int rotation = StructureRotator.GetRotationFromMatrix(matrix);
                 TileBase tile = animatedTilemap.GetTile(highlightedTilePos);

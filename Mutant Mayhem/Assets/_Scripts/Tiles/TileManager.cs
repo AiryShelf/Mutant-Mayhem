@@ -21,12 +21,12 @@ public class TileManager : MonoBehaviour
     public Player player;
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
+
+    [SerializeField] Tilemap blueprintTilemap;
     public static Tilemap AnimatedTilemap;
-    [SerializeField] Tilemap DestroyedTilemap;
-    [SerializeField] Tilemap DamageTilemap;
+    [SerializeField] Tilemap destroyedTilemap;
+    [SerializeField] Tilemap damageTilemap;
     [SerializeField] List<ParticleSystem> particlesToClear;
-    public ParticleSystem repairEffect;
-    public int amountRepairParticles = 5;
     [SerializeField] Color textFlyHealthLossColor;
     [SerializeField] Color textFlyHealthGainColor;
     [SerializeField] float textFlyAlphaMax;
@@ -70,7 +70,7 @@ public class TileManager : MonoBehaviour
         turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
-        DestroyedTilemap = GameObject.Find("DestroyedTilemap").GetComponent<Tilemap>();
+        destroyedTilemap = GameObject.Find("DestroyedTilemap").GetComponent<Tilemap>();
         if (!ReadTilemapToDict())
             Debug.LogError("Error when trying to read the starting tilemap to dict");
         //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
@@ -84,40 +84,76 @@ public class TileManager : MonoBehaviour
 
     #region Alter Tiles
 
-    public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
+    public bool AddBlueprintAt(Vector3Int gridPos, StructureSO structure, int rotation)
     {
-        if (AddNewTileToDict(gridPos, structure))
+        if (!AddNewTileToDict(gridPos, structure))
         {
-            // Set and rotate animated tile
-            if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
-            {
-                AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
-                AnimatedTilemap.RefreshAllTiles();
-                RefreshSurroundingTiles(gridPos);
-            }
-            else
-                AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+            Debug.LogWarning("Failed to add structure tiles to dict when placing blueprint");
+            return false;
+        }
 
-            StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
+        _TileStatsDict[gridPos].health = 1;
 
-            // Set structure tile
-            StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
-            StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
-
-            StartCoroutine(RotateTileObject(gridPos, rotation));
-
-            ClearParticlesAndDebris(gridPos);                
-            shadowCaster2DTileMap.Generate();
-            //Debug.Log("Added a Tile");
-            
-            //Debug.Log("Structure tile and Animated tile placed");
-            return true;
+        if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
+        {
+            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+            blueprintTilemap.RefreshAllTiles(); // ?? This might not need to be here?
+            RefreshSurroundingTiles(gridPos);
         }
         else
+            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+
+        StructureRotator.RotateTileAt(blueprintTilemap, gridPos, rotation);
+
+        // Set structure tile
+        //StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
+        //StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
+
+        StartCoroutine(RotateTileObject(gridPos, rotation));
+
+        if (structure.isTurret)
+        {
+            turretManager.currentNumTurrets++;
+        }
+
+        return true;
+    }
+
+    public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
+    {
+        if (!AddNewTileToDict(gridPos, structure))
         {
             Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
             return false;
-        }     
+        }
+
+        // Set and rotate animated tile
+        if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
+        {
+            AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+            AnimatedTilemap.RefreshAllTiles();
+            RefreshSurroundingTiles(gridPos);
+        }
+        else
+            AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+
+        if (structure.isTurret)
+        {
+            turretManager.AddTurret(gridPos);
+        }
+
+        StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
+
+        // Set structure tile
+        StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
+        StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
+
+        StartCoroutine(RotateTileObject(gridPos, rotation));
+
+        ClearParticlesAndDebris(gridPos);                
+        shadowCaster2DTileMap.Generate();
+        
+        return true;
     }
 
     IEnumerator RotateTileObject(Vector3Int gridPos, int rotation)
@@ -126,22 +162,18 @@ public class TileManager : MonoBehaviour
 
         GameObject tileObj = StructureTilemap.GetInstantiatedObject(gridPos);
 
-        // Rotate and position GameObject
+        // Rotate GameObject
         if (tileObj != null)
         {
             tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
-        }
-        else
-        {
-            //Debug.Log("TileObject not found");
         }
     }
 
     public void SetRubbleTileAt(Vector3Int rootPos)
     {
         int rotation = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
-        DestroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
-        StructureRotator.RotateTileAt(DestroyedTilemap, rootPos, -rotation);
+        destroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
+        StructureRotator.RotateTileAt(destroyedTilemap, rootPos, -rotation);
 
         StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
         if (type == StructureType.OneByOneWall ||
@@ -151,7 +183,7 @@ public class TileManager : MonoBehaviour
         {
             float randomRotationZ = Random.Range(0f, 360f);  
             Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));
-            DestroyedTilemap.SetTransformMatrix(rootPos, rotationMatrix);
+            destroyedTilemap.SetTransformMatrix(rootPos, rotationMatrix);
         }
     }
 
@@ -164,11 +196,15 @@ public class TileManager : MonoBehaviour
         List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, tileRot);
 
         AnimatedTilemap.SetTile(rootPos, null);
+        if (blueprintTilemap.GetTile(rootPos))
+            ConstructionManager.Instance.RemoveBuildJobAt(GridCenterToWorld(rootPos));
+        blueprintTilemap.SetTile(rootPos, null);
 
         // Check for turrets
         if (rts.structureSO.isTurret)
         {
             turretManager.RemoveTurret(rootPos);
+            turretManager.currentNumTurrets--;
         }
 
         // Remove from list and dict
@@ -186,7 +222,7 @@ public class TileManager : MonoBehaviour
             Debug.LogError("shadowCaster2DTileMap is null");
 
         RefreshSurroundingTiles(rootPos);
-        DamageTilemap.SetTile(rootPos, null);
+        damageTilemap.SetTile(rootPos, null);
 
         //Debug.Log("DESTROYED A TILE");
     }
@@ -203,6 +239,31 @@ public class TileManager : MonoBehaviour
         BuildingSystem.PlayerCredits += cost * ratio / 2;
 
         //Debug.Log("Refunded a tile");
+    }
+
+    #endregion
+
+    #region Modify Health
+
+    public bool BuildBlueprintAt(Vector2 pos, float amount)
+    {
+        Vector3Int rootpos = GridToRootPos(WorldToGrid(pos));
+        if (!_TileStatsDict.ContainsKey(rootpos))
+        {
+            Debug.LogError($"TileManager: No blueprint fround at {pos} to build");
+            return true;  // To return the drone home for next task
+        }
+
+        _TileStatsDict[rootpos].health += amount;
+        if (_TileStatsDict[rootpos].health >= _TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount)
+        {
+            DroneBuildJob buildJob = ConstructionManager.Instance.GetBuildJobAt(pos);
+            blueprintTilemap.SetTile(WorldToGrid(pos), null);
+            AddTileAt(rootpos, _TileStatsDict[rootpos].ruleTileStructure.structureSO, buildJob.rotation);
+            return true;
+        }
+
+        return false;
     }
 
     public void ModifyHealthAt(Vector2 point, float value, float textPulseScaleMax, Vector2 hitDir)
@@ -277,6 +338,10 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Update Tiles
+
     void UpdateDamageTile(Vector3Int rootPos)
     {
         float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
@@ -309,7 +374,7 @@ public class TileManager : MonoBehaviour
         List<AnimatedTile> dTiles;
         if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Wall")
         {
-            tilemap = DamageTilemap;
+            tilemap = damageTilemap;
             dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
         }
         else
@@ -412,7 +477,7 @@ public class TileManager : MonoBehaviour
             return false;
     }
 
-    public Vector3Int GetRootPos(Vector3Int gridPos)
+    public Vector3Int GridToRootPos(Vector3Int gridPos)
     {
         return _TileStatsDict[gridPos].rootGridPos;
     }
@@ -689,7 +754,7 @@ public class TileManager : MonoBehaviour
 
         foreach (Vector3Int pos in positions)
         {
-            DestroyedTilemap.SetTile(pos, null);
+            destroyedTilemap.SetTile(pos, null);
         }
     }
 

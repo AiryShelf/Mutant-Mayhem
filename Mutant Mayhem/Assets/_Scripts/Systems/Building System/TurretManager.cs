@@ -52,7 +52,7 @@ public class TurretManager : MonoBehaviour
         }
 
         StartCoroutine(GetGameObject(rootPos));
-        currentNumTurrets++;
+        //currentNumTurrets++;
     }
 
     IEnumerator GetGameObject(Vector3Int rootPos)
@@ -79,7 +79,7 @@ public class TurretManager : MonoBehaviour
         }
 
         turrets.Remove(rootPos);
-        currentNumTurrets--;
+        //currentNumTurrets--;
     }
 
     #region Turret Upgrades

@@ -13,6 +13,7 @@ public class StructureSO : ScriptableObject
     public float tileCost;
     public float maxHealth;
     public float health;
+    public float blueprintBuildAmount = 100;
     public List<Vector3Int> cellPositions;
 
     [Header("Tile Type")]
