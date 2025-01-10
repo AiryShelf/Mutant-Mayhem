@@ -20,24 +20,24 @@ public class DroneHangar : MonoBehaviour
         while (true)
         {
             DroneJob job = null;
-            Drone foundDrone = null;
-            foreach (Drone drone in dockedDrones)
+            Drone freeDrone = null;
+            foreach (Drone dockedDrone in dockedDrones)
             {
-                if (drone.currentJob.jobType != DroneJobType.None)
+                if (dockedDrone.currentJob.jobType != DroneJobType.None)
                     continue;
 
-                job = GetJob(drone);
+                job = GetJob(dockedDrone);
 
                 if (job == null)
                         continue;
 
-                foundDrone = drone;
+                freeDrone = dockedDrone;
                 break;                
             }
-            if (foundDrone != null)
+            if (freeDrone != null)
             {
-                LaunchDrone(foundDrone);
-                AssignJob(foundDrone, job);
+                LaunchDrone(freeDrone);
+                freeDrone.SetJob(job);
             }
             yield return new WaitForSeconds(1);
         }
@@ -48,51 +48,15 @@ public class DroneHangar : MonoBehaviour
         DroneJob closestJob = null;
 
         if (drone.droneType == DroneType.Builder)
-            closestJob = SearchForConstructionJobs(pos);
+            closestJob = ConstructionManager.Instance.GetNearestJob(pos);
 
         if (closestJob != null)
         {
-            AssignJob(drone, closestJob);
+            drone.SetJob(closestJob);
             return true;
         }
 
         return false;
-    }
-
-    DroneJob SearchForConstructionJobs(Vector2 pos)
-    {
-        DroneJob closestJob = null;
-        float closestDistance = Mathf.Infinity;
-
-        // Check build jobs first (priority)
-        foreach (DroneBuildJob buildJob in ConstructionManager.Instance.buildJobs)
-        {
-            float distance = Vector2.Distance(pos, buildJob.jobPosition);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closestJob = buildJob;
-            }
-        }
-
-        // If a build job is found nearby, skip checking repair jobs
-        if (closestJob != null)
-        {
-            return closestJob;
-        }
-
-        // If no build job is nearby, check repair jobs
-        foreach (DroneJob repairJob in ConstructionManager.Instance.repairJobs)
-        {
-            float distance = Vector2.Distance(pos, repairJob.jobPosition);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closestJob = repairJob;
-            }
-        }
-
-        return closestJob;
     }
 
     public DroneJob GetDroneJob(DroneType droneType)
@@ -119,14 +83,9 @@ public class DroneHangar : MonoBehaviour
             Debug.LogError("DroneHangar: No drone found to launch!");
     }
 
-    void AssignJob(Drone drone, DroneJob job)
+    public void LandDrone(Drone drone)
     {
-        if (job.jobType == DroneJobType.Build)
-            ConstructionManager.Instance.RemoveBuildJobAt(job.jobPosition);
-        else if (job.jobType == DroneJobType.Repair)
-            ConstructionManager.Instance.RemoveRepairJobAt(job.jobPosition);
-
-        drone.SetJob(job);
+        dockedDrones.Add(drone);
     }
 
     DroneJob GetJob(Drone drone)

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DroneManager : MonoBehaviour
 {
-    List<Drone> allDrones;
-    List<bool> unlockedDrones;
+    public List<Drone> allDrones;
+    public List<bool> unlockedDrones;
 
     public static DroneManager Instance;
 

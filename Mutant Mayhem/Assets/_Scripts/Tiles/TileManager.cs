@@ -190,6 +190,8 @@ public class TileManager : MonoBehaviour
 
     public void RemoveTileAt(Vector3Int rootPos)
     {
+        ConstructionManager.Instance.TileRemoved(GridCenterToWorld(rootPos));
+        
         // Find rotation matrix of tile at gridPos, convert source positions to rotation
         int tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
         RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
@@ -197,8 +199,6 @@ public class TileManager : MonoBehaviour
         List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, tileRot);
 
         AnimatedTilemap.SetTile(rootPos, null);
-        if (blueprintTilemap.GetTile(rootPos))
-            //ConstructionManager.Instance.RemoveBuildJobAt(GridCenterToWorld(rootPos));
         blueprintTilemap.SetTile(rootPos, null);
 
         // Check for turrets
@@ -281,7 +281,11 @@ public class TileManager : MonoBehaviour
 
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         float healthAtStart = _TileStatsDict[rootPos].health;
+
         _TileStatsDict[rootPos].health += value;
+        if (_TileStatsDict[rootPos].health >= _TileStatsDict[rootPos].maxHealth)
+            _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
+
         _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 
                                                         0, _TileStatsDict[rootPos].maxHealth);
         //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);

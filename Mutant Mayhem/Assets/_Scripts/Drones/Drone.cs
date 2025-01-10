@@ -7,7 +7,8 @@ public class Drone : MonoBehaviour
 {
     public DroneType droneType = DroneType.Builder;
     public float moveSpeed = 3;
-    public float buildSpeed = 0.5f;  // For upgrades, most of stats should be moved to PlayerStats
+    public float buildSpeed = 0.1f;  // For upgrades, most of stats should be moved to PlayerStats
+    public float repairSpeed = 1;
     public Vector2 jobPosition;
     public DroneJob currentJob;
     [SerializeField] Rigidbody2D myRB;
@@ -51,39 +52,90 @@ public class Drone : MonoBehaviour
             if (Vector2.Distance(transform.position, target) < minJobDist)
             {
                 arrived = true;
-                SetNewAction(DoJob);
+                DoJob();
             }
         }
     }
 
-    IEnumerator DoJob()
+    void DoJob()
+    {
+        StartCoroutine(AlignToPos(currentJob.jobPosition));
+
+        if (currentJob.jobType == DroneJobType.Build)
+            SetNewAction(Build);
+        else if (currentJob.jobType == DroneJobType.Repair)
+            SetNewAction(Repair);
+        else
+            SetJobDone();
+    }
+
+    IEnumerator Build()
+    {
+        DroneBuildJob buildJob;
+        if (currentJob is DroneBuildJob)
+            buildJob = (DroneBuildJob)currentJob;
+        else
+        {
+            Debug.LogError("Drone: Tried to build when current job is not a DroneBuildJob");
+            yield break;
+        }
+
+        Vector2 jobPos = currentJob.jobPosition;
+        bool buildComplete = false;
+        while (!buildComplete)
+        {
+                if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
+                    SetJobDone();
+
+                else if (!buildComplete && ConstructionManager.Instance.BuildBlueprint(buildJob, buildSpeed))
+                {
+                    buildComplete = true;
+                    DroneJob newJob = new DroneJob(DroneJobType.Repair, jobPos);
+                    ConstructionManager.Instance.AddRepairJob(newJob);
+                    SetJob(newJob);
+                }
+
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    IEnumerator Repair()
     {
         Vector2 jobPos = currentJob.jobPosition;
-        bool aligned = false;
-        while (!jobDone)
+
+        // Repair
+        bool repairComplete = false;
+        while (!repairComplete)
         {
-            aligned = Vector2.Distance(transform.position, jobPos) < 0.2f;
-            if (!aligned)
-            {
-                MoveTowards(currentJob.jobPosition, 0.3f);
-                if (aligned)
-                    Debug.Log("Drone aligned");
-            }
-
-            if (currentJob is DroneBuildJob buildJob)
-                if (ConstructionManager.Instance.BuildBlueprint(buildJob, buildSpeed))
-                    jobDone = true;
-
+            if (ConstructionManager.Instance.RepairTileAt(jobPos, repairSpeed))
+                repairComplete = true;
             yield return new WaitForFixedUpdate();
         }
 
         SetJobDone();
     }
 
+    IEnumerator AlignToPos(Vector2 pos)
+    {
+        bool aligned;
+        aligned = Vector2.Distance(transform.position, pos) < 0.3f;
+        if (!aligned)
+        {
+            MoveTowards(pos, 1f);
+            if (aligned)
+                Debug.Log("Drone aligned");
+        }
+        yield return new WaitForSeconds(0.05f);
+    }
+
     IEnumerator FlyToHangar()
     {
-        if (myHangar.LookForJobInArea(this, transform.position))
+        DroneJob newJob = myHangar.GetDroneJob(droneType);
+        if (newJob != null)
+        {
+            SetJob(newJob);
             yield break;
+        }
 
         Vector2 target = myHangar.transform.position;
 
@@ -98,8 +150,12 @@ public class Drone : MonoBehaviour
             if (checkTimer >= 1)
             {
                 checkTimer = 0;
-                if (myHangar.LookForJobInArea(this, transform.position))
+                newJob = myHangar.GetDroneJob(droneType);
+                if (newJob != null)
+                {
+                    SetJob(newJob);
                     yield break;
+                }
             }
             if (Vector2.Distance(transform.position, target) < minJobDist)
                 arrived = true;
@@ -111,6 +167,8 @@ public class Drone : MonoBehaviour
     IEnumerator LandInHangar()
     {
         yield return new WaitForFixedUpdate();
+        myHangar.LandDrone(this);
+        gameObject.SetActive(false);
     }
 
     void MoveTowards(Vector2 target, float forceFactor)
@@ -121,14 +179,14 @@ public class Drone : MonoBehaviour
 
     void SetNewAction(System.Func<IEnumerator> coroutineMethod)
     {
-        if (actionCoroutine != null)
-            StopCoroutine(actionCoroutine);
+        StopAllCoroutines();
         
         actionCoroutine = StartCoroutine(coroutineMethod());
     }
 
     void SetJobDone()
     {
+        jobDone = true;
         currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
         SetNewAction(FlyToHangar);
     }
@@ -143,11 +201,6 @@ public class Drone : MonoBehaviour
 
     void CancelJob()
     {
-        if (currentJob is DroneBuildJob buildJob)
-            ConstructionManager.Instance.buildJobs.Insert(0, buildJob);
-        else if (currentJob.jobType == DroneJobType.Repair)
-            ConstructionManager.Instance.repairJobs.Add(currentJob);
-
         SetJobDone();
     }
 }

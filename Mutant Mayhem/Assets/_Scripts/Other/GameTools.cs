@@ -189,6 +189,13 @@ public static class GameTools
         transform.localPosition = startLocalPos;
     }
 
+    public static Vector2 GetRandomDirection()
+    {
+        float angle = Random.Range(0f, 360f);
+        float radian = angle * Mathf.Deg2Rad;
+        return new Vector2(Mathf.Cos(radian), Mathf.Sin(radian)).normalized;
+    }
+
     #region Flash / Pulse
 
     public static IEnumerator FlashSprite(SpriteRenderer sr, float flashTime, float flashSpeed, Color flashColor, Color startColor)

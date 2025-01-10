@@ -369,15 +369,15 @@ public class BuildingSystem : MonoBehaviour
         // Add Tile
         if (tileManager.AddBlueprintAt(gridPos, structureInHand, currentRotation))
         {
-            DroneBuildJob job = new DroneBuildJob(DroneJobType.Build, tileManager.GridCenterToWorld(gridPos), currentRotation);
-            if (job == null)
+            DroneBuildJob buildJob = new DroneBuildJob(DroneJobType.Build, tileManager.GridCenterToWorld(gridPos), currentRotation);
+            if (buildJob == null)
             {
-                Debug.LogError("BuildingSystem: Blueprint job creation failed");
+                Debug.LogError("BuildingSystem: BuildJob creation failed");
                 MessagePanel.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
                 return;
             }
-            Instantiate(debugDotPrefab, job.jobPosition, quaternion.identity);
-            ConstructionManager.Instance.buildJobs.Add(job);
+            Instantiate(debugDotPrefab, buildJob.jobPosition, quaternion.identity);
+            ConstructionManager.Instance.AddBuildJob(buildJob);
 
             PlayerCredits -= structureInHand.tileCost * structureCostMult;
             RemoveBuildHighlight();
