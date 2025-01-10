@@ -19,6 +19,7 @@ public class StructureSO : ScriptableObject
     [Header("Tile Type")]
     
     public RuleTileStructure ruleTileStructure;
+    public RuleTileStructure blueprintTile;
     public StructureType structureType;
     public bool isTurret;
     public ActionType actionType;

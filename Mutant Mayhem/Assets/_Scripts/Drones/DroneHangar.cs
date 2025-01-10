@@ -126,10 +126,12 @@ public class DroneJob
 public class DroneBuildJob : DroneJob
 {
     public int rotation;
+    public StructureSO structure;
 
-    public DroneBuildJob(DroneJobType jobType, Vector3 position, int rotation) : base(jobType, position)
+    public DroneBuildJob(DroneJobType jobType, Vector3 position, int rotation, StructureSO structure) : base(jobType, position)
     {
         this.rotation = rotation;
+        this.structure = structure;
     }
 }
 

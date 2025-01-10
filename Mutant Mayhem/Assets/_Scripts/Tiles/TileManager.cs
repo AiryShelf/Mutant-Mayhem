@@ -84,17 +84,27 @@ public class TileManager : MonoBehaviour
 
     #region Alter Tiles
 
-    public bool AddBlueprintAt(Vector3Int gridPos, StructureSO structure, int rotation)
+    public bool AddBlueprintAt(Vector3Int gridPos, RuleTileStructure ruleTile, int rotation)
     {
-        if (!AddNewTileToDict(gridPos, structure))
+        if (!AddNewTileToDict(gridPos, ruleTile.structureSO))
         {
             Debug.LogWarning("Failed to add structure tiles to dict when placing blueprint");
             return false;
         }
 
-        _TileStatsDict[gridPos].health *= 0.1f;
+        DroneBuildJob buildJob = new DroneBuildJob(DroneJobType.Build, GridCenterToWorld(gridPos), rotation, ruleTile.structureSO);
+        if (buildJob == null)
+        {
+            Debug.LogError("BuildingSystem: BuildJob creation failed");
+            MessagePanel.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
+            return false;
+        }
+        //Instantiate(debugDotPrefab, buildJob.jobPosition, quaternion.identity);
+        ConstructionManager.Instance.AddBuildJob(buildJob);
 
-        if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
+        _TileStatsDict[gridPos].health = 1f;
+
+        if (ruleTile.structureSO.tileName != "1x1 Wall")
         {
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
             blueprintTilemap.RefreshAllTiles(); // ?? This might not need to be here?
@@ -106,12 +116,12 @@ public class TileManager : MonoBehaviour
         StructureRotator.RotateTileAt(blueprintTilemap, gridPos, rotation);
 
         // Set structure tile
-        StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
+        StructureTilemap.SetTile(gridPos, ruleTile);
         StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
 
         StartCoroutine(RotateTileObject(gridPos, rotation));
 
-        if (structure.isTurret)
+        if (ruleTile.structureSO.isTurret)
         {
             turretManager.currentNumTurrets++;
         }
@@ -119,16 +129,16 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    public bool AddTileAt(Vector3Int gridPos, StructureSO structure, int rotation)
+    public bool AddTileAt(Vector3Int gridPos, RuleTileStructure ruleTile, int rotation)
     {
-        if (!AddNewTileToDict(gridPos, structure))
+        if (!AddNewTileToDict(gridPos, ruleTile.structureSO))
         {
             Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
             return false;
         }
 
         // Set and rotate animated tile
-        if (structure.ruleTileStructure.structureSO.tileName != "1x1 Wall")
+        if (ruleTile.structureSO.tileName != "1x1 Wall")
         {
             AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
             AnimatedTilemap.RefreshAllTiles();
@@ -137,7 +147,7 @@ public class TileManager : MonoBehaviour
         else
             AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
 
-        if (structure.isTurret)
+        if (ruleTile.structureSO.isTurret)
         {
             turretManager.AddTurret(gridPos);
         }
@@ -145,7 +155,7 @@ public class TileManager : MonoBehaviour
         StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
 
         // Set structure tile
-        StructureTilemap.SetTile(gridPos, structure.ruleTileStructure);
+        StructureTilemap.SetTile(gridPos, ruleTile);
         StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
 
         StartCoroutine(RotateTileObject(gridPos, rotation));
@@ -248,6 +258,8 @@ public class TileManager : MonoBehaviour
 
     public bool BuildBlueprintAt(DroneBuildJob buildJob, float amount)
     {
+        
+
         Vector3Int rootpos = GridToRootPos(WorldToGrid(buildJob.jobPosition));
         if (!_TileStatsDict.ContainsKey(rootpos))
         {
@@ -255,12 +267,12 @@ public class TileManager : MonoBehaviour
             return true;  // To return the drone home for next task
         }
 
-        _TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount -= amount;
+        _TileStatsDict[rootpos].health += amount;
 
-        if (_TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount <= 0)
+        if (_TileStatsDict[rootpos].health >= _TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount)
         {
             blueprintTilemap.SetTile(WorldToGrid(buildJob.jobPosition), null);
-            AddTileAt(rootpos, _TileStatsDict[rootpos].ruleTileStructure.structureSO, buildJob.rotation);
+            AddTileAt(rootpos, buildJob.structure.ruleTileStructure, buildJob.rotation);
             return true;
         }
 
