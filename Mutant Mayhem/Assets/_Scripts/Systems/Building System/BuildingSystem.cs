@@ -376,7 +376,7 @@ public class BuildingSystem : MonoBehaviour
                 MessagePanel.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
                 return;
             }
-            Instantiate(debugDotPrefab, buildJob.jobPosition, quaternion.identity);
+            //Instantiate(debugDotPrefab, buildJob.jobPosition, quaternion.identity);
             ConstructionManager.Instance.AddBuildJob(buildJob);
 
             PlayerCredits -= structureInHand.tileCost * structureCostMult;

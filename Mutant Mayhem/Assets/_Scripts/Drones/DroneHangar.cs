@@ -66,6 +66,8 @@ public class DroneHangar : MonoBehaviour
         if (droneType == DroneType.Builder)
         {
             job = ConstructionManager.Instance.GetBuildJob();
+            if (job == null)
+                job = ConstructionManager.Instance.GetRepairJob();
         }
 
         return job;

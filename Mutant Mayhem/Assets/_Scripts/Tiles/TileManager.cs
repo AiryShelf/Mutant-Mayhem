@@ -255,9 +255,9 @@ public class TileManager : MonoBehaviour
             return true;  // To return the drone home for next task
         }
 
-        _TileStatsDict[rootpos].health += amount;
+        _TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount -= amount;
 
-        if (_TileStatsDict[rootpos].health >= _TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount)
+        if (_TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount <= 0)
         {
             blueprintTilemap.SetTile(WorldToGrid(buildJob.jobPosition), null);
             AddTileAt(rootpos, _TileStatsDict[rootpos].ruleTileStructure.structureSO, buildJob.rotation);
@@ -281,26 +281,31 @@ public class TileManager : MonoBehaviour
 
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         float healthAtStart = _TileStatsDict[rootPos].health;
+        float maxHealth = _TileStatsDict[rootPos].maxHealth;
 
         _TileStatsDict[rootPos].health += value;
-        if (_TileStatsDict[rootPos].health >= _TileStatsDict[rootPos].maxHealth)
-            _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
 
-        _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 
-                                                        0, _TileStatsDict[rootPos].maxHealth);
+        _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 0, maxHealth);
         //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
 
         float healthDifference = _TileStatsDict[rootPos].health - healthAtStart;
-        Color color;
-        if (healthDifference < 0)
+        Color color = textFlyHealthGainColor;
+        if (healthDifference == 0)
+            return;
+        else if (healthDifference < 0)
         {
+            if (healthAtStart >= maxHealth)
+                ConstructionManager.Instance.AddRepairJob(new DroneJob(DroneJobType.Repair, GridCenterToWorld(rootPos)));
+
             color = textFlyHealthLossColor;
             StatsCounterPlayer.DamageToStructures += -healthDifference;
             numberOfTilesHit++;
         }
-        else
+        else if (healthDifference > 0)
         {
-            color = textFlyHealthGainColor;
+            if (_TileStatsDict[rootPos].health >= maxHealth)
+                ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
+
             StatsCounterPlayer.AmountRepaired += healthDifference;
         }
 
