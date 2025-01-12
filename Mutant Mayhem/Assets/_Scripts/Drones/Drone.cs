@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Drone : MonoBehaviour
@@ -86,7 +85,8 @@ public class Drone : MonoBehaviour
         Vector2 jobPos = currentJob.jobPosition;
         while (true)
         {
-            if (ConstructionManager.Instance.BuildBlueprint(jobPos, buildSpeed))
+
+            if (ConstructionManager.Instance.BuildBlueprint(jobPos, buildSpeed, GameTools.GetRandomDirection()))
             {
                 SetJob(ConstructionManager.Instance.GetRepairJob());
                 yield break;
@@ -225,10 +225,11 @@ public class Drone : MonoBehaviour
         }
     }
 
-    void Die()
+    public void Die()
     {
         // This should be on a Health script attached to the Drone
-        SetJobDone();
+        StopAllCoroutines();
+        Destroy(gameObject);
     }
 }
 

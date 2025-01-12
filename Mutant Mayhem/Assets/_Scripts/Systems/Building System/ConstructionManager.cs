@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class ConstructionManager : MonoBehaviour
 {
@@ -284,11 +281,11 @@ public class ConstructionManager : MonoBehaviour
 
     #region Do Job
 
-    public bool BuildBlueprint(Vector2 pos, float buildAmount)
+    public bool BuildBlueprint(Vector2 pos, float buildAmount, Vector2 hitDir)
     {
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
-        if (tileManager.CheckGridIsClear(gridPos, buildingSystem.layersForBuildClearCheck, false))
-        if (tileManager.BuildBlueprintAt(pos, buildAmount))
+        if (tileManager.CheckGridIsClear(gridPos, buildingSystem.layersForBuildClearCheck, false) &&
+            tileManager.BuildBlueprintAt(pos, buildAmount, 2, hitDir))
         {
             //RemoveBuildJob(buildJob);
             return true;

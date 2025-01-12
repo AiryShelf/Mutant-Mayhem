@@ -32,6 +32,7 @@ public class TileManager : MonoBehaviour
     [SerializeField] Color textFlyHealthLossColor;
     [SerializeField] Color textFlyHealthGainColor;
     [SerializeField] float textFlyAlphaMax;
+    [SerializeField] Color buildBlueprintTextColor = Color.cyan;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -102,31 +103,21 @@ public class TileManager : MonoBehaviour
             MessagePanel.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
             return false;
         }
-        //Instantiate(debugDotPrefab, buildJob.jobPosition, quaternion.identity);
         ConstructionManager.Instance.AddBuildJob(buildJob);
 
-        _TileStatsDict[gridPos].health = 1f;
+        _TileStatsDict[gridPos].health *= 0.5f;
 
         if (ruleTile.structureSO.tileName == "1x1 Wall")
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
         else
         {
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
-            blueprintTilemap.RefreshAllTiles(); // ?? This might not need to be here?
             RefreshSurroundingTiles(gridPos);
         }
 
         Quaternion q = Quaternion.Euler(0, 0, rotation);
         Matrix4x4 matrix = Matrix4x4.Rotate(q);
         blueprintTilemap.SetTransformMatrix(gridPos, matrix);
-
-        //StructureRotator.RotateTileAt(blueprintTilemap, gridPos, rotation);
-
-        // Set structure tile
-        //StructureTilemap.SetTile(gridPos, ruleTile);
-        //StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
-
-        //StartCoroutine(RotateTileObject(gridPos, rotation));
 
         if (ruleTile.structureSO.isTurret)
         {
@@ -255,7 +246,7 @@ public class TileManager : MonoBehaviour
 
     #region Modify Health
 
-    public bool BuildBlueprintAt(Vector2 pos, float amount)
+    public bool BuildBlueprintAt(Vector2 pos, float amount, float textPulseScaleMax, Vector2 hitDir)
     {
         Vector3Int gridPos = WorldToGrid(pos);
         Vector3Int rootPos;
@@ -285,6 +276,11 @@ public class TileManager : MonoBehaviour
             ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
             return true;
         }
+
+        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+        textFly.transform.position = pos;
+        textFly.Initialize(Mathf.Abs(amount).ToString("#0"), buildBlueprintTextColor, 
+                           textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);
 
         return false;
     }

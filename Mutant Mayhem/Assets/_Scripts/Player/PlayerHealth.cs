@@ -20,30 +20,15 @@ public class PlayerHealth : Health
         if (player.IsDead)
             return;
 
-        health += value;
-        if (health > maxHealth)
-            health = maxHealth;
+        base.ModifyHealth(value, textPulseScaleMax, hitDir, damageDealer);
 
         // Stats counting
         if (value < 0)
         {
-            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
-            textFly.transform.position = transform.position;
-            float angle = UnityEngine.Random.Range(-45f, 45f) * Mathf.Deg2Rad;
-            Vector2 dir = new Vector2(
-                hitDir.x * Mathf.Cos(angle) - hitDir.y * Mathf.Sin(angle),
-                hitDir.x * Mathf.Sin(angle) + hitDir.y * Mathf.Cos(angle)
-            ).normalized;
-
-            textFly.Initialize(Mathf.Abs(value).ToString("#0"), textFlyHealthLossColor, textFlyAlphaMax, dir, true, textPulseScaleMax);
-
-            PlayPainSound();
-            StatsCounterPlayer.DamageToPlayer -= value;
-
+            StatsCounterPlayer.DamageToPlayer -= healthChange;
             player.playerShooter.currentAccuracy += hitAccuracyLoss * player.stats.weaponHandling;
         }
         
-        // Die
         if (health <= 0 && !player.IsDead)
         {
             Die();
@@ -75,6 +60,8 @@ public class PlayerHealth : Health
 
     public override void Die()
     {
+        StopAllCoroutines();
+
         //Debug.Log("PLAYER IS DEAD");
         hasDied = true;
         player.IsDead = true;

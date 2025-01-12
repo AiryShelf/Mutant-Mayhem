@@ -200,6 +200,11 @@ public class MeleeControllerEnemy : MonoBehaviour
             return 2;
         if (collider.gameObject.layer == 12)
             return 3;
+        if (collider.CompareTag("Drone"))
+        {
+            Debug.Log("Enemy found Drone Priority 4");
+            return 4;
+        }
         
         
         return int.MaxValue;
@@ -222,6 +227,13 @@ public class MeleeControllerEnemy : MonoBehaviour
         else if (collider.gameObject.layer == 12) // Structure
         {
             HitStructure(point);
+        }
+        else if (collider.CompareTag("Drone"))
+        {
+            Debug.Log("Enemy found drone, trying to hit");
+            Health health = collider.GetComponent<Health>();
+            if (health)
+                Hit(health, point);
         }
     }
 

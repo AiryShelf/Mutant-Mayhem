@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -42,6 +41,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] Tilemap previewTilemap;
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
+    [SerializeField] TileBase blockedTileAsset;
     [SerializeField] GameObject debugDotPrefab;
 
     [Header("Dynamic vars, don't set here")]
@@ -158,7 +158,7 @@ public class BuildingSystem : MonoBehaviour
         else if (inRange)
         {
             if (structureInHand.actionType == ActionType.Build)
-                MessagePanel.Instance.DelayMessage("Area not clear for building", Color.yellow, 0.1f);
+                //MessagePanel.Instance.DelayMessage("Area not clear for building", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.Instance.DelayMessage("Unable to destroy", Color.yellow, 0.1f);
             StartCoroutine(DelayUIReselect());
@@ -515,7 +515,7 @@ public class BuildingSystem : MonoBehaviour
                 {
                     // Show X where grid is not clear
                     Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
-                    highlightTilemap.SetTile(highlightedTilePos + newPos, destroyTileAsset);
+                    highlightTilemap.SetTile(highlightedTilePos + newPos, blockedTileAsset);
                     allHighlighted = false;
                 }   
             }

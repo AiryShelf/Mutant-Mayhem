@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class EnemyHealth : Health
 {
     [SerializeField] string corpsePoolName;
+    [SerializeField] protected float healthToCreditsDivisor = 1;
     EnemyBase enemyBase;
 
     TileManager tileManager;
@@ -18,32 +17,46 @@ public class EnemyHealth : Health
         enemyBase = GetComponent<EnemyBase>();
         if (enemyBase == null)
         {
-            Debug.LogError("EnemyBase not found by EnemyHealth on Awake");
+            Debug.LogError("EnemyHealth: EnemyBase not found on Awake");
         }
 
         tileManager = FindObjectOfType<TileManager>();
     }
 
+    public override void ModifyHealth(float value, float textPulseScaleMax, Vector2 textDir, GameObject damageDealer)
+    {
+        base.ModifyHealth(value, textPulseScaleMax, textDir, damageDealer);
+
+        // Stats counting
+        if (damageDealer != null)
+        {
+            if (this.CompareTag("Enemy"))
+                StatsCounterPlayer.DamageToEnemies -= healthChange;
+        }
+        
+        // Die
+        if (health <= 0 && !hasDied)
+        {
+            if (damageDealer != null)
+            {
+                // Structure layer 13
+                if (damageDealer.layer == 13)
+                    StatsCounterPlayer.EnemiesKilledByTurrets++;
+                else if (damageDealer.CompareTag("Player") || damageDealer.CompareTag("PlayerExplosion") || damageDealer.layer == 8)
+                    StatsCounterPlayer.EnemiesKilledByPlayer++;
+            }
+
+            Die();
+            return;
+        }
+    }
+
     public override void Die()
     {
-        StopAllCoroutines();
-
         if (!string.IsNullOrEmpty(corpsePoolName))
         {
             hasDied = true;
-            // Create corpse, pass scale and color
-            GameObject corpse = PoolManager.Instance.GetFromPool(corpsePoolName);
-            corpse.transform.position = transform.position;
-            corpse.transform.rotation = transform.rotation;
-            corpse.transform.localScale = transform.localScale;
-            corpse.GetComponentInChildren<SpriteRenderer>().color = 
-                                                GetComponent<SpriteRenderer>().color;
-
-            // Pass physics to corpse      **  Depricate for improved performance?  **  Currently testing with non-simulated corpses
-            //Rigidbody2D corpseRb = corpsePrefab.GetComponent<Rigidbody2D>();
-            //corpseRb.velocity = myRb.velocity;
-            //corpseRb.angularVelocity = myRb.angularVelocity;
-            //corpseRb.mass = myRb.mass * 2;
+            SetCorpse();
         }
 
         // Increment Drop Counter
@@ -61,6 +74,16 @@ public class EnemyHealth : Health
         EnemyCounter.EnemyCount--; 
 
         enemyBase.Die();
+    }
+
+    void SetCorpse()
+    {
+        // Pass scale and color
+        GameObject corpse = PoolManager.Instance.GetFromPool(corpsePoolName);
+        corpse.transform.position = transform.position;
+        corpse.transform.rotation = transform.rotation;
+        corpse.transform.localScale = transform.localScale;
+        corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;
     }
 
     void DropPickup(int value)

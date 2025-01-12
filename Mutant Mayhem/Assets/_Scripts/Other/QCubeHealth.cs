@@ -57,10 +57,17 @@ public class QCubeHealth : Health
         if (amount < 0)
         {
             PlayCubeDamageEffect();
+            StatsCounterPlayer.DamageToStructures -= healthChange;
         }
         else
         {
-            // Play cube repair effect
+            // Play cube repair effect, currently handled by UpgradeManager
+        }
+
+        if (health <= 0 && !hasDied)
+        {
+            Die();
+            return;
         }
 
         OnCubeHealthChanged.Invoke(health);
