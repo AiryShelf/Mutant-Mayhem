@@ -189,6 +189,8 @@ public class Drone : MonoBehaviour
         StopAllCoroutines();
         
         actionCoroutine = StartCoroutine(coroutineMethod());
+
+        StartCoroutine(CheckIfJobDone());
     }
 
     void SetJobDone()
@@ -198,16 +200,46 @@ public class Drone : MonoBehaviour
         SetNewAction(FlyToHangar);
     }
 
-    
+    IEnumerator CheckIfJobDone()
+    {
+        yield return null;
+        
+        DroneBuildJob buildJob = null;
+
+        while (!jobDone)
+        {
+            if (currentJob == null)
+            {
+                SetJobDone();
+                jobDone = true;
+                yield break;
+            }
+
+            if (currentJob is DroneBuildJob)
+                buildJob = (DroneBuildJob)currentJob;
+
+            if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
+            {
+                SetJobDone();
+                jobDone = true;
+                yield break;
+            }
+
+            if (!ConstructionManager.Instance.CheckIfRepairJobExists(currentJob))
+            {
+                SetJobDone();
+                jobDone = true;
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1);
+        }
+        yield return null;
+    }
 
     void Die()
     {
         // This should be on a Health script attached to the Drone
-        CancelJob();
-    }
-
-    void CancelJob()
-    {
         SetJobDone();
     }
 }

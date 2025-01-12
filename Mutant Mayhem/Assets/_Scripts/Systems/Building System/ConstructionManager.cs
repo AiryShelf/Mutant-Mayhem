@@ -240,6 +240,17 @@ public class ConstructionManager : MonoBehaviour
         return false;
     }
 
+    public bool CheckIfRepairJobExists(DroneJob repairJob)
+    {
+        foreach (var kvp in repairJobs)
+        {
+            if (kvp.Key == repairJob)
+                return true;
+        }
+
+        return false;
+    }
+
     #endregion
 
     #region Do Job
