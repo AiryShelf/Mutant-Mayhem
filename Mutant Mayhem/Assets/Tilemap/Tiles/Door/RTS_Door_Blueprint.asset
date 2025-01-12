@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
+  m_Name: RTS_Door_Blueprint
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 1705434313, guid: 7a12fc301ddd5c94f8ec89d8ff32cf1a, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules: []
+  structureSO: {fileID: 11400000, guid: 685bb448510fbcc488080ec4a8bc3293, type: 2}
+  damagedTiles:
+  - {fileID: 11400000, guid: 8b0dafea0b6b7f64b9c6621152ac8784, type: 2}
+  destroyedTile: {fileID: 11400000, guid: d3fc1f4b944014f579464747b9e7689c, type: 2}
+  buildUiTile: {fileID: 0}

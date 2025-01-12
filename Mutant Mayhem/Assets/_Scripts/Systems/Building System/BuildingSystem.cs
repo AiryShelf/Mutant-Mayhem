@@ -564,7 +564,10 @@ public class BuildingSystem : MonoBehaviour
     void HighlightForDestroy(Vector3Int gridPos)
     {
         // Find cells for destroying
-        destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(animatedTilemap, gridPos));
+        if (animatedTilemap.GetTile(gridPos))
+            destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(animatedTilemap, gridPos));
+        else
+            destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(tileManager.blueprintTilemap, gridPos));
         if (destroyPositions.Count > 0)
         {
             foreach (Vector3Int pos in destroyPositions)

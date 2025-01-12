@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class TileStats
 {   
-    [SerializeField]public RuleTileStructure ruleTileStructure;
+    public RuleTileStructure ruleTileStructure;
     public float maxHealth;
     public float health;
     public Vector3Int rootGridPos;
@@ -24,7 +24,7 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
 
-    [SerializeField] Tilemap blueprintTilemap;
+    public Tilemap blueprintTilemap;
     public static Tilemap AnimatedTilemap;
     [SerializeField] Tilemap destroyedTilemap;
     [SerializeField] Tilemap damageTilemap;
@@ -88,13 +88,14 @@ public class TileManager : MonoBehaviour
 
     public bool AddBlueprintAt(Vector3Int gridPos, RuleTileStructure ruleTile, int rotation)
     {
-        if (!AddNewTileToDict(gridPos, ruleTile.structureSO))
+        StructureSO rotatedStructure = StructureRotator.RotateStructure(ruleTile.structureSO, rotation);
+        if (!AddNewTileToDict(gridPos, rotatedStructure))
         {
             Debug.LogWarning("Failed to add structure tiles to dict when placing blueprint");
             return false;
         }
 
-        DroneBuildJob buildJob = new DroneBuildJob(DroneJobType.Build, GridCenterToWorld(gridPos), rotation, ruleTile.structureSO);
+        DroneBuildJob buildJob = new DroneBuildJob(DroneJobType.Build, GridCenterToWorld(gridPos), rotation, rotatedStructure);
         if (buildJob == null)
         {
             Debug.LogError("BuildingSystem: BuildJob creation failed");
@@ -106,22 +107,26 @@ public class TileManager : MonoBehaviour
 
         _TileStatsDict[gridPos].health = 1f;
 
-        if (ruleTile.structureSO.tileName != "1x1 Wall")
+        if (ruleTile.structureSO.tileName == "1x1 Wall")
+            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+        else
         {
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
             blueprintTilemap.RefreshAllTiles(); // ?? This might not need to be here?
             RefreshSurroundingTiles(gridPos);
         }
-        else
-            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
 
-        StructureRotator.RotateTileAt(blueprintTilemap, gridPos, rotation);
+        Quaternion q = Quaternion.Euler(0, 0, rotation);
+        Matrix4x4 matrix = Matrix4x4.Rotate(q);
+        blueprintTilemap.SetTransformMatrix(gridPos, matrix);
+
+        //StructureRotator.RotateTileAt(blueprintTilemap, gridPos, rotation);
 
         // Set structure tile
-        StructureTilemap.SetTile(gridPos, ruleTile);
-        StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
+        //StructureTilemap.SetTile(gridPos, ruleTile);
+        //StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
 
-        StartCoroutine(RotateTileObject(gridPos, rotation));
+        //StartCoroutine(RotateTileObject(gridPos, rotation));
 
         if (ruleTile.structureSO.isTurret)
         {
@@ -131,64 +136,56 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-    public bool AddTileAt(Vector3Int gridPos, RuleTileStructure ruleTile, int rotation)
+    public bool AddTileAt(Vector3Int rootPos, RuleTileStructure ruleTile)
     {
-        _TileStatsDict[gridPos].isBlueprint = false;
+        _TileStatsDict[rootPos].isBlueprint = false;
+        Matrix4x4 matrix = blueprintTilemap.GetTransformMatrix(rootPos);
+        blueprintTilemap.SetTile(rootPos, null);
         
-        if (!AddNewTileToDict(gridPos, ruleTile.structureSO))
-        {
-            Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
-            return false;
-        }
+        //if (!AddNewTileToDict(gridPos, rotatedStructure))
+        //{
+        //    Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
+        //    return false;
+        //}
 
         // Set and rotate animated tile
-        if (ruleTile.structureSO.tileName != "1x1 Wall")
-        {
-            AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
-            AnimatedTilemap.RefreshAllTiles();
-            RefreshSurroundingTiles(gridPos);
-        }
+        if (ruleTile.structureSO.tileName == "1x1 Wall")
+            AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
         else
-            AnimatedTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+        {
+            AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[0]);
+            AnimatedTilemap.RefreshAllTiles();
+            RefreshSurroundingTiles(rootPos);
+        }  
+
+        AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
 
         if (ruleTile.structureSO.isTurret)
         {
-            turretManager.AddTurret(gridPos);
+            turretManager.AddTurret(rootPos);
         }
 
-        StructureRotator.RotateTileAt(AnimatedTilemap, gridPos, rotation);
+        //StructureRotator.RotateTileAt(AnimatedTilemap, rootPos, rotation);
 
         // Set structure tile
-        StructureTilemap.SetTile(gridPos, ruleTile);
-        StructureRotator.RotateTileAt(StructureTilemap, gridPos, rotation);
+        StructureTilemap.SetTile(rootPos, ruleTile);
+        StructureTilemap.SetTransformMatrix(rootPos, matrix);
+        //StructureRotator.RotateTileAt(StructureTilemap, rootPos, rotation);
 
-        StartCoroutine(RotateTileObject(gridPos, rotation));
+        StartCoroutine(RotateTileObject(rootPos, matrix));
 
-        ClearParticlesAndDebris(gridPos);                
+        ClearParticlesAndDebris(rootPos);                
         shadowCaster2DTileMap.Generate();
-        UpdateTileDamageSprite(gridPos);
+        UpdateTileDamageSprite(rootPos);
         
         return true;
     }
 
-    IEnumerator RotateTileObject(Vector3Int gridPos, int rotation)
-    {
-        yield return new WaitForFixedUpdate();
-
-        GameObject tileObj = StructureTilemap.GetInstantiatedObject(gridPos);
-
-        // Rotate GameObject
-        if (tileObj != null)
-        {
-            tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
-        }
-    }
-
     public void SetRubbleTileAt(Vector3Int rootPos)
     {
-        int rotation = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
+        Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
         destroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
-        StructureRotator.RotateTileAt(destroyedTilemap, rootPos, -rotation);
+        destroyedTilemap.SetTransformMatrix(rootPos, matrix);
 
         StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
         if (type == StructureType.OneByOneWall ||
@@ -207,20 +204,18 @@ public class TileManager : MonoBehaviour
         ConstructionManager.Instance.TileRemoved(GridCenterToWorld(rootPos));
         
         // Find rotation matrix of tile at gridPos, convert source positions to rotation
-        int tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
+        int tileRot = StructureRotator.GetRotationFromMatrix(blueprintTilemap.GetTransformMatrix(rootPos));
         RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
         List<Vector3Int> sourcePositions = rts.structureSO.cellPositions;
         List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, tileRot);
+
 
         AnimatedTilemap.SetTile(rootPos, null);
         blueprintTilemap.SetTile(rootPos, null);
 
         // Check for turrets
         if (rts.structureSO.isTurret)
-        {
             turretManager.RemoveTurret(rootPos);
-            turretManager.currentNumTurrets--;
-        }
 
         // Remove from list and dict
         foreach (var pos in rotatedPositions)
@@ -282,9 +277,9 @@ public class TileManager : MonoBehaviour
 
         if (_TileStatsDict[rootPos].blueprintProgress >= _TileStatsDict[rootPos].ruleTileStructure.structureSO.blueprintBuildAmount)
         {
-            blueprintTilemap.SetTile(WorldToGrid(pos), null);
-            int rotation = GetTileRotation(blueprintTilemap, rootPos);
-            AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure, rotation);
+            
+            //StructureRotator.RotateTileAt(blueprintTilemap, rootPos, rotation);
+            AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
 
             ConstructionManager.Instance.RemoveBuildJob(pos);
             ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
@@ -411,6 +406,7 @@ public class TileManager : MonoBehaviour
 
             tilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
             tilemap.SetTransformMatrix(rootPos, matrix);
+            //StructureRotator.RotateTileAt(tilemap, rootPos, StructureRotator.GetRotationFromMatrix(matrix));
         }
         else 
         {
@@ -715,7 +711,7 @@ public class TileManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("RootPos was already taken when trying to add to dict");
+                Debug.LogError("RootPos was already taken when trying to add to dict");
                 return false;
             }
         }
@@ -746,6 +742,27 @@ public class TileManager : MonoBehaviour
     #endregion
 
     #region Tools
+
+    IEnumerator RotateTileObject(Vector3Int gridPos, Matrix4x4 matrix)
+    {
+        yield return new WaitForFixedUpdate();
+
+        float angleRadians = Mathf.Atan2(matrix.m01, matrix.m00); // m01 = sin, m00 = cos
+        float angleDegrees = -angleRadians * Mathf.Rad2Deg;
+
+        GameObject tileObj = StructureTilemap.GetInstantiatedObject(gridPos);
+
+        // Rotate GameObject
+        if (tileObj != null)
+        {
+            tileObj.transform.rotation = Quaternion.Euler(0, 0, angleDegrees);
+            Debug.Log("TileObj rotation set to: " + angleDegrees);
+        }
+        else 
+        {
+            Debug.LogError("tileObj was null when attempting to rotate");
+        }
+    }
 
     void ClearParticlesAndDebris(Vector3Int gridPos)
     {

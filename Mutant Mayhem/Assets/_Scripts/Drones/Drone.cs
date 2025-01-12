@@ -8,7 +8,7 @@ public class Drone : MonoBehaviour
     public DroneType droneType = DroneType.Builder;
     public float moveSpeed = 3;
     public float buildSpeed = 0.1f;  // For upgrades, most of stats should be moved to PlayerStats
-    public float repairDelay = 1;
+    public float actionDelay = 1;
     public float repairSpeed = 1;
     public DroneJob currentJob;
     [SerializeField] Rigidbody2D myRB;
@@ -92,7 +92,7 @@ public class Drone : MonoBehaviour
                 yield break;
             }
 
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(actionDelay);
         }
     }
 
@@ -101,20 +101,15 @@ public class Drone : MonoBehaviour
         Vector2 jobPos = currentJob.jobPosition;
 
         // Repair
-        bool repairComplete = false;
-        float timer = 0;
-        while (!repairComplete)
-        {
-            if (timer >= repairDelay)
-            {
-                timer = 0;
 
-                if (ConstructionManager.Instance.RepairTile(jobPos, repairSpeed))
-                    repairComplete = true;
+        while (true)
+        {
+            if (ConstructionManager.Instance.RepairTile(jobPos, repairSpeed))
+            {
+                break;
             }
 
-            yield return new WaitForFixedUpdate();
-            timer += Time.fixedDeltaTime;
+            yield return new WaitForSeconds(actionDelay);
         }
 
         SetJobDone();

@@ -18,12 +18,14 @@ MonoBehaviour:
   tileCost: 1500
   maxHealth: 1500
   health: 1500
+  blueprintBuildAmount: 100
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
   - {x: 0, y: -1, z: 0}
   - {x: 1, y: -1, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: 86cab3e12a54d3442b3d29373a4f87bb, type: 2}
+  blueprintTile: {fileID: 11400000, guid: 9fff3b7a24c624c46af0cdcefd94773a, type: 2}
   structureType: 13
   isTurret: 1
   actionType: 1

@@ -79,7 +79,7 @@ public class TurretManager : MonoBehaviour
         }
 
         turrets.Remove(rootPos);
-        //currentNumTurrets--;
+        currentNumTurrets--;
     }
 
     #region Turret Upgrades
