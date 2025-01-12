@@ -42,28 +42,45 @@ public class ConstructionManager : MonoBehaviour
     {
         foreach (var kvp in buildJobs)
         {
-            if (kvp.Key == buildJob)
+            if (kvp.Key.jobPosition == buildJob.jobPosition)
             {
-                Debug.LogError("ContructionManager: Tired to add a BuildJob that already exists in the queue!");
+                Debug.LogWarning($"ContructionManager: Tired to add a BuildJob that already exists at {buildJob.jobPosition}!");
                 return;
             }
         }
 
         buildJobs.Add(new KeyValuePair<DroneBuildJob, int>(buildJob, 0));
+        Debug.Log($"ConstructionManager: Added buildJob at: {buildJob.jobPosition}");
     }
 
     public void AddRepairJob(DroneJob repairJob)
     {
         foreach (var kvp in repairJobs)
         {
-            if (kvp.Key == repairJob)
+            if (kvp.Key.jobPosition == repairJob.jobPosition)
+            {
+                Debug.LogWarning($"ContructionManager: Tired to add a RepairJob that already exists at {repairJob.jobPosition}!");
+                return;
+            }
+        }
+
+        repairJobs.Add(new KeyValuePair<DroneJob, int>(repairJob, 0));
+        Debug.Log($"ConstructionManager: Added repairJob at: {repairJob.jobPosition}");
+    }
+
+    public void InsertRepairJob(DroneJob repairJob)
+    {
+        foreach (var kvp in repairJobs)
+        {
+            if (kvp.Key.jobPosition == repairJob.jobPosition)
             {
                 Debug.LogError("ContructionManager: Tired to add a RepairJob that already exists in the queue!");
                 return;
             }
         }
 
-        repairJobs.Add(new KeyValuePair<DroneJob, int>(repairJob, 0));
+        repairJobs.Insert(0, new KeyValuePair<DroneJob, int>(repairJob, 0));
+        Debug.Log($"ConstructionManager: Inserted repairJob at: {repairJob.jobPosition}");
     }
 
     #endregion
@@ -107,6 +124,18 @@ public class ConstructionManager : MonoBehaviour
             Debug.LogError($"ConstructionManager: No building job found for the key: {jobToRemove}");
     }
 
+    public void RemoveBuildJob(Vector2 pos)
+    {
+        // Remove all jobs matching the specified key
+        int removedCount = buildJobs.RemoveAll(kvp => kvp.Key.jobPosition == pos);
+
+        if (removedCount > 1)
+            Debug.LogError($"ConstructionManager: Found and removed multiple building jobs at: {pos}");
+
+        if (removedCount == 0)
+            Debug.LogError($"ConstructionManager: No building job found to remove at: {pos}");
+    }
+
     public void RemoveRepairJob(DroneJob jobToRemove)
     {
         int removedCount = repairJobs.RemoveAll(kvp => kvp.Key == jobToRemove);
@@ -127,7 +156,7 @@ public class ConstructionManager : MonoBehaviour
             Debug.LogError($"ConstructionManager: Found and removed multiple repair jobs at the same position: {positionToRemove}");
 
         if (removedCount == 0)
-            Debug.LogError($"ConstructionManager: No repair job found at the position: {positionToRemove}");
+            Debug.LogError($"ConstructionManager: No repair job found to remove at the position: {positionToRemove}");
     }
 
     #endregion
@@ -255,22 +284,24 @@ public class ConstructionManager : MonoBehaviour
 
     #region Do Job
 
-    public bool BuildBlueprint(DroneBuildJob buildJob, float buildAmount)
+    public bool BuildBlueprint(Vector2 pos, float buildAmount)
     {
-        if (tileManager.BuildBlueprintAt(buildJob, buildAmount))
+        Vector3Int gridPos = tileManager.WorldToGrid(pos);
+        if (tileManager.CheckGridIsClear(gridPos, buildingSystem.layersForBuildClearCheck, false))
+        if (tileManager.BuildBlueprintAt(pos, buildAmount))
         {
-            RemoveBuildJob(buildJob);
+            //RemoveBuildJob(buildJob);
             return true;
         }
 
         return false;
     }
 
-    public bool RepairTile(DroneJob job, float value)
+    public bool RepairTile(Vector2 pos, float value)
     {
-        Vector2 jobPos = job.jobPosition;
-        tileManager.ModifyHealthAt(jobPos, value, 2, GameTools.GetRandomDirection());
-        if (tileManager.GetTileHealthRatio(tileManager.GridToRootPos(tileManager.WorldToGrid(jobPos))) <= 0)
+        tileManager.ModifyHealthAt(pos, value, 2, GameTools.GetRandomDirection());
+        Vector3Int gridPos = tileManager.WorldToGrid(pos);
+        if (tileManager.ContainsTileKey(gridPos) && tileManager.GetTileHealthRatio(tileManager.GridToRootPos(gridPos)) <= 0)
         {
             //RemoveRepairJob(job);
             return true;

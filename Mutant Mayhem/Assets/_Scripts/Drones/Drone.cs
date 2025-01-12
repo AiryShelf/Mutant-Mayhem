@@ -24,7 +24,7 @@ public class Drone : MonoBehaviour
         myHangar = hangar;
     }
 
-    void Awake()
+    void Start()
     {
         SetJobDone();
     }
@@ -39,11 +39,14 @@ public class Drone : MonoBehaviour
         jobDone = false;
         currentJob = job;
         SetNewAction(MoveToJob);
+        Debug.Log("Drone: New job set");
     }
 
     IEnumerator MoveToJob()
     {
-        Vector2 target = currentJob.jobPosition;
+        Vector2 target = Vector2.zero;
+        if (currentJob != null)
+            target = currentJob.jobPosition;
         bool arrived = false;
         while (!arrived)
         {
@@ -81,19 +84,13 @@ public class Drone : MonoBehaviour
         }
 
         Vector2 jobPos = currentJob.jobPosition;
-        bool buildComplete = false;
-        while (!buildComplete)
+        while (true)
         {
-                if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
-                    SetJobDone();
-
-                else if (!buildComplete && ConstructionManager.Instance.BuildBlueprint(buildJob, buildSpeed))
-                {
-                    buildComplete = true;
-                    DroneJob newJob = new DroneJob(DroneJobType.Repair, jobPos);
-                    ConstructionManager.Instance.AddRepairJob(newJob);
-                    SetJob(newJob);
-                }
+            if (ConstructionManager.Instance.BuildBlueprint(jobPos, buildSpeed))
+            {
+                SetJob(ConstructionManager.Instance.GetRepairJob());
+                yield break;
+            }
 
             yield return new WaitForFixedUpdate();
         }
@@ -111,7 +108,8 @@ public class Drone : MonoBehaviour
             if (timer >= repairDelay)
             {
                 timer = 0;
-                if (ConstructionManager.Instance.RepairTile(currentJob, repairSpeed))
+
+                if (ConstructionManager.Instance.RepairTile(jobPos, repairSpeed))
                     repairComplete = true;
             }
 
@@ -203,38 +201,33 @@ public class Drone : MonoBehaviour
     IEnumerator CheckIfJobDone()
     {
         yield return null;
-        
-        DroneBuildJob buildJob = null;
 
-        while (!jobDone)
+        while (jobDone == false)
         {
             if (currentJob == null)
             {
+                Debug.Log("Drone: CurrentJob found null");
                 SetJobDone();
-                jobDone = true;
                 yield break;
             }
-
-            if (currentJob is DroneBuildJob)
-                buildJob = (DroneBuildJob)currentJob;
-
-            if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
+            if (currentJob is DroneBuildJob buildJob)
             {
-                SetJobDone();
-                jobDone = true;
-                yield break;
+                if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
+                {
+                    Debug.Log("Drone: Build job no longer exists");
+                    SetJobDone();
+                    yield break;
+                }
             }
-
-            if (!ConstructionManager.Instance.CheckIfRepairJobExists(currentJob))
+            else if (!ConstructionManager.Instance.CheckIfRepairJobExists(currentJob))
             {
+                Debug.Log("Drone: Repair job no longer exists");
                 SetJobDone();
-                jobDone = true;
                 yield break;
             }
 
             yield return new WaitForSeconds(1);
         }
-        yield return null;
     }
 
     void Die()

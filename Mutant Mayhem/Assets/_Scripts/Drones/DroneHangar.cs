@@ -13,7 +13,7 @@ public class DroneHangar : MonoBehaviour
     void Start()
     {
         StartCoroutine(LookForJobs());
-    }   
+    }
 
     IEnumerator LookForJobs()
     {
@@ -103,6 +103,11 @@ public class DroneHangar : MonoBehaviour
             job = buildJob;
             if (buildJob == null)
                 job = repairJob;
+        }
+
+        if (drone.droneType == DroneType.Attacker)
+        {
+            
         }
 
         return job;

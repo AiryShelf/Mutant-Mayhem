@@ -67,7 +67,10 @@ public class RepairBullet : Bullet
             if (BuildingSystem.PlayerCredits >= repairCost)
             {
                 Vector2 pos = transform.position;
-                tileManager.ModifyHealthAt(pos, -damage, 2, hitDir);
+                if (tileManager.IsTileBlueprint(pos))
+                    ConstructionManager.Instance.BuildBlueprint(pos, -damage);
+                else
+                    tileManager.ModifyHealthAt(pos, -damage, 2, hitDir);
                 ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
                 BuildingSystem.PlayerCredits -= repairCost;
 

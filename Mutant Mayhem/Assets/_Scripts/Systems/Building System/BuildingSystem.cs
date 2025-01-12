@@ -28,7 +28,7 @@ public class BuildingSystem : MonoBehaviour
     }
     public LineRendererCircle buildRangeCircle;
     public LayerMask layersForBuildClearCheck;
-    [SerializeField] LayerMask layersForRemoveClearCheck;
+    [SerializeField] LayerMask layersToClearOnBuild;
     public UIBuildMenuController buildMenuController;
     [SerializeField] QCubeController qCubeController;
     [SerializeField] MouseLooker mouseLooker;
@@ -203,7 +203,10 @@ public class BuildingSystem : MonoBehaviour
     {
         RemoveBuildHighlight();
         // Ensure use of original SO cell positions for rotation
-        structure = AllStructureSOs[AllStructureSOs.IndexOf(structure)];
+        if (AllStructureSOs.Contains(structure))
+            structure = AllStructureSOs[AllStructureSOs.IndexOf(structure)];
+        else
+            return;
         structureInHand = StructureRotator.RotateStructure(structure, currentRotation);
         //lastStructureInHand = structureInHand;
     }
@@ -312,7 +315,8 @@ public class BuildingSystem : MonoBehaviour
 
     public void ChangeStructureInHand(StructureSO structure)
     {
-        Rotate(structure);
+        if (structure != null)
+            Rotate(structure);
         //Debug.Log("Changed structure in hand to: " + structure.tileName);
     }
 
@@ -411,7 +415,7 @@ public class BuildingSystem : MonoBehaviour
     void RemoveTile(Vector3Int gridPos)
     {
         RemoveBuildHighlight();
-        if (tileManager.CheckGridIsClear(gridPos, structureInHand, layersForRemoveClearCheck, false))
+        if (tileManager.CheckGridIsClear(gridPos, structureInHand, layersToClearOnBuild, false))
         {
             tileManager.RefundTileAt(gridPos);
             tileManager.RemoveTileAt(gridPos);
@@ -435,7 +439,7 @@ public class BuildingSystem : MonoBehaviour
         
         // Replace the highlight position for build or destroy
         RemoveBuildHighlight();
-        if (currentAction != ActionType.Build && tileManager.ContainsTileDictKey(mouseGridPos))
+        if (currentAction != ActionType.Build && tileManager.ContainsTileKey(mouseGridPos))
             highlightedTilePos = tileManager.GridToRootPos(mouseGridPos);
         else 
             highlightedTilePos = mouseGridPos;
@@ -458,7 +462,7 @@ public class BuildingSystem : MonoBehaviour
         {
             HighlightForDestroy(highlightedTilePos);
             
-            if (tileManager.ContainsTileDictKey(highlightedTilePos))
+            if (tileManager.ContainsTileKey(highlightedTilePos))
             {
                 Vector3Int rootPos = tileManager.GridToRootPos(highlightedTilePos);
 

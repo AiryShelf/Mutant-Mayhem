@@ -59,7 +59,7 @@ public class Explosion : MonoBehaviour
                 Vector2 worldPos = hit.point + nudge;
                 Vector3Int gridPos = tileManager.WorldToGrid(worldPos);
                 
-                if (tileManager.ContainsTileDictKey(gridPos))
+                if (tileManager.ContainsTileKey(gridPos))
                 {
                     // Apply half damage to the structure if tile hasn’t been hit yet
                     if (!hitTiles.Contains(gridPos))

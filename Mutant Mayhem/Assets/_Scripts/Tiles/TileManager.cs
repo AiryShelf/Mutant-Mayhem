@@ -9,6 +9,8 @@ public class TileStats
     public float maxHealth;
     public float health;
     public Vector3Int rootGridPos;
+    public bool isBlueprint = false;
+    public float blueprintProgress = 0;
 }
 
 public class TileManager : MonoBehaviour
@@ -71,8 +73,8 @@ public class TileManager : MonoBehaviour
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
         destroyedTilemap = GameObject.Find("DestroyedTilemap").GetComponent<Tilemap>();
-        if (!ReadTilemapToDict())
-            Debug.LogError("Error when trying to read the starting tilemap to dict");
+        //if (!ReadTilemapToDict())
+            //Debug.LogError("Error when trying to read the starting tilemap to dict");
         //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
     }
 
@@ -131,6 +133,8 @@ public class TileManager : MonoBehaviour
 
     public bool AddTileAt(Vector3Int gridPos, RuleTileStructure ruleTile, int rotation)
     {
+        _TileStatsDict[gridPos].isBlueprint = false;
+        
         if (!AddNewTileToDict(gridPos, ruleTile.structureSO))
         {
             Debug.LogWarning("Failed to add structure tiles to dict when placing tile");
@@ -162,7 +166,7 @@ public class TileManager : MonoBehaviour
 
         ClearParticlesAndDebris(gridPos);                
         shadowCaster2DTileMap.Generate();
-        UpdateAnimatedTile(gridPos);
+        UpdateTileDamageSprite(gridPos);
         
         return true;
     }
@@ -256,23 +260,34 @@ public class TileManager : MonoBehaviour
 
     #region Modify Health
 
-    public bool BuildBlueprintAt(DroneBuildJob buildJob, float amount)
+    public bool BuildBlueprintAt(Vector2 pos, float amount)
     {
-        
-
-        Vector3Int rootpos = GridToRootPos(WorldToGrid(buildJob.jobPosition));
-        if (!_TileStatsDict.ContainsKey(rootpos))
+        Vector3Int gridPos = WorldToGrid(pos);
+        Vector3Int rootPos;
+        if (_TileStatsDict.ContainsKey(gridPos))
         {
-            Debug.LogError($"TileManager: No blueprint fround at {buildJob.jobPosition} to build");
+            rootPos = GridToRootPos(gridPos);
+            pos = GridCenterToWorld(rootPos);
+        }
+        else
+            return true;  // To stop building
+
+        if (!_TileStatsDict.ContainsKey(rootPos))
+        {
+            Debug.LogError($"TileManager: No blueprint fround at {pos} to build");
             return true;  // To return the drone home for next task
         }
 
-        _TileStatsDict[rootpos].health += amount;
+        _TileStatsDict[rootPos].blueprintProgress += amount;
 
-        if (_TileStatsDict[rootpos].health >= _TileStatsDict[rootpos].ruleTileStructure.structureSO.blueprintBuildAmount)
+        if (_TileStatsDict[rootPos].blueprintProgress >= _TileStatsDict[rootPos].ruleTileStructure.structureSO.blueprintBuildAmount)
         {
-            blueprintTilemap.SetTile(WorldToGrid(buildJob.jobPosition), null);
-            AddTileAt(rootpos, buildJob.structure.ruleTileStructure, buildJob.rotation);
+            blueprintTilemap.SetTile(WorldToGrid(pos), null);
+            int rotation = GetTileRotation(blueprintTilemap, rootPos);
+            AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure, rotation);
+
+            ConstructionManager.Instance.RemoveBuildJob(pos);
+            ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
             return true;
         }
 
@@ -284,19 +299,15 @@ public class TileManager : MonoBehaviour
         Vector3Int gridPos = WorldToGrid(point);
         if (!_TileStatsDict.ContainsKey(gridPos))
         {
-            numberofTilesMissed++;
+            numberofTilesMissed++; // For debug
             return;
         }
-
-        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
-        textFly.transform.position = point;
 
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
         float healthAtStart = _TileStatsDict[rootPos].health;
         float maxHealth = _TileStatsDict[rootPos].maxHealth;
 
         _TileStatsDict[rootPos].health += value;
-
         _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 0, maxHealth);
         //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
 
@@ -321,18 +332,12 @@ public class TileManager : MonoBehaviour
             StatsCounterPlayer.AmountRepaired += healthDifference;
         }
 
+        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+        textFly.transform.position = point;
         textFly.Initialize(Mathf.Abs(healthDifference).ToString("#0"), color, 
                            textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);
 
-        if (_TileStatsDict[rootPos].health == 0)
-        {
-            StatsCounterPlayer.StructuresLost++;
-            SetRubbleTileAt(rootPos);
-            RemoveTileAt(rootPos);
-            return;
-        }
-
-        UpdateAnimatedTile(rootPos);
+        UpdateTileDamageSprite(rootPos);
     }
 
     public void ModifyMaxHealthAll(float factor)
@@ -364,8 +369,16 @@ public class TileManager : MonoBehaviour
 
     #region Update Tiles
 
-    void UpdateAnimatedTile(Vector3Int rootPos)
+    void UpdateTileDamageSprite(Vector3Int rootPos)
     {
+        if (_TileStatsDict[rootPos].health == 0)
+        {
+            StatsCounterPlayer.StructuresLost++;
+            SetRubbleTileAt(rootPos);
+            RemoveTileAt(rootPos);
+            return;
+        }
+
         // AnimatedTilemap.GetTile(rootPos);
         float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
                                  _TileStatsDict[rootPos].maxHealth);
@@ -382,7 +395,6 @@ public class TileManager : MonoBehaviour
             tilemap = AnimatedTilemap;
             dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
         }
-
 
         if (dTiles.Count > 1)
         {
@@ -464,12 +476,21 @@ public class TileManager : MonoBehaviour
 
     #region Checks and Getters
 
+    public bool IsTileBlueprint(Vector2 worldPos)
+    {
+        Vector3Int gridPos = WorldToGrid(worldPos);
+        if (_TileStatsDict[gridPos].isBlueprint)
+            return true;
+
+        return false;
+    }
+
     public List<Vector3Int> GetAllStructurePositions()
     {
         return _StructurePositions;
     }
 
-    public bool ContainsTileDictKey(Vector3Int gridPos)
+    public bool ContainsTileKey(Vector3Int gridPos)
     {
         if (_TileStatsDict.ContainsKey(gridPos))
             return true;
@@ -602,7 +623,6 @@ public class TileManager : MonoBehaviour
     {
         if (_TileStatsDict.ContainsKey(gridPos))
         {
-            // Get rootPos and structure
             Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
             RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
             
@@ -610,8 +630,7 @@ public class TileManager : MonoBehaviour
             List<Vector3Int> sourcePositions = new List<Vector3Int>(rts.structureSO.cellPositions);
 
             // Get rotation from transform matrix
-            Matrix4x4 matrix = tilemap.GetTransformMatrix(rootPos);
-            int rotation = StructureRotator.GetRotationFromMatrix(matrix);
+            int rotation = GetTileRotation(tilemap, rootPos);
 
             // Rotate the sourcePositions
             List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, rotation);
@@ -631,6 +650,13 @@ public class TileManager : MonoBehaviour
         
             return positions;
         }
+    }
+
+    int GetTileRotation(Tilemap tilemap, Vector3Int gridPos)
+    {
+        Vector3Int rootPos = GridToRootPos(gridPos);
+        Matrix4x4 matrix = tilemap.GetTransformMatrix(rootPos);
+        return StructureRotator.GetRotationFromMatrix(matrix);
     }
 
     #endregion
@@ -681,7 +707,8 @@ public class TileManager : MonoBehaviour
                     ruleTileStructure = structure.ruleTileStructure,
                     maxHealth = maxHP,
                     health = maxHP,
-                    rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0)
+                    rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0),
+                    isBlueprint = true,
                 });
 
                 //Debug.Log("Structure added to structures list and dict");
