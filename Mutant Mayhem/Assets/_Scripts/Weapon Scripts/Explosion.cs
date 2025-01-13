@@ -101,7 +101,7 @@ public class Explosion : MonoBehaviour
             Bounds tileBounds = new Bounds(tileCenter, tileSize);
 
             // Check for enemies or player within this tile
-            Collider2D[] entitiesInTile = Physics2D.OverlapBoxAll(tileCenter, tileSize, 0, LayerMask.GetMask("Enemies", "Player", "QCube"));
+            Collider2D[] entitiesInTile = Physics2D.OverlapBoxAll(tileCenter, tileSize, 0, LayerMask.GetMask("Enemies", "Player", "QCube", "Drones"));
 
             foreach (Collider2D entity in entitiesInTile)
             {
@@ -122,7 +122,7 @@ public class Explosion : MonoBehaviour
                         }
                         Vector2 direction = enemy.transform.position - transform.position;
                         float forceMagnitude = Mathf.Clamp(force / distToPoint, 0, force);
-                        rb.AddForce(direction * forceMagnitude, ForceMode2D.Impulse);
+                        rb.AddForce(direction.normalized * forceMagnitude, ForceMode2D.Impulse);
 
                         // Apply damage
                         float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage);
@@ -145,8 +145,10 @@ public class Explosion : MonoBehaviour
                     // Apply force
                     Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
                     Vector2 direction = player.transform.position - transform.position;
-                    float forceMagnitude = Mathf.Clamp(force / distToPoint, 0, force);
-                    rb.AddForce(direction * forceMagnitude, ForceMode2D.Impulse);
+                    //float forceMagnitude = Mathf.Clamp(force / distToPoint * 4, 0, force * 4);
+                    float forceMagnitude = force / distToPoint * 4;
+                    forceMagnitude = Mathf.Clamp(forceMagnitude, 0, force * 8f);
+                    rb.AddForce(direction.normalized * forceMagnitude, ForceMode2D.Impulse);
 
                     // Apply damage
                     Health pHealth = player.GetComponent<Health>();
@@ -155,6 +157,27 @@ public class Explosion : MonoBehaviour
                     pHealth.ModifyHealth(-totalDamage, damageScale, direction, gameObject);
                     //Debug.Log($"Player hit at {player.transform.position} for {totalDamage} damage");
                     playerWasHit = true;
+                    continue;
+                }
+
+                // Apply half damage to drones
+                DroneHealth droneHealth = entity.GetComponent<DroneHealth>();
+                if (droneHealth != null)
+                {
+                    float distToPoint = Vector2.Distance(explosionPos, droneHealth.transform.position);
+
+                    // Apply force
+                    Rigidbody2D rb = droneHealth.GetComponent<Rigidbody2D>();
+                    Vector2 direction = droneHealth.transform.position - transform.position;
+                    //float forceMagnitude = Mathf.Clamp(force / distToPoint * 4, 0, force * 4);
+                    float forceMagnitude = force / distToPoint;
+                    forceMagnitude = Mathf.Clamp(forceMagnitude, 0, force);
+                    rb.AddForce(direction.normalized * forceMagnitude, ForceMode2D.Impulse);
+
+                    // Apply damage
+                    float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
+                    float damageScale = totalDamage / (damage / 2) + 1;
+                    droneHealth.ModifyHealth(-totalDamage, damageScale, direction, gameObject);
                     continue;
                 }
 
@@ -172,6 +195,11 @@ public class Explosion : MonoBehaviour
                 }
             }
         }
+    }
+
+    void ApplyEnemyDamage()
+    {
+        
     }
 
     List<Vector3Int> GetTilesInRadius(Vector2 pos, TileManager tileManager)

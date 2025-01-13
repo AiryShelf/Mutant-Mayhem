@@ -15,6 +15,8 @@ public class Drone : MonoBehaviour
     [SerializeField] float hoverEffectTime = 1;
     [SerializeField] float hoverEffectVariationFactor = 0.2f;
     [SerializeField] float hoverEffectForceFactor = 0.2f;
+    [SerializeField] float hoverScaleFactor = 0.05f;
+    [SerializeField] float rotationSpeed = 0.0025f;
 
     public DroneHangar myHangar;
     bool jobDone = false;
@@ -66,14 +68,14 @@ public class Drone : MonoBehaviour
 
     void DoJob()
     {
-        StartCoroutine(AlignToPos(currentJob.jobPosition));
-
         if (currentJob.jobType == DroneJobType.Build)
             SetNewAction(Build);
         else if (currentJob.jobType == DroneJobType.Repair)
             SetNewAction(Repair);
         else
             SetJobDone();
+
+        StartCoroutine(AlignToPos(currentJob.jobPosition));
     }
 
     IEnumerator Build()
@@ -185,7 +187,7 @@ public class Drone : MonoBehaviour
     {
         while (true)
         {
-            // pick how long we apply force in one direction
+            // pick how long we apply force in cycle
             float directionDuration = Random.Range(
                 hoverEffectTime * (1 - hoverEffectVariationFactor),
                 hoverEffectTime * (1 + hoverEffectVariationFactor)
@@ -199,19 +201,22 @@ public class Drone : MonoBehaviour
             //                                 hoverEffectForceFactor * (1 + hoverEffectVariationFactor));
             while (timer < directionDuration)
             {
-                timer += Time.deltaTime;
-
                 // Normalized progress from 0..1
                 float t = timer / directionDuration;
 
                 // Force ramps up from 0 to hoverEffectForceFactor
-                float currentForce = Mathf.Lerp(0, hoverEffectForceFactor, t);
+                float sineValue = Mathf.Sin(Mathf.PI * t);
+                float currentForce = hoverEffectForceFactor * sineValue;
 
                 // Apply force each frame
                 myRB.AddForce(randomDir * currentForce, ForceMode2D.Force);
 
+                float scaleFactor = 1 + hoverScaleFactor * sineValue * (1 + hoverEffectVariationFactor);
+                transform.localScale = new Vector3(scaleFactor, scaleFactor, 1f);
+
                 // Wait until next frame
                 yield return new WaitForFixedUpdate();
+                timer += Time.fixedDeltaTime;
             }
         }
     }
@@ -220,6 +225,14 @@ public class Drone : MonoBehaviour
     {
         Vector2 dir = target - (Vector2)myRB.transform.position;
         myRB.AddForce(dir.normalized * moveSpeed);
+
+        float desiredAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
+        float currentAngle = myRB.rotation;
+
+        float angleDiff = Mathf.DeltaAngle(currentAngle, desiredAngle);
+        float torque = angleDiff * rotationSpeed;
+
+        myRB.AddTorque(torque, ForceMode2D.Force);
     }
 
     void SetNewAction(System.Func<IEnumerator> coroutineMethod)

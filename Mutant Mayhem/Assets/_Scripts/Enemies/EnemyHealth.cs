@@ -56,7 +56,7 @@ public class EnemyHealth : Health
         if (!string.IsNullOrEmpty(corpsePoolName))
         {
             hasDied = true;
-            SetCorpse();
+            SetCorpse(corpsePoolName);
         }
 
         // Increment Drop Counter
@@ -76,15 +76,7 @@ public class EnemyHealth : Health
         enemyBase.Die();
     }
 
-    void SetCorpse()
-    {
-        // Pass scale and color
-        GameObject corpse = PoolManager.Instance.GetFromPool(corpsePoolName);
-        corpse.transform.position = transform.position;
-        corpse.transform.rotation = transform.rotation;
-        corpse.transform.localScale = transform.localScale;
-        corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;
-    }
+    
 
     void DropPickup(int value)
     {

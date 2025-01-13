@@ -255,18 +255,19 @@ public class TileManager : MonoBehaviour
     {
         // Get remaining health ratio and tile cost
         
+        int tileCost = (int)_TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
         int refund;
         
         if (blueprintTilemap.GetTile(gridPos))
         {
-            refund = (int)_TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
+            refund = tileCost;
         }
         else
         {
             float ratio = 1 - (_TileStatsDict[gridPos].maxHealth - _TileStatsDict[gridPos].health) /
                     _TileStatsDict[gridPos].maxHealth;
-            refund = Mathf.FloorToInt(ratio * buildingSystem.structureCostMult * 
-                     _TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost / 1.5f);
+            refund = Mathf.FloorToInt(ratio * buildingSystem.structureCostMult * tileCost);
+            refund = Mathf.Clamp(refund, 0, Mathf.FloorToInt(buildingSystem.structureCostMult * tileCost * 0.75f));
         }
         
 

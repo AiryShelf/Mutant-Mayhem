@@ -11,7 +11,7 @@ public class Health : MonoBehaviour
     [SerializeField] float painSoundCooldown= 0.3f;
     [SerializeField] protected Color textFlyHealthGainColor;
     [SerializeField] protected Color textFlyHealthLossColor;
-    [SerializeField] protected float textFlyAlphaMax = 0.25f;
+    [SerializeField] protected float textFlyAlphaMax = 0.8f;
     float lastPainSoundTime;
 
     protected float health;
@@ -104,6 +104,16 @@ public class Health : MonoBehaviour
 
             textFly.Initialize(Mathf.Abs(healthChange).ToString("#0"), color, 
                                textFlyAlphaMax, dir, true, scaleMax);
+    }
+
+    protected void SetCorpse(string poolName)
+    {
+        // Pass scale and color
+        GameObject corpse = PoolManager.Instance.GetFromPool(poolName);
+        corpse.transform.position = transform.position;
+        corpse.transform.rotation = transform.rotation;
+        corpse.transform.localScale = transform.localScale;
+        corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;
     }
 
     public virtual void Die() { }

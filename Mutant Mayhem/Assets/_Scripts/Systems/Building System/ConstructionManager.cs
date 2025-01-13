@@ -288,7 +288,7 @@ public class ConstructionManager : MonoBehaviour
     {
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
         if (tileManager.CheckGridIsClear(gridPos, buildingSystem.layersForBuildClearCheck, false) &&
-            tileManager.BuildBlueprintAt(pos, buildAmount, 2, hitDir))
+            tileManager.BuildBlueprintAt(pos, buildAmount, 1.2f, hitDir))
         {
             //RemoveBuildJob(buildJob);
             return true;
@@ -299,7 +299,7 @@ public class ConstructionManager : MonoBehaviour
 
     public bool RepairTile(Vector2 pos, float value, Vector2 hitDir)
     {
-        tileManager.ModifyHealthAt(pos, value, 2, hitDir);
+        tileManager.ModifyHealthAt(pos, value, 1f, hitDir);
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
         if (tileManager.ContainsTileKey(gridPos) && tileManager.GetTileHealthRatio(tileManager.GridToRootPos(gridPos)) <= 0)
         {

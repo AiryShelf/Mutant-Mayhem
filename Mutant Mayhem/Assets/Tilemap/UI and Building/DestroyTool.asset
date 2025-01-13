@@ -14,12 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: 0a48672cf36271144af9672d0fd91e32, type: 3}
   tileName: Destroy Tool
-  description: Used to remove structures.  50% refund per integrity remaining
+  description: Used to remove structures.  Refund per integrity remaining, up to
+    75% refund
   tileCost: 0
   maxHealth: 0
   health: 0
+  blueprintBuildAmount: 100
   cellPositions: []
   ruleTileStructure: {fileID: 11400000, guid: a0aa3d6d096d8414bb7d2f28cf2d2c51, type: 2}
+  blueprintTile: {fileID: 0}
   structureType: 2
   isTurret: 0
   actionType: 2
