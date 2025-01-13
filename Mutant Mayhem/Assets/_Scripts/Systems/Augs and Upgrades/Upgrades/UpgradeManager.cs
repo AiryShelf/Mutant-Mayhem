@@ -398,7 +398,7 @@ public class UpgradeManager : MonoBehaviour
             case ConsumablesUpgrade.SMGBuyAmmo:
                 return new SMGBuyAmmoUpgrade();
             case ConsumablesUpgrade.BuyConstructionDrone:
-                return new SMGBuyAmmoUpgrade();
+                return new BuyConstructionDroneUpgrade();
 
             default:
                 return null;

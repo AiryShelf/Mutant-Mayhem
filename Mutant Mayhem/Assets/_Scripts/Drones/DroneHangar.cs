@@ -20,8 +20,7 @@ public class DroneHangar : MonoBehaviour
     {
         foreach (Drone startDrone in dronesToSpawnAtStart)
         {
-            Drone newDrone = PoolManager.Instance.GetFromPool(startDrone.objectPoolName).GetComponent<Drone>();
-            AddDrone(newDrone);
+            DroneManager.Instance.SpawnDroneInHangar(startDrone.droneType, this);
         }
     }
 
@@ -38,7 +37,7 @@ public class DroneHangar : MonoBehaviour
 
                 job = GetJob(dockedDrone);
 
-                if (job == null)
+                if (job.jobType == DroneJobType.None)
                         continue;
 
                 freeDrone = dockedDrone;
@@ -71,16 +70,19 @@ public class DroneHangar : MonoBehaviour
 
     public DroneJob GetDroneJob(DroneType droneType)
     {
-        DroneJob job = null;
+        DroneJob newJob = new DroneJob(DroneJobType.None, Vector2.zero);
 
         if (droneType == DroneType.Builder)
         {
-            job = ConstructionManager.Instance.GetBuildJob();
+            DroneJob job = ConstructionManager.Instance.GetBuildJob();
             if (job == null)
                 job = ConstructionManager.Instance.GetRepairJob();
+            
+            if (job != null)
+                newJob = job;
         }
 
-        return job;
+        return newJob;
     }
 
     void LaunchDrone(Drone drone)
@@ -95,11 +97,24 @@ public class DroneHangar : MonoBehaviour
             Debug.LogError("DroneHangar: No drone found to launch!");
     }
 
-    public void AddDrone(Drone drone)
+    public bool AddDrone(Drone drone)
     {
+        if (drone == null)
+        {
+            Debug.LogError("DroneHangar: Tried to Add a null Drone to the hangar");
+            return false;
+        }
+
+        if (controlledDrones.Count >= maxDrones)
+        {
+            Debug.Log("DrongHanger: Already full when adding drone");
+            return false;
+        }
+        
         drone.transform.position = transform.position;
         controlledDrones.Add(drone);
         LandDrone(drone);
+        return true;
     }
 
     public void LandDrone(Drone drone)
@@ -117,8 +132,6 @@ public class DroneHangar : MonoBehaviour
             controlledDrones.Remove(drone);
         if (dockedDrones.Contains(drone))
             dockedDrones.Remove(drone);
-
-        DroneManager.Instance.RemoveDrone(drone);
     }
 
     DroneJob GetJob(Drone drone)

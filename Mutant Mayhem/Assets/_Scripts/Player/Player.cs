@@ -47,6 +47,9 @@ public class PlayerStats
     [Header("Crit Hit Stats")]
     public float criticalHitChanceMult = 1f;
     public float criticalHitDamageMult = 1f;
+
+    [Header("Drone Stats")]
+    public int numStartingDrones = 2;
 }
 
 [System.Serializable]

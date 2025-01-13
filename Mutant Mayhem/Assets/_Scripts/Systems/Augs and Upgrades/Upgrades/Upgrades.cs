@@ -549,13 +549,13 @@ public class BuyConstructionDroneUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        int cost = baseCost * level;
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones - player.stats.numStartingDrones + 1), baseCost, int.MaxValue);
         return cost;
     }
 
     public static int GetCost(Player player, int baseCost)
     {
-        int cost = baseCost * (DroneManager.Instance.activeConstructionDrones + 1);
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones - player.stats.numStartingDrones + 1), baseCost, int.MaxValue);
         return cost;
     }
 }

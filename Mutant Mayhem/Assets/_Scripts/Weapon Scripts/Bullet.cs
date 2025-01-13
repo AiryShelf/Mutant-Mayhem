@@ -99,31 +99,7 @@ public class Bullet : MonoBehaviour
         // Enemies
         if (enemy)
         {
-            enemy.Knockback(hitDir, knockback);
-            ParticleManager.Instance.PlayBulletBlood(point, hitDir);
-            enemy.StartFreeze();
-            enemy.EnemyChaseSOBaseInstance.StartSprint();
-
-            damageScale = damageNew / damage;
-            enemy.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
-            
-            // Stat Counting
-            if (this.gameObject.CompareTag("PlayerBullet"))
-            {
-                StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damageNew;
-                StatsCounterPlayer.ShotsHitByPlayer++;
-            }
-            else if (this.gameObject.CompareTag("TurretBullet"))
-                StatsCounterPlayer.EnemyDamageByTurrets += damageNew;
-
-            // Create AI Trigger
-            if (AiTrggerPrefab != null)
-            {
-                //Debug.Log("AiTrigger instantiated");
-                GameObject triggerObj = Instantiate(AiTrggerPrefab, point, Quaternion.identity);
-                triggerObj.GetComponent<AiTrigger>().origin = this.origin;
-                triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
-            } 
+            HitEnemy(enemy, hitDir, point, damageNew);
         }
         // Structures Layer #12
         else if (otherCollider.gameObject.layer == 12)
@@ -139,11 +115,6 @@ public class Bullet : MonoBehaviour
             {
                 tileManager.ModifyHealthAt(point, -damageNew, damageScale, hitDir);
             }
-            
-
-            //StatsCounterPlayer.DamageToStructures += damage;
-
-            //Debug.Log("TILE HIT");
         }
 
         // Play bullet hit effect
@@ -152,5 +123,34 @@ public class Bullet : MonoBehaviour
         
         // Return to pool
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+    }
+
+    void HitEnemy(EnemyBase enemy, Vector2 hitDir, Vector2 point, float damageNew)
+    {
+        enemy.Knockback(hitDir, knockback);
+        ParticleManager.Instance.PlayBulletBlood(point, hitDir);
+        enemy.StartFreeze();
+        enemy.EnemyChaseSOBaseInstance.StartSprint();
+
+        float damageScale = damageNew / damage;
+        enemy.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
+        
+        // Stat Counting
+        if (this.gameObject.CompareTag("PlayerBullet"))
+        {
+            StatsCounterPlayer.EnemyDamageByPlayerProjectiles += damageNew;
+            StatsCounterPlayer.ShotsHitByPlayer++;
+        }
+        else if (this.gameObject.CompareTag("TurretBullet"))
+            StatsCounterPlayer.EnemyDamageByTurrets += damageNew;
+
+        // Create AI Trigger
+        if (AiTrggerPrefab != null)
+        {
+            //Debug.Log("AiTrigger instantiated");
+            GameObject triggerObj = Instantiate(AiTrggerPrefab, point, Quaternion.identity);
+            triggerObj.GetComponent<AiTrigger>().origin = this.origin;
+            triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
+        } 
     }
 }

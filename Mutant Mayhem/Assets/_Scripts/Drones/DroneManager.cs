@@ -45,6 +45,7 @@ public class DroneManager : MonoBehaviour
             if (drone.droneType == droneType)
             {
                 Drone newDrone = PoolManager.Instance.GetFromPool(poolName).GetComponent<Drone>();
+                newDrone.Initialize();
                 droneHangar.AddDrone(newDrone);
                 activeDroneCount++;
                 return true;
@@ -67,5 +68,7 @@ public class DroneManager : MonoBehaviour
                 activeAttackDrones--;
                 break;
         }
+
+        PoolManager.Instance.ReturnToPool(drone.objectPoolName, drone.gameObject);
     }
 }

@@ -197,7 +197,7 @@ public class ConstructionManager : MonoBehaviour
 
     public DroneJob GetRepairJob()
     {
-        DroneJob job = null;
+        DroneJob job = new DroneJob(DroneJobType.None, Vector2.zero);
         int leastDronesAssigned = int.MaxValue;
 
         for (int i = 0; i < repairJobs.Count; i++)

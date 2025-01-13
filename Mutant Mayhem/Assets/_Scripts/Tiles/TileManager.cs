@@ -790,7 +790,7 @@ public class TileManager : MonoBehaviour
         }
         else 
         {
-            Debug.LogError("tileObj was null when attempting to rotate");
+            Debug.LogWarning("tileObj was null when attempting to rotate");
         }
     }
 

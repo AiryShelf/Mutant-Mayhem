@@ -206,7 +206,6 @@ public class MeleeControllerEnemy : MonoBehaviour
             return 4;
         }
         
-        
         return int.MaxValue;
     }
 
@@ -230,7 +229,11 @@ public class MeleeControllerEnemy : MonoBehaviour
         }
         else if (collider.CompareTag("Drone"))
         {
-            Debug.Log("Enemy found drone, trying to hit");
+            Drone drone = collider.GetComponent<Drone>();
+            if (drone.isFlying)
+                return;
+
+            Debug.Log("Enemy found drone not flying, trying to hit");
             Health health = collider.GetComponent<Health>();
             if (health)
                 Hit(health, point);

@@ -76,8 +76,6 @@ public class EnemyHealth : Health
         enemyBase.Die();
     }
 
-    
-
     void DropPickup(int value)
     {
         GameObject obj = PoolManager.Instance.GetFromPool("Pickup");

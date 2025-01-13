@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Drone : MonoBehaviour
@@ -18,49 +19,81 @@ public class Drone : MonoBehaviour
     [SerializeField] float hoverEffectForceFactor = 0.2f;
     [SerializeField] float hoverScaleFactor = 0.05f;
     [SerializeField] float rotationSpeed = 0.0025f;
+    [SerializeField] float launchOrLandMinScale = 0.3f;
+    [SerializeField] float launchOrLandScaleSpeed = 0.05f;
 
     public DroneHangar myHangar;
+    public bool isFlying = false;
+    public float heightScaleStart = 1;
+    float heightScale = 1;
     bool jobDone = false;
     Coroutine actionCoroutine; // Used for states
     Coroutine hoverCoroutine;
-    
+    Coroutine alignCoroutine;
+    Coroutine jobCheckCoroutine;
+    DroneHealth droneHealth; 
 
-    public Drone(DroneType type, DroneHangar hangar)
+    public void Initialize()
     {
-        droneType = type;
-        myHangar = hangar;
-    }
-
-    void Awake()
-    {
-        //jobDone = true;
-        //currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
-    }
-
-    void Start()
-    {
-        //SetJobDone();
+        droneHealth = GetComponent<DroneHealth>();
+        if (droneHealth == null)
+        {
+            Debug.LogError("Drone: Could not find DroneHealth on self!");
+            return;
+        }
+        droneHealth.SetHealth(droneHealth.GetMaxHealth());
     }
 
     public void Launch()
     {
         gameObject.SetActive(true);
+        heightScale = heightScaleStart;
+        
+        StartCoroutine(LaunchScaling());
+    }
 
+    IEnumerator LaunchScaling()
+    {
+        yield return null;
+        heightScale = heightScaleStart * launchOrLandMinScale;
+        hoverCoroutine = StartCoroutine(HoverEffect());
+
+        while (heightScale < heightScaleStart)
+        {
+            yield return new WaitForSeconds(0.05f);
+            heightScale += launchOrLandScaleSpeed;
+        }
+
+        
     }
     
     public void SetJob(DroneJob job)
     {
-        jobDone = false;
-        currentJob = job;
-        SetNewAction(MoveToJob);
-        Debug.Log("Drone: New job set");
+        if (job.jobType == DroneJobType.None)
+        {
+            jobDone = true;
+            currentJob = job;
+            SetNewAction(FlyToHangar);
+        }
+        else
+        {
+            jobDone = false;
+            currentJob = job;
+            SetNewAction(MoveToJob);
+        }
+        
+        Debug.Log($"Drone: Job type set to: {job.jobType}");
     }
 
     IEnumerator MoveToJob()
     {
+        yield return null;
+        jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
+        isFlying = true;
         Vector2 target = Vector2.zero;
         if (currentJob != null)
             target = currentJob.jobPosition;
+
         bool arrived = false;
         while (!arrived)
         {
@@ -76,6 +109,7 @@ public class Drone : MonoBehaviour
 
     void DoJob()
     {
+        
         if (currentJob.jobType == DroneJobType.Build)
             SetNewAction(Build);
         else if (currentJob.jobType == DroneJobType.Repair)
@@ -83,15 +117,16 @@ public class Drone : MonoBehaviour
         else
             SetJobDone();
 
-        StartCoroutine(AlignToPos(currentJob.jobPosition));
+        if (currentJob != null)
+            alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
     }
 
     IEnumerator Build()
     {
-        DroneBuildJob buildJob;
-        if (currentJob is DroneBuildJob)
-            buildJob = (DroneBuildJob)currentJob;
-        else
+        yield return null;
+        jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
+        isFlying = false;
+        if (currentJob is not DroneBuildJob)
         {
             Debug.LogError("Drone: Tried to build when current job is not a DroneBuildJob");
             yield break;
@@ -113,6 +148,9 @@ public class Drone : MonoBehaviour
 
     IEnumerator Repair()
     {
+        yield return null;
+        jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
+        isFlying = false;
         Vector2 jobPos = currentJob.jobPosition;
 
         while (true)
@@ -133,8 +171,11 @@ public class Drone : MonoBehaviour
 
     IEnumerator FlyToHangar()
     {
+        yield return null;
+
+        isFlying = true;
         DroneJob newJob = myHangar.GetDroneJob(droneType);
-        if (newJob != null)
+        if (newJob.jobType != DroneJobType.None)
         {
             SetJob(newJob);
             yield break;
@@ -157,7 +198,7 @@ public class Drone : MonoBehaviour
             {
                 checkTimer = 0;
                 newJob = myHangar.GetDroneJob(droneType);
-                if (newJob != null)
+                if (newJob.jobType != DroneJobType.None)
                 {
                     SetJob(newJob);
                     yield break;
@@ -172,16 +213,22 @@ public class Drone : MonoBehaviour
 
     public IEnumerator LandInHangar()
     {
-        // Landing effect here **
+        yield return null;
+        while (heightScale > launchOrLandMinScale)
+        {
+            yield return new WaitForSeconds(0.05f);
+            heightScale -= launchOrLandScaleSpeed;
+        }
 
         yield return new WaitForFixedUpdate();
+        isFlying = false;
         myHangar.LandDrone(this);
         StopAllCoroutines();
-        gameObject.SetActive(false);
     }
 
     IEnumerator AlignToPos(Vector2 pos)
     {
+        yield return null;
         while (true)
         {
             yield return new WaitForFixedUpdate();
@@ -198,6 +245,7 @@ public class Drone : MonoBehaviour
 
     IEnumerator HoverEffect()
     {
+        yield return null;
         while (true)
         {
             // pick how long we apply force in cycle
@@ -224,7 +272,7 @@ public class Drone : MonoBehaviour
                 // Apply force each frame
                 myRB.AddForce(randomDir * currentForce, ForceMode2D.Force);
 
-                float scaleFactor = 1 + hoverScaleFactor * sineValue * (1 + hoverEffectVariationFactor);
+                float scaleFactor = heightScale + hoverScaleFactor * sineValue * (1 + hoverEffectVariationFactor);
                 transform.localScale = new Vector3(scaleFactor, scaleFactor, 1f);
 
                 // Wait until next frame
@@ -250,11 +298,15 @@ public class Drone : MonoBehaviour
 
     public void SetNewAction(System.Func<IEnumerator> coroutineMethod)
     {
-        StopAllCoroutines();
-        
-        hoverCoroutine = StartCoroutine(HoverEffect());
+        //StopAllCoroutines();
+        if (alignCoroutine != null)
+            StopCoroutine(alignCoroutine);
+        if (actionCoroutine != null)
+            StopCoroutine(actionCoroutine);
+        if (jobCheckCoroutine != null)
+            StopCoroutine(jobCheckCoroutine);
+
         actionCoroutine = StartCoroutine(coroutineMethod());
-        StartCoroutine(CheckIfJobDone());
     }
 
     void SetJobDone()
@@ -268,7 +320,7 @@ public class Drone : MonoBehaviour
     {
         yield return null;
 
-        while (jobDone == false)
+        while (!jobDone)
         {
             if (currentJob == null)
             {
@@ -276,6 +328,12 @@ public class Drone : MonoBehaviour
                 SetJobDone();
                 yield break;
             }
+            if (currentJob.jobType == DroneJobType.None)
+            {
+                SetJobDone();
+                yield break;
+            }
+
             if (currentJob is DroneBuildJob buildJob)
             {
                 if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
@@ -298,10 +356,11 @@ public class Drone : MonoBehaviour
 
     public void Die()
     {
-        // This should be on a Health script attached to the Drone
         StopAllCoroutines();
-        myHangar.RemoveDrone(this);
-        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+        if (myHangar != null)
+            myHangar.RemoveDrone(this);
+
+        DroneManager.Instance.RemoveDrone(this);
     }
 }
 
