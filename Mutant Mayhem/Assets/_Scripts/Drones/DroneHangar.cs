@@ -6,12 +6,23 @@ public class DroneHangar : MonoBehaviour
 {
     public List<Drone> controlledDrones;
     public List<Drone> dockedDrones;
+    public List<Drone> dronesToSpawnAtStart;
     public int maxDrones;
     public float detectionRange;
 
     void Start()
     {
+        SpawnStartDrones();
         StartCoroutine(LookForJobs());
+    }
+
+    void SpawnStartDrones()
+    {
+        foreach (Drone startDrone in dronesToSpawnAtStart)
+        {
+            Drone newDrone = PoolManager.Instance.GetFromPool(startDrone.objectPoolName).GetComponent<Drone>();
+            AddDrone(newDrone);
+        }
     }
 
     IEnumerator LookForJobs()
@@ -84,9 +95,30 @@ public class DroneHangar : MonoBehaviour
             Debug.LogError("DroneHangar: No drone found to launch!");
     }
 
+    public void AddDrone(Drone drone)
+    {
+        drone.transform.position = transform.position;
+        controlledDrones.Add(drone);
+        LandDrone(drone);
+    }
+
     public void LandDrone(Drone drone)
     {
+        drone.myHangar = this;
+        drone.currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
         dockedDrones.Add(drone);
+        drone.gameObject.SetActive(false);
+        //drone.SetNewAction(drone.LandInHangar);
+    }
+
+    public void RemoveDrone(Drone drone)
+    {
+        if (controlledDrones.Contains(drone))
+            controlledDrones.Remove(drone);
+        if (dockedDrones.Contains(drone))
+            dockedDrones.Remove(drone);
+
+        DroneManager.Instance.RemoveDrone(drone);
     }
 
     DroneJob GetJob(Drone drone)

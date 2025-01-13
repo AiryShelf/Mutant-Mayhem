@@ -52,6 +52,7 @@ public class PlayerStats
 [System.Serializable]
 public class StructureStats
 {
+    public QCubeController cubeController;
     public QCubeHealth cubeHealthScript;
     public TileManager tileManager;
     public float structureMaxHealthMult = 1;
@@ -135,6 +136,7 @@ public class Player : MonoBehaviour
         myStamina.stats = stats;
         playerShooter.playerStats = stats;
         stats.structureStats.cubeHealthScript = FindObjectOfType<QCubeHealth>();
+        stats.structureStats.cubeController = FindObjectOfType<QCubeController>();
         IsDead = false;
     }
 

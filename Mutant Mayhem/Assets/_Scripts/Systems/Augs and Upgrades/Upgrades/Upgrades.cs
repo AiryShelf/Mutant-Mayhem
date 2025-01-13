@@ -42,6 +42,7 @@ public enum ConsumablesUpgrade
     QCubeRepair,
     GrenadeBuyAmmo,
     SMGBuyAmmo,
+    BuyConstructionDrone,
 }
 
 public enum GunStatsUpgrade
@@ -525,10 +526,37 @@ public class SMGBuyAmmoUpgrade : Upgrade
         // No extra cost after consumable
         return baseCost;
     }
+
     public static int GetCost(Player player, int baseCost)
     {
         
         return baseCost;
+    }
+}
+
+public class BuyConstructionDroneUpgrade : Upgrade
+{
+    public BuyConstructionDroneUpgrade() : base(ConsumablesUpgrade.BuyConstructionDrone) { }
+
+    public static int Amount = 1;
+
+    public override bool Apply(PlayerStats playerStats)
+    {
+        
+        DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, playerStats.structureStats.cubeController.droneHangar);
+        return true;
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        int cost = baseCost * level;
+        return cost;
+    }
+
+    public static int GetCost(Player player, int baseCost)
+    {
+        int cost = baseCost * (DroneManager.Instance.activeConstructionDrones + 1);
+        return cost;
     }
 }
 

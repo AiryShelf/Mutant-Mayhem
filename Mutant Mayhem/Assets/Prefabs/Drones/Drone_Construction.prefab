@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7494644282629353633}
   - component: {fileID: 7531098424993310505}
   m_Layer: 19
-  m_Name: Drone
+  m_Name: Drone_Construction
   m_TagString: Drone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6082351659805797165}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.48, y: -4.88, z: 0.038794}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -101,20 +101,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9614bcc908fa9492c96360e3105fa499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectPoolName: Drone_Construction
   droneType: 0
-  moveSpeed: 10
+  moveSpeed: 8
   buildSpeed: 10
   actionDelay: 0.75
   repairSpeed: 10
   currentJob:
-    jobType: 0
-    jobPosition: {x: 0, y: 0}
+    jobType: 3
+    jobPosition: {x: -1.5, y: 3.5}
   myRB: {fileID: 8271507474314208127}
   minJobDist: 0.6
-  hoverEffectTime: 1
+  hoverEffectTime: 2
   hoverEffectVariationFactor: 0.2
   hoverEffectForceFactor: 0.7
-  hoverScaleFactor: 0
+  hoverScaleFactor: 0.1
   rotationSpeed: 0.003
   myHangar: {fileID: 0}
 --- !u!114 &4250599866353163505

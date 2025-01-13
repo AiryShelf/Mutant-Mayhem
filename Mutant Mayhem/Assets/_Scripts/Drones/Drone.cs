@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Drone : MonoBehaviour
 {
+    public string objectPoolName = "";
     public DroneType droneType = DroneType.Builder;
     public float moveSpeed = 3;
     public float buildSpeed = 0.1f;  // For upgrades, most of stats should be moved to PlayerStats
@@ -30,14 +31,21 @@ public class Drone : MonoBehaviour
         myHangar = hangar;
     }
 
+    void Awake()
+    {
+        //jobDone = true;
+        //currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
+    }
+
     void Start()
     {
-        SetJobDone();
+        //SetJobDone();
     }
 
     public void Launch()
     {
         gameObject.SetActive(true);
+
     }
     
     public void SetJob(DroneJob job)
@@ -136,6 +144,9 @@ public class Drone : MonoBehaviour
 
         float checkTimer = 0;
         bool arrived = false;
+        if (Vector2.Distance(transform.position, target) < minJobDist)
+                arrived = true;
+
         while (!arrived)
         {
             MoveTowards(target, 1);
@@ -159,8 +170,10 @@ public class Drone : MonoBehaviour
         SetNewAction(LandInHangar);
     }
 
-    IEnumerator LandInHangar()
+    public IEnumerator LandInHangar()
     {
+        // Landing effect here **
+
         yield return new WaitForFixedUpdate();
         myHangar.LandDrone(this);
         StopAllCoroutines();
@@ -235,7 +248,7 @@ public class Drone : MonoBehaviour
         myRB.AddTorque(torque, ForceMode2D.Force);
     }
 
-    void SetNewAction(System.Func<IEnumerator> coroutineMethod)
+    public void SetNewAction(System.Func<IEnumerator> coroutineMethod)
     {
         StopAllCoroutines();
         
@@ -287,7 +300,8 @@ public class Drone : MonoBehaviour
     {
         // This should be on a Health script attached to the Drone
         StopAllCoroutines();
-        Destroy(gameObject);
+        myHangar.RemoveDrone(this);
+        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 }
 

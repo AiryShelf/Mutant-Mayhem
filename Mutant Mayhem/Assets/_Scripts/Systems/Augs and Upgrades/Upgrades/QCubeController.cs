@@ -38,6 +38,7 @@ public class QCubeController : MonoBehaviour
     [SerializeField] PauseMenuController pauseMenuController;
     [SerializeField] BuildingSystem buildingSystem;
     [SerializeField] Player player;
+    public DroneHangar droneHangar;
 
     InputActionMap playerActionMap;
     InputAction qCubeAction;

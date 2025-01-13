@@ -76,6 +76,9 @@ public static class UpgStatGetter
                 stat = (player.stats.playerShooter.gunsAmmo[1] +
                         player.stats.playerShooter.gunsAmmoInClips[1]).ToString("#0");
                 return stat;
+            case ConsumablesUpgrade.BuyConstructionDrone:
+                stat = DroneManager.Instance.activeConstructionDrones.ToString();
+                return stat;
         }
 
         return stat;
@@ -224,6 +227,9 @@ public static class UpgStatGetter
             case ConsumablesUpgrade.SMGBuyAmmo:
                 amount = "+" + SMGBuyAmmoUpgrade.AmmoAmount.ToString();
                 return amount;
+            case ConsumablesUpgrade.BuyConstructionDrone:
+                amount = "+" + BuyConstructionDroneUpgrade.Amount.ToString();
+                return amount;
         }
 
         return amount;
@@ -335,6 +341,9 @@ public static class UpgStatGetter
                 return cost;
             case ConsumablesUpgrade.SMGBuyAmmo:
                 cost = SMGBuyAmmoUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+            case ConsumablesUpgrade.BuyConstructionDrone:
+                cost = BuyConstructionDroneUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
                 return cost;
         }
 

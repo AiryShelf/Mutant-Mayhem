@@ -176,6 +176,7 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgMaxLevels[ConsumablesUpgrade.QCubeRepair] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.GrenadeBuyAmmo] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.SMGBuyAmmo] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.BuyConstructionDrone] = int.MaxValue;
 
         // GunStats
         laserUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
@@ -262,6 +263,7 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.QCubeRepair] = 200;
         consumablesUpgBaseCosts[ConsumablesUpgrade.GrenadeBuyAmmo] = 200;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 100;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyConstructionDrone] = 300;
 
         // Gun Stats
         laserUpgBaseCosts[GunStatsUpgrade.GunDamage] = 250;
@@ -394,6 +396,8 @@ public class UpgradeManager : MonoBehaviour
             case ConsumablesUpgrade.GrenadeBuyAmmo:
                 return new GrenadeBuyAmmoUpgrade();
             case ConsumablesUpgrade.SMGBuyAmmo:
+                return new SMGBuyAmmoUpgrade();
+            case ConsumablesUpgrade.BuyConstructionDrone:
                 return new SMGBuyAmmoUpgrade();
 
             default:
@@ -555,7 +559,7 @@ public class UpgradeManager : MonoBehaviour
         {
             Debug.LogError("Consumable int maxed out: " + upgType);
             MessagePanel.PulseMessage("Reached max value for integers. You either bought this over " +
-                                      "32,000 times or there is a bug!  Let me know!", Color.red);
+                                      "2 billion times,or there is a bug!  Let me know!", Color.red);
             return;
         }
         
