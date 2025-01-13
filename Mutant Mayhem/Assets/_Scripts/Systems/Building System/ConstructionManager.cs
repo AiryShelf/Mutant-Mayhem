@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ConstructionManager : MonoBehaviour
 {
+    [SerializeField] int maxDronesPerJob;
     // Lists track jobs and number of assigned drones
     List<KeyValuePair<DroneBuildJob, int>> buildJobs = new List<KeyValuePair<DroneBuildJob, int>>();
     List<KeyValuePair<DroneJob, int>> repairJobs = new List<KeyValuePair<DroneJob, int>>();
@@ -170,7 +171,8 @@ public class ConstructionManager : MonoBehaviour
             int dronesAssigned = buildJobs[i].Value;
 
             // Select the job with the fewest drones assigned
-            if (dronesAssigned < leastDronesAssigned)
+            if (dronesAssigned < leastDronesAssigned &&
+                dronesAssigned < maxDronesPerJob)
             {
                 job = buildJobs[i].Key;
                 leastDronesAssigned = dronesAssigned;
@@ -203,7 +205,8 @@ public class ConstructionManager : MonoBehaviour
             int dronesAssigned = repairJobs[i].Value;
 
             // Select the job with the fewest drones assigned
-            if (dronesAssigned < leastDronesAssigned)
+            if (dronesAssigned < leastDronesAssigned &&
+                dronesAssigned < maxDronesPerJob)
             {
                 job = repairJobs[i].Key;
                 leastDronesAssigned = dronesAssigned;
@@ -294,9 +297,9 @@ public class ConstructionManager : MonoBehaviour
         return false;
     }
 
-    public bool RepairTile(Vector2 pos, float value)
+    public bool RepairTile(Vector2 pos, float value, Vector2 hitDir)
     {
-        tileManager.ModifyHealthAt(pos, value, 2, GameTools.GetRandomDirection());
+        tileManager.ModifyHealthAt(pos, value, 2, hitDir);
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
         if (tileManager.ContainsTileKey(gridPos) && tileManager.GetTileHealthRatio(tileManager.GridToRootPos(gridPos)) <= 0)
         {

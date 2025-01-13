@@ -14,6 +14,7 @@ public class DoorOpener : TileObject
     bool isOpen;
     bool destroyed;
     float healthRatio;
+    int damageIndex;
 
     TileManager tileManager;
 
@@ -46,12 +47,11 @@ public class DoorOpener : TileObject
     {
         this.healthRatio = healthRatio;
 
-        UpdateSprite();
+        UpdateDamage();
     }
 
-    private void UpdateSprite()
+    private void UpdateOpenClose()
     {
-        int damageIndex = Mathf.FloorToInt(doorsOpen.Count * healthRatio);
         //Debug.Log("Damage Index: " + damageIndex);
         if (isOpen)
         {
@@ -73,6 +73,20 @@ public class DoorOpener : TileObject
         }
     }
 
+    void UpdateDamage()
+    {
+        damageIndex = Mathf.FloorToInt(doorsOpen.Count * healthRatio);
+
+        if (isOpen)
+        {
+            animatedTilemap.SetTile(myGridPos, doorsOpen[damageIndex]);
+        }
+        else
+        {
+            animatedTilemap.SetTile(myGridPos, doorsClosed[damageIndex]);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -80,7 +94,7 @@ public class DoorOpener : TileObject
             if (!isOpen)
             {
                 isOpen = true;
-                UpdateSprite();
+                UpdateOpenClose();
             }
             //Debug.Log("Door detected Player");
         }
@@ -95,7 +109,7 @@ public class DoorOpener : TileObject
                 if (isOpen)
                 {
                     isOpen = false;
-                    UpdateSprite();
+                    UpdateOpenClose();
                 }
                 //Debug.Log("Player away from door");
             }

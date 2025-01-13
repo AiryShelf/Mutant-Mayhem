@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -132,6 +133,7 @@ public class TileManager : MonoBehaviour
         _TileStatsDict[rootPos].isBlueprint = false;
         Matrix4x4 matrix = blueprintTilemap.GetTransformMatrix(rootPos);
         blueprintTilemap.SetTile(rootPos, null);
+        blueprintTilemap.SetTransformMatrix(rootPos, matrix);
         
         //if (!AddNewTileToDict(gridPos, rotatedStructure))
         //{
@@ -190,19 +192,40 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public void RemoveTileAt(Vector3Int rootPos)
+    public void RemoveTileAt(Vector3Int gridPos)
     {
-        ConstructionManager.Instance.TileRemoved(GridCenterToWorld(rootPos));
+        ConstructionManager.Instance.TileRemoved(GridCenterToWorld(gridPos));
+        Vector3Int rootPos = GridToRootPos(gridPos);
         
         // Find rotation matrix of tile at gridPos, convert source positions to rotation
-        int tileRot = StructureRotator.GetRotationFromMatrix(blueprintTilemap.GetTransformMatrix(rootPos));
+        var tile = blueprintTilemap.GetTile(rootPos);
+        Matrix4x4 matrix;
+        int tileRot;
+        Tilemap tilemap;
+        if (tile != null)
+        {
+            tilemap = blueprintTilemap;
+            matrix = blueprintTilemap.GetTransformMatrix(rootPos);
+            tileRot = StructureRotator.GetRotationFromMatrix(blueprintTilemap.GetTransformMatrix(rootPos));
+        }
+        else
+        {
+            tilemap = AnimatedTilemap;
+            tile = AnimatedTilemap.GetTile(rootPos);
+            matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+            tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
+        }
         RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
         List<Vector3Int> sourcePositions = rts.structureSO.cellPositions;
+        //List<Vector3Int> rotatedPositions = GetStructurePositions(tilemap, rootPos);
         List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, tileRot);
 
 
         AnimatedTilemap.SetTile(rootPos, null);
         blueprintTilemap.SetTile(rootPos, null);
+
+        //AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
+        //blueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
         // Check for turrets
         if (rts.structureSO.isTurret)
@@ -212,7 +235,7 @@ public class TileManager : MonoBehaviour
         foreach (var pos in rotatedPositions)
         {
             if (_StructurePositions.Contains(pos))
-                _StructurePositions.Remove(rootPos + pos);
+                _StructurePositions.Remove(pos);
             _TileStatsDict.Remove(rootPos + pos);
             StructureTilemap.SetTile(rootPos + pos, null);           
         }
@@ -231,13 +254,24 @@ public class TileManager : MonoBehaviour
     public void RefundTileAt(Vector3Int gridPos)
     {
         // Get remaining health ratio and tile cost
-        float ratio = 1 - (_TileStatsDict[gridPos].maxHealth - _TileStatsDict[gridPos].health) /
-                      _TileStatsDict[gridPos].maxHealth;
-        int cost = Mathf.FloorToInt(buildingSystem.structureCostMult * 
-                   _TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost);
+        
+        int refund;
+        
+        if (blueprintTilemap.GetTile(gridPos))
+        {
+            refund = (int)_TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
+        }
+        else
+        {
+            float ratio = 1 - (_TileStatsDict[gridPos].maxHealth - _TileStatsDict[gridPos].health) /
+                    _TileStatsDict[gridPos].maxHealth;
+            refund = Mathf.FloorToInt(ratio * buildingSystem.structureCostMult * 
+                     _TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost / 1.5f);
+        }
+        
 
         // Refund cost
-        BuildingSystem.PlayerCredits += cost * ratio / 2;
+        BuildingSystem.PlayerCredits += refund;
 
         //Debug.Log("Refunded a tile");
     }
@@ -370,7 +404,6 @@ public class TileManager : MonoBehaviour
             return;
         }
 
-        // AnimatedTilemap.GetTile(rootPos);
         float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
                                  _TileStatsDict[rootPos].maxHealth);
 

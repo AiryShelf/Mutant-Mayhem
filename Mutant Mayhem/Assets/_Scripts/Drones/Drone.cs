@@ -12,10 +12,15 @@ public class Drone : MonoBehaviour
     public DroneJob currentJob;
     [SerializeField] Rigidbody2D myRB;
     [SerializeField] float minJobDist = 1f;
+    [SerializeField] float hoverEffectTime = 1;
+    [SerializeField] float hoverEffectVariationFactor = 0.2f;
+    [SerializeField] float hoverEffectForceFactor = 0.2f;
 
     public DroneHangar myHangar;
     bool jobDone = false;
     Coroutine actionCoroutine; // Used for states
+    Coroutine hoverCoroutine;
+    
 
     public Drone(DroneType type, DroneHangar hangar)
     {
@@ -85,8 +90,8 @@ public class Drone : MonoBehaviour
         Vector2 jobPos = currentJob.jobPosition;
         while (true)
         {
-
-            if (ConstructionManager.Instance.BuildBlueprint(jobPos, buildSpeed, GameTools.GetRandomDirection()))
+            Vector2 hitDir = jobPos - (Vector2)transform.position;
+            if (ConstructionManager.Instance.BuildBlueprint(jobPos, buildSpeed, hitDir))
             {
                 SetJob(ConstructionManager.Instance.GetRepairJob());
                 yield break;
@@ -100,11 +105,10 @@ public class Drone : MonoBehaviour
     {
         Vector2 jobPos = currentJob.jobPosition;
 
-        // Repair
-
         while (true)
         {
-            if (ConstructionManager.Instance.RepairTile(jobPos, repairSpeed))
+            Vector2 hitDir = jobPos - (Vector2)transform.position;
+            if (ConstructionManager.Instance.RepairTile(jobPos, repairSpeed, hitDir))
             {
                 break;
             }
@@ -115,18 +119,7 @@ public class Drone : MonoBehaviour
         SetJobDone();
     }
 
-    IEnumerator AlignToPos(Vector2 pos)
-    {
-        bool aligned;
-        aligned = Vector2.Distance(transform.position, pos) < 0.3f;
-        if (!aligned)
-        {
-            MoveTowards(pos, 1f);
-            if (aligned)
-                Debug.Log("Drone aligned");
-        }
-        yield return new WaitForSeconds(0.05f);
-    }
+    
 
     IEnumerator FlyToHangar()
     {
@@ -168,7 +161,59 @@ public class Drone : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
         myHangar.LandDrone(this);
+        StopAllCoroutines();
         gameObject.SetActive(false);
+    }
+
+    IEnumerator AlignToPos(Vector2 pos)
+    {
+        while (true)
+        {
+            yield return new WaitForFixedUpdate();
+
+            bool aligned = Vector2.Distance(transform.position, pos) < minJobDist;
+            if (!aligned)
+            {
+                MoveTowards(pos, 1f);
+                if (aligned)
+                    Debug.Log("Drone aligned");
+            }
+        }
+    }
+
+    IEnumerator HoverEffect()
+    {
+        while (true)
+        {
+            // pick how long we apply force in one direction
+            float directionDuration = Random.Range(
+                hoverEffectTime * (1 - hoverEffectVariationFactor),
+                hoverEffectTime * (1 + hoverEffectVariationFactor)
+            );
+
+            // pick a random direction (unit circle normalized)
+            Vector2 randomDir = Random.insideUnitCircle.normalized;
+
+            float timer = 0f;
+            //float forceFactor = Random.Range(hoverEffectForceFactor * (1 - hoverEffectVariationFactor),
+            //                                 hoverEffectForceFactor * (1 + hoverEffectVariationFactor));
+            while (timer < directionDuration)
+            {
+                timer += Time.deltaTime;
+
+                // Normalized progress from 0..1
+                float t = timer / directionDuration;
+
+                // Force ramps up from 0 to hoverEffectForceFactor
+                float currentForce = Mathf.Lerp(0, hoverEffectForceFactor, t);
+
+                // Apply force each frame
+                myRB.AddForce(randomDir * currentForce, ForceMode2D.Force);
+
+                // Wait until next frame
+                yield return new WaitForFixedUpdate();
+            }
+        }
     }
 
     void MoveTowards(Vector2 target, float forceFactor)
@@ -181,8 +226,8 @@ public class Drone : MonoBehaviour
     {
         StopAllCoroutines();
         
+        hoverCoroutine = StartCoroutine(HoverEffect());
         actionCoroutine = StartCoroutine(coroutineMethod());
-
         StartCoroutine(CheckIfJobDone());
     }
 
