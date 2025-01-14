@@ -55,26 +55,6 @@ public class Shooter : MonoBehaviour
         criticalHit = GetComponent<CriticalHit>();
     }
 
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // If on a planet
-        if (scene.buildIndex > 1)
-        {
-            //laserDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
-            //bulletDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
-        }
-    }
-
     protected virtual void Start()
     {
         StartChargingGuns();
@@ -106,6 +86,8 @@ public class Shooter : MonoBehaviour
             fireTimer = shootSpeed;
         }
     }
+
+    #region Initialize
 
     protected void CopyGunList()
     {
@@ -160,6 +142,8 @@ public class Shooter : MonoBehaviour
             }
         }
     }
+
+    #endregion
 
     #region Fire
 

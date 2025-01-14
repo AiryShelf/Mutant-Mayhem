@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 
 public class Drone : MonoBehaviour
@@ -136,11 +137,19 @@ public class Drone : MonoBehaviour
         isFlying = true;
         Vector2 target = Vector2.zero;
         if (currentJob != null)
-            target = currentJob.jobPosition;
+        {
+            if (currentJob.jobType == DroneJobType.Build ||
+                currentJob.jobType == DroneJobType.Repair)
+            {
+                target = currentJob.jobPosition;
+            }   
+        }
 
         bool arrived = false;
         while (!arrived)
         {
+            if (currentJob is DroneAttackJob attackJob)
+                target = attackJob.targetTrans.position;
             MoveTowards(target, 1);
             yield return new WaitForFixedUpdate();
             if (Vector2.Distance(transform.position, target) < minJobDist)
@@ -151,7 +160,7 @@ public class Drone : MonoBehaviour
         }
     }
 
-    void MoveTowards(Vector2 target, float forceFactor)
+    protected void MoveTowards(Vector2 target, float forceFactor)
     {
         Vector2 dir = target - (Vector2)myRB.transform.position;
         myRB.AddForce(dir.normalized * moveSpeed);
@@ -167,11 +176,23 @@ public class Drone : MonoBehaviour
 
     void DoJob()
     {
-        
-        if (currentJob.jobType == DroneJobType.Build)
-            SetNewAction(Build);
-        else if (currentJob.jobType == DroneJobType.Repair)
-            SetNewAction(Repair);
+        if (droneType == DroneType.Builder)
+        {
+            if (currentJob.jobType == DroneJobType.Build)
+                SetNewAction(Build);
+            else if (currentJob.jobType == DroneJobType.Repair)
+                SetNewAction(Repair);
+            else
+                SetJobDone();
+        }
+        else if (this is AttackDrone attackDrone && currentJob is DroneAttackJob attackJob)
+        {
+            if (attackJob.targetTrans != null)
+            {
+                attackDrone.targetTrans = attackJob.targetTrans;
+                SetNewAction(attackDrone.Attack);
+            }
+        }
         else
             SetJobDone();
 
@@ -272,7 +293,7 @@ public class Drone : MonoBehaviour
 
     #endregion
 
-    #region Secondary Action
+    #region 2nd Actions
 
     IEnumerator AlignToPos(Vector2 pos)
     {

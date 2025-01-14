@@ -6,17 +6,22 @@ public class DroneHangar : MonoBehaviour
 {
     public List<Drone> controlledDrones;
     public List<Drone> dockedDrones;
-    public List<Drone> dronesToSpawnAtStart;
     public int maxDrones;
-    public float detectionRange;
     [SerializeField] float launchDelay = 0.5f;
+    public float detectionRadius = 6f;
+
+    [SerializeField] Collider2D detectionCollider;
+
+    // Tracks num assigned drones
+    [SerializeField] List<KeyValuePair<DroneAttackJob, int>> attackJobs = new List<KeyValuePair<DroneAttackJob, int>>(); 
 
     void Start()
     {
-        
         SpawnStartDrones();
         StartCoroutine(LookForJobs());
     }
+
+    #region Drones
 
     void SpawnStartDrones()
     {
@@ -24,68 +29,8 @@ public class DroneHangar : MonoBehaviour
         for (int i = 0; i < player.stats.numStartingDrones; i++)
         {
             DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, this);
+            DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, this);
         }
-    }
-
-    IEnumerator LookForJobs()
-    {
-        while (true)
-        {
-            DroneJob job = null;
-            Drone freeDrone = null;
-            foreach (Drone dockedDrone in dockedDrones)
-            {
-                if (dockedDrone.currentJob.jobType != DroneJobType.None)
-                    continue;
-
-                job = GetJob(dockedDrone);
-
-                if (job.jobType == DroneJobType.None)
-                        continue;
-
-                freeDrone = dockedDrone;
-                break;                
-            }
-            if (freeDrone != null)
-            {
-                LaunchDrone(freeDrone);
-                freeDrone.SetJob(job);
-            }
-            yield return new WaitForSeconds(launchDelay);
-        }
-    } 
-
-    public bool LookForJobInArea(Drone drone, Vector2 pos)
-    {
-        DroneJob closestJob = null;
-
-        if (drone.droneType == DroneType.Builder)
-            closestJob = ConstructionManager.Instance.GetNearestJob(pos);
-
-        if (closestJob != null)
-        {
-            drone.SetJob(closestJob);
-            return true;
-        }
-
-        return false;
-    }
-
-    public DroneJob GetDroneJob(DroneType droneType)
-    {
-        DroneJob newJob = new DroneJob(DroneJobType.None, Vector2.zero);
-
-        if (droneType == DroneType.Builder)
-        {
-            DroneJob job = ConstructionManager.Instance.GetBuildJob();
-            if (job == null)
-                job = ConstructionManager.Instance.GetRepairJob();
-            
-            if (job != null)
-                newJob = job;
-        }
-
-        return newJob;
     }
 
     void LaunchDrone(Drone drone)
@@ -137,27 +82,123 @@ public class DroneHangar : MonoBehaviour
             dockedDrones.Remove(drone);
     }
 
-    DroneJob GetJob(Drone drone)
-    {
-        DroneJob job = null;
-        DroneBuildJob buildJob = ConstructionManager.Instance.GetBuildJob();
-        DroneJob repairJob = ConstructionManager.Instance.GetRepairJob();
+    #endregion
 
-        if (drone.droneType == DroneType.Builder)
+#region Jobs
+
+    public DroneJob GetDroneJob(DroneType droneType)
+    {
+        DroneJob newJob = new DroneJob(DroneJobType.None, Vector2.zero);
+
+        switch (droneType)
         {
-            Debug.Log("Builder drone found");
-            // Assign build job over repair
-            job = buildJob;
-            if (buildJob == null)
-                job = repairJob;
+            case DroneType.Builder:
+                DroneJob job = ConstructionManager.Instance.GetBuildJob();
+                if (job == null)
+                    job = ConstructionManager.Instance.GetRepairJob();
+                
+                if (job != null)
+                    newJob = job;
+                break;
+
+            case DroneType.Attacker:
+                newJob = GetAttackJob();
+                break;
+        }
+        
+
+        return newJob;
+    }
+
+    DroneAttackJob GetAttackJob()
+    {
+        DroneAttackJob job = new DroneAttackJob(DroneJobType.None, null, Vector3.zero);
+        int leastDronesAssigned = int.MaxValue;
+
+        for (int i = 0; i < attackJobs.Count; i++)
+        {
+            int dronesAssigned = attackJobs[i].Value;
+
+            if (attackJobs[i].Key.targetTrans == null)
+                return job;
+
+            // Select the job with the fewest drones assigned
+            if (dronesAssigned < leastDronesAssigned)
+            {
+                job = attackJobs[i].Key;
+                leastDronesAssigned = dronesAssigned;
+            }
         }
 
-        if (drone.droneType == DroneType.Attacker)
+        // Increment assigned drones
+        if (job.jobType != DroneJobType.None)
         {
-            
+            for (int i = 0; i < attackJobs.Count; i++)
+            {
+                if (attackJobs[i].Key == job)
+                {
+                    attackJobs[i] = new KeyValuePair<DroneAttackJob, int>(job, attackJobs[i].Value + 1);
+                    break;
+                }
+            }
         }
 
         return job;
+    }
+
+    void OnTriggerEnter2D(Collider2D otherCollider)
+    {
+        if (otherCollider.GetComponent<EnemyBase>() != null)
+            attackJobs.Add(new KeyValuePair<DroneAttackJob, int>(new DroneAttackJob(DroneJobType.Attack, otherCollider.transform, otherCollider.transform.position), 0));
+    }
+
+    void OnTriggerExit2D(Collider2D otherCollider)
+    {
+        if (otherCollider.GetComponent<EnemyBase>() == null)
+            return;
+
+        List<KeyValuePair<DroneAttackJob, int>> pairsToRemove = new List<KeyValuePair<DroneAttackJob, int>>();
+    
+        foreach (var kvp in attackJobs)
+        {
+            if (otherCollider.transform == kvp.Key.targetTrans)
+            {
+                pairsToRemove.Add(kvp);
+            }
+        }
+
+        foreach (var item in pairsToRemove)
+        {
+            attackJobs.Remove(item);
+        }
+    }
+
+    IEnumerator LookForJobs()
+    {
+        while (true)
+        {
+            DroneJob job = null;
+            Drone freeDrone = null;
+            foreach (Drone dockedDrone in dockedDrones)
+            {
+                if (dockedDrone.currentJob.jobType != DroneJobType.None)
+                    continue;
+
+                job = GetDroneJob(dockedDrone.droneType);
+
+                if (job.jobType == DroneJobType.None)
+                    continue;
+
+                freeDrone = dockedDrone;
+                break;
+            }
+            if (freeDrone != null)
+            {
+                LaunchDrone(freeDrone);
+                freeDrone.SetJob(job);
+            }
+            yield return new WaitForSeconds(launchDelay);
+        }
     }
 }
 
@@ -177,13 +218,18 @@ public class DroneJob
 [System.Serializable]
 public class DroneBuildJob : DroneJob
 {
-    public int rotation;
-    public StructureSO structure;
+    public DroneBuildJob(DroneJobType jobType, Vector3 position) : base(jobType, position)
+    { }
+}
 
-    public DroneBuildJob(DroneJobType jobType, Vector3 position, int rotation, StructureSO structure) : base(jobType, position)
+[System.Serializable]
+public class DroneAttackJob : DroneJob
+{
+    public Transform targetTrans;
+    public DroneAttackJob(DroneJobType jobType, Transform targetTrans, Vector3 position) : base(jobType, position)
     {
-        this.rotation = rotation;
-        this.structure = structure;
+        this.jobType = jobType;
+        this.targetTrans = targetTrans;
     }
 }
 
@@ -196,3 +242,5 @@ public enum DroneJobType
     Repair,
     Attack,
 }
+
+#endregion

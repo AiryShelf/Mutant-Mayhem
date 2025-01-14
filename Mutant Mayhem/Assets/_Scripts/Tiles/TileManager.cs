@@ -97,7 +97,7 @@ public class TileManager : MonoBehaviour
             return false;
         }
 
-        DroneBuildJob buildJob = new DroneBuildJob(DroneJobType.Build, GridCenterToWorld(gridPos), rotation, rotatedStructure);
+        DroneBuildJob buildJob = new DroneBuildJob(DroneJobType.Build, GridCenterToWorld(gridPos));
         if (buildJob == null)
         {
             Debug.LogError("BuildingSystem: BuildJob creation failed");

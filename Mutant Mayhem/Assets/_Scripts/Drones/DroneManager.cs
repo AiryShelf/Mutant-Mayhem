@@ -38,6 +38,10 @@ public class DroneManager : MonoBehaviour
                 poolName = "Drone_Construction";
                 activeConstructionDrones++;
                 break;
+            case DroneType.Attacker:
+                poolName = "Drone_Attack";
+                activeAttackDrones++;
+                break;
         }
 
         foreach (Drone drone in allDrones)
