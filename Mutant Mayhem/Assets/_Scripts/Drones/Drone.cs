@@ -21,6 +21,7 @@ public class Drone : MonoBehaviour
     [SerializeField] float rotationSpeed = 0.0025f;
     [SerializeField] float launchOrLandMinScale = 0.3f;
     [SerializeField] float launchOrLandScaleSpeed = 0.05f;
+    [SerializeField] float jobHeightMinScale = 0.6f;
 
     public DroneHangar myHangar;
     public bool isFlying = false;
@@ -30,6 +31,7 @@ public class Drone : MonoBehaviour
     Coroutine actionCoroutine; // Used for states
     Coroutine hoverCoroutine;
     Coroutine alignCoroutine;
+    Coroutine jobHeightCoroutine;
     Coroutine jobCheckCoroutine;
     DroneHealth droneHealth; 
 
@@ -44,19 +46,33 @@ public class Drone : MonoBehaviour
         droneHealth.SetHealth(droneHealth.GetMaxHealth());
     }
 
+    #region Launch / Land
+
     public void Launch()
     {
         gameObject.SetActive(true);
-        heightScale = heightScaleStart;
-        
-        StartCoroutine(LaunchScaling());
+
+        heightScale = heightScaleStart * launchOrLandMinScale;
+        transform.localScale = new Vector3(heightScale, heightScale, 1);
+        hoverCoroutine = StartCoroutine(HoverEffect());
     }
 
-    IEnumerator LaunchScaling()
+    IEnumerator LowerToJob()
     {
         yield return null;
-        heightScale = heightScaleStart * launchOrLandMinScale;
-        hoverCoroutine = StartCoroutine(HoverEffect());
+
+        isFlying = false;
+
+        while (heightScale > jobHeightMinScale)
+        {
+            yield return new WaitForSeconds(0.05f);
+            heightScale -= launchOrLandScaleSpeed;
+        }
+    }
+
+    IEnumerator RaiseFromJob()
+    {
+        yield return null;
 
         while (heightScale < heightScaleStart)
         {
@@ -64,31 +80,59 @@ public class Drone : MonoBehaviour
             heightScale += launchOrLandScaleSpeed;
         }
 
-        
+        isFlying = true;
     }
-    
-    public void SetJob(DroneJob job)
+
+    IEnumerator LandInHangar()
     {
-        if (job.jobType == DroneJobType.None)
+        yield return null;
+        isFlying = false;
+
+        while (heightScale > launchOrLandMinScale)
         {
-            jobDone = true;
-            currentJob = job;
-            SetNewAction(FlyToHangar);
+            yield return new WaitForSeconds(0.05f);
+            heightScale -= launchOrLandScaleSpeed;
         }
-        else
-        {
-            jobDone = false;
-            currentJob = job;
-            SetNewAction(MoveToJob);
-        }
+
+        yield return new WaitForFixedUpdate();
         
-        Debug.Log($"Drone: Job type set to: {job.jobType}");
+        myHangar.LandDrone(this);
+        StopAllCoroutines();
+    }
+
+    public void Die()
+    {
+        StopAllCoroutines();
+        if (myHangar != null)
+            myHangar.RemoveDrone(this);
+
+        DroneManager.Instance.RemoveDrone(this);
+    }
+
+    #endregion
+
+    #region Main Actions
+
+    void SetNewAction(System.Func<IEnumerator> coroutineMethod)
+    {
+        //StopAllCoroutines();
+        if (alignCoroutine != null)
+            StopCoroutine(alignCoroutine);
+        if (actionCoroutine != null)
+            StopCoroutine(actionCoroutine);
+        if (jobCheckCoroutine != null)
+            StopCoroutine(jobCheckCoroutine);
+        if (jobHeightCoroutine != null)
+            StopCoroutine(jobHeightCoroutine);
+
+        actionCoroutine = StartCoroutine(coroutineMethod());
     }
 
     IEnumerator MoveToJob()
     {
         yield return null;
         jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
+        jobHeightCoroutine = StartCoroutine(RaiseFromJob());
         isFlying = true;
         Vector2 target = Vector2.zero;
         if (currentJob != null)
@@ -107,6 +151,20 @@ public class Drone : MonoBehaviour
         }
     }
 
+    void MoveTowards(Vector2 target, float forceFactor)
+    {
+        Vector2 dir = target - (Vector2)myRB.transform.position;
+        myRB.AddForce(dir.normalized * moveSpeed);
+
+        float desiredAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
+        float currentAngle = myRB.rotation;
+
+        float angleDiff = Mathf.DeltaAngle(currentAngle, desiredAngle);
+        float torque = angleDiff * rotationSpeed;
+
+        myRB.AddTorque(torque, ForceMode2D.Force);
+    }
+
     void DoJob()
     {
         
@@ -117,8 +175,11 @@ public class Drone : MonoBehaviour
         else
             SetJobDone();
 
-        if (currentJob != null)
-            alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
+        if (currentJob == null)
+            return;
+
+        alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
+        jobHeightCoroutine = StartCoroutine(LowerToJob());
     }
 
     IEnumerator Build()
@@ -167,13 +228,11 @@ public class Drone : MonoBehaviour
         SetJobDone();
     }
 
-    
-
     IEnumerator FlyToHangar()
     {
         yield return null;
 
-        isFlying = true;
+        jobHeightCoroutine = StartCoroutine(RaiseFromJob());
         DroneJob newJob = myHangar.GetDroneJob(droneType);
         if (newJob.jobType != DroneJobType.None)
         {
@@ -211,20 +270,9 @@ public class Drone : MonoBehaviour
         SetNewAction(LandInHangar);
     }
 
-    public IEnumerator LandInHangar()
-    {
-        yield return null;
-        while (heightScale > launchOrLandMinScale)
-        {
-            yield return new WaitForSeconds(0.05f);
-            heightScale -= launchOrLandScaleSpeed;
-        }
+    #endregion
 
-        yield return new WaitForFixedUpdate();
-        isFlying = false;
-        myHangar.LandDrone(this);
-        StopAllCoroutines();
-    }
+    #region Secondary Action
 
     IEnumerator AlignToPos(Vector2 pos)
     {
@@ -282,31 +330,26 @@ public class Drone : MonoBehaviour
         }
     }
 
-    void MoveTowards(Vector2 target, float forceFactor)
+    #endregion
+
+    #region Jobs
+
+    public void SetJob(DroneJob job)
     {
-        Vector2 dir = target - (Vector2)myRB.transform.position;
-        myRB.AddForce(dir.normalized * moveSpeed);
-
-        float desiredAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-        float currentAngle = myRB.rotation;
-
-        float angleDiff = Mathf.DeltaAngle(currentAngle, desiredAngle);
-        float torque = angleDiff * rotationSpeed;
-
-        myRB.AddTorque(torque, ForceMode2D.Force);
-    }
-
-    public void SetNewAction(System.Func<IEnumerator> coroutineMethod)
-    {
-        //StopAllCoroutines();
-        if (alignCoroutine != null)
-            StopCoroutine(alignCoroutine);
-        if (actionCoroutine != null)
-            StopCoroutine(actionCoroutine);
-        if (jobCheckCoroutine != null)
-            StopCoroutine(jobCheckCoroutine);
-
-        actionCoroutine = StartCoroutine(coroutineMethod());
+        if (job.jobType == DroneJobType.None)
+        {
+            jobDone = true;
+            currentJob = job;
+            SetNewAction(FlyToHangar);
+        }
+        else
+        {
+            jobDone = false;
+            currentJob = job;
+            SetNewAction(MoveToJob);
+        }
+        
+        Debug.Log($"Drone: Job type set to: {job.jobType}");
     }
 
     void SetJobDone()
@@ -354,14 +397,7 @@ public class Drone : MonoBehaviour
         }
     }
 
-    public void Die()
-    {
-        StopAllCoroutines();
-        if (myHangar != null)
-            myHangar.RemoveDrone(this);
-
-        DroneManager.Instance.RemoveDrone(this);
-    }
+    #endregion
 }
 
 public enum DroneType
