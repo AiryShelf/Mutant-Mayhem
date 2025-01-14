@@ -12,15 +12,17 @@ public class DroneHangar : MonoBehaviour
 
     void Start()
     {
+        
         SpawnStartDrones();
         StartCoroutine(LookForJobs());
     }
 
     void SpawnStartDrones()
     {
-        foreach (Drone startDrone in dronesToSpawnAtStart)
+        Player player = FindObjectOfType<Player>();
+        for (int i = 0; i < player.stats.numStartingDrones; i++)
         {
-            DroneManager.Instance.SpawnDroneInHangar(startDrone.droneType, this);
+            DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, this);
         }
     }
 

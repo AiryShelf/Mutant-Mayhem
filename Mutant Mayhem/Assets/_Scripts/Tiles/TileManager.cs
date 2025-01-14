@@ -106,7 +106,7 @@ public class TileManager : MonoBehaviour
         }
         ConstructionManager.Instance.AddBuildJob(buildJob);
 
-        _TileStatsDict[gridPos].health *= 0.5f;
+        _TileStatsDict[gridPos].health *= 0.33f;
 
         if (ruleTile.structureSO.tileName == "1x1 Wall")
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);

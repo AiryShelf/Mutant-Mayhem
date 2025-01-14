@@ -287,8 +287,16 @@ public class ConstructionManager : MonoBehaviour
     public bool BuildBlueprint(Vector2 pos, float buildAmount, Vector2 hitDir)
     {
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
-        if (tileManager.CheckGridIsClear(gridPos, buildingSystem.layersForBuildClearCheck, false) &&
-            tileManager.BuildBlueprintAt(pos, buildAmount, 1.2f, hitDir))
+        if (!tileManager.CheckGridIsClear(gridPos, buildingSystem.layersForBuildClearCheck, false))
+        {
+            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+            textFly.transform.position = pos;
+            textFly.Initialize("Blocked!", Color.red, 
+                               1, hitDir.normalized, true, 1.2f);
+            return false;
+        }
+
+        if (tileManager.BuildBlueprintAt(pos, buildAmount, 1.2f, hitDir))
         {
             //RemoveBuildJob(buildJob);
             return true;

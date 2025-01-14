@@ -117,6 +117,15 @@ public class Bullet : MonoBehaviour
             }
         }
 
+        // Drones
+        DroneHealth droneHealth = otherCollider.GetComponent<DroneHealth>();
+        if (droneHealth != null)
+        {
+            
+            
+            HitDrone(droneHealth, hitDir, point, damageNew);
+        }
+
         // Play bullet hit effect
         ParticleManager.Instance.PlayBulletHitEffect(gunType, point, hitDir);
         SFXManager.Instance.PlaySoundAt(hitSound, point);
@@ -143,6 +152,31 @@ public class Bullet : MonoBehaviour
         }
         else if (this.gameObject.CompareTag("TurretBullet"))
             StatsCounterPlayer.EnemyDamageByTurrets += damageNew;
+
+        // Create AI Trigger
+        if (AiTrggerPrefab != null)
+        {
+            //Debug.Log("AiTrigger instantiated");
+            GameObject triggerObj = Instantiate(AiTrggerPrefab, point, Quaternion.identity);
+            triggerObj.GetComponent<AiTrigger>().origin = this.origin;
+            triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
+        } 
+    }
+
+    void HitDrone(Health health, Vector2 hitDir, Vector2 point, float damageNew)
+    {
+        health.Knockback(hitDir, knockback);
+        ParticleManager.Instance.PlayBulletHitWall(point, hitDir);
+        //ParticleManager.Instance.PlayBulletBlood(point, hitDir);
+        // Could add freeze effect
+
+        if (gameObject.CompareTag("PlayerProjectiles"))
+            damageNew *= 0.5f;
+        float damageScale = damageNew / damage;
+        health.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
+        
+        // Stat Counting
+        
 
         // Create AI Trigger
         if (AiTrggerPrefab != null)
