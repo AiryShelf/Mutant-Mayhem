@@ -31,26 +31,53 @@ public class Pickup : MonoBehaviour
         int rot = Random.Range(0, 360);
         Quaternion q = Quaternion.Euler(0, 0, rot);
         transform.rotation = q;
+        //RepositionIfNecessary();
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
     }
 
     public void RepositionIfNecessary()
     {
-        StartCoroutine(RepositionRoutine());
+        StartCoroutine(CheckIfClear());
     }
 
-    IEnumerator RepositionRoutine()
+    IEnumerator CheckIfClear()
     {
-        Vector3Int gridPos = tileManager.WorldToGrid(transform.position);
-        
+        Vector3Int gridPos = Vector3Int.zero;
+        Vector2 myPos;
         // Try repositioning if the initial spot is over a structure
-        while (!tileManager.CheckGridIsClear(gridPos, LayerMask.GetMask("Structures"), true))
+        while (true)
         {
-            Debug.LogWarning("Pickup spawned over a structure, repositioning...");
-            Reposition();
-            gridPos = tileManager.WorldToGrid(transform.position);
-            yield return null;
+            myPos = transform.position;
+            gridPos = tileManager.WorldToGrid(myPos);
+            if (!tileManager.IsTileBlueprint(myPos) &&
+                !tileManager.CheckGridIsClear(gridPos, LayerMask.GetMask("Structures"), true))
+            {
+                Vector2 dir = myPos - tileManager.GridCenterToWorld(gridPos);
+                Debug.LogWarning("Pickup found over a structure, repositioning...");
+                StartCoroutine(RepositionUntilFree(dir));
+            }
+
+            yield return new WaitForSeconds(2);
         }
-        
+    }
+
+    IEnumerator RepositionUntilFree(Vector2 dir)
+    {
+        Vector3Int gridPos;
+        bool free = false;
+        while (!free)
+        {
+            transform.position += (Vector3)dir.normalized * 1;
+            gridPos = tileManager.WorldToGrid(transform.position);
+            if (tileManager.CheckGridIsClear(gridPos, LayerMask.GetMask("Structures"), true))
+                free = true;
+                
+            yield return new WaitForFixedUpdate();
+        }
     }
 
     void Reposition()

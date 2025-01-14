@@ -286,8 +286,9 @@ public class ConstructionManager : MonoBehaviour
 
     public bool BuildBlueprint(Vector2 pos, float buildAmount, Vector2 hitDir)
     {
+        
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
-        if (!tileManager.CheckGridIsClear(gridPos, buildingSystem.layersForBuildClearCheck, false))
+        if (!tileManager.CheckBlueprintCellsAreClear(gridPos))
         {
             TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
             textFly.transform.position = pos;

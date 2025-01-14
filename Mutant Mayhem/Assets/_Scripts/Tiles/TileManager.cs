@@ -110,6 +110,8 @@ public class TileManager : MonoBehaviour
 
         if (ruleTile.structureSO.tileName == "1x1 Wall")
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+        else if (ruleTile.structureSO.tileName == "1x1 Corner")
+            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
         else
         {
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
@@ -144,6 +146,8 @@ public class TileManager : MonoBehaviour
         // Set and rotate animated tile
         if (ruleTile.structureSO.tileName == "1x1 Wall")
             AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
+        else if (ruleTile.structureSO.tileName == "1x1 Corner")
+            AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.buildUiTile);
         else
         {
             AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[0]);
@@ -409,18 +413,13 @@ public class TileManager : MonoBehaviour
                                  _TileStatsDict[rootPos].maxHealth);
 
         Tilemap tilemap;
-        List<AnimatedTile> dTiles;
-        if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Wall")
-        {
+        if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Wall" || 
+            _TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Corner")
             tilemap = damageTilemap;
-            dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
-        }
         else
-        {
             tilemap = AnimatedTilemap;
-            dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
-        }
 
+        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
         if (dTiles.Count > 1)
         {
             int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
@@ -683,6 +682,19 @@ public class TileManager : MonoBehaviour
         Vector3Int rootPos = GridToRootPos(gridPos);
         Matrix4x4 matrix = tilemap.GetTransformMatrix(rootPos);
         return StructureRotator.GetRotationFromMatrix(matrix);
+    }
+
+    public bool CheckBlueprintCellsAreClear(Vector3Int gridPos)
+    {
+        List<Vector3Int> structurePositions = new List<Vector3Int>(GetStructurePositions(blueprintTilemap, gridPos));
+        foreach (var pos in structurePositions)
+        {
+
+            if (!CheckGridIsClear(pos, buildingSystem.layersForBuildClearCheck, false))
+                return false;
+        }
+
+        return true;
     }
 
     #endregion
