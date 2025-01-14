@@ -358,8 +358,6 @@ public class TileManager : MonoBehaviour
         {
             if (_TileStatsDict[rootPos].health >= maxHealth)
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
-
-            StatsCounterPlayer.AmountRepaired += healthDifference;
         }
 
         TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
@@ -504,7 +502,7 @@ public class TileManager : MonoBehaviour
     public bool IsTileBlueprint(Vector2 worldPos)
     {
         Vector3Int gridPos = WorldToGrid(worldPos);
-        if (_TileStatsDict[gridPos].isBlueprint)
+        if (_TileStatsDict.ContainsKey(gridPos) && _TileStatsDict[gridPos].isBlueprint)
             return true;
 
         return false;

@@ -36,7 +36,8 @@ public class StatsCounterPlayer : MonoBehaviour
     [Header("Structures")]
     public static int StructuresBuilt;
     public static int StructuresLost;
-    public static float AmountRepaired;
+    public static float AmountRepairedByPlayer;
+    public static float AmountRepairedByDrones;
     public static int DoorsBuilt;
     public static int WallsBuilt;
     public static int TurretsBuilt;
@@ -88,7 +89,7 @@ public class StatsCounterPlayer : MonoBehaviour
         DamageToEnemies = 0;
         StructuresBuilt = 0;
         StructuresLost = 0;
-        AmountRepaired = 0;
+        AmountRepairedByPlayer = 0;
         DoorsBuilt = 0;
         WallsBuilt = 0;
         TurretsBuilt = 0;
@@ -143,7 +144,8 @@ public class StatsCounterPlayer : MonoBehaviour
         {
             {"Total Built:", StructuresBuilt},
             {"Total Lost:", StructuresLost},
-            {"Damage Repaired:", AmountRepaired},
+            {"Repair by Player:", AmountRepairedByPlayer},
+            {"Repair by Drones:", AmountRepairedByDrones},
             {"Doors Built", DoorsBuilt},
             {"Walls Built", WallsBuilt},
             {"Turrets Built", TurretsBuilt},

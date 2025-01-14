@@ -11,7 +11,7 @@ public class Task_UseRepairGun : Task
     {
         UpdateProgressText();
 
-        amountRepairedAtStart = StatsCounterPlayer.AmountRepaired;
+        amountRepairedAtStart = StatsCounterPlayer.AmountRepairedByPlayer;
     }
 
     void FixedUpdate()
@@ -19,7 +19,7 @@ public class Task_UseRepairGun : Task
         if (isComplete) 
             return;
 
-        progress = (StatsCounterPlayer.AmountRepaired - amountRepairedAtStart) / amountToRepair;
+        progress = (StatsCounterPlayer.AmountRepairedByPlayer - amountRepairedAtStart) / amountToRepair;
         if (progress >= 1)
             SetTaskComplete();
 

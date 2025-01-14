@@ -5,15 +5,16 @@ using UnityEngine;
 public class Task_DeselectRepairGun : Task
 {
     [SerializeField] int repairGunIndex;
-    Player player;
+    PlayerShooter playerShooter;
     bool wasSelected = false;
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
-        if (player == null)
+        Player player = FindObjectOfType<Player>();
+        playerShooter = player.stats.playerShooter;
+        if (playerShooter == null)
         {
-            Debug.LogError("Objective_SelectGun could not find the Player");
+            Debug.LogError("Objective_DeselctRepairGun could not find the Player's shooter");
         }
 
         UpdateProgressText();
@@ -24,11 +25,11 @@ public class Task_DeselectRepairGun : Task
         if (isComplete) 
             return;
 
-        if (player.stats.playerShooter.currentGunIndex == repairGunIndex)
+        if (playerShooter.currentGunIndex == repairGunIndex)
         {
             wasSelected = true;
         }
-        else if (wasSelected)
+        else if (wasSelected && playerShooter.currentGunIndex != repairGunIndex)
         {
             progress = 1;
             SetTaskComplete();

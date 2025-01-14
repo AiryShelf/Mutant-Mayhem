@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class RepairBullet : Bullet
 {
@@ -67,13 +68,14 @@ public class RepairBullet : Bullet
             {
                 Vector2 pos = transform.position;
                 if (tileManager.IsTileBlueprint(pos))
-                    ConstructionManager.Instance.BuildBlueprint(pos, -damage, hitDir);
+                    tileManager.BuildBlueprintAt(pos, -damage, 1.3f, hitDir);
                 else
                     tileManager.ModifyHealthAt(pos, -damage, 1.3f, hitDir);
                 ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
                 BuildingSystem.PlayerCredits -= repairCost;
 
                 SFXManager.Instance.PlaySoundAt(hitSound, pos);
+                StatsCounterPlayer.AmountRepairedByPlayer -= damage;
                 Debug.Log("Ran repair code");
             }
             else

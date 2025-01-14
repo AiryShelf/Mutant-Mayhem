@@ -297,6 +297,8 @@ public class ConstructionManager : MonoBehaviour
             return false;
         }
 
+        StatsCounterPlayer.AmountRepairedByDrones += buildAmount;
+
         if (tileManager.BuildBlueprintAt(pos, buildAmount, 1.2f, hitDir))
         {
             //RemoveBuildJob(buildJob);
@@ -308,9 +310,15 @@ public class ConstructionManager : MonoBehaviour
 
     public bool RepairTile(Vector2 pos, float value, Vector2 hitDir)
     {
-        tileManager.ModifyHealthAt(pos, value, 1f, hitDir);
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
-        if (tileManager.ContainsTileKey(gridPos) && tileManager.GetTileHealthRatio(tileManager.GridToRootPos(gridPos)) <= 0)
+
+        if (!tileManager.ContainsTileKey(gridPos))
+            return true; // Let the drone continue
+
+        tileManager.ModifyHealthAt(pos, value, 1f, hitDir);
+        StatsCounterPlayer.AmountRepairedByDrones += value;
+        
+        if (tileManager.GetTileHealthRatio(tileManager.GridToRootPos(gridPos)) <= 0)
         {
             //RemoveRepairJob(job);
             return true;
