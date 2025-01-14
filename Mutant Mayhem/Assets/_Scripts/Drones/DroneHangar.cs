@@ -9,6 +9,7 @@ public class DroneHangar : MonoBehaviour
     public List<Drone> dronesToSpawnAtStart;
     public int maxDrones;
     public float detectionRange;
+    [SerializeField] float launchDelay = 0.5f;
 
     void Start()
     {
@@ -50,7 +51,7 @@ public class DroneHangar : MonoBehaviour
                 LaunchDrone(freeDrone);
                 freeDrone.SetJob(job);
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(launchDelay);
         }
     } 
 

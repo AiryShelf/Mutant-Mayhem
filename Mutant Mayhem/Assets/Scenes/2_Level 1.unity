@@ -6235,7 +6235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerStatsUpgrades: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
   structureStatsUpgrades: 0000000001000000030000000400000005000000
-  consumablesUpgrades: 00000000010000000200000003000000
+  consumablesUpgrades: 0000000001000000020000000300000004000000
   laserPistolUpgrades: 00000000010000000200000003000000040000000500000006000000
   SMGUpgrades: 00000000010000000200000003000000050000000600000008000000
   repairGunUpgrades: 0000000003000000040000000200000006000000
@@ -12602,6 +12602,7 @@ MonoBehaviour:
   dronesToSpawnAtStart: []
   maxDrones: 16
   detectionRange: 0
+  launchDelay: 0.5
 --- !u!1 &543306201
 GameObject:
   m_ObjectHideFlags: 0
@@ -13252,7 +13253,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 528.10645, y: 345.26624}
+  m_AnchoredPosition: {x: 470.7921, y: 352.47528}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1.1, y: 1.1}
 --- !u!114 &562144389
@@ -43807,6 +43808,7 @@ MonoBehaviour:
   - {fileID: 8519783592572758885, guid: 7e8ec7ee58b73b145927f4846f12c88d, type: 3}
   - {fileID: 5682574338105705101, guid: 2f4bb63d98521804f89c3200bdd43482, type: 3}
   - {fileID: 5696621846081790354, guid: 2cf516ffcd2f1ff46a7fe097b546aa6c, type: 3}
+  - {fileID: 5696621846081790354, guid: 9dca9bde4e806451897b76904d860bb2, type: 3}
   buttonsGrid: {fileID: 1559531516}
   textGrid: {fileID: 476782769}
   panelSwitcher: {fileID: 436456710}
