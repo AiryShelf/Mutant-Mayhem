@@ -29,8 +29,8 @@ public class DroneHangar : MonoBehaviour
         for (int i = 0; i < player.stats.numStartingDrones; i++)
         {
             DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, this);
-            DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, this);
         }
+        DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, this);
     }
 
     void LaunchDrone(Drone drone)
@@ -70,7 +70,9 @@ public class DroneHangar : MonoBehaviour
         drone.myHangar = this;
         drone.currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
         dockedDrones.Add(drone);
-        drone.gameObject.SetActive(false);
+        drone.rb.simulated = false;
+        drone.sr.enabled = false;
+        drone.lights.SetActive(false);
         //drone.SetNewAction(drone.LandInHangar);
     }
 
@@ -80,6 +82,25 @@ public class DroneHangar : MonoBehaviour
             controlledDrones.Remove(drone);
         if (dockedDrones.Contains(drone))
             dockedDrones.Remove(drone);
+
+        if (drone.currentJob == null)
+            return;
+
+        RemoveDroneFromJob(drone);
+        
+    }
+
+    void RemoveDroneFromJob(Drone drone)
+    {
+        switch (drone.droneType)
+        {
+            case DroneType.Builder:
+                ConstructionManager.Instance.IncrementAssignedDrones(drone.currentJob, -1);
+                break;
+            case DroneType.Attacker:
+                IncrementAssignedDrones_Attack(drone.currentJob, -1);
+                break;
+        }
     }
 
     #endregion
@@ -131,19 +152,27 @@ public class DroneHangar : MonoBehaviour
         }
 
         // Increment assigned drones
+        IncrementAssignedDrones_Attack(job, 1);
+
+        return job;
+    }
+
+    void IncrementAssignedDrones_Attack(DroneJob job, int value)
+    {
         if (job.jobType != DroneJobType.None)
         {
-            for (int i = 0; i < attackJobs.Count; i++)
+            if (job is DroneAttackJob attackJob)
             {
-                if (attackJobs[i].Key == job)
+                for (int i = 0; i < attackJobs.Count; i++)
                 {
-                    attackJobs[i] = new KeyValuePair<DroneAttackJob, int>(job, attackJobs[i].Value + 1);
-                    break;
+                    if (attackJobs[i].Key == job)
+                    {
+                        attackJobs[i] = new KeyValuePair<DroneAttackJob, int>(attackJob, attackJobs[i].Value + value);
+                        break;
+                    }
                 }
             }
         }
-
-        return job;
     }
 
     void OnTriggerEnter2D(Collider2D otherCollider)
@@ -164,12 +193,24 @@ public class DroneHangar : MonoBehaviour
             if (otherCollider.transform == kvp.Key.targetTrans)
             {
                 pairsToRemove.Add(kvp);
+                UnassignDrones_Attack(kvp.Key);
             }
         }
 
         foreach (var item in pairsToRemove)
         {
             attackJobs.Remove(item);
+        }
+    }
+
+    void UnassignDrones_Attack(DroneJob job)
+    {
+        foreach (Drone drone in controlledDrones)
+        {
+            if (drone.currentJob == job)
+            {
+                drone.SetJobDone();
+            }
         }
     }
 

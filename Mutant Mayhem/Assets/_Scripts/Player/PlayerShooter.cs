@@ -160,6 +160,8 @@ public class PlayerShooter : Shooter
         isAiming = false;
     }
 
+    #region Shooting
+
     void Shoot()
     {
         reloadNotificationTimer -= Time.deltaTime;
@@ -222,6 +224,20 @@ public class PlayerShooter : Shooter
 
         currentAccuracy += currentGunSO.firingAccuracyLoss * playerStats.weaponHandling;
     }
+
+    void UpdateDynamicAccuracy()
+    {
+        if (playerShooter)
+            currentAccuracy -= Time.deltaTime * playerShooter.player.stats.accuracyHoningSpeed;
+        else
+            currentAccuracy -= Time.deltaTime * accuracyHoningSpeed;
+
+        currentAccuracy = Mathf.Clamp(currentAccuracy, 0, currentGunSO.accuracy * 
+                                      playerShooter.playerStats.weaponHandling);
+        gunSights.SetAccuracy(currentAccuracy);
+    }
+
+    #endregion
 
     #region Sounds
 

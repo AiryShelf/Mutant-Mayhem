@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3688259929015718581}
+  m_Father: {fileID: 4661157760905373336}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &474827040792190476
 MonoBehaviour:
@@ -107,12 +107,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5629306172167252448}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3688259929015718581}
+  m_Father: {fileID: 4661157760905373336}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3887617732711275867
 MonoBehaviour:
@@ -200,9 +200,7 @@ Transform:
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3527722937006211710}
-  - {fileID: 7383601344053854747}
-  - {fileID: 1238175055612458776}
+  - {fileID: 4661157760905373336}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3379014345932164951
@@ -278,21 +276,22 @@ MonoBehaviour:
   currentJob:
     jobType: 0
     jobPosition: {x: 0, y: 0}
-  myRB: {fileID: 8271507474314208127}
-  minJobDist: 6
+  rb: {fileID: 8271507474314208127}
+  sr: {fileID: 3379014345932164951}
+  lights: {fileID: 8022975895623362790}
+  minJobDist: 1
   hoverEffectTime: 2.5
   hoverEffectVariationFactor: 0.5
   hoverEffectForceFactor: 0.7
   hoverScaleFactor: 0.15
-  rotationSpeed: 0.003
-  launchOrLandMinScale: 0.05
+  rotationSpeed: 0.02
+  launchOrLandMinScale: 0.5
   launchOrLandScaleSpeed: 0.05
   jobHeightMinScale: 0.75
   myHangar: {fileID: 0}
   isFlying: 0
-  heightScaleStart: 1
-  shooter: {fileID: 0}
-  attackRange: 6
+  heightScaleStart: 0.8
+  shooter: {fileID: -7526314183592093641}
 --- !u!114 &4250599866353163505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,7 +313,7 @@ MonoBehaviour:
   textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   hasDied: 0
-  corpsePoolName: Drone_Construction_Corpse
+  corpsePoolName: Drone_Attack_Corpse
 --- !u!114 &-7526314183592093641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,16 +326,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38050b0764aa0d44d9ba8237023e929c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gunListSource: []
-  gunTrans: {fileID: 0}
-  muzzleTrans: {fileID: 0}
-  casingEjectorTrans: {fileID: 0}
-  clipEjectorTrans: {fileID: 0}
+  _gunListSource:
+  - {fileID: 11400000, guid: 1faf041caa9594cc597a294d6d679700, type: 2}
+  gunTrans: {fileID: 3688259929015718581}
+  muzzleTrans: {fileID: 3688259929015718581}
+  casingEjectorTrans: {fileID: 3688259929015718581}
+  clipEjectorTrans: {fileID: 3688259929015718581}
   elevatedHitLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   gunRecoil: {fileID: 0}
-  gunsAmmoInClips: 
+  gunsAmmoInClips: 14000000
   accuracyHoningSpeed: 4
   gunList: []
   currentGunIndex: 0
@@ -430,6 +430,40 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &8022975895623362790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4661157760905373336}
+  m_Layer: 19
+  m_Name: Lights
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4661157760905373336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022975895623362790}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3527722937006211710}
+  - {fileID: 7383601344053854747}
+  - {fileID: 1238175055612458776}
+  m_Father: {fileID: 3688259929015718581}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8282318820988226712
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,13 +489,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8282318820988226712}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3688259929015718581}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 4661157760905373336}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!114 &2036210208101773497
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -262,18 +262,6 @@ public class Shooter : MonoBehaviour
         //currentGun.muzzleFlash.enabled = false;
     }
 
-    protected void UpdateDynamicAccuracy()
-    {
-        if (playerShooter)
-            currentAccuracy -= Time.deltaTime * playerShooter.player.stats.accuracyHoningSpeed;
-        else
-            currentAccuracy -= Time.deltaTime * accuracyHoningSpeed;
-
-        currentAccuracy = Mathf.Clamp(currentAccuracy, 0, currentGunSO.accuracy * 
-                                      playerShooter.playerStats.weaponHandling);
-        gunSights.SetAccuracy(currentAccuracy);
-    }
-
     protected Vector2 ApplyAccuracy(Vector2 dir, float accuracy)
     {
         // Vector to radians to degrees
@@ -352,7 +340,7 @@ public class Shooter : MonoBehaviour
     }
 
     // Call this whenever adding new charging weapon
-    protected void StartChargingGuns()
+    public void StartChargingGuns()
     {
         for (int i = 0; i < gunList.Count; i++)
         {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Jobs;
 using UnityEngine;
 
 public class ConstructionManager : MonoBehaviour
@@ -182,14 +183,7 @@ public class ConstructionManager : MonoBehaviour
         // Increment assigned drones
         if (job != null)
         {
-            for (int i = 0; i < buildJobs.Count; i++)
-            {
-                if (buildJobs[i].Key == job)
-                {
-                    buildJobs[i] = new KeyValuePair<DroneBuildJob, int>(job, buildJobs[i].Value + 1);
-                    break;
-                }
-            }
+            IncrementAssignedDrones(job, 1);
         }
 
         return job;
@@ -216,17 +210,36 @@ public class ConstructionManager : MonoBehaviour
         // Increment the assigned drones count for the selected job
         if (job != null)
         {
-            for (int i = 0; i < repairJobs.Count; i++)
+            IncrementAssignedDrones(job, 1);
+        }
+
+        return job;
+    }
+
+    public void IncrementAssignedDrones(DroneJob job, int value)
+    {
+        if (job is DroneBuildJob buildJob)
+        {
+            for (int i = 0; i < buildJobs.Count; i++)
             {
-                if (repairJobs[i].Key == job)
+                if (buildJobs[i].Key == job)
                 {
-                    repairJobs[i] = new KeyValuePair<DroneJob, int>(job, repairJobs[i].Value + 1);
+                    buildJobs[i] = new KeyValuePair<DroneBuildJob, int>(buildJob, buildJobs[i].Value + value);
                     break;
                 }
             }
         }
-
-        return job;
+        else
+        {
+            for (int i = 0; i < repairJobs.Count; i++)
+            {
+                if (repairJobs[i].Key == job)
+                {
+                    repairJobs[i] = new KeyValuePair<DroneJob, int>(job, repairJobs[i].Value + value);
+                    break;
+                }
+            }
+        }
     }
 
     public DroneJob GetNearestJob(Vector2 pos)

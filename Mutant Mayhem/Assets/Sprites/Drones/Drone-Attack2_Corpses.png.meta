@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5860793b7967f4dcfaeb0acb5eedb5eb
+guid: 885ece188bf2e44ab8cdbbdb07a1f240
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -45,12 +45,12 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 48
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Drone-Attack2_0
+      name: Drone-Attack2_Corpses_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 48
-        height: 48
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 47d6913a690304226b4271cc30671cf9
-      internalID: 1065483855
+      spriteID: f2a3e741d8f3a426d80f7867b2b3fa9b
+      internalID: -1858685964
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drone-Attack2_1
+      name: Drone-Attack2_Corpses_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 64
         y: 0
-        width: 48
-        height: 48
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3e5fe1ec8b76247b38e9283e1f7257a5
-      internalID: 1895239425
+      spriteID: dc9138cb3bd664306b686f71e67d9665
+      internalID: -566171462
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drone-Attack2_2
+      name: Drone-Attack2_Corpses_2
       rect:
         serializedVersion: 2
-        x: 96
+        x: 128
         y: 0
-        width: 48
-        height: 48
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,8 +166,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 36e67f85044fd49a1a7582f25c723375
-      internalID: -16831945
+      spriteID: b5bf1598e94884e9eb1e55c8326d5c8b
+      internalID: 1828267188
       vertices: []
       indices: 
       edges: []
@@ -183,9 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Drone-Attack2_0: 1065483855
-      Drone-Attack2_1: 1895239425
-      Drone-Attack2_2: -16831945
+      Drone-Attack2_Corpses_0: -1858685964
+      Drone-Attack2_Corpses_1: -566171462
+      Drone-Attack2_Corpses_2: 1828267188
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

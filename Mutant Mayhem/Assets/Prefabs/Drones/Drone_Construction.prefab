@@ -1,5 +1,39 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &382300257879138901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5985097188294961925}
+  m_Layer: 0
+  m_Name: Lights
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5985097188294961925
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382300257879138901}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.011850991, y: -0.29020506, z: -0.0020968062}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3527722937006211710}
+  - {fileID: 7383601344053854747}
+  - {fileID: 1238175055612458776}
+  m_Father: {fileID: 3688259929015718581}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4296084068919222899
 GameObject:
   m_ObjectHideFlags: 0
@@ -26,11 +60,11 @@ Transform:
   m_GameObject: {fileID: 4296084068919222899}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.009480793, y: 0.23216406, z: 0.0020968062}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3688259929015718581}
+  m_Father: {fileID: 5985097188294961925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &474827040792190476
 MonoBehaviour:
@@ -107,12 +141,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5629306172167252448}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.009480793, y: 0.23216406, z: 0.0020968062}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3688259929015718581}
+  m_Father: {fileID: 5985097188294961925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3887617732711275867
 MonoBehaviour:
@@ -199,9 +233,7 @@ Transform:
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3527722937006211710}
-  - {fileID: 7383601344053854747}
-  - {fileID: 1238175055612458776}
+  - {fileID: 5985097188294961925}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3379014345932164951
@@ -277,13 +309,15 @@ MonoBehaviour:
   currentJob:
     jobType: 3
     jobPosition: {x: -1.5, y: 3.5}
-  myRB: {fileID: 8271507474314208127}
+  rb: {fileID: 8271507474314208127}
+  sr: {fileID: 3379014345932164951}
+  lights: {fileID: 382300257879138901}
   minJobDist: 0.6
   hoverEffectTime: 2.5
   hoverEffectVariationFactor: 0.5
   hoverEffectForceFactor: 0.7
   hoverScaleFactor: 0.15
-  rotationSpeed: 0.003
+  rotationSpeed: 0.013
   launchOrLandMinScale: 0.5
   launchOrLandScaleSpeed: 0.05
   jobHeightMinScale: 0.75
@@ -421,11 +455,11 @@ Transform:
   m_GameObject: {fileID: 8282318820988226712}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.009480793, y: 0.23216406, z: 0.0020968062}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3688259929015718581}
+  m_Father: {fileID: 5985097188294961925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2036210208101773497
 MonoBehaviour:

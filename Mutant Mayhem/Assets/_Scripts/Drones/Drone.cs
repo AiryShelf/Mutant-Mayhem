@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 
 public class Drone : MonoBehaviour
@@ -13,8 +11,10 @@ public class Drone : MonoBehaviour
     public float actionDelay = 1;
     public float repairSpeed = 1;
     public DroneJob currentJob;
-    [SerializeField] Rigidbody2D myRB;
-    [SerializeField] float minJobDist = 1f;
+    public Rigidbody2D rb;
+    public SpriteRenderer sr;
+    public GameObject lights;
+    [SerializeField] protected float minJobDist = 1f;
     [SerializeField] float hoverEffectTime = 1;
     [SerializeField] float hoverEffectVariationFactor = 0.2f;
     [SerializeField] float hoverEffectForceFactor = 0.2f;
@@ -36,7 +36,7 @@ public class Drone : MonoBehaviour
     Coroutine jobCheckCoroutine;
     DroneHealth droneHealth; 
 
-    public void Initialize()
+    public virtual void Initialize()
     {
         droneHealth = GetComponent<DroneHealth>();
         if (droneHealth == null)
@@ -45,13 +45,19 @@ public class Drone : MonoBehaviour
             return;
         }
         droneHealth.SetHealth(droneHealth.GetMaxHealth());
+
+        if (this is AttackDrone attackDrone)
+            attackDrone.shooter.StartChargingGuns();
+
     }
 
     #region Launch / Land
 
     public void Launch()
     {
-        gameObject.SetActive(true);
+        rb.simulated = true;
+        sr.enabled = true;
+        lights.SetActive(true);
 
         heightScale = heightScaleStart * launchOrLandMinScale;
         transform.localScale = new Vector3(heightScale, heightScale, 1);
@@ -114,7 +120,7 @@ public class Drone : MonoBehaviour
 
     #region Main Actions
 
-    void SetNewAction(System.Func<IEnumerator> coroutineMethod)
+    protected virtual void SetNewAction(System.Func<IEnumerator> coroutineMethod)
     {
         //StopAllCoroutines();
         if (alignCoroutine != null)
@@ -123,8 +129,8 @@ public class Drone : MonoBehaviour
             StopCoroutine(actionCoroutine);
         if (jobCheckCoroutine != null)
             StopCoroutine(jobCheckCoroutine);
-        if (jobHeightCoroutine != null)
-            StopCoroutine(jobHeightCoroutine);
+        //if (jobHeightCoroutine != null)
+            //StopCoroutine(jobHeightCoroutine);
 
         actionCoroutine = StartCoroutine(coroutineMethod());
     }
@@ -151,6 +157,7 @@ public class Drone : MonoBehaviour
             if (currentJob is DroneAttackJob attackJob)
                 target = attackJob.targetTrans.position;
             MoveTowards(target, 1);
+            RotateTowards(target);
             yield return new WaitForFixedUpdate();
             if (Vector2.Distance(transform.position, target) < minJobDist)
             {
@@ -162,16 +169,21 @@ public class Drone : MonoBehaviour
 
     protected void MoveTowards(Vector2 target, float forceFactor)
     {
-        Vector2 dir = target - (Vector2)myRB.transform.position;
-        myRB.AddForce(dir.normalized * moveSpeed);
+        Vector2 dir = target - (Vector2)rb.transform.position;
+        rb.AddForce(dir.normalized * moveSpeed * forceFactor);
+    }
 
-        float desiredAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-        float currentAngle = myRB.rotation;
+    protected void RotateTowards(Vector2 target)
+    {
+        Vector2 dir = target - (Vector2)transform.position;
+        float desiredAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90f;
+        float currentAngle = transform.eulerAngles.z + 90;
 
         float angleDiff = Mathf.DeltaAngle(currentAngle, desiredAngle);
+        angleDiff = Mathf.Clamp(angleDiff, -15, 15);
         float torque = angleDiff * rotationSpeed;
 
-        myRB.AddTorque(torque, ForceMode2D.Force);
+        rb.AddTorque(torque, ForceMode2D.Force);
     }
 
     void DoJob()
@@ -199,13 +211,14 @@ public class Drone : MonoBehaviour
         if (currentJob == null)
             return;
 
-        alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
-        jobHeightCoroutine = StartCoroutine(LowerToJob());
+        
     }
 
     IEnumerator Build()
     {
         yield return null;
+        alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
+        jobHeightCoroutine = StartCoroutine(LowerToJob());
         jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
         isFlying = false;
         if (currentJob is not DroneBuildJob)
@@ -231,6 +244,8 @@ public class Drone : MonoBehaviour
     IEnumerator Repair()
     {
         yield return null;
+        alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
+        jobHeightCoroutine = StartCoroutine(LowerToJob());
         jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
         isFlying = false;
         Vector2 jobPos = currentJob.jobPosition;
@@ -265,12 +280,13 @@ public class Drone : MonoBehaviour
 
         float checkTimer = 0;
         bool arrived = false;
-        if (Vector2.Distance(transform.position, target) < minJobDist)
+        if (Vector2.Distance(transform.position, target) < 1)
                 arrived = true;
 
         while (!arrived)
         {
             MoveTowards(target, 1);
+            RotateTowards(target);
             yield return new WaitForFixedUpdate();
 
             checkTimer += Time.fixedDeltaTime;
@@ -284,7 +300,7 @@ public class Drone : MonoBehaviour
                     yield break;
                 }
             }
-            if (Vector2.Distance(transform.position, target) < minJobDist)
+            if (Vector2.Distance(transform.position, target) < 1)
                 arrived = true;
         }
 
@@ -306,6 +322,7 @@ public class Drone : MonoBehaviour
             if (!aligned)
             {
                 MoveTowards(pos, 1f);
+                RotateTowards(pos);
                 if (aligned)
                     Debug.Log("Drone aligned");
             }
@@ -339,7 +356,7 @@ public class Drone : MonoBehaviour
                 float currentForce = hoverEffectForceFactor * sineValue;
 
                 // Apply force each frame
-                myRB.AddForce(randomDir * currentForce, ForceMode2D.Force);
+                rb.AddForce(randomDir * currentForce, ForceMode2D.Force);
 
                 float scaleFactor = heightScale + hoverScaleFactor * sineValue * (1 + hoverEffectVariationFactor);
                 transform.localScale = new Vector3(scaleFactor, scaleFactor, 1f);
@@ -373,7 +390,7 @@ public class Drone : MonoBehaviour
         Debug.Log($"Drone: Job type set to: {job.jobType}");
     }
 
-    void SetJobDone()
+    public void SetJobDone()
     {
         jobDone = true;
         currentJob = new DroneJob(DroneJobType.None, Vector3.zero);

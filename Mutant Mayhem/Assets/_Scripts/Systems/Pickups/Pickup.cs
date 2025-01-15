@@ -61,7 +61,7 @@ public class Pickup : MonoBehaviour
                 StartCoroutine(RepositionUntilFree(dir));
             }
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(3);
         }
     }
 

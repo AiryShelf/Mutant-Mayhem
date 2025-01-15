@@ -44,16 +44,13 @@ public class DroneManager : MonoBehaviour
                 break;
         }
 
-        foreach (Drone drone in allDrones)
+        Drone newDrone = PoolManager.Instance.GetFromPool(poolName).GetComponent<Drone>();
+        if (newDrone != null)
         {
-            if (drone.droneType == droneType)
-            {
-                Drone newDrone = PoolManager.Instance.GetFromPool(poolName).GetComponent<Drone>();
-                newDrone.Initialize();
-                droneHangar.AddDrone(newDrone);
-                activeDroneCount++;
-                return true;
-            }
+            newDrone.Initialize();
+            droneHangar.AddDrone(newDrone);
+            activeDroneCount++;
+            return true;
         }
 
         return false;
