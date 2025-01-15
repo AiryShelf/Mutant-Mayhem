@@ -6,7 +6,8 @@ public class DroneHangar : MonoBehaviour
 {
     public List<Drone> controlledDrones;
     public List<Drone> dockedDrones;
-    public int maxDrones;
+    public int maxConstructionDrones;
+    public int maxAttackDrones;
     [SerializeField] float launchDelay = 0.5f;
     public float detectionRadius = 6f;
 
@@ -26,11 +27,14 @@ public class DroneHangar : MonoBehaviour
     void SpawnStartDrones()
     {
         Player player = FindObjectOfType<Player>();
-        for (int i = 0; i < player.stats.numStartingDrones; i++)
+        for (int i = 0; i < player.stats.numStartBuilderDrones; i++)
         {
             DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, this);
         }
-        DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, this);
+        for (int i = 0; i < player.stats.numStartAttackDrones; i++)
+        {
+            DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, this);
+        }
     }
 
     void LaunchDrone(Drone drone)
@@ -45,24 +49,17 @@ public class DroneHangar : MonoBehaviour
             Debug.LogError("DroneHangar: No drone found to launch!");
     }
 
-    public bool AddDrone(Drone drone)
+    public void AddDrone(Drone drone)
     {
         if (drone == null)
         {
             Debug.LogError("DroneHangar: Tried to Add a null Drone to the hangar");
-            return false;
-        }
-
-        if (controlledDrones.Count >= maxDrones)
-        {
-            Debug.Log("DrongHanger: Already full when adding drone");
-            return false;
+            return;
         }
         
         drone.transform.position = transform.position;
         controlledDrones.Add(drone);
         LandDrone(drone);
-        return true;
     }
 
     public void LandDrone(Drone drone)
@@ -103,6 +100,19 @@ public class DroneHangar : MonoBehaviour
         }
     }
 
+    public int GetDroneCount(DroneType droneType)
+    {
+        int count = 0;
+
+        foreach (Drone drone in controlledDrones)
+        {
+            if (drone.droneType == droneType)
+                count++;
+        }
+
+        return count;
+    }
+
     #endregion
 
 #region Jobs
@@ -126,7 +136,6 @@ public class DroneHangar : MonoBehaviour
                 newJob = GetAttackJob();
                 break;
         }
-        
 
         return newJob;
     }

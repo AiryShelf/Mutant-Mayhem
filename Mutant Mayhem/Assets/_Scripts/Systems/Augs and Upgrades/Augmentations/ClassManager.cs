@@ -41,7 +41,8 @@ public class ClassManager : MonoBehaviour
                 UpgradeManager.Instance.gunStatsCostMult -= 0.2f;
                 UpgradeManager.Instance.structureStatsCostMult += 0.2f;
                 buildingSystem.structureCostMult += 0.2f;
-                player.stats.numStartingDrones = 0;
+                player.stats.numStartBuilderDrones = 0;
+                player.stats.numStartAttackDrones = 2;
                 break;
 
             case PlayerClass.Neutral:
@@ -55,7 +56,8 @@ public class ClassManager : MonoBehaviour
                 player.stats.structureStats.maxTurrets = 1;
                 player.playerShooter.gunsUnlocked[9] = true; // Repair gun
                 player.playerShooter.gunList[9].damage += 2; 
-                player.stats.numStartingDrones = 4;
+                player.stats.numStartBuilderDrones = 4;
+                player.stats.numStartAttackDrones = 0;
                 break;
         }
 

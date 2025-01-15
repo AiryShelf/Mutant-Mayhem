@@ -79,6 +79,9 @@ public static class UpgStatGetter
             case ConsumablesUpgrade.BuyConstructionDrone:
                 stat = DroneManager.Instance.activeConstructionDrones.ToString();
                 return stat;
+            case ConsumablesUpgrade.BuyAttackDrone:
+                stat = DroneManager.Instance.activeAttackDrones.ToString();
+                return stat;
         }
 
         return stat;
@@ -229,6 +232,9 @@ public static class UpgStatGetter
                 return amount;
             case ConsumablesUpgrade.BuyConstructionDrone:
                 amount = "+" + BuyConstructionDroneUpgrade.Amount.ToString();
+                return amount;
+            case ConsumablesUpgrade.BuyAttackDrone:
+                amount = "+" + BuyAttackDroneUpgrade.Amount.ToString();
                 return amount;
         }
 

@@ -284,14 +284,16 @@ MonoBehaviour:
   hoverEffectVariationFactor: 0.5
   hoverEffectForceFactor: 0.7
   hoverScaleFactor: 0.15
-  rotationSpeed: 0.02
+  rotationSpeed: 0.025
   launchOrLandMinScale: 0.5
-  launchOrLandScaleSpeed: 0.05
-  jobHeightMinScale: 0.75
+  launchOrLandScaleSpeed: 0.025
+  flyingAlpha: 1
+  jobHeightMinScale: 1
   myHangar: {fileID: 0}
   isFlying: 0
-  heightScaleStart: 0.8
+  heightScaleStart: 1
   shooter: {fileID: -7526314183592093641}
+  toleranceAngle: 30
 --- !u!114 &4250599866353163505
 MonoBehaviour:
   m_ObjectHideFlags: 0

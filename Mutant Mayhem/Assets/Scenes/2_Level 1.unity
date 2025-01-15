@@ -6236,7 +6236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerStatsUpgrades: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
   structureStatsUpgrades: 0000000001000000030000000400000005000000
-  consumablesUpgrades: 0000000001000000020000000300000004000000
+  consumablesUpgrades: 000000000100000002000000030000000400000005000000
   laserPistolUpgrades: 00000000010000000200000003000000040000000500000006000000
   SMGUpgrades: 00000000010000000200000003000000050000000600000008000000
   repairGunUpgrades: 0000000003000000040000000200000006000000
@@ -8905,7 +8905,8 @@ MonoBehaviour:
     accuracyHoningSpeed: 5
     criticalHitChanceMult: 1
     criticalHitDamageMult: 1
-    numStartingDrones: 2
+    numStartBuilderDrones: 2
+    numStartAttackDrones: 1
   stamina: 100
 --- !u!114 &419796355
 MonoBehaviour:
@@ -8994,7 +8995,8 @@ MonoBehaviour:
     accuracyHoningSpeed: 5
     criticalHitChanceMult: 1
     criticalHitDamageMult: 1
-    numStartingDrones: 2
+    numStartBuilderDrones: 2
+    numStartAttackDrones: 1
   player: {fileID: 0}
 --- !u!114 &419796358
 MonoBehaviour:
@@ -9040,7 +9042,8 @@ MonoBehaviour:
     accuracyHoningSpeed: 4
     criticalHitChanceMult: 1
     criticalHitDamageMult: 1
-    numStartingDrones: 2
+    numStartBuilderDrones: 2
+    numStartAttackDrones: 1
   forceFactor: 2
   sprintStaminaUse: 0.5
   headTurnSpeed: 0.3
@@ -9132,7 +9135,8 @@ MonoBehaviour:
     accuracyHoningSpeed: 5
     criticalHitChanceMult: 1
     criticalHitDamageMult: 1
-    numStartingDrones: 2
+    numStartBuilderDrones: 2
+    numStartAttackDrones: 1
   meleeStaminaUse: 17
   meleeAccuracyLoss: 8
   damageVariance: 0.25
@@ -12406,7 +12410,7 @@ GameObject:
   - component: {fileID: 541972989}
   - component: {fileID: 541972990}
   - component: {fileID: 541972991}
-  m_Layer: 19
+  m_Layer: 20
   m_Name: DroneHangar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12442,7 +12446,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlledDrones: []
   dockedDrones: []
-  maxDrones: 16
+  maxConstructionDrones: 8
+  maxAttackDrones: 2
   launchDelay: 0.5
   detectionRadius: 8
   detectionCollider: {fileID: 541972991}
@@ -12480,7 +12485,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 11
+  m_Radius: 12
 --- !u!1 &543306201
 GameObject:
   m_ObjectHideFlags: 0
@@ -13131,7 +13136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 616.58777, y: 350.237}
+  m_AnchoredPosition: {x: 576.0976, y: 347.8049}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1.1, y: 1.1}
 --- !u!114 &562144389
@@ -43687,6 +43692,7 @@ MonoBehaviour:
   - {fileID: 5682574338105705101, guid: 2f4bb63d98521804f89c3200bdd43482, type: 3}
   - {fileID: 5696621846081790354, guid: 2cf516ffcd2f1ff46a7fe097b546aa6c, type: 3}
   - {fileID: 5696621846081790354, guid: 9dca9bde4e806451897b76904d860bb2, type: 3}
+  - {fileID: 5696621846081790354, guid: d47058b858560486d8df07130562258f, type: 3}
   buttonsGrid: {fileID: 1559531516}
   textGrid: {fileID: 476782769}
   panelSwitcher: {fileID: 436456710}

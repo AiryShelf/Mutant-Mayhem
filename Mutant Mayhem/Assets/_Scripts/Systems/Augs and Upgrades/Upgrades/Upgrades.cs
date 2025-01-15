@@ -43,6 +43,7 @@ public enum ConsumablesUpgrade
     GrenadeBuyAmmo,
     SMGBuyAmmo,
     BuyConstructionDrone,
+    BuyAttackDrone,
 }
 
 public enum GunStatsUpgrade
@@ -543,19 +544,42 @@ public class BuyConstructionDroneUpgrade : Upgrade
     public override bool Apply(PlayerStats playerStats)
     {
         
-        DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, playerStats.structureStats.cubeController.droneHangar);
-        return true;
+        return DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, playerStats.structureStats.cubeController.droneHangar);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones - player.stats.numStartingDrones + 1), baseCost, int.MaxValue);
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones - player.stats.numStartBuilderDrones + 1), baseCost, int.MaxValue);
         return cost;
     }
 
     public static int GetCost(Player player, int baseCost)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones - player.stats.numStartingDrones + 1), baseCost, int.MaxValue);
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones - player.stats.numStartBuilderDrones + 1), baseCost, int.MaxValue);
+        return cost;
+    }
+}
+
+public class BuyAttackDroneUpgrade : Upgrade
+{
+    public BuyAttackDroneUpgrade() : base(ConsumablesUpgrade.BuyAttackDrone) { }
+
+    public static int Amount = 1;
+
+    public override bool Apply(PlayerStats playerStats)
+    {
+        return DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, playerStats.structureStats.cubeController.droneHangar);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeAttackDrones - player.stats.numStartAttackDrones + 1), baseCost, int.MaxValue);
+        return cost;
+    }
+
+    public static int GetCost(Player player, int baseCost)
+    {
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeAttackDrones - player.stats.numStartAttackDrones + 1), baseCost, int.MaxValue);
         return cost;
     }
 }

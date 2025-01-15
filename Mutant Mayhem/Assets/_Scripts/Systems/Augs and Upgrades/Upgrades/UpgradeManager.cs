@@ -177,6 +177,7 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgMaxLevels[ConsumablesUpgrade.GrenadeBuyAmmo] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.SMGBuyAmmo] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.BuyConstructionDrone] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.BuyAttackDrone] = int.MaxValue;
 
         // GunStats
         laserUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
@@ -263,7 +264,8 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.QCubeRepair] = 200;
         consumablesUpgBaseCosts[ConsumablesUpgrade.GrenadeBuyAmmo] = 200;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 100;
-        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyConstructionDrone] = 300;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyConstructionDrone] = 500;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 1000;
 
         // Gun Stats
         laserUpgBaseCosts[GunStatsUpgrade.GunDamage] = 250;
@@ -399,6 +401,8 @@ public class UpgradeManager : MonoBehaviour
                 return new SMGBuyAmmoUpgrade();
             case ConsumablesUpgrade.BuyConstructionDrone:
                 return new BuyConstructionDroneUpgrade();
+            case ConsumablesUpgrade.BuyAttackDrone:
+                return new BuyAttackDroneUpgrade();
 
             default:
                 return null;

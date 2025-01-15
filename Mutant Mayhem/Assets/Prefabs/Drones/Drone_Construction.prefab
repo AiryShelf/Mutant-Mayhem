@@ -307,8 +307,8 @@ MonoBehaviour:
   actionDelay: 1
   repairSpeed: 20
   currentJob:
-    jobType: 3
-    jobPosition: {x: -1.5, y: 3.5}
+    jobType: 0
+    jobPosition: {x: 0, y: 0}
   rb: {fileID: 8271507474314208127}
   sr: {fileID: 3379014345932164951}
   lights: {fileID: 382300257879138901}
@@ -316,14 +316,15 @@ MonoBehaviour:
   hoverEffectTime: 2.5
   hoverEffectVariationFactor: 0.5
   hoverEffectForceFactor: 0.7
-  hoverScaleFactor: 0.15
+  hoverScaleFactor: 0.1
   rotationSpeed: 0.013
   launchOrLandMinScale: 0.5
-  launchOrLandScaleSpeed: 0.05
-  jobHeightMinScale: 0.75
+  launchOrLandScaleSpeed: 0.025
+  flyingAlpha: 0.7
+  jobHeightMinScale: 0.95
   myHangar: {fileID: 0}
   isFlying: 0
-  heightScaleStart: 1
+  heightScaleStart: 1.4
 --- !u!114 &4250599866353163505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,13 +455,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8282318820988226712}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0.009480793, y: 0.23216406, z: 0.0020968062}
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5985097188294961925}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!114 &2036210208101773497
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -22,6 +22,7 @@ public class Drone : MonoBehaviour
     [SerializeField] float rotationSpeed = 0.0025f;
     [SerializeField] float launchOrLandMinScale = 0.3f;
     [SerializeField] float launchOrLandScaleSpeed = 0.05f;
+    [SerializeField] float flyingAlpha = 0.5f;
     [SerializeField] float jobHeightMinScale = 0.6f;
 
     public DroneHangar myHangar;
@@ -32,7 +33,7 @@ public class Drone : MonoBehaviour
     Coroutine actionCoroutine; // Used for states
     Coroutine hoverCoroutine;
     Coroutine alignCoroutine;
-    Coroutine jobHeightCoroutine;
+    protected Coroutine jobHeightCoroutine;
     Coroutine jobCheckCoroutine;
     DroneHealth droneHealth; 
 
@@ -61,6 +62,7 @@ public class Drone : MonoBehaviour
 
         heightScale = heightScaleStart * launchOrLandMinScale;
         transform.localScale = new Vector3(heightScale, heightScale, 1);
+        jobHeightCoroutine = StartCoroutine(RaiseFromJob());
         hoverCoroutine = StartCoroutine(HoverEffect());
     }
 
@@ -74,10 +76,11 @@ public class Drone : MonoBehaviour
         {
             yield return new WaitForSeconds(0.05f);
             heightScale -= launchOrLandScaleSpeed;
+            UpdateAlphaBasedOnHeight();
         }
     }
 
-    IEnumerator RaiseFromJob()
+    protected IEnumerator RaiseFromJob()
     {
         yield return null;
 
@@ -85,6 +88,7 @@ public class Drone : MonoBehaviour
         {
             yield return new WaitForSeconds(0.05f);
             heightScale += launchOrLandScaleSpeed;
+            UpdateAlphaBasedOnHeight();
         }
 
         isFlying = true;
@@ -99,12 +103,31 @@ public class Drone : MonoBehaviour
         {
             yield return new WaitForSeconds(0.05f);
             heightScale -= launchOrLandScaleSpeed;
+            UpdateAlphaBasedOnHeight();
         }
 
         yield return new WaitForFixedUpdate();
         
         myHangar.LandDrone(this);
         StopAllCoroutines();
+    }
+
+    void UpdateAlphaBasedOnHeight()
+    {
+        // Ensure we don't divide by zero
+        float heightRange = heightScaleStart - jobHeightMinScale;
+        if (Mathf.Approximately(heightRange, 0)) return;
+
+        // Normalize the height scale
+        float t = Mathf.Clamp01((heightScale - jobHeightMinScale) / heightRange);
+
+        // Interpolate alpha
+        float alpha = Mathf.Lerp(1, flyingAlpha, t);
+
+        // Update the SpriteRenderer's alpha
+        Color color = sr.color;
+        color.a = alpha;
+        sr.color = color;
     }
 
     public void Die()
@@ -139,6 +162,8 @@ public class Drone : MonoBehaviour
     {
         yield return null;
         jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
+        if (jobHeightCoroutine != null)
+            StopCoroutine(jobHeightCoroutine);
         jobHeightCoroutine = StartCoroutine(RaiseFromJob());
         isFlying = true;
         Vector2 target = Vector2.zero;
@@ -210,14 +235,14 @@ public class Drone : MonoBehaviour
 
         if (currentJob == null)
             return;
-
-        
     }
 
     IEnumerator Build()
     {
         yield return null;
         alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
+        if (jobHeightCoroutine != null)
+            StopCoroutine(jobHeightCoroutine);
         jobHeightCoroutine = StartCoroutine(LowerToJob());
         jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
         isFlying = false;
@@ -245,6 +270,8 @@ public class Drone : MonoBehaviour
     {
         yield return null;
         alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
+        if (jobHeightCoroutine != null)
+            StopCoroutine(jobHeightCoroutine);
         jobHeightCoroutine = StartCoroutine(LowerToJob());
         jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
         isFlying = false;
@@ -268,6 +295,8 @@ public class Drone : MonoBehaviour
     {
         yield return null;
 
+        if (jobHeightCoroutine != null)
+            StopCoroutine(jobHeightCoroutine);
         jobHeightCoroutine = StartCoroutine(RaiseFromJob());
         DroneJob newJob = myHangar.GetDroneJob(droneType);
         if (newJob.jobType != DroneJobType.None)

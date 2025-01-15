@@ -28,28 +28,37 @@ public class DroneManager : MonoBehaviour
 
     public bool SpawnDroneInHangar(DroneType droneType, DroneHangar droneHangar)
     {
-        if (droneHangar.controlledDrones.Count >= droneHangar.maxDrones)
-            return false;
-
         string poolName = "";
         switch (droneType)
         {
             case DroneType.Builder:
                 poolName = "Drone_Construction";
-                activeConstructionDrones++;
+                if (droneHangar.GetDroneCount(DroneType.Builder) >= droneHangar.maxConstructionDrones)
+                {
+                    MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
+                    return false;
+                }
                 break;
             case DroneType.Attacker:
                 poolName = "Drone_Attack";
-                activeAttackDrones++;
+                if (droneHangar.GetDroneCount(DroneType.Attacker) >= droneHangar.maxAttackDrones)
+                {
+                    MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
+                    return false;
+                }
                 break;
         }
 
         Drone newDrone = PoolManager.Instance.GetFromPool(poolName).GetComponent<Drone>();
         if (newDrone != null)
         {
-            newDrone.Initialize();
             droneHangar.AddDrone(newDrone);
+            newDrone.Initialize();
             activeDroneCount++;
+            if (newDrone is AttackDrone)
+                activeAttackDrones++;
+            else
+                activeConstructionDrones++;
             return true;
         }
 
