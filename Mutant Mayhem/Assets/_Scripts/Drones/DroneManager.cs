@@ -89,7 +89,7 @@ public class DroneManager : MonoBehaviour
     {
         UpgradeDroneGunList(gunType, upgType, level);
 
-        // Apply upgrade to existing turrets
+        // Apply upgrade to attack drones
         foreach (Drone drone in activeAttackDrones)
         {
             Shooter shooter = drone.GetComponent<Shooter>();
@@ -111,6 +111,12 @@ public class DroneManager : MonoBehaviour
             
             UpgradeManager.Instance.upgradeEffects.PlayStructureUpgradeEffectAt(drone.transform.position);
             //Debug.Log("Finished upgrading a turret's guns");
+        }
+
+        // Apply upgrade to construction drones
+        foreach(Drone drone in activeConstructionDrones)
+        {
+            //drone.buildSpeed += 
         }
     }
 

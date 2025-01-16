@@ -32,9 +32,9 @@ public class Drone : MonoBehaviour
     protected bool jobDone = false;
     Coroutine actionCoroutine; // Used for states
     Coroutine hoverCoroutine;
-    Coroutine alignCoroutine;
+    protected Coroutine alignCoroutine;
     protected Coroutine jobHeightCoroutine;
-    Coroutine jobCheckCoroutine;
+    protected Coroutine jobCheckCoroutine;
     DroneHealth droneHealth; 
 
     public virtual void Initialize()
@@ -67,8 +67,9 @@ public class Drone : MonoBehaviour
         hoverCoroutine = StartCoroutine(HoverEffect());
     }
 
-    IEnumerator LowerToJob()
+    protected IEnumerator LowerToJob()
     {
+        Debug.LogError("LOWER STARTED");
         yield return null;
 
         isFlying = false;
@@ -83,6 +84,7 @@ public class Drone : MonoBehaviour
 
     protected IEnumerator RaiseFromJob()
     {
+        Debug.LogError("RAISE STARTED");
         yield return null;
 
         while (heightScale < heightScaleStart)
@@ -97,6 +99,7 @@ public class Drone : MonoBehaviour
 
     IEnumerator LandInHangar()
     {
+        Debug.LogError("LAND IN HANGAR STARTED");
         yield return null;
         if (jobHeightCoroutine != null)
             StopCoroutine(jobHeightCoroutine);
@@ -214,86 +217,6 @@ public class Drone : MonoBehaviour
         rb.AddTorque(torque, ForceMode2D.Force);
     }
 
-    void DoJob()
-    {
-        if (droneType == DroneType.Builder)
-        {
-            if (currentJob.jobType == DroneJobType.Build)
-                SetNewAction(Build);
-            else if (currentJob.jobType == DroneJobType.Repair)
-                SetNewAction(Repair);
-            else
-                SetJobDone();
-        }
-        else if (this is AttackDrone attackDrone && currentJob is DroneAttackJob attackJob)
-        {
-            if (attackJob.targetTrans != null)
-            {
-                attackDrone.targetTrans = attackJob.targetTrans;
-                SetNewAction(attackDrone.Attack);
-            }
-        }
-        else
-            SetJobDone();
-
-        if (currentJob == null)
-            return;
-    }
-
-    IEnumerator Build()
-    {
-        yield return null;
-        alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
-        if (jobHeightCoroutine != null)
-            StopCoroutine(jobHeightCoroutine);
-        jobHeightCoroutine = StartCoroutine(LowerToJob());
-        jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
-        isFlying = false;
-        if (currentJob is not DroneBuildJob)
-        {
-            Debug.LogError("Drone: Tried to build when current job is not a DroneBuildJob");
-            yield break;
-        }
-
-        Vector2 jobPos = currentJob.jobPosition;
-        while (true)
-        {
-            Vector2 hitDir = jobPos - (Vector2)transform.position;
-            if (ConstructionManager.Instance.BuildBlueprint(jobPos, buildSpeed, hitDir))
-            {
-                SetJob(ConstructionManager.Instance.GetRepairJob());
-                yield break;
-            }
-
-            yield return new WaitForSeconds(actionDelay);
-        }
-    }
-
-    IEnumerator Repair()
-    {
-        yield return null;
-        alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
-        if (jobHeightCoroutine != null)
-            StopCoroutine(jobHeightCoroutine);
-        jobHeightCoroutine = StartCoroutine(LowerToJob());
-        jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
-        isFlying = false;
-        Vector2 jobPos = currentJob.jobPosition;
-
-        while (true)
-        {
-            Vector2 hitDir = jobPos - (Vector2)transform.position;
-            if (ConstructionManager.Instance.RepairTile(jobPos, repairSpeed, hitDir))
-            {
-                break;
-            }
-
-            yield return new WaitForSeconds(actionDelay);
-        }
-
-        SetJobDone();
-    }
-
     IEnumerator FlyToHangar()
     {
         yield return null;
@@ -343,7 +266,7 @@ public class Drone : MonoBehaviour
 
     #region 2nd Actions
 
-    IEnumerator AlignToPos(Vector2 pos)
+    protected IEnumerator AlignToPos(Vector2 pos)
     {
         yield return null;
         while (true)
@@ -422,6 +345,32 @@ public class Drone : MonoBehaviour
         Debug.Log($"Drone: Job type set to: {job.jobType}");
     }
 
+    void DoJob()
+    {
+        if (this is ConstructionDrone constructionDrone)
+        {
+            if (currentJob.jobType == DroneJobType.Build)
+                SetNewAction(constructionDrone.Build);
+            else if (currentJob.jobType == DroneJobType.Repair)
+                SetNewAction(constructionDrone.Repair);
+            else
+                SetJobDone();
+        }
+        else if (this is AttackDrone attackDrone && currentJob is DroneAttackJob attackJob)
+        {
+            if (attackJob.targetTrans != null)
+            {
+                attackDrone.targetTrans = attackJob.targetTrans;
+                SetNewAction(attackDrone.Attack);
+            }
+        }
+        else
+            SetJobDone();
+
+        if (currentJob == null)
+            return;
+    }
+
     public void SetJobDone()
     {
         jobDone = true;
@@ -429,43 +378,7 @@ public class Drone : MonoBehaviour
         SetNewAction(FlyToHangar);
     }
 
-    protected virtual IEnumerator CheckIfJobDone()
-    {
-        yield return null;
-
-        while (!jobDone)
-        {
-            if (currentJob == null)
-            {
-                Debug.Log("Drone: CurrentJob found null");
-                SetJobDone();
-                yield break;
-            }
-            if (currentJob.jobType == DroneJobType.None)
-            {
-                SetJobDone();
-                yield break;
-            }
-
-            if (currentJob is DroneBuildJob buildJob)
-            {
-                if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
-                {
-                    Debug.Log("Drone: Build job no longer exists");
-                    SetJobDone();
-                    yield break;
-                }
-            }
-            else if (!ConstructionManager.Instance.CheckIfRepairJobExists(currentJob))
-            {
-                Debug.Log("Drone: Repair job no longer exists");
-                SetJobDone();
-                yield break;
-            }
-
-            yield return new WaitForSeconds(1);
-        }
-    }
+    protected virtual IEnumerator CheckIfJobDone() { yield return null; }
 
     #endregion
 }
