@@ -29,7 +29,7 @@ public class Drone : MonoBehaviour
     public bool isFlying = false;
     public float heightScaleStart = 1;
     float heightScale = 1;
-    bool jobDone = false;
+    protected bool jobDone = false;
     Coroutine actionCoroutine; // Used for states
     Coroutine hoverCoroutine;
     Coroutine alignCoroutine;
@@ -49,8 +49,9 @@ public class Drone : MonoBehaviour
 
         if (this is AttackDrone attackDrone)
             attackDrone.shooter.StartChargingGuns();
-
     }
+
+    public virtual void RefreshStats() { }
 
     #region Launch / Land
 
@@ -97,6 +98,8 @@ public class Drone : MonoBehaviour
     IEnumerator LandInHangar()
     {
         yield return null;
+        if (jobHeightCoroutine != null)
+            StopCoroutine(jobHeightCoroutine);
         isFlying = false;
 
         while (heightScale > launchOrLandMinScale)
@@ -426,7 +429,7 @@ public class Drone : MonoBehaviour
         SetNewAction(FlyToHangar);
     }
 
-    IEnumerator CheckIfJobDone()
+    protected virtual IEnumerator CheckIfJobDone()
     {
         yield return null;
 

@@ -47,6 +47,7 @@ public class WaveControllerRandom : MonoBehaviour
     Coroutine endWave;
     public bool isNight;
     Daylight daylight;
+    float countdown;
 
     void OnDisable()
     {
@@ -72,9 +73,11 @@ public class WaveControllerRandom : MonoBehaviour
 
     void OnNextWaveInput(InputAction.CallbackContext context)
     {
-        // When Enter is pressed to start next wave
         if (nextWaveFadeGroup.isTriggered)
         {
+            int healthGain = Mathf.FloorToInt(player.stats.playerHealthScript.healthRegenPerSec * countdown);
+            player.stats.playerHealthScript.ModifyHealth(healthGain, 1, Vector2.one, gameObject);
+
             StopAllCoroutines();
             StartCoroutine(StartWave());
         }
@@ -102,7 +105,7 @@ public class WaveControllerRandom : MonoBehaviour
 
         UpdateWaveTimer(false);
 
-        float countdown = timeBetweenWaves;
+        countdown = timeBetweenWaves;
         while (countdown > 0)
         {
             nextWaveText.text = "Time until night " + (currentWaveIndex + 1) + 

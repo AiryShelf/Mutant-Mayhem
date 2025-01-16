@@ -6,7 +6,7 @@ public class TurretManager : MonoBehaviour
 {
     public static TurretManager Instance { get; private set; }
     
-    public List<TurretGunSO> _turretGunListSource = new List<TurretGunSO>();
+    [SerializeField] List<TurretGunSO> _turretGunListSource = new List<TurretGunSO>();
     
     [Header("Dynamic vars, don't set here")]
     public int currentNumTurrets = 0;
@@ -86,7 +86,7 @@ public class TurretManager : MonoBehaviour
 
     public void UpgradeTurretGuns(GunType gunType, GunStatsUpgrade upgType, int level)
     {
-        // Upgrade master list for stats
+        // Upgrade working list for stats
         UpgradeTurretGunList(gunType, upgType, level);
         
         // Apply upgrade to existing turrets

@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class DroneManager : MonoBehaviour
 {
-    public List<Drone> allDrones;
+    public List<Drone> _droneListSource;
     public List<bool> unlockedDrones;
-    public int activeDroneCount = 0;
-    public int activeConstructionDrones = 0;
-    public int activeAttackDrones = 0;
+    public List<Drone> allActiveDrones;
+    public List<Drone> activeConstructionDrones;
+    public List<Drone> activeAttackDrones;
+
+    public List<TurretGunSO> _droneGunListSource = new List<TurretGunSO>();
+    public List<TurretGunSO> droneGunList = new List<TurretGunSO>();
 
     public static DroneManager Instance;
 
@@ -54,11 +57,11 @@ public class DroneManager : MonoBehaviour
         {
             droneHangar.AddDrone(newDrone);
             newDrone.Initialize();
-            activeDroneCount++;
+            allActiveDrones.Add(newDrone);
             if (newDrone is AttackDrone)
-                activeAttackDrones++;
+                activeAttackDrones.Add(newDrone);
             else
-                activeConstructionDrones++;
+                activeConstructionDrones.Add(newDrone);
             return true;
         }
 
@@ -67,18 +70,92 @@ public class DroneManager : MonoBehaviour
 
     public void RemoveDrone(Drone drone)
     {
-        activeDroneCount--;
+        allActiveDrones.Remove(drone);
 
         switch (drone.droneType)
         {
             case DroneType.Builder:
-                activeConstructionDrones--;
+                activeConstructionDrones.Remove(drone);
                 break;
             case DroneType.Attacker:
-                activeAttackDrones--;
+                activeAttackDrones.Remove(drone);
                 break;
         }
 
         PoolManager.Instance.ReturnToPool(drone.objectPoolName, drone.gameObject);
+    }
+
+    public void UpgradeDroneGuns(GunType gunType, GunStatsUpgrade upgType, int level)
+    {
+        UpgradeDroneGunList(gunType, upgType, level);
+
+        // Apply upgrade to existing turrets
+        foreach (Drone drone in activeAttackDrones)
+        {
+            Shooter shooter = drone.GetComponent<Shooter>();
+            foreach (GunSO gun in shooter.gunList)
+            {
+                if (gun.gunType != gunType)
+                {
+                    return;
+                }
+
+                if (gun is TurretGunSO droneGun)
+                {
+                    UpgradeDroneGun(droneGun, upgType, level);   
+                    drone.RefreshStats();             
+                }
+            }
+            // Refresh stats in shooter
+            shooter.SwitchGuns(shooter.currentGunIndex);
+            
+            UpgradeManager.Instance.upgradeEffects.PlayStructureUpgradeEffectAt(drone.transform.position);
+            //Debug.Log("Finished upgrading a turret's guns");
+        }
+    }
+
+    void UpgradeDroneGunList(GunType gunType, GunStatsUpgrade upgType, int level)
+    {
+        foreach (TurretGunSO droneGun in droneGunList)
+        {
+            if (droneGun.gunType == gunType)
+                UpgradeDroneGun(droneGun, upgType, level);
+        }
+    }
+
+    void UpgradeDroneGun(TurretGunSO droneGun, GunStatsUpgrade upgType, int level)
+    {
+        switch (upgType)
+        {
+            case GunStatsUpgrade.GunDamage:
+                droneGun.damage += droneGun.damageUpgFactor * (level + 1);
+                break;
+            case GunStatsUpgrade.GunKnockback:
+                droneGun.knockback += droneGun.knockbackUpgAmt;
+                break;
+            case GunStatsUpgrade.ShootSpeed:
+                droneGun.shootSpeed += droneGun.shootSpeedUpgNegAmt;
+                break;
+            case GunStatsUpgrade.ClipSize:
+                droneGun.clipSize += droneGun.clipSizeUpgAmt;
+                break;
+            case GunStatsUpgrade.ChargeSpeed:
+                droneGun.chargeDelay += droneGun.chargeSpeedUpgNegAmt;
+                break;
+            case GunStatsUpgrade.GunAccuracy:
+                droneGun.accuracy += droneGun.accuracyUpgNegAmt;
+                break;
+            case GunStatsUpgrade.GunRange:
+                droneGun.bulletLifeTime += droneGun.bulletRangeUpgAmt;
+                break;
+            case GunStatsUpgrade.Recoil:
+                // Depricated
+                Debug.LogError("Tried to upgrade turret with depricated upgrade: recoil");
+                break;
+            case GunStatsUpgrade.TurretReloadSpeed:
+                droneGun.reloadSpeed += droneGun.reloadSpeedUpgNegAmt;
+                break;
+        }
+        //Debug.Log("Upgraded Turret Gun");
     }
 }

@@ -356,7 +356,7 @@ public class TileManager : MonoBehaviour
         }
         else if (healthDifference > 0)
         {
-            if (_TileStatsDict[rootPos].health >= maxHealth)
+            if (_TileStatsDict[rootPos].health >= maxHealth -1)
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
         }
 

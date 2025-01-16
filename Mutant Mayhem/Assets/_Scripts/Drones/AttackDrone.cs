@@ -43,4 +43,35 @@ public class AttackDrone : Drone
         shooter.hasTarget = false;
         base.SetNewAction(coroutineMethod);
     }
+
+    protected override IEnumerator CheckIfJobDone()
+    {
+        yield return null;
+
+        while (!jobDone)
+        {
+            if (currentJob == null)
+            {
+                Debug.Log("AttackDrone: CurrentJob found null");
+                SetJobDone();
+                yield break;
+            }
+            if (currentJob.jobType == DroneJobType.None)
+            {
+                SetJobDone();
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    public override void RefreshStats()
+    {
+        attackRange = shooter.currentGunSO.bulletLifeTime *
+                      shooter.currentGunSO.bulletSpeed * 0.75f;
+        minJobDist = attackRange;
+        
+        base.RefreshStats();
+    }
 }
