@@ -209,12 +209,13 @@ GameObject:
   - component: {fileID: 3688259929015718581}
   - component: {fileID: 1944827466100814146}
   - component: {fileID: 4250599866353163505}
+  - component: {fileID: 7467090437493003281}
   - component: {fileID: 8271507474314208127}
   - component: {fileID: 7494644282629353633}
   - component: {fileID: 7531098424993310505}
   - component: {fileID: 3379014345932164951}
   m_Layer: 19
-  m_Name: Drone_Construction 1
+  m_Name: Drone_Construction
   m_TagString: Drone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -268,11 +269,12 @@ MonoBehaviour:
   rotationSpeed: 0.013
   launchOrLandMinScale: 0.5
   launchOrLandScaleSpeed: 0.03
-  flyingAlpha: 1
+  flyingAlpha: 0.75
   jobHeightMinScale: 0.95
   myHangar: {fileID: 0}
   isFlying: 0
   heightScaleStart: 1.4
+  shooter: {fileID: 7467090437493003281}
 --- !u!114 &4250599866353163505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,6 +297,39 @@ MonoBehaviour:
   textFlyAlphaMax: 0.8
   hasDied: 0
   corpsePoolName: Drone_Construction_Corpse
+--- !u!114 &7467090437493003281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6082351659805797165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38050b0764aa0d44d9ba8237023e929c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gunListSource:
+  - {fileID: 11400000, guid: 6ff8615f6cabc4d14b7ab2988b9dec60, type: 2}
+  gunTrans: {fileID: 3688259929015718581}
+  muzzleTrans: {fileID: 3688259929015718581}
+  casingEjectorTrans: {fileID: 3688259929015718581}
+  clipEjectorTrans: {fileID: 3688259929015718581}
+  elevatedHitLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  gunRecoil: {fileID: 0}
+  gunsAmmoInClips: 0a000000
+  accuracyHoningSpeed: 0
+  gunList: []
+  currentGunIndex: 0
+  currentGunSO: {fileID: 0}
+  TurretReloadTime: 1
+  isReloading: 0
+  isElevated: 0
+  hasTarget: 0
+  gunSights: {fileID: 0}
+  currentAccuracy: 0
 --- !u!50 &8271507474314208127
 Rigidbody2D:
   serializedVersion: 4

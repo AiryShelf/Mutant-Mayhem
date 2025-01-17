@@ -93,8 +93,7 @@ public abstract class Upgrade
     public virtual void Apply(StructureStats structureStats, int level) { }
     public virtual void Apply(TileStats tileStats, int level) { }
     public virtual void Apply(GunSO gunSO, int level) { }
-    // Consumables below
-    public virtual bool Apply(PlayerStats playerStats) 
+    public virtual bool Apply(PlayerStats playerStats) // Consumables
     { 
         return false; 
     }
@@ -771,16 +770,20 @@ public class GunDamageUpgrade : Upgrade
 
     public override void Apply(GunSO gunSO, int level)
     {
+        float amount = 0;
         switch (gunSO.gunType)
         {
             case GunType.Laser:
-                gunSO.damage += gunSO.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                amount = gunSO.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                gunSO.damage += amount;
                 break;
             case GunType.Bullet:
-                gunSO.damage += gunSO.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                amount = gunSO.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                gunSO.damage += amount;
                 break;
             case GunType.RepairGun:
-                gunSO.damage += gunSO.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                amount = gunSO.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                gunSO.damage += amount;
                 break;
         }
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
@@ -1016,6 +1019,7 @@ public class TurretReloadSpeedUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        TurretGunSO turretGun = gunSO as TurretGunSO;
         DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 

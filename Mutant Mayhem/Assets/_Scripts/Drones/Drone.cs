@@ -69,7 +69,7 @@ public class Drone : MonoBehaviour
 
     protected IEnumerator LowerToJob()
     {
-        Debug.LogError("LOWER STARTED");
+        //Debug.Log("LOWER FROM JOB STARTED");
         yield return null;
 
         isFlying = false;
@@ -84,7 +84,7 @@ public class Drone : MonoBehaviour
 
     protected IEnumerator RaiseFromJob()
     {
-        Debug.LogError("RAISE STARTED");
+        //Debug.Log("RAISE FROM JOB STARTED");
         yield return null;
 
         while (heightScale < heightScaleStart)
@@ -99,7 +99,7 @@ public class Drone : MonoBehaviour
 
     IEnumerator LandInHangar()
     {
-        Debug.LogError("LAND IN HANGAR STARTED");
+        //Debug.Log("LAND IN HANGAR STARTED");
         yield return null;
         if (jobHeightCoroutine != null)
             StopCoroutine(jobHeightCoroutine);
@@ -278,8 +278,8 @@ public class Drone : MonoBehaviour
             {
                 MoveTowards(pos, 1f);
                 RotateTowards(pos);
-                if (aligned)
-                    Debug.Log("Drone aligned");
+                //if (aligned)
+                    //Debug.Log("Drone aligned");
             }
         }
     }

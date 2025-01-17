@@ -220,7 +220,7 @@ public class Shooter : MonoBehaviour
     {
         if (i < 0 || i >= gunList.Count)
         {
-            Debug.Log("Tried to switch to a gun that is not unlocked or does not exist");
+            Debug.LogError("Tried to switch to a gun that is not unlocked or does not exist");
             return;
         }
 

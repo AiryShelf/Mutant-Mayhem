@@ -71,7 +71,7 @@ public class GunSights : MonoBehaviour
 
         if (centerHit.collider != null)
         {
-            centerLength = centerHit.distance + 0.5f;
+            centerLength = centerHit.distance + 0.4f;
         }
 
         float leftLength = baseLength * edgeLengthFactor;
@@ -86,7 +86,7 @@ public class GunSights : MonoBehaviour
 
         if (leftHit.collider != null)
         {
-            leftLength = leftHit.distance + 0.5f;
+            leftLength = leftHit.distance + 0.4f;
         }
         float rightLength = baseLength * edgeLengthFactor;
         Vector2 rightDir = GameTools.RotateVector2(transform.right, -accuracy);
@@ -100,7 +100,7 @@ public class GunSights : MonoBehaviour
 
         if (rightHit.collider != null)
         {
-            rightLength = rightHit.distance + 1;
+            rightLength = rightHit.distance + 0.4f;
         }
         
         return (centerLength, leftLength, rightLength);

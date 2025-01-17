@@ -269,7 +269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectPoolName: Drone_Attack
   droneType: 1
-  moveSpeed: 8
+  moveSpeed: 10
   buildSpeed: 0
   actionDelay: 1
   repairSpeed: 0
@@ -293,7 +293,8 @@ MonoBehaviour:
   isFlying: 0
   heightScaleStart: 1
   shooter: {fileID: -7526314183592093641}
-  toleranceAngle: 30
+  aimToleranceAngle: 30
+  keepDistanceFactor: 0.7
 --- !u!114 &4250599866353163505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,7 +339,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   gunRecoil: {fileID: 0}
-  gunsAmmoInClips: 14000000
+  gunsAmmoInClips: 05000000
   accuracyHoningSpeed: 4
   gunList: []
   currentGunIndex: 0

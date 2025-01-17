@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ConstructionDrone : Drone
 {
+    public Shooter shooter;
     internal IEnumerator Build()
     {
         Debug.LogError("BUILD STARTED");
@@ -24,13 +25,13 @@ public class ConstructionDrone : Drone
         while (true)
         {
             Vector2 hitDir = jobPos - (Vector2)transform.position;
-            if (ConstructionManager.Instance.BuildBlueprint(jobPos, buildSpeed, hitDir))
+            if (ConstructionManager.Instance.BuildBlueprint(jobPos, -shooter.currentGunSO.damage, hitDir))
             {
                 SetJob(ConstructionManager.Instance.GetRepairJob());
                 yield break;
             }
 
-            yield return new WaitForSeconds(actionDelay);
+            yield return new WaitForSeconds(shooter.currentGunSO.shootSpeed);
         }
     }
 
@@ -44,16 +45,16 @@ public class ConstructionDrone : Drone
         jobCheckCoroutine = StartCoroutine(CheckIfJobDone());
         isFlying = false;
         Vector2 jobPos = currentJob.jobPosition;
-
+        
         while (true)
         {
             Vector2 hitDir = jobPos - (Vector2)transform.position;
-            if (ConstructionManager.Instance.RepairTile(jobPos, repairSpeed, hitDir))
+            if (ConstructionManager.Instance.RepairTile(jobPos, -shooter.currentGunSO.damage, hitDir))
             {
                 break;
             }
 
-            yield return new WaitForSeconds(actionDelay);
+            yield return new WaitForSeconds(shooter.currentGunSO.shootSpeed);
         }
 
         SetJobDone();

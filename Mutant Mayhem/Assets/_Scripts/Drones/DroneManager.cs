@@ -11,6 +11,7 @@ public class DroneManager : MonoBehaviour
     public List<Drone> activeAttackDrones;
 
     public List<TurretGunSO> _droneGunListSource = new List<TurretGunSO>();
+    [Header("Dynamic Vars:")]
     public List<TurretGunSO> droneGunList = new List<TurretGunSO>();
 
     public static DroneManager Instance;
@@ -26,6 +27,13 @@ public class DroneManager : MonoBehaviour
         {
             Destroy(gameObject);
             return;
+        }
+
+        droneGunList.Clear();
+        foreach(TurretGunSO gun in _droneGunListSource)
+        {
+            TurretGunSO g = Instantiate(gun);
+            droneGunList.Add(g);
         }
     }  
 
@@ -87,17 +95,18 @@ public class DroneManager : MonoBehaviour
 
     public void UpgradeDroneGuns(GunType gunType, GunStatsUpgrade upgType, int level)
     {
+        //Debug.Log("UpgradeDroneGuns called");
         UpgradeDroneGunList(gunType, upgType, level);
 
         // Apply upgrade to attack drones
-        foreach (Drone drone in activeAttackDrones)
+        foreach (Drone drone in allActiveDrones)
         {
             Shooter shooter = drone.GetComponent<Shooter>();
             foreach (GunSO gun in shooter.gunList)
             {
                 if (gun.gunType != gunType)
                 {
-                    return;
+                    continue;
                 }
 
                 if (gun is TurretGunSO droneGun)
@@ -112,29 +121,39 @@ public class DroneManager : MonoBehaviour
             UpgradeManager.Instance.upgradeEffects.PlayStructureUpgradeEffectAt(drone.transform.position);
             //Debug.Log("Finished upgrading a turret's guns");
         }
-
-        // Apply upgrade to construction drones
-        foreach(Drone drone in activeConstructionDrones)
-        {
-            //drone.buildSpeed += 
-        }
     }
 
     void UpgradeDroneGunList(GunType gunType, GunStatsUpgrade upgType, int level)
     {
-        foreach (TurretGunSO droneGun in droneGunList)
+        //Debug.Log("UpgradeDroneGunList called");
+        foreach (TurretGunSO droneGunBase in droneGunList)
         {
-            if (droneGun.gunType == gunType)
-                UpgradeDroneGun(droneGun, upgType, level);
+            //if (droneGunBase.gunType == gunType)
+                //UpgradeDroneGun(droneGunBase, upgType, level);
         }
     }
 
     void UpgradeDroneGun(TurretGunSO droneGun, GunStatsUpgrade upgType, int level)
     {
+        float damageAmount = 0;
+        switch (droneGun.gunType)
+        {
+            case GunType.Laser:
+                damageAmount = droneGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                break;
+            case GunType.Bullet:
+                damageAmount = droneGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                break;
+            case GunType.RepairGun:
+                damageAmount = droneGun.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                break;
+        }
+
+        //Debug.Log($"UpgradeDroneGun: {droneGun}, UpgType: {upgType}, level: {level}");
         switch (upgType)
         {
             case GunStatsUpgrade.GunDamage:
-                droneGun.damage += droneGun.damageUpgFactor * (level + 1);
+                droneGun.damage += damageAmount;
                 break;
             case GunStatsUpgrade.GunKnockback:
                 droneGun.knockback += droneGun.knockbackUpgAmt;
@@ -162,6 +181,5 @@ public class DroneManager : MonoBehaviour
                 droneGun.reloadSpeed += droneGun.reloadSpeedUpgNegAmt;
                 break;
         }
-        //Debug.Log("Upgraded Turret Gun");
     }
 }

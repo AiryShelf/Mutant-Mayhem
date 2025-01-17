@@ -1855,7 +1855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _droneListSource:
-  - {fileID: 6772420642090194433, guid: d3b93fffac05440229d0ed3a46230515, type: 3}
+  - {fileID: 1944827466100814146, guid: 90126303bf3874a7fab85a482e0c9ce2, type: 3}
   - {fileID: -8186209936180108193, guid: cd21e30ef7ccd46ba81051d00f0a2290, type: 3}
   unlockedDrones: 
   allActiveDrones: []
@@ -1863,6 +1863,7 @@ MonoBehaviour:
   activeAttackDrones: []
   _droneGunListSource:
   - {fileID: 11400000, guid: 1faf041caa9594cc597a294d6d679700, type: 2}
+  - {fileID: 11400000, guid: 6ff8615f6cabc4d14b7ab2988b9dec60, type: 2}
   droneGunList: []
 --- !u!1 &83254962
 GameObject:
@@ -10466,6 +10467,7 @@ MonoBehaviour:
   - {fileID: 145518261742128944, guid: 07cdcb54209e84c4589fa7ee1c3c0774, type: 3}
   - {fileID: 145518261742128944, guid: 2f34aec5bd679f64e81317a4522430ea, type: 3}
   - {fileID: 145518261742128944, guid: a541e93f5f717e44dac9311f6d529a18, type: 3}
+  - {fileID: 145518261742128944, guid: 578b50f2875df4710bde9e3ad33aac3d, type: 3}
   - {fileID: 145518261742128944, guid: bac53c885b4ec214b8bbc98e7b2950a8, type: 3}
   - {fileID: 145518261742128944, guid: 1e9ac2e9097fb0d47a8559940a92e36f, type: 3}
   - {fileID: 145518261742128944, guid: 0f2d29c89e0924be799e00ee7f09dcb7, type: 3}
@@ -10488,6 +10490,7 @@ MonoBehaviour:
   - BulletLaser_Pistol
   - BulletGun_SMG
   - BulletRepair
+  - BulletRepair_Drone
   - BulletLaser_Turret
   - BulletGun_Turret
   - BulletLaser_Drone
@@ -10506,7 +10509,7 @@ MonoBehaviour:
   - Drone_Construction_Corpse
   - Drone_Attack
   - Drone_Attack_Corpse
-  poolCounts: 070000000f0000000f000000140000001e0000001e000000c8000000c80000009600000064000000c800000096000000640000006400000032000000640000009600000010000000180000001000000018000000
+  poolCounts: 070000000f0000000f00000018000000140000001e0000001e000000c8000000c80000009600000064000000c800000096000000640000006400000032000000640000009600000010000000180000001000000018000000
 --- !u!4 &473999726
 Transform:
   m_ObjectHideFlags: 0
@@ -13305,7 +13308,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 342.22223, y: 350.66666}
+  m_AnchoredPosition: {x: 375.11243, y: 343.1784}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1.1, y: 1.1}
 --- !u!114 &562144389

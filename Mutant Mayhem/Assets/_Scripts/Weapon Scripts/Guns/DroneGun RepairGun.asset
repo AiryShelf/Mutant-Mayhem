@@ -9,42 +9,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a973bc44d767914408079356d9c621eb, type: 3}
-  m_Name: RepairGun
+  m_Script: {fileID: 11500000, guid: c6956ae236b6e2142be75f03ca1ae122, type: 3}
+  m_Name: DroneGun RepairGun
   m_EditorClassIdentifier: 
   gunType: 10
-  bulletPoolName: BulletRepair
-  uiName: Repair Gun
-  sprite: {fileID: 21300000, guid: 2eb6dc60541c920449efa7ffcd7d740b, type: 3}
-  uiSprite: {fileID: 21300000, guid: 33ba324b557c3494c96f3ba3bfee6981, type: 3}
-  animatorHasString: hasPistol
+  bulletPoolName: BulletRepair_Drone
+  uiName: Drone Repair Gun
+  sprite: {fileID: 0}
+  uiSprite: {fileID: 0}
+  animatorHasString: 
   reloadSounds: []
   selectedSound: {fileID: 11400000, guid: 16dbbb20aa291b14783178bed40bd5a5, type: 2}
   emptyClipPrefab: {fileID: 0}
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: b0032bb18fd08ba4bbadc3c8ac1ec991, type: 3}
-  laserSight: {fileID: 2462978180868395494, guid: 2103369fd556cec4084b6fc80a2c606f, type: 3}
-  muzzleLocalPos: {x: -0.052, y: -0.02}
+  laserSight: {fileID: 0}
+  muzzleLocalPos: {x: 0, y: 0}
   bulletCasingPrefab: {fileID: 1136685630353648448, guid: 66d2439bcd59ab0429a4cee0f21593d7, type: 3}
   FXManagerCasingMethodName: PlayRepairCasing_Gun
-  casingLocalPos: {x: 0.31, y: 0}
+  casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.05
-  recoilAmount: {x: -0.1, y: 0}
-  damage: -25
+  recoilAmount: {x: 0, y: 0}
+  damage: -20
   damageVariance: 0.1
-  damageUpgFactor: -2.5
+  damageUpgFactor: -2
   knockback: 0
   knockbackUpgAmt: 0
-  clipSize: 20
-  clipSizeUpgAmt: 5
-  chargeDelay: 0.3
-  chargeSpeedUpgNegAmt: -0.02
-  shootSpeed: 0.15
-  shootSpeedUpgNegAmt: -0.01
+  clipSize: 10
+  clipSizeUpgAmt: 3
+  chargeDelay: 1
+  chargeSpeedUpgNegAmt: -0.09
+  shootSpeed: 0.9
+  shootSpeedUpgNegAmt: -0.08
   accuracy: 1
-  accuracyUpgNegAmt: -0.01
+  accuracyUpgNegAmt: -0.1
   firingAccuracyLoss: 1
   bulletSpeed: 10
-  bulletLifeTime: 0.28
-  bulletRangeUpgAmt: 0.05
+  bulletLifeTime: 0.14
+  bulletRangeUpgAmt: 0.03
   kickback: 0
   kickbackUpgNegAmt: 0
+  rotationSpeed: 40
+  rotSpeedUpgAmt: 4
+  detectRange: 10
+  detectRangeUpgAmt: 0.5
+  expansionDelay: 0.1
+  expansionDelayUpgNegAmt: -0.004
+  reloadSpeed: 1
+  reloadSpeedUpgNegAmt: -0.09

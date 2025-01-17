@@ -6,11 +6,11 @@ using UnityEngine.Tilemaps;
 public class RepairBullet : Bullet
 {
     [Header("Repair Bullet Settings")]
-    [SerializeField] float speed = 10;
+    [SerializeField] protected float speed = 10;
     [SerializeField] int repairCost = 5;
     [SerializeField] BulletEffectsHandler effectsHandler;
 
-    Vector2 target;
+    protected Vector2 target;
     float targetDist;
     
     public override void Fly()
@@ -46,7 +46,7 @@ public class RepairBullet : Bullet
         // Do nothing
     }
 
-    private IEnumerator CheckDistanceTravelled(float travelDistance)
+    protected IEnumerator CheckDistanceTravelled(float travelDistance)
     {
         Vector3 startPosition = transform.position;
         Vector2 hitDir = (target - (Vector2)startPosition).normalized;

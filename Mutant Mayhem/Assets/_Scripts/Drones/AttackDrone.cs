@@ -5,7 +5,8 @@ using UnityEngine;
 public class AttackDrone : Drone
 {
     public Shooter shooter;
-    [SerializeField] int toleranceAngle = 30;
+    [SerializeField] int aimToleranceAngle = 30;
+    [SerializeField] float keepDistanceFactor = 0.7f;
 
     internal Transform targetTrans;
     float attackRange;
@@ -14,8 +15,17 @@ public class AttackDrone : Drone
     {
         base.Initialize();
         attackRange = shooter.currentGunSO.bulletLifeTime *
-                      shooter.currentGunSO.bulletSpeed * 0.75f;
+                      shooter.currentGunSO.bulletSpeed * 0.9f;
         minJobDist = attackRange;
+    }
+
+    public override void RefreshStats()
+    {
+        attackRange = shooter.currentGunSO.bulletLifeTime *
+                      shooter.currentGunSO.bulletSpeed * 0.9f;
+        minJobDist = attackRange;
+        
+        base.RefreshStats();
     }
 
     internal IEnumerator Attack()
@@ -25,16 +35,36 @@ public class AttackDrone : Drone
             Vector3 forward = rb.transform.right.normalized;
             Vector3 dir = targetTrans.position - rb.transform.position;
             float dot = Vector3.Dot(forward, dir.normalized);
-            float cosThreshold = Mathf.Cos(toleranceAngle * Mathf.Deg2Rad);
-            if (dot >= cosThreshold)
-                shooter.hasTarget = true;
-            else
-                shooter.hasTarget = false;
+            float cosThreshold = Mathf.Cos(aimToleranceAngle * Mathf.Deg2Rad);
+            shooter.hasTarget = dot >= cosThreshold;
 
-            if (dir.sqrMagnitude > Mathf.Pow(attackRange, 2))
+            float sqrDistance = dir.sqrMagnitude;
+            float attackRangeSqr = Mathf.Pow(attackRange, 2);
+            float keepDistanceSqr = Mathf.Pow(attackRange * keepDistanceFactor, 2);
+
+            if (sqrDistance > attackRangeSqr)
+            {
+                // Move closer to the target
                 MoveTowards(targetTrans.position, 1);
+            }
+            else if (sqrDistance < keepDistanceSqr)
+            {
+                // Move away from the target
+                Vector3 awayDirection = rb.transform.position - targetTrans.position;
+                MoveTowards(rb.transform.position + awayDirection.normalized, 1);
+            }
+
             RotateTowards(targetTrans.position);
             yield return new WaitForFixedUpdate();
+
+            /*
+            if (dir.sqrMagnitude > Mathf.Pow(attackRange, 2))
+                MoveTowards(targetTrans.position, 1);
+            else if (dir.sqrMagnitude < Mathf.Pow(attackRange * keepDistanceFactor, 2))
+                MoveTowards()
+            RotateTowards(targetTrans.position);
+            yield return new WaitForFixedUpdate();
+            */
         }
     }
 
@@ -64,14 +94,5 @@ public class AttackDrone : Drone
 
             yield return new WaitForSeconds(1);
         }
-    }
-
-    public override void RefreshStats()
-    {
-        attackRange = shooter.currentGunSO.bulletLifeTime *
-                      shooter.currentGunSO.bulletSpeed * 0.75f;
-        minJobDist = attackRange;
-        
-        base.RefreshStats();
     }
 }

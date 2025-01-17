@@ -98,7 +98,7 @@ public class TurretManager : MonoBehaviour
             {
                 if (gun.gunType != gunType)
                 {
-                    return;
+                    break;
                 }
 
                 if (gun is TurretGunSO turretGun)
@@ -123,10 +123,24 @@ public class TurretManager : MonoBehaviour
     
     void UpgradeTurretGun(TurretGunSO turretGun, GunStatsUpgrade upgType, int level)
     {
+        float damageAmount = 0;
+        switch (turretGun.gunType)
+        {
+            case GunType.Laser:
+                damageAmount = turretGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                break;
+            case GunType.Bullet:
+                damageAmount = turretGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                break;
+            case GunType.RepairGun:
+                damageAmount = turretGun.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                break;
+        }
+
         switch (upgType)
         {
             case GunStatsUpgrade.GunDamage:
-                turretGun.damage += turretGun.damageUpgFactor * (level + 1);
+                turretGun.damage += damageAmount;
                 break;
             case GunStatsUpgrade.GunKnockback:
                 turretGun.knockback += turretGun.knockbackUpgAmt;
