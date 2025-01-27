@@ -56,15 +56,6 @@ public class AttackDrone : Drone
 
             RotateTowards(targetTrans.position);
             yield return new WaitForFixedUpdate();
-
-            /*
-            if (dir.sqrMagnitude > Mathf.Pow(attackRange, 2))
-                MoveTowards(targetTrans.position, 1);
-            else if (dir.sqrMagnitude < Mathf.Pow(attackRange * keepDistanceFactor, 2))
-                MoveTowards()
-            RotateTowards(targetTrans.position);
-            yield return new WaitForFixedUpdate();
-            */
         }
     }
 

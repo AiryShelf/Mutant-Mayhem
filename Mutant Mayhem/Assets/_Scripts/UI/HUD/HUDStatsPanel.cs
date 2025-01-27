@@ -38,7 +38,6 @@ public class HUDStatsPanel : MonoBehaviour
     Health playerHealthScript;
     Stamina playerStaminaScript;
     float playerStamina;
-    float playerMaxStamina;
 
     float qCubePevHealth;
     float qCubeCurrHealth;
@@ -101,9 +100,8 @@ public class HUDStatsPanel : MonoBehaviour
 
     void UpdateStaminaStats()
     {
-        playerMaxStamina = playerStats.staminaMax;
         playerStamina = playerStaminaScript.GetStamina();
-        staminaSlider.value = playerStamina / playerMaxStamina;
+        staminaSlider.value = playerStamina / playerStats.staminaMax;;
         staminaValueText.text = "Energy: " + Mathf.CeilToInt(playerStamina).ToString();
     }
 

@@ -7,6 +7,7 @@ public class PlanetUnlockLines : MonoBehaviour
 {
     [SerializeField] Transform solarSystem;
     [SerializeField] GameObject lineRendererPrefab;
+    [SerializeField] float zOffset = -3f;
     UI_PlanetClickHandler myClickHandler;
     List<Vector3> prerequisitePositions = new List<Vector3>();
     List<bool>prerequisitesComplete = new List<bool>();
@@ -61,6 +62,11 @@ public class PlanetUnlockLines : MonoBehaviour
                 else
                     prerequisitesComplete.Add(false);
             }
+        }
+
+        for (int i = 0; i < prerequisitePositions.Count; i++)
+        {
+            prerequisitePositions[i] = new Vector3(prerequisitePositions[i].x, prerequisitePositions[i].y, prerequisitePositions[i].z + zOffset);
         }
 
         if (prerequisitePositions.Count < 1)
