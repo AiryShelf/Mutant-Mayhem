@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class AttackDrone : Drone
 {
-    public Shooter shooter;
     [SerializeField] int aimToleranceAngle = 30;
     [SerializeField] float keepDistanceFactor = 0.7f;
 
     internal Transform targetTrans;
     float attackRange;
 
-    public override void Initialize()
+    public override void Initialize(TurretGunSO droneGun)
     {
-        base.Initialize();
+        base.Initialize(droneGun);
         attackRange = shooter.currentGunSO.bulletLifeTime *
                       shooter.currentGunSO.bulletSpeed * 0.9f;
         minJobDist = attackRange;

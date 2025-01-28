@@ -40,6 +40,7 @@ public class DroneManager : MonoBehaviour
     public bool SpawnDroneInHangar(DroneType droneType, DroneHangar droneHangar)
     {
         string poolName = "";
+        TurretGunSO droneGun = null;
         switch (droneType)
         {
             case DroneType.Builder:
@@ -49,6 +50,7 @@ public class DroneManager : MonoBehaviour
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
                 }
+                droneGun = droneGunList[1];
                 break;
             case DroneType.Attacker:
                 poolName = "Drone_Attack";
@@ -57,6 +59,7 @@ public class DroneManager : MonoBehaviour
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
                 }
+                droneGun = droneGunList[0];
                 break;
         }
 
@@ -64,7 +67,7 @@ public class DroneManager : MonoBehaviour
         if (newDrone != null)
         {
             droneHangar.AddDrone(newDrone);
-            newDrone.Initialize();
+            newDrone.Initialize(droneGun);
             allActiveDrones.Add(newDrone);
             if (newDrone is AttackDrone)
                 activeAttackDrones.Add(newDrone);
@@ -128,8 +131,8 @@ public class DroneManager : MonoBehaviour
         //Debug.Log("UpgradeDroneGunList called");
         foreach (TurretGunSO droneGunBase in droneGunList)
         {
-            //if (droneGunBase.gunType == gunType)
-                //UpgradeDroneGun(droneGunBase, upgType, level);
+            if (droneGunBase.gunType == gunType)
+                UpgradeDroneGun(droneGunBase, upgType, level);
         }
     }
 

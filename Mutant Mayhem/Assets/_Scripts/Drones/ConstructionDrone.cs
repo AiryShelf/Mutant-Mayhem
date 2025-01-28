@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class ConstructionDrone : Drone
 {
-    public Shooter shooter;
     internal IEnumerator Build()
     {
-        Debug.LogError("BUILD STARTED");
+        //Debug.LogError("BUILD STARTED");
         yield return null;
         alignCoroutine = StartCoroutine(AlignToPos(currentJob.jobPosition));
         if (jobHeightCoroutine != null)

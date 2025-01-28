@@ -323,6 +323,7 @@ public class ConstructionManager : MonoBehaviour
 
     public bool RepairTile(Vector2 pos, float value, Vector2 hitDir)
     {
+        
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
 
         if (!tileManager.ContainsTileKey(gridPos))

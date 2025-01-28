@@ -11,7 +11,6 @@ public class RepairBullet : Bullet
     [SerializeField] BulletEffectsHandler effectsHandler;
 
     protected Vector2 target;
-    float targetDist;
     
     public override void Fly()
     {
@@ -33,7 +32,6 @@ public class RepairBullet : Bullet
 
         // Start the coroutine to check the distance traveled
         StartCoroutine(CheckDistanceTravelled(targetDist));
-        
     }
 
     protected override void CheckCollisions()
@@ -64,27 +62,26 @@ public class RepairBullet : Bullet
         // Modify tile health 
         if (!tileManager.CheckTileFullHealth(transform.position))
         {
-            if (BuildingSystem.PlayerCredits >= repairCost)
+            Vector2 pos = transform.position;
+            if (tileManager.IsTileBlueprint(pos))
+                tileManager.BuildBlueprintAt(pos, -damage, 1.3f, hitDir);
+            else if (BuildingSystem.PlayerCredits >= repairCost)
             {
-                Vector2 pos = transform.position;
-                if (tileManager.IsTileBlueprint(pos))
-                    tileManager.BuildBlueprintAt(pos, -damage, 1.3f, hitDir);
-                else
-                    tileManager.ModifyHealthAt(pos, -damage, 1.3f, hitDir);
-                ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
+                tileManager.ModifyHealthAt(pos, -damage, 1.3f, hitDir);
                 BuildingSystem.PlayerCredits -= repairCost;
-
-                SFXManager.Instance.PlaySoundAt(hitSound, pos);
-                StatsCounterPlayer.AmountRepairedByPlayer -= damage;
-                Debug.Log("Ran repair code");
             }
             else
             {
                 MessagePanel.PulseMessage("Not enough Credits to repair!", Color.red);
+                PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+                yield break;
             }
+                
+            ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
+            SFXManager.Instance.PlaySoundAt(hitSound, pos);
+            StatsCounterPlayer.AmountRepairedByPlayer -= damage;
+            //Debug.Log("Ran repair code");
         }
-
-        //effectsHandler.DestroyAfterSeconds();
 
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }

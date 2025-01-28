@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Drone : MonoBehaviour
 {
+    public Shooter shooter;
     public string objectPoolName = "";
     public DroneType droneType = DroneType.Builder;
     public float moveSpeed = 3;
@@ -37,7 +38,7 @@ public class Drone : MonoBehaviour
     protected Coroutine jobCheckCoroutine;
     DroneHealth droneHealth; 
 
-    public virtual void Initialize()
+    public virtual void Initialize(TurretGunSO droneGun)
     {
         droneHealth = GetComponent<DroneHealth>();
         if (droneHealth == null)
@@ -46,6 +47,8 @@ public class Drone : MonoBehaviour
             return;
         }
         droneHealth.SetHealth(droneHealth.GetMaxHealth());
+
+        shooter._gunListSource[0] = droneGun;
 
         if (this is AttackDrone attackDrone)
             attackDrone.shooter.StartChargingGuns();

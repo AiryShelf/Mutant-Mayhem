@@ -272,23 +272,6 @@ public static class UpgStatGetter
     public static string GetUpgAmount(Player player, GunStatsUpgrade gunStatsUpgrade, int gunIndex, UpgradeManager upgradeManager)
     {
         string amount = "null";
-        float planetDamageMult = 1;
-        float planetRangeMult = 1;
-
-        switch (gunIndex)
-        {
-            case 0:
-                planetDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
-                planetRangeMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserRange];
-                break;
-            case 1:
-                planetDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
-                planetRangeMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletRange];
-                break;
-            case 9:
-                planetDamageMult = PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
-                break;
-        }
 
         switch (gunStatsUpgrade)
         {

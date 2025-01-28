@@ -758,7 +758,7 @@ public class GunDamageUpgrade : Upgrade
                             (upgradeManager.bulletUpgLevels[GunStatsUpgrade.GunDamage] + 2) *
                             PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
                 return upgAmount;
-            case 9:
+            case 4:
                 // upgAmount does not scale up for repair gun
                 upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
                             PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
@@ -770,7 +770,7 @@ public class GunDamageUpgrade : Upgrade
 
     public override void Apply(GunSO gunSO, int level)
     {
-        float amount = 0;
+        float amount;
         switch (gunSO.gunType)
         {
             case GunType.Laser:

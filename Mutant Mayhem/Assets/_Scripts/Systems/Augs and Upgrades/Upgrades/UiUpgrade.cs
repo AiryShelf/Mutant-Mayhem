@@ -172,7 +172,7 @@ public class UIUpgrade : MonoBehaviour
                               upgradeManager.bulletUpgCurrCosts[gunStatsUpgrade]);
                     break;
                 }
-                case 9:
+                case 4:
                 {
                     upgLvl = upgradeManager.repairGunUpgLevels[gunStatsUpgrade];
                     maxLvl = upgradeManager.repairGunUpgMaxLevels[gunStatsUpgrade];

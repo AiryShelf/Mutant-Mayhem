@@ -221,106 +221,31 @@ public class Player : MonoBehaviour
         // Laser Pistol
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (playerShooter.currentGunIndex != 0 && 
-                animControllerPlayer.SwitchGunsStart(0))
-            {
-                toolbarSelector.SwitchBoxes(0); 
-                previousGunIndex = 0;
-            }
+            SwitchToGun(0);
         }
         // SMG
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-
-            if (playerShooter.currentGunIndex != 1 && 
-                animControllerPlayer.SwitchGunsStart(1))
-            { 
-                toolbarSelector.SwitchBoxes(1);
-                previousGunIndex = 1;
-            }
+            SwitchToGun(1);
         }
         // Battle Rifle
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-
-            if (playerShooter.currentGunIndex != 2 && 
-                animControllerPlayer.SwitchGunsStart(2))
-            { 
-                toolbarSelector.SwitchBoxes(2);
-                previousGunIndex = 2;
-            }
+            SwitchToGun(2);
         }
         // Laser Rifle
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-
-            if (playerShooter.currentGunIndex != 3 && 
-                animControllerPlayer.SwitchGunsStart(3))
-            { 
-                toolbarSelector.SwitchBoxes(3);
-                previousGunIndex = 3;
-            }
-        }
-        // FlameThrower?
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-
-            if (playerShooter.currentGunIndex != 4 && 
-                animControllerPlayer.SwitchGunsStart(4))
-            { 
-                toolbarSelector.SwitchBoxes(4);
-                previousGunIndex = 4;
-            }
-        }
-        // Rocket Launcher?
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-
-            if (playerShooter.currentGunIndex != 5 && 
-                animControllerPlayer.SwitchGunsStart(5))
-            { 
-                toolbarSelector.SwitchBoxes(5);
-                previousGunIndex = 5;
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-
-            if (playerShooter.currentGunIndex != 6 && 
-                animControllerPlayer.SwitchGunsStart(6))
-            { 
-                toolbarSelector.SwitchBoxes(6);
-                previousGunIndex = 6;
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-
-            if (playerShooter.currentGunIndex != 7 && 
-                animControllerPlayer.SwitchGunsStart(7))
-            { 
-                toolbarSelector.SwitchBoxes(7);
-                previousGunIndex = 7;
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-
-            if (playerShooter.currentGunIndex != 8 && 
-                animControllerPlayer.SwitchGunsStart(8))
-            { 
-                toolbarSelector.SwitchBoxes(8);
-                previousGunIndex = 8;
-            }
+            SwitchToGun(3);
         }
         // REPAIR GUN
-        else if (Input.GetKeyDown(KeyCode.Alpha0) ||
+        else if (Input.GetKeyDown(KeyCode.Alpha5) ||
                  Input.GetKeyDown(KeyCode.C))
         {
-            if (playerShooter.currentGunIndex != 9)
+            if (playerShooter.currentGunIndex != 4)
             {
-                animControllerPlayer.SwitchGunsStart(9);
-                toolbarSelector.SwitchBoxes(9);
+                animControllerPlayer.SwitchGunsStart(4);
+                toolbarSelector.SwitchBoxes(4);
             }
             else 
             {
@@ -329,6 +254,16 @@ public class Player : MonoBehaviour
                 toolbarSelector.SwitchBoxes(previousGunIndex);
             }
             return;
+        }
+    }
+
+    void SwitchToGun(int gunIndex)
+    {
+        if (playerShooter.currentGunIndex != gunIndex && 
+            animControllerPlayer.SwitchGunsStart(gunIndex))
+        {
+            toolbarSelector.SwitchBoxes(gunIndex); 
+            previousGunIndex = gunIndex;
         }
     }
 
