@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: StructureSO_1x1Wall
   m_EditorClassIdentifier: 
   uiImage: {fileID: 1214991554, guid: 0c66a5e9b0f514d5ea02ea4ddb43d05e, type: 3}
-  tileName: 1x1 Wall
+  tileName: Wall
   description: A basic concrete wall, conveniently dropped from the Mission Control
     station in low orbit.  I hope their aim is good!
   tileCost: 50
   maxHealth: 800
   health: 800
-  blueprintBuildAmount: 200
+  blueprintBuildAmount: 400
   cellPositions:
   - {x: 0, y: 0, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: 7ba813e8503324946a825ce843ae42f2, type: 2}

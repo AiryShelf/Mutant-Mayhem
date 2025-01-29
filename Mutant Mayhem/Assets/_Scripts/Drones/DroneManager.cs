@@ -44,21 +44,21 @@ public class DroneManager : MonoBehaviour
         switch (droneType)
         {
             case DroneType.Builder:
-                poolName = "Drone_Construction";
                 if (droneHangar.GetDroneCount(DroneType.Builder) >= droneHangar.maxConstructionDrones)
                 {
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
                 }
+                poolName = "Drone_Construction";
                 droneGun = droneGunList[1];
                 break;
             case DroneType.Attacker:
-                poolName = "Drone_Attack";
                 if (droneHangar.GetDroneCount(DroneType.Attacker) >= droneHangar.maxAttackDrones)
                 {
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
                 }
+                poolName = "Drone_Attack";
                 droneGun = droneGunList[0];
                 break;
         }
@@ -66,9 +66,10 @@ public class DroneManager : MonoBehaviour
         Drone newDrone = PoolManager.Instance.GetFromPool(poolName).GetComponent<Drone>();
         if (newDrone != null)
         {
-            droneHangar.AddDrone(newDrone);
             newDrone.Initialize(droneGun);
+            droneHangar.AddDrone(newDrone);
             allActiveDrones.Add(newDrone);
+
             if (newDrone is AttackDrone)
                 activeAttackDrones.Add(newDrone);
             else
@@ -96,34 +97,12 @@ public class DroneManager : MonoBehaviour
         PoolManager.Instance.ReturnToPool(drone.objectPoolName, drone.gameObject);
     }
 
+    #region Upgrades
+
     public void UpgradeDroneGuns(GunType gunType, GunStatsUpgrade upgType, int level)
     {
         //Debug.Log("UpgradeDroneGuns called");
         UpgradeDroneGunList(gunType, upgType, level);
-
-        // Apply upgrade to attack drones
-        foreach (Drone drone in allActiveDrones)
-        {
-            Shooter shooter = drone.GetComponent<Shooter>();
-            foreach (GunSO gun in shooter.gunList)
-            {
-                if (gun.gunType != gunType)
-                {
-                    continue;
-                }
-
-                if (gun is TurretGunSO droneGun)
-                {
-                    UpgradeDroneGun(droneGun, upgType, level);   
-                    drone.RefreshStats();             
-                }
-            }
-            // Refresh stats in shooter
-            shooter.SwitchGuns(shooter.currentGunIndex);
-            
-            UpgradeManager.Instance.upgradeEffects.PlayStructureUpgradeEffectAt(drone.transform.position);
-            //Debug.Log("Finished upgrading a turret's guns");
-        }
     }
 
     void UpgradeDroneGunList(GunType gunType, GunStatsUpgrade upgType, int level)
@@ -185,4 +164,6 @@ public class DroneManager : MonoBehaviour
                 break;
         }
     }
+
+    #endregion
 }

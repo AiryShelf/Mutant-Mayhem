@@ -26,7 +26,8 @@ public class ConstructionDrone : Drone
             Vector2 hitDir = jobPos - (Vector2)transform.position;
             if (ConstructionManager.Instance.BuildBlueprint(jobPos, -shooter.currentGunSO.damage, hitDir))
             {
-                SetJob(ConstructionManager.Instance.GetRepairJob());
+                //SetJob(ConstructionManager.Instance.GetRepairJob());
+                SetJobDone();
                 yield break;
             }
 
@@ -48,7 +49,7 @@ public class ConstructionDrone : Drone
         while (true)
         {
             Vector2 hitDir = jobPos - (Vector2)transform.position;
-            if (ConstructionManager.Instance.RepairTile(jobPos, -shooter.currentGunSO.damage, hitDir))
+            if (ConstructionManager.Instance.RepairUntilComplete(jobPos, -shooter.currentGunSO.damage, hitDir))
             {
                 break;
             }

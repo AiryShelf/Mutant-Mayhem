@@ -13,18 +13,14 @@ public class AttackDrone : Drone
     public override void Initialize(TurretGunSO droneGun)
     {
         base.Initialize(droneGun);
-        attackRange = shooter.currentGunSO.bulletLifeTime *
-                      shooter.currentGunSO.bulletSpeed * 0.9f;
-        minJobDist = attackRange;
+        RefreshStats();
     }
 
     public override void RefreshStats()
     {
         attackRange = shooter.currentGunSO.bulletLifeTime *
-                      shooter.currentGunSO.bulletSpeed * 0.9f;
+                      shooter.currentGunSO.bulletSpeed * 0.85f;
         minJobDist = attackRange;
-        
-        base.RefreshStats();
     }
 
     internal IEnumerator Attack()

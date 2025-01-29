@@ -58,7 +58,7 @@ public class ConstructionManager : MonoBehaviour
         {
             if (kvp.Key.jobPosition == repairJob.jobPosition)
             {
-                Debug.LogWarning($"ContructionManager: Tired to add a RepairJob that already exists at {repairJob.jobPosition}!");
+                //Debug.LogWarning($"ContructionManager: Tired to add a RepairJob that already exists at {repairJob.jobPosition}!");
                 return;
             }
         }
@@ -321,22 +321,30 @@ public class ConstructionManager : MonoBehaviour
         return false;
     }
 
-    public bool RepairTile(Vector2 pos, float value, Vector2 hitDir)
+    public bool RepairUntilComplete(Vector2 pos, float value, Vector2 hitDir)
     {
-        
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
 
         if (!tileManager.ContainsTileKey(gridPos))
-            return true; // Let the drone continue
+            return true; // Job is missing or complete
 
-        tileManager.ModifyHealthAt(pos, value, 1f, hitDir);
-        StatsCounterPlayer.AmountRepairedByDrones += value;
+        float repairCost = tileManager.GetRepairCostAt(pos, value);
+        if (BuildingSystem.PlayerCredits >= repairCost)
+        {
+            // modify health
+            tileManager.ModifyHealthAt(pos, value, 1f, hitDir);
+            StatsCounterPlayer.AmountRepairedByDrones += value;
+            BuildingSystem.PlayerCredits -= repairCost;
+        }
+        else
+        {
+            MessagePanel.PulseMessage("Not enough Credits to repair!", Color.red);
+            // NEED LOGIG HERE for keeping the job but sending drones home....
+            return false;
+        }
         
         if (tileManager.GetTileHealthRatio(tileManager.GridToRootPos(gridPos)) <= 0)
-        {
-            //RemoveRepairJob(job);
-            return true;
-        }
+            return true; // Job is complete
         
         return false;
     }

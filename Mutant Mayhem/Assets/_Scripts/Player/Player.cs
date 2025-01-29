@@ -218,29 +218,22 @@ public class Player : MonoBehaviour
 
     void OnToolbar()
     {
-        // Laser Pistol
+        // Laser Weapon
         if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
             SwitchToGun(0);
-        }
-        // SMG
+        // Bullet Weapon
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
             SwitchToGun(1);
-        }
-        // Battle Rifle
+        // ??
         else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
             SwitchToGun(2);
-        }
-        // Laser Rifle
+        // ??
         else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
             SwitchToGun(3);
-        }
         // REPAIR GUN
-        else if (Input.GetKeyDown(KeyCode.Alpha5) ||
-                 Input.GetKeyDown(KeyCode.C))
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+            SwitchToGun(4);
+        else if (Input.GetKeyDown(KeyCode.C))
         {
             if (playerShooter.currentGunIndex != 4)
             {
@@ -346,37 +339,6 @@ public class Player : MonoBehaviour
         RotateHead(mousePos);
     }
 
-/* THIS WAS TOO SLOW, ESPECIALLY FOR SMALL MOVEMENTS
-    void LookAtMouse()
-    {
-        // Find Mouse direction and angle
-        Vector3 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        
-        if ((transform.position - mousePos).magnitude > 
-            (transform.position - muzzleTrans.position).magnitude)
-        {
-            muzzleDirToMouse = mousePos - muzzleTrans.transform.position;
-        }
-        else
-        {
-            muzzleDirToMouse = mousePos - transform.position;
-        }
-
-        muzzleDirToMouse.Normalize();
-       
-        // Get muzzle angle and rotation
-        muzzleAngleToMouse = Mathf.Atan2(muzzleDirToMouse.y, muzzleDirToMouse.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(0, 0, muzzleAngleToMouse);
-
-        // Apply body rotation 
-        double rotationSpeed = Math.Pow(stats.lookSpeed, experimentRotationConstant);
-        playerMainTrans.rotation = Quaternion.Lerp(
-            playerMainTrans.rotation, targetRotation, (float)rotationSpeed);
-
-        RotateHead(mousePos);
-    }
-*/
-
     void RotateHead(Vector3 mousePos)
     {
         // Get head angle
@@ -452,11 +414,6 @@ public class Player : MonoBehaviour
 
         float speed = Mathf.Lerp(stats.strafeForce, stats.moveForce, speedFactor);
         moveDir *= speed * sprintSpeedAmount;
-
-
-        //OG code
-        //float speed = Mathf.Lerp(strafeForce, moveForce, Mathf.Cos(angleDifference * Mathf.Deg2Rad));
-        //moveDir *= speed * sprintSpeedAmount;
 
         myRb.AddForce(moveDir);
     }

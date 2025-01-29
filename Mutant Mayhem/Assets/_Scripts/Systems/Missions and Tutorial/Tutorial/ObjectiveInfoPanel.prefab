@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 7897227796263444526}
   - component: {fileID: 2345845451889605395}
   m_Layer: 5
-  m_Name: Mission Text
+  m_Name: Objective Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Mission Info
+  m_text: 'Objective Title
 
 '
   m_isRightToLeft: 0
@@ -371,12 +371,12 @@ GameObject:
   - component: {fileID: 3458928221112978256}
   - component: {fileID: 5422591254970403954}
   m_Layer: 5
-  m_Name: TutorialMissionInfoPanel
+  m_Name: ObjectiveInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3458928221112978256
 RectTransform:
   m_ObjectHideFlags: 0
@@ -654,7 +654,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5776675130458506331, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 190
+      value: 109.4
       objectReference: {fileID: 0}
     - target: {fileID: 5776675130458506331, guid: 048590c64802cfc468d0ff7da4e8cfc1, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -890,7 +890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50.6
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_AnchoredPosition.y

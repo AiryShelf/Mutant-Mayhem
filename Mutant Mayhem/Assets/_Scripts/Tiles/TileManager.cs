@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -85,7 +84,6 @@ public class TileManager : MonoBehaviour
         _TileStatsDict.Clear();
     }
 
-
     #region Alter Tiles
 
     public bool AddBlueprintAt(Vector3Int gridPos, RuleTileStructure ruleTile, int rotation)
@@ -106,11 +104,11 @@ public class TileManager : MonoBehaviour
         }
         ConstructionManager.Instance.AddBuildJob(buildJob);
 
-        _TileStatsDict[gridPos].health *= 0.33f;
+        _TileStatsDict[gridPos].health *= 0.99f;
 
-        if (ruleTile.structureSO.tileName == "1x1 Wall")
+        if (ruleTile.structureSO.tileName == "Wall")
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
-        else if (ruleTile.structureSO.tileName == "1x1 Corner")
+        else if (ruleTile.structureSO.tileName == "Wall Corner")
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
         else
         {
@@ -133,6 +131,7 @@ public class TileManager : MonoBehaviour
     public bool AddTileAt(Vector3Int rootPos, RuleTileStructure ruleTile)
     {
         _TileStatsDict[rootPos].isBlueprint = false;
+        _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
         Matrix4x4 matrix = blueprintTilemap.GetTransformMatrix(rootPos);
         blueprintTilemap.SetTile(rootPos, null);
         blueprintTilemap.SetTransformMatrix(rootPos, matrix);
@@ -144,9 +143,9 @@ public class TileManager : MonoBehaviour
         //}
 
         // Set and rotate animated tile
-        if (ruleTile.structureSO.tileName == "1x1 Wall")
+        if (ruleTile.structureSO.tileName == "Wall")
             AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
-        else if (ruleTile.structureSO.tileName == "1x1 Corner")
+        else if (ruleTile.structureSO.tileName == "Wall Corner")
             AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.buildUiTile);
         else
         {
@@ -309,10 +308,11 @@ public class TileManager : MonoBehaviour
         {
             
             //StructureRotator.RotateTileAt(blueprintTilemap, rootPos, rotation);
+            _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
             AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
 
             ConstructionManager.Instance.RemoveBuildJob(pos);
-            ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
+            //ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
             return true;
         }
 
@@ -347,7 +347,7 @@ public class TileManager : MonoBehaviour
             return;
         else if (healthDifference < 0)
         {
-            if (healthAtStart >= maxHealth)
+            //if (healthAtStart >= maxHealth)
                 ConstructionManager.Instance.AddRepairJob(new DroneJob(DroneJobType.Repair, GridCenterToWorld(rootPos)));
 
             color = textFlyHealthLossColor;
@@ -411,8 +411,8 @@ public class TileManager : MonoBehaviour
                                  _TileStatsDict[rootPos].maxHealth);
 
         Tilemap tilemap;
-        if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Wall" || 
-            _TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "1x1 Corner")
+        if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "Wall" || 
+            _TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "Wall Corner")
             tilemap = damageTilemap;
         else
             tilemap = AnimatedTilemap;
@@ -498,6 +498,25 @@ public class TileManager : MonoBehaviour
     #endregion
 
     #region Checks and Getters
+
+    public float GetRepairCostAt(Vector2 worldPos, float repairAmount)
+    {
+        Vector3Int gridPos = WorldToGrid(worldPos);
+        if (!_TileStatsDict.ContainsKey(gridPos))
+        {
+            Debug.LogWarning($"TileManager: No structure exists at: {gridPos}");
+            return 0;
+        }
+
+        float maxHealth = _TileStatsDict[gridPos].maxHealth;
+        float currentHealth = _TileStatsDict[gridPos].health;
+        float actualRepairAmount = Mathf.Min(repairAmount, maxHealth - currentHealth);
+        
+        float tileCost = _TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
+        float cost = actualRepairAmount / maxHealth * (tileCost * 0.5f);
+        
+        return cost;
+    }
 
     public bool IsTileBlueprint(Vector2 worldPos)
     {

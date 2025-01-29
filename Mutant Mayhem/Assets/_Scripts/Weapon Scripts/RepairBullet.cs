@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class RepairBullet : Bullet
 {
     [Header("Repair Bullet Settings")]
     [SerializeField] protected float speed = 10;
-    [SerializeField] int repairCost = 5;
     [SerializeField] BulletEffectsHandler effectsHandler;
 
     protected Vector2 target;
@@ -59,22 +57,31 @@ public class RepairBullet : Bullet
         // Lock to target pos to avoid missses
         transform.position = target;
 
-        // Modify tile health 
+        // Build if blueprint
         if (!tileManager.CheckTileFullHealth(transform.position))
         {
             Vector2 pos = transform.position;
+            bool isBlueprint = false;
             if (tileManager.IsTileBlueprint(pos))
+            {
+                isBlueprint = true;
                 tileManager.BuildBlueprintAt(pos, -damage, 1.3f, hitDir);
-            else if (BuildingSystem.PlayerCredits >= repairCost)
-            {
-                tileManager.ModifyHealthAt(pos, -damage, 1.3f, hitDir);
-                BuildingSystem.PlayerCredits -= repairCost;
             }
-            else
+            
+            if (!isBlueprint)
             {
-                MessagePanel.PulseMessage("Not enough Credits to repair!", Color.red);
-                PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
-                yield break;
+                float repairCost = tileManager.GetRepairCostAt(pos, -damage);
+                if (BuildingSystem.PlayerCredits >= repairCost)
+                {
+                    tileManager.ModifyHealthAt(pos, -damage, 1.3f, hitDir);
+                    BuildingSystem.PlayerCredits -= repairCost;
+                }
+                else
+                {
+                    MessagePanel.PulseMessage("Not enough Credits to repair!", Color.red);
+                    PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+                    yield break;
+                }
             }
                 
             ParticleManager.Instance.PlayRepairEffect(pos, transform.right);

@@ -145,10 +145,10 @@ public class UI_MissionPanelController : MonoBehaviour
         objectiveInfoPanel.descriptionText.text = currentMission.objectives[currentObjectiveIndex].objectiveDescription;
 
         // Handle 'Disable Tutorial' button
-        if (currentMission.missionTitle == "Tutorial")
-            objectiveInfoPanel.disableTutorialButton.gameObject.SetActive(true);
-        else
-            objectiveInfoPanel.disableTutorialButton.gameObject.SetActive(false);
+        //if (currentMission.isTutorial)
+            //objectiveInfoPanel.disableTutorialButton.gameObject.SetActive(true);
+        //else
+            //objectiveInfoPanel.disableTutorialButton.gameObject.SetActive(false);
     }
 
     void ClearTasksGrid()

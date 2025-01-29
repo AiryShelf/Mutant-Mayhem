@@ -48,7 +48,8 @@ public class Drone : MonoBehaviour
         }
         droneHealth.SetHealth(droneHealth.GetMaxHealth());
 
-        shooter._gunListSource[0] = droneGun;
+        shooter.gunList[0] = droneGun;
+        shooter.SwitchGuns(0);
 
         if (this is AttackDrone attackDrone)
             attackDrone.shooter.StartChargingGuns();

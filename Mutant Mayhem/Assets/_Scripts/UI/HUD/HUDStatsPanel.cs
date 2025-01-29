@@ -144,12 +144,15 @@ public class HUDStatsPanel : MonoBehaviour
 
     void UpdateCreditsText(float playerCredits)
     {
+        int creditsChange =  Mathf.FloorToInt(playerCredits - previousCredits);
+        if (creditsChange == 0)
+            return;
+
         TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Credits").GetComponent<TextFly>();
         textFly.transform.SetParent(transform);
         Color textColor;
         textFly.transform.position = creditsText.transform.position;
-
-        int creditsChange =  Mathf.FloorToInt(playerCredits - previousCredits);
+        
         if (creditsChange < 0)
         {
             textColor = textFlyCreditsLossColor;
