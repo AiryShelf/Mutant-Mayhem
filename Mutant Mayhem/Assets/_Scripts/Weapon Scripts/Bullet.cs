@@ -7,7 +7,18 @@ public class Bullet : MonoBehaviour
     public LayerMask hitLayers;
     LayerMask hitLayersStart;
     public GunType gunType;
+
+    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] protected SoundSO shootSound;
+    [SerializeField] protected SoundSO hitSound;
+
+    [Header("Dynamic vars, don't set here")]
     public string objectPoolName;
+
+    [Header("Optional")]
+    [SerializeField] GameObject AiTrggerPrefab;
+    [SerializeField] float AITriggerSize;
+
     [HideInInspector] public float damage = 10;
     [HideInInspector] public float damageVariance;
     [HideInInspector] public float knockback = 1f;
@@ -17,14 +28,6 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public CriticalHit criticalHit;
     [HideInInspector] public float critChanceMult = 1;
     [HideInInspector] public float critDamageMult = 1;
-
-    [SerializeField] protected Rigidbody2D rb;
-    [SerializeField] protected SoundSO shootSound;
-    [SerializeField] protected SoundSO hitSound;
-
-    [Header("Optional")]
-    [SerializeField] GameObject AiTrggerPrefab;
-    [SerializeField] float AITriggerSize;
 
     protected TileManager tileManager;
 

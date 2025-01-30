@@ -12,7 +12,15 @@ public class CubeInteractEffect : MonoBehaviour
     [SerializeField] float fadeLightToValue = 0.25f;
     [SerializeField] float fadeSpriteToValue = 0.125f;
 
+    float startLightValue;
+    float startSpriteValue;
     Coroutine fadeCoroutine;
+
+    void Awake()
+    {
+        startLightValue = light2d.intensity;
+        startSpriteValue = sr.color.a;
+    }
 
     void OnTriggerEnter2D(Collider2D other) 
     {
@@ -39,7 +47,7 @@ public class CubeInteractEffect : MonoBehaviour
                 
             if (fadeCoroutine != null)
                 StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(FadeLightAndSprite(0, 0));
+            fadeCoroutine = StartCoroutine(FadeLightAndSprite(startSpriteValue, startLightValue));
         }
     }
     

@@ -50,10 +50,12 @@ public class MeleeControllerPlayer : MonoBehaviour
     {
         if (on)
         {
+            swordSR.enabled = true;
             swordController.gameObject.SetActive(true);
         }
         else
         {
+            swordSR.enabled = false;
             swordController.gameObject.SetActive(false);
         }
     }

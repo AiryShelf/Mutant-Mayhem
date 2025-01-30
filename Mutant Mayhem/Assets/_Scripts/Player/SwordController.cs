@@ -9,9 +9,11 @@ public class SwordController : MonoBehaviour
     [SerializeField] Transform tipTrans;
     public PolygonCollider2D polyCollider;
     [SerializeField] TrailRenderer trailRenderer;
+    [SerializeField] Transform spriteTransform;
     [SerializeField] float baseTrailWidth;
     [SerializeField] float minTrailWidth;
-    
+
+
     Vector2 previousHandlePos;
     Vector2 previousTipPos;
 
@@ -69,16 +71,19 @@ public class SwordController : MonoBehaviour
 
                 // Set the trail width with the base value as a multiplier
                 trailRenderer.widthMultiplier = baseTrailWidth * widthMultiplier;
+                spriteTransform.localScale = new Vector2(1, widthMultiplier);
             }
             else
             {
                 // No collision, so set the trail width to the full base value
                 trailRenderer.widthMultiplier = baseTrailWidth;
+                spriteTransform.localScale = new Vector2(1, 1);
             }
         }
         else
         {
             trailRenderer.widthMultiplier = baseTrailWidth;
+            spriteTransform.localScale = new Vector2(1, 1);
         }
 
         // Draw polygon collider
