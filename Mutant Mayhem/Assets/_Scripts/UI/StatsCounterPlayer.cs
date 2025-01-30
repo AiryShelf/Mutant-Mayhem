@@ -32,12 +32,12 @@ public class StatsCounterPlayer : MonoBehaviour
     public static float DamageToPlayer;
     public static float DamageToStructures;
     public static float DamageToEnemies;
+    public static float AmountRepairedByPlayer;
+    public static float AmountRepairedByDrones;
 
     [Header("Structures")]
     public static int StructuresBuilt;
     public static int StructuresLost;
-    public static float AmountRepairedByPlayer;
-    public static float AmountRepairedByDrones;
     public static int DoorsBuilt;
     public static int WallsBuilt;
     public static int TurretsBuilt;
@@ -138,14 +138,14 @@ public class StatsCounterPlayer : MonoBehaviour
             {"Total to Player:", DamageToPlayer},
             {"Total to Structures:", DamageToStructures},
             {"Total to Enemies:", DamageToEnemies},
+            {"Repaired by Player:", AmountRepairedByPlayer},
+            {"Repaired by Drones:", AmountRepairedByDrones},
         };
 
         StructuresStats = new Dictionary<string, float>
         {
             {"Total Built:", StructuresBuilt},
             {"Total Lost:", StructuresLost},
-            {"Repair by Player:", AmountRepairedByPlayer},
-            {"Repair by Drones:", AmountRepairedByDrones},
             {"Doors Built", DoorsBuilt},
             {"Walls Built", WallsBuilt},
             {"Turrets Built", TurretsBuilt},

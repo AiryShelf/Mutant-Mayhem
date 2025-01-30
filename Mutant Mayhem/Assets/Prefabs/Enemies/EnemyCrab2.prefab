@@ -70,7 +70,7 @@ MonoBehaviour:
   gaussMeanSize: 1.5
   gaussStdDev: 0.3
   <health>k__BackingField: {fileID: -8614638230977953302}
-  <unfreezeTime>k__BackingField: 0.1
+  <unfreezeTime>k__BackingField: 0.05
   CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   EnemyChaseSOBase: {fileID: 11400000, guid: e800cd9523d9f6344b43d6463422dd23, type: 2}
@@ -90,7 +90,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startMaxHealth: 70
   maxHealth: 70
-  healthToCreditsDivisor: 2.1
   deathTorque: 30
   painSound: {fileID: 11400000, guid: dc0429e7a6c0fba48956d18ff1936bda, type: 2}
   painSoundCooldown: 0.3
@@ -99,6 +98,7 @@ MonoBehaviour:
   textFlyAlphaMax: 0.8
   hasDied: 0
   corpsePoolName: Crab2_Corpse
+  healthToCreditsDivisor: 2.1
 --- !u!114 &8299610102731463758
 MonoBehaviour:
   m_ObjectHideFlags: 0
