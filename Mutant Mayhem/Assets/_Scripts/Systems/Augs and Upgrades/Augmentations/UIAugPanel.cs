@@ -114,7 +114,7 @@ public class UIAugPanel : MonoBehaviour
 
         if (selectedUiAugmentation == null)
         {
-            Debug.LogWarning("No Aug selected on UI panel update");
+            //Debug.LogWarning("No Aug selected on UI panel update");
             return;
         }
 
