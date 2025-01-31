@@ -14,8 +14,20 @@ public class QualityManager : MonoBehaviour
         {
             DetermineGraphicsQuality();
         }
+
+        if (PlayerPrefs.HasKey("VSync"))
+        {
+            QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSync");
+        }
     }
 
+    public void SetVSync(bool enable)
+    {
+        QualitySettings.vSyncCount = enable ? 1 : 0;
+        PlayerPrefs.SetInt("VSync", enable ? 1 : 0);
+        PlayerPrefs.Save();
+        Debug.Log($"VSync set to: {(enable ? "On" : "Off")}");
+    }
     
     void DetermineGraphicsQuality()
     {
@@ -61,5 +73,21 @@ public class QualityManager : MonoBehaviour
         PlayerPrefs.Save();
 
         Debug.Log($"Graphics Quality Auto-Set to: {QualitySettings.names[qualityLevel]} (Level {qualityLevel})");
+    }
+
+    public void SetGraphicsQuality(int index)
+    {
+        if (index >= QualitySettings.count)
+        {
+            Debug.LogError($"Failed to set graphics quality! Index: {index} is out of range");
+            return;
+        }
+
+        PlayerPrefs.SetInt("Graphics_Quality", index);
+        PlayerPrefs.Save();
+
+        QualitySettings.SetQualityLevel(index, true);
+
+        Debug.Log("Graphics Quality set to: " + index);
     }
 }

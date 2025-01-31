@@ -9,11 +9,15 @@ public class OptionsPanel : MonoBehaviour
     public FadeCanvasGroupsWave fadeGroup;
     [SerializeField] TMP_Dropdown movementTypeDropdown;
     [SerializeField] TMP_Dropdown qualityDropdown;
+    [SerializeField] Toggle vSyncToggle;
     [SerializeField] Toggle spacebarToggle;
     [SerializeField] Toggle tutorialToggle;
 
+    QualityManager qualityManager;
+
     void OnEnable()
     {
+        Debug.LogError("OPTIONS PANEL ENABLED");
         tutorialToggle.onValueChanged.AddListener(delegate {
                                             ToggleTutorial(tutorialToggle); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
@@ -22,6 +26,8 @@ public class OptionsPanel : MonoBehaviour
                                             QualityValueChanged(qualityDropdown); });
         spacebarToggle.onValueChanged.AddListener(delegate {
                                             ToggleSpacebar(spacebarToggle); });
+        vSyncToggle.onValueChanged.AddListener(delegate {
+                                            ToggleVSync(vSyncToggle); });
     }
 
     void OnDisable()
@@ -34,10 +40,16 @@ public class OptionsPanel : MonoBehaviour
                                             QualityValueChanged(qualityDropdown); });
         spacebarToggle.onValueChanged.RemoveListener(delegate {
                                             ToggleSpacebar(spacebarToggle); });
+        vSyncToggle.onValueChanged.RemoveListener(delegate {
+                                            ToggleVSync(vSyncToggle); });
     }
 
     void Start()
     {
+        qualityManager = SettingsManager.Instance.GetComponent<QualityManager>();
+        if (qualityManager == null)
+            Debug.LogError("OptionsPanel: Could not find QualityManager on SettingsManager object");
+
         Initialize();
     }
 
@@ -60,6 +72,7 @@ public class OptionsPanel : MonoBehaviour
         }
 
         qualityDropdown.value = QualitySettings.GetQualityLevel();
+        vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
     }
 
     public void ToggleSpacebar(Toggle change)
@@ -71,7 +84,7 @@ public class OptionsPanel : MonoBehaviour
         }
 
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
-        Debug.Log("Toggled Spacebar");
+        Debug.Log("Spacebar throws grenades set to " + change.isOn);
     }
 
     public void ToggleTutorial(Toggle change)
@@ -103,17 +116,11 @@ public class OptionsPanel : MonoBehaviour
 
     void QualityValueChanged(TMP_Dropdown change)
     {
-        if (QualitySettings.count <= change.value)
-        {
-            Debug.LogError($"Failed to set graphics quality! Index: {change.value} is out of range");
-            return;
-        }
+        qualityManager.SetGraphicsQuality(change.value);
+    }
 
-        PlayerPrefs.SetInt("Graphics_Quality", change.value);
-        PlayerPrefs.Save();
-
-        QualitySettings.SetQualityLevel(change.value, true);
-
-        Debug.Log("Graphics Quality set to: " + change.value);
+    void ToggleVSync(Toggle change)
+    {
+        qualityManager.SetVSync(change.isOn);
     }
 }
