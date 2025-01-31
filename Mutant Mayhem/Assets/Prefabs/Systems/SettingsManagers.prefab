@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4781240415254864151}
   - component: {fileID: 9079178564760172867}
   - component: {fileID: 548687643582223412}
+  - component: {fileID: 7350775835454406973}
   - component: {fileID: 6763610489901167481}
   m_Layer: 0
   m_Name: SettingsManagers
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7f847421e1dae4a853aa22e56161b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clearPlayerPrefsInEditor: 0
   profiles: []
   currentProfile:
     profileName: 
@@ -60,6 +62,7 @@ MonoBehaviour:
     difficultyLevel: 0
     isStandardWASD: 0
     isSpacebarEnabled: 0
+    completedPlanets: []
 --- !u!114 &3878209574839751526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +170,18 @@ MonoBehaviour:
   currentResearchPoints: 0
   grenadeAmmoMult: 1
   grenadeCostMult: 1
+--- !u!114 &7350775835454406973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553980603506277957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3a877dd5f03641cca69ef27e4f90bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6763610489901167481
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,34 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class OptionsPanel : MonoBehaviour
 {
     public FadeCanvasGroupsWave fadeGroup;
     [SerializeField] TMP_Dropdown movementTypeDropdown;
+    [SerializeField] TMP_Dropdown qualityDropdown;
     [SerializeField] Toggle spacebarToggle;
     [SerializeField] Toggle tutorialToggle;
 
     void OnEnable()
     {
-        // Add listeners
         tutorialToggle.onValueChanged.AddListener(delegate {
                                             ToggleTutorial(tutorialToggle); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
+        qualityDropdown.onValueChanged.AddListener(delegate { 
+                                            QualityValueChanged(qualityDropdown); });
         spacebarToggle.onValueChanged.AddListener(delegate {
                                             ToggleSpacebar(spacebarToggle); });
     }
 
     void OnDisable()
     {
-        // Add listeners
         tutorialToggle.onValueChanged.RemoveListener(delegate {
                                             ToggleTutorial(tutorialToggle); });
         movementTypeDropdown.onValueChanged.RemoveListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
+        qualityDropdown.onValueChanged.RemoveListener(delegate { 
+                                            QualityValueChanged(qualityDropdown); });
         spacebarToggle.onValueChanged.RemoveListener(delegate {
                                             ToggleSpacebar(spacebarToggle); });
     }
@@ -56,6 +58,8 @@ public class OptionsPanel : MonoBehaviour
             tutorialToggle.SetIsOnWithoutNotify(true);
             spacebarToggle.SetIsOnWithoutNotify(true);
         }
+
+        qualityDropdown.value = QualitySettings.GetQualityLevel();
     }
 
     public void ToggleSpacebar(Toggle change)
@@ -73,35 +77,6 @@ public class OptionsPanel : MonoBehaviour
     public void ToggleTutorial(Toggle change)
     {
         TutorialManager.SetTutorialState(change.isOn);
-    }
-
-    void DifficultyValueChanged(TMP_Dropdown change)
-    {
-        if ((DifficultyLevel)change.value != ProfileManager.Instance.currentProfile.difficultyLevel)
-        {
-            switch (change.value)
-            {
-                case 0:
-                    ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Easy;
-                    break;
-                case 1:
-                    ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Normal;
-                    break;
-                case 2:
-                    ProfileManager.Instance.currentProfile.difficultyLevel = DifficultyLevel.Hard;
-                    break;
-                default:
-                    Debug.LogError("Failed to change difficulty");
-                    return;
-            }
-        
-
-            ProfileManager.Instance.SaveCurrentProfile();
-
-            MessagePanel.PulseMessage("Difficulty changed to " + (DifficultyLevel)change.value + 
-                                    ", saved to currentProfile", Color.yellow);
-            Debug.Log($"Difficulty changed to {(DifficultyLevel)change.value} via Dropdown");
-        }
     }
 
     void MoveTypeValueChanged(TMP_Dropdown change)
@@ -124,5 +99,21 @@ public class OptionsPanel : MonoBehaviour
         SettingsManager.Instance.RefreshSettingsFromProfile(profile);
 
         Debug.Log("useStandardWASD set to: " + change.value);
+    }
+
+    void QualityValueChanged(TMP_Dropdown change)
+    {
+        if (QualitySettings.count <= change.value)
+        {
+            Debug.LogError($"Failed to set graphics quality! Index: {change.value} is out of range");
+            return;
+        }
+
+        PlayerPrefs.SetInt("Graphics_Quality", change.value);
+        PlayerPrefs.Save();
+
+        QualitySettings.SetQualityLevel(change.value, true);
+
+        Debug.Log("Graphics Quality set to: " + change.value);
     }
 }
