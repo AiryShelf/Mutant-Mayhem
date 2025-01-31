@@ -17,7 +17,6 @@ public class OptionsPanel : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.LogError("OPTIONS PANEL ENABLED");
         tutorialToggle.onValueChanged.AddListener(delegate {
                                             ToggleTutorial(tutorialToggle); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
@@ -117,6 +116,7 @@ public class OptionsPanel : MonoBehaviour
     void QualityValueChanged(TMP_Dropdown change)
     {
         qualityManager.SetGraphicsQuality(change.value);
+        Initialize();
     }
 
     void ToggleVSync(Toggle change)

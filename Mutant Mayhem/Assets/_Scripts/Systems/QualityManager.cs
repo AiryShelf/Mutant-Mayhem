@@ -87,6 +87,8 @@ public class QualityManager : MonoBehaviour
         PlayerPrefs.Save();
 
         QualitySettings.SetQualityLevel(index, true);
+        if (PlayerPrefs.HasKey("VSync"))
+            SetVSync(PlayerPrefs.GetInt("VSync") > 0);
 
         Debug.Log("Graphics Quality set to: " + index);
     }

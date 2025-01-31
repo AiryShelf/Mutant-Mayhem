@@ -13,6 +13,7 @@ public class MeleeControllerPlayer : MonoBehaviour
     [Range(0, 1)]
     [SerializeField] float damageVariance = 0.15f;
     [SerializeField] SpriteRenderer swordSR;
+    [SerializeField] Light2D swordSelfLight;
     public SwordController swordController;
     public PlayerShooter playerShooter;
     [SerializeField] AnimationControllerPlayer animationControllerPlayer;
@@ -51,11 +52,13 @@ public class MeleeControllerPlayer : MonoBehaviour
         if (on)
         {
             swordSR.enabled = true;
+            swordSelfLight.enabled = true;
             swordController.gameObject.SetActive(true);
         }
         else
         {
             swordSR.enabled = false;
+            swordSelfLight.enabled = false;
             swordController.gameObject.SetActive(false);
         }
     }
