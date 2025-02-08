@@ -9,7 +9,7 @@ public class TurretShooter : Shooter
     protected override void Start()
     {
         turretShooter = this;
-        StartChargingGuns();
+        base.Start();
     }
 
     protected override void Fire()

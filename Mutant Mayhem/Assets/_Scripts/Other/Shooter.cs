@@ -42,7 +42,24 @@ public class Shooter : MonoBehaviour
     protected PlayerShooter playerShooter;
     protected TurretShooter turretShooter;
 
+    
     protected virtual void Awake()
+    {
+        /*
+        CopyGunList();
+        ApplyPlanetProperties();
+
+        // Initialize first gun
+        SwitchGuns(0);
+        gunsAmmoInClips[0] = 0;
+        isReloading = true;
+
+        criticalHit = GetComponent<CriticalHit>();
+        */
+    }
+    
+
+    protected virtual void Start()
     {
         CopyGunList();
         ApplyPlanetProperties();
@@ -53,10 +70,6 @@ public class Shooter : MonoBehaviour
         isReloading = true;
 
         criticalHit = GetComponent<CriticalHit>();
-    }
-
-    protected virtual void Start()
-    {
         StartChargingGuns();
     }
 

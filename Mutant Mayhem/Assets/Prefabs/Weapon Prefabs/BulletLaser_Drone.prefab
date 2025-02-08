@@ -53,7 +53,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   gunType: 0
+  rb: {fileID: 2082839547474369568}
+  shootSound: {fileID: 11400000, guid: 32cb16881e834644b84c3586a79f0fcb, type: 2}
+  hitSound: {fileID: 11400000, guid: 6ffb3c9e7bd64ec4f978af323e6aea7a, type: 2}
   objectPoolName: 
+  AiTrggerPrefab: {fileID: 0}
+  AITriggerSize: 3
   damage: 20
   damageVariance: 0
   knockback: 0.5
@@ -63,11 +68,6 @@ MonoBehaviour:
   criticalHit: {fileID: 0}
   critChanceMult: 1
   critDamageMult: 1
-  rb: {fileID: 2082839547474369568}
-  shootSound: {fileID: 11400000, guid: f1714f3cf7752a6458b978d9c56ded82, type: 2}
-  hitSound: {fileID: 11400000, guid: 6ffb3c9e7bd64ec4f978af323e6aea7a, type: 2}
-  AiTrggerPrefab: {fileID: 0}
-  AITriggerSize: 3
 --- !u!50 &2082839547474369568
 Rigidbody2D:
   serializedVersion: 4

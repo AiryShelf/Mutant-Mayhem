@@ -19,6 +19,8 @@ public class AnimationControllerPlayer : MonoBehaviour
     PlayerShooter playerShooter;
     Coroutine waitToLowerWeaponCoroutine;
 
+    bool isBuilding;
+    bool isMeleeing;
     bool isFireInput;
     bool isThrowInput;
     bool hasMeleeStamina;
@@ -153,8 +155,7 @@ public class AnimationControllerPlayer : MonoBehaviour
 
         // Initial checks
         hasMeleeStamina = bodyAnim.GetBool("hasMeleeStamina");
-        bool isBuilding = bodyAnim.GetBool("isBuilding");
-        bool isMeleeing;
+        isBuilding = bodyAnim.GetBool("isBuilding");
         // Might need check for reload animations, SMG got stuck again.
         
         if (!hasMeleeStamina) 
@@ -430,11 +431,10 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     void FireInput_Performed(InputAction.CallbackContext context)
     {
-        //if (playerShooter.isBuilding)
-            //ToggleBuildMode();
         bodyAnim.SetBool("isAiming", true);
         isFireInput = true;
     }
+
     void FireInput_Cancelled(InputAction.CallbackContext context)
     {   
         isFireInput = false;       
@@ -454,6 +454,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             }
         }   
     }
+
     void MeleeInput_Cancelled(InputAction.CallbackContext context)
     {
         bodyAnim.SetBool("isMeleeing", false);
@@ -481,6 +482,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             }
         }
     }
+
     public void ThrowInput_Cancelled(InputAction.CallbackContext context)
     {       
         isThrowInput = false;
@@ -534,6 +536,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     {
         ReloadTrigger();        
     }
+
     public void ReloadTrigger()
     {
         if (!reloadAnimPlaying && playerShooter.gunsAmmo[playerShooter.currentGunIndex] > 0 &&
