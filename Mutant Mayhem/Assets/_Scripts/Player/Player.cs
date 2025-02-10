@@ -74,6 +74,8 @@ public class Player : MonoBehaviour
     [SerializeField] float sprintStaminaUse = 0.1f;
     [SerializeField] float headTurnSpeed = 0.1f;
     [SerializeField] float headTurnMax = 80;
+    [SerializeField] float joystickDeadzone = 0.05f;
+    [SerializeField] float joystickCurveMagnitude = 2;
 
     [Header("Sound")]
     [SerializeField] SoundSO walkGrassSound;
@@ -95,6 +97,13 @@ public class Player : MonoBehaviour
 
     [SerializeField] float experimentRotationConstant; 
     
+    Vector3 aimPos = Vector3.zero;
+    Vector3 lastAimDir = Vector3.zero;
+    float aimDistance = 10;
+    float aimMinDist = 5;
+    Rect blankRect = new Rect();
+
+    Coroutine sprintCoroutine;
     float sprintSpeedAmount;
     Vector2 rawInput;
     Vector2 muzzleDirToMouse;
@@ -124,10 +133,12 @@ public class Player : MonoBehaviour
     float footstepCooldown = 0.1f;
     int previousGunIndex;
 
+    InputAction sprintAction;
+
     void Awake()
     {
         //KillAllEnemies();
-        //Time.timeScale = 1;
+        TimeControl.Instance.ResetTimeScale();
 
         stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
@@ -142,14 +153,31 @@ public class Player : MonoBehaviour
         stats.structureStats.cubeHealthScript = FindObjectOfType<QCubeHealth>();
         stats.structureStats.cubeController = FindObjectOfType<QCubeController>();
         IsDead = false;
+
+        // Inputs
+        InputActionMap actionMap = inputAsset.FindActionMap("Player");
+        sprintAction = actionMap.FindAction("Sprint");
+        aimDistance = CursorManager.Instance.aimDistance;
+        aimMinDist = CursorManager.Instance.aimMinDistance;
+    }
+
+    void OnEnable()
+    {
+        sprintAction.performed += SprintInput_Performed;
+        sprintAction.canceled += SprintInput_Cancelled;
+        TimeControl.Instance.SubscribePlayerTimeControl(this);
+    }
+
+    void OnDisable()
+    {
+        sprintAction.performed -= SprintInput_Performed;
+        sprintAction.canceled -= SprintInput_Cancelled;
+        TimeControl.Instance.UnsubscribePlayerTimeControl(this);
     }
 
     void Start()
     {
-        //ParticleManager.Instance.ClearAllChildrenParticleSystems();
-        TimeControl.Instance.SubscribePlayerTimeControl(this);
         SFXManager.Instance.Initialize();
-        //TutorialManager.ResetTutorialPanel();
         StatsCounterPlayer.ResetStatsCounts();
         
         SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
@@ -160,19 +188,12 @@ public class Player : MonoBehaviour
         UpgradeManager.Instance.Initialize();
         ClassManager.Instance.ApplyClassEffects(this);
         AugManager.Instance.ApplySelectedAugmentations();
-        //PlanetManager.Instance.InitializeStatMultipliers();
         PlanetManager.Instance.ApplyPlanetProperties();
         
         FindObjectOfType<WaveControllerRandom>().Initialize();
         
+        StartCoroutine(Sprint(false));
         RefreshMoveForces();
-        //PoolManager.Instance.ResetAllPools();
-    }
-
-    void OnDisable()
-    {
-        TimeControl.Instance.UnsubscribePlayerTimeControl(this);
-        //ParticleManager.Instance.ClearAllChildrenParticleSystems();
     }
 
     void KillAllEnemies()
@@ -195,7 +216,6 @@ public class Player : MonoBehaviour
         if (!IsDead)
         {
             LookAtMouse();
-            Sprint();
             Move();
         }
         else
@@ -215,6 +235,22 @@ public class Player : MonoBehaviour
     }
 
     #region Inputs
+
+    void SprintInput_Performed(InputAction.CallbackContext context)
+    {
+        if (sprintCoroutine != null)
+            StopCoroutine(sprintCoroutine);
+        sprintCoroutine = StartCoroutine(Sprint(true));
+        Debug.Log("Sprint was triggered");
+    }
+
+    void SprintInput_Cancelled(InputAction.CallbackContext context)
+    {
+        if (sprintCoroutine != null)
+            StopCoroutine(sprintCoroutine);
+        sprintCoroutine = StartCoroutine(Sprint(false));
+        Debug.Log("Sprint was cancelled");
+    }
 
     void OnToolbar()
     {
@@ -307,17 +343,49 @@ public class Player : MonoBehaviour
     void LookAtMouse()
     {
         // Find Mouse direction and angle
-        Vector3 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //muzzleDirToMouse = mousePos - transform.position;
+        float joystickX = Input.GetAxis("RightStickHorizontal");
+        float joystickY = Input.GetAxis("RightStickVertical");
+        Vector2 joystickInput = new Vector2(joystickX, joystickY);
 
-        if ((transform.position - mousePos).magnitude > 
+        float joystickInputMagnitude = joystickInput.magnitude;
+        float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
+        float scaledDistance = Mathf.Lerp(aimMinDist, aimDistance, curvedMagnitude);
+
+        // Mouse position
+        if (InputController.LastUsedDevice == Keyboard.current)
+        {
+            aimPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            lastAimDir = Vector3.zero;
+        }
+        // Touchscreen
+        else if (InputController.LastUsedDevice == Touchscreen.current)
+        {
+            // TODO: Get input from virtual joysticks, apply to aimPos
+        }
+        // Joystick input
+        else if (joystickInputMagnitude > joystickDeadzone)
+        {
+            lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
+            aimPos = transform.position + lastAimDir;
+        }
+        else if (lastAimDir != Vector3.zero)
+        {
+            aimPos = transform.position + lastAimDir;
+            //lastAimDir = aimPos;
+        }
+
+        // Aim or virtual mouse for joystick
+        if (!InputController.GetJoystickAsMouseState())
+            CursorManager.Instance.MoveCustomCursorTo(aimPos);
+
+        if ((transform.position - aimPos).magnitude > 
             (transform.position - muzzleTrans.position).magnitude + 0.5f)
         {
-            muzzleDirToMouse = mousePos - muzzleTrans.transform.position;
+            muzzleDirToMouse = aimPos - muzzleTrans.transform.position;
         }
         else
         {
-            muzzleDirToMouse = mousePos - transform.position;
+            muzzleDirToMouse = aimPos - transform.position;
         }
 
         muzzleDirToMouse.Normalize();
@@ -336,7 +404,7 @@ public class Player : MonoBehaviour
         playerMainTrans.rotation = Quaternion.Slerp(
             playerMainTrans.rotation, targetRotation, Time.deltaTime * dynamicSpeed);
 
-        RotateHead(mousePos);
+        RotateHead(aimPos);
     }
 
     void RotateHead(Vector3 mousePos)
@@ -361,24 +429,33 @@ public class Player : MonoBehaviour
         headImageTrans.rotation, clampedTargetRotation, (float)rotationSpeed);
     }
 
-    void Sprint()
+    IEnumerator Sprint(bool isSprinting)
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (isSprinting)
         {
-            if (sprintStaminaUse <= myStamina.GetStamina() && rawInput.sqrMagnitude > 0)
+            while (true)
             {
-                float time = Time.fixedDeltaTime;
-                StatsCounterPlayer.TimeSprintingPlayer += time;
-                sprintSpeedAmount = stats.sprintFactor;
-                myStamina.ModifyStamina(-sprintStaminaUse);
+                if (sprintStaminaUse <= myStamina.GetStamina() /* && rawInput.sqrMagnitude > 0 */)
+                {
+                    float time = Time.fixedDeltaTime;
+                    StatsCounterPlayer.TimeSprintingPlayer += time;
+                    sprintSpeedAmount = stats.sprintFactor;
+                    myStamina.ModifyStamina(-sprintStaminaUse);
 
-                playerShooter.currentAccuracy += time * stats.sprintAccuracyLoss * stats.weaponHandling;
+                    playerShooter.currentAccuracy += time * stats.sprintAccuracyLoss * stats.weaponHandling;
+                    //Debug.Log("Sprint code ran successfully");
+                }
+                else
+                    sprintSpeedAmount = 1;
+
+                yield return new WaitForFixedUpdate();
             }
-            else
-                sprintSpeedAmount = 1;
+            
         }
         else
             sprintSpeedAmount = 1;
+
+        yield return new WaitForEndOfFrame();
     }
 
     void Move()

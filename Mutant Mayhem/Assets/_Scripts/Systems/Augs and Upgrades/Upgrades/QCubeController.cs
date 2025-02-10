@@ -153,6 +153,9 @@ public class QCubeController : MonoBehaviour
         //}
         yield return new WaitForFixedUpdate();
         
+        if (InputController.LastUsedDevice == Gamepad.current)
+            InputController.SetJoystickMouseControl(true);
+
         fireAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
@@ -160,6 +163,7 @@ public class QCubeController : MonoBehaviour
 
     public void CloseUpgradeWindow()
     {
+        InputController.SetJoystickMouseControl(false);
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
         panelSwitcher.isTriggered = false;

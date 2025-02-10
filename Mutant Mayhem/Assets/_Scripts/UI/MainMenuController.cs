@@ -20,15 +20,19 @@ public class MainMenuController : MonoBehaviour
 
     void OnEnable() 
     {
+        Debug.Log("Main Menu Enabled");
         InputActionMap uiActionMap = inputAsset.FindActionMap("UI");
         uiActionMap.Enable();
         escapeKeyPressed = uiActionMap.FindAction("Escape");
         escapeKeyPressed.performed += EscapeKeyPressed;
+        if (InputController.LastUsedDevice == Gamepad.current)
+            InputController.SetJoystickMouseControl(true);
     }
 
     void OnDisable()
     {
         escapeKeyPressed.performed -= EscapeKeyPressed;
+        InputController.SetJoystickMouseControl(false);
     }
 
     public void OnStartGame()

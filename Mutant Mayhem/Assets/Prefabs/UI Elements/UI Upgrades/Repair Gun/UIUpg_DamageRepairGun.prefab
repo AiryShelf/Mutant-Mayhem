@@ -60,6 +60,7 @@ MonoBehaviour:
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
   myButton: {fileID: 5473086164219338046}
+  clickableAreaButton: {fileID: 5702643250601924438}
   UiName: Repair Amount
   tooltipDescription: Pack a higher density of nanobots into each shot.  Increases
     repair amount
@@ -335,6 +336,17 @@ PrefabInstance:
 --- !u!114 &5473086164219338046 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 8402345759286711798}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5702643250601924438 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
   m_PrefabInstance: {fileID: 8402345759286711798}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

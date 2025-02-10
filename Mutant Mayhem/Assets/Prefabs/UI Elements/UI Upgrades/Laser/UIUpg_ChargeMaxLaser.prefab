@@ -59,6 +59,7 @@ MonoBehaviour:
   consumablesUpgrade: 0
   gunStatsUpgrade: 3
   myButton: {fileID: 3308800034724365388}
+  clickableAreaButton: {fileID: 2971440160887393828}
   UiName: Charge Max
   tooltipDescription: Yup, advancements in battery tech are STILL happening in the
     future... Spend some Credits and upgrade yours now!
@@ -257,6 +258,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 808465359057252210, guid: c68b552e96894a148a099deb438bfcca, type: 3}
   m_PrefabInstance: {fileID: 1334286175168793732}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2971440160887393828 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 1334286175168793732}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3308800034724365388 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}

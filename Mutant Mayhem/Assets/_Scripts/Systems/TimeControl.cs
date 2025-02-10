@@ -40,6 +40,12 @@ public class TimeControl : MonoBehaviour
         timeControlAction.performed -= OnTimeControl;
     }
 
+    public void ResetTimeScale()
+    {
+        Time.timeScale = 1;
+        previousTimeScale = 1;
+    }
+
     void OnTimeControl(InputAction.CallbackContext context)
     {
         if (Input.GetKeyDown(KeyCode.KeypadPlus))

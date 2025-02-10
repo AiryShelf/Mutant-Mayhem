@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -146,12 +147,12 @@ public class BuildingSystem : MonoBehaviour
             if (structureInHand.actionType == ActionType.Build)
             {
                 Build(highlightedTilePos);
-                StartCoroutine(DelayUIReselect());
+                //StartCoroutine(DelayUIReselect());
             }
             else if (structureInHand.actionType == ActionType.Destroy)
             {
                 RemoveTile(destroyPositions[0]);
-                StartCoroutine(DelayUIReselect());
+                //StartCoroutine(DelayUIReselect());
             }
         }
         // Messages for failed to build or destroy
@@ -161,7 +162,7 @@ public class BuildingSystem : MonoBehaviour
                 //MessagePanel.Instance.DelayMessage("Area not clear for building", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.Instance.DelayMessage("Unable to destroy", Color.yellow, 0.1f);
-            StartCoroutine(DelayUIReselect());
+            //StartCoroutine(DelayUIReselect());
         }
         else
         {
@@ -169,7 +170,7 @@ public class BuildingSystem : MonoBehaviour
                 MessagePanel.Instance.DelayMessage("Too far away to build", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.Instance.DelayMessage("Too far away to destroy", Color.yellow, 0.1f);
-            StartCoroutine(DelayUIReselect());
+            //StartCoroutine(DelayUIReselect());
         }
     }
 
@@ -186,14 +187,17 @@ public class BuildingSystem : MonoBehaviour
         if (!isInBuildMode || structureInHand.structureType == AllStructureSOs[2].structureType)
             return;
 
-        if (context.control.name == "q")
+        if (context.control.name == "q" || context.control.name == "leftShoulder")
         {
             currentRotation += 90;
         }   
-        else if (context.control.name == "e")
+        else if (context.control.name == "e" || context.control.name == "rightShoulder")
         {
             currentRotation -= 90;
         }
+
+        Debug.Log(context.control.name);
+
         // Normalize the rotation to be within the range (0, 360)
         currentRotation = (currentRotation % 360 + 360) % 360;
         Rotate(structureInHand.ruleTileStructure.structureSO);
@@ -252,7 +256,14 @@ public class BuildingSystem : MonoBehaviour
 
         if (on)
         {
+            qCubeController.CloseUpgradeWindow();
+            
             CursorManager.Instance.SetBuildCursor();
+            if (InputController.LastUsedDevice == Gamepad.current)
+            {
+                InputController.SetJoystickMouseControl(true);
+                Debug.Log("Joystick turned on from BuildingSystem");
+            }
 
             // Lock camera to player
             cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
@@ -262,7 +273,7 @@ public class BuildingSystem : MonoBehaviour
             isInBuildMode = true;
             player.playerShooter.isBuilding = true;
             buildMenuController.OpenBuildMenu(true);
-            qCubeController.CloseUpgradeWindow();
+            
             //Debug.Log("Opened Build Panel");
             structureInHand = lastStructureInHand;
             
@@ -270,8 +281,9 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
-            // If not holding repair gun, set aim cursor
             CursorManager.Instance.SetAimCursor();
+            InputController.SetJoystickMouseControl(false);
+            Debug.Log("Joystick turned off from BuildingSystem");
 
             // Unlock camera from player
             cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
@@ -446,7 +458,7 @@ public class BuildingSystem : MonoBehaviour
 
         // Find player grid position
         //playerGridPos = structureTilemap.WorldToCell(player.transform.position);
-        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
 
         // Highlight if in range and conditions met.
         //if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
@@ -612,7 +624,8 @@ public class BuildingSystem : MonoBehaviour
 
     private Vector3Int GetMouseToGridPos()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePos = CursorManager.Instance.GetCustomCursorWorldPos();
         Vector3Int mouseCellPos = structureTilemap.WorldToCell(mousePos);
         mouseCellPos.z = 0;
 

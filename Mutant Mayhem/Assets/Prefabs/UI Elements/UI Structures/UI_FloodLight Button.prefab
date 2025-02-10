@@ -58,6 +58,7 @@ MonoBehaviour:
   button: {fileID: 467291852663348429}
   image: {fileID: 8541260717436885320}
   textPrefab: {fileID: 2430187354095485744, guid: eb9345ad852e67948bc4871ab5be062f, type: 3}
+  textLockedAlpha: 0.3
   textInstance: {fileID: 0}
   myRectTransform: {fileID: 7827437853780163098}
 --- !u!114 &-7245967889176055581
@@ -126,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 2
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

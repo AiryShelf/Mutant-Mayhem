@@ -59,6 +59,7 @@ MonoBehaviour:
   consumablesUpgrade: 5
   gunStatsUpgrade: 0
   myButton: {fileID: 5812754246163645486}
+  clickableAreaButton: {fileID: 6087908181822164550}
   UiName: Buy Attack Drone
   tooltipDescription: Adds one Attack Drone to the fleet
   showLevelsText: 0
@@ -258,6 +259,17 @@ PrefabInstance:
 --- !u!114 &5812754246163645486 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 8053671013006118118}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6087908181822164550 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
   m_PrefabInstance: {fileID: 8053671013006118118}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

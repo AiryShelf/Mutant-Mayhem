@@ -38,6 +38,7 @@ public class PauseMenuController : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log("Pause Menu Enabled");
         escapeAction.started += EscapePressed;
     }
 
@@ -68,9 +69,13 @@ public class PauseMenuController : MonoBehaviour
         {
             //Debug.Log("Pause passed checks");
             if (!isPauseMenuOpen)
+            {
                 OpenPauseMenu(true);
+            }
             else
+            {
                 OpenPauseMenu(false);
+            }
         }
     }
 
@@ -79,6 +84,8 @@ public class PauseMenuController : MonoBehaviour
         if (open)
         {
             playerActionMap.Disable();
+            if (InputController.LastUsedDevice == Gamepad.current)
+                    InputController.SetJoystickMouseControl(true);
 
             wasMusicPlaying = !MusicManager.Instance.isPaused;
             if (wasMusicPlaying)
@@ -87,6 +94,7 @@ public class PauseMenuController : MonoBehaviour
         else
         {
             playerActionMap.Enable();
+            InputController.SetJoystickMouseControl(false);
             
             if (wasMusicPlaying)
                 MusicManager.Instance.PlayOrPausePressed();
