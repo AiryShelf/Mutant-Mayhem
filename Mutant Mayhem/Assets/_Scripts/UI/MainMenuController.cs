@@ -25,8 +25,7 @@ public class MainMenuController : MonoBehaviour
         uiActionMap.Enable();
         escapeKeyPressed = uiActionMap.FindAction("Escape");
         escapeKeyPressed.performed += EscapeKeyPressed;
-        if (InputController.LastUsedDevice == Gamepad.current)
-            InputController.SetJoystickMouseControl(true);
+        InputController.SetJoystickMouseControl(true);
     }
 
     void OnDisable()

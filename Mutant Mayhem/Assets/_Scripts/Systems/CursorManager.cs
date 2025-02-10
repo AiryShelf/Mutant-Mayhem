@@ -54,19 +54,19 @@ public class CursorManager : MonoBehaviour
         customCursorTrans.position = Camera.main.WorldToScreenPoint(pos);
     }
 
-    public void MoveCustomCursorToUi(Vector2 pos, CursorRangeType rangeType, Vector2 circleCenter, float radius, Rect rect)
+    public void MoveCustomCursorToUi(Vector2 uiPos, CursorRangeType rangeType, Vector2 circleCenter, float radius, Rect rect)
     {
         switch (rangeType)
         {
             case CursorRangeType.Radius:
-                pos = ClampPositionWorldToScreenCircle(pos, circleCenter, radius, Camera.main);
-                customCursorTrans.position = pos;
+                uiPos = ClampScreenPositionToWorldCircle(uiPos, circleCenter, radius, Camera.main);
+                customCursorTrans.position = uiPos;
                 break;
             case CursorRangeType.Bounds:
-                pos = ClampPositionToUiBounds(pos, rect);
+                uiPos = ClampUiPositionToUiBounds(uiPos, rect);
                 break;
         }
-        customCursorTrans.position = pos;
+        customCursorTrans.position = uiPos;
     }
 
     public Vector2 GetCustomCursorWorldPos()
@@ -79,49 +79,28 @@ public class CursorManager : MonoBehaviour
         return customCursorTrans.position;
     }
 
-    Vector2 ClampPositionWorldToScreenCircle(Vector2 pos, Vector2 center, float radius, Camera cam)
+    Vector2 ClampScreenPositionToWorldCircle(Vector2 screenPos, Vector2 worldCenter, float worldRadius, Camera cam)
     {
-        // [CHANGE] Convert world position 'pos' to screen space.
-        Vector3 screenPos = cam.WorldToScreenPoint(new Vector3(pos.x, pos.y, 0));
-        center = cam.WorldToScreenPoint(center);
-
-        // Calculate the offset in screen space.
-        Vector2 offset = pos - center;
+        Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        Vector2 worldOffset = worldPos - worldCenter;
         
         // Check if the screen position is outside the screen-space circle.
-        if (offset.sqrMagnitude > radius * radius)
+        if (worldOffset.sqrMagnitude > worldRadius * worldRadius)
         {
             // Clamp the offset to the screen radius.
-            offset = offset.normalized * radius;
-            // [CHANGE] Apply the clamped offset to the screen center.
-            Vector2 clampedScreenPos = new Vector2(center.x, center.y) + offset;
-            screenPos.x = clampedScreenPos.x;
-            screenPos.y = clampedScreenPos.y;
+            worldOffset = worldOffset.normalized * worldRadius;
+            Vector2 clampedWorldPos = worldCenter + worldOffset;
+            screenPos = cam.WorldToScreenPoint(clampedWorldPos);
         }
 
-        // [CHANGE] Convert the clamped screen position back to world space.
-        // Note: The Z value in screenPos (depth) is preserved from the WorldToScreenPoint conversion.
-        return cam.WorldToScreenPoint(screenPos);
-
-        /*
-        // Calculate the offset from the center
-        Vector2 offset = pos - center;
-        // Check if outside the circle (using sqrMagnitude for efficiency)
-        if (offset.sqrMagnitude > radius * radius)
-        {
-            // Clamp the offset to the radius and recompute the position
-            offset = offset.normalized * radius;
-            pos = center + offset;
-        }
-        return pos;
-        */
+        return screenPos;
     }
 
-    Vector2 ClampPositionToUiBounds(Vector2 pos, Rect bounds)
+    Vector2 ClampUiPositionToUiBounds(Vector2 uiPos, Rect bounds)
     {
-        pos.x = Mathf.Clamp(pos.x, bounds.xMin, bounds.xMax);
-        pos.y = Mathf.Clamp(pos.y, bounds.yMin, bounds.yMax);
-        return pos;
+        uiPos.x = Mathf.Clamp(uiPos.x, bounds.xMin, bounds.xMax);
+        uiPos.y = Mathf.Clamp(uiPos.y, bounds.yMin, bounds.yMax);
+        return uiPos;
     }
 
     #region Cursor Images

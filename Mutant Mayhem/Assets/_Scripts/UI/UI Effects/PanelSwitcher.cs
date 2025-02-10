@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PanelSwitcher : MonoBehaviour
@@ -57,13 +58,13 @@ public class PanelSwitcher : MonoBehaviour
         if (isOpen)
         {
             if (Input.GetKeyDown(KeyCode.Q))
-            {
                 SwipeLeft();
-            }
             else if (Input.GetKeyDown(KeyCode.E))
-            {
                 SwipeRight();
-            }
+            else if (Gamepad.current.leftShoulder.wasPressedThisFrame)
+                SwipeLeft();
+            else if (Gamepad.current.rightShoulder.wasPressedThisFrame)
+                SwipeRight();
         }
     }
 

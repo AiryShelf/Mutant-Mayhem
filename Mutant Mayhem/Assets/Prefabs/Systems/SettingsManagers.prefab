@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6b6c2e86c3780049be263d8e69ced01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiTrans: {fileID: 0}
+  worldTrans: {fileID: 5538946154420396534}
 --- !u!1 &6553980603506277957
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1bb2a6e9a77f6b4c906e846cdec2d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorSpeedFactor: 15
+  cursorSpeedFactor: 200
 --- !u!114 &4781240415254864151
 MonoBehaviour:
   m_ObjectHideFlags: 0

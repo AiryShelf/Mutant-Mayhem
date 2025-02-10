@@ -43,6 +43,7 @@ public class QCubeController : MonoBehaviour
     InputActionMap playerActionMap;
     InputAction qCubeAction;
     InputAction fireAction;
+    InputAction throwAction;
     InputActionMap uIActionMap;
     InputAction escapeAction;
 
@@ -52,6 +53,7 @@ public class QCubeController : MonoBehaviour
         playerActionMap = player.inputAsset.FindActionMap("Player");
         qCubeAction = playerActionMap.FindAction("QCube");
         fireAction = playerActionMap.FindAction("Fire");
+        throwAction = playerActionMap.FindAction("Throw");
 
         uIActionMap = player.inputAsset.FindActionMap("UI");
         escapeAction = uIActionMap.FindAction("Escape");
@@ -147,25 +149,22 @@ public class QCubeController : MonoBehaviour
 
     IEnumerator OpenUpgradeWindow()
     {
-        //if (!TutorialManager.TutorialShowedUpgrade && !TutorialManager.TutorialDisabled)
-        //{
-            //StartCoroutine(DelayTutorialOpen());
-        //}
         yield return new WaitForFixedUpdate();
         
-        if (InputController.LastUsedDevice == Gamepad.current)
-            InputController.SetJoystickMouseControl(true);
+        InputController.SetJoystickMouseControl(true);
 
         fireAction.Disable();
+        throwAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
     }
 
     public void CloseUpgradeWindow()
     {
-        InputController.SetJoystickMouseControl(false);
+        //InputController.SetJoystickMouseControl(false);
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
+        throwAction.Enable();
         panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;
 
@@ -179,12 +178,5 @@ public class QCubeController : MonoBehaviour
 
         randomIndex = UnityEngine.Random.Range(0, cubeDeathSubtitles.Count);
         deathSubtitleText.text = cubeDeathSubtitles[randomIndex];
-    }   
-
-    IEnumerator DelayTutorialOpen()
-    {
-        yield return new WaitForSeconds(0.2f);
-
-        Instantiate(tutorialUpgradePanelPrefab, gamePlayCanvas);
-    }
+    } 
 }

@@ -257,13 +257,9 @@ public class BuildingSystem : MonoBehaviour
         if (on)
         {
             qCubeController.CloseUpgradeWindow();
-            
             CursorManager.Instance.SetBuildCursor();
-            if (InputController.LastUsedDevice == Gamepad.current)
-            {
-                InputController.SetJoystickMouseControl(true);
-                Debug.Log("Joystick turned on from BuildingSystem");
-            }
+            InputController.SetJoystickMouseControl(true);
+            
 
             // Lock camera to player
             cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);

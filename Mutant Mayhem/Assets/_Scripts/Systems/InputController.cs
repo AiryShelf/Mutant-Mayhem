@@ -27,9 +27,10 @@ public class InputController : MonoBehaviour
     void Update()
     {
         CheckCurrentInputDevice();
-        if (joystickAsMouse)
+        
+        if (joystickAsMouse && LastUsedDevice == Gamepad.current)
         {
-            Debug.Log("Joystick as mouse is running");
+            //Debug.Log("Joystick as mouse is running");
             float joystickX = Input.GetAxis("RightStickHorizontal");
             float joystickY = Input.GetAxis("RightStickVertical");
             Vector2 joystickInput = new Vector2(joystickX, joystickY);
@@ -37,7 +38,7 @@ public class InputController : MonoBehaviour
             Vector2 lastAimDir = joystickInput * cursorSpeedFactor * Time.deltaTime;
             Vector2 newCursorPos = CursorManager.Instance.GetCustomCursorUiPos() + lastAimDir;
 
-            if (player.stats.playerShooter.isBuilding)
+            if (player != null && player.stats.playerShooter.isBuilding)
             {
                 CursorManager.Instance.MoveCustomCursorToUi(newCursorPos, CursorRangeType.Radius, player.transform.position, 6f, new Rect());
             }

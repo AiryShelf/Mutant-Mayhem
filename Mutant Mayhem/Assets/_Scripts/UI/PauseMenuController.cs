@@ -84,8 +84,7 @@ public class PauseMenuController : MonoBehaviour
         if (open)
         {
             playerActionMap.Disable();
-            if (InputController.LastUsedDevice == Gamepad.current)
-                    InputController.SetJoystickMouseControl(true);
+            InputController.SetJoystickMouseControl(true);
 
             wasMusicPlaying = !MusicManager.Instance.isPaused;
             if (wasMusicPlaying)
