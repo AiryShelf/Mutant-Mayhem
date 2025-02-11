@@ -8,6 +8,7 @@ public class UIMothershipController : MonoBehaviour
     [SerializeField] FadeCanvasGroupsWave areYouSurePanel;
 
     UIAugPanel augPanel;
+    
 
     void Start()
     {

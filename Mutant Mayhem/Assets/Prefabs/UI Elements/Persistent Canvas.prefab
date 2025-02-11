@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 6426071419165068419}
   - component: {fileID: 7087335763425143153}
   m_Layer: 0
-  m_Name: Custom Cursor
+  m_Name: Custom Cursor - UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,9 +284,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -733,7 +733,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -251.79004, y: -30.599976}
+  m_AnchoredPosition: {x: -251.79004, y: -30.600098}
   m_SizeDelta: {x: 83.377, y: 62.43}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7833481224182810324
@@ -1464,11 +1464,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -105.05
+      value: -105.05005
       objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -26.58
+      value: -26.580078
       objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

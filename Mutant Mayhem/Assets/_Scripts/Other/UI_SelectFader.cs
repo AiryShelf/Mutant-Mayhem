@@ -7,21 +7,21 @@ using UnityEngine.UI;
 public class UI_SelectFader : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     [SerializeField] Image imageToFade;
-    [SerializeField] float selectedAlpha;
-    float startAlpha;
+    [SerializeField] Color selectedColor;
+    Color startColor;
 
     void Awake()
     {
-        startAlpha = imageToFade.color.a;
+        startColor = imageToFade.color;
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        throw new System.NotImplementedException();
+        imageToFade.color = selectedColor;
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        throw new System.NotImplementedException();
+        imageToFade.color = startColor;
     }
 }

@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
-    public static InputDevice LastUsedDevice;
-
-    [SerializeField] float cursorSpeedFactor = 30f;
-    Vector2 lastMousePos;
+    public static InputDevice LastUsedDevice { get; private set; }
     static bool joystickAsMouse = false;
-    Player player;
+    
+    Vector2 lastMousePos;
 
     void Start()
     {
@@ -20,76 +21,76 @@ public class InputController : MonoBehaviour
             LastUsedDevice = Gamepad.current;
         else if (Touchscreen.current != null)
             LastUsedDevice = Touchscreen.current;
-
-        player = FindObjectOfType<Player>();
     }
 
     void Update()
     {
+        EventSystem.current.sendNavigationEvents = !joystickAsMouse;
+
         CheckCurrentInputDevice();
-        
-        if (joystickAsMouse && LastUsedDevice == Gamepad.current)
-        {
-            //Debug.Log("Joystick as mouse is running");
-            float joystickX = Input.GetAxis("RightStickHorizontal");
-            float joystickY = Input.GetAxis("RightStickVertical");
-            Vector2 joystickInput = new Vector2(joystickX, joystickY);
 
-            Vector2 lastAimDir = joystickInput * cursorSpeedFactor * Time.deltaTime;
-            Vector2 newCursorPos = CursorManager.Instance.GetCustomCursorUiPos() + lastAimDir;
-
-            if (player != null && player.stats.playerShooter.isBuilding)
-            {
-                CursorManager.Instance.MoveCustomCursorToUi(newCursorPos, CursorRangeType.Radius, player.transform.position, 6f, new Rect());
-            }
-            else 
-            {
-                Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
-                CursorManager.Instance.MoveCustomCursorToUi(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
-            }
-        }
+        CursorManager.Instance.CustomCursorControl();
+        CursorManager.Instance.CustomCursorHover();
     }
 
     public static void SetJoystickMouseControl(bool active)
     {
-        joystickAsMouse = active;
-        Debug.Log("joystickAsMouse set to " + active);
-    } 
+        if (LastUsedDevice == Gamepad.current)
+        {
+            joystickAsMouse = active;
+            Debug.Log("joystickAsMouse set to " + active);
+            return;
+        }
+        else
+            joystickAsMouse = false;
+
+        Debug.Log("joystickAsMouse set to false");
+        
+    }
 
     public static bool GetJoystickAsMouseState()
     {
         return joystickAsMouse;
     }
 
-
     #region CheckInputDevice
+
     void CheckCurrentInputDevice()
     {
         Vector2 mousePos = Input.mousePosition;
         if (Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos)
         {
             lastMousePos = mousePos;
-            LastUsedDevice = Keyboard.current;
-            CursorManager.Instance.SetCursorVisible(true);
-            CursorManager.Instance.SetCustomCursorVisible(false);
+            if (LastUsedDevice != Keyboard.current)
+            {
+                LastUsedDevice = Keyboard.current;
+                SetJoystickMouseControl(false);
+                CursorManager.Instance.SetCursorVisible(true);
+                CursorManager.Instance.SetUsingCustomCursor(false);
+                CursorManager.Instance.SetCustomCursorVisible(false);
+            }
         }
-        else if (Gamepad.current != null &&
-                (Gamepad.current.buttonSouth.wasPressedThisFrame ||  // A / X button
-                 Gamepad.current.buttonNorth.wasPressedThisFrame ||  // Y / Triangle
-                 Gamepad.current.buttonEast.wasPressedThisFrame ||   // B / Circle
-                 Gamepad.current.buttonWest.wasPressedThisFrame ||   // X / Square
-                 Gamepad.current.leftStick.ReadValue() != Vector2.zero ||
-                 Gamepad.current.rightStick.ReadValue() != Vector2.zero))
+        if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
         {
-            LastUsedDevice = Gamepad.current;
-            CursorManager.Instance.SetCursorVisible(false);
-            CursorManager.Instance.SetCustomCursorVisible(true);
+            if (LastUsedDevice != Gamepad.current)
+            {
+                LastUsedDevice = Gamepad.current;
+                SetJoystickMouseControl(true);
+                CursorManager.Instance.SetCursorVisible(false);
+                CursorManager.Instance.SetUsingCustomCursor(true);
+                CursorManager.Instance.SetCustomCursorVisible(true);
+            }
         }
         else if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
-            LastUsedDevice = Touchscreen.current;
-            CursorManager.Instance.SetCursorVisible(false);
-            CursorManager.Instance.SetCustomCursorVisible(true);
+            if (LastUsedDevice != Touchscreen.current)
+            {
+                LastUsedDevice = Touchscreen.current;
+                SetJoystickMouseControl(false);
+                CursorManager.Instance.SetCursorVisible(false);
+                CursorManager.Instance.SetUsingCustomCursor(true);
+                CursorManager.Instance.SetCustomCursorVisible(true);
+            }
         }
 
         //Debug.Log(LastUsedDevice);

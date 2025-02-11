@@ -376,7 +376,7 @@ public class Player : MonoBehaviour
 
         // Aim or virtual mouse for joystick
         if (!InputController.GetJoystickAsMouseState())
-            CursorManager.Instance.MoveCustomCursorTo(aimPos);
+            CursorManager.Instance.MoveCustomCursorWorldToUi(aimPos);
 
         if ((transform.position - aimPos).magnitude > 
             (transform.position - muzzleTrans.position).magnitude + 0.5f)

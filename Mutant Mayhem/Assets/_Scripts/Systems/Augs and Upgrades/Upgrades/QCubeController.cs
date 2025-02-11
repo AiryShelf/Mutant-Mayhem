@@ -151,7 +151,7 @@ public class QCubeController : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
         
-        InputController.SetJoystickMouseControl(true);
+        CursorManager.Instance.SetCustomCursorVisible(false);
 
         fireAction.Disable();
         throwAction.Disable();
@@ -161,7 +161,8 @@ public class QCubeController : MonoBehaviour
 
     public void CloseUpgradeWindow()
     {
-        //InputController.SetJoystickMouseControl(false);
+        CursorManager.Instance.SetCustomCursorVisible(true);
+
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
         throwAction.Enable();

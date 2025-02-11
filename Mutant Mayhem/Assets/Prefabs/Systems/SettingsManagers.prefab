@@ -124,14 +124,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3886594428026681670
-Transform:
+--- !u!224 &3886594428026681670
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6553980603506277957}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -140,6 +139,11 @@ Transform:
   - {fileID: 5538946154420396534}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 433.5, y: 325}
+  m_SizeDelta: {x: 867, y: 650}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6177104941479526016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,7 +229,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1bb2a6e9a77f6b4c906e846cdec2d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorSpeedFactor: 200
 --- !u!114 &4781240415254864151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,8 +241,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20e18f3ad9ccad54a8fd27ad15b24877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
+  graphicRaycasters: []
+  canvas: {fileID: 0}
+  usingCustomCursor: 0
+  cursorSpeedFactor: 400
   aimDistance: 20
   aimMinDistance: 4
+  rayDistance: 500
   aimCursorTexture: {fileID: 2800000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
   aimCursor: {fileID: 21300000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
   aimCursorHotspot: {x: 16, y: 16}

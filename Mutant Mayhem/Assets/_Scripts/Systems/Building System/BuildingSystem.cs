@@ -259,7 +259,6 @@ public class BuildingSystem : MonoBehaviour
             qCubeController.CloseUpgradeWindow();
             CursorManager.Instance.SetBuildCursor();
             InputController.SetJoystickMouseControl(true);
-            
 
             // Lock camera to player
             cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
