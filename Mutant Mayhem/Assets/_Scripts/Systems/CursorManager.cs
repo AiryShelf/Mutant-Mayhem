@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -13,30 +13,49 @@ public class CursorManager : MonoBehaviour
     public static CursorManager Instance { get; private set; }
 
     [SerializeField] InputActionAsset inputActionAsset;
-    [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
-    public Canvas canvas;
-    public bool usingCustomCursor = false;
-    [SerializeField] float cursorSpeedFactor = 400;
+    public Transform worldCursorTrans;
+    
+    [Header("Aim Cursor")]
     public float aimDistance = 20f;
     public float aimMinDistance = 5f;
-    [SerializeField] int rayDistance = 100;
     [SerializeField] Texture2D aimCursorTexture;
     [SerializeField] Sprite aimCursor;
     [SerializeField] Vector2 aimCursorHotspot = Vector2.zero;
+
+    [Header("Build Cursor")]
     [SerializeField] Texture2D buildCursorTexture;
     [SerializeField] Sprite buildCursor;
     [SerializeField] Vector2 buildCursorHotspot = Vector2.zero;
+
+    [Header("Repair Cursor")]
     [SerializeField] Texture2D repairCursorTexture;
     [SerializeField] Sprite repairCursor;
     [SerializeField] Vector2 repairCursorHotspot = Vector2.zero;
+
+    [Header("Custom Cursor")]
+    public bool usingCustomCursor = false;
+    [SerializeField] float cursorSpeedFactor = 400;
     [SerializeField] Image customCursorImage;
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
+    [SerializeField] GraphicRaycaster persistentCanvasGR;
+    [SerializeField] int rayDistance = 100;
+
     Player player;
 
     bool initialized;
-    GameObject currentHoveredObject = null;
+    bool isDropdownOpen = false;
+    public GameObject currentHoveredObject = null;
     Transform customCursorTrans;
     InputAction clickAction;
-    List<RaycastResult> filteredResults = new List<RaycastResult>();
+    [SerializeField] List<GameObject> filteredResults = new List<GameObject>();
+    Dictionary<int, List<GameObject>> sortedResults = new Dictionary<int, List<GameObject>>()
+    {
+        { 0, new List<GameObject>() }, // Toggles
+        { 1, new List<GameObject>() }, // Buttons
+        { 2, new List<GameObject>() }, // Dropdowns
+        { 3, new List<GameObject>() }, // Sliders
+        { 4, new List<GameObject>() }  // InputFields
+    };
 
     void Awake()
     {
@@ -51,6 +70,7 @@ public class CursorManager : MonoBehaviour
             return;
         }
 
+        SetCustomCursorVisible(false);
         Initialize();
     }
 
@@ -59,11 +79,10 @@ public class CursorManager : MonoBehaviour
         initialized = true;
         player = FindObjectOfType<Player>();
         InputActionMap uiActionMap = inputActionAsset.FindActionMap("UI");
-        clickAction = uiActionMap.FindAction("Click");
-        clickAction.performed += CheckForSimulatedClick;
+        clickAction = uiActionMap.FindAction("SimulatedClick");
+        clickAction.started += CheckForSimulatedClick;
         customCursorTrans = customCursorImage.transform;
         SetAimCursor();
-        SetCustomCursorVisible(false);
     }
 
     void OnEnable()
@@ -73,7 +92,41 @@ public class CursorManager : MonoBehaviour
 
     void OnDisable()
     {
-        clickAction.performed -= CheckForSimulatedClick;
+        clickAction.started -= CheckForSimulatedClick;
+    }
+
+    void Update()
+    {
+        CustomCursorControl();
+        CustomCursorHover();
+    }
+
+    public void SetCursorVisible(bool visible)
+    {
+        Cursor.visible = visible;
+    }
+
+    public void SetCustomCursorVisible(bool visible)
+    {
+        if (usingCustomCursor)
+            customCursorImage.enabled = visible;
+        else 
+            customCursorImage.enabled = false;
+    }
+
+    public void SetUsingCustomCursor(bool isUsing)
+    {
+        usingCustomCursor = isUsing;
+
+        if (!isUsing)
+            SetCustomCursorVisible(false);
+    }
+
+    public void SetGraphicRaycasters(List<GraphicRaycaster> raycasters)
+    {
+        graphicRaycasters.Clear();
+        graphicRaycasters = raycasters;
+        graphicRaycasters.Add(persistentCanvasGR);
     }
 
     #region Movement
@@ -108,7 +161,7 @@ public class CursorManager : MonoBehaviour
         float joystickY = Input.GetAxis("RightStickVertical");
         Vector2 joystickInput = new Vector2(joystickX, joystickY);
 
-        Vector2 lastAimDir = joystickInput * cursorSpeedFactor * Time.deltaTime;
+        Vector2 lastAimDir = joystickInput * cursorSpeedFactor * Time.unscaledDeltaTime;
         Vector2 newCursorPos;
 
         if (player != null && player.stats.playerShooter.isBuilding)
@@ -127,20 +180,21 @@ public class CursorManager : MonoBehaviour
 
     #endregion
 
-    #region Click / Hover
+    #region Click
 
     public void CheckForSimulatedClick(InputAction.CallbackContext context)
     {
-        if (!InputController.GetJoystickAsMouseState())
+        if (!InputController.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
-        Debug.Log("Simulated click started...");
+        Debug.Log("Simulated click started on currentHoveredObject: " + currentHoveredObject);
+
+        //EventSystem.current.SetSelectedGameObject(null);
 
         GameObject selected = currentHoveredObject;
         if (selected == null)
             return;
 
-        // **NEW**: If the selected object has a Button component, simulate a click.
         Button button = selected.GetComponent<Button>();
         if (button != null)
         {
@@ -149,24 +203,20 @@ public class CursorManager : MonoBehaviour
             return;
         }
 
-        // **NEW**: If the selected object has a Dropdown component, simulate a click.
-        // Note: Unity's Dropdown doesn't expose a public "Show" method.
-        // Instead, we'll send a pointer click event to trigger its default behavior.
-        Dropdown dropdown = selected.GetComponent<Dropdown>();
+        TMP_Dropdown dropdown = selected.GetComponent<TMP_Dropdown>();
         if (dropdown != null)
         {
-            Debug.Log("Dropdown found, clicking...");
+            Debug.Log($"Dropdown found on {selected}, clicking...");
             // Simulate a pointer click event.
             PointerEventData pointerData = new PointerEventData(EventSystem.current);
             ExecuteEvents.Execute(selected, pointerData, ExecuteEvents.pointerClickHandler);
             return;
         }
 
-        // **NEW**: If the selected object has a Toggle component, toggle its state.
         Toggle toggle = selected.GetComponent<Toggle>();
         if (toggle != null)
         {
-            Debug.Log("Toggle found! Clicking...");
+            Debug.Log($"Toggle found on {selected}, clicking...");
             // Toggle the value.
             toggle.isOn = !toggle.isOn;
             // Optionally, invoke the onValueChanged event.
@@ -174,139 +224,202 @@ public class CursorManager : MonoBehaviour
             return;
         }
 
-        /*
-        Debug.Log("Simulating mouse click...");
-
-        PointerEventData pointerData = new PointerEventData(EventSystem.current);
-        // This conversion assumes canvas is in Screen Space - Overlay or Camera.
-        pointerData.position = customCursorTrans.position;
-
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        foreach (GraphicRaycaster gr in graphicRaycasters)
+        TMP_InputField inputField = selected.GetComponent<TMP_InputField>();
+        if (inputField != null)
         {
-            gr.Raycast(pointerData, raycastResults);
+            Debug.Log($"Input field found on {selected}, clicking...");
+            PointerEventData pointerData = new PointerEventData(EventSystem.current);
+            ExecuteEvents.Execute(selected, pointerData, ExecuteEvents.pointerClickHandler);
+            return;
         }
 
-        // Clear any previous results.
-        List<RaycastResult> filteredResults = FilterRaycastResults(raycastResults);
-
-        GameObject clickedObject = filteredResults.Count > 0 ? filteredResults[0].gameObject : null;
-
-        if (clickedObject != null)
+        Slider slider = selected.GetComponent<Slider>();
+        if (slider != null)
         {
-            Debug.Log("Raycast: found " + clickedObject + ", looking for button...");
-            Button button = clickedObject.GetComponent<Button>();
-            if (button != null)
+            Debug.Log($"Slider found on {selected}, clicking...");
+            PointerEventData pointerData = new PointerEventData(EventSystem.current);
+            ExecuteEvents.Execute(selected, pointerData, ExecuteEvents.pointerClickHandler);
+
+            RectTransform sliderRect = slider.GetComponent<RectTransform>();
+
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(sliderRect, customCursorTrans.position, null, out Vector2 localPoint))
             {
-                Debug.Log("BUTTON FOUND!  Invoking...");
-                button.onClick.Invoke();
+                // Normalize the click position to get a value between 0 and 1
+                float normalizedValue = Mathf.InverseLerp(-sliderRect.rect.width / 2, sliderRect.rect.width / 2, localPoint.x);
+
+                // Convert normalized value to slider value
+                slider.value = Mathf.Lerp(slider.minValue, slider.maxValue, normalizedValue);
             }
+
+            return;
         }
 
-        /*
-        Debug.Log("Simulating mouse click...");
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-        pointerEventData.position = customCursorTrans.position;
-
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        foreach(var caster in graphicRaycasters)
-            caster.Raycast(pointerEventData, raycastResults);
-
-        GameObject clickedObject = raycastResults.Count > 0 ? raycastResults[0].gameObject : null;
-
-        if (clickedObject != null)
-        {
-            Debug.Log("Raycast: found something, looking for button...");
-            Button button = clickedObject.GetComponent<Button>();
-            if (button != null)
-            {
-                Debug.Log("BUTTON FOUND!  Invoking...");
-                button.onClick.Invoke();
-            }
-        }
-        */
+        // Click anyways
+        PointerEventData pointerData2 = new PointerEventData(EventSystem.current);
+        ExecuteEvents.Execute(selected, pointerData2, ExecuteEvents.pointerClickHandler);
         
     }
 
+    #endregion
+
+    #region Hover
+
     public void CustomCursorHover()
     {
-        if (!InputController.GetJoystickAsMouseState())
+        if (!InputController.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
-        Debug.Log("CursorHover Ran");
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-        // This conversion assumes canvas is in Screen Space - Overlay or Camera.
         pointerEventData.position = customCursorTrans.position;
 
+        // UI raycasting
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         foreach(var caster in graphicRaycasters)
             caster.Raycast(pointerEventData, raycastResults);
 
-        List<RaycastResult> filteredResults = FilterRaycastResults(raycastResults);
+        // Handle Dropdown menus
+        foreach(var caster in graphicRaycasters)
+        {
+            Transform dropdown = FindChildRecursive(caster.transform, "Dropdown List");
+            if (dropdown != null)
+            {
+                GraphicRaycaster dropdownRaycaster = dropdown.GetComponent<GraphicRaycaster>();
+                if (dropdownRaycaster != null)
+                {
+                    dropdownRaycaster.Raycast(pointerEventData, raycastResults);
+                }
+                break;
+            }
+        }
+        /*
+        GameObject dropdownList = GameObject.Find("Dropdown List"); // TMP_Dropdown generates this name
+        if (dropdownList != null)
+        {
+            GraphicRaycaster dropdownRaycaster = dropdownList.GetComponentInParent<GraphicRaycaster>();
+            if (dropdownRaycaster != null)
+            {
+                dropdownRaycaster.Raycast(pointerEventData, raycastResults);
+            }
+        }
+        */
 
-        GameObject newHoveredObject = filteredResults.Count > 0 ? filteredResults[0].gameObject : null;
+        FilterRaycastResults(raycastResults);
+        GameObject newHoveredUIObject = filteredResults.Count > 0 ? filteredResults[0] : null;
 
+        // 3D raycasting
+        Ray ray = Camera.main.ScreenPointToRay(customCursorTrans.position);
+        RaycastHit hit;
+        GameObject newHovered3DObject = null;
+        if (Physics.Raycast(ray, out hit))
+        {
+            newHovered3DObject = hit.collider.gameObject;
+        }
+
+        // Determine the object to be hovered (UI takes priority over 3D if both are found)
+        GameObject newHoveredObject = newHoveredUIObject != null ? newHoveredUIObject : newHovered3DObject;
         if (newHoveredObject != currentHoveredObject)
         {
-            // If there was a previously hovered object, send it a pointer exit event.
             if (currentHoveredObject != null)
             {
                 Debug.Log("Simulating pointer exit event on " + currentHoveredObject);
-                //EventSystem.current.SetSelectedGameObject(null);
                 ExecuteEvents.Execute(currentHoveredObject, pointerEventData, ExecuteEvents.pointerExitHandler);
+                EventSystem.current.SetSelectedGameObject(null);
             }
 
-            // If a new object is now hovered, send it a pointer enter event.
+            currentHoveredObject = newHoveredObject;
+
             if (newHoveredObject != null)
             {
                 Debug.Log("Simulating pointer enter event on " + newHoveredObject);
-                //EventSystem.current.SetSelectedGameObject(newHoveredObject);
                 ExecuteEvents.Execute(newHoveredObject, pointerEventData, ExecuteEvents.pointerEnterHandler);
-                
             }
-
-            // Update the current hovered object.
-            currentHoveredObject = newHoveredObject;
         }
     }
 
-    List<RaycastResult> FilterRaycastResults(List<RaycastResult> raycastResults)
+    public static Transform FindChildRecursive(Transform parent, string childName)
     {
-        List<RaycastResult> filteredResults = new List<RaycastResult>();
+        foreach (Transform child in parent)
+        {
+            if (child.name == childName)
+                return child;
+
+            Transform found = FindChildRecursive(child, childName);
+            if (found != null)
+                return found;
+        }
+        return null;
+    }
+
+    #endregion
+
+    #region Filter Results
+
+    void FilterRaycastResults(List<RaycastResult> raycastResults)
+    {
+        sortedResults = new Dictionary<int, List<GameObject>>()
+        {
+            { 0, new List<GameObject>() }, // Toggles
+            { 1, new List<GameObject>() }, // Buttons
+            { 2, new List<GameObject>() }, // Dropdowns
+            { 3, new List<GameObject>() }, // Sliders
+            { 4, new List<GameObject>() }  // InputFields
+        };
 
         foreach (RaycastResult result in raycastResults)
         {
-            // **CHANGED:** Check if the GameObject has a Graphic component
             Graphic graphic = result.gameObject.GetComponent<Graphic>();
 
             if (graphic != null)
             {
-                // **CHANGED:** Skip elements that are not raycast targets or are invisible.
-                if (!graphic.raycastTarget || graphic.color.a <= 0.01f)
+                if (!graphic.raycastTarget)
+                {
+                    Debug.Log($"Graphic found on {result.gameObject} was not a raycast target");
                     continue;
+                }
+                if (graphic.color.a <= 0.01f)
+                {
+                    Debug.Log($"Graphic found on {result.gameObject} was not a visible target, still accepting");
+                }
+            }
+            else
+            {
+                Debug.Log("No Graphic found on " + result.gameObject);
             }
 
-            // **CHANGED:** Only add results that have an interactable component.
-            bool isInteractable = false;
-            if (result.gameObject.GetComponent<Button>() != null)
-                isInteractable = true;
-            else if (result.gameObject.GetComponent<Dropdown>() != null)
-                isInteractable = true;
-            else if (result.gameObject.GetComponent<Toggle>() != null)
-                isInteractable = true;
+            // Determine the type of interactable component and sort accordingly
+            if (result.gameObject.GetComponent<Toggle>() != null)
+                sortedResults[0].Add(result.gameObject);
+            else if (result.gameObject.GetComponent<Button>() != null)
+                sortedResults[1].Add(result.gameObject);
+            else if (result.gameObject.GetComponent<TMP_Dropdown>() != null)
+                sortedResults[2].Add(result.gameObject);
             else if (result.gameObject.GetComponent<Slider>() != null)
-                isInteractable = true;
-
-            if (!isInteractable)
+                sortedResults[3].Add(result.gameObject);
+            else if (result.gameObject.GetComponent<TMP_InputField>() != null)
+                sortedResults[4].Add(result.gameObject);
+            else
+            {
+                Debug.Log("No interactable component found on " + result.gameObject);
                 continue;
-
-            // Add the valid result.
-            filteredResults.Add(result);
+            }
         }
 
-        return filteredResults;
-    }
+        // Toggles with prefix "Item" go first
+        sortedResults[0].Sort((a, b) =>
+        {
+            bool aIsItem = a.name.StartsWith("Item");
+            bool bIsItem = b.name.StartsWith("Item");
+            return aIsItem == bIsItem ? 0 : (aIsItem ? -1 : 1); // "Item" names come first
+        });
 
+        // Flatten sorted results into a single list, preserving order
+        filteredResults = new List<GameObject>();
+        foreach (var category in sortedResults)
+            filteredResults.AddRange(category.Value);
+
+        Debug.Log($"Filtered raycast results count: {filteredResults.Count}");
+        
+    }
 
     #endregion
 
@@ -349,27 +462,6 @@ public class CursorManager : MonoBehaviour
     #endregion
 
     #region Cursor Images
-
-    public void SetCursorVisible(bool visible)
-    {
-        Cursor.visible = visible;
-    }
-
-    public void SetCustomCursorVisible(bool visible)
-    {
-        if (usingCustomCursor)
-            customCursorImage.enabled = visible;
-        else 
-            customCursorImage.enabled = false;
-    }
-
-    public void SetUsingCustomCursor(bool isUsing)
-    {
-        usingCustomCursor = isUsing;
-
-        if (!isUsing)
-            SetCustomCursorVisible(false);
-    }
 
     public void SetAimCursor()
     {

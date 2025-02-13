@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
     [SerializeField] InputActionAsset inputAsset;
     [SerializeField] ProfileSelectionUI profileSelectionUI;
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     InputAction escapeKeyPressed;
     bool isOptionsOpen;
@@ -21,11 +23,13 @@ public class MainMenuController : MonoBehaviour
     void OnEnable() 
     {
         Debug.Log("Main Menu Enabled");
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
+        InputController.SetJoystickMouseControl(true);
+
         InputActionMap uiActionMap = inputAsset.FindActionMap("UI");
         uiActionMap.Enable();
         escapeKeyPressed = uiActionMap.FindAction("Escape");
         escapeKeyPressed.performed += EscapeKeyPressed;
-        InputController.SetJoystickMouseControl(true);
     }
 
     void OnDisable()

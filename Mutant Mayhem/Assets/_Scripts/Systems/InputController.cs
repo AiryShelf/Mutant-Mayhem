@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -25,27 +26,20 @@ public class InputController : MonoBehaviour
 
     void Update()
     {
-        EventSystem.current.sendNavigationEvents = !joystickAsMouse;
+        //EventSystem.current.sendNavigationEvents = !joystickAsMouse;
 
         CheckCurrentInputDevice();
+    }
 
-        CursorManager.Instance.CustomCursorControl();
-        CursorManager.Instance.CustomCursorHover();
+    public static void SetLastUsedDevice(InputDevice device)
+    {
+        LastUsedDevice = device;
     }
 
     public static void SetJoystickMouseControl(bool active)
     {
-        if (LastUsedDevice == Gamepad.current)
-        {
-            joystickAsMouse = active;
-            Debug.Log("joystickAsMouse set to " + active);
-            return;
-        }
-        else
-            joystickAsMouse = false;
-
-        Debug.Log("joystickAsMouse set to false");
-        
+        joystickAsMouse = active;
+        Debug.Log("joystickAsMouse set to " + active);
     }
 
     public static bool GetJoystickAsMouseState()
@@ -64,7 +58,7 @@ public class InputController : MonoBehaviour
             if (LastUsedDevice != Keyboard.current)
             {
                 LastUsedDevice = Keyboard.current;
-                SetJoystickMouseControl(false);
+                //SetJoystickMouseControl(false);
                 CursorManager.Instance.SetCursorVisible(true);
                 CursorManager.Instance.SetUsingCustomCursor(false);
                 CursorManager.Instance.SetCustomCursorVisible(false);
@@ -75,7 +69,7 @@ public class InputController : MonoBehaviour
             if (LastUsedDevice != Gamepad.current)
             {
                 LastUsedDevice = Gamepad.current;
-                SetJoystickMouseControl(true);
+                //SetJoystickMouseControl(true);
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
@@ -86,7 +80,7 @@ public class InputController : MonoBehaviour
             if (LastUsedDevice != Touchscreen.current)
             {
                 LastUsedDevice = Touchscreen.current;
-                SetJoystickMouseControl(false);
+                //SetJoystickMouseControl(false);
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);

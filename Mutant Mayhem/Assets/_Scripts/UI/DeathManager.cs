@@ -110,6 +110,7 @@ public class DeathManager : MonoBehaviour
 
     void TransitionToPanel()
     {
+        InputController.SetJoystickMouseControl(true);
         //SFXManager.Instance.FadeToDeathSnapshot();
         MusicManager.Instance.mainMixer.GetFloat("sfxVolume", out storedSFXVolume);
         StartCoroutine(LerpSFXVolume(Mathf.Clamp(storedSFXVolume + deathSFXFadeAmount, -80, float.MaxValue), 2f));

@@ -404,7 +404,7 @@ MonoBehaviour:
   addedColor: {r: 0, g: 1, b: 1, a: 1}
   addedNegColor: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
   highlightedColor: {r: 1, g: 1, b: 1, a: 1}
-  aug: {fileID: 0}
+  augBaseSO: {fileID: 0}
   totalCost: 0
   selected: 0
 --- !u!222 &7087610850468447527
@@ -488,4 +488,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2428046634604259382}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4752222191128437891}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: Select
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

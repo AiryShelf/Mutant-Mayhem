@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIMothershipController : MonoBehaviour
 {
     [SerializeField] FadeCanvasGroupsWave areYouSurePanel;
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     UIAugPanel augPanel;
     
@@ -13,6 +15,9 @@ public class UIMothershipController : MonoBehaviour
     void Start()
     {
         AugManager.Instance.Initialize();
+        InputController.SetLastUsedDevice(null);
+        InputController.SetJoystickMouseControl(true);
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
         
         augPanel = FindObjectOfType<UIAugPanel>();
         augPanel.Initialize();

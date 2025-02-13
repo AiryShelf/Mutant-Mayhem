@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 548687643582223412}
   - component: {fileID: 7350775835454406973}
   - component: {fileID: 6763610489901167481}
+  - component: {fileID: 2244293778294111314}
   m_Layer: 0
   m_Name: SettingsManagers
   m_TagString: Untagged
@@ -133,7 +134,7 @@ RectTransform:
   m_GameObject: {fileID: 6553980603506277957}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5538946154420396534}
@@ -242,13 +243,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputActionAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
-  graphicRaycasters: []
-  canvas: {fileID: 0}
-  usingCustomCursor: 0
-  cursorSpeedFactor: 400
+  worldCursorTrans: {fileID: 5538946154420396534}
   aimDistance: 20
   aimMinDistance: 4
-  rayDistance: 500
   aimCursorTexture: {fileID: 2800000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
   aimCursor: {fileID: 21300000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
   aimCursorHotspot: {x: 16, y: 16}
@@ -258,7 +255,14 @@ MonoBehaviour:
   repairCursorTexture: {fileID: 2800000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
   repairCursor: {fileID: 21300000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
   repairCursorHotspot: {x: 16, y: 16}
+  usingCustomCursor: 0
+  cursorSpeedFactor: 400
   customCursorImage: {fileID: 0}
+  graphicRaycasters: []
+  persistentCanvasGR: {fileID: 0}
+  rayDistance: 500
+  currentHoveredObject: {fileID: 0}
+  filteredResults: []
 --- !u!114 &9079178564760172867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,3 +327,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3e7f8cf2f613a499ae671135c6a656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2244293778294111314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553980603506277957}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a786411edfc93e469b28753c6f333a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineRectTransform: {fileID: 0}

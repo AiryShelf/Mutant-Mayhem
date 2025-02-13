@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class PlayerStats
@@ -132,6 +133,7 @@ public class Player : MonoBehaviour
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
     int previousGunIndex;
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     InputAction sprintAction;
 
@@ -180,7 +182,9 @@ public class Player : MonoBehaviour
         SFXManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
         
-        SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
+        CursorManager.Instance.Initialize();
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
+        InputController.SetJoystickMouseControl(false);
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         SettingsManager.Instance.ApplyGameplaySettings();
 
