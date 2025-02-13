@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -24,8 +25,14 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     AugManager augManager;
     UIAugPanel augPanel;
+    Button myButton;
     public bool selected;
     bool isHovered;
+
+    void Awake()
+    {
+        myButton = GetComponent<Button>();
+    }
 
     public void Setup(AugmentationBaseSO augmentation, AugManager manager, UIAugPanel panel)
     {

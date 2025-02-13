@@ -44,6 +44,7 @@ public class QCubeController : MonoBehaviour
     InputAction qCubeAction;
     InputAction fireAction;
     InputAction throwAction;
+    InputAction toolbarAction;
     InputActionMap uIActionMap;
     InputAction escapeAction;
 
@@ -54,6 +55,7 @@ public class QCubeController : MonoBehaviour
         qCubeAction = playerActionMap.FindAction("QCube");
         fireAction = playerActionMap.FindAction("Fire");
         throwAction = playerActionMap.FindAction("Throw");
+        toolbarAction = playerActionMap.FindAction("Toolbar");
 
         uIActionMap = player.inputAsset.FindActionMap("UI");
         escapeAction = uIActionMap.FindAction("Escape");
@@ -151,21 +153,24 @@ public class QCubeController : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
         
-        CursorManager.Instance.SetCustomCursorVisible(false);
+        InputController.SetJoystickMouseControl(true);
 
         fireAction.Disable();
         throwAction.Disable();
+        if (InputController.LastUsedDevice == Gamepad.current)
+            toolbarAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
     }
 
     public void CloseUpgradeWindow()
     {
-        CursorManager.Instance.SetCustomCursorVisible(true);
+        InputController.SetJoystickMouseControl(false);
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
         throwAction.Enable();
+        toolbarAction.Enable();
         panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;
 

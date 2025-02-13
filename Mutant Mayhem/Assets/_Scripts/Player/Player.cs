@@ -288,7 +288,34 @@ public class Player : MonoBehaviour
             }
             return;
         }
+        else if (Gamepad.current.dpad.left.isPressed)
+        {
+            int index = GetNextUnlockedGun(playerShooter.currentGunIndex, -1);
+            if (index != -1)
+                SwitchToGun(index);
+        }
+        else if (Gamepad.current.dpad.right.isPressed)
+        {
+            int index = GetNextUnlockedGun(playerShooter.currentGunIndex, 1);
+            if (index != -1)
+                SwitchToGun(index);
+        }
     }
+
+    int GetNextUnlockedGun(int startIndex, int direction)
+{
+    int totalWeapons = playerShooter.gunsUnlocked.Count;
+    int index = startIndex;
+
+    for (int i = 0; i < totalWeapons; i++)
+    {
+        index = (index + direction + totalWeapons) % totalWeapons; // Loop around
+        if (playerShooter.gunsUnlocked[index]) 
+            return index;
+    }
+
+    return -1; // No unlocked weapon found (shouldn't happen unless all are locked)
+}
 
     void SwitchToGun(int gunIndex)
     {
@@ -355,27 +382,36 @@ public class Player : MonoBehaviour
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
         float scaledDistance = Mathf.Lerp(aimMinDist, aimDistance, curvedMagnitude);
 
-        // Mouse position
-        if (InputController.LastUsedDevice == Keyboard.current)
+        if (InputController.GetJoystickAsMouseState() && CursorManager.Instance.usingCustomCursor)
         {
-            aimPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            lastAimDir = Vector3.zero;
+            // Use custom cursor position directly for aiming
+            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            lastAimDir = Vector3.zero; // Reset last joystick aim direction
         }
-        // Touchscreen
-        else if (InputController.LastUsedDevice == Touchscreen.current)
+        else
         {
-            // TODO: Get input from virtual joysticks, apply to aimPos
-        }
-        // Joystick input
-        else if (joystickInputMagnitude > joystickDeadzone)
-        {
-            lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
-            aimPos = transform.position + lastAimDir;
-        }
-        else if (lastAimDir != Vector3.zero)
-        {
-            aimPos = transform.position + lastAimDir;
-            //lastAimDir = aimPos;
+            // Mouse position
+            if (InputController.LastUsedDevice == Keyboard.current)
+            {
+                aimPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                lastAimDir = Vector3.zero;
+            }
+            // Touchscreen
+            else if (InputController.LastUsedDevice == Touchscreen.current)
+            {
+                // TODO: Get input from virtual joysticks, apply to aimPos
+            }
+            // Joystick input
+            else if (joystickInputMagnitude > joystickDeadzone)
+            {
+                lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
+                aimPos = transform.position + lastAimDir;
+            }
+            else if (lastAimDir != Vector3.zero)
+            {
+                aimPos = transform.position + lastAimDir;
+                //lastAimDir = aimPos;
+            }
         }
 
         // Aim or virtual mouse for joystick

@@ -594,7 +594,7 @@
                 {
                     "name": "",
                     "id": "142a80e4-5419-4667-be6c-0da86862abcd",
-                    "path": "<Gamepad>/select",
+                    "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -620,6 +620,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "NextWave",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3a0231c-c198-4436-8b86-8fe692614227",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "NextWave",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -727,6 +738,17 @@
                     "name": "",
                     "id": "17646bd4-f4c3-48c3-9be0-6b1ac39a03f1",
                     "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "BuildStructure",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f6392fae-318b-4219-a163-d1579cc43ec6",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -923,17 +945,6 @@
                     "groups": "",
                     "action": "Navigate",
                     "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "fb8277d4-c5cd-4663-9dc7-ee3f0b506d90",
-                    "path": "<Gamepad>/dpad",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Navigate",
-                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {

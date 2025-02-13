@@ -26,6 +26,7 @@ public class CursorManager : MonoBehaviour
     [SerializeField] Texture2D buildCursorTexture;
     [SerializeField] Sprite buildCursor;
     [SerializeField] Vector2 buildCursorHotspot = Vector2.zero;
+    [SerializeField] Vector2 customBuildCursorPivot = new Vector2(0.3f, 0.7f);
 
     [Header("Repair Cursor")]
     [SerializeField] Texture2D repairCursorTexture;
@@ -36,17 +37,19 @@ public class CursorManager : MonoBehaviour
     public bool usingCustomCursor = false;
     [SerializeField] float cursorSpeedFactor = 400;
     [SerializeField] Image customCursorImage;
-    [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
-    [SerializeField] GraphicRaycaster persistentCanvasGR;
     [SerializeField] int rayDistance = 100;
+    public GameObject currentHoveredObject = null;
+    [SerializeField] GraphicRaycaster persistentCanvasGR;
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
 
     Player player;
 
     bool initialized;
     bool isDropdownOpen = false;
-    public GameObject currentHoveredObject = null;
+    
     Transform customCursorTrans;
     InputAction clickAction;
+    InputAction cancelAction;
     [SerializeField] List<GameObject> filteredResults = new List<GameObject>();
     Dictionary<int, List<GameObject>> sortedResults = new Dictionary<int, List<GameObject>>()
     {
@@ -56,6 +59,8 @@ public class CursorManager : MonoBehaviour
         { 3, new List<GameObject>() }, // Sliders
         { 4, new List<GameObject>() }  // InputFields
     };
+    float updateCount = 0f;
+    [SerializeField] float framesPerUpdate = 6;
 
     void Awake()
     {
@@ -81,6 +86,8 @@ public class CursorManager : MonoBehaviour
         InputActionMap uiActionMap = inputActionAsset.FindActionMap("UI");
         clickAction = uiActionMap.FindAction("SimulatedClick");
         clickAction.started += CheckForSimulatedClick;
+        cancelAction = uiActionMap.FindAction("Cancel");
+        cancelAction.started += OnCancelPressed;
         customCursorTrans = customCursorImage.transform;
         SetAimCursor();
     }
@@ -93,12 +100,19 @@ public class CursorManager : MonoBehaviour
     void OnDisable()
     {
         clickAction.started -= CheckForSimulatedClick;
+        cancelAction.started -= OnCancelPressed;
     }
 
     void Update()
     {
         CustomCursorControl();
-        CustomCursorHover();
+
+        updateCount++;
+        if (updateCount >= framesPerUpdate)
+        {
+            CustomCursorHover();
+            updateCount = 0;
+        }
     }
 
     public void SetCursorVisible(bool visible)
@@ -111,7 +125,15 @@ public class CursorManager : MonoBehaviour
         if (usingCustomCursor)
             customCursorImage.enabled = visible;
         else 
+        {
             customCursorImage.enabled = false;
+            if (currentHoveredObject != null)
+            {
+                PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+                ExecuteEvents.Execute(currentHoveredObject, pointerEventData, ExecuteEvents.pointerExitHandler);
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+        }
     }
 
     public void SetUsingCustomCursor(bool isUsing)
@@ -136,7 +158,7 @@ public class CursorManager : MonoBehaviour
         customCursorTrans.position = (Vector2)Camera.main.WorldToScreenPoint(worldPos);
     }
 
-    public void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
+    void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
     {
         switch (rangeType)
         {
@@ -164,17 +186,25 @@ public class CursorManager : MonoBehaviour
         Vector2 lastAimDir = joystickInput * cursorSpeedFactor * Time.unscaledDeltaTime;
         Vector2 newCursorPos;
 
-        if (player != null && player.stats.playerShooter.isBuilding)
+        if (player == null) return;
+        if (player.stats.playerShooter.isBuilding)
         {
             newCursorPos = GetCustomCursorUiPos() + lastAimDir / 2;
-            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, 6f, new Rect());
+            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, BuildingSystem.buildRange, new Rect());
         }
-        else 
+        else if (player.stats.playerShooter.isRepairing)
+        {
+            newCursorPos = GetCustomCursorUiPos() + lastAimDir;
+            Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
+            float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * player.stats.playerShooter.currentGunSO.bulletSpeed;
+            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.stats.playerShooter.muzzleTrans.position, range, screenBounds);
+        } 
+        else
         {
             newCursorPos = GetCustomCursorUiPos() + lastAimDir;
             Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
-        } 
+        }
         
     }
 
@@ -257,7 +287,16 @@ public class CursorManager : MonoBehaviour
         // Click anyways
         PointerEventData pointerData2 = new PointerEventData(EventSystem.current);
         ExecuteEvents.Execute(selected, pointerData2, ExecuteEvents.pointerClickHandler);
-        
+    }
+
+    void OnCancelPressed(InputAction.CallbackContext context)
+    {
+        foreach(var caster in graphicRaycasters)
+        {
+            Transform dropdown = FindChildRecursive(caster.transform, "Dropdown List");
+            if (dropdown != null)
+                dropdown.GetComponentInParent<TMP_Dropdown>().Hide();
+        }
     }
 
     #endregion
@@ -291,17 +330,6 @@ public class CursorManager : MonoBehaviour
                 break;
             }
         }
-        /*
-        GameObject dropdownList = GameObject.Find("Dropdown List"); // TMP_Dropdown generates this name
-        if (dropdownList != null)
-        {
-            GraphicRaycaster dropdownRaycaster = dropdownList.GetComponentInParent<GraphicRaycaster>();
-            if (dropdownRaycaster != null)
-            {
-                dropdownRaycaster.Raycast(pointerEventData, raycastResults);
-            }
-        }
-        */
 
         FilterRaycastResults(raycastResults);
         GameObject newHoveredUIObject = filteredResults.Count > 0 ? filteredResults[0] : null;
@@ -323,7 +351,7 @@ public class CursorManager : MonoBehaviour
             {
                 Debug.Log("Simulating pointer exit event on " + currentHoveredObject);
                 ExecuteEvents.Execute(currentHoveredObject, pointerEventData, ExecuteEvents.pointerExitHandler);
-                EventSystem.current.SetSelectedGameObject(null);
+                //EventSystem.current.SetSelectedGameObject(null);
             }
 
             currentHoveredObject = newHoveredObject;
@@ -473,12 +501,14 @@ public class CursorManager : MonoBehaviour
         {
             SetRepairCursor();
             customCursorImage.sprite = repairCursor;
+            customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
         else
         {
             // Aiming cursor
             Cursor.SetCursor(aimCursorTexture, aimCursorHotspot, CursorMode.Auto);
             customCursorImage.sprite = aimCursor;
+            customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
     }
 
@@ -486,12 +516,14 @@ public class CursorManager : MonoBehaviour
     {
         Cursor.SetCursor(buildCursorTexture, buildCursorHotspot, CursorMode.Auto);
         customCursorImage.sprite = buildCursor;
+        customCursorImage.rectTransform.pivot = customBuildCursorPivot;
     }
 
     public void SetRepairCursor()
     {
         Cursor.SetCursor(repairCursorTexture, repairCursorHotspot, CursorMode.Auto);
         customCursorImage.sprite = repairCursor;
+        customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
     }
 
     public void SetSystemCursor()

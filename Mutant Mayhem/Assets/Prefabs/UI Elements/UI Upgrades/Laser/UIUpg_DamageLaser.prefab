@@ -59,8 +59,9 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
-  myButton: {fileID: 5473086164219338046}
+  buttonImage: {fileID: 6784902953083132244}
   clickableAreaButton: {fileID: 5702643250601924438}
+  unlocked: 1
   UiName: Laser Damage
   tooltipDescription: Increased wave amplitude and frequency combined with harmonic
     tuning boost the destructive potential of each burst
@@ -333,17 +334,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c68b552e96894a148a099deb438bfcca, type: 3}
---- !u!114 &5473086164219338046 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
-  m_PrefabInstance: {fileID: 8402345759286711798}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5702643250601924438 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
@@ -353,6 +343,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6784902953083132244 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3077068755420810402, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 8402345759286711798}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &9197227878320421508 stripped

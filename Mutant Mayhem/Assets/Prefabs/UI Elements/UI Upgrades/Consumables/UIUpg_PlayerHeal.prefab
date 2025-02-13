@@ -58,8 +58,9 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
-  myButton: {fileID: 1885929057835326320}
+  buttonImage: {fileID: 1148617929034456858}
   clickableAreaButton: {fileID: 2232588530605003032}
+  unlocked: 1
   UiName: Healing
   tooltipDescription: A tiny vial of nanobots goes a surprisingly long way for tissue
     and exosuit repair these days.
@@ -241,10 +242,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2857791971681218037}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 1885929057835326320}
-    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: InvokeOnClick
       objectReference: {fileID: 0}
@@ -293,15 +290,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c68b552e96894a148a099deb438bfcca, type: 3}
---- !u!114 &1885929057835326320 stripped
+--- !u!114 &1148617929034456858 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3077068755420810402, guid: c68b552e96894a148a099deb438bfcca, type: 3}
   m_PrefabInstance: {fileID: 2685064919118894008}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2232588530605003032 stripped

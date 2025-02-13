@@ -131,20 +131,31 @@ public class UIAugPanel : MonoBehaviour
 
         // Update name and TotalCost text
         if (aug == null)
-            nameText.text = "Selected: None";
+        {
+            nameText.text = "Select an aug above!";
+            nameText.color = Color.yellow;
+        }
         else
-            nameText.text = "Selected: " + aug.augmentationName;
+        {
+            nameText.text = aug.augmentationName;
+            nameText.color = Color.cyan;
+        }
         string costOrGain;
         Color costTextColor;
-        if (_totalCost <= 0)
+        if (_totalCost < 0)
         {
             costOrGain = "Current Cost: ";
             costTextColor = Color.yellow;
         }
-        else 
+        else if (_totalCost > 0)
         {
             costOrGain = "Current Gain: ";
             costTextColor = Color.green;
+        }
+        else 
+        {
+            costOrGain = "";
+            costTextColor = Color.white;
         }
 
         totalCostGainText.text = costOrGain + Mathf.Abs(_totalCost) + " RP";
@@ -159,12 +170,12 @@ public class UIAugPanel : MonoBehaviour
         }
         else if (level > 0)
         {
-            descriptionColor = Color.cyan;
+            descriptionColor = Color.cyan + (Color.white / 2);
             description = aug.GetPositiveDescription(augManager, level);
         }
         else if (level < 0)
         {
-            descriptionColor = Color.red;
+            descriptionColor = Color.red - (Color.white / 4f);
             description = aug.GetNegativeDescription(augManager, level);
         }
 
@@ -357,6 +368,7 @@ public class UIAugPanel : MonoBehaviour
         Debug.Log("Current Level raised to: " + level + ". Subtracted " + nextLevelCost + " from currentResearchPoints");
         Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost);
             
+        EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
 
         selectedUiAugmentation.UpdateIconAndText();
         UpdatePanelTextandButtons();
@@ -433,8 +445,10 @@ public class UIAugPanel : MonoBehaviour
 
         Debug.Log("Current Level lowered to: " + level + ". Added " + levelRefund.ToString() + " to currentResearchPoints");
         Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost.ToString());
-        selectedUiAugmentation.UpdateIconAndText();
 
+        EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
+
+        selectedUiAugmentation.UpdateIconAndText();
         UpdatePanelTextandButtons();
     }
 

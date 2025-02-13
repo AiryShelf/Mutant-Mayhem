@@ -14,6 +14,8 @@ public class UIUpgrade : MonoBehaviour
     public GunStatsUpgrade gunStatsUpgrade;
 
     public Image buttonImage;
+    [SerializeField] Color buttonImageHoverColor;
+    Color buttonImageStartColor;
     public Button clickableAreaButton;
     public bool unlocked = true;
 
@@ -40,6 +42,7 @@ public class UIUpgrade : MonoBehaviour
 
     void OnEnable()
     {
+        buttonImageStartColor = buttonImage.color;
         BuildingSystem.OnPlayerCreditsChanged += UpdateTextDelay;
 
         if (initialized)
@@ -55,7 +58,7 @@ public class UIUpgrade : MonoBehaviour
 
     public void Initialize()
     {
-        buttonImage = GetComponentInChildren<Image>();
+        //buttonImage = GetComponentInChildren<Image>();
         if (unlocked)
             buttonImage.enabled = true;
         else
@@ -128,7 +131,7 @@ public class UIUpgrade : MonoBehaviour
     {
         Debug.Log("UiUpgrade: Selected ran");
 
-        //clickableAreaButton.Select();
+        buttonImage.color = buttonImageHoverColor;
     }
 
     #region Update Text

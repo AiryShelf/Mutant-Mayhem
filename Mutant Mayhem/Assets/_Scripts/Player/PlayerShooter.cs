@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
 public class PlayerShooter : Shooter
@@ -20,6 +21,7 @@ public class PlayerShooter : Shooter
     public bool isShooting;
     public bool isAiming;
     public bool isBuilding;
+    public bool isRepairing;
     public bool isSwitchingGuns;
     public bool isMeleeing;
     
@@ -118,7 +120,18 @@ public class PlayerShooter : Shooter
 
         // Set cursor
         if (!isBuilding)
-            CursorManager.Instance.SetAimCursor(); 
+            CursorManager.Instance.SetAimCursor();
+
+        if (i == 4) // Repair gun
+        {
+            InputController.SetJoystickMouseControl(true);
+            isRepairing = true;
+        }
+        else
+        {
+            InputController.SetJoystickMouseControl(false);
+            isRepairing = false;
+        }
 
         Debug.Log("PlayerShooter: CurrentGunSO: " + currentGunSO); 
     }

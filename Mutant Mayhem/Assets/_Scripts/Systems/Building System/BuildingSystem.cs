@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -26,6 +27,7 @@ public class BuildingSystem : MonoBehaviour
             }
         }
     }
+    public static float buildRange = 6f;
     public LineRendererCircle buildRangeCircle;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersToClearOnBuild;
@@ -57,7 +59,7 @@ public class BuildingSystem : MonoBehaviour
     bool inRange;
     Player player;
     InputActionMap playerActionMap;
-    InputAction toolbarAction;
+    InputAction helpAction;
     InputAction rotateStructureAction;
     InputAction buildAction;
     InputAction cheatCodeCreditsAction;
@@ -82,6 +84,7 @@ public class BuildingSystem : MonoBehaviour
 
         playerActionMap = player.inputAsset.FindActionMap("Player");
         buildAction = playerActionMap.FindAction("BuildStructure");
+        helpAction = playerActionMap.FindAction("Help");
         rotateStructureAction = playerActionMap.FindAction("RotateStructure");
         cheatCodeCreditsAction = playerActionMap.FindAction("CheatCodeCredits");
 
@@ -101,6 +104,8 @@ public class BuildingSystem : MonoBehaviour
 
     void Start()
     {
+        buildRangeCircle.radius = buildRange;
+
         turretManager = TurretManager.Instance;
         if (turretManager == null)
         {
@@ -256,6 +261,8 @@ public class BuildingSystem : MonoBehaviour
 
         if (on)
         {
+            if (InputController.LastUsedDevice == Gamepad.current)
+                helpAction.Disable();
             qCubeController.CloseUpgradeWindow();
             CursorManager.Instance.SetBuildCursor();
             InputController.SetJoystickMouseControl(true);
@@ -276,8 +283,11 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
+            helpAction.Enable();
+
             CursorManager.Instance.SetAimCursor();
-            InputController.SetJoystickMouseControl(false);
+            if (!player.stats.playerShooter.isRepairing)
+                InputController.SetJoystickMouseControl(false);
             Debug.Log("Joystick turned off from BuildingSystem");
 
             // Unlock camera from player
@@ -453,11 +463,15 @@ public class BuildingSystem : MonoBehaviour
 
         // Find player grid position
         //playerGridPos = structureTilemap.WorldToCell(player.transform.position);
-        Vector2 mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
+        Vector2 mouseWorldPos; 
+        if (InputController.LastUsedDevice == Gamepad.current)
+            mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
+        else 
+            mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Highlight if in range and conditions met.
         //if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
-        if (!InRange(player.transform.position, mouseWorldPos, 6f))
+        if (!InRange(player.transform.position, mouseWorldPos, buildRange))
         {
             inRange = false;
             allHighlighted = false;
@@ -619,8 +633,12 @@ public class BuildingSystem : MonoBehaviour
 
     private Vector3Int GetMouseToGridPos()
     {
-        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 mousePos = CursorManager.Instance.GetCustomCursorWorldPos();
+        Vector3 mousePos;
+        if (InputController.LastUsedDevice == Gamepad.current)
+            mousePos = CursorManager.Instance.GetCustomCursorWorldPos();
+        else
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
         Vector3Int mouseCellPos = structureTilemap.WorldToCell(mousePos);
         mouseCellPos.z = 0;
 

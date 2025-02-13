@@ -59,8 +59,9 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 6
-  myButton: {fileID: 5788132343165632642}
+  buttonImage: {fileID: 5012238262571664616}
   clickableAreaButton: {fileID: 6090000017560980202}
+  unlocked: 1
   UiName: Range
   tooltipDescription: Advanced aerodynamic enhancements allow the slugs to maintain
     stability over longer distances
@@ -329,15 +330,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c68b552e96894a148a099deb438bfcca, type: 3}
---- !u!114 &5788132343165632642 stripped
+--- !u!114 &5012238262571664616 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3077068755420810402, guid: c68b552e96894a148a099deb438bfcca, type: 3}
   m_PrefabInstance: {fileID: 8015560292773333066}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6090000017560980202 stripped
