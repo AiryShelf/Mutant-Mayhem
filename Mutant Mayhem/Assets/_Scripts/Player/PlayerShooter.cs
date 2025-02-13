@@ -53,11 +53,42 @@ public class PlayerShooter : Shooter
         Shoot();
     }
 
+    public void StartAiming()
+    {
+        isAiming = true;
+    }
+
+    public void StopAiming()
+    {
+        isAiming = false;
+    }
+
     public void UnlockGun(int i)
     {
         gunsUnlocked[i] = true;
         toolbarSelector.UnlockBoxImage(i);
         Debug.Log("Unlocked gun index: " + i);
+    }
+
+    public void ReloadPlayer()
+    {
+        if (currentGunIndex != 0)
+        {
+            int numBullets = currentGunSO.clipSize - gunsAmmoInClips[currentGunIndex];
+
+            if (gunsAmmo[currentGunIndex] < numBullets)
+            {
+                gunsAmmoInClips[currentGunIndex] += gunsAmmo[currentGunIndex];
+                gunsAmmo[currentGunIndex] = 0;
+            }
+            else
+            {
+                gunsAmmoInClips[currentGunIndex] += numBullets;
+                gunsAmmo[currentGunIndex] -= numBullets;
+            }
+
+            currentAccuracy += currentGunSO.accuracy * playerStats.weaponHandling;
+        }
     }
 
     public void DropGun()
@@ -80,11 +111,13 @@ public class PlayerShooter : Shooter
         }
     }
 
+    #region Switch Guns
+
     public override void SwitchGuns(int i)
     {
         if (i < 0 || i >= gunList.Count)
         {
-            Debug.LogError("Tried to switch to a gun outside of index range");
+            Debug.LogError("PlayerShooter: Tried to switch to a gun outside of index range");
             return;
         }
 
@@ -135,53 +168,21 @@ public class PlayerShooter : Shooter
         else
         {
             isRepairing = false;
-            if (!BuildingSystem.Instance.isInBuildMode)
+            if (BuildingSystem.Instance.isInBuildMode)
+                BuildingSystem.Instance.SetBuildRangeCircle();
+            else
             {
                 BuildingSystem.Instance.buildRangeCircle.EnableCircle(false);
+                BuildingSystem.Instance.LockCameraToPlayer(false);
+                //BuildingSystem.Instance.buildRangeCircle.radius = BuildingSystem.buildRange;
                 InputController.SetJoystickMouseControl(false);
             }
-            
         }
 
         Debug.Log("PlayerShooter: CurrentGunSO: " + currentGunSO); 
     }
 
-    public void ReloadPlayer()
-    {
-        if (currentGunIndex != 0)
-        {
-            int numBullets = currentGunSO.clipSize - gunsAmmoInClips[currentGunIndex];
-
-            if (gunsAmmo[currentGunIndex] < numBullets)
-            {
-                gunsAmmoInClips[currentGunIndex] += gunsAmmo[currentGunIndex];
-                gunsAmmo[currentGunIndex] = 0;
-            }
-            else
-            {
-                gunsAmmoInClips[currentGunIndex] += numBullets;
-                gunsAmmo[currentGunIndex] -= numBullets;
-            }
-
-            currentAccuracy += currentGunSO.accuracy * playerStats.weaponHandling;
-        }
-    }
-
-    void Kickback()
-    {
-        myRb.AddForce(-myRb.transform.right * 
-                      currentGunSO.kickback, ForceMode2D.Impulse);
-    }
-
-    public void StartAiming()
-    {
-        isAiming = true;
-    }
-
-    public void StopAiming()
-    {
-        isAiming = false;
-    }
+    #endregion
 
     #region Shooting
 
@@ -246,6 +247,12 @@ public class PlayerShooter : Shooter
         gunRecoil.TriggerRecoil(currentGunSO.recoilAmount, oneHand);
 
         currentAccuracy += currentGunSO.firingAccuracyLoss * playerStats.weaponHandling;
+    }
+
+    void Kickback()
+    {
+        myRb.AddForce(-myRb.transform.right * 
+                      currentGunSO.kickback, ForceMode2D.Impulse);
     }
 
     void UpdateDynamicAccuracy()

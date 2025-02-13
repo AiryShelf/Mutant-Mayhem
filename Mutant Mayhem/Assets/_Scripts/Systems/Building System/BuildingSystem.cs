@@ -69,6 +69,7 @@ public class BuildingSystem : MonoBehaviour
     TurretManager turretManager;
 
     Coroutine clearStructureInHand;
+    Coroutine lockBuildCircleToMuzzle;
     public GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
 
@@ -279,17 +280,15 @@ public class BuildingSystem : MonoBehaviour
         {
             if (InputController.LastUsedDevice == Gamepad.current)
                 helpAction.Disable();
+
             qCubeController.CloseUpgradeWindow();
             CursorManager.Instance.SetBuildCursor();
             InputController.SetJoystickMouseControl(true);
 
-            // Lock camera to player
-            cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
-            mouseLooker.lockedToPlayer = true;
+            LockCameraToPlayer(true);
 
-            buildRangeCircle.EnableCircle(true);
-            buildRangeCircle.radius = buildRange;
             isInBuildMode = true;
+            SetBuildRangeCircle();
             player.playerShooter.isBuilding = true;
             buildMenuController.OpenBuildMenu(true);
             
@@ -303,21 +302,20 @@ public class BuildingSystem : MonoBehaviour
             helpAction.Enable();
 
             CursorManager.Instance.SetAimCursor();
-            SetRepairRangeCircle();
+            if (player.stats.playerShooter.isRepairing)
+                SetRepairRangeCircle();
+            else
+            {
+                InputController.SetJoystickMouseControl(false);
+                buildRangeCircle.EnableCircle(false);
+            }
             
             Debug.Log("Joystick turned off from BuildingSystem");
 
-            // Unlock camera from player
-            cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
-            mouseLooker.lockedToPlayer = false;
-
-            
+            LockCameraToPlayer(false);
             
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;
-            // Only switch guns if not repair gun
-            //if (previousGunIndex != 9)
-                //player.playerShooter.SwitchGuns(previousGunIndex);
             buildMenuController.OpenBuildMenu(false);
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
@@ -333,18 +331,48 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
+    public void LockCameraToPlayer(bool isLocked)
+    {
+        if (isLocked)
+        {
+            cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
+            mouseLooker.lockedToPlayer = true;
+        }
+        else
+        {
+            cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
+            mouseLooker.lockedToPlayer = false;
+        }  
+    }
+
+    public void SetBuildRangeCircle()
+    {
+        buildRangeCircle.transform.parent = player.stats.playerShooter.transform;
+        buildRangeCircle.transform.position = player.stats.playerShooter.transform.position;
+        buildRangeCircle.EnableCircle(true);
+        buildRangeCircle.radius = buildRange;
+    }
+
     public void SetRepairRangeCircle()
     {
         if (player.stats.playerShooter.isRepairing)
         {
-            Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
-            Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
-            Debug.Log($"worldPos = {worldPos}, localPos = {localPos}");
+            LockCameraToPlayer(true);
+            buildRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
+                                      player.stats.playerShooter.currentGunSO.bulletSpeed;
+
+            if (lockBuildCircleToMuzzle != null)
+                StopCoroutine(lockBuildCircleToMuzzle);
+            lockBuildCircleToMuzzle = StartCoroutine(LockBuildCircleToMuzzle());
+
+            //Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
+            //Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
+            //player.transform.TransformPoint(player.stats.playerShooter.muzzleTrans.position);
+            //Debug.Log($"worldPos = {worldPos}, localPos = {localPos}");
 
             // Set buildRangeCircle's local position.
-            buildRangeCircle.transform.position = localPos;
-            buildRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
-                                        player.stats.playerShooter.currentGunSO.bulletSpeed;
+            //buildRangeCircle.transform.parent = player.stats.playerShooter.muzzleTrans;
+            
         }
         else
         {
@@ -353,6 +381,22 @@ public class BuildingSystem : MonoBehaviour
             buildRangeCircle.EnableCircle(false);
         }
     }
+
+    IEnumerator LockBuildCircleToMuzzle()
+    {
+        while (true)
+        {
+            Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
+            Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
+            //player.transform.TransformPoint(player.stats.playerShooter.muzzleTrans.position);
+            Debug.Log($"MuzzleTrans worldPos = {worldPos}, localPos = {localPos}");
+
+            buildRangeCircle.transform.position = worldPos;
+
+            yield return null;
+        }
+    }
+
 
     IEnumerator DelayMenuSelection()
     {

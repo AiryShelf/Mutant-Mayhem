@@ -46,7 +46,7 @@ public class SwordController : MonoBehaviour
         Vector2 tipPos = transform.InverseTransformPoint(tipWorldPos);
         Vector2 meleeControllerPos = transform.InverseTransformPoint(meleeControllerWorldPos);
 
-        // Check for structures
+        // Check for structures or obstacles
         Vector2 tipDirection = tipWorldPos - meleeControllerWorldPos;
         RaycastHit2D hit = Physics2D.Raycast(meleeControllerWorldPos, tipDirection, 
                            Vector2.Distance(meleeControllerWorldPos, tipWorldPos), 
@@ -56,7 +56,7 @@ public class SwordController : MonoBehaviour
         {
             if (hit.collider != null)
             {
-                // Adjust the tip position and convert to local space
+                // Adjust the tip position for obstacles and convert to local space
                 Vector2 hitLocalPoint = transform.InverseTransformPoint(hit.point);
                 tipPos = hitLocalPoint;
 
