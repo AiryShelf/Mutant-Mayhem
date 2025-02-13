@@ -347,6 +347,9 @@ public class BuildingSystem : MonoBehaviour
 
     public void SetBuildRangeCircle()
     {
+        if (lockBuildCircleToMuzzle != null)
+                StopCoroutine(lockBuildCircleToMuzzle);
+
         buildRangeCircle.transform.parent = player.stats.playerShooter.transform;
         buildRangeCircle.transform.position = player.stats.playerShooter.transform.position;
         buildRangeCircle.EnableCircle(true);
@@ -355,14 +358,15 @@ public class BuildingSystem : MonoBehaviour
 
     public void SetRepairRangeCircle()
     {
+        if (lockBuildCircleToMuzzle != null)
+                StopCoroutine(lockBuildCircleToMuzzle);
+
         if (player.stats.playerShooter.isRepairing)
         {
             LockCameraToPlayer(true);
             buildRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                                       player.stats.playerShooter.currentGunSO.bulletSpeed;
 
-            if (lockBuildCircleToMuzzle != null)
-                StopCoroutine(lockBuildCircleToMuzzle);
             lockBuildCircleToMuzzle = StartCoroutine(LockBuildCircleToMuzzle());
 
             //Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
