@@ -46,6 +46,7 @@ public class CursorManager : MonoBehaviour
 
     bool initialized;
     bool isDropdownOpen = false;
+    bool wasJoystickAsMouse = false;
     
     Transform customCursorTrans;
     InputAction clickAction;
@@ -176,6 +177,16 @@ public class CursorManager : MonoBehaviour
 
     public void CustomCursorControl()
     {
+        if (Gamepad.current.rightStickButton.wasPressedThisFrame)
+        {
+            wasJoystickAsMouse = InputController.GetJoystickAsMouseState();
+            InputController.SetJoystickMouseControl(true);
+        }
+        else if (Gamepad.current.rightStickButton.wasReleasedThisFrame)
+        {
+            InputController.SetJoystickMouseControl(wasJoystickAsMouse);
+        }
+
         if (!InputController.GetJoystickAsMouseState())
             return;
 

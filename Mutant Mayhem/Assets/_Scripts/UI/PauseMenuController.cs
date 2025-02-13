@@ -21,6 +21,7 @@ public class PauseMenuController : MonoBehaviour
     public bool isPauseMenuOpen = false;
     public bool isOptionsOpen = false;
     bool wasMusicPlaying;
+    bool wasRepairing = false;
 
     void Awake()
     {
@@ -83,6 +84,9 @@ public class PauseMenuController : MonoBehaviour
     {
         if (open)
         {
+            wasRepairing = player.stats.playerShooter.isRepairing;
+            player.stats.playerShooter.isRepairing = false;
+
             playerActionMap.Disable();
             InputController.SetJoystickMouseControl(true);
 
@@ -92,8 +96,13 @@ public class PauseMenuController : MonoBehaviour
         }
         else
         {
+            if (wasRepairing)
+                player.stats.playerShooter.isRepairing = true;
+            else
+                InputController.SetJoystickMouseControl(false);
+
             playerActionMap.Enable();
-            InputController.SetJoystickMouseControl(false);
+            
             
             if (wasMusicPlaying)
                 MusicManager.Instance.PlayOrPausePressed();

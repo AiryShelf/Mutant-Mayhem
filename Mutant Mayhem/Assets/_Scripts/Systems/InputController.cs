@@ -1,16 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
     public static InputDevice LastUsedDevice { get; private set; }
     static bool joystickAsMouse = false;
+    public event Action<InputDevice> LastUsedDeviceChanged;
     
     Vector2 lastMousePos;
 
@@ -62,6 +61,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(true);
                 CursorManager.Instance.SetUsingCustomCursor(false);
                 CursorManager.Instance.SetCustomCursorVisible(false);
+                LastUsedDeviceChanged.Invoke(LastUsedDevice);
             }
         }
         if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
@@ -73,6 +73,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
+                LastUsedDeviceChanged.Invoke(LastUsedDevice);
             }
         }
         else if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
@@ -84,6 +85,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
+                LastUsedDeviceChanged.Invoke(LastUsedDevice);
             }
         }
 

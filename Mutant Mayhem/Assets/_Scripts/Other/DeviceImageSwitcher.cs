@@ -4,57 +4,49 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DeviceTextSwitcher : MonoBehaviour
+public class DeviceImageSwitcher : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI textToSwitch;
     [SerializeField] string keyboardText;
     [SerializeField] string touchscreenText;
     [SerializeField] string gamepadText;
 
-    InputController inputController;
-
     void OnEnable()
     {
-        inputController = FindObjectOfType<InputController>();
-        inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
-        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+        //InputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
     }
 
     void OnDisable()
     {
-        inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
+        //InputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
         Debug.Log($"{gameObject} unsubscribed from LastUsedDeviceChanged text updates");
     }
 
     void OnLastUsedDeviceChanged(InputDevice device)
     {
         Debug.Log("DeviceTextSwitcher: Responding to device changed event...");
-        
+
         if (InputController.LastUsedDevice == Keyboard.current)
             textToSwitch.text = keyboardText;
         else if (InputController.LastUsedDevice == Touchscreen.current)
             textToSwitch.text = touchscreenText;
         else if (InputController.LastUsedDevice == Gamepad.current)
             textToSwitch.text = gamepadText;
-        
         /*
-        if (device == null) return;
-
         switch (device)
         {
             case Keyboard keyboard:
-                textToSwitch.text = keyboardText;
-                break;
+            textToSwitch.text = keyboardText;
+            break;
 
             case Touchscreen touchscreen:
-                textToSwitch.text = touchscreenText;
-                break;
+            textToSwitch.text = touchscreenText;
+            break;
 
             case Gamepad gamepad:
-                textToSwitch.text = gamepadText;
-                break;
+            textToSwitch.text = gamepadText;
+            break;
         }
         */
-        
     }
 }

@@ -62,6 +62,7 @@ public class BuildingSystem : MonoBehaviour
     Player player;
     InputActionMap playerActionMap;
     InputAction helpAction;
+    InputAction toolbarAction;
     InputAction rotateStructureAction;
     InputAction buildAction;
     InputAction cheatCodeCreditsAction;
@@ -102,6 +103,7 @@ public class BuildingSystem : MonoBehaviour
         playerActionMap = player.inputAsset.FindActionMap("Player");
         buildAction = playerActionMap.FindAction("BuildStructure");
         helpAction = playerActionMap.FindAction("Help");
+        toolbarAction = playerActionMap.FindAction("Toolbar");
         rotateStructureAction = playerActionMap.FindAction("RotateStructure");
         cheatCodeCreditsAction = playerActionMap.FindAction("CheatCodeCredits");
 
@@ -278,10 +280,14 @@ public class BuildingSystem : MonoBehaviour
 
         if (on)
         {
-            if (InputController.LastUsedDevice == Gamepad.current)
-                helpAction.Disable();
-
             qCubeController.CloseUpgradeWindow();
+
+            if (InputController.LastUsedDevice == Gamepad.current)
+            {
+                helpAction.Disable();
+                toolbarAction.Disable();
+            }
+
             CursorManager.Instance.SetBuildCursor();
             InputController.SetJoystickMouseControl(true);
 
@@ -300,6 +306,7 @@ public class BuildingSystem : MonoBehaviour
         else
         {
             helpAction.Enable();
+            toolbarAction.Enable();
 
             CursorManager.Instance.SetAimCursor();
             if (player.stats.playerShooter.isRepairing)

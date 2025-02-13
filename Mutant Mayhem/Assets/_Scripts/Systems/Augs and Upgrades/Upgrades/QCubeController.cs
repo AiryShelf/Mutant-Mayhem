@@ -39,6 +39,7 @@ public class QCubeController : MonoBehaviour
     [SerializeField] BuildingSystem buildingSystem;
     [SerializeField] Player player;
     public DroneHangar droneHangar;
+    bool wasRepairing = false;
 
     InputActionMap playerActionMap;
     InputAction qCubeAction;
@@ -153,6 +154,9 @@ public class QCubeController : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
         
+        wasRepairing = player.stats.playerShooter.isRepairing;
+        player.stats.playerShooter.isRepairing = false;
+
         InputController.SetJoystickMouseControl(true);
 
         fireAction.Disable();
@@ -165,7 +169,10 @@ public class QCubeController : MonoBehaviour
 
     public void CloseUpgradeWindow()
     {
-        InputController.SetJoystickMouseControl(false);
+        if (player.stats.playerShooter.currentGunIndex == 4) // Repair Gun
+            player.stats.playerShooter.isRepairing = true;
+        else
+            InputController.SetJoystickMouseControl(false);
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();

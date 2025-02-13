@@ -272,8 +272,11 @@ public class Player : MonoBehaviour
             SwitchToGun(3);
         // REPAIR GUN
         else if (Input.GetKeyDown(KeyCode.Alpha5))
-            SwitchToGun(4);
-        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            animControllerPlayer.SwitchGunsStart(4);
+            toolbarSelector.SwitchBoxes(4);
+        }
+        else if (Input.GetKeyDown(KeyCode.C) || Gamepad.current.dpad.up.isPressed)
         {
             if (playerShooter.currentGunIndex != 4)
             {
@@ -292,13 +295,19 @@ public class Player : MonoBehaviour
         {
             int index = GetNextUnlockedGun(playerShooter.currentGunIndex, -1);
             if (index != -1)
-                SwitchToGun(index);
+            {
+                animControllerPlayer.SwitchGunsStart(index);
+                toolbarSelector.SwitchBoxes(index);
+            }
         }
         else if (Gamepad.current.dpad.right.isPressed)
         {
             int index = GetNextUnlockedGun(playerShooter.currentGunIndex, 1);
             if (index != -1)
-                SwitchToGun(index);
+            {
+                animControllerPlayer.SwitchGunsStart(index);
+                toolbarSelector.SwitchBoxes(index);
+            }
         }
     }
 
