@@ -130,7 +130,8 @@ public class CursorManager : MonoBehaviour
             if (currentHoveredObject != null)
             {
                 PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-                ExecuteEvents.Execute(currentHoveredObject, pointerEventData, ExecuteEvents.pointerExitHandler);
+                ExecuteEvents.Execute(currentHoveredObject, pointerEventData, 
+                                      ExecuteEvents.pointerExitHandler);
                 EventSystem.current.SetSelectedGameObject(null);
             }
         }
@@ -190,14 +191,17 @@ public class CursorManager : MonoBehaviour
         if (player.stats.playerShooter.isBuilding)
         {
             newCursorPos = GetCustomCursorUiPos() + lastAimDir / 2;
-            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, BuildingSystem.buildRange, new Rect());
+            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, 
+                               BuildingSystem.buildRange, new Rect());
         }
         else if (player.stats.playerShooter.isRepairing)
         {
             newCursorPos = GetCustomCursorUiPos() + lastAimDir;
             Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
-            float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * player.stats.playerShooter.currentGunSO.bulletSpeed;
-            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.stats.playerShooter.muzzleTrans.position, range, screenBounds);
+            float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
+                          player.stats.playerShooter.currentGunSO.bulletSpeed;
+            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, 
+                               player.stats.playerShooter.muzzleTrans.position, range, screenBounds);
         } 
         else
         {
@@ -272,10 +276,12 @@ public class CursorManager : MonoBehaviour
 
             RectTransform sliderRect = slider.GetComponent<RectTransform>();
 
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(sliderRect, customCursorTrans.position, null, out Vector2 localPoint))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(sliderRect, 
+                                     customCursorTrans.position, null, out Vector2 localPoint))
             {
                 // Normalize the click position to get a value between 0 and 1
-                float normalizedValue = Mathf.InverseLerp(-sliderRect.rect.width / 2, sliderRect.rect.width / 2, localPoint.x);
+                float normalizedValue = Mathf.InverseLerp(-sliderRect.rect.width / 2, 
+                                                          sliderRect.rect.width / 2, localPoint.x);
 
                 // Convert normalized value to slider value
                 slider.value = Mathf.Lerp(slider.minValue, slider.maxValue, normalizedValue);

@@ -124,13 +124,23 @@ public class PlayerShooter : Shooter
 
         if (i == 4) // Repair gun
         {
-            InputController.SetJoystickMouseControl(true);
             isRepairing = true;
+            InputController.SetJoystickMouseControl(true);
+            if (!BuildingSystem.Instance.isInBuildMode)
+            {
+                BuildingSystem.Instance.buildRangeCircle.EnableCircle(true);
+                BuildingSystem.Instance.SetRepairRangeCircle();
+            }
         }
         else
         {
-            InputController.SetJoystickMouseControl(false);
             isRepairing = false;
+            if (!BuildingSystem.Instance.isInBuildMode)
+            {
+                BuildingSystem.Instance.buildRangeCircle.EnableCircle(false);
+                InputController.SetJoystickMouseControl(false);
+            }
+            
         }
 
         Debug.Log("PlayerShooter: CurrentGunSO: " + currentGunSO); 

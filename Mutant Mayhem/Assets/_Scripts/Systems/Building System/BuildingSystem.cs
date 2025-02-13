@@ -10,6 +10,8 @@ using UnityEngine.Tilemaps;
 
 public class BuildingSystem : MonoBehaviour
 {
+    public static BuildingSystem Instance { get; private set; }
+
     public List<StructureSO> AllStructureSOs;
     [SerializeField] List<bool> unlockedStructuresStart;
     public StructureSO structureInHand;
@@ -69,6 +71,20 @@ public class BuildingSystem : MonoBehaviour
     Coroutine clearStructureInHand;
     public GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     void OnEnable()
     {
@@ -272,6 +288,7 @@ public class BuildingSystem : MonoBehaviour
             mouseLooker.lockedToPlayer = true;
 
             buildRangeCircle.EnableCircle(true);
+            buildRangeCircle.radius = buildRange;
             isInBuildMode = true;
             player.playerShooter.isBuilding = true;
             buildMenuController.OpenBuildMenu(true);
@@ -286,15 +303,16 @@ public class BuildingSystem : MonoBehaviour
             helpAction.Enable();
 
             CursorManager.Instance.SetAimCursor();
-            if (!player.stats.playerShooter.isRepairing)
-                InputController.SetJoystickMouseControl(false);
+            SetRepairRangeCircle();
+            
             Debug.Log("Joystick turned off from BuildingSystem");
 
             // Unlock camera from player
             cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
             mouseLooker.lockedToPlayer = false;
 
-            buildRangeCircle.EnableCircle(false);
+            
+            
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;
             // Only switch guns if not repair gun
@@ -312,6 +330,27 @@ public class BuildingSystem : MonoBehaviour
             lastStructureInHand = structureInHand;
             structureInHand = AllStructureSOs[(int)StructureType.SelectTool];
             //Debug.Log("Closed Build Panel");
+        }
+    }
+
+    public void SetRepairRangeCircle()
+    {
+        if (player.stats.playerShooter.isRepairing)
+        {
+            Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
+            Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
+            Debug.Log($"worldPos = {worldPos}, localPos = {localPos}");
+
+            // Set buildRangeCircle's local position.
+            buildRangeCircle.transform.position = localPos;
+            buildRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
+                                        player.stats.playerShooter.currentGunSO.bulletSpeed;
+        }
+        else
+        {
+            buildRangeCircle.transform.position = player.transform.position;
+            InputController.SetJoystickMouseControl(false);
+            buildRangeCircle.EnableCircle(false);
         }
     }
 
