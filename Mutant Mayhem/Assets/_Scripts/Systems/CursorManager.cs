@@ -37,7 +37,7 @@ public class CursorManager : MonoBehaviour
     public bool usingCustomCursor = false;
     public float cursorSpeedMin = 200;
     public float cursorSpeedMax = 1600;
-    public float cursorSpeedFactor = 800;
+    public float cursorSpeedFactor = 600;
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
     [SerializeField] Image customCursorImage;
     [SerializeField] int rayDistance = 100;

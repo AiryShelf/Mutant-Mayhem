@@ -27,16 +27,20 @@ public class InputController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-    }
 
-    void Start()
-    {
         if (Keyboard.current != null)
             LastUsedDevice = Keyboard.current;
         else if (Gamepad.current != null)
             LastUsedDevice = Gamepad.current;
         else if (Touchscreen.current != null)
             LastUsedDevice = Touchscreen.current;
+
+        LogPlatform();
+    }
+
+    void Start()
+    {
+        
     }
 
     void Update()
@@ -44,6 +48,43 @@ public class InputController : MonoBehaviour
         //EventSystem.current.sendNavigationEvents = !joystickAsMouse;
 
         CheckCurrentInputDevice();
+    }
+
+    void LogPlatform()
+    {
+        switch (Application.platform)
+        {
+            case RuntimePlatform.WindowsPlayer:
+            case RuntimePlatform.WindowsEditor:
+                Debug.Log("Running on Windows build");
+                LastUsedDevice = Keyboard.current;
+                break;
+            case RuntimePlatform.OSXPlayer:
+            case RuntimePlatform.OSXEditor:
+                Debug.Log("Running on macOS build");
+                LastUsedDevice = Keyboard.current;
+                break;
+            case RuntimePlatform.LinuxPlayer:
+                Debug.Log("Running on Linux build");
+                LastUsedDevice = Keyboard.current;
+                break;
+            case RuntimePlatform.Android:
+                Debug.Log("Running on Android build");
+                LastUsedDevice = Touchscreen.current;
+                break;
+            case RuntimePlatform.IPhonePlayer:
+                Debug.Log("Running on iOS build");
+                LastUsedDevice = Touchscreen.current;
+                break;
+            case RuntimePlatform.XboxOne:
+                Debug.Log("Running on Xbox One build");
+                LastUsedDevice = Gamepad.current;
+                break;
+            // Add additional platforms as needed
+            default:
+                Debug.Log("Running on an unrecognized platform: " + Application.platform);
+                break;
+        }
     }
 
     public static void SetLastUsedDevice(InputDevice device)

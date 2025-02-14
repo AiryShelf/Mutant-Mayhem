@@ -65,6 +65,8 @@ MonoBehaviour:
     difficultyLevel: 0
     isStandardWASD: 0
     isSpacebarEnabled: 0
+    isFastJoystickAimEnabled: 0
+    joystickCursorSpeed: 0
     completedPlanets: []
 --- !u!114 &6658943725255159057
 MonoBehaviour:
@@ -81,6 +83,7 @@ MonoBehaviour:
   startingDifficulty: 1
   difficultyLevel: 1
   useStandardWASD: 1
+  useFastJoystickAim: 0
   WaveDifficultyMult: 1
   WavesTillAddWaveBase: 1
   SubwaveListGrowthFactor: 1
@@ -88,6 +91,7 @@ MonoBehaviour:
   BatchSpawnMult: 1
   CreditsMult: 1
   isSpacebarEnabled: 1
+  joystickCursorSpeed: 800
 --- !u!114 &8090136197738410126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,13 +158,16 @@ MonoBehaviour:
   repairCursor: {fileID: 21300000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
   repairCursorHotspot: {x: 24, y: 24}
   usingCustomCursor: 0
-  cursorSpeedFactor: 1200
+  cursorSpeedMin: 100
+  cursorSpeedMax: 1600
+  cursorSpeedFactor: 600
   cursorSpeedCurveMagnitude: 1
   customCursorImage: {fileID: 0}
   rayDistance: 500
   currentHoveredObject: {fileID: 0}
   persistentCanvasGR: {fileID: 0}
   graphicRaycasters: []
+  inMenu: 0
   filteredResults: []
   framesPerUpdate: 6
 --- !u!114 &2494230285008560391

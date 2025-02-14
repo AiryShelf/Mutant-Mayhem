@@ -32,7 +32,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Controls Settings")]
     public bool isSpacebarEnabled = true;
-    public float joystickCursorSpeed = 800;
+    public float joystickCursorSpeed = 600;
 
     WaveControllerRandom waveController;  
     Player player;
@@ -76,7 +76,7 @@ public class SettingsManager : MonoBehaviour
             useStandardWASD = true;
             isSpacebarEnabled = true;
             useFastJoystickAim = false;
-            joystickCursorSpeed = 800;
+            joystickCursorSpeed = 600;
             return;
         }
         Debug.Log($"Loading settings from profile: {currentProfile.profileName}");

@@ -315,7 +315,7 @@ public class BuildingSystem : MonoBehaviour
                 SetRepairRangeCircle();
             else
             {
-                InputController.SetJoystickMouseControl(false);
+                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
                 buildRangeCircle.EnableCircle(false);
             }
             
@@ -390,7 +390,7 @@ public class BuildingSystem : MonoBehaviour
         else
         {
             buildRangeCircle.transform.position = player.transform.position;
-            InputController.SetJoystickMouseControl(false);
+            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
             buildRangeCircle.EnableCircle(false);
         }
     }

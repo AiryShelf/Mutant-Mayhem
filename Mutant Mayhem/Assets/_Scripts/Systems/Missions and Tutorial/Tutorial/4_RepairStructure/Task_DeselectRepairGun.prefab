@@ -332,7 +332,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_text
-      value: Switch back to weapon with 'C'
+      value: Switch back to gun with 'C'
       objectReference: {fileID: 0}
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Pivot.x
@@ -413,6 +413,22 @@ PrefabInstance:
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: gamepadText
+      value: D-Pad Up
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: keyboardText
+      value: C
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: touchscreenText
+      value: Tap
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: stringToReplace_BlankAll
+      value: C
       objectReference: {fileID: 0}
     - target: {fileID: 8840805616247617409, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Name

@@ -35,7 +35,7 @@ public class MainMenuController : MonoBehaviour
     void OnDisable()
     {
         escapeKeyPressed.performed -= EscapeKeyPressed;
-        InputController.SetJoystickMouseControl(false);
+        //InputController.SetJoystickMouseControl(false);
     }
 
     public void OnStartGame()
