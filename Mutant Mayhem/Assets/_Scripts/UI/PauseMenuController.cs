@@ -89,6 +89,7 @@ public class PauseMenuController : MonoBehaviour
 
             playerActionMap.Disable();
             InputController.SetJoystickMouseControl(true);
+            CursorManager.Instance.inMenu = true;
 
             wasMusicPlaying = !MusicManager.Instance.isPaused;
             if (wasMusicPlaying)
@@ -99,10 +100,10 @@ public class PauseMenuController : MonoBehaviour
             if (wasRepairing)
                 player.stats.playerShooter.isRepairing = true;
             else
-                InputController.SetJoystickMouseControl(false);
+                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
 
+            CursorManager.Instance.inMenu = false;
             playerActionMap.Enable();
-            
             
             if (wasMusicPlaying)
                 MusicManager.Instance.PlayOrPausePressed();

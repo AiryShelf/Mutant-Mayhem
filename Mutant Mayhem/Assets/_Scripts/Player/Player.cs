@@ -130,6 +130,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool hasFirstThrowTarget;
     [HideInInspector] public Vector2 throwTarget;
     [HideInInspector] public bool useStandardWASD = true;
+    [HideInInspector] public bool useFastJoystickAim = false;
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
     int previousGunIndex;
@@ -184,7 +185,7 @@ public class Player : MonoBehaviour
         
         CursorManager.Instance.Initialize();
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        InputController.SetJoystickMouseControl(false);
+        InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         SettingsManager.Instance.ApplyGameplaySettings();
 
@@ -370,15 +371,7 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    #region Movement
-
-    public void RefreshMoveForces()
-    {
-        stats.moveForce = stats.moveSpeed * myRb.mass * forceFactor;
-        stats.strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
-        stats.maxVelocity = (stats.moveForce * stats.sprintFactor) / 
-                            (myRb.drag * myRb.mass);
-    }
+    #region Look At Mouse
 
     void LookAtMouse()
     {
@@ -478,13 +471,25 @@ public class Player : MonoBehaviour
         headImageTrans.rotation, clampedTargetRotation, (float)rotationSpeed);
     }
 
+    #endregion
+
+    #region Movement
+
+    public void RefreshMoveForces()
+    {
+        stats.moveForce = stats.moveSpeed * myRb.mass * forceFactor;
+        stats.strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
+        stats.maxVelocity = (stats.moveForce * stats.sprintFactor) / 
+                            (myRb.drag * myRb.mass);
+    }
+
     IEnumerator Sprint(bool isSprinting)
     {
         if (isSprinting)
         {
             while (true)
             {
-                if (sprintStaminaUse <= myStamina.GetStamina() /* && rawInput.sqrMagnitude > 0 */)
+                if (sprintStaminaUse <= myStamina.GetStamina()  && rawInput.sqrMagnitude > 0 )
                 {
                     float time = Time.fixedDeltaTime;
                     StatsCounterPlayer.TimeSprintingPlayer += time;

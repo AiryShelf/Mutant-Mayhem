@@ -158,6 +158,7 @@ public class QCubeController : MonoBehaviour
         player.stats.playerShooter.isRepairing = false;
 
         InputController.SetJoystickMouseControl(true);
+        CursorManager.Instance.inMenu = true;
 
         fireAction.Disable();
         throwAction.Disable();
@@ -172,7 +173,9 @@ public class QCubeController : MonoBehaviour
         if (player.stats.playerShooter.currentGunIndex == 4) // Repair Gun
             player.stats.playerShooter.isRepairing = true;
         else
-            InputController.SetJoystickMouseControl(false);
+            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+
+        CursorManager.Instance.inMenu = false;
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();

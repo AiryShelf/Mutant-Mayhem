@@ -7,11 +7,27 @@ using UnityEngine.InputSystem;
 
 public class InputController : MonoBehaviour
 {
+    public static InputController Instance { get; private set; }
+
     public static InputDevice LastUsedDevice { get; private set; }
     static bool joystickAsMouse = false;
     public event Action<InputDevice> LastUsedDeviceChanged;
     
     Vector2 lastMousePos;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     void Start()
     {

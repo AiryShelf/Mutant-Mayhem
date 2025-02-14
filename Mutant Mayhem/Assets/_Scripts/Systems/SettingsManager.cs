@@ -20,6 +20,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Movement Settings")]
     public bool useStandardWASD = true;
+    public bool useFastJoystickAim = false;
 
     [Header("Difficulty Multipliers")]
     public float WaveDifficultyMult = 1; // Multiplies enemy stats on spawning
@@ -31,6 +32,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Controls Settings")]
     public bool isSpacebarEnabled = true;
+    public float joystickCursorSpeed = 800;
 
     WaveControllerRandom waveController;  
     Player player;
@@ -73,16 +75,21 @@ public class SettingsManager : MonoBehaviour
             difficultyLevel = startingDifficulty;
             useStandardWASD = true;
             isSpacebarEnabled = true;
+            useFastJoystickAim = false;
+            joystickCursorSpeed = 800;
             return;
         }
-
         Debug.Log($"Loading settings from profile: {currentProfile.profileName}");
 
         difficultyLevel = currentProfile.difficultyLevel;
         useStandardWASD = currentProfile.isStandardWASD;
         isSpacebarEnabled = currentProfile.isSpacebarEnabled;
-
+        useFastJoystickAim = currentProfile.isFastJoystickAimEnabled;
+        joystickCursorSpeed = currentProfile.joystickCursorSpeed;
         Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}");
+
+        ApplyMovementSettings();
+        ApplyControlSettings();
     }
         
     public void ApplyGameplaySettings()
@@ -158,7 +165,8 @@ public class SettingsManager : MonoBehaviour
         if (player != null)
         {
             player.useStandardWASD = useStandardWASD;
-            Debug.Log("Movement Type updated: " + useStandardWASD);
+            player.useFastJoystickAim = useFastJoystickAim;
+            Debug.Log("Movement Type updated. Standard movement: " + useStandardWASD + ", Fast Joystick Aim: " + useFastJoystickAim);
         }
         else
         {
@@ -172,6 +180,8 @@ public class SettingsManager : MonoBehaviour
 
     void ApplyControlSettings()
     {
+        CursorManager.Instance.cursorSpeedFactor = joystickCursorSpeed;
+
         player = FindObjectOfType<Player>();
         if (player == null)
         {

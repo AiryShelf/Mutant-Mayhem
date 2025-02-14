@@ -35,12 +35,16 @@ public class CursorManager : MonoBehaviour
 
     [Header("Custom Cursor")]
     public bool usingCustomCursor = false;
-    [SerializeField] float cursorSpeedFactor = 400;
+    public float cursorSpeedMin = 200;
+    public float cursorSpeedMax = 1600;
+    public float cursorSpeedFactor = 800;
+    [SerializeField] float cursorSpeedCurveMagnitude = 3;
     [SerializeField] Image customCursorImage;
     [SerializeField] int rayDistance = 100;
     public GameObject currentHoveredObject = null;
     [SerializeField] GraphicRaycaster persistentCanvasGR;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
+    public bool inMenu;
 
     Player player;
 
@@ -177,14 +181,10 @@ public class CursorManager : MonoBehaviour
 
     public void CustomCursorControl()
     {
-        if (Gamepad.current.rightStickButton.wasPressedThisFrame)
+        if (SettingsManager.Instance.useFastJoystickAim && !inMenu && Gamepad.current.rightStickButton.wasPressedThisFrame)
         {
-            wasJoystickAsMouse = InputController.GetJoystickAsMouseState();
-            InputController.SetJoystickMouseControl(true);
-        }
-        else if (Gamepad.current.rightStickButton.wasReleasedThisFrame)
-        {
-            InputController.SetJoystickMouseControl(wasJoystickAsMouse);
+            InputController.SetJoystickMouseControl(!InputController.GetJoystickAsMouseState());
+            MessagePanel.PulseMessage("Aim mode switched! Cick right thumbstick to switch back", Color.yellow);
         }
 
         if (!InputController.GetJoystickAsMouseState())
@@ -195,19 +195,21 @@ public class CursorManager : MonoBehaviour
         float joystickY = Input.GetAxis("RightStickVertical");
         Vector2 joystickInput = new Vector2(joystickX, joystickY);
 
-        Vector2 lastAimDir = joystickInput * cursorSpeedFactor * Time.unscaledDeltaTime;
+        float joystickInputMagnitude = joystickInput.magnitude;
+        float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, cursorSpeedCurveMagnitude);
+
+        Vector2 newAimDir = joystickInput * cursorSpeedFactor * curvedMagnitude * Time.unscaledDeltaTime;
         Vector2 newCursorPos;
 
-        if (player == null) return;
-        if (player.stats.playerShooter.isBuilding)
+        if (player != null && player.stats.playerShooter.isBuilding)
         {
-            newCursorPos = GetCustomCursorUiPos() + lastAimDir / 2;
+            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, 
                                BuildingSystem.buildRange, new Rect());
         }
-        else if (player.stats.playerShooter.isRepairing)
+        else if (player != null && player.stats.playerShooter.isRepairing)
         {
-            newCursorPos = GetCustomCursorUiPos() + lastAimDir;
+            newCursorPos = GetCustomCursorUiPos() + newAimDir;
             Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
             float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                           player.stats.playerShooter.currentGunSO.bulletSpeed;
@@ -216,7 +218,7 @@ public class CursorManager : MonoBehaviour
         } 
         else
         {
-            newCursorPos = GetCustomCursorUiPos() + lastAimDir;
+            newCursorPos = GetCustomCursorUiPos() + newAimDir;
             Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
         }

@@ -163,6 +163,7 @@ public class PlayerShooter : Shooter
             {
                 BuildingSystem.Instance.buildRangeCircle.EnableCircle(true);
                 BuildingSystem.Instance.SetRepairRangeCircle();
+                CursorManager.Instance.inMenu = true;
             }
         }
         else
@@ -175,7 +176,8 @@ public class PlayerShooter : Shooter
                 BuildingSystem.Instance.buildRangeCircle.EnableCircle(false);
                 BuildingSystem.Instance.LockCameraToPlayer(false);
                 //BuildingSystem.Instance.buildRangeCircle.radius = BuildingSystem.buildRange;
-                InputController.SetJoystickMouseControl(false);
+                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                CursorManager.Instance.inMenu = false;
             }
         }
 

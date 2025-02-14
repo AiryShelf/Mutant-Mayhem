@@ -288,6 +288,7 @@ public class BuildingSystem : MonoBehaviour
                 toolbarAction.Disable();
             }
 
+            CursorManager.Instance.inMenu = true;
             CursorManager.Instance.SetBuildCursor();
             InputController.SetJoystickMouseControl(true);
 
@@ -308,6 +309,7 @@ public class BuildingSystem : MonoBehaviour
             helpAction.Enable();
             toolbarAction.Enable();
 
+            CursorManager.Instance.inMenu = false;
             CursorManager.Instance.SetAimCursor();
             if (player.stats.playerShooter.isRepairing)
                 SetRepairRangeCircle();
