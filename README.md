@@ -27,15 +27,17 @@ https://youtu.be/QrIcqxv9Lm8
 
 - Challenging fast paced top-down shooting action
 - Base building, defense and repair
+- Automatic construction and attack drones
 - EVERYTHING is upgradable (Structures, player stats, gun stats)
 - Roguelite mechanics.  Collect and spend Research Points to customize your character before each run
 - Choose between 3 character types
 - 3 enemy types with unique behaviors
 - 3 attack types: Gun, melee, and throw
 - 2 damage types: Lasers and bullets
+- A fun repair gun
 - Built in music player to choose your vibe
 - 3 difficulty levels
-- A solar system of unique planets to conquer <span style="color: white;"> **(Coming Soon)** </span>
+- A solar system of 14 unique planets to conquer <span style="color: white;"> **(Coming Soon)** </span>
 
 ## <span style="color: white;"> Installation </span>
 
