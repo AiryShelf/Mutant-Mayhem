@@ -110,7 +110,10 @@ public class CursorManager : MonoBehaviour
 
     void Update()
     {
-        CustomCursorControl();
+        if (usingCustomCursor)
+            CustomCursorControl();
+        else 
+            customCursorTrans.position = Input.mousePosition;
 
         updateCount++;
         if (updateCount >= framesPerUpdate)
@@ -188,7 +191,9 @@ public class CursorManager : MonoBehaviour
         }
 
         if (!InputController.GetJoystickAsMouseState())
+        {
             return;
+        }
 
         //Debug.Log("Joystick as mouse is running");
         float joystickX = Input.GetAxis("RightStickHorizontal");
@@ -209,7 +214,7 @@ public class CursorManager : MonoBehaviour
         }
         else if (player != null && player.stats.playerShooter.isRepairing)
         {
-            newCursorPos = GetCustomCursorUiPos() + newAimDir;
+            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
             Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
             float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                           player.stats.playerShooter.currentGunSO.bulletSpeed;

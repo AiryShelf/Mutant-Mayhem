@@ -15,7 +15,7 @@ public class UIMothershipController : MonoBehaviour
     void Start()
     {
         AugManager.Instance.Initialize();
-        InputController.SetLastUsedDevice(null);
+        //InputController.SetLastUsedDevice(null);
         InputController.SetJoystickMouseControl(true);
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
         

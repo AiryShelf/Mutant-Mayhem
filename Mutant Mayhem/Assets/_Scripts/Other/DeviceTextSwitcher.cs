@@ -21,18 +21,15 @@ public class DeviceTextSwitcher : MonoBehaviour
     {
         inputController = InputController.Instance;
         inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
-        
+
+        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
     }
 
     void OnDisable()
     {
+        Debug.Log($"{gameObject} unsubscribing from LastUsedDeviceChanged text updates");
         inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
-        Debug.Log($"{gameObject} unsubscribed from LastUsedDeviceChanged text updates");
-    }
-
-    void Start()
-    {
-        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+        
     }
 
     void OnLastUsedDeviceChanged(InputDevice device)

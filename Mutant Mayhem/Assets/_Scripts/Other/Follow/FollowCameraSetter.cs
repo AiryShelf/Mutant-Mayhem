@@ -5,14 +5,10 @@ using UnityEngine;
 
 public class FollowCameraSetter : MonoBehaviour
 {
-    [SerializeField] Transform objToFollow;
     [SerializeField] CinemachineVirtualCamera followCamera;
 
     void Start()
     {
-        if (objToFollow != null)
-            followCamera.Follow = CursorManager.Instance.worldCursorTrans;
-        else
-            followCamera.Follow = objToFollow;
+        followCamera.Follow = CursorManager.Instance.worldCursorTrans;
     }
 }

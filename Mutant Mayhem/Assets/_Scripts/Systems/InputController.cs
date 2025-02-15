@@ -118,7 +118,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(true);
                 CursorManager.Instance.SetUsingCustomCursor(false);
                 CursorManager.Instance.SetCustomCursorVisible(false);
-                LastUsedDeviceChanged.Invoke(LastUsedDevice);
+                LastUsedDeviceChanged?.Invoke(LastUsedDevice);
             }
         }
         if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
@@ -130,7 +130,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
-                LastUsedDeviceChanged.Invoke(LastUsedDevice);
+                LastUsedDeviceChanged?.Invoke(LastUsedDevice);
             }
         }
         else if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
@@ -142,7 +142,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
-                LastUsedDeviceChanged.Invoke(LastUsedDevice);
+                LastUsedDeviceChanged?.Invoke(LastUsedDevice);
             }
         }
 

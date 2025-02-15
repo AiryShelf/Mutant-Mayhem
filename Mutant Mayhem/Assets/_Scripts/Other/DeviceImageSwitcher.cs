@@ -1,37 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class DeviceImageSwitcher : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI textToSwitch;
-    [SerializeField] string keyboardText;
-    [SerializeField] string touchscreenText;
-    [SerializeField] string gamepadText;
+    [SerializeField] Image imageToSwitch;
+    [SerializeField] Sprite keyboardSprite;
+    [SerializeField] Sprite touchscreenSprite;
+    [SerializeField] Sprite gamepadSprite;
 
-    void OnEnable()
+    InputController inputController;
+
+    void Start()
     {
-        //InputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        inputController = InputController.Instance;
+        inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+
+        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
     }
 
-    void OnDisable()
+    void OnDestroy()
     {
-        //InputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
+        inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
         Debug.Log($"{gameObject} unsubscribed from LastUsedDeviceChanged text updates");
     }
 
     void OnLastUsedDeviceChanged(InputDevice device)
     {
-        Debug.Log("DeviceTextSwitcher: Responding to device changed event...");
+        Debug.Log("DeviceImageSwitcher: Responding to device changed event...");
 
         if (InputController.LastUsedDevice == Keyboard.current)
-            textToSwitch.text = keyboardText;
+            imageToSwitch.sprite = keyboardSprite;
         else if (InputController.LastUsedDevice == Touchscreen.current)
-            textToSwitch.text = touchscreenText;
+            imageToSwitch.sprite = touchscreenSprite;
         else if (InputController.LastUsedDevice == Gamepad.current)
-            textToSwitch.text = gamepadText;
+            imageToSwitch.sprite = gamepadSprite;
         /*
         switch (device)
         {

@@ -395,7 +395,8 @@ public class Player : MonoBehaviour
             // Mouse position
             if (InputController.LastUsedDevice == Keyboard.current)
             {
-                aimPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
+                //aimPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 lastAimDir = Vector3.zero;
             }
             // Touchscreen
@@ -534,7 +535,7 @@ public class Player : MonoBehaviour
 
         // Determine the speed based on the angle difference
         float maxSpeedAngle = 15f; // Full speed within ±15 degrees
-        float minSpeedAngle = 90f;
+        float minSpeedAngle = 120f;
         float speedFactor = 1.0f;
         
         if (Mathf.Abs(angleDifference) > maxSpeedAngle)
