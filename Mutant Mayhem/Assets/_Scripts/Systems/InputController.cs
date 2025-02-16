@@ -95,7 +95,7 @@ public class InputController : MonoBehaviour
     public static void SetJoystickMouseControl(bool active)
     {
         joystickAsMouse = active;
-        Debug.Log("joystickAsMouse set to " + active);
+        //Debug.Log("joystickAsMouse set to " + active);
     }
 
     public static bool GetJoystickAsMouseState()

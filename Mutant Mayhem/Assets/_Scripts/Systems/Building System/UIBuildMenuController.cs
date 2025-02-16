@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -181,20 +180,11 @@ public class UIBuildMenuController : MonoBehaviour
         if (!player.stats.playerShooter.isBuilding)
             return;
         
-        // Gamepad
-        if (Gamepad.current.dpad.up.isPressed)
+        Vector2 scroll = context.ReadValue<Vector2>();
+        if (scroll.y > 0)
             ScrollUp();
-        else if (Gamepad.current.dpad.down.isPressed)
+        else if (scroll.y < 0)
             ScrollDown();
-        else 
-        {
-            // Mouse Scroll
-            float scrollDelta = context.ReadValue<float>();
-            if (scrollDelta > 0)
-                ScrollUp();
-            else if (scrollDelta < 0)
-                ScrollDown();
-        }
     }
 
     void ScrollUp()

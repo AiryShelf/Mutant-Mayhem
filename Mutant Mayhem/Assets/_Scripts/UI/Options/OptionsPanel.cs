@@ -137,15 +137,16 @@ public class OptionsPanel : MonoBehaviour
 
     void JoystickCursorSpeedChanged(Slider change)
     {
+        float value = CursorManager.Instance.cursorSpeedFactor;
         if (ProfileManager.Instance.currentProfile != null)
         {
-            float value = Mathf.Lerp(CursorManager.Instance.cursorSpeedMin, CursorManager.Instance.cursorSpeedMax, change.value);
+            value = Mathf.Lerp(CursorManager.Instance.cursorSpeedMin, CursorManager.Instance.cursorSpeedMax, change.value);
             ProfileManager.Instance.currentProfile.joystickCursorSpeed = value;
             ProfileManager.Instance.SaveCurrentProfile();
         }
 
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
-        Debug.Log("Joystick Cursor Speed set to " + change.value);
+        Debug.Log("Joystick Cursor Speed set to " + value);
     }
 
     void FastJoystickAimChanged(Toggle change)

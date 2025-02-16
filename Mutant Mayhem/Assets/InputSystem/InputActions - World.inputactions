@@ -913,7 +913,7 @@
                     "name": "Scroll",
                     "type": "PassThrough",
                     "id": "6bdcdd8d-c5c2-4266-ad33-f42db4f35673",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1203,7 +1203,7 @@
                 {
                     "name": "",
                     "id": "d8362ded-6338-4995-9925-0c84bed718b3",
-                    "path": "<Mouse>/scroll/y",
+                    "path": "<Mouse>/scroll",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -1212,26 +1212,59 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "8c7c8bcd-c362-4a67-8b67-466f4e64c41a",
-                    "path": "<Gamepad>/dpad/down",
+                    "name": "2D Vector",
+                    "id": "4f368141-1076-4490-ad65-19baa375b58a",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "",
                     "action": "Scroll",
-                    "isComposite": false,
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "0f78130b-43a0-4549-83d5-ed09b62cd196",
+                    "name": "Up",
+                    "id": "1f5013aa-4ddf-4039-86b4-216f83dffdac",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Scroll",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "17b3895d-95d2-4cb1-8ac0-c31b23686baf",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "5261905e-1fb8-446e-9bee-8b470e440af8",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "4bf67fdc-1ef4-4e1d-8cd2-43c366dab993",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",

@@ -20,21 +20,35 @@ public class DeviceTextSwitcher : MonoBehaviour
     void OnEnable()
     {
         inputController = InputController.Instance;
-        inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        if (inputController != null)
+            inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        //else
+            //Debug.Log("DeviceTextSwitcher: Could not find InputController.Instance when enabled");
 
         OnLastUsedDeviceChanged(InputController.LastUsedDevice);
     }
 
     void OnDisable()
     {
-        Debug.Log($"{gameObject} unsubscribing from LastUsedDeviceChanged text updates");
+        //Debug.Log($"{gameObject} unsubscribing from LastUsedDeviceChanged text updates");
         inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
         
     }
 
+    void Start()
+    {
+        inputController = InputController.Instance;
+        if (inputController != null)
+            inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        else
+            Debug.LogError("DeviceTextSwitcher: Could not find InputController.Instance on Start");
+
+        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+    }
+
     void OnLastUsedDeviceChanged(InputDevice device)
     {
-        Debug.Log("DeviceTextSwitcher: Responding to device changed event...");
+        //Debug.Log("DeviceTextSwitcher: Responding to device changed event...");
         
         string newText = GetDeviceText();
 

@@ -239,7 +239,7 @@ public class CursorManager : MonoBehaviour
         if (!InputController.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
-        Debug.Log("Simulated click started on currentHoveredObject: " + currentHoveredObject);
+        //Debug.Log("Simulated click started on currentHoveredObject: " + currentHoveredObject);
 
         //EventSystem.current.SetSelectedGameObject(null);
 
@@ -250,7 +250,7 @@ public class CursorManager : MonoBehaviour
         Button button = selected.GetComponent<Button>();
         if (button != null)
         {
-            Debug.Log($"BUTTON FOUND on {selected}! Invoking OnClick!");
+            //Debug.Log($"BUTTON FOUND on {selected}! Invoking OnClick!");
             button.onClick.Invoke();
             return;
         }
@@ -258,7 +258,7 @@ public class CursorManager : MonoBehaviour
         TMP_Dropdown dropdown = selected.GetComponent<TMP_Dropdown>();
         if (dropdown != null)
         {
-            Debug.Log($"Dropdown found on {selected}, clicking...");
+            //Debug.Log($"Dropdown found on {selected}, clicking...");
             // Simulate a pointer click event.
             PointerEventData pointerData = new PointerEventData(EventSystem.current);
             ExecuteEvents.Execute(selected, pointerData, ExecuteEvents.pointerClickHandler);
@@ -268,7 +268,7 @@ public class CursorManager : MonoBehaviour
         Toggle toggle = selected.GetComponent<Toggle>();
         if (toggle != null)
         {
-            Debug.Log($"Toggle found on {selected}, clicking...");
+            //Debug.Log($"Toggle found on {selected}, clicking...");
             // Toggle the value.
             toggle.isOn = !toggle.isOn;
             // Optionally, invoke the onValueChanged event.
@@ -279,7 +279,7 @@ public class CursorManager : MonoBehaviour
         TMP_InputField inputField = selected.GetComponent<TMP_InputField>();
         if (inputField != null)
         {
-            Debug.Log($"Input field found on {selected}, clicking...");
+            //Debug.Log($"Input field found on {selected}, clicking...");
             PointerEventData pointerData = new PointerEventData(EventSystem.current);
             ExecuteEvents.Execute(selected, pointerData, ExecuteEvents.pointerClickHandler);
             return;
@@ -288,7 +288,7 @@ public class CursorManager : MonoBehaviour
         Slider slider = selected.GetComponent<Slider>();
         if (slider != null)
         {
-            Debug.Log($"Slider found on {selected}, clicking...");
+            //Debug.Log($"Slider found on {selected}, clicking...");
             PointerEventData pointerData = new PointerEventData(EventSystem.current);
             ExecuteEvents.Execute(selected, pointerData, ExecuteEvents.pointerClickHandler);
 
@@ -373,7 +373,7 @@ public class CursorManager : MonoBehaviour
         {
             if (currentHoveredObject != null)
             {
-                Debug.Log("Simulating pointer exit event on " + currentHoveredObject);
+                //Debug.Log("Simulating pointer exit event on " + currentHoveredObject);
                 ExecuteEvents.Execute(currentHoveredObject, pointerEventData, ExecuteEvents.pointerExitHandler);
                 //EventSystem.current.SetSelectedGameObject(null);
             }
@@ -382,7 +382,7 @@ public class CursorManager : MonoBehaviour
 
             if (newHoveredObject != null)
             {
-                Debug.Log("Simulating pointer enter event on " + newHoveredObject);
+                //Debug.Log("Simulating pointer enter event on " + newHoveredObject);
                 ExecuteEvents.Execute(newHoveredObject, pointerEventData, ExecuteEvents.pointerEnterHandler);
             }
         }
@@ -423,15 +423,17 @@ public class CursorManager : MonoBehaviour
 
             if (graphic != null)
             {
+                /*
                 if (!graphic.raycastTarget)
                 {
-                    Debug.Log($"Graphic found on {result.gameObject} was not a raycast target");
+                    //Debug.Log($"Graphic found on {result.gameObject} was not a raycast target");
                     continue;
                 }
                 if (graphic.color.a <= 0.01f)
                 {
                     Debug.Log($"Graphic found on {result.gameObject} was not a visible target, still accepting");
                 }
+                */
             }
             else
             {
@@ -451,7 +453,7 @@ public class CursorManager : MonoBehaviour
                 sortedResults[4].Add(result.gameObject);
             else
             {
-                Debug.Log("No interactable component found on " + result.gameObject);
+                //Debug.Log("No interactable component found on " + result.gameObject);
                 continue;
             }
         }
@@ -469,7 +471,7 @@ public class CursorManager : MonoBehaviour
         foreach (var category in sortedResults)
             filteredResults.AddRange(category.Value);
 
-        Debug.Log($"Filtered raycast results count: {filteredResults.Count}");
+        //Debug.Log($"Filtered raycast results count: {filteredResults.Count}");
         
     }
 

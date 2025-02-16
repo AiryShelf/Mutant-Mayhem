@@ -13,7 +13,7 @@ public class DeviceImageSwitcher : MonoBehaviour
 
     InputController inputController;
 
-    void Start()
+    void OnEnable()
     {
         inputController = InputController.Instance;
         inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
@@ -21,10 +21,21 @@ public class DeviceImageSwitcher : MonoBehaviour
         OnLastUsedDeviceChanged(InputController.LastUsedDevice);
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
         inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
-        Debug.Log($"{gameObject} unsubscribed from LastUsedDeviceChanged text updates");
+        //Debug.Log($"{gameObject} unsubscribed from LastUsedDeviceChanged text updates");
+    }
+
+    void Start()
+    {
+        inputController = InputController.Instance;
+        if (inputController != null)
+            inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        else
+            Debug.LogError("DeviceImageSwitcher: Could not find InputController.Instance on Start");
+
+        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
     }
 
     void OnLastUsedDeviceChanged(InputDevice device)
