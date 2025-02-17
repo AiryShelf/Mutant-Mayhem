@@ -39,6 +39,8 @@ public class CursorManager : MonoBehaviour
     public float cursorSpeedMax = 1600;
     public float cursorSpeedFactor = 600;
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
+    Vector2 cursorVelocity = Vector2.zero;
+    public float cursorAcceleration = 1000f;
     [SerializeField] Image customCursorImage;
     [SerializeField] int rayDistance = 100;
     public GameObject currentHoveredObject = null;
@@ -113,7 +115,7 @@ public class CursorManager : MonoBehaviour
         if (usingCustomCursor)
             CustomCursorControl();
         else 
-            customCursorTrans.position = Input.mousePosition;
+            customCursorTrans.position = Mouse.current.position.ReadValue();
 
         updateCount++;
         if (updateCount >= framesPerUpdate)
@@ -192,18 +194,48 @@ public class CursorManager : MonoBehaviour
 
         if (!InputController.GetJoystickAsMouseState())
         {
+            cursorVelocity = Vector2.zero;
             return;
         }
 
-        //Debug.Log("Joystick as mouse is running");
-        float joystickX = Input.GetAxis("RightStickHorizontal");
-        float joystickY = Input.GetAxis("RightStickVertical");
-        Vector2 joystickInput = new Vector2(joystickX, joystickY);
+        Vector2 joystickInput = Gamepad.current.rightStick.ReadValue();
+        //Debug.Log($"Joystick input: {joystickInput}");
 
         float joystickInputMagnitude = joystickInput.magnitude;
+        //Debug.Log($"Joystick Input Magnitude: {joystickInputMagnitude}");
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, cursorSpeedCurveMagnitude);
+        //Debug.Log($"Curved Magnitude: {curvedMagnitude}");
+        //Debug.Log($"Cursor Speed Factor: {cursorSpeedFactor}");
 
-        Vector2 newAimDir = joystickInput * cursorSpeedFactor * curvedMagnitude * Time.unscaledDeltaTime;
+        float targetSpeed = cursorSpeedFactor * curvedMagnitude * joystickInputMagnitude; // [New] Full speed.
+        Vector2 direction = (joystickInputMagnitude > 0f) ? joystickInput.normalized : Vector2.zero; // [New] Direction of movement.
+
+        // If the joystick is near the center, set velocity to zero.
+        if (joystickInputMagnitude < 0.1f)
+        {
+            cursorVelocity = Vector2.zero;
+        }
+        else
+        {
+            float currentSpeed = cursorVelocity.magnitude;
+            if (targetSpeed > currentSpeed)
+            {
+                // Accelerate gradually until reaching full speed.
+                currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, cursorAcceleration * Time.unscaledDeltaTime); // [New]
+            }
+            else
+            {
+                // If the joystick input is reduced, immediately set to the new target speed.
+                currentSpeed = targetSpeed; // [New]
+            }
+            cursorVelocity = direction * currentSpeed; // [New]
+        }
+
+        // Calculate displacement for this frame.
+        Vector2 newAimDir = cursorVelocity * Time.unscaledDeltaTime;
+
+        //Vector2 newAimDir = joystickInput * cursorSpeedFactor * curvedMagnitude * Time.unscaledDeltaTime;
+        //Debug.Log($"New Aim Dir: {newAimDir}");
         Vector2 newCursorPos;
 
         if (player != null && player.stats.playerShooter.isBuilding)
@@ -223,11 +255,15 @@ public class CursorManager : MonoBehaviour
         } 
         else
         {
-            newCursorPos = GetCustomCursorUiPos() + newAimDir;
+            Vector2 currentPos = GetCustomCursorUiPos();
+            //Debug.Log($"currentPos: {currentPos}");
+            newCursorPos = currentPos + newAimDir;
             Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
+            //Debug.Log($"CustomCursorControl() attempting to move within screen bounds: {screenBounds} to new position: {newCursorPos}");
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
         }
-        
+
+        //Debug.Log($"New Cursor Pos: {newCursorPos}");
     }
 
     #endregion

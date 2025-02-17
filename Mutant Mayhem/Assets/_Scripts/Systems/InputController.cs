@@ -35,7 +35,7 @@ public class InputController : MonoBehaviour
         else if (Touchscreen.current != null)
             LastUsedDevice = Touchscreen.current;
 
-        LogPlatform();
+        //LogPlatform();
     }
 
     void Start()
@@ -107,7 +107,7 @@ public class InputController : MonoBehaviour
 
     void CheckCurrentInputDevice()
     {
-        Vector2 mousePos = Input.mousePosition;
+        Vector2 mousePos = Mouse.current.position.ReadValue();
         if (Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos)
         {
             lastMousePos = mousePos;

@@ -48,7 +48,7 @@ public class MouseLooker : MonoBehaviour
 
     void FollowMouse()
     {
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         Vector3 difference = mousePos - playerTrans.position;
         difference /= distDivisor;

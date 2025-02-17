@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
@@ -36,8 +37,8 @@ public class ShadowCaster2DTileMap : MonoBehaviour
     void Update()
     {
         // For debugging
-        if (Input.GetKeyDown("g"))
-            Generate();
+        //if (Keyboard.current.gKey.isPressed)
+            //Generate();
     }
     
     public void Generate()

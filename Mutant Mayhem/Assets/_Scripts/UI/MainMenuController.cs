@@ -22,10 +22,6 @@ public class MainMenuController : MonoBehaviour
 
     void OnEnable() 
     {
-        Debug.Log("Main Menu Enabled");
-        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        InputController.SetJoystickMouseControl(true);
-
         InputActionMap uiActionMap = inputAsset.FindActionMap("UI");
         uiActionMap.Enable();
         escapeKeyPressed = uiActionMap.FindAction("Escape");
@@ -36,6 +32,14 @@ public class MainMenuController : MonoBehaviour
     {
         escapeKeyPressed.performed -= EscapeKeyPressed;
         //InputController.SetJoystickMouseControl(false);
+    }
+
+    void Start()
+    {
+        Application.targetFrameRate = 60;
+        
+        InputController.SetJoystickMouseControl(true);
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
     }
 
     public void OnStartGame()

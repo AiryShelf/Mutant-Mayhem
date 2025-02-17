@@ -85,6 +85,12 @@ public class SettingsManager : MonoBehaviour
         useStandardWASD = currentProfile.isStandardWASD;
         isSpacebarEnabled = currentProfile.isSpacebarEnabled;
         useFastJoystickAim = currentProfile.isFastJoystickAimEnabled;
+        if (currentProfile.joystickCursorSpeed < 100)
+        {
+            currentProfile.joystickCursorSpeed = 600;
+            Debug.Log($"Profile: {currentProfile} had an abnormally slow cursor speed, resetting to default");
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
         joystickCursorSpeed = currentProfile.joystickCursorSpeed;
         Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}");
 

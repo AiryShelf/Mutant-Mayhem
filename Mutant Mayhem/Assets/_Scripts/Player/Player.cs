@@ -180,6 +180,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 120;
+        
         SFXManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
         
@@ -260,24 +262,24 @@ public class Player : MonoBehaviour
     void OnToolbar()
     {
         // Laser Weapon
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Keyboard.current.digit1Key.isPressed)
             SwitchToGun(0);
         // Bullet Weapon
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Keyboard.current.digit2Key.isPressed)
             SwitchToGun(1);
         // ??
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Keyboard.current.digit3Key.isPressed)
             SwitchToGun(2);
         // ??
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (Keyboard.current.digit4Key.isPressed)
             SwitchToGun(3);
         // REPAIR GUN
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        else if (Keyboard.current.digit5Key.isPressed)
         {
             animControllerPlayer.SwitchGunsStart(4);
             toolbarSelector.SwitchBoxes(4);
         }
-        else if (Input.GetKeyDown(KeyCode.C) || Gamepad.current.dpad.up.isPressed)
+        else if (Keyboard.current.cKey.isPressed || Gamepad.current.dpad.up.isPressed)
         {
             if (playerShooter.currentGunIndex != 4)
             {
@@ -353,7 +355,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            itemToThrow.target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            itemToThrow.target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         }
 
         itemToThrow.transform.parent = null;
@@ -375,10 +377,7 @@ public class Player : MonoBehaviour
 
     void LookAtMouse()
     {
-        // Find Mouse direction and angle
-        float joystickX = Input.GetAxis("RightStickHorizontal");
-        float joystickY = Input.GetAxis("RightStickVertical");
-        Vector2 joystickInput = new Vector2(joystickX, joystickY);
+        Vector2 joystickInput = Gamepad.current.rightStick.ReadValue();
 
         float joystickInputMagnitude = joystickInput.magnitude;
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
@@ -396,13 +395,12 @@ public class Player : MonoBehaviour
             if (InputController.LastUsedDevice == Keyboard.current)
             {
                 aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
-                //aimPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 lastAimDir = Vector3.zero;
             }
             // Touchscreen
             else if (InputController.LastUsedDevice == Touchscreen.current)
             {
-                // TODO: Get input from virtual joysticks, apply to aimPos
+                //aimPos = Touchscreen.current.
             }
             // Joystick input
             else if (joystickInputMagnitude > joystickDeadzone)
