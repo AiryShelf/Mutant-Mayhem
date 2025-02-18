@@ -112,7 +112,7 @@ public class InputController : MonoBehaviour
             mousePos = Mouse.current.position.ReadValue();
         Debug.Log($"Mouse Pos: {mousePos}");
 
-        if ((Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos))
+        if (Keyboard.current != null && (Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos))
         {
             lastMousePos = mousePos;
             if (LastUsedDevice != Keyboard.current)
@@ -126,7 +126,7 @@ public class InputController : MonoBehaviour
                 Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }
         }
-        else if (Gamepad.current.allControls.Any(control => control.IsPressed()))
+        else if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
         {
             if (LastUsedDevice != Gamepad.current)
             {
