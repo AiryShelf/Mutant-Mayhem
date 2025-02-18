@@ -38,6 +38,7 @@ public class CursorManager : MonoBehaviour
     public float cursorSpeedMin = 200;
     public float cursorSpeedMax = 1600;
     public float cursorSpeedFactor = 600;
+    public float joystickDeadzone = 0.05f;
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
     Vector2 cursorVelocity = Vector2.zero;
     public float cursorAcceleration = 1000f;
@@ -115,7 +116,10 @@ public class CursorManager : MonoBehaviour
         if (usingCustomCursor)
             CustomCursorControl();
         else 
-            customCursorTrans.position = Mouse.current.position.ReadValue();
+        {
+            //if (Mouse.current != null)
+                customCursorTrans.position = Mouse.current.position.ReadValue();
+        }
 
         updateCount++;
         if (updateCount >= framesPerUpdate)
@@ -198,7 +202,9 @@ public class CursorManager : MonoBehaviour
             return;
         }
 
-        Vector2 joystickInput = Gamepad.current.rightStick.ReadValue();
+        Vector2 joystickInput = Vector2.zero;
+        if (Gamepad.current != null)
+            joystickInput = Gamepad.current.rightStick.ReadValue();
         //Debug.Log($"Joystick input: {joystickInput}");
 
         float joystickInputMagnitude = joystickInput.magnitude;
@@ -211,7 +217,7 @@ public class CursorManager : MonoBehaviour
         Vector2 direction = (joystickInputMagnitude > 0f) ? joystickInput.normalized : Vector2.zero; // [New] Direction of movement.
 
         // If the joystick is near the center, set velocity to zero.
-        if (joystickInputMagnitude < 0.1f)
+        if (joystickInputMagnitude <= joystickDeadzone)
         {
             cursorVelocity = Vector2.zero;
         }

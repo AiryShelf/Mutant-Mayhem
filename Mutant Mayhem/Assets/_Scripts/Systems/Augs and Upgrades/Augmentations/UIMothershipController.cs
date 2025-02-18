@@ -40,7 +40,7 @@ public class UIMothershipController : MonoBehaviour
 
     public void OnLaunch()
     {
-        if (AugManager.Instance.selectedAugsWithLvls.Count < 1)
+        if (AugManager.selectedAugsWithLvls.Count < 1)
         {
             areYouSurePanel.isTriggered = true;
             return;

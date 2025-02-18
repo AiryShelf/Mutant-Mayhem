@@ -57,13 +57,11 @@ public class PanelSwitcher : MonoBehaviour
         // Check swipe input
         if (isOpen)
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Keyboard.current.qKey.wasPressedThisFrame ||
+                Gamepad.current.leftShoulder.wasPressedThisFrame)
                 SwipeLeft();
-            else if (Input.GetKeyDown(KeyCode.E))
-                SwipeRight();
-            else if (Gamepad.current.leftShoulder.wasPressedThisFrame)
-                SwipeLeft();
-            else if (Gamepad.current.rightShoulder.wasPressedThisFrame)
+            else if (Keyboard.current.eKey.wasPressedThisFrame ||
+                     Gamepad.current.rightShoulder.wasPressedThisFrame)
                 SwipeRight();
         }
     }

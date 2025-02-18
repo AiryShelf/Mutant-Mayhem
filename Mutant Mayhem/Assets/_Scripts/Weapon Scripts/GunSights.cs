@@ -44,7 +44,7 @@ public class GunSights : MonoBehaviour
             if (InputController.LastUsedDevice == Gamepad.current)
                 target = CursorManager.Instance.GetCustomCursorWorldPos();
             else
-                target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             target.z = 0;
             baseLength = (target - transform.position).magnitude;
         }

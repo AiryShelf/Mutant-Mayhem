@@ -74,20 +74,20 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     public bool AddToSelectedAugs(int level)
     {
-        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
+        if (AugManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
             Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
             return false;
         } 
 
         // Check for duplicates
-        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
+        if (AugManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
             Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
             return false;
         }
 
-        augManager.selectedAugsWithLvls.Add(augBaseSO, level);
+        AugManager.selectedAugsWithLvls.Add(augBaseSO, level);
         Debug.Log("Added Augmentation: " + augBaseSO.augmentationName);
 
         UpdateIconAndText();
@@ -96,13 +96,13 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     public void RemoveFromSelectedAugs()
     {
-        if (!augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
+        if (!AugManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
             Debug.LogError("UIAugmentation not found in selected Augs, can't remove");
             return;
         }
 
-        augManager.selectedAugsWithLvls.Remove(augBaseSO);
+        AugManager.selectedAugsWithLvls.Remove(augBaseSO);
         Debug.Log("Removed an Augmentation");
 
         UpdateIconAndText();
@@ -136,9 +136,9 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
         }
         
         // Set button colors for selection state
-        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
+        if (AugManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
-            int level = augManager.selectedAugsWithLvls[augBaseSO];
+            int level = AugManager.selectedAugsWithLvls[augBaseSO];
             if (level >= 0)
             {
                 icon.color = addedColor;
@@ -173,9 +173,9 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
         }
 
         // Add level number to end of name
-        if (augManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
+        if (AugManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
         {
-            nameText.text = augBaseSO.augmentationName + " " + augManager.selectedAugsWithLvls[augBaseSO];
+            nameText.text = augBaseSO.augmentationName + " " + AugManager.selectedAugsWithLvls[augBaseSO];
         }
         else
         {

@@ -24,7 +24,7 @@ public class OptionsPanel : MonoBehaviour
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
         fastJoystickAimToggle.onValueChanged.AddListener(delegate {
-                                            FastJoystickAimChanged(fastJoystickAimToggle); });
+                                            FastJoystickAimToggle(fastJoystickAimToggle); });
         joystickCursorSpeedSlider.onValueChanged.AddListener(delegate {
                                             JoystickCursorSpeedChanged(joystickCursorSpeedSlider); });
         qualityDropdown.onValueChanged.AddListener(delegate { 
@@ -44,7 +44,7 @@ public class OptionsPanel : MonoBehaviour
         movementTypeDropdown.onValueChanged.RemoveListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
         fastJoystickAimToggle.onValueChanged.RemoveListener(delegate {
-                                            FastJoystickAimChanged(fastJoystickAimToggle); });
+                                            FastJoystickAimToggle(fastJoystickAimToggle); });
         joystickCursorSpeedSlider.onValueChanged.RemoveListener(delegate {
                                             JoystickCursorSpeedChanged(joystickCursorSpeedSlider); });
         qualityDropdown.onValueChanged.RemoveListener(delegate { 
@@ -149,7 +149,7 @@ public class OptionsPanel : MonoBehaviour
         Debug.Log("Joystick Cursor Speed set to " + value);
     }
 
-    void FastJoystickAimChanged(Toggle change)
+    void FastJoystickAimToggle(Toggle change)
     {
         if (ProfileManager.Instance.currentProfile != null)
         {

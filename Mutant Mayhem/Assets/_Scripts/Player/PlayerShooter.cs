@@ -159,22 +159,22 @@ public class PlayerShooter : Shooter
         {
             isRepairing = true;
             InputController.SetJoystickMouseControl(true);
-            if (!BuildingSystem.Instance.isInBuildMode)
+            if (!playerStats.structureStats.buildingSystem.isInBuildMode)
             {
-                BuildingSystem.Instance.buildRangeCircle.EnableCircle(true);
-                BuildingSystem.Instance.SetRepairRangeCircle();
+                playerStats.structureStats.buildingSystem.buildRangeCircle.EnableCircle(true);
+                playerStats.structureStats.buildingSystem.SetRepairRangeCircle();
                 CursorManager.Instance.inMenu = true;
             }
         }
         else
         {
             isRepairing = false;
-            if (BuildingSystem.Instance.isInBuildMode)
-                BuildingSystem.Instance.SetBuildRangeCircle();
+            if (playerStats.structureStats.buildingSystem.isInBuildMode)
+                playerStats.structureStats.buildingSystem.SetBuildRangeCircle();
             else
             {
-                BuildingSystem.Instance.buildRangeCircle.EnableCircle(false);
-                BuildingSystem.Instance.LockCameraToPlayer(false);
+                playerStats.structureStats.buildingSystem.buildRangeCircle.EnableCircle(false);
+                playerStats.structureStats.buildingSystem.LockCameraToPlayer(false);
                 //BuildingSystem.Instance.buildRangeCircle.radius = BuildingSystem.buildRange;
                 InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
                 CursorManager.Instance.inMenu = false;

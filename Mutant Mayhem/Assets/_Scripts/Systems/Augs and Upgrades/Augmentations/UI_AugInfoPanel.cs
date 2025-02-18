@@ -28,7 +28,7 @@ public class UI_AugInfoPanel : MonoBehaviour
             
         }
 
-        Dictionary<AugmentationBaseSO, int> augsWithLevels = AugManager.Instance.selectedAugsWithLvls;
+        Dictionary<AugmentationBaseSO, int> augsWithLevels = AugManager.selectedAugsWithLvls;
 
         // Create stat group, add entries
         StatGroupWrapper statGroup = new StatGroupWrapper(nameGroup, valueGroup, namePrefab, valuePrefab);

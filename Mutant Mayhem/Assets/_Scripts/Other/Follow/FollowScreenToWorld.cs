@@ -4,11 +4,28 @@ using UnityEngine;
 
 public class FollowScreenToWorld : MonoBehaviour
 {
-    [SerializeField] RectTransform uiTrans;
-    [SerializeField] Transform worldTrans;
+    public bool useUiTrans = true;
+    RectTransform startingUiTrans;
+    public RectTransform uiTrans;
+
+    public Transform worldTrans;
+
+    void Awake()
+    {
+        startingUiTrans = uiTrans;
+    }
 
     void Update()
     {
-        worldTrans.position = Camera.main.ScreenToWorldPoint(uiTrans.position);
+        if (useUiTrans || worldTrans == null)
+            transform.position = Camera.main.ScreenToWorldPoint(uiTrans.position);
+        else 
+            transform.position = worldTrans.position;
+    }
+
+    public void ResetUiTransToStart()
+    {
+        useUiTrans = true;
+        uiTrans = startingUiTrans;
     }
 }

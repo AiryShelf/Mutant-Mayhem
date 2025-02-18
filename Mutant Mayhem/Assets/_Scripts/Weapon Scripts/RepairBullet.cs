@@ -18,7 +18,7 @@ public class RepairBullet : Bullet
         if (InputController.LastUsedDevice == Gamepad.current)
             target = CursorManager.Instance.GetCustomCursorWorldPos();
         else
-            target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         // If distance to target is above max, set target to max distance
         float targetDist = Vector2.Distance((Vector2)transform.position, target);

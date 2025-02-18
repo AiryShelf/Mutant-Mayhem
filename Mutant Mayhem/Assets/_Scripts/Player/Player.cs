@@ -57,6 +57,7 @@ public class PlayerStats
 [System.Serializable]
 public class StructureStats
 {
+    public BuildingSystem buildingSystem;
     public QCubeController cubeController;
     public QCubeHealth cubeHealthScript;
     public TileManager tileManager;
@@ -75,7 +76,7 @@ public class Player : MonoBehaviour
     [SerializeField] float sprintStaminaUse = 0.1f;
     [SerializeField] float headTurnSpeed = 0.1f;
     [SerializeField] float headTurnMax = 80;
-    [SerializeField] float joystickDeadzone = 0.05f;
+    public float joystickDeadzone = 0.05f;
     [SerializeField] float joystickCurveMagnitude = 2;
 
     [Header("Sound")]
@@ -377,7 +378,9 @@ public class Player : MonoBehaviour
 
     void LookAtMouse()
     {
-        Vector2 joystickInput = Gamepad.current.rightStick.ReadValue();
+        Vector2 joystickInput = Vector2.zero;
+        if (Gamepad.current != null)
+            joystickInput = Gamepad.current.rightStick.ReadValue();
 
         float joystickInputMagnitude = joystickInput.magnitude;
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);

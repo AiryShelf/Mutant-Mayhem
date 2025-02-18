@@ -726,6 +726,7 @@ GameObject:
   - component: {fileID: 5897128568969595323}
   - component: {fileID: 2205076249765429741}
   - component: {fileID: 5848978692253464088}
+  - component: {fileID: 3573849243554950230}
   m_Layer: 5
   m_Name: Joystick Cursor Speed Slider
   m_TagString: Untagged
@@ -844,6 +845,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &3573849243554950230
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599185473061241387}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1778496046333018438
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,6 +1242,12 @@ MonoBehaviour:
   - {fileID: 5740690826168250507}
   - {fileID: 6288828315270501067}
   - {fileID: 6562745478812076757}
+  - {fileID: 7006004997589424746}
+  - {fileID: 8446304858595706440}
+  - {fileID: 6320722971602039020}
+  - {fileID: 8056860264568513261}
+  - {fileID: 2602254560097268680}
+  - {fileID: 3573849243554950230}
   fadeStartDelay: 0
   delayBetweenElements: 0.025
   fadeStartTime: 0.1
@@ -1815,14 +1834,14 @@ RectTransform:
   - {fileID: 6949313262776951126}
   - {fileID: 2425524634835364008}
   - {fileID: 4516170271800551660}
-  - {fileID: 8670380505031980777}
-  - {fileID: 6479097319479172978}
   - {fileID: 4843691202433607440}
   - {fileID: 3535784104980821486}
+  - {fileID: 8670380505031980777}
+  - {fileID: 6479097319479172978}
   - {fileID: 3473137067085148749}
+  - {fileID: 2273403005671422575}
   - {fileID: 5938939290639755791}
   - {fileID: 9153366955291293904}
-  - {fileID: 2273403005671422575}
   - {fileID: 1444682489884963205}
   - {fileID: 7040732934440373485}
   m_Father: {fileID: 8353789901146059663}

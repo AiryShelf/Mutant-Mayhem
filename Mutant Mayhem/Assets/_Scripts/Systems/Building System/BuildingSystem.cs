@@ -10,8 +10,6 @@ using UnityEngine.Tilemaps;
 
 public class BuildingSystem : MonoBehaviour
 {
-    public static BuildingSystem Instance { get; private set; }
-
     public List<StructureSO> AllStructureSOs;
     [SerializeField] List<bool> unlockedStructuresStart;
     public StructureSO structureInHand;
@@ -74,20 +72,6 @@ public class BuildingSystem : MonoBehaviour
     public GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
 
-    void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
-
     void OnEnable()
     {
         BuildStructsAvailDict();
@@ -123,6 +107,7 @@ public class BuildingSystem : MonoBehaviour
 
     void Start()
     {
+        player.stats.structureStats.buildingSystem =  this;
         buildRangeCircle.radius = buildRange;
 
         turretManager = TurretManager.Instance;
@@ -244,7 +229,7 @@ public class BuildingSystem : MonoBehaviour
         if (!isInBuildMode)
             return;
 
-        if (Input.GetKeyDown("x"))
+        if (Keyboard.current.xKey.wasPressedThisFrame)
         {
             // If destroy tool is not selected
             if (structureInHand.structureType != AllStructureSOs[2].structureType)
@@ -400,9 +385,9 @@ public class BuildingSystem : MonoBehaviour
         while (true)
         {
             Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
-            Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
+            //Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
             //player.transform.TransformPoint(player.stats.playerShooter.muzzleTrans.position);
-            Debug.Log($"MuzzleTrans worldPos = {worldPos}, localPos = {localPos}");
+            //Debug.Log($"MuzzleTrans worldPos = {worldPos}, localPos = {localPos}");
 
             buildRangeCircle.transform.position = worldPos;
 
@@ -563,7 +548,7 @@ public class BuildingSystem : MonoBehaviour
         if (InputController.LastUsedDevice == Gamepad.current)
             mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
         else 
-            mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         // Highlight if in range and conditions met.
         //if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
@@ -733,7 +718,7 @@ public class BuildingSystem : MonoBehaviour
         if (InputController.LastUsedDevice == Gamepad.current)
             mousePos = CursorManager.Instance.GetCustomCursorWorldPos();
         else
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         Vector3Int mouseCellPos = structureTilemap.WorldToCell(mousePos);
         mouseCellPos.z = 0;

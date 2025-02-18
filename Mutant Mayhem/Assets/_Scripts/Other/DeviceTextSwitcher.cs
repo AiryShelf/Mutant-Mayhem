@@ -16,12 +16,16 @@ public class DeviceTextSwitcher : MonoBehaviour
     [SerializeField] string gamepadText;
 
     InputController inputController;
+    int subCount = 0;
 
     void OnEnable()
     {
         inputController = InputController.Instance;
         if (inputController != null)
+        {
+            subCount++;
             inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        }
         //else
             //Debug.Log("DeviceTextSwitcher: Could not find InputController.Instance when enabled");
 
@@ -31,7 +35,8 @@ public class DeviceTextSwitcher : MonoBehaviour
     void OnDisable()
     {
         //Debug.Log($"{gameObject} unsubscribing from LastUsedDeviceChanged text updates");
-        inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
+        for (int i = 0; i < subCount; i++)
+            inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
         
     }
 
@@ -39,7 +44,10 @@ public class DeviceTextSwitcher : MonoBehaviour
     {
         inputController = InputController.Instance;
         if (inputController != null)
+        {
+            subCount++;
             inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        }
         else
             Debug.LogError("DeviceTextSwitcher: Could not find InputController.Instance on Start");
 

@@ -13,7 +13,7 @@ public class InputController : MonoBehaviour
     static bool joystickAsMouse = false;
     public event Action<InputDevice> LastUsedDeviceChanged;
     
-    Vector2 lastMousePos;
+    Vector2 lastMousePos = Vector2.zero;
 
     void Awake()
     {
@@ -107,8 +107,12 @@ public class InputController : MonoBehaviour
 
     void CheckCurrentInputDevice()
     {
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-        if (Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos)
+        Vector2 mousePos = Vector2.zero;
+        //if (Mouse.current != null)
+            mousePos = Mouse.current.position.ReadValue();
+        Debug.Log($"Mouse Pos: {mousePos}");
+
+        if ((Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos))
         {
             lastMousePos = mousePos;
             if (LastUsedDevice != Keyboard.current)
@@ -119,9 +123,10 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetUsingCustomCursor(false);
                 CursorManager.Instance.SetCustomCursorVisible(false);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
+                Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }
         }
-        if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
+        else if (Gamepad.current.allControls.Any(control => control.IsPressed()))
         {
             if (LastUsedDevice != Gamepad.current)
             {

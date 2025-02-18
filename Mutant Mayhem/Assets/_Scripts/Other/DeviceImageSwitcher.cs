@@ -12,18 +12,25 @@ public class DeviceImageSwitcher : MonoBehaviour
     [SerializeField] Sprite gamepadSprite;
 
     InputController inputController;
+    int subCount = 0;
 
     void OnEnable()
     {
         inputController = InputController.Instance;
-        inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        if (inputController != null)
+        {
+            subCount++;
+            inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        }
 
         OnLastUsedDeviceChanged(InputController.LastUsedDevice);
     }
 
     void OnDisable()
     {
-        inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
+        for (int i = 0; i < subCount; i++)
+            inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
+
         //Debug.Log($"{gameObject} unsubscribed from LastUsedDeviceChanged text updates");
     }
 
@@ -31,7 +38,10 @@ public class DeviceImageSwitcher : MonoBehaviour
     {
         inputController = InputController.Instance;
         if (inputController != null)
+        {
+            subCount++;
             inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
+        }
         else
             Debug.LogError("DeviceImageSwitcher: Could not find InputController.Instance on Start");
 
