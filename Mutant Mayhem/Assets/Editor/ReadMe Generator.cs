@@ -23,7 +23,7 @@ public class ReadmeGenerator : IPostprocessBuildWithReport
                          "Enjoy the game!";
 
         // Write the content to the README file
-        File.WriteAllText(readmePath, content);
+        //File.WriteAllText(readmePath, content);
     }
 }
 #endif

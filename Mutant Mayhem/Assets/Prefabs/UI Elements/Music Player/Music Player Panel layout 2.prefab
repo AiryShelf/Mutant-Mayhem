@@ -372,6 +372,7 @@ MonoBehaviour:
   shuffleButtonText: {fileID: 462571055815289990}
   buttonDisabledColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
   sliderDecibelsMin: -24
+  persistentCanvas: {fileID: 0}
   mainMixer: {fileID: 24100000, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   player: {fileID: 0}
 --- !u!225 &24270541694805846
@@ -989,36 +990,12 @@ PrefabInstance:
       value: Music Volume Slider
       objectReference: {fileID: 0}
     - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_Value
-      value: 0.902
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8991375232977025867}
     - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnMusicVolumeSlider
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UI_MusicPlayerPanel, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_Pivot.x
@@ -1051,14 +1028,6 @@ PrefabInstance:
     - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_SizeDelta.y
       value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2383,33 +2352,9 @@ PrefabInstance:
       value: SFX Volume Slider
       objectReference: {fileID: 0}
     - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8991375232977025867}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnSFXVolumeSlider
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UI_MusicPlayerPanel, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 5754219162355613798, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2441,14 +2386,6 @@ PrefabInstance:
     - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_SizeDelta.y
       value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7180050897043201952, guid: 893087654b576414e96cd4dcc91088d1, type: 3}
       propertyPath: m_LocalPosition.x

@@ -305,6 +305,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: gamepadText
+      value: '''Left Stick'''
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: keyboardText
+      value: '''WASD'' keys'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: touchscreenText
+      value: '''L-Joystick'''
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+      propertyPath: stringToReplace_BlankAll
+      value: '''WASD'' keys'
+      objectReference: {fileID: 0}
     - target: {fileID: 8840805616247617409, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Name
       value: Task Text

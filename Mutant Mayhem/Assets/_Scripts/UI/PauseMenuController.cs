@@ -21,6 +21,7 @@ public class PauseMenuController : MonoBehaviour
     public bool isPauseMenuOpen = false;
     public bool isOptionsOpen = false;
     bool wasMusicPlaying;
+    bool wasRepairing = false;
 
     void Awake()
     {
@@ -38,6 +39,7 @@ public class PauseMenuController : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log("Pause Menu Enabled");
         escapeAction.started += EscapePressed;
     }
 
@@ -68,9 +70,13 @@ public class PauseMenuController : MonoBehaviour
         {
             //Debug.Log("Pause passed checks");
             if (!isPauseMenuOpen)
+            {
                 OpenPauseMenu(true);
+            }
             else
+            {
                 OpenPauseMenu(false);
+            }
         }
     }
 
@@ -78,7 +84,12 @@ public class PauseMenuController : MonoBehaviour
     {
         if (open)
         {
+            wasRepairing = player.stats.playerShooter.isRepairing;
+            player.stats.playerShooter.isRepairing = false;
+
             playerActionMap.Disable();
+            InputController.SetJoystickMouseControl(true);
+            CursorManager.Instance.inMenu = true;
 
             wasMusicPlaying = !MusicManager.Instance.isPaused;
             if (wasMusicPlaying)
@@ -86,6 +97,12 @@ public class PauseMenuController : MonoBehaviour
         }
         else
         {
+            if (wasRepairing)
+                player.stats.playerShooter.isRepairing = true;
+            else
+                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+
+            CursorManager.Instance.inMenu = false;
             playerActionMap.Enable();
             
             if (wasMusicPlaying)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GunSights : MonoBehaviour
 {
@@ -39,7 +40,11 @@ public class GunSights : MonoBehaviour
         
         if (repairGun)
         {
-            Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 target;
+            if (InputController.LastUsedDevice == Gamepad.current)
+                target = CursorManager.Instance.GetCustomCursorWorldPos();
+            else
+                target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             target.z = 0;
             baseLength = (target - transform.position).magnitude;
         }

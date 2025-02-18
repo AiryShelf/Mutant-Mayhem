@@ -53,7 +53,7 @@ public class Tooltip : MonoBehaviour
         }
 
         // Calculate which quatrant
-        Vector2 pos = Input.mousePosition;
+        Vector2 pos = Mouse.current.position.ReadValue();
         var normalizedPosition = new Vector2(pos.x / Screen.width, pos.y / Screen.height);
         var pivot = CalculatePivot(normalizedPosition);
         // if not working try this:

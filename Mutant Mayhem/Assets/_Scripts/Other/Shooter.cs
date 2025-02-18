@@ -8,7 +8,7 @@ public class Shooter : MonoBehaviour
     public List<GunSO> _gunListSource;
     
     [SerializeField] protected Transform gunTrans;
-    [SerializeField] protected Transform muzzleTrans;
+    public Transform muzzleTrans;
     [SerializeField] protected Transform casingEjectorTrans;
     [SerializeField] protected Transform clipEjectorTrans;
     [SerializeField] protected LayerMask elevatedHitLayers;

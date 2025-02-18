@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PersistentCanvas : MonoBehaviour
 {
     public static PersistentCanvas Instance;
+    public Image customCursor;
 
     private void Awake()
     {

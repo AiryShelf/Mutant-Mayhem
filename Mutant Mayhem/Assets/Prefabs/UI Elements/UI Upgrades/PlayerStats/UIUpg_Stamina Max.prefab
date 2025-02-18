@@ -58,7 +58,9 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
-  myButton: {fileID: 5046168315053862527}
+  buttonImage: {fileID: 6042433010584726037}
+  clickableAreaButton: {fileID: 4814350562333287447}
+  unlocked: 1
   UiName: Stamina Max
   tooltipDescription: More energy storage.  Allows for longer bursts of exosuit use
   showLevelsText: 1
@@ -251,15 +253,26 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c68b552e96894a148a099deb438bfcca, type: 3}
---- !u!114 &5046168315053862527 stripped
+--- !u!114 &4814350562333287447 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
   m_PrefabInstance: {fileID: 8748516561145341623}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6042433010584726037 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3077068755420810402, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 8748516561145341623}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &8237303071456119237 stripped

@@ -13,7 +13,11 @@ public class UIUpgrade : MonoBehaviour
     public ConsumablesUpgrade consumablesUpgrade;
     public GunStatsUpgrade gunStatsUpgrade;
 
-    public Button myButton;
+    public Image buttonImage;
+    [SerializeField] Color buttonImageHoverColor;
+    Color buttonImageStartColor;
+    public Button clickableAreaButton;
+    public bool unlocked = true;
 
     [SerializeField] string UiName;
     [TextArea(3,10)]
@@ -38,6 +42,7 @@ public class UIUpgrade : MonoBehaviour
 
     void OnEnable()
     {
+        buttonImageStartColor = buttonImage.color;
         BuildingSystem.OnPlayerCreditsChanged += UpdateTextDelay;
 
         if (initialized)
@@ -53,6 +58,12 @@ public class UIUpgrade : MonoBehaviour
 
     public void Initialize()
     {
+        //buttonImage = GetComponentInChildren<Image>();
+        if (unlocked)
+            buttonImage.enabled = true;
+        else
+            buttonImage.enabled = false;
+            
         upgradeManager = UpgradeManager.Instance;
         player = FindObjectOfType<Player>();
 
@@ -72,7 +83,7 @@ public class UIUpgrade : MonoBehaviour
     // This allows the enum to be referenced via UI button OnClick
     public void InvokeOnClick(UIUpgrade myUpg)
     {  
-        if (!myButton.interactable)
+        if (!buttonImage.enabled)
         {
             MessagePanel.PulseMessage("Upgrade/Consumable is locked!  Unlock the associated tech first", Color.yellow);
             return;
@@ -116,6 +127,15 @@ public class UIUpgrade : MonoBehaviour
         UpdateText(playerCredits);
     }
 
+    public void Selected()
+    {
+        Debug.Log("UiUpgrade: Selected ran");
+
+        buttonImage.color = buttonImageHoverColor;
+    }
+
+    #region Update Text
+
     public void UpdateText(float playerCredits)
     {
         if (upgradeText == null)
@@ -124,7 +144,7 @@ public class UIUpgrade : MonoBehaviour
             return;
         }
 
-        if (!myButton.interactable)
+        if (!buttonImage.enabled)
         {
             upgradeText.color = Color.grey;
         }
@@ -237,4 +257,6 @@ public class UIUpgrade : MonoBehaviour
 
         //Debug.Log("Upgrade UI text updated");
     }
+
+    #endregion
 }

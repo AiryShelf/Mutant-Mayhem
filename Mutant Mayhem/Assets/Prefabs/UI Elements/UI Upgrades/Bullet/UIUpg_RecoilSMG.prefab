@@ -134,7 +134,9 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 7
-  myButton: {fileID: 6731866398781433718}
+  buttonImage: {fileID: 5237962641739326236}
+  clickableAreaButton: {fileID: 6466027627639434526}
+  unlocked: 1
   UiName: Recoil
   tooltipDescription: Reduces recoil.  Advanced shock absorbing materials and near-perfect
     AI designed structures allow for maximum stability during discharge
@@ -332,9 +334,20 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c68b552e96894a148a099deb438bfcca, type: 3}
---- !u!114 &6731866398781433718 stripped
+--- !u!114 &5237962641739326236 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4570993287249086664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3077068755420810402, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+  m_PrefabInstance: {fileID: 7062500733864390590}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6466027627639434526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
   m_PrefabInstance: {fileID: 7062500733864390590}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

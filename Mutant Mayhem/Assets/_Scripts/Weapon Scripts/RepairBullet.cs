@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RepairBullet : Bullet
 {
@@ -14,7 +15,10 @@ public class RepairBullet : Bullet
     {
         SFXManager.Instance.PlaySoundFollow(shootSound, transform);
 
-        target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //if (InputController.LastUsedDevice == Gamepad.current)
+            target = CursorManager.Instance.GetCustomCursorWorldPos();
+        //else 
+            //target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         // If distance to target is above max, set target to max distance
         float targetDist = Vector2.Distance((Vector2)transform.position, target);

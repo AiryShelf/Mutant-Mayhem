@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UpgradeEffects : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class UpgradeEffects : MonoBehaviour
 
     public void PlayUpgradeButtonEffect()
     {
-        uiButtonUpgAppliedFX.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        uiButtonUpgAppliedFX.transform.position = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         uiButtonUpgAppliedFX.Play();
 
         PlayerUpgradeEffectAt(player.transform.position);

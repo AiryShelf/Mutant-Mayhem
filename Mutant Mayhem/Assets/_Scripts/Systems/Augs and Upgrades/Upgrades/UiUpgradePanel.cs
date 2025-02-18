@@ -209,7 +209,8 @@ public class UiUpgradePanel : UI_PanelBase
                     // Turn button on
                     if (otherUpg.gameObject.name == upg.gameObject.name + "(Clone)")
                     {
-                        otherUpg.myButton.interactable = true;
+                        otherUpg.buttonImage.enabled = true;
+                        otherUpg.unlocked = true;
                     }
                 }
             }

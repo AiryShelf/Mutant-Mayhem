@@ -11,9 +11,8 @@ public class ControlsPanel : MonoBehaviour
     [SerializeField] string hideControlsStr;
     [SerializeField] string showControlsStr;
     [SerializeField] TextMeshProUGUI header;
-    [SerializeField] List<string> controlStrings;
-    [SerializeField] GameObject controlsTextPrefab;
     [SerializeField] GridLayoutGroup gridLayoutGroup;
+    [SerializeField] List<GameObject> controlsToFade;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroupsWave;
     [SerializeField] Player player;
     InputActionMap playerActionMap;
@@ -24,14 +23,13 @@ public class ControlsPanel : MonoBehaviour
         playerActionMap = player.inputAsset.FindActionMap("Player");
         helpAction = playerActionMap.FindAction("Help");
 
-        foreach (string str in controlStrings)
-        {
-            GameObject obj = Instantiate(controlsTextPrefab, gridLayoutGroup.transform);
-            obj.GetComponentInChildren<TextMeshProUGUI>().text = str;
-            fadeCanvasGroupsWave.individualElements.Add(obj.GetComponent<CanvasGroup>());
-        }
-
         header.text = showControlsStr;
+
+        foreach (var obj in controlsToFade)
+        {
+            CanvasGroup group = obj.GetComponent<CanvasGroup>();
+            fadeCanvasGroupsWave.individualElements.Add(group);
+        }
     }
 
     void OnEnable()

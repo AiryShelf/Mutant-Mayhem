@@ -299,6 +299,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             }  
 
             fireAction.Disable();
+            throwAction.Disable();
         }
         else
         {
@@ -308,6 +309,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             bodyAnim.SetBool("isAiming", true);
 
             fireAction.Enable();
+            throwAction.Enable();
         }
     }
 
@@ -472,7 +474,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             if (playerShooter.isBuilding)
                 ToggleBuildMode();
             isThrowInput = true;
-            player.throwTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            player.throwTarget = CursorManager.Instance.GetCustomCursorWorldPos();
             player.hasFirstThrowTarget = true;
             bodyAnim.SetBool("isThrowing", true);
             if (waitToLowerWeaponCoroutine != null)

@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class DeathManager : MonoBehaviour
 {
+    [SerializeField] QCubeController qCube;
     [SerializeField] Player player;
     [SerializeField] StatsCounterPlayer statsCounterPlayer;
     [SerializeField] CanvasGroup myCanvasGroup;
@@ -23,6 +23,7 @@ public class DeathManager : MonoBehaviour
     [SerializeField] AudioMixer sfxMixer;
     [SerializeField] float deathSFXFadeTime = 3f;
     [SerializeField] float deathSFXFadeAmount = -4f;
+    [SerializeField] FollowScreenToWorld worldCustomCursor;
 
     int adjustedPointsPerWave;
     bool isTriggered;
@@ -44,10 +45,13 @@ public class DeathManager : MonoBehaviour
     {
         Player.OnPlayerDestroyed -= TransitionToPlayerDeath;
         QCubeController.OnCubeDestroyed -= TransitionToCubeDeath;
+
+        worldCustomCursor.ResetUiTransToStart();
     }
 
     void Start()
     {
+        worldCustomCursor = SettingsManager.Instance.GetComponentInChildren<FollowScreenToWorld>();
         myCanvasGroup.blocksRaycasts = false;
     }
 
@@ -91,6 +95,8 @@ public class DeathManager : MonoBehaviour
     {
         if (destroyed && !isTriggered)
         {
+            worldCustomCursor.useUiTrans = false;
+            worldCustomCursor.worldTrans = player.transform;
             ApplyDeathPoints();
             TransitionToPanel();
             RandomizeDeathMessages(playerDeathTitles, playerDeathSubtitles);
@@ -101,6 +107,8 @@ public class DeathManager : MonoBehaviour
     {
         if (destroyed && !isTriggered)
         {
+            worldCustomCursor.useUiTrans = false;
+            worldCustomCursor.worldTrans = qCube.transform;
             player.IsDead = true;
             ApplyDeathPoints();
             TransitionToPanel();
@@ -110,6 +118,7 @@ public class DeathManager : MonoBehaviour
 
     void TransitionToPanel()
     {
+        InputController.SetJoystickMouseControl(true);
         //SFXManager.Instance.FadeToDeathSnapshot();
         MusicManager.Instance.mainMixer.GetFloat("sfxVolume", out storedSFXVolume);
         StartCoroutine(LerpSFXVolume(Mathf.Clamp(storedSFXVolume + deathSFXFadeAmount, -80, float.MaxValue), 2f));

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -167,7 +166,7 @@ public class UIBuildMenuController : MonoBehaviour
                     return false;
                     
                 currentIndex = uiStructureList.IndexOf(uiStructure);
-                Debug.Log("BuildMenu selection changed to " + uiStructure.name);
+                //Debug.Log("BuildMenu selection changed to " + uiStructure.name);
                 return true;
             }
         }
@@ -180,36 +179,12 @@ public class UIBuildMenuController : MonoBehaviour
     {
         if (!player.stats.playerShooter.isBuilding)
             return;
-
-        float scrollDelta = context.ReadValue<float>();
-
-        // Compare
-        if (scrollDelta > 0)
-        {
-            ScrollUp();
-        }
-        else if (scrollDelta < 0)
-        {
-            ScrollDown();
-        }
-    }
-
-    void ScrollDown()
-    {
-        if (currentIndex >= uiStructureList.Count - 1)
-            return;
-
-        int startIndex = currentIndex;
-        currentIndex++;
         
-        for (int i = currentIndex; i < uiStructureList.Count; i++) 
-        {
-            if (SetMenuSelection(uiStructureList[i].structureSO))
-                return;
-            currentIndex++;
-        }
-
-        currentIndex = startIndex;        
+        Vector2 scroll = context.ReadValue<Vector2>();
+        if (scroll.y > 0)
+            ScrollUp();
+        else if (scroll.y < 0)
+            ScrollDown();
     }
 
     void ScrollUp()
@@ -228,5 +203,23 @@ public class UIBuildMenuController : MonoBehaviour
         }
 
         currentIndex = startIndex;  
+    }
+
+    void ScrollDown()
+    {
+        if (currentIndex >= uiStructureList.Count - 1)
+            return;
+
+        int startIndex = currentIndex;
+        currentIndex++;
+        
+        for (int i = currentIndex; i < uiStructureList.Count; i++) 
+        {
+            if (SetMenuSelection(uiStructureList[i].structureSO))
+                return;
+            currentIndex++;
+        }
+
+        currentIndex = startIndex;        
     }
 }

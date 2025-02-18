@@ -20,6 +20,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Movement Settings")]
     public bool useStandardWASD = true;
+    public bool useFastJoystickAim = false;
 
     [Header("Difficulty Multipliers")]
     public float WaveDifficultyMult = 1; // Multiplies enemy stats on spawning
@@ -31,6 +32,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Controls Settings")]
     public bool isSpacebarEnabled = true;
+    public float joystickCursorSpeed = 600;
 
     WaveControllerRandom waveController;  
     Player player;
@@ -73,16 +75,27 @@ public class SettingsManager : MonoBehaviour
             difficultyLevel = startingDifficulty;
             useStandardWASD = true;
             isSpacebarEnabled = true;
+            useFastJoystickAim = false;
+            joystickCursorSpeed = 600;
             return;
         }
-
         Debug.Log($"Loading settings from profile: {currentProfile.profileName}");
 
         difficultyLevel = currentProfile.difficultyLevel;
         useStandardWASD = currentProfile.isStandardWASD;
         isSpacebarEnabled = currentProfile.isSpacebarEnabled;
-
+        useFastJoystickAim = currentProfile.isFastJoystickAimEnabled;
+        if (currentProfile.joystickCursorSpeed < 100)
+        {
+            currentProfile.joystickCursorSpeed = 600;
+            Debug.Log($"Profile: {currentProfile} had an abnormally slow cursor speed, resetting to default");
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+        joystickCursorSpeed = currentProfile.joystickCursorSpeed;
         Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}");
+
+        ApplyMovementSettings();
+        ApplyControlSettings();
     }
         
     public void ApplyGameplaySettings()
@@ -158,7 +171,8 @@ public class SettingsManager : MonoBehaviour
         if (player != null)
         {
             player.useStandardWASD = useStandardWASD;
-            Debug.Log("Movement Type updated: " + useStandardWASD);
+            player.useFastJoystickAim = useFastJoystickAim;
+            Debug.Log("Movement Type updated. Standard movement: " + useStandardWASD + ", Fast Joystick Aim: " + useFastJoystickAim);
         }
         else
         {
@@ -172,6 +186,8 @@ public class SettingsManager : MonoBehaviour
 
     void ApplyControlSettings()
     {
+        CursorManager.Instance.cursorSpeedFactor = joystickCursorSpeed;
+
         player = FindObjectOfType<Player>();
         if (player == null)
         {

@@ -14,6 +14,7 @@ public class WaveControllerRandom : MonoBehaviour
     [SerializeField] TextMeshProUGUI enemyCountText;
     [SerializeField] TextMeshProUGUI currentNightText;
     [SerializeField] TextMeshProUGUI nextWaveText;
+    public TextMeshProUGUI nextWaveButtonName; // Used to store and universally access a 'string' 
 
     [Header("Wave Properties")]
     public int currentWaveIndex = 0;
@@ -73,6 +74,7 @@ public class WaveControllerRandom : MonoBehaviour
 
     void OnNextWaveInput(InputAction.CallbackContext context)
     {
+        Debug.Log("NextWave Input detected");
         if (nextWaveFadeGroup.isTriggered)
         {
             int healthGain = Mathf.FloorToInt(player.stats.playerHealthScript.healthRegenPerSec * countdown);
@@ -108,8 +110,7 @@ public class WaveControllerRandom : MonoBehaviour
         countdown = timeBetweenWaves;
         while (countdown > 0)
         {
-            nextWaveText.text = "Time until night " + (currentWaveIndex + 1) + 
-                ":  " + countdown.ToString("#") + "s.  Press 'Enter' to skip";
+            nextWaveText.text = $"Time until night {currentWaveIndex + 1}: " + countdown.ToString("#") + $"s.  Press '{nextWaveButtonName.text}' to skip";
             
             yield return new WaitForSeconds(1);
             countdown--;

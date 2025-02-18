@@ -45,7 +45,7 @@ public class UIAugPanel : MonoBehaviour
     public void Initialize()
     {
         augManager = AugManager.Instance;
-        augManager.RefreshCurrentRP();
+        //augManager.RefreshCurrentRP();
 
         levelPanelStartColor = levelPanel.color;
         PopulateAugsList(AugManager.Instance.availableAugmentations);
@@ -124,27 +124,38 @@ public class UIAugPanel : MonoBehaviour
         AugmentationBaseSO aug = selectedUiAugmentation.augBaseSO;
         int _totalCost = selectedUiAugmentation.totalCost;
         int level;
-        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
-            level = augManager.selectedAugsWithLvls[aug];
+        if (AugManager.selectedAugsWithLvls.ContainsKey(aug))
+            level = AugManager.selectedAugsWithLvls[aug];
         else
             level = 0;
 
         // Update name and TotalCost text
         if (aug == null)
-            nameText.text = "Selected: None";
+        {
+            nameText.text = "Select an aug above!";
+            nameText.color = Color.yellow;
+        }
         else
-            nameText.text = "Selected: " + aug.augmentationName;
+        {
+            nameText.text = aug.augmentationName;
+            nameText.color = Color.cyan;
+        }
         string costOrGain;
         Color costTextColor;
-        if (_totalCost <= 0)
+        if (_totalCost < 0)
         {
             costOrGain = "Current Cost: ";
             costTextColor = Color.yellow;
         }
-        else 
+        else if (_totalCost > 0)
         {
             costOrGain = "Current Gain: ";
             costTextColor = Color.green;
+        }
+        else 
+        {
+            costOrGain = "";
+            costTextColor = Color.white;
         }
 
         totalCostGainText.text = costOrGain + Mathf.Abs(_totalCost) + " RP";
@@ -159,12 +170,12 @@ public class UIAugPanel : MonoBehaviour
         }
         else if (level > 0)
         {
-            descriptionColor = Color.cyan;
+            descriptionColor = Color.cyan + (Color.white / 2);
             description = aug.GetPositiveDescription(augManager, level);
         }
         else if (level < 0)
         {
-            descriptionColor = Color.red;
+            descriptionColor = Color.red - (Color.white / 4f);
             description = aug.GetNegativeDescription(augManager, level);
         }
 
@@ -264,14 +275,14 @@ public class UIAugPanel : MonoBehaviour
         // Handle maxAugs
         if (selectedUiAugmentation.augBaseSO is Aug_MaxAugs _maxAugs)
         {
-            if (!augManager.selectedAugsWithLvls.ContainsKey(selectedUiAugmentation.augBaseSO))
+            if (!AugManager.selectedAugsWithLvls.ContainsKey(selectedUiAugmentation.augBaseSO))
             {
                 Debug.LogError("Did not find Max Augs in dictionary");
                 return;
             }
 
             // Make sure removing maxAugs doesn't bring current count below max.
-            int currentLvl = augManager.selectedAugsWithLvls[selectedUiAugmentation.augBaseSO];
+            int currentLvl = AugManager.selectedAugsWithLvls[selectedUiAugmentation.augBaseSO];
             if (augManager.GetCurrentLevelCount() - currentLvl <= augManager.maxAugs - augLvlsAdded)
             {
                 augManager.maxAugs -= augLvlsAdded;
@@ -304,9 +315,9 @@ public class UIAugPanel : MonoBehaviour
         AugmentationBaseSO aug = selectedUiAugmentation.augBaseSO;
         int level = 0;
         int currentLvlCount = augManager.GetCurrentLevelCount();
-        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        if (AugManager.selectedAugsWithLvls.ContainsKey(aug))
         {
-            level = augManager.selectedAugsWithLvls[aug]; 
+            level = AugManager.selectedAugsWithLvls[aug]; 
         }
 
         if (level >= aug.maxLvl)
@@ -357,6 +368,7 @@ public class UIAugPanel : MonoBehaviour
         Debug.Log("Current Level raised to: " + level + ". Subtracted " + nextLevelCost + " from currentResearchPoints");
         Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost);
             
+        EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
 
         selectedUiAugmentation.UpdateIconAndText();
         UpdatePanelTextandButtons();
@@ -374,9 +386,9 @@ public class UIAugPanel : MonoBehaviour
         AugmentationBaseSO aug = selectedUiAugmentation.augBaseSO;
         int level = 0;
         int currentLvlCount = augManager.GetCurrentLevelCount();
-        if (augManager.selectedAugsWithLvls.ContainsKey(aug))
+        if (AugManager.selectedAugsWithLvls.ContainsKey(aug))
         {
-            level = augManager.selectedAugsWithLvls[aug];
+            level = AugManager.selectedAugsWithLvls[aug];
         }
 
         if (level <= aug.minLvl)
@@ -433,8 +445,10 @@ public class UIAugPanel : MonoBehaviour
 
         Debug.Log("Current Level lowered to: " + level + ". Added " + levelRefund.ToString() + " to currentResearchPoints");
         Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost.ToString());
-        selectedUiAugmentation.UpdateIconAndText();
 
+        EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
+
+        selectedUiAugmentation.UpdateIconAndText();
         UpdatePanelTextandButtons();
     }
 
@@ -444,7 +458,7 @@ public class UIAugPanel : MonoBehaviour
 
     public void TrackRPCosts()
     {
-        AugManager.Instance.selectedAugsTotalCosts.Clear();
+        AugManager.selectedAugsTotalCosts.Clear();
 
         foreach (Transform trans in buttonContainer)
         {
@@ -456,10 +470,10 @@ public class UIAugPanel : MonoBehaviour
             }
 
             AugmentationBaseSO aug = uiAug.augBaseSO;
-            foreach (var kvp in AugManager.Instance.selectedAugsWithLvls)
+            foreach (var kvp in AugManager.selectedAugsWithLvls)
             {
                 if (kvp.Key.augmentationName == aug.augmentationName)
-                    AugManager.Instance.selectedAugsTotalCosts.Add(aug, uiAug.totalCost);
+                    AugManager.selectedAugsTotalCosts.Add(aug, uiAug.totalCost);
             }
         }
     }
@@ -482,7 +496,7 @@ public class UIAugPanel : MonoBehaviour
                 return;
             }
 
-            foreach (var kvp in AugManager.Instance.selectedAugsTotalCosts)
+            foreach (var kvp in AugManager.selectedAugsTotalCosts)
             {
                 if (kvp.Key.augmentationName == aug.augmentationName)
                 {

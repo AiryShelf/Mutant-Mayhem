@@ -39,10 +39,13 @@ public class QCubeController : MonoBehaviour
     [SerializeField] BuildingSystem buildingSystem;
     [SerializeField] Player player;
     public DroneHangar droneHangar;
+    bool wasRepairing = false;
 
     InputActionMap playerActionMap;
     InputAction qCubeAction;
     InputAction fireAction;
+    InputAction throwAction;
+    InputAction toolbarAction;
     InputActionMap uIActionMap;
     InputAction escapeAction;
 
@@ -52,6 +55,8 @@ public class QCubeController : MonoBehaviour
         playerActionMap = player.inputAsset.FindActionMap("Player");
         qCubeAction = playerActionMap.FindAction("QCube");
         fireAction = playerActionMap.FindAction("Fire");
+        throwAction = playerActionMap.FindAction("Throw");
+        toolbarAction = playerActionMap.FindAction("Toolbar");
 
         uIActionMap = player.inputAsset.FindActionMap("UI");
         escapeAction = uIActionMap.FindAction("Escape");
@@ -147,21 +152,35 @@ public class QCubeController : MonoBehaviour
 
     IEnumerator OpenUpgradeWindow()
     {
-        //if (!TutorialManager.TutorialShowedUpgrade && !TutorialManager.TutorialDisabled)
-        //{
-            //StartCoroutine(DelayTutorialOpen());
-        //}
         yield return new WaitForFixedUpdate();
         
+        wasRepairing = player.stats.playerShooter.isRepairing;
+        player.stats.playerShooter.isRepairing = false;
+
+        InputController.SetJoystickMouseControl(true);
+        CursorManager.Instance.inMenu = true;
+
         fireAction.Disable();
+        throwAction.Disable();
+        if (InputController.LastUsedDevice == Gamepad.current)
+            toolbarAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
     }
 
     public void CloseUpgradeWindow()
     {
+        if (player.stats.playerShooter.currentGunIndex == 4) // Repair Gun
+            player.stats.playerShooter.isRepairing = true;
+        else
+            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+
+        CursorManager.Instance.inMenu = false;
+
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
+        throwAction.Enable();
+        toolbarAction.Enable();
         panelSwitcher.isTriggered = false;
         isUpgradesOpen = false;
 
@@ -175,12 +194,5 @@ public class QCubeController : MonoBehaviour
 
         randomIndex = UnityEngine.Random.Range(0, cubeDeathSubtitles.Count);
         deathSubtitleText.text = cubeDeathSubtitles[randomIndex];
-    }   
-
-    IEnumerator DelayTutorialOpen()
-    {
-        yield return new WaitForSeconds(0.2f);
-
-        Instantiate(tutorialUpgradePanelPrefab, gamePlayCanvas);
-    }
+    } 
 }

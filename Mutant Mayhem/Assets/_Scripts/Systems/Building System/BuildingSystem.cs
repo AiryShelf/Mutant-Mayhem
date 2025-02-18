@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -25,6 +27,7 @@ public class BuildingSystem : MonoBehaviour
             }
         }
     }
+    public static float buildRange = 6f;
     public LineRendererCircle buildRangeCircle;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersToClearOnBuild;
@@ -56,6 +59,7 @@ public class BuildingSystem : MonoBehaviour
     bool inRange;
     Player player;
     InputActionMap playerActionMap;
+    InputAction helpAction;
     InputAction toolbarAction;
     InputAction rotateStructureAction;
     InputAction buildAction;
@@ -64,6 +68,7 @@ public class BuildingSystem : MonoBehaviour
     TurretManager turretManager;
 
     Coroutine clearStructureInHand;
+    Coroutine lockBuildCircleToMuzzle;
     public GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
 
@@ -81,6 +86,8 @@ public class BuildingSystem : MonoBehaviour
 
         playerActionMap = player.inputAsset.FindActionMap("Player");
         buildAction = playerActionMap.FindAction("BuildStructure");
+        helpAction = playerActionMap.FindAction("Help");
+        toolbarAction = playerActionMap.FindAction("Toolbar");
         rotateStructureAction = playerActionMap.FindAction("RotateStructure");
         cheatCodeCreditsAction = playerActionMap.FindAction("CheatCodeCredits");
 
@@ -100,6 +107,9 @@ public class BuildingSystem : MonoBehaviour
 
     void Start()
     {
+        player.stats.structureStats.buildingSystem =  this;
+        buildRangeCircle.radius = buildRange;
+
         turretManager = TurretManager.Instance;
         if (turretManager == null)
         {
@@ -146,12 +156,12 @@ public class BuildingSystem : MonoBehaviour
             if (structureInHand.actionType == ActionType.Build)
             {
                 Build(highlightedTilePos);
-                StartCoroutine(DelayUIReselect());
+                //StartCoroutine(DelayUIReselect());
             }
             else if (structureInHand.actionType == ActionType.Destroy)
             {
                 RemoveTile(destroyPositions[0]);
-                StartCoroutine(DelayUIReselect());
+                //StartCoroutine(DelayUIReselect());
             }
         }
         // Messages for failed to build or destroy
@@ -161,7 +171,7 @@ public class BuildingSystem : MonoBehaviour
                 //MessagePanel.Instance.DelayMessage("Area not clear for building", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.Instance.DelayMessage("Unable to destroy", Color.yellow, 0.1f);
-            StartCoroutine(DelayUIReselect());
+            //StartCoroutine(DelayUIReselect());
         }
         else
         {
@@ -169,7 +179,7 @@ public class BuildingSystem : MonoBehaviour
                 MessagePanel.Instance.DelayMessage("Too far away to build", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.Instance.DelayMessage("Too far away to destroy", Color.yellow, 0.1f);
-            StartCoroutine(DelayUIReselect());
+            //StartCoroutine(DelayUIReselect());
         }
     }
 
@@ -186,14 +196,17 @@ public class BuildingSystem : MonoBehaviour
         if (!isInBuildMode || structureInHand.structureType == AllStructureSOs[2].structureType)
             return;
 
-        if (context.control.name == "q")
+        if (context.control.name == "q" || context.control.name == "leftShoulder")
         {
             currentRotation += 90;
         }   
-        else if (context.control.name == "e")
+        else if (context.control.name == "e" || context.control.name == "rightShoulder")
         {
             currentRotation -= 90;
         }
+
+        Debug.Log(context.control.name);
+
         // Normalize the rotation to be within the range (0, 360)
         currentRotation = (currentRotation % 360 + 360) % 360;
         Rotate(structureInHand.ruleTileStructure.structureSO);
@@ -216,7 +229,7 @@ public class BuildingSystem : MonoBehaviour
         if (!isInBuildMode)
             return;
 
-        if (Input.GetKeyDown("x"))
+        if (Keyboard.current.xKey.wasPressedThisFrame)
         {
             // If destroy tool is not selected
             if (structureInHand.structureType != AllStructureSOs[2].structureType)
@@ -252,17 +265,25 @@ public class BuildingSystem : MonoBehaviour
 
         if (on)
         {
+            qCubeController.CloseUpgradeWindow();
+
+            if (InputController.LastUsedDevice == Gamepad.current)
+            {
+                helpAction.Disable();
+                toolbarAction.Disable();
+            }
+
+            CursorManager.Instance.inMenu = true;
             CursorManager.Instance.SetBuildCursor();
+            InputController.SetJoystickMouseControl(true);
 
-            // Lock camera to player
-            cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
-            mouseLooker.lockedToPlayer = true;
+            LockCameraToPlayer(true);
 
-            buildRangeCircle.EnableCircle(true);
             isInBuildMode = true;
+            SetBuildRangeCircle();
             player.playerShooter.isBuilding = true;
             buildMenuController.OpenBuildMenu(true);
-            qCubeController.CloseUpgradeWindow();
+            
             //Debug.Log("Opened Build Panel");
             structureInHand = lastStructureInHand;
             
@@ -270,19 +291,25 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
-            // If not holding repair gun, set aim cursor
+            helpAction.Enable();
+            toolbarAction.Enable();
+
+            CursorManager.Instance.inMenu = false;
             CursorManager.Instance.SetAimCursor();
+            if (player.stats.playerShooter.isRepairing)
+                SetRepairRangeCircle();
+            else
+            {
+                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                buildRangeCircle.EnableCircle(false);
+            }
+            
+            Debug.Log("Joystick turned off from BuildingSystem");
 
-            // Unlock camera from player
-            cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
-            mouseLooker.lockedToPlayer = false;
-
-            buildRangeCircle.EnableCircle(false);
+            LockCameraToPlayer(false);
+            
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;
-            // Only switch guns if not repair gun
-            //if (previousGunIndex != 9)
-                //player.playerShooter.SwitchGuns(previousGunIndex);
             buildMenuController.OpenBuildMenu(false);
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
@@ -297,6 +324,77 @@ public class BuildingSystem : MonoBehaviour
             //Debug.Log("Closed Build Panel");
         }
     }
+
+    public void LockCameraToPlayer(bool isLocked)
+    {
+        if (isLocked)
+        {
+            cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
+            mouseLooker.lockedToPlayer = true;
+        }
+        else
+        {
+            cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
+            mouseLooker.lockedToPlayer = false;
+        }  
+    }
+
+    public void SetBuildRangeCircle()
+    {
+        if (lockBuildCircleToMuzzle != null)
+                StopCoroutine(lockBuildCircleToMuzzle);
+
+        buildRangeCircle.transform.parent = player.stats.playerShooter.transform;
+        buildRangeCircle.transform.position = player.stats.playerShooter.transform.position;
+        buildRangeCircle.EnableCircle(true);
+        buildRangeCircle.radius = buildRange;
+    }
+
+    public void SetRepairRangeCircle()
+    {
+        if (lockBuildCircleToMuzzle != null)
+                StopCoroutine(lockBuildCircleToMuzzle);
+
+        if (player.stats.playerShooter.isRepairing)
+        {
+            LockCameraToPlayer(true);
+            buildRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
+                                      player.stats.playerShooter.currentGunSO.bulletSpeed;
+
+            lockBuildCircleToMuzzle = StartCoroutine(LockBuildCircleToMuzzle());
+
+            //Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
+            //Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
+            //player.transform.TransformPoint(player.stats.playerShooter.muzzleTrans.position);
+            //Debug.Log($"worldPos = {worldPos}, localPos = {localPos}");
+
+            // Set buildRangeCircle's local position.
+            //buildRangeCircle.transform.parent = player.stats.playerShooter.muzzleTrans;
+            
+        }
+        else
+        {
+            buildRangeCircle.transform.position = player.transform.position;
+            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            buildRangeCircle.EnableCircle(false);
+        }
+    }
+
+    IEnumerator LockBuildCircleToMuzzle()
+    {
+        while (true)
+        {
+            Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
+            //Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
+            //player.transform.TransformPoint(player.stats.playerShooter.muzzleTrans.position);
+            //Debug.Log($"MuzzleTrans worldPos = {worldPos}, localPos = {localPos}");
+
+            buildRangeCircle.transform.position = worldPos;
+
+            yield return null;
+        }
+    }
+
 
     IEnumerator DelayMenuSelection()
     {
@@ -446,11 +544,15 @@ public class BuildingSystem : MonoBehaviour
 
         // Find player grid position
         //playerGridPos = structureTilemap.WorldToCell(player.transform.position);
-        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mouseWorldPos; 
+        if (InputController.LastUsedDevice == Gamepad.current)
+            mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
+        else 
+            mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         // Highlight if in range and conditions met.
         //if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
-        if (!InRange(player.transform.position, mouseWorldPos, 6f))
+        if (!InRange(player.transform.position, mouseWorldPos, buildRange))
         {
             inRange = false;
             allHighlighted = false;
@@ -612,7 +714,12 @@ public class BuildingSystem : MonoBehaviour
 
     private Vector3Int GetMouseToGridPos()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePos;
+        if (InputController.LastUsedDevice == Gamepad.current)
+            mousePos = CursorManager.Instance.GetCustomCursorWorldPos();
+        else
+            mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+
         Vector3Int mouseCellPos = structureTilemap.WorldToCell(mousePos);
         mouseCellPos.z = 0;
 

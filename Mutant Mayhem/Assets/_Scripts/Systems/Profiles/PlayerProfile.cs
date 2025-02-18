@@ -13,6 +13,8 @@ public class PlayerProfile
     public DifficultyLevel difficultyLevel;
     public bool isStandardWASD;
     public bool isSpacebarEnabled;
+    public bool isFastJoystickAimEnabled;
+    public float joystickCursorSpeed;
     public List<string> completedPlanets = new List<string>();
 
     public PlayerProfile(string profileName, DifficultyLevel difficulty)
@@ -25,5 +27,7 @@ public class PlayerProfile
         difficultyLevel = difficulty;
         isStandardWASD = true;
         isSpacebarEnabled = true;
+        isFastJoystickAimEnabled = false;
+        joystickCursorSpeed = 600;
     }
 }

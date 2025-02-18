@@ -8,6 +8,8 @@ public class OptionsPanel : MonoBehaviour
 {
     public FadeCanvasGroupsWave fadeGroup;
     [SerializeField] TMP_Dropdown movementTypeDropdown;
+    [SerializeField] Toggle fastJoystickAimToggle;
+    [SerializeField] Slider joystickCursorSpeedSlider;
     [SerializeField] TMP_Dropdown qualityDropdown;
     [SerializeField] Toggle vSyncToggle;
     [SerializeField] Toggle spacebarToggle;
@@ -21,12 +23,18 @@ public class OptionsPanel : MonoBehaviour
                                             ToggleTutorial(tutorialToggle); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
+        fastJoystickAimToggle.onValueChanged.AddListener(delegate {
+                                            FastJoystickAimToggle(fastJoystickAimToggle); });
+        joystickCursorSpeedSlider.onValueChanged.AddListener(delegate {
+                                            JoystickCursorSpeedChanged(joystickCursorSpeedSlider); });
         qualityDropdown.onValueChanged.AddListener(delegate { 
                                             QualityValueChanged(qualityDropdown); });
         spacebarToggle.onValueChanged.AddListener(delegate {
                                             ToggleSpacebar(spacebarToggle); });
         vSyncToggle.onValueChanged.AddListener(delegate {
                                             ToggleVSync(vSyncToggle); });
+
+        Initialize();
     }
 
     void OnDisable()
@@ -35,6 +43,10 @@ public class OptionsPanel : MonoBehaviour
                                             ToggleTutorial(tutorialToggle); });
         movementTypeDropdown.onValueChanged.RemoveListener(delegate { 
                                             MoveTypeValueChanged(movementTypeDropdown); });
+        fastJoystickAimToggle.onValueChanged.RemoveListener(delegate {
+                                            FastJoystickAimToggle(fastJoystickAimToggle); });
+        joystickCursorSpeedSlider.onValueChanged.RemoveListener(delegate {
+                                            JoystickCursorSpeedChanged(joystickCursorSpeedSlider); });
         qualityDropdown.onValueChanged.RemoveListener(delegate { 
                                             QualityValueChanged(qualityDropdown); });
         spacebarToggle.onValueChanged.RemoveListener(delegate {
@@ -62,12 +74,22 @@ public class OptionsPanel : MonoBehaviour
             movementTypeDropdown.SetValueWithoutNotify(profile.isStandardWASD ? 1 : 0);
             tutorialToggle.SetIsOnWithoutNotify(profile.isTutorialEnabled);
             spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
+            fastJoystickAimToggle.SetIsOnWithoutNotify(profile.isFastJoystickAimEnabled);
+
+            float sliderValue = Mathf.InverseLerp(
+                CursorManager.Instance.cursorSpeedMin,
+                CursorManager.Instance.cursorSpeedMax,
+                profile.joystickCursorSpeed
+            );
+            joystickCursorSpeedSlider.SetValueWithoutNotify(sliderValue);
         }
         else
         {
             movementTypeDropdown.SetValueWithoutNotify(1); // Default to standard WASD
             tutorialToggle.SetIsOnWithoutNotify(true);
             spacebarToggle.SetIsOnWithoutNotify(true);
+            fastJoystickAimToggle.SetIsOnWithoutNotify(false);
+            joystickCursorSpeedSlider.SetValueWithoutNotify(0.5f);
         }
 
         qualityDropdown.value = QualitySettings.GetQualityLevel();
@@ -111,6 +133,32 @@ public class OptionsPanel : MonoBehaviour
         SettingsManager.Instance.RefreshSettingsFromProfile(profile);
 
         Debug.Log("useStandardWASD set to: " + change.value);
+    }
+
+    void JoystickCursorSpeedChanged(Slider change)
+    {
+        float value = CursorManager.Instance.cursorSpeedFactor;
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            value = Mathf.Lerp(CursorManager.Instance.cursorSpeedMin, CursorManager.Instance.cursorSpeedMax, change.value);
+            ProfileManager.Instance.currentProfile.joystickCursorSpeed = value;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        Debug.Log("Joystick Cursor Speed set to " + value);
+    }
+
+    void FastJoystickAimToggle(Toggle change)
+    {
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            ProfileManager.Instance.currentProfile.isFastJoystickAimEnabled = change.isOn;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        Debug.Log("Fast Joystick Aim set to " + change.isOn);
     }
 
     void QualityValueChanged(TMP_Dropdown change)

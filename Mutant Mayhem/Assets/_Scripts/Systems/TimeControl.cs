@@ -40,11 +40,17 @@ public class TimeControl : MonoBehaviour
         timeControlAction.performed -= OnTimeControl;
     }
 
+    public void ResetTimeScale()
+    {
+        Time.timeScale = 1;
+        previousTimeScale = 1;
+    }
+
     void OnTimeControl(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        if (Keyboard.current.numpadPlusKey.isPressed)
             Time.timeScale += 0.1f;
-        if (Input.GetKeyDown(KeyCode.KeypadMinus) && Time.timeScale - 0.01f > epsilon)
+        if (Keyboard.current.numpadMinusKey.isPressed && Time.timeScale - 0.01f > epsilon)
             if (Time.timeScale > 0.1f)
                 Time.timeScale -= 0.1f;
         //Debug.Log("timeScale changed to: " + Time.timeScale.ToString("#0.0"));

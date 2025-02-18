@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class PlayerStats
@@ -56,6 +57,7 @@ public class PlayerStats
 [System.Serializable]
 public class StructureStats
 {
+    public BuildingSystem buildingSystem;
     public QCubeController cubeController;
     public QCubeHealth cubeHealthScript;
     public TileManager tileManager;
@@ -74,6 +76,8 @@ public class Player : MonoBehaviour
     [SerializeField] float sprintStaminaUse = 0.1f;
     [SerializeField] float headTurnSpeed = 0.1f;
     [SerializeField] float headTurnMax = 80;
+    public float joystickDeadzone = 0.05f;
+    [SerializeField] float joystickCurveMagnitude = 2;
 
     [Header("Sound")]
     [SerializeField] SoundSO walkGrassSound;
@@ -95,6 +99,13 @@ public class Player : MonoBehaviour
 
     [SerializeField] float experimentRotationConstant; 
     
+    Vector3 aimPos = Vector3.zero;
+    Vector3 lastAimDir = Vector3.zero;
+    float aimDistance = 10;
+    float aimMinDist = 5;
+    Rect blankRect = new Rect();
+
+    Coroutine sprintCoroutine;
     float sprintSpeedAmount;
     Vector2 rawInput;
     Vector2 muzzleDirToMouse;
@@ -120,14 +131,18 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool hasFirstThrowTarget;
     [HideInInspector] public Vector2 throwTarget;
     [HideInInspector] public bool useStandardWASD = true;
+    [HideInInspector] public bool useFastJoystickAim = false;
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
     int previousGunIndex;
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
+
+    InputAction sprintAction;
 
     void Awake()
     {
         //KillAllEnemies();
-        //Time.timeScale = 1;
+        TimeControl.Instance.ResetTimeScale();
 
         stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
@@ -142,17 +157,38 @@ public class Player : MonoBehaviour
         stats.structureStats.cubeHealthScript = FindObjectOfType<QCubeHealth>();
         stats.structureStats.cubeController = FindObjectOfType<QCubeController>();
         IsDead = false;
+
+        // Inputs
+        InputActionMap actionMap = inputAsset.FindActionMap("Player");
+        sprintAction = actionMap.FindAction("Sprint");
+        aimDistance = CursorManager.Instance.aimDistance;
+        aimMinDist = CursorManager.Instance.aimMinDistance;
+    }
+
+    void OnEnable()
+    {
+        sprintAction.performed += SprintInput_Performed;
+        sprintAction.canceled += SprintInput_Cancelled;
+        TimeControl.Instance.SubscribePlayerTimeControl(this);
+    }
+
+    void OnDisable()
+    {
+        sprintAction.performed -= SprintInput_Performed;
+        sprintAction.canceled -= SprintInput_Cancelled;
+        TimeControl.Instance.UnsubscribePlayerTimeControl(this);
     }
 
     void Start()
     {
-        //ParticleManager.Instance.ClearAllChildrenParticleSystems();
-        TimeControl.Instance.SubscribePlayerTimeControl(this);
+        Application.targetFrameRate = 120;
+        
         SFXManager.Instance.Initialize();
-        //TutorialManager.ResetTutorialPanel();
         StatsCounterPlayer.ResetStatsCounts();
         
-        SettingsManager.Instance.GetComponent<CursorManager>().Initialize();
+        CursorManager.Instance.Initialize();
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
+        InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         SettingsManager.Instance.ApplyGameplaySettings();
 
@@ -160,19 +196,12 @@ public class Player : MonoBehaviour
         UpgradeManager.Instance.Initialize();
         ClassManager.Instance.ApplyClassEffects(this);
         AugManager.Instance.ApplySelectedAugmentations();
-        //PlanetManager.Instance.InitializeStatMultipliers();
         PlanetManager.Instance.ApplyPlanetProperties();
         
         FindObjectOfType<WaveControllerRandom>().Initialize();
         
+        StartCoroutine(Sprint(false));
         RefreshMoveForces();
-        //PoolManager.Instance.ResetAllPools();
-    }
-
-    void OnDisable()
-    {
-        TimeControl.Instance.UnsubscribePlayerTimeControl(this);
-        //ParticleManager.Instance.ClearAllChildrenParticleSystems();
     }
 
     void KillAllEnemies()
@@ -195,7 +224,6 @@ public class Player : MonoBehaviour
         if (!IsDead)
         {
             LookAtMouse();
-            Sprint();
             Move();
         }
         else
@@ -216,24 +244,43 @@ public class Player : MonoBehaviour
 
     #region Inputs
 
+    void SprintInput_Performed(InputAction.CallbackContext context)
+    {
+        if (sprintCoroutine != null)
+            StopCoroutine(sprintCoroutine);
+        sprintCoroutine = StartCoroutine(Sprint(true));
+        Debug.Log("Sprint was triggered");
+    }
+
+    void SprintInput_Cancelled(InputAction.CallbackContext context)
+    {
+        if (sprintCoroutine != null)
+            StopCoroutine(sprintCoroutine);
+        sprintCoroutine = StartCoroutine(Sprint(false));
+        Debug.Log("Sprint was cancelled");
+    }
+
     void OnToolbar()
     {
         // Laser Weapon
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Keyboard.current.digit1Key.isPressed)
             SwitchToGun(0);
         // Bullet Weapon
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Keyboard.current.digit2Key.isPressed)
             SwitchToGun(1);
         // ??
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Keyboard.current.digit3Key.isPressed)
             SwitchToGun(2);
         // ??
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (Keyboard.current.digit4Key.isPressed)
             SwitchToGun(3);
         // REPAIR GUN
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-            SwitchToGun(4);
-        else if (Input.GetKeyDown(KeyCode.C))
+        else if (Keyboard.current.digit5Key.isPressed)
+        {
+            animControllerPlayer.SwitchGunsStart(4);
+            toolbarSelector.SwitchBoxes(4);
+        }
+        else if (Keyboard.current.cKey.isPressed || Gamepad.current.dpad.up.isPressed)
         {
             if (playerShooter.currentGunIndex != 4)
             {
@@ -248,7 +295,40 @@ public class Player : MonoBehaviour
             }
             return;
         }
+        else if (Gamepad.current.dpad.left.isPressed)
+        {
+            int index = GetNextUnlockedGun(playerShooter.currentGunIndex, -1);
+            if (index != -1)
+            {
+                animControllerPlayer.SwitchGunsStart(index);
+                toolbarSelector.SwitchBoxes(index);
+            }
+        }
+        else if (Gamepad.current.dpad.right.isPressed)
+        {
+            int index = GetNextUnlockedGun(playerShooter.currentGunIndex, 1);
+            if (index != -1)
+            {
+                animControllerPlayer.SwitchGunsStart(index);
+                toolbarSelector.SwitchBoxes(index);
+            }
+        }
     }
+
+    int GetNextUnlockedGun(int startIndex, int direction)
+{
+    int totalWeapons = playerShooter.gunsUnlocked.Count;
+    int index = startIndex;
+
+    for (int i = 0; i < totalWeapons; i++)
+    {
+        index = (index + direction + totalWeapons) % totalWeapons; // Loop around
+        if (playerShooter.gunsUnlocked[index]) 
+            return index;
+    }
+
+    return -1; // No unlocked weapon found (shouldn't happen unless all are locked)
+}
 
     void SwitchToGun(int gunIndex)
     {
@@ -276,7 +356,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            itemToThrow.target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            itemToThrow.target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         }
 
         itemToThrow.transform.parent = null;
@@ -294,30 +374,62 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    #region Movement
-
-    public void RefreshMoveForces()
-    {
-        stats.moveForce = stats.moveSpeed * myRb.mass * forceFactor;
-        stats.strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
-        stats.maxVelocity = (stats.moveForce * stats.sprintFactor) / 
-                            (myRb.drag * myRb.mass);
-    }
+    #region Look At Mouse
 
     void LookAtMouse()
     {
-        // Find Mouse direction and angle
-        Vector3 mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //muzzleDirToMouse = mousePos - transform.position;
+        Vector2 joystickInput = Vector2.zero;
+        if (Gamepad.current != null)
+            joystickInput = Gamepad.current.rightStick.ReadValue();
 
-        if ((transform.position - mousePos).magnitude > 
-            (transform.position - muzzleTrans.position).magnitude + 0.5f)
+        float joystickInputMagnitude = joystickInput.magnitude;
+        float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
+        float scaledDistance = Mathf.Lerp(aimMinDist, aimDistance, curvedMagnitude);
+
+        if (InputController.GetJoystickAsMouseState() && CursorManager.Instance.usingCustomCursor)
         {
-            muzzleDirToMouse = mousePos - muzzleTrans.transform.position;
+            // Use custom cursor position directly for aiming
+            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            lastAimDir = Vector3.zero; // Reset last joystick aim direction
         }
         else
         {
-            muzzleDirToMouse = mousePos - transform.position;
+            // Mouse position
+            if (InputController.LastUsedDevice == Keyboard.current)
+            {
+                aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
+                lastAimDir = Vector3.zero;
+            }
+            // Touchscreen
+            else if (InputController.LastUsedDevice == Touchscreen.current)
+            {
+                //aimPos = Touchscreen.current.
+            }
+            // Joystick input
+            else if (joystickInputMagnitude > joystickDeadzone)
+            {
+                lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
+                aimPos = transform.position + lastAimDir;
+            }
+            else if (lastAimDir != Vector3.zero)
+            {
+                aimPos = transform.position + lastAimDir;
+                //lastAimDir = aimPos;
+            }
+        }
+
+        // Aim or virtual mouse for joystick
+        if (!InputController.GetJoystickAsMouseState())
+            CursorManager.Instance.MoveCustomCursorWorldToUi(aimPos);
+
+        if ((transform.position - aimPos).magnitude > 
+            (transform.position - muzzleTrans.position).magnitude + 0.5f)
+        {
+            muzzleDirToMouse = aimPos - muzzleTrans.transform.position;
+        }
+        else
+        {
+            muzzleDirToMouse = aimPos - transform.position;
         }
 
         muzzleDirToMouse.Normalize();
@@ -336,7 +448,7 @@ public class Player : MonoBehaviour
         playerMainTrans.rotation = Quaternion.Slerp(
             playerMainTrans.rotation, targetRotation, Time.deltaTime * dynamicSpeed);
 
-        RotateHead(mousePos);
+        RotateHead(aimPos);
     }
 
     void RotateHead(Vector3 mousePos)
@@ -361,24 +473,45 @@ public class Player : MonoBehaviour
         headImageTrans.rotation, clampedTargetRotation, (float)rotationSpeed);
     }
 
-    void Sprint()
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            if (sprintStaminaUse <= myStamina.GetStamina() && rawInput.sqrMagnitude > 0)
-            {
-                float time = Time.fixedDeltaTime;
-                StatsCounterPlayer.TimeSprintingPlayer += time;
-                sprintSpeedAmount = stats.sprintFactor;
-                myStamina.ModifyStamina(-sprintStaminaUse);
+    #endregion
 
-                playerShooter.currentAccuracy += time * stats.sprintAccuracyLoss * stats.weaponHandling;
+    #region Movement
+
+    public void RefreshMoveForces()
+    {
+        stats.moveForce = stats.moveSpeed * myRb.mass * forceFactor;
+        stats.strafeForce = stats.strafeSpeed * myRb.mass * forceFactor;
+        stats.maxVelocity = (stats.moveForce * stats.sprintFactor) / 
+                            (myRb.drag * myRb.mass);
+    }
+
+    IEnumerator Sprint(bool isSprinting)
+    {
+        if (isSprinting)
+        {
+            while (true)
+            {
+                if (sprintStaminaUse <= myStamina.GetStamina()  && rawInput.sqrMagnitude > 0 )
+                {
+                    float time = Time.fixedDeltaTime;
+                    StatsCounterPlayer.TimeSprintingPlayer += time;
+                    sprintSpeedAmount = stats.sprintFactor;
+                    myStamina.ModifyStamina(-sprintStaminaUse);
+
+                    playerShooter.currentAccuracy += time * stats.sprintAccuracyLoss * stats.weaponHandling;
+                    //Debug.Log("Sprint code ran successfully");
+                }
+                else
+                    sprintSpeedAmount = 1;
+
+                yield return new WaitForFixedUpdate();
             }
-            else
-                sprintSpeedAmount = 1;
+            
         }
         else
             sprintSpeedAmount = 1;
+
+        yield return new WaitForEndOfFrame();
     }
 
     void Move()
@@ -403,7 +536,7 @@ public class Player : MonoBehaviour
 
         // Determine the speed based on the angle difference
         float maxSpeedAngle = 15f; // Full speed within ±15 degrees
-        float minSpeedAngle = 90f;
+        float minSpeedAngle = 120f;
         float speedFactor = 1.0f;
         
         if (Mathf.Abs(angleDifference) > maxSpeedAngle)
