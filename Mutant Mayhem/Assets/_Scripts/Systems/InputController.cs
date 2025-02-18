@@ -108,9 +108,9 @@ public class InputController : MonoBehaviour
     void CheckCurrentInputDevice()
     {
         Vector2 mousePos = Vector2.zero;
-        //if (Mouse.current != null)
+        if (Mouse.current != null)
             mousePos = Mouse.current.position.ReadValue();
-        Debug.Log($"Mouse Pos: {mousePos}");
+        //Debug.Log($"Mouse Pos: {mousePos}");
 
         if (Keyboard.current != null && (Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos))
         {

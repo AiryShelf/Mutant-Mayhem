@@ -15,10 +15,10 @@ public class RepairBullet : Bullet
     {
         SFXManager.Instance.PlaySoundFollow(shootSound, transform);
 
-        if (InputController.LastUsedDevice == Gamepad.current)
+        //if (InputController.LastUsedDevice == Gamepad.current)
             target = CursorManager.Instance.GetCustomCursorWorldPos();
-        else
-            target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        //else 
+            //target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
         // If distance to target is above max, set target to max distance
         float targetDist = Vector2.Distance((Vector2)transform.position, target);

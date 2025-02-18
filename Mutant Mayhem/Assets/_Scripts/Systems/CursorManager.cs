@@ -117,7 +117,7 @@ public class CursorManager : MonoBehaviour
             CustomCursorControl();
         else 
         {
-            //if (Mouse.current != null)
+            if (Mouse.current != null)
                 customCursorTrans.position = Mouse.current.position.ReadValue();
         }
 
