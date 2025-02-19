@@ -20,6 +20,7 @@ public class UIBuildMenuController : MonoBehaviour
     BuildingSystem buildingSystem;
     InputAction scrollAction;
     InputAction swapWithDestroyAction;
+    bool isMenuOpen = false;
 
     void Awake()
     {
@@ -88,46 +89,7 @@ public class UIBuildMenuController : MonoBehaviour
             fadeCanvasGroups.individualElements.Add(uiStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
         }
-
-        //SetButtonNavigation();
     }
-    
-    /*
-    void SetButtonNavigation()
-    {
-        for (int i = 0; i < uiStructureList.Count; i++)
-        {
-            Button button = uiStructureList[i].GetComponent<Button>();
-            Navigation nav = button.navigation;
-            nav.mode = Navigation.Mode.Explicit;
-
-            if (i == 0)
-            {
-                // First button - no upward navigation
-                nav.selectOnUp = null;
-                nav.selectOnDown = uiStructureList[i + 1].GetComponent<Button>();
-
-                button.navigation = nav;
-            }
-            else if (i == uiStructureList.Count - 1)
-            {
-                // Last button - no downward navigation
-                nav.selectOnUp = uiStructureList[i - 1].GetComponent<Button>();
-                nav.selectOnDown = null;
-
-                button.navigation = nav;
-            }
-            else
-            {
-                // Middle buttons - navigate both up and down
-                //nav.selectOnUp = structureButtonInstances[i - 1].GetComponent<Button>();
-                //nav.selectOnDown = structureButtonInstances[i + 1].GetComponent<Button>();
-            }
-
-            //button.navigation = nav;
-        }
-    }
-    */
 
     public void RefreshBuildList()
     {
@@ -139,18 +101,11 @@ public class UIBuildMenuController : MonoBehaviour
         }
     }
 
-    public void OpenBuildMenu(bool open)
+    public void ToggleBuildMenu()
     {
-        if (open)
-        {
-            fadeCanvasGroups.isTriggered = true;
-            myCanvasGroup.blocksRaycasts = true;
-        }
-        else
-        {
-            fadeCanvasGroups.isTriggered = false;
-            myCanvasGroup.blocksRaycasts = false;
-        }
+        fadeCanvasGroups.isTriggered = !isMenuOpen;
+        myCanvasGroup.blocksRaycasts = !isMenuOpen;
+        isMenuOpen = !isMenuOpen;
     }
 
     public bool SetMenuSelection(StructureSO structure)

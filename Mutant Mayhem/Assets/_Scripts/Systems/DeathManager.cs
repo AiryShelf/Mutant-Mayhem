@@ -118,6 +118,7 @@ public class DeathManager : MonoBehaviour
 
     void TransitionToPanel()
     {
+        CursorManager.Instance.SetVirtualJoysticksActive(false);
         InputController.SetJoystickMouseControl(true);
         //SFXManager.Instance.FadeToDeathSnapshot();
         MusicManager.Instance.mainMixer.GetFloat("sfxVolume", out storedSFXVolume);

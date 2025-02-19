@@ -126,18 +126,6 @@ public class InputController : MonoBehaviour
                 Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }
         }
-        else if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
-        {
-            if (LastUsedDevice != Gamepad.current)
-            {
-                LastUsedDevice = Gamepad.current;
-                //SetJoystickMouseControl(true);
-                CursorManager.Instance.SetCursorVisible(false);
-                CursorManager.Instance.SetUsingCustomCursor(true);
-                CursorManager.Instance.SetCustomCursorVisible(true);
-                LastUsedDeviceChanged?.Invoke(LastUsedDevice);
-            }
-        }
         else if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
             if (LastUsedDevice != Touchscreen.current)
@@ -150,6 +138,19 @@ public class InputController : MonoBehaviour
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
             }
         }
+        else if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
+        {
+            if (LastUsedDevice != Gamepad.current)
+            {
+                LastUsedDevice = Gamepad.current;
+                //SetJoystickMouseControl(true);
+                CursorManager.Instance.SetCursorVisible(false);
+                CursorManager.Instance.SetUsingCustomCursor(true);
+                CursorManager.Instance.SetCustomCursorVisible(true);
+                LastUsedDeviceChanged?.Invoke(LastUsedDevice);
+            }
+        }
+        
 
         //Debug.Log(LastUsedDevice);
     }

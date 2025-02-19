@@ -1,0 +1,34 @@
+{
+    "name": "InputActions - VirtualJoysticks",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "f308ba3b-e1f7-45ae-b970-5b8353f8f399",
+            "actions": [
+                {
+                    "name": "Left Virtual Stick",
+                    "type": "Value",
+                    "id": "bffe825a-1fd1-43cc-b186-0ed0ca934531",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d5a4bb93-0e32-401b-aa7d-4c9657b554e2",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left Virtual Stick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

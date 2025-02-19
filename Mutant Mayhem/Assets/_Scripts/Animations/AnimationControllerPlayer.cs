@@ -285,7 +285,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             
         if (!playerShooter.isBuilding)
         {
-            buildingSystemController.ToggleBuildMenu(true);
+            buildingSystemController.ToggleBuildMenu();
             playerShooter.isBuilding = true;
             bodyAnim.SetBool("isBuilding", true);
             bodyAnim.SetBool("isAiming", false);
@@ -303,7 +303,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
         else
         {
-            buildingSystemController.ToggleBuildMenu(false);
+            buildingSystemController.ToggleBuildMenu();
             playerShooter.isBuilding = false;
             bodyAnim.SetBool("isBuilding", false);
             bodyAnim.SetBool("isAiming", true);

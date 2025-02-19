@@ -53,6 +53,11 @@ public class PauseMenuController : MonoBehaviour
         myCanvasGroup.blocksRaycasts = false;
     }
 
+    public void PauseButtonPressed()
+    {
+        EscapePressed(new InputAction.CallbackContext());
+    }
+
     void EscapePressed(InputAction.CallbackContext context)
     {
         if (TutorialManager.NumTutorialsOpen > 0)
@@ -84,12 +89,13 @@ public class PauseMenuController : MonoBehaviour
     {
         if (open)
         {
+            CursorManager.Instance.inMenu = true;
+            CursorManager.Instance.SetVirtualJoysticksActive(false);
+            InputController.SetJoystickMouseControl(true);
+
             wasRepairing = player.stats.playerShooter.isRepairing;
             player.stats.playerShooter.isRepairing = false;
-
             playerActionMap.Disable();
-            InputController.SetJoystickMouseControl(true);
-            CursorManager.Instance.inMenu = true;
 
             wasMusicPlaying = !MusicManager.Instance.isPaused;
             if (wasMusicPlaying)
@@ -97,13 +103,14 @@ public class PauseMenuController : MonoBehaviour
         }
         else
         {
+            CursorManager.Instance.inMenu = false;
+            CursorManager.Instance.SetVirtualJoysticksActive(true);
+            playerActionMap.Enable();
+
             if (wasRepairing)
                 player.stats.playerShooter.isRepairing = true;
             else
                 InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
-
-            CursorManager.Instance.inMenu = false;
-            playerActionMap.Enable();
             
             if (wasMusicPlaying)
                 MusicManager.Instance.PlayOrPausePressed();

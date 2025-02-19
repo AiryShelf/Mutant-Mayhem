@@ -259,11 +259,11 @@ public class BuildingSystem : MonoBehaviour
 
     #region Menu / Unlock
 
-    public void ToggleBuildMenu(bool on)
+    public void ToggleBuildMenu()
     {
         //Debug.Log("ToggleBuildMenu Called");
 
-        if (on)
+        if (!isInBuildMode)
         {
             qCubeController.CloseUpgradeWindow();
 
@@ -282,7 +282,7 @@ public class BuildingSystem : MonoBehaviour
             isInBuildMode = true;
             SetBuildRangeCircle();
             player.playerShooter.isBuilding = true;
-            buildMenuController.OpenBuildMenu(true);
+            buildMenuController.ToggleBuildMenu();
             
             //Debug.Log("Opened Build Panel");
             structureInHand = lastStructureInHand;
@@ -310,7 +310,7 @@ public class BuildingSystem : MonoBehaviour
             
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;
-            buildMenuController.OpenBuildMenu(false);
+            buildMenuController.ToggleBuildMenu();
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
 

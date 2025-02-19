@@ -34,6 +34,8 @@ public class CursorManager : MonoBehaviour
     [SerializeField] Vector2 repairCursorHotspot = Vector2.zero;
 
     [Header("Custom Cursor")]
+    public VirtualJoystick moveJoystick;
+    public VirtualJoystick aimJoystick;
     public bool usingCustomCursor = false;
     public float cursorSpeedMin = 200;
     public float cursorSpeedMax = 1600;
@@ -129,6 +131,20 @@ public class CursorManager : MonoBehaviour
         }
     }
 
+    public void SetVirtualJoysticksActive(bool active)
+    {
+        if (InputController.LastUsedDevice == Touchscreen.current && !inMenu)
+        {
+            moveJoystick.ActivateJoystick(active);
+            aimJoystick.ActivateJoystick(active);
+        }
+        else 
+        {
+            moveJoystick.ActivateJoystick(false);
+            aimJoystick.ActivateJoystick(false);
+        }
+    }
+
     public void SetCursorVisible(bool visible)
     {
         Cursor.visible = visible;
@@ -190,7 +206,8 @@ public class CursorManager : MonoBehaviour
 
     public void CustomCursorControl()
     {
-        if (SettingsManager.Instance.useFastJoystickAim && !inMenu && Gamepad.current.rightStickButton.wasPressedThisFrame)
+        if (SettingsManager.Instance.useFastJoystickAim && !inMenu && 
+            Gamepad.current != null && Gamepad.current.rightStickButton.wasPressedThisFrame)
         {
             InputController.SetJoystickMouseControl(!InputController.GetJoystickAsMouseState());
             MessagePanel.PulseMessage("Aim mode switched! Cick right thumbstick to switch back", Color.yellow);
@@ -203,8 +220,11 @@ public class CursorManager : MonoBehaviour
         }
 
         Vector2 joystickInput = Vector2.zero;
-        if (Gamepad.current != null)
+        if (InputController.LastUsedDevice == Touchscreen.current)
+            joystickInput = aimJoystick.JoystickOutput;
+        else if (InputController.LastUsedDevice == Gamepad.current)
             joystickInput = Gamepad.current.rightStick.ReadValue();
+        
         //Debug.Log($"Joystick input: {joystickInput}");
 
         float joystickInputMagnitude = joystickInput.magnitude;

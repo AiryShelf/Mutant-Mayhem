@@ -16,6 +16,7 @@ public class UIMothershipController : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         
+        CursorManager.Instance.SetVirtualJoysticksActive(false);
         AugManager.Instance.Initialize();
         //InputController.SetLastUsedDevice(null);
         InputController.SetJoystickMouseControl(true);

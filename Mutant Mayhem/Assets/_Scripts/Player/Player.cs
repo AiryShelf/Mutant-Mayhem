@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -79,6 +78,7 @@ public class Player : MonoBehaviour
     public float joystickDeadzone = 0.05f;
     [SerializeField] float joystickCurveMagnitude = 2;
 
+
     [Header("Sound")]
     [SerializeField] SoundSO walkGrassSound;
     [SerializeField] SoundSO walkWoodSound;
@@ -103,7 +103,6 @@ public class Player : MonoBehaviour
     Vector3 lastAimDir = Vector3.zero;
     float aimDistance = 10;
     float aimMinDist = 5;
-    Rect blankRect = new Rect();
 
     Coroutine sprintCoroutine;
     float sprintSpeedAmount;
@@ -142,7 +141,6 @@ public class Player : MonoBehaviour
     void Awake()
     {
         //KillAllEnemies();
-        TimeControl.Instance.ResetTimeScale();
 
         stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
@@ -181,13 +179,17 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        CursorManager.Instance.Initialize();
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
+        if (InputController.LastUsedDevice == Touchscreen.current)
+                CursorManager.Instance.SetVirtualJoysticksActive(true);
+
+        TimeControl.Instance.ResetTimeScale();
         Application.targetFrameRate = 120;
         
         SFXManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
         
-        CursorManager.Instance.Initialize();
-        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
         InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         SettingsManager.Instance.ApplyGameplaySettings();
@@ -204,6 +206,19 @@ public class Player : MonoBehaviour
         RefreshMoveForces();
     }
 
+    void FixedUpdate()
+    {
+        if (!IsDead)
+        {
+            LookAtMouse();
+            Move();
+        }
+        else
+        {
+            playerShooter.isShooting = false; 
+        }
+    }
+
     void KillAllEnemies()
     {
         bool enemiesExist = true;
@@ -216,19 +231,6 @@ public class Player : MonoBehaviour
             }
             else
                 enemiesExist = false;
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (!IsDead)
-        {
-            LookAtMouse();
-            Move();
-        }
-        else
-        {
-            playerShooter.isShooting = false; 
         }
     }
 
@@ -369,7 +371,8 @@ public class Player : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        rawInput = value.Get<Vector2>();    
+        rawInput = value.Get<Vector2>(); 
+        //Debug.Log($"OnMove called, rawInput: {rawInput}");
     }
 
     #endregion
@@ -379,7 +382,9 @@ public class Player : MonoBehaviour
     void LookAtMouse()
     {
         Vector2 joystickInput = Vector2.zero;
-        if (Gamepad.current != null)
+        if (InputController.LastUsedDevice == Touchscreen.current)
+            joystickInput = CursorManager.Instance.aimJoystick.JoystickOutput;
+        else if (InputController.LastUsedDevice == Gamepad.current)
             joystickInput = Gamepad.current.rightStick.ReadValue();
 
         float joystickInputMagnitude = joystickInput.magnitude;
@@ -516,6 +521,9 @@ public class Player : MonoBehaviour
 
     void Move()
     {
+        if (Touchscreen.current != null)
+            rawInput = CursorManager.Instance.moveJoystick.JoystickOutput;
+
         Vector2 moveDir;
 
         if (useStandardWASD == true)

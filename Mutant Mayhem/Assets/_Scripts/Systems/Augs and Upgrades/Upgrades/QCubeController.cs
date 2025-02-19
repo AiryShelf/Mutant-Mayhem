@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class QCubeController : MonoBehaviour
+public class QCubeController : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] GameObject tutorialUpgradePanelPrefab;
     [SerializeField] RectTransform gamePlayCanvas;
@@ -108,6 +109,11 @@ public class QCubeController : MonoBehaviour
 
     void OnQCubeInteract(InputAction.CallbackContext context)
     {
+        TryInteract();
+    }
+
+    public void TryInteract()
+    {
         if (player.playerShooter.isBuilding)
         {
             player.animControllerPlayer.ToggleBuildMode();
@@ -137,17 +143,17 @@ public class QCubeController : MonoBehaviour
         }
 
         if (!isUpgradesOpen)
-            {
-                MessagePanel.PulseMessage("Not close enough to access the " +
-                                        "Q-Cube. Get closer!", Color.yellow);
-                // Player is not in range, show UI message to the player
-                //Debug.Log("Player NOT in QCube Range!");
-            }
-            else
-            {
-                CloseUpgradeWindow();
-                return;
-            }
+        {
+            MessagePanel.PulseMessage("Not close enough to access the " +
+                                    "Q-Cube. Get closer!", Color.yellow);
+            // Player is not in range, show UI message to the player
+            //Debug.Log("Player NOT in QCube Range!");
+        }
+        else
+        {
+            CloseUpgradeWindow();
+            return;
+        }
     }
 
     IEnumerator OpenUpgradeWindow()
@@ -194,5 +200,10 @@ public class QCubeController : MonoBehaviour
 
         randomIndex = UnityEngine.Random.Range(0, cubeDeathSubtitles.Count);
         deathSubtitleText.text = cubeDeathSubtitles[randomIndex];
-    } 
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        TryInteract();
+    }
 }

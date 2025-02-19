@@ -40,6 +40,7 @@ public class MainMenuController : MonoBehaviour
         
         InputController.SetJoystickMouseControl(true);
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
+        CursorManager.Instance.SetVirtualJoysticksActive(false);
     }
 
     public void OnStartGame()

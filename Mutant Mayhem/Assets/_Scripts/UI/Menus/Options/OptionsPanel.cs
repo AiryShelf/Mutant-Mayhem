@@ -19,6 +19,177 @@ public class OptionsPanel : MonoBehaviour
 
     void OnEnable()
     {
+        // CHANGED: Use method groups matching UnityEvent signatures.
+        tutorialToggle.onValueChanged.AddListener(ToggleTutorial);
+        movementTypeDropdown.onValueChanged.AddListener(MoveTypeValueChanged);
+        fastJoystickAimToggle.onValueChanged.AddListener(FastJoystickAimToggle);
+        joystickCursorSpeedSlider.onValueChanged.AddListener(JoystickCursorSpeedChanged);
+        qualityDropdown.onValueChanged.AddListener(QualityValueChanged);
+        spacebarToggle.onValueChanged.AddListener(ToggleSpacebar);
+        vSyncToggle.onValueChanged.AddListener(ToggleVSync);
+
+        //Initialize();
+    }
+
+    void OnDisable()
+    {
+        // CHANGED: Remove listeners using the same method groups.
+        tutorialToggle.onValueChanged.RemoveListener(ToggleTutorial);
+        movementTypeDropdown.onValueChanged.RemoveListener(MoveTypeValueChanged);
+        fastJoystickAimToggle.onValueChanged.RemoveListener(FastJoystickAimToggle);
+        joystickCursorSpeedSlider.onValueChanged.RemoveListener(JoystickCursorSpeedChanged);
+        qualityDropdown.onValueChanged.RemoveListener(QualityValueChanged);
+        spacebarToggle.onValueChanged.RemoveListener(ToggleSpacebar);
+        vSyncToggle.onValueChanged.RemoveListener(ToggleVSync);
+    }
+
+    void Start()
+    {
+        qualityManager = SettingsManager.Instance.GetComponent<QualityManager>();
+        if (qualityManager == null)
+            Debug.LogError("OptionsPanel: Could not find QualityManager on SettingsManager object");
+
+        Initialize();
+    }
+
+    public void Initialize()
+    {
+        // Check if a current profile exists, then set option values
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            PlayerProfile profile = ProfileManager.Instance.currentProfile;
+
+            movementTypeDropdown.SetValueWithoutNotify(profile.isStandardWASD ? 1 : 0);
+            tutorialToggle.SetIsOnWithoutNotify(profile.isTutorialEnabled);
+            spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
+            fastJoystickAimToggle.SetIsOnWithoutNotify(profile.isFastJoystickAimEnabled);
+
+            float sliderValue = Mathf.InverseLerp(
+                CursorManager.Instance.cursorSpeedMin,
+                CursorManager.Instance.cursorSpeedMax,
+                profile.joystickCursorSpeed
+            );
+            joystickCursorSpeedSlider.SetValueWithoutNotify(sliderValue);
+        }
+        else
+        {
+            movementTypeDropdown.SetValueWithoutNotify(1); // Default to standard WASD
+            tutorialToggle.SetIsOnWithoutNotify(true);
+            spacebarToggle.SetIsOnWithoutNotify(true);
+            fastJoystickAimToggle.SetIsOnWithoutNotify(false);
+            joystickCursorSpeedSlider.SetValueWithoutNotify(0.5f);
+        }
+
+        qualityDropdown.SetValueWithoutNotify(QualitySettings.GetQualityLevel());
+        vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
+    }
+
+    // CHANGED: Now accepts a bool instead of a Toggle
+    public void ToggleTutorial(bool isOn) // CHANGED: Parameter type updated
+    {
+        TutorialManager.SetTutorialState(isOn);
+    }
+
+    // CHANGED: Now accepts an int (the new value) instead of a TMP_Dropdown
+    void MoveTypeValueChanged(int value) // CHANGED: Parameter type updated
+    {
+        PlayerProfile profile = ProfileManager.Instance.currentProfile;
+        switch (value)
+        {
+            case 0:
+                profile.isStandardWASD = false;
+                break;
+            case 1:
+                profile.isStandardWASD = true;
+                break;
+            default:
+                Debug.LogError("Failed to change move type");
+                break;
+        }
+
+        ProfileManager.Instance.SaveCurrentProfile();
+        SettingsManager.Instance.RefreshSettingsFromProfile(profile);
+
+        Debug.Log("useStandardWASD set to: " + value);
+    }
+
+    // CHANGED: Now accepts a float (the slider value) instead of a Slider
+    void JoystickCursorSpeedChanged(float sliderValue) // CHANGED: Parameter type updated
+    {
+        float value = CursorManager.Instance.cursorSpeedFactor;
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            value = Mathf.Lerp(CursorManager.Instance.cursorSpeedMin, CursorManager.Instance.cursorSpeedMax, sliderValue);
+            ProfileManager.Instance.currentProfile.joystickCursorSpeed = value;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        Debug.Log("Joystick Cursor Speed set to " + value);
+    }
+
+    // CHANGED: Now accepts a bool instead of a Toggle
+    void FastJoystickAimToggle(bool isOn) // CHANGED: Parameter type updated
+    {
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            ProfileManager.Instance.currentProfile.isFastJoystickAimEnabled = isOn;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        Debug.Log("Fast Joystick Aim set to " + isOn);
+    }
+
+    // CHANGED: Now accepts an int instead of a TMP_Dropdown
+    void QualityValueChanged(int qualityLevel) // CHANGED: Parameter type updated
+    {
+        qualityManager.SetGraphicsQuality(qualityLevel);
+        Initialize();
+    }
+
+    // CHANGED: Now accepts a bool instead of a Toggle
+    void ToggleVSync(bool isOn) // CHANGED: Parameter type updated
+    {
+        qualityManager.SetVSync(isOn);
+    }
+
+    // CHANGED: Now accepts a bool instead of a Toggle
+    public void ToggleSpacebar(bool isOn) // CHANGED: Parameter type updated
+    {
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            ProfileManager.Instance.currentProfile.isSpacebarEnabled = isOn;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        Debug.Log("Spacebar throws grenades set to " + isOn);
+    }
+}
+
+
+
+
+
+
+
+/*
+public class OptionsPanel : MonoBehaviour
+{
+    public FadeCanvasGroupsWave fadeGroup;
+    [SerializeField] TMP_Dropdown movementTypeDropdown;
+    [SerializeField] Toggle fastJoystickAimToggle;
+    [SerializeField] Slider joystickCursorSpeedSlider;
+    [SerializeField] TMP_Dropdown qualityDropdown;
+    [SerializeField] Toggle vSyncToggle;
+    [SerializeField] Toggle spacebarToggle;
+    [SerializeField] Toggle tutorialToggle;
+
+    QualityManager qualityManager;
+
+    void OnEnable()
+    {
         tutorialToggle.onValueChanged.AddListener(delegate {
                                             ToggleTutorial(tutorialToggle); });
         movementTypeDropdown.onValueChanged.AddListener(delegate { 
@@ -92,7 +263,7 @@ public class OptionsPanel : MonoBehaviour
             joystickCursorSpeedSlider.SetValueWithoutNotify(0.5f);
         }
 
-        qualityDropdown.value = QualitySettings.GetQualityLevel();
+        qualityDropdown.SetValueWithoutNotify(QualitySettings.GetQualityLevel());
         vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
     }
 
@@ -108,9 +279,9 @@ public class OptionsPanel : MonoBehaviour
         Debug.Log("Spacebar throws grenades set to " + change.isOn);
     }
 
-    public void ToggleTutorial(Toggle change)
+    public void ToggleTutorial(bool change)
     {
-        TutorialManager.SetTutorialState(change.isOn);
+        TutorialManager.SetTutorialState(change);
     }
 
     void MoveTypeValueChanged(TMP_Dropdown change)
@@ -172,3 +343,5 @@ public class OptionsPanel : MonoBehaviour
         qualityManager.SetVSync(change.isOn);
     }
 }
+
+*/
