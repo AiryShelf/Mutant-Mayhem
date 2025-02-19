@@ -145,6 +145,11 @@ public class CursorManager : MonoBehaviour
         }
     }
 
+    public bool GetVirtualJoysticksActive()
+    {
+        return moveJoystick.isActiveAndEnabled;
+    }
+
     public void SetCursorVisible(bool visible)
     {
         Cursor.visible = visible;
@@ -289,7 +294,7 @@ public class CursorManager : MonoBehaviour
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
         }
 
-        //Debug.Log($"New Cursor Pos: {newCursorPos}");
+        Debug.Log($"CursorManager: New Cursor Pos: {newCursorPos}");
     }
 
     #endregion

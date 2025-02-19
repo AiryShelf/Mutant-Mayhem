@@ -136,6 +136,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
+                Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }
         }
         else if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
@@ -148,6 +149,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
+                Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }
         }
         

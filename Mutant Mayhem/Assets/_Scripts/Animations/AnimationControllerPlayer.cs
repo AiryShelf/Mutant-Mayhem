@@ -431,18 +431,18 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
 
-    void FireInput_Performed(InputAction.CallbackContext context)
+    public void FireInput_Performed(InputAction.CallbackContext context)
     {
         bodyAnim.SetBool("isAiming", true);
         isFireInput = true;
     }
 
-    void FireInput_Cancelled(InputAction.CallbackContext context)
+    public void FireInput_Cancelled(InputAction.CallbackContext context)
     {   
         isFireInput = false;       
     }
 
-    void MeleeInput_Performed(InputAction.CallbackContext context)
+    public void MeleeInput_Performed(InputAction.CallbackContext context)
     {
         if (hasMeleeStamina && !throwAnimPlaying)
         {
@@ -457,7 +457,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         }   
     }
 
-    void MeleeInput_Cancelled(InputAction.CallbackContext context)
+    public void MeleeInput_Cancelled(InputAction.CallbackContext context)
     {
         bodyAnim.SetBool("isMeleeing", false);
         bodyAnim.SetBool("isAiming", true);

@@ -179,10 +179,13 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        
         CursorManager.Instance.Initialize();
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
         if (InputController.LastUsedDevice == Touchscreen.current)
                 CursorManager.Instance.SetVirtualJoysticksActive(true);
+
+        LinkVirtualJoysticks();
 
         TimeControl.Instance.ResetTimeScale();
         Application.targetFrameRate = 120;
@@ -216,6 +219,16 @@ public class Player : MonoBehaviour
         else
         {
             playerShooter.isShooting = false; 
+        }
+    }
+
+    void LinkVirtualJoysticks()
+    {
+        VirtualJoystick[] allVirtualJoysticks = FindObjectsOfType<VirtualJoystick>(true);
+
+        foreach (var stick in allVirtualJoysticks)
+        {
+            stick.animControllerPlayer = animControllerPlayer;
         }
     }
 
@@ -391,7 +404,12 @@ public class Player : MonoBehaviour
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
         float scaledDistance = Mathf.Lerp(aimMinDist, aimDistance, curvedMagnitude);
 
-        if (InputController.GetJoystickAsMouseState() && CursorManager.Instance.usingCustomCursor)
+        if (CursorManager.Instance.GetVirtualJoysticksActive() && SettingsManager.Instance.useFastJoystickAim && joystickInputMagnitude > joystickDeadzone)
+        {
+            lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
+            aimPos = transform.position + lastAimDir;
+        }
+        else if (InputController.GetJoystickAsMouseState() && CursorManager.Instance.usingCustomCursor && !SettingsManager.Instance.useFastJoystickAim)
         {
             // Use custom cursor position directly for aiming
             aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
@@ -404,17 +422,6 @@ public class Player : MonoBehaviour
             {
                 aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
                 lastAimDir = Vector3.zero;
-            }
-            // Touchscreen
-            else if (InputController.LastUsedDevice == Touchscreen.current)
-            {
-                //aimPos = Touchscreen.current.
-            }
-            // Joystick input
-            else if (joystickInputMagnitude > joystickDeadzone)
-            {
-                lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
-                aimPos = transform.position + lastAimDir;
             }
             else if (lastAimDir != Vector3.zero)
             {
