@@ -129,7 +129,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
                 //Debug.Log("Player in QCube Range");
 
                 // Open or close menu
-                if (!isUpgradesOpen)
+                if (!isUpgradesOpen && !CursorManager.Instance.inMenu)
                 {
                     StartCoroutine(OpenUpgradeWindow());
                     return;

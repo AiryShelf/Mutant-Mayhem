@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Burst.Intrinsics;
 
 public class TouchManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class TouchManager : MonoBehaviour
     public Player player;
 
     private Dictionary<int, TouchData> activeTouches = new Dictionary<int, TouchData>();
+    Rect screenBounds = new Rect(0,0,0,0);
 
     void Awake()
     {
@@ -27,6 +29,8 @@ public class TouchManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        screenBounds = new Rect(0, 0, Screen.width, Screen.height);
     }
 
     void Update()
@@ -77,12 +81,18 @@ public class TouchManager : MonoBehaviour
         {
             moveJoystick.ActivateJoystick(active);
             aimJoystick.ActivateJoystick(active);
+            moveJoystick.ResetJoystick();
+            aimJoystick.ResetJoystick();
         }
         else 
         {
             moveJoystick.ActivateJoystick(false);
             aimJoystick.ActivateJoystick(false);
+            moveJoystick.ResetJoystick();
+            aimJoystick.ResetJoystick();
         }
+
+        screenBounds = new Rect(0, 0, Screen.width, Screen.height);
     }
 
     public bool GetVirtualJoysticksActive()
@@ -115,6 +125,8 @@ public class TouchManager : MonoBehaviour
         {
             if (player != null)
             {
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Shoot, position);
+
                 // Check if there is already a finger down shooting
                 List<int> existingShootFingerIds = new List<int>();
                 foreach (var kvp in activeTouches)
@@ -125,26 +137,23 @@ public class TouchManager : MonoBehaviour
                     }
                 }
 
-                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Shoot, position);
-
                 if (existingShootFingerIds.Count > 1)
                 {
-                    // This means we just placed a second "Shoot" finger
                     Debug.Log("Two-Finger Tap Detected! Trigger Melee instead!");
                     foreach(var id in existingShootFingerIds)
                         activeTouches[id].purpose = TouchPurpose.Melee;
 
                     activeTouches[fingerId].purpose = TouchPurpose.Melee;
 
-                    // Call your player's melee logic (you'll need a method for it)
                     player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
                     player.animControllerPlayer.MeleeInput_Performed(new InputAction.CallbackContext()); 
                 }
                 else
                 {
-                    // Normal single-finger shoot logic
                     Debug.Log("Single-Finger Tap Detected!  Trigger Shoot");
                     player.animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
+                    
+                    CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
                     player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
                 }
                 // [CHANGE END] -----------------------------------------------
@@ -163,21 +172,20 @@ public class TouchManager : MonoBehaviour
         switch (data.purpose)
         {
             case TouchPurpose.Joystick:
-                // Update joystick
-                //moveJoystick.OnTouchMove(position, fingerId);
                 break;
             case TouchPurpose.Shoot:
                 // Update aim or firing logic if you want continuous movement
                 // e.g., playerShooter.OnFireTouchMove(fingerId, position);
+                CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
                 if (player != null)
                     player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
                 break;
             case TouchPurpose.Melee:
+                CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
                 if (player != null)
                     player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
                 break;
             case TouchPurpose.UI:
-                // Possibly handle UI drag, if needed
                 break;
         }
     }
@@ -187,6 +195,8 @@ public class TouchManager : MonoBehaviour
         if (!activeTouches.ContainsKey(fingerId)) return;
 
         TouchData data = activeTouches[fingerId];
+        activeTouches.Remove(fingerId);
+
         switch (data.purpose)
         {
             case TouchPurpose.Joystick:
@@ -201,16 +211,40 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.Melee:
                 if (player != null)
-                    player.animControllerPlayer.MeleeInput_Cancelled(new InputAction.CallbackContext());
+                    CheckForLastMeleeTouch();
                 break;
             case TouchPurpose.UI:
                 // Release UI press
                 // If it was a button press, you can finalize the click here
                 break;
+        };
+    }
+
+    void CheckForLastMeleeTouch()
+    {
+        int count = 0;
+        TouchData touchData = new TouchData(0, TouchPurpose.None, Vector2.zero);
+        foreach (var kvp in activeTouches)
+        {
+            if (kvp.Value.purpose == TouchPurpose.Melee)
+            {
+                count++;
+                touchData = kvp.Value;
+            }
         }
 
-        // Remove from dictionary
-        activeTouches.Remove(fingerId);
+        if (count == 1)
+        {
+            touchData.purpose = TouchPurpose.Shoot;
+            Debug.Log("One melee tap remaining, change to Shoot");
+            player.animControllerPlayer.MeleeInput_Cancelled(new InputAction.CallbackContext());
+            player.animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
+            
+            CursorManager.Instance.MoveCustomCursorTo(touchData.currentPosition, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
+            player.lastAimDir = Camera.main.ScreenToWorldPoint(touchData.currentPosition) - player.transform.position;
+        }
+        else if (count == 0)
+            player.animControllerPlayer.MeleeInput_Cancelled(new InputAction.CallbackContext());
     }
 
     private bool IsPointerOverUI(Vector2 screenPosition, out GameObject hitUIObject)

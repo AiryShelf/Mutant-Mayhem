@@ -42,7 +42,7 @@ public class HUDStatsPanel : MonoBehaviour
     float qCubePevHealth;
     float qCubeCurrHealth;
     float qCubeMaxHealth;
-    int previousCredits;
+    int previousCredits = 0;
     int previousHealth;
     
     QCubeHealth qCubeHealth;

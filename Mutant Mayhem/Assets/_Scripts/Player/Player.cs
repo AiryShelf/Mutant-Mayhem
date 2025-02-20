@@ -87,6 +87,7 @@ public class Player : MonoBehaviour
     [SerializeField] SoundSO walkMetalSound;
 
     [Header("Other")]
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
     public InputActionAsset inputAsset;
     [SerializeField] GameObject grenadePrefab;
     [SerializeField] Transform headImageTrans;
@@ -100,7 +101,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] float experimentRotationConstant; 
     
-    Vector3 aimPos = Vector3.zero;
+    [Header("Dynamic Vars, Don't set here")]
+    public Vector3 aimWorldPos = Vector3.zero;
     public Vector3 lastAimDir = Vector3.zero;
     float aimDistance = 10;
     float aimMinDist = 5;
@@ -135,7 +137,6 @@ public class Player : MonoBehaviour
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
     int previousGunIndex;
-    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     InputAction sprintAction;
     InputAction pointAction;
@@ -167,9 +168,6 @@ public class Player : MonoBehaviour
         InputActionMap uiMap = inputAsset.FindActionMap("UI");
         pointAction = uiMap.FindAction("Point");
         clickAction = uiMap.FindAction("Click");
-
-        aimDistance = CursorManager.Instance.aimDistance;
-        aimMinDist = CursorManager.Instance.aimMinDistance;
     }
 
     void OnEnable()
@@ -178,7 +176,6 @@ public class Player : MonoBehaviour
         sprintAction.canceled += SprintInput_Cancelled;
         //pointAction.performed += OnPoint_Performed;
         //clickAction.performed += OnClick_Performed;
-        TimeControl.Instance.SubscribePlayerTimeControl(this);
     }
 
     void OnDisable()
@@ -192,6 +189,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(ForceCanvasUpdate());
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         SettingsManager.Instance.ApplyGameplaySettings();
 
@@ -204,7 +202,10 @@ public class Player : MonoBehaviour
                 TouchManager.Instance.SetVirtualJoysticksActive(true);
         InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
         LinkVirtualJoysticks();
+        aimDistance = CursorManager.Instance.aimDistance;
+        aimMinDist = CursorManager.Instance.aimMinDistance;
 
+        TimeControl.Instance.SubscribePlayerTimeControl(this);
         TimeControl.Instance.ResetTimeScale();
         Application.targetFrameRate = 120;
         
@@ -234,6 +235,13 @@ public class Player : MonoBehaviour
         {
             playerShooter.isShooting = false; 
         }
+    }
+
+    IEnumerator ForceCanvasUpdate()
+    {
+        // Wait for the end of the frame to ensure everything is initialized.
+        yield return new WaitForSeconds(2);
+        Canvas.ForceUpdateCanvases();
     }
 
     void LinkVirtualJoysticks()
@@ -273,110 +281,6 @@ public class Player : MonoBehaviour
     }
 
     #region Inputs
-
-    void OnPoint_Performed(InputAction.CallbackContext context)
-    {
-        Vector2 tapPosition = context.ReadValue<Vector2>();
-        //Debug.Log("Point Pos: " + tapPosition);
-        if (IsPointerOverUI(tapPosition))
-        {
-            Debug.Log("Tap ignored: UI element detected.");
-            return; 
-        }
-
-        Vector2 center = Vector2.zero;
-        float radius = 0;
-        CursorRangeType rangeType = CursorRangeType.Bounds;
-
-        if (playerShooter.isBuilding)
-        {
-            radius = BuildingSystem.buildRange;
-            center = transform.position;
-            rangeType = CursorRangeType.Radius;
-        }
-        else if (playerShooter.isRepairing)
-        {
-            radius = playerShooter.GetRange();
-            center = playerShooter.muzzleTrans.position;
-            rangeType = CursorRangeType.Radius;
-        }
-        
-        Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
-        CursorManager.Instance.MoveCustomCursorTo(tapPosition, rangeType, center, radius, screenBounds);
-    }
-
-    void OnClick_Performed(InputAction.CallbackContext context)
-    {
-        float tapValue = context.ReadValue<float>();
-        Vector2 tapPosition = Pointer.current.position.ReadValue();
-
-        if (tapValue > 0f)
-        {
-            if (Touchscreen.current != null && Touchscreen.current.touches.Count > 0) // Multi-touch support
-            {
-                foreach (var touch in Touchscreen.current.touches)
-                {
-                    if (!touch.press.isPressed) continue; // Only check active touches
-
-                    tapPosition = touch.position.ReadValue();
-
-                    if (!IsPointerOverUI(tapPosition)) // Ignore taps on UI
-                    {
-                        Debug.Log("Valid Tap Detected!");
-                        lastAimDir = Camera.main.ScreenToWorldPoint(tapPosition);
-                        lastAimDir = lastAimDir - transform.position;
-                        isFiring = true;
-                        animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
-                        return;
-                    }
-                }
-
-                Debug.Log("All taps were on UI. Ignoring input.");
-                return;
-            }
-            else
-            {
-                if (IsPointerOverUI(tapPosition))
-                {
-                    Debug.Log("Tap ignored: UI element detected.");
-                    return;
-                }
-
-                Debug.Log("Single Tap Started!");
-                lastAimDir = Camera.main.ScreenToWorldPoint(tapPosition);
-                lastAimDir = lastAimDir - transform.position;
-                isFiring = true;
-                animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
-            }
-        }
-        else if (tapValue == 0f) // Tap released
-        {
-            if (IsPointerOverUI(tapPosition))
-            {
-                Debug.Log("Tap ignored: UI element detected.");
-                return;
-            }
-            Debug.Log("Tap Released!");
-            isFiring = false;
-            animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
-        }
-    }
-
-    bool IsPointerOverUI(Vector2 position)
-    {
-        PointerEventData eventData = new PointerEventData(EventSystem.current) { position = position };
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventData, results);
-        
-        foreach (var result in results)
-        {
-            //if (result.gameObject.CompareTag("UIIgnore")) continue; 
-            Debug.Log("UI Element Hit: " + result.gameObject.name);
-            return true;
-        }
-
-        return false;
-    }
 
     public void SprintInput_Performed(InputAction.CallbackContext context)
     {
@@ -450,19 +354,19 @@ public class Player : MonoBehaviour
     }
 
     int GetNextUnlockedGun(int startIndex, int direction)
-{
-    int totalWeapons = playerShooter.gunsUnlocked.Count;
-    int index = startIndex;
-
-    for (int i = 0; i < totalWeapons; i++)
     {
-        index = (index + direction + totalWeapons) % totalWeapons; // Loop around
-        if (playerShooter.gunsUnlocked[index]) 
-            return index;
-    }
+        int totalWeapons = playerShooter.gunsUnlocked.Count;
+        int index = startIndex;
 
-    return -1; // No unlocked weapon found (shouldn't happen unless all are locked)
-}
+        for (int i = 0; i < totalWeapons; i++)
+        {
+            index = (index + direction + totalWeapons) % totalWeapons; // Loop around
+            if (playerShooter.gunsUnlocked[index]) 
+                return index;
+        }
+
+        return -1; // No unlocked weapon found (shouldn't happen unless all are locked)
+    }
 
     public void SwitchToGun(int gunIndex)
     {
@@ -525,8 +429,8 @@ public class Player : MonoBehaviour
 
         if (playerShooter.isBuilding || playerShooter.isRepairing)
         {
-            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
-            lastAimDir = Vector3.zero;
+            aimWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            //lastAimDir = Vector3.zero;
         }
         else if (TouchManager.Instance.GetVirtualJoysticksActive() && 
                  SettingsManager.Instance.useFastJoystickAim && 
@@ -534,40 +438,40 @@ public class Player : MonoBehaviour
         {
             // Instant Joystick Aim
             lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
-            aimPos = transform.position + lastAimDir;
+            aimWorldPos = transform.position + lastAimDir;
         }
         else if (InputManager.GetJoystickAsMouseState() && 
                  CursorManager.Instance.usingCustomCursor && 
                  !SettingsManager.Instance.useFastJoystickAim)
         {
             // Use custom cursor position directly for aiming
-            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
-            lastAimDir = Vector3.zero; // Reset last joystick aim direction
+            aimWorldPos = transform.position + lastAimDir;
+            //lastAimDir = Vector3.zero; // Reset last joystick aim direction
         }
         else
         {
-            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            aimWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
             //lastAimDir = Vector3.zero;
 
             if (lastAimDir != Vector3.zero)
             {
                 // For Instant Joystick Aim lock
-                aimPos = transform.position + lastAimDir;
+                aimWorldPos = transform.position + lastAimDir;
             }
         }
 
         // Aim or virtual mouse for joystick
-        if (!InputManager.GetJoystickAsMouseState())
-            CursorManager.Instance.MoveCustomCursorWorldToUi(aimPos);
+        //if (!InputManager.GetJoystickAsMouseState())
+            CursorManager.Instance.MoveCustomCursorWorldToUi(aimWorldPos);
 
-        if ((transform.position - aimPos).magnitude > 
+        if ((transform.position - aimWorldPos).magnitude > 
             (transform.position - muzzleTrans.position).magnitude + 0.5f)
         {
-            muzzleDirToMouse = aimPos - muzzleTrans.transform.position;
+            muzzleDirToMouse = aimWorldPos - muzzleTrans.transform.position;
         }
         else
         {
-            muzzleDirToMouse = aimPos - transform.position;
+            muzzleDirToMouse = aimWorldPos - transform.position;
         }
 
         muzzleDirToMouse.Normalize();
@@ -586,7 +490,7 @@ public class Player : MonoBehaviour
         playerMainTrans.rotation = Quaternion.Slerp(
             playerMainTrans.rotation, targetRotation, Time.deltaTime * dynamicSpeed);
 
-        RotateHead(aimPos);
+        RotateHead(aimWorldPos);
     }
 
     void RotateHead(Vector3 mousePos)

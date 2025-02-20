@@ -15,43 +15,20 @@ public class DeviceTextSwitcher : MonoBehaviour
     [SerializeField] string touchscreenText;
     [SerializeField] string gamepadText;
 
-    InputManager inputController;
-    int subCount = 0;
-
-    void OnEnable()
-    {
-        inputController = InputManager.Instance;
-        if (inputController != null)
-        {
-            subCount++;
-            inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
-        }
-        //else
-            //Debug.Log("DeviceTextSwitcher: Could not find InputController.Instance when enabled");
-
-        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
-    }
-
-    void OnDisable()
-    {
-        //Debug.Log($"{gameObject} unsubscribing from LastUsedDeviceChanged text updates");
-        for (int i = 0; i < subCount; i++)
-            inputController.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
-        
-    }
+    string _stringToReplace;
+    int listenerCount = 0;
 
     void Start()
     {
-        inputController = InputManager.Instance;
-        if (inputController != null)
-        {
-            subCount++;
-            inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
-        }
-        else
-            Debug.LogError("DeviceTextSwitcher: Could not find InputController.Instance on Start");
+        InputManager.Instance.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
 
-        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
+        ResetAndUpdate();
+    }
+
+    void OnDestroy()
+    {
+        //Debug.Log($"{gameObject} unsubscribing from LastUsedDeviceChanged text updates");
+        InputManager.Instance.LastUsedDeviceChanged -= OnLastUsedDeviceChanged;
     }
 
     void OnLastUsedDeviceChanged(InputDevice device)
@@ -62,7 +39,7 @@ public class DeviceTextSwitcher : MonoBehaviour
 
         if (textToSwitch != null)
         {
-            if (string.IsNullOrEmpty(stringToReplace_BlankAll))
+            if (string.IsNullOrEmpty(_stringToReplace))
             {
                 // Replace the entire text
                 if (!string.IsNullOrEmpty(newText))
@@ -71,10 +48,16 @@ public class DeviceTextSwitcher : MonoBehaviour
             else
             {
                 // Replace only the specific string within the text
-                textToSwitch.text = textToSwitch.text.Replace(stringToReplace_BlankAll, newText);
-                stringToReplace_BlankAll = newText;
+                textToSwitch.text = textToSwitch.text.Replace(_stringToReplace, newText);
+                _stringToReplace = newText;
             }   
         }
+    }
+
+    public void ResetAndUpdate()
+    {
+        _stringToReplace = stringToReplace_BlankAll;
+        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
     }
 
     string GetDeviceText()
@@ -86,6 +69,6 @@ public class DeviceTextSwitcher : MonoBehaviour
         else if (InputManager.LastUsedDevice == Gamepad.current)
             return gamepadText;
 
-        return string.Empty;
+        return _stringToReplace;
     }
 }

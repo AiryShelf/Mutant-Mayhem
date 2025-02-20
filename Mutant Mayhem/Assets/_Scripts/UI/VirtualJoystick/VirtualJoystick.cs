@@ -20,7 +20,7 @@ public class VirtualJoystick : MonoBehaviour,
     public AnimationControllerPlayer animControllerPlayer; 
 
     [Header("Button Settings")]
-    [Tooltip("Check this if you want to detect taps (single or double) within the joystick area for attacks.  (This splits the joystick in 2 zones, vertically for Shoot and Melee)")]
+    [Tooltip("Check this if you want to detect taps (single or double) within the joystick area for actions.  (This splits the joystick in 2 zones, vertically for Shoot and Melee)")]
     public bool enableTapAttack = false;
     [Tooltip("Check this if you want to detect taps (single or double) within the joystick area for sprinting.")]
     public bool enableTapSprint = false;
@@ -32,16 +32,14 @@ public class VirtualJoystick : MonoBehaviour,
     public float deadZoneRadius = 0f;
 
     private float lastTapTime = 0f;
-    private bool isDoubleTap = false;
-    private bool isHoldingAttack = false;
+    private bool isHoldingAction = false;
     
     private enum ActionType { None, Shoot, Melee, Sprint }
-    private ActionType currentAttackType = ActionType.None;
+    private ActionType currentActionType = ActionType.None;
 
     private Vector2 _startPos;
     private bool _isDragging = false;
     private int _pointerId = -1;
-    private Vector2 _tapStartPos;
     InputAction.CallbackContext emptyContext = new InputAction.CallbackContext();
     Coroutine delayCancelCoroutine;
 
@@ -64,8 +62,6 @@ public class VirtualJoystick : MonoBehaviour,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        _tapStartPos = ScreenPointToAnchorPosition(eventData.position);
-
         //Debug.Log("Virtual Joystick: OnPointerDown");
         if (!isFixed)
         {
@@ -99,27 +95,31 @@ public class VirtualJoystick : MonoBehaviour,
         //Debug.Log("Virtual Joystick: OnPointerUp");
         if (eventData.pointerId == _pointerId)
         {
-            _isDragging = false;
-            _pointerId = -1;
-
-            handle.anchoredPosition = Vector2.zero;
-            JoystickOutput = Vector2.zero;
-
-            if (!isFixed)
-            {
-                background.anchoredPosition = _startPos;
-                handle.anchoredPosition = _startPos;
-            }
-
-            // *** CHANGED *** If we're "holding" an attack, cancel it now
-            if (isHoldingAttack)
-            {
-                CancelAction(currentAttackType);
-            }
-
-            isHoldingAttack = false;
-            currentAttackType = ActionType.None;
+            ResetJoystick();
         }
+    }
+
+    public void ResetJoystick()
+    {
+        _isDragging = false;
+        _pointerId = -1;
+
+        handle.anchoredPosition = Vector2.zero;
+        JoystickOutput = Vector2.zero;
+
+        if (!isFixed)
+        {
+            background.anchoredPosition = _startPos;
+            handle.anchoredPosition = _startPos;
+        }
+
+        if (isHoldingAction)
+        {
+            CancelAction(currentActionType);
+        }
+
+        isHoldingAction = false;
+        currentActionType = ActionType.None;
     }
 
     #endregion
@@ -139,42 +139,30 @@ public class VirtualJoystick : MonoBehaviour,
         return localPoint;
     }
 
-    // *** CHANGED *** 
-    // Detect whether this pointer down is a single or double tap, 
-    // and call the appropriate method.
     private void DetectTapAndDoAction(PointerEventData eventData)
     {
-        //Debug.Log("Virtual Joystick: DetectTapToAttack");
+        //Debug.Log("Virtual Joystick: DetectTapToAction");
         float timeSinceLastTap = Time.time - lastTapTime;
         lastTapTime = Time.time;
 
-        // Determine which attack type (shoot or melee)
-        currentAttackType = DetermineActionType(eventData);
+        // Determine which action type (shoot or melee)
+        currentActionType = DetermineActionType(eventData);
 
         if (useDoubleTapHold)
         {
-            // Double tap starts a continuous attack
+            // Double tap starts a continuous action
             if (timeSinceLastTap <= doubleTapThreshold)
             {
-                isDoubleTap = true;
-                isHoldingAttack = true;
+                isHoldingAction = true;
                 if (delayCancelCoroutine != null)
                     StopCoroutine(delayCancelCoroutine);
-                PerformAction(currentAttackType, continuous: true);
-            }       
-            else
-            {
-                isDoubleTap = false;
-                //PerformAction(currentAttackType, continuous: false);
-                //delayCancelCoroutine = StartCoroutine(DelayCancelAttack(currentAttackType));
-                
+                PerformAction(currentActionType, continuous: true);
             }
         }
         else
         {
-            isDoubleTap = false;
-            isHoldingAttack = true;
-            PerformAction(currentAttackType, continuous: true);
+            isHoldingAction = true;
+            PerformAction(currentActionType, continuous: true);
         }
     }
 
@@ -199,15 +187,15 @@ public class VirtualJoystick : MonoBehaviour,
 
     #endregion
 
-    #region Perform Attack
+    #region Perform Action
 
-    private void PerformAction(ActionType attackType, bool continuous)
+    private void PerformAction(ActionType actionType, bool continuous)
     {
         if (animControllerPlayer == null || player == null) return;
 
-        //Debug.Log($"Virtual Joystick: Perform attack type: {attackType}, continuous: {continuous}");
+        //Debug.Log($"Virtual Joystick: Perform action type: {actionType}, continuous: {continuous}");
 
-        switch (attackType)
+        switch (actionType)
         {
             case ActionType.Sprint:
                 // Simulate Sprint Input Performed
@@ -256,22 +244,22 @@ public class VirtualJoystick : MonoBehaviour,
         }
     }
 
-    IEnumerator DelayCancelAttack(ActionType attackType)
+    IEnumerator DelayCancelAction(ActionType actionType)
     {
         yield return new WaitForFixedUpdate();
-        CancelAction(attackType);
+        CancelAction(actionType);
     }
 
     #endregion
 
-    #region Cancel Attack
+    #region Cancel Action
 
-    private void CancelAction(ActionType attackType)
+    private void CancelAction(ActionType actionType)
     {
-        //Debug.Log("Virtual Joystick: CancelAction: " + attackType);
+        //Debug.Log("Virtual Joystick: CancelAction: " + actionType);
         if (animControllerPlayer == null || player == null) return;
 
-        switch (attackType)
+        switch (actionType)
         {
             case ActionType.Sprint:
                 player.SprintInput_Cancelled(emptyContext);

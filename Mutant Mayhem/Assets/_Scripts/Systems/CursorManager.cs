@@ -52,9 +52,7 @@ public class CursorManager : MonoBehaviour
 
     Player player;
 
-    bool initialized;
-    bool isDropdownOpen = false;
-    bool wasJoystickAsMouse = false;
+    bool initialized = false;
     
     Transform customCursorTrans;
     InputAction clickAction;
@@ -69,7 +67,7 @@ public class CursorManager : MonoBehaviour
         { 4, new List<GameObject>() }  // InputFields
     };
     float updateCount = 0f;
-    [SerializeField] float framesPerUpdate = 6;
+    [SerializeField] float framesPerHoverUpdate = 6;
 
     void Awake()
     {
@@ -85,21 +83,6 @@ public class CursorManager : MonoBehaviour
         }
 
         SetCustomCursorVisible(false);
-        Initialize();
-    }
-
-    public void Initialize()
-    {
-        initialized = true;
-        aimJoystick = TouchManager.Instance.aimJoystick;
-        player = FindObjectOfType<Player>();
-        InputActionMap uiActionMap = inputActionAsset.FindActionMap("UI");
-        clickAction = uiActionMap.FindAction("SimulatedClick");
-        clickAction.started += CheckForSimulatedClick;
-        cancelAction = uiActionMap.FindAction("Cancel");
-        cancelAction.started += OnCancelPressed;
-        customCursorTrans = customCursorUI.transform;
-        SetAimCursor();
     }
 
     void OnEnable()
@@ -113,6 +96,29 @@ public class CursorManager : MonoBehaviour
         cancelAction.started -= OnCancelPressed;
     }
 
+    void Start()
+    {
+        Initialize();
+    }
+    
+    public void Initialize()
+    {
+        
+        aimJoystick = TouchManager.Instance.aimJoystick;
+        player = FindObjectOfType<Player>();
+
+        if (initialized) return;
+
+        InputActionMap uiActionMap = inputActionAsset.FindActionMap("UI");
+        clickAction = uiActionMap.FindAction("SimulatedClick");
+        clickAction.started += CheckForSimulatedClick;
+        cancelAction = uiActionMap.FindAction("Cancel");
+        cancelAction.started += OnCancelPressed;
+        customCursorTrans = customCursorUI.transform;
+        initialized = true;
+        SetAimCursor();
+    }
+
     void Update()
     {
         if (usingCustomCursor)
@@ -124,7 +130,7 @@ public class CursorManager : MonoBehaviour
         }
 
         updateCount++;
-        if (updateCount >= framesPerUpdate)
+        if (updateCount >= framesPerHoverUpdate)
         {
             CustomCursorHover();
             updateCount = 0;
@@ -164,7 +170,10 @@ public class CursorManager : MonoBehaviour
     public void SetGraphicRaycasters(List<GraphicRaycaster> raycasters)
     {
         graphicRaycasters.Clear();
-        graphicRaycasters = raycasters;
+        
+        foreach(var rc in raycasters)
+            graphicRaycasters.Add(rc);
+
         graphicRaycasters.Add(persistentCanvasGR);
     }
 
@@ -188,6 +197,9 @@ public class CursorManager : MonoBehaviour
                 break;
         }
         customCursorTrans.position = uiPos;
+        player.aimWorldPos = Camera.main.ScreenToWorldPoint(uiPos);
+        player.lastAimDir = player.aimWorldPos - player.transform.position;
+        Debug.Log("Moved custom cursor to: " + uiPos);
     }
 
     public void CustomCursorControl()
@@ -270,9 +282,12 @@ public class CursorManager : MonoBehaviour
             Vector2 currentPos = GetCustomCursorUiPos();
             //Debug.Log($"currentPos: {currentPos}");
             newCursorPos = currentPos + newAimDir;
-            Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
-            //Debug.Log($"CustomCursorControl() attempting to move within screen bounds: {screenBounds} to new position: {newCursorPos}");
-            MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
+            if (newCursorPos != currentPos)
+            {
+                Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
+                //Debug.Log($"CustomCursorControl() attempting to move within screen bounds: {screenBounds} to new position: {newCursorPos}");
+                MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
+            }
         }
 
         //Debug.Log($"CursorManager: New Cursor Pos: {newCursorPos}");
