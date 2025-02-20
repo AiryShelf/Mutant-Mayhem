@@ -163,12 +163,12 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         wasRepairing = player.stats.playerShooter.isRepairing;
         player.stats.playerShooter.isRepairing = false;
 
-        InputController.SetJoystickMouseControl(true);
+        InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
 
         fireAction.Disable();
         throwAction.Disable();
-        if (InputController.LastUsedDevice == Gamepad.current)
+        if (InputManager.LastUsedDevice == Gamepad.current)
             toolbarAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
@@ -179,7 +179,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         if (player.stats.playerShooter.currentGunIndex == 4) // Repair Gun
             player.stats.playerShooter.isRepairing = true;
         else
-            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
 
         CursorManager.Instance.inMenu = false;
 

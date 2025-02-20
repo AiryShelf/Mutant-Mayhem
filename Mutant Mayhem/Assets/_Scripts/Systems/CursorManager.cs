@@ -13,7 +13,8 @@ public class CursorManager : MonoBehaviour
     public static CursorManager Instance { get; private set; }
 
     [SerializeField] InputActionAsset inputActionAsset;
-    public Transform worldCursorTrans;
+    public Transform customCursorWorld;
+    [SerializeField] Image customCursorUI;
     
     [Header("Aim Cursor")]
     public float aimDistance = 20f;
@@ -34,9 +35,9 @@ public class CursorManager : MonoBehaviour
     [SerializeField] Vector2 repairCursorHotspot = Vector2.zero;
 
     [Header("Custom Cursor")]
-    public VirtualJoystick moveJoystick;
     public VirtualJoystick aimJoystick;
     public bool usingCustomCursor = false;
+    public bool inMenu;
     public float cursorSpeedMin = 200;
     public float cursorSpeedMax = 1600;
     public float cursorSpeedFactor = 600;
@@ -44,12 +45,10 @@ public class CursorManager : MonoBehaviour
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
     Vector2 cursorVelocity = Vector2.zero;
     public float cursorAcceleration = 1000f;
-    [SerializeField] Image customCursorImage;
     [SerializeField] int rayDistance = 100;
     public GameObject currentHoveredObject = null;
     [SerializeField] GraphicRaycaster persistentCanvasGR;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
-    public bool inMenu;
 
     Player player;
 
@@ -92,13 +91,14 @@ public class CursorManager : MonoBehaviour
     public void Initialize()
     {
         initialized = true;
+        aimJoystick = TouchManager.Instance.aimJoystick;
         player = FindObjectOfType<Player>();
         InputActionMap uiActionMap = inputActionAsset.FindActionMap("UI");
         clickAction = uiActionMap.FindAction("SimulatedClick");
         clickAction.started += CheckForSimulatedClick;
         cancelAction = uiActionMap.FindAction("Cancel");
         cancelAction.started += OnCancelPressed;
-        customCursorTrans = customCursorImage.transform;
+        customCursorTrans = customCursorUI.transform;
         SetAimCursor();
     }
 
@@ -131,25 +131,6 @@ public class CursorManager : MonoBehaviour
         }
     }
 
-    public void SetVirtualJoysticksActive(bool active)
-    {
-        if (InputController.LastUsedDevice == Touchscreen.current && !inMenu)
-        {
-            moveJoystick.ActivateJoystick(active);
-            aimJoystick.ActivateJoystick(active);
-        }
-        else 
-        {
-            moveJoystick.ActivateJoystick(false);
-            aimJoystick.ActivateJoystick(false);
-        }
-    }
-
-    public bool GetVirtualJoysticksActive()
-    {
-        return moveJoystick.isActiveAndEnabled;
-    }
-
     public void SetCursorVisible(bool visible)
     {
         Cursor.visible = visible;
@@ -158,10 +139,10 @@ public class CursorManager : MonoBehaviour
     public void SetCustomCursorVisible(bool visible)
     {
         if (usingCustomCursor)
-            customCursorImage.enabled = visible;
+            customCursorUI.enabled = visible;
         else 
         {
-            customCursorImage.enabled = false;
+            customCursorUI.enabled = false;
             if (currentHoveredObject != null)
             {
                 PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
@@ -194,7 +175,7 @@ public class CursorManager : MonoBehaviour
         customCursorTrans.position = (Vector2)Camera.main.WorldToScreenPoint(worldPos);
     }
 
-    void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
+    public void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
     {
         switch (rangeType)
         {
@@ -214,20 +195,20 @@ public class CursorManager : MonoBehaviour
         if (SettingsManager.Instance.useFastJoystickAim && !inMenu && 
             Gamepad.current != null && Gamepad.current.rightStickButton.wasPressedThisFrame)
         {
-            InputController.SetJoystickMouseControl(!InputController.GetJoystickAsMouseState());
+            InputManager.SetJoystickMouseControl(!InputManager.GetJoystickAsMouseState());
             MessagePanel.PulseMessage("Aim mode switched! Cick right thumbstick to switch back", Color.yellow);
         }
 
-        if (!InputController.GetJoystickAsMouseState())
+        if (!InputManager.GetJoystickAsMouseState())
         {
             cursorVelocity = Vector2.zero;
             return;
         }
 
         Vector2 joystickInput = Vector2.zero;
-        if (InputController.LastUsedDevice == Touchscreen.current)
+        if (InputManager.LastUsedDevice == Touchscreen.current)
             joystickInput = aimJoystick.JoystickOutput;
-        else if (InputController.LastUsedDevice == Gamepad.current)
+        else if (InputManager.LastUsedDevice == Gamepad.current)
             joystickInput = Gamepad.current.rightStick.ReadValue();
         
         //Debug.Log($"Joystick input: {joystickInput}");
@@ -294,7 +275,7 @@ public class CursorManager : MonoBehaviour
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
         }
 
-        Debug.Log($"CursorManager: New Cursor Pos: {newCursorPos}");
+        //Debug.Log($"CursorManager: New Cursor Pos: {newCursorPos}");
     }
 
     #endregion
@@ -303,7 +284,7 @@ public class CursorManager : MonoBehaviour
 
     public void CheckForSimulatedClick(InputAction.CallbackContext context)
     {
-        if (!InputController.GetJoystickAsMouseState() || !usingCustomCursor)
+        if (!InputManager.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
         //Debug.Log("Simulated click started on currentHoveredObject: " + currentHoveredObject);
@@ -396,7 +377,7 @@ public class CursorManager : MonoBehaviour
 
     public void CustomCursorHover()
     {
-        if (!InputController.GetJoystickAsMouseState() || !usingCustomCursor)
+        if (!InputManager.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
@@ -593,30 +574,30 @@ public class CursorManager : MonoBehaviour
         if (player != null && player.playerShooter.currentGunIndex == 4)
         {
             SetRepairCursor();
-            customCursorImage.sprite = repairCursor;
-            customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            customCursorUI.sprite = repairCursor;
+            customCursorUI.rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
         else
         {
             // Aiming cursor
             Cursor.SetCursor(aimCursorTexture, aimCursorHotspot, CursorMode.Auto);
-            customCursorImage.sprite = aimCursor;
-            customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            customCursorUI.sprite = aimCursor;
+            customCursorUI.rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
     }
 
     public void SetBuildCursor()
     {
         Cursor.SetCursor(buildCursorTexture, buildCursorHotspot, CursorMode.Auto);
-        customCursorImage.sprite = buildCursor;
-        customCursorImage.rectTransform.pivot = customBuildCursorPivot;
+        customCursorUI.sprite = buildCursor;
+        customCursorUI.rectTransform.pivot = customBuildCursorPivot;
     }
 
     public void SetRepairCursor()
     {
         Cursor.SetCursor(repairCursorTexture, repairCursorHotspot, CursorMode.Auto);
-        customCursorImage.sprite = repairCursor;
-        customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        customCursorUI.sprite = repairCursor;
+        customCursorUI.rectTransform.pivot = new Vector2(0.5f, 0.5f);
     }
 
     public void SetSystemCursor()

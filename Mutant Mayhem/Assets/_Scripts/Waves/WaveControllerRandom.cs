@@ -72,6 +72,11 @@ public class WaveControllerRandom : MonoBehaviour
         nextWaveTimer = StartCoroutine(NextWaveTimer());
     }
 
+    public void NextWaveButtonPressed()
+    {
+        OnNextWaveInput(new InputAction.CallbackContext());
+    }
+
     void OnNextWaveInput(InputAction.CallbackContext context)
     {
         Debug.Log("NextWave Input detected");
@@ -110,7 +115,7 @@ public class WaveControllerRandom : MonoBehaviour
         countdown = timeBetweenWaves;
         while (countdown > 0)
         {
-            nextWaveText.text = $"Time until night {currentWaveIndex + 1}: " + countdown.ToString("#") + $"s.  Press '{nextWaveButtonName.text}' to skip";
+            nextWaveText.text = $"Time until night {currentWaveIndex + 1}: " + countdown.ToString("#") + $"s.  {nextWaveButtonName.text} to skip";
             
             yield return new WaitForSeconds(1);
             countdown--;

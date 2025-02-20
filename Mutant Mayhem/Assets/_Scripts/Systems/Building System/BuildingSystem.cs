@@ -267,7 +267,7 @@ public class BuildingSystem : MonoBehaviour
         {
             qCubeController.CloseUpgradeWindow();
 
-            if (InputController.LastUsedDevice == Gamepad.current)
+            if (InputManager.LastUsedDevice == Gamepad.current)
             {
                 helpAction.Disable();
                 toolbarAction.Disable();
@@ -275,7 +275,7 @@ public class BuildingSystem : MonoBehaviour
 
             CursorManager.Instance.inMenu = true;
             CursorManager.Instance.SetBuildCursor();
-            InputController.SetJoystickMouseControl(true);
+            InputManager.SetJoystickMouseControl(true);
 
             LockCameraToPlayer(true);
 
@@ -300,7 +300,7 @@ public class BuildingSystem : MonoBehaviour
                 SetRepairRangeCircle();
             else
             {
-                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
                 buildRangeCircle.EnableCircle(false);
             }
             
@@ -375,7 +375,7 @@ public class BuildingSystem : MonoBehaviour
         else
         {
             buildRangeCircle.transform.position = player.transform.position;
-            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
             buildRangeCircle.EnableCircle(false);
         }
     }
@@ -545,7 +545,7 @@ public class BuildingSystem : MonoBehaviour
         // Find player grid position
         //playerGridPos = structureTilemap.WorldToCell(player.transform.position);
         Vector2 mouseWorldPos; 
-        if (InputController.LastUsedDevice == Gamepad.current)
+        if (InputManager.LastUsedDevice == Gamepad.current)
             mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
         else 
             mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
@@ -715,7 +715,7 @@ public class BuildingSystem : MonoBehaviour
     private Vector3Int GetMouseToGridPos()
     {
         Vector3 mousePos;
-        if (InputController.LastUsedDevice == Gamepad.current)
+        if (InputManager.LastUsedDevice == Gamepad.current)
             mousePos = CursorManager.Instance.GetCustomCursorWorldPos();
         else
             mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());

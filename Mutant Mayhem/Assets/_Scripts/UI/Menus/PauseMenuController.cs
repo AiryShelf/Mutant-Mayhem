@@ -90,8 +90,8 @@ public class PauseMenuController : MonoBehaviour
         if (open)
         {
             CursorManager.Instance.inMenu = true;
-            CursorManager.Instance.SetVirtualJoysticksActive(false);
-            InputController.SetJoystickMouseControl(true);
+            TouchManager.Instance.SetVirtualJoysticksActive(false);
+            InputManager.SetJoystickMouseControl(true);
 
             wasRepairing = player.stats.playerShooter.isRepairing;
             player.stats.playerShooter.isRepairing = false;
@@ -104,13 +104,13 @@ public class PauseMenuController : MonoBehaviour
         else
         {
             CursorManager.Instance.inMenu = false;
-            CursorManager.Instance.SetVirtualJoysticksActive(true);
+            TouchManager.Instance.SetVirtualJoysticksActive(true);
             playerActionMap.Enable();
 
             if (wasRepairing)
                 player.stats.playerShooter.isRepairing = true;
             else
-                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
             
             if (wasMusicPlaying)
                 MusicManager.Instance.PlayOrPausePressed();

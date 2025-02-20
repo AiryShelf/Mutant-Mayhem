@@ -38,9 +38,10 @@ public class MainMenuController : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         
-        InputController.SetJoystickMouseControl(true);
+        InputManager.SetJoystickMouseControl(true);
+        CursorManager.Instance.inMenu = true;
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        CursorManager.Instance.SetVirtualJoysticksActive(false);
+        TouchManager.Instance.SetVirtualJoysticksActive(false);
     }
 
     public void OnStartGame()

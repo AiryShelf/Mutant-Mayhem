@@ -84,14 +84,26 @@ public class OptionsPanel : MonoBehaviour
         vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
     }
 
-    // CHANGED: Now accepts a bool instead of a Toggle
-    public void ToggleTutorial(bool isOn) // CHANGED: Parameter type updated
+    public void ToggleTutorial(bool isOn)
     {
         TutorialManager.SetTutorialState(isOn);
     }
 
-    // CHANGED: Now accepts an int (the new value) instead of a TMP_Dropdown
-    void MoveTypeValueChanged(int value) // CHANGED: Parameter type updated
+    #region Control Options
+
+    public void ToggleSpacebar(bool isOn)
+    {
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            ProfileManager.Instance.currentProfile.isSpacebarEnabled = isOn;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        Debug.Log("Spacebar throws grenades set to " + isOn);
+    }
+
+    void MoveTypeValueChanged(int value)
     {
         PlayerProfile profile = ProfileManager.Instance.currentProfile;
         switch (value)
@@ -113,8 +125,11 @@ public class OptionsPanel : MonoBehaviour
         Debug.Log("useStandardWASD set to: " + value);
     }
 
-    // CHANGED: Now accepts a float (the slider value) instead of a Slider
-    void JoystickCursorSpeedChanged(float sliderValue) // CHANGED: Parameter type updated
+    #endregion
+
+    #region Joystick
+
+    void JoystickCursorSpeedChanged(float sliderValue)
     {
         float value = CursorManager.Instance.cursorSpeedFactor;
         if (ProfileManager.Instance.currentProfile != null)
@@ -128,9 +143,9 @@ public class OptionsPanel : MonoBehaviour
         Debug.Log("Joystick Cursor Speed set to " + value);
     }
 
-    // CHANGED: Now accepts a bool instead of a Toggle
-    void FastJoystickAimToggle(bool isOn) // CHANGED: Parameter type updated
+    void FastJoystickAimToggle(bool isOn)
     {
+        joystickCursorSpeedSlider.interactable = !isOn;
         if (ProfileManager.Instance.currentProfile != null)
         {
             ProfileManager.Instance.currentProfile.isFastJoystickAimEnabled = isOn;
@@ -141,31 +156,22 @@ public class OptionsPanel : MonoBehaviour
         Debug.Log("Fast Joystick Aim set to " + isOn);
     }
 
-    // CHANGED: Now accepts an int instead of a TMP_Dropdown
-    void QualityValueChanged(int qualityLevel) // CHANGED: Parameter type updated
+    #endregion
+
+    #region Graphics
+
+    void QualityValueChanged(int qualityLevel)
     {
         qualityManager.SetGraphicsQuality(qualityLevel);
         Initialize();
     }
 
-    // CHANGED: Now accepts a bool instead of a Toggle
-    void ToggleVSync(bool isOn) // CHANGED: Parameter type updated
+    void ToggleVSync(bool isOn)
     {
         qualityManager.SetVSync(isOn);
     }
 
-    // CHANGED: Now accepts a bool instead of a Toggle
-    public void ToggleSpacebar(bool isOn) // CHANGED: Parameter type updated
-    {
-        if (ProfileManager.Instance.currentProfile != null)
-        {
-            ProfileManager.Instance.currentProfile.isSpacebarEnabled = isOn;
-            ProfileManager.Instance.SaveCurrentProfile();
-        }
-
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
-        Debug.Log("Spacebar throws grenades set to " + isOn);
-    }
+    #endregion
 }
 
 

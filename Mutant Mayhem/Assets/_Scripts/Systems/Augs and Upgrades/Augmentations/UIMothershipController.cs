@@ -16,10 +16,11 @@ public class UIMothershipController : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         
-        CursorManager.Instance.SetVirtualJoysticksActive(false);
+        CursorManager.Instance.inMenu = true;
+        TouchManager.Instance.SetVirtualJoysticksActive(false);
         AugManager.Instance.Initialize();
         //InputController.SetLastUsedDevice(null);
-        InputController.SetJoystickMouseControl(true);
+        InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
         
         augPanel = FindObjectOfType<UIAugPanel>();

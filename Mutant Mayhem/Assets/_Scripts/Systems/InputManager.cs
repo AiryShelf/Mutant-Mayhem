@@ -5,9 +5,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputController : MonoBehaviour
+public class InputManager : MonoBehaviour
 {
-    public static InputController Instance { get; private set; }
+    public static InputManager Instance { get; private set; }
 
     public static InputDevice LastUsedDevice { get; private set; }
     static bool joystickAsMouse = false;
@@ -122,6 +122,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(true);
                 CursorManager.Instance.SetUsingCustomCursor(false);
                 CursorManager.Instance.SetCustomCursorVisible(false);
+                TouchManager.Instance.SetVirtualJoysticksActive(false);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }
@@ -135,6 +136,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
+                TouchManager.Instance.SetVirtualJoysticksActive(true);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }
@@ -148,6 +150,7 @@ public class InputController : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
+                TouchManager.Instance.SetVirtualJoysticksActive(false);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 Debug.Log($"Last Used Device switched to: {LastUsedDevice}");
             }

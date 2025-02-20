@@ -15,12 +15,12 @@ public class DeviceTextSwitcher : MonoBehaviour
     [SerializeField] string touchscreenText;
     [SerializeField] string gamepadText;
 
-    InputController inputController;
+    InputManager inputController;
     int subCount = 0;
 
     void OnEnable()
     {
-        inputController = InputController.Instance;
+        inputController = InputManager.Instance;
         if (inputController != null)
         {
             subCount++;
@@ -29,7 +29,7 @@ public class DeviceTextSwitcher : MonoBehaviour
         //else
             //Debug.Log("DeviceTextSwitcher: Could not find InputController.Instance when enabled");
 
-        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
     }
 
     void OnDisable()
@@ -42,7 +42,7 @@ public class DeviceTextSwitcher : MonoBehaviour
 
     void Start()
     {
-        inputController = InputController.Instance;
+        inputController = InputManager.Instance;
         if (inputController != null)
         {
             subCount++;
@@ -51,7 +51,7 @@ public class DeviceTextSwitcher : MonoBehaviour
         else
             Debug.LogError("DeviceTextSwitcher: Could not find InputController.Instance on Start");
 
-        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
     }
 
     void OnLastUsedDeviceChanged(InputDevice device)
@@ -79,11 +79,11 @@ public class DeviceTextSwitcher : MonoBehaviour
 
     string GetDeviceText()
     {
-        if (InputController.LastUsedDevice == Keyboard.current)
+        if (InputManager.LastUsedDevice == Keyboard.current)
             return keyboardText;
-        else if (InputController.LastUsedDevice == Touchscreen.current)
+        else if (InputManager.LastUsedDevice == Touchscreen.current)
             return touchscreenText;
-        else if (InputController.LastUsedDevice == Gamepad.current)
+        else if (InputManager.LastUsedDevice == Gamepad.current)
             return gamepadText;
 
         return string.Empty;

@@ -41,7 +41,7 @@ public class GunSights : MonoBehaviour
         if (repairGun)
         {
             Vector3 target;
-            if (InputController.LastUsedDevice == Gamepad.current)
+            if (InputManager.LastUsedDevice == Gamepad.current)
                 target = CursorManager.Instance.GetCustomCursorWorldPos();
             else
                 target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());

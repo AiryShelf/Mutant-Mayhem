@@ -53,6 +53,11 @@ public class PlayerShooter : Shooter
         Shoot();
     }
 
+    public float GetRange()
+    {
+        return currentGunSO.bulletLifeTime * currentGunSO.bulletSpeed;
+    }
+
     public void StartAiming()
     {
         isAiming = true;
@@ -158,7 +163,7 @@ public class PlayerShooter : Shooter
         if (i == 4) // Repair gun
         {
             isRepairing = true;
-            InputController.SetJoystickMouseControl(true);
+            InputManager.SetJoystickMouseControl(true);
             if (!playerStats.structureStats.buildingSystem.isInBuildMode)
             {
                 playerStats.structureStats.buildingSystem.buildRangeCircle.EnableCircle(true);
@@ -176,7 +181,7 @@ public class PlayerShooter : Shooter
                 playerStats.structureStats.buildingSystem.buildRangeCircle.EnableCircle(false);
                 playerStats.structureStats.buildingSystem.LockCameraToPlayer(false);
                 //BuildingSystem.Instance.buildRangeCircle.radius = BuildingSystem.buildRange;
-                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
                 CursorManager.Instance.inMenu = false;
             }
         }

@@ -11,19 +11,19 @@ public class DeviceImageSwitcher : MonoBehaviour
     [SerializeField] Sprite touchscreenSprite;
     [SerializeField] Sprite gamepadSprite;
 
-    InputController inputController;
+    InputManager inputController;
     int subCount = 0;
 
     void OnEnable()
     {
-        inputController = InputController.Instance;
+        inputController = InputManager.Instance;
         if (inputController != null)
         {
             subCount++;
             inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
         }
 
-        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
     }
 
     void OnDisable()
@@ -36,7 +36,7 @@ public class DeviceImageSwitcher : MonoBehaviour
 
     void Start()
     {
-        inputController = InputController.Instance;
+        inputController = InputManager.Instance;
         if (inputController != null)
         {
             subCount++;
@@ -45,18 +45,18 @@ public class DeviceImageSwitcher : MonoBehaviour
         else
             Debug.LogError("DeviceImageSwitcher: Could not find InputController.Instance on Start");
 
-        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
     }
 
     void OnLastUsedDeviceChanged(InputDevice device)
     {
         Debug.Log("DeviceImageSwitcher: Responding to device changed event...");
 
-        if (InputController.LastUsedDevice == Keyboard.current)
+        if (InputManager.LastUsedDevice == Keyboard.current)
             imageToSwitch.sprite = keyboardSprite;
-        else if (InputController.LastUsedDevice == Touchscreen.current)
+        else if (InputManager.LastUsedDevice == Touchscreen.current)
             imageToSwitch.sprite = touchscreenSprite;
-        else if (InputController.LastUsedDevice == Gamepad.current)
+        else if (InputManager.LastUsedDevice == Gamepad.current)
             imageToSwitch.sprite = gamepadSprite;
         /*
         switch (device)

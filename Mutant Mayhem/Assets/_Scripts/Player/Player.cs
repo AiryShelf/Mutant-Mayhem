@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -100,7 +101,7 @@ public class Player : MonoBehaviour
     [SerializeField] float experimentRotationConstant; 
     
     Vector3 aimPos = Vector3.zero;
-    Vector3 lastAimDir = Vector3.zero;
+    public Vector3 lastAimDir = Vector3.zero;
     float aimDistance = 10;
     float aimMinDist = 5;
 
@@ -137,6 +138,10 @@ public class Player : MonoBehaviour
     [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     InputAction sprintAction;
+    InputAction pointAction;
+    InputAction clickAction;
+    Coroutine delayShootCancel;
+    bool isFiring = false;
 
     void Awake()
     {
@@ -157,8 +162,12 @@ public class Player : MonoBehaviour
         IsDead = false;
 
         // Inputs
-        InputActionMap actionMap = inputAsset.FindActionMap("Player");
-        sprintAction = actionMap.FindAction("Sprint");
+        InputActionMap playerMap = inputAsset.FindActionMap("Player");
+        sprintAction = playerMap.FindAction("Sprint");
+        InputActionMap uiMap = inputAsset.FindActionMap("UI");
+        pointAction = uiMap.FindAction("Point");
+        clickAction = uiMap.FindAction("Click");
+
         aimDistance = CursorManager.Instance.aimDistance;
         aimMinDist = CursorManager.Instance.aimMinDistance;
     }
@@ -167,6 +176,8 @@ public class Player : MonoBehaviour
     {
         sprintAction.performed += SprintInput_Performed;
         sprintAction.canceled += SprintInput_Cancelled;
+        //pointAction.performed += OnPoint_Performed;
+        //clickAction.performed += OnClick_Performed;
         TimeControl.Instance.SubscribePlayerTimeControl(this);
     }
 
@@ -174,17 +185,24 @@ public class Player : MonoBehaviour
     {
         sprintAction.performed -= SprintInput_Performed;
         sprintAction.canceled -= SprintInput_Cancelled;
+        //pointAction.performed -= OnPoint_Performed;
+        //clickAction.performed -= OnClick_Performed;
         TimeControl.Instance.UnsubscribePlayerTimeControl(this);
     }
 
     void Start()
     {
-        
-        CursorManager.Instance.Initialize();
-        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        if (InputController.LastUsedDevice == Touchscreen.current)
-                CursorManager.Instance.SetVirtualJoysticksActive(true);
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        SettingsManager.Instance.ApplyGameplaySettings();
 
+        TouchManager.Instance.player = this;
+        CursorManager.Instance.Initialize();
+        CursorManager.Instance.inMenu = false;
+        CursorManager.Instance.MoveCustomCursorWorldToUi(transform.position);
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+                TouchManager.Instance.SetVirtualJoysticksActive(true);
+        InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
         LinkVirtualJoysticks();
 
         TimeControl.Instance.ResetTimeScale();
@@ -192,10 +210,6 @@ public class Player : MonoBehaviour
         
         SFXManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
-        
-        InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
-        SettingsManager.Instance.ApplyGameplaySettings();
 
         TurretManager.Instance.Initialize(this);
         UpgradeManager.Instance.Initialize();
@@ -229,6 +243,7 @@ public class Player : MonoBehaviour
         foreach (var stick in allVirtualJoysticks)
         {
             stick.animControllerPlayer = animControllerPlayer;
+            stick.player = this;
         }
     }
 
@@ -259,7 +274,111 @@ public class Player : MonoBehaviour
 
     #region Inputs
 
-    void SprintInput_Performed(InputAction.CallbackContext context)
+    void OnPoint_Performed(InputAction.CallbackContext context)
+    {
+        Vector2 tapPosition = context.ReadValue<Vector2>();
+        //Debug.Log("Point Pos: " + tapPosition);
+        if (IsPointerOverUI(tapPosition))
+        {
+            Debug.Log("Tap ignored: UI element detected.");
+            return; 
+        }
+
+        Vector2 center = Vector2.zero;
+        float radius = 0;
+        CursorRangeType rangeType = CursorRangeType.Bounds;
+
+        if (playerShooter.isBuilding)
+        {
+            radius = BuildingSystem.buildRange;
+            center = transform.position;
+            rangeType = CursorRangeType.Radius;
+        }
+        else if (playerShooter.isRepairing)
+        {
+            radius = playerShooter.GetRange();
+            center = playerShooter.muzzleTrans.position;
+            rangeType = CursorRangeType.Radius;
+        }
+        
+        Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
+        CursorManager.Instance.MoveCustomCursorTo(tapPosition, rangeType, center, radius, screenBounds);
+    }
+
+    void OnClick_Performed(InputAction.CallbackContext context)
+    {
+        float tapValue = context.ReadValue<float>();
+        Vector2 tapPosition = Pointer.current.position.ReadValue();
+
+        if (tapValue > 0f)
+        {
+            if (Touchscreen.current != null && Touchscreen.current.touches.Count > 0) // Multi-touch support
+            {
+                foreach (var touch in Touchscreen.current.touches)
+                {
+                    if (!touch.press.isPressed) continue; // Only check active touches
+
+                    tapPosition = touch.position.ReadValue();
+
+                    if (!IsPointerOverUI(tapPosition)) // Ignore taps on UI
+                    {
+                        Debug.Log("Valid Tap Detected!");
+                        lastAimDir = Camera.main.ScreenToWorldPoint(tapPosition);
+                        lastAimDir = lastAimDir - transform.position;
+                        isFiring = true;
+                        animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
+                        return;
+                    }
+                }
+
+                Debug.Log("All taps were on UI. Ignoring input.");
+                return;
+            }
+            else
+            {
+                if (IsPointerOverUI(tapPosition))
+                {
+                    Debug.Log("Tap ignored: UI element detected.");
+                    return;
+                }
+
+                Debug.Log("Single Tap Started!");
+                lastAimDir = Camera.main.ScreenToWorldPoint(tapPosition);
+                lastAimDir = lastAimDir - transform.position;
+                isFiring = true;
+                animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
+            }
+        }
+        else if (tapValue == 0f) // Tap released
+        {
+            if (IsPointerOverUI(tapPosition))
+            {
+                Debug.Log("Tap ignored: UI element detected.");
+                return;
+            }
+            Debug.Log("Tap Released!");
+            isFiring = false;
+            animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
+        }
+    }
+
+    bool IsPointerOverUI(Vector2 position)
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current) { position = position };
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+        
+        foreach (var result in results)
+        {
+            //if (result.gameObject.CompareTag("UIIgnore")) continue; 
+            Debug.Log("UI Element Hit: " + result.gameObject.name);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void SprintInput_Performed(InputAction.CallbackContext context)
     {
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
@@ -267,7 +386,7 @@ public class Player : MonoBehaviour
         Debug.Log("Sprint was triggered");
     }
 
-    void SprintInput_Cancelled(InputAction.CallbackContext context)
+    public void SprintInput_Cancelled(InputAction.CallbackContext context)
     {
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
@@ -345,7 +464,7 @@ public class Player : MonoBehaviour
     return -1; // No unlocked weapon found (shouldn't happen unless all are locked)
 }
 
-    void SwitchToGun(int gunIndex)
+    public void SwitchToGun(int gunIndex)
     {
         if (playerShooter.currentGunIndex != gunIndex && 
             animControllerPlayer.SwitchGunsStart(gunIndex))
@@ -395,21 +514,31 @@ public class Player : MonoBehaviour
     void LookAtMouse()
     {
         Vector2 joystickInput = Vector2.zero;
-        if (InputController.LastUsedDevice == Touchscreen.current)
-            joystickInput = CursorManager.Instance.aimJoystick.JoystickOutput;
-        else if (InputController.LastUsedDevice == Gamepad.current)
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            joystickInput = TouchManager.Instance.aimJoystick.JoystickOutput;
+        else if (InputManager.LastUsedDevice == Gamepad.current)
             joystickInput = Gamepad.current.rightStick.ReadValue();
 
         float joystickInputMagnitude = joystickInput.magnitude;
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
         float scaledDistance = Mathf.Lerp(aimMinDist, aimDistance, curvedMagnitude);
 
-        if (CursorManager.Instance.GetVirtualJoysticksActive() && SettingsManager.Instance.useFastJoystickAim && joystickInputMagnitude > joystickDeadzone)
+        if (playerShooter.isBuilding || playerShooter.isRepairing)
         {
+            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            lastAimDir = Vector3.zero;
+        }
+        else if (TouchManager.Instance.GetVirtualJoysticksActive() && 
+                 SettingsManager.Instance.useFastJoystickAim && 
+                 joystickInputMagnitude > joystickDeadzone)
+        {
+            // Instant Joystick Aim
             lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
             aimPos = transform.position + lastAimDir;
         }
-        else if (InputController.GetJoystickAsMouseState() && CursorManager.Instance.usingCustomCursor && !SettingsManager.Instance.useFastJoystickAim)
+        else if (InputManager.GetJoystickAsMouseState() && 
+                 CursorManager.Instance.usingCustomCursor && 
+                 !SettingsManager.Instance.useFastJoystickAim)
         {
             // Use custom cursor position directly for aiming
             aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
@@ -417,21 +546,18 @@ public class Player : MonoBehaviour
         }
         else
         {
-            // Mouse position
-            if (InputController.LastUsedDevice == Keyboard.current)
+            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            //lastAimDir = Vector3.zero;
+
+            if (lastAimDir != Vector3.zero)
             {
-                aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
-                lastAimDir = Vector3.zero;
-            }
-            else if (lastAimDir != Vector3.zero)
-            {
+                // For Instant Joystick Aim lock
                 aimPos = transform.position + lastAimDir;
-                //lastAimDir = aimPos;
             }
         }
 
         // Aim or virtual mouse for joystick
-        if (!InputController.GetJoystickAsMouseState())
+        if (!InputManager.GetJoystickAsMouseState())
             CursorManager.Instance.MoveCustomCursorWorldToUi(aimPos);
 
         if ((transform.position - aimPos).magnitude > 
@@ -529,7 +655,7 @@ public class Player : MonoBehaviour
     void Move()
     {
         if (Touchscreen.current != null)
-            rawInput = CursorManager.Instance.moveJoystick.JoystickOutput;
+            rawInput = TouchManager.Instance.moveJoystick.JoystickOutput;
 
         Vector2 moveDir;
 

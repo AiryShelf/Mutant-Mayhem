@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class AnimationControllerPlayer : MonoBehaviour
 {
@@ -467,6 +468,18 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
 
+    public void ThrowButtonPressed()
+    {
+        ThrowInput_Performed(new InputAction.CallbackContext());
+        StartCoroutine(DelayThrowCancel());
+    }
+
+    IEnumerator DelayThrowCancel()
+    {
+        yield return new WaitForSeconds(0.2f);
+        ThrowInput_Cancelled(new InputAction.CallbackContext());
+    }
+
     public void ThrowInput_Performed(InputAction.CallbackContext context)
     {  
         if (!meleeAnimPlaying && player.stats.grenadeAmmo > 0)
@@ -483,6 +496,8 @@ public class AnimationControllerPlayer : MonoBehaviour
                 waitToLowerWeaponCoroutine = null;
             }
         }
+        else
+            MessagePanel.PulseMessage("No more grenades!  But some at the Cube!", Color.red);
     }
 
     public void ThrowInput_Cancelled(InputAction.CallbackContext context)

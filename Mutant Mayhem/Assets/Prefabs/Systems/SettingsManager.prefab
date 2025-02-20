@@ -12,13 +12,9 @@ GameObject:
   - component: {fileID: 4033974509541921775}
   - component: {fileID: 6658943725255159057}
   - component: {fileID: 8090136197738410126}
-  - component: {fileID: 4347617180862610100}
-  - component: {fileID: 5415945514739575403}
   - component: {fileID: 2494230285008560391}
   - component: {fileID: 3184887387907700395}
   - component: {fileID: 3837195195736545221}
-  - component: {fileID: 346440003896465925}
-  - component: {fileID: 3380180620933964346}
   m_Layer: 0
   m_Name: SettingsManager
   m_TagString: Untagged
@@ -119,61 +115,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7478ab236b78b48c18b48d8de7fc5c8b, type: 2}
   - {fileID: 11400000, guid: 387b81dd0246744d1b7317072823d3e0, type: 2}
   - {fileID: 11400000, guid: 9ecded26d5e074d71a1f9e9a417dd1d8, type: 2}
---- !u!114 &4347617180862610100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4728742619335677830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1bb2a6e9a77f6b4c906e846cdec2d50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5415945514739575403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4728742619335677830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20e18f3ad9ccad54a8fd27ad15b24877, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputActionAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
-  worldCursorTrans: {fileID: 9157019105111725558}
-  aimDistance: 20
-  aimMinDistance: 3
-  aimCursorTexture: {fileID: 2800000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
-  aimCursor: {fileID: 21300000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
-  aimCursorHotspot: {x: 16, y: 16}
-  buildCursorTexture: {fileID: 2800000, guid: 93886451911a2d74e99fbf632ada6091, type: 3}
-  buildCursor: {fileID: 21300000, guid: 93886451911a2d74e99fbf632ada6091, type: 3}
-  buildCursorHotspot: {x: 12, y: 12}
-  customBuildCursorPivot: {x: 0.3, y: 0.7}
-  repairCursorTexture: {fileID: 2800000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
-  repairCursor: {fileID: 21300000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
-  repairCursorHotspot: {x: 24, y: 24}
-  moveJoystick: {fileID: 0}
-  aimJoystick: {fileID: 0}
-  usingCustomCursor: 0
-  cursorSpeedMin: 200
-  cursorSpeedMax: 1200
-  cursorSpeedFactor: 600
-  joystickDeadzone: 0.05
-  cursorSpeedCurveMagnitude: 1
-  cursorAcceleration: 1200
-  customCursorImage: {fileID: 0}
-  rayDistance: 500
-  currentHoveredObject: {fileID: 0}
-  persistentCanvasGR: {fileID: 0}
-  graphicRaycasters: []
-  inMenu: 0
-  filteredResults: []
-  framesPerUpdate: 6
 --- !u!114 &2494230285008560391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,31 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a877dd5f03641cca69ef27e4f90bdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &346440003896465925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4728742619335677830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f3e7f8cf2f613a499ae671135c6a656, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3380180620933964346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4728742619335677830}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a786411edfc93e469b28753c6f333a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineRectTransform: {fileID: 0}
 --- !u!1 &5853297479244973275
 GameObject:
   m_ObjectHideFlags: 0

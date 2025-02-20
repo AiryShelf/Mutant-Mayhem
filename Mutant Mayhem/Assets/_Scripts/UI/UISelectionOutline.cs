@@ -15,7 +15,7 @@ public class UISelectionOutline : MonoBehaviour
         if (outlineRectTransform == null) return;
 
         // Check if the last used device was a Gamepad
-        bool isGamepadActive = InputController.LastUsedDevice == Gamepad.current;
+        bool isGamepadActive = InputManager.LastUsedDevice == Gamepad.current;
         outlineRectTransform.gameObject.SetActive(isGamepadActive);
 
         if (!isGamepadActive) return;
