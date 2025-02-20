@@ -11,14 +11,16 @@ public class MainMenuController : MonoBehaviour
 {
     [SerializeField] FadeCanvasGroupsWave mainMenuFadeGroup;
     [SerializeField] OptionsPanel optionsPanel;
+    [SerializeField] ControlSettingsPanel controlsPanel;
     [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
     [SerializeField] InputActionAsset inputAsset;
     [SerializeField] ProfileSelectionUI profileSelectionUI;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     InputAction escapeKeyPressed;
-    bool isOptionsOpen;
     bool isProfilesOpen;
+    bool isOptionsOpen;
+    bool isControlsOpen;
 
     void OnEnable() 
     {
@@ -74,6 +76,23 @@ public class MainMenuController : MonoBehaviour
             // Close options panel
             optionsPanel.fadeGroup.isTriggered = false;
             isOptionsOpen = false;
+        }
+    }
+
+    public void ToggleControls()
+    {
+        if (!isControlsOpen)
+        {
+            // Open controls panel
+            controlsPanel.fadeGroup.isTriggered = true;
+            controlsPanel.Initialize();
+            isControlsOpen = true;
+        }
+        else
+        {
+            // Close controls panel
+            controlsPanel.fadeGroup.isTriggered = false;
+            isControlsOpen = false;
         }
     }
 

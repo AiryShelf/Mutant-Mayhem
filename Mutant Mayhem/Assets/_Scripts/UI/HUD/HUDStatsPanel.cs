@@ -50,6 +50,7 @@ public class HUDStatsPanel : MonoBehaviour
     Vector2 qCubeStartLocalPos;
     Coroutine shakeEffect;
     Coroutine flashEffect;
+    bool initialized = false;
 
     void Awake()
     {
@@ -90,12 +91,42 @@ public class HUDStatsPanel : MonoBehaviour
 
     IEnumerator DelayStatsUpdate()
     {
-        yield return null;
+        yield return new WaitForEndOfFrame();
 
         UpdateHealthStats(player.stats.playerHealthScript.GetHealth());
+        UpdateCreditsText(BuildingSystem.PlayerCredits);
 
         qCubeHealth = FindObjectOfType<QCubeHealth>();
         UpdateQCubeStatsUI(qCubeHealth.GetHealth());
+
+        /*
+        var rt = creditsText.GetComponent<RectTransform>();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+        var parentRT = creditsText.transform.parent.GetComponent<RectTransform>();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parentRT);
+        var grandparentRT = creditsText.transform.parent.parent.GetComponent<RectTransform>();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(grandparentRT);
+
+        yield return new WaitForEndOfFrame(); 
+
+        
+
+        Canvas.ForceUpdateCanvases();
+        yield return new WaitForEndOfFrame(); 
+        creditsText.ForceMeshUpdate(true, true);
+        yield return new WaitForEndOfFrame(); 
+        Canvas.ForceUpdateCanvases();
+        yield return new WaitForEndOfFrame(); 
+
+        creditsText.gameObject.SetActive(false);
+        yield return new WaitForEndOfFrame(); 
+        creditsText.gameObject.SetActive(true);
+        yield return new WaitForEndOfFrame(); 
+        */
+        //Screen.SetResolution(Screen.width / 2, Screen.height / 2, Screen.fullScreen);
+        //yield return new WaitForEndOfFrame(); 
+        //yield return new WaitForEndOfFrame(); 
+        Screen.SetResolution(Screen.width * 2, Screen.height * 2, Screen.fullScreen);
     }
 
     void UpdateStaminaStats()
@@ -145,7 +176,7 @@ public class HUDStatsPanel : MonoBehaviour
     void UpdateCreditsText(float playerCredits)
     {
         int creditsChange =  Mathf.FloorToInt(playerCredits - previousCredits);
-        if (creditsChange == 0)
+        if (creditsChange == 0 && initialized)
             return;
 
         TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Credits").GetComponent<TextFly>();
@@ -171,6 +202,8 @@ public class HUDStatsPanel : MonoBehaviour
         int credits = (int)BuildingSystem.PlayerCredits;
         creditsText.text = "Credits: " + credits.ToString("#0");
         previousCredits = credits;
+
+        initialized = true;
     }
 
     void UpdateQCubeStatsUI(float cubeHealth)

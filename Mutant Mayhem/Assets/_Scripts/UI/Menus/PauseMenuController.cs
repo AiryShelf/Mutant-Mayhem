@@ -11,6 +11,7 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] CanvasGroup myCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroups;
     [SerializeField] OptionsPanel optionsPanel;
+    [SerializeField] ControlSettingsPanel controlsPanel;
 
     Player player;
     QCubeController qCubeController;
@@ -20,6 +21,7 @@ public class PauseMenuController : MonoBehaviour
     InputAction escapeAction;
     public bool isPauseMenuOpen = false;
     public bool isOptionsOpen = false;
+    public bool isControlsOpen = false;
     bool wasMusicPlaying;
     bool wasRepairing = false;
 
@@ -176,6 +178,23 @@ public class PauseMenuController : MonoBehaviour
             isOptionsOpen = false;
             optionsPanel.fadeGroup.isTriggered = false;
             Debug.Log("Closed options menu");
+        }
+    }
+
+    public void ToggleControlsMenu()
+    {
+        if (!isControlsOpen)
+        {
+            isControlsOpen = true;
+            controlsPanel.Initialize();
+            controlsPanel.fadeGroup.isTriggered = true;
+            Debug.Log("Opened controls menu");
+        }
+        else
+        {
+            isControlsOpen = false;
+            controlsPanel.fadeGroup.isTriggered = false;
+            Debug.Log("Closed controls menu");
         }
     }
 }

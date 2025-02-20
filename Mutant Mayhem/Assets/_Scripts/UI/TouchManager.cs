@@ -95,6 +95,8 @@ public class TouchManager : MonoBehaviour
         screenBounds = new Rect(0, 0, Screen.width, Screen.height);
     }
 
+    //public void SetAimJoystickActive()
+
     public bool GetVirtualJoysticksActive()
     {
         return moveJoystick.isActiveAndEnabled;
