@@ -124,6 +124,8 @@ public class MainMenuController : MonoBehaviour
 
     void EscapeKeyPressed(InputAction.CallbackContext context)
     {
+        if (isControlsOpen)
+            ToggleControls();
         if (isOptionsOpen)
             ToggleOptions();
         else if (profileSelectionUI.isAreYouSurePanelOpen)

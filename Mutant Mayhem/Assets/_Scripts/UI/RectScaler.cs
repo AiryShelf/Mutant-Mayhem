@@ -2,10 +2,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JoystickScaler : MonoBehaviour
+public class RectScaler : MonoBehaviour
 {
     public RectTransform rectToScale;
-    float default16x9Scale = 1.0f;
+    [SerializeField] float default16x9Scale = 1.0f;
+    [SerializeField] float midScale = 0.75f;
+    [SerializeField] float narrowScale = 0.5f;
     int lastWidth, lastHeight;
 
     void OnEnable()
@@ -27,11 +29,11 @@ public class JoystickScaler : MonoBehaviour
 
         if (aspectRatio < 1.6f) // Narrower than 16:10 (e.g., 4:3)
         {
-            scaleFactor = 0.7f; // Reduce scale
+            scaleFactor = 0.5f; // Reduce scale
         }
         else if (aspectRatio < 1.77f) // Between 16:10 and 16:9
         {
-            scaleFactor = 0.85f;
+            scaleFactor = 0.75f;
         }
         else
         {

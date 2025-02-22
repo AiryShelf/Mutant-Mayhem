@@ -180,8 +180,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4096065497702037561}
   - {fileID: 328716047793281293}
+  - {fileID: 4096065497702037561}
   - {fileID: 2864543817839208280}
   - {fileID: 1198423665197843322}
   - {fileID: 3339485326444868306}
@@ -190,8 +190,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -133.356}
-  m_SizeDelta: {x: 288.93, y: 184.32}
+  m_AnchoredPosition: {x: 0, y: -133.63055}
+  m_SizeDelta: {x: 288.93, y: 183.7688}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2201209650384856007
 MonoBehaviour:
@@ -210,7 +210,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 1
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
@@ -255,7 +255,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 289.03, y: 35}
+  m_SizeDelta: {x: 289.03, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3631425395332131690
 CanvasRenderer:
@@ -312,8 +312,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -526,7 +526,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: ToggleOptions
+        m_MethodName: ToggleControls
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -674,7 +674,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 287.57, y: 35}
+  m_SizeDelta: {x: 287.57, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &903150966044219954
 CanvasRenderer:
@@ -731,8 +731,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1765,8 +1765,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 33.824814}
-  m_SizeDelta: {x: 298.6262, y: 325.3097}
+  m_AnchoredPosition: {x: 0, y: 13.3702}
+  m_SizeDelta: {x: 298.6262, y: 284.4005}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3972028824455601863
 CanvasRenderer:
@@ -1978,7 +1978,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4579813033150881934}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3792,7 +3792,7 @@ GameObject:
   - component: {fileID: 6162869437568876314}
   - component: {fileID: 669287871379760021}
   m_Layer: 5
-  m_Name: Options Info Text
+  m_Name: Controls Header Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3814,8 +3814,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.00000049296, y: -22.8}
-  m_SizeDelta: {x: 288.93, y: 36.496002}
+  m_AnchoredPosition: {x: -0.00000049296, y: -23.149}
+  m_SizeDelta: {x: 288.93, y: 37.194}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8922372316708474977
 CanvasRenderer:

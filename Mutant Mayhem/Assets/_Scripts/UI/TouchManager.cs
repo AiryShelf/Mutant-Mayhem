@@ -46,7 +46,7 @@ public class TouchManager : MonoBehaviour
                 if (activeTouches.ContainsKey(touchControl.touchId.ReadValue()))
                     EndTouch(touchControl.touchId.ReadValue());
                 
-                // Not pressed, skip
+                // Not tracked, skip
                 continue;
             }
 
@@ -64,9 +64,6 @@ public class TouchManager : MonoBehaviour
                 //case UnityEngine.InputSystem.TouchPhase.Stationary:
                     MoveTouch(fingerId, touchPos);
                     break;
-                // Ended/Canceled handled after loop checks isPressed = false
-                // But in some devices, you might see Ended within the loop
-                // We'll do a quick check to handle that if needed:
                 case UnityEngine.InputSystem.TouchPhase.Ended:
                 case UnityEngine.InputSystem.TouchPhase.Canceled:
                     EndTouch(fingerId);
@@ -101,6 +98,8 @@ public class TouchManager : MonoBehaviour
     {
         return moveJoystick.isActiveAndEnabled;
     }
+
+    #region Tap / Move
 
     private void BeginTouch(int fingerId, Vector2 position)
     {
@@ -158,7 +157,6 @@ public class TouchManager : MonoBehaviour
                     CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
                     player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
                 }
-                // [CHANGE END] -----------------------------------------------
             }
             
         }
@@ -222,6 +220,10 @@ public class TouchManager : MonoBehaviour
         };
     }
 
+    #endregion
+
+    #region Checks
+
     void CheckForLastMeleeTouch()
     {
         int count = 0;
@@ -283,4 +285,6 @@ public class TouchManager : MonoBehaviour
         // Check if the localPoint is within the rect bounds
         return rect.rect.Contains(localPoint);
     }
+
+    #endregion
 }

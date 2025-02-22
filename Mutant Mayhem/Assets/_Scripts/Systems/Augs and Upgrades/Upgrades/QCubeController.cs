@@ -114,11 +114,6 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
 
     public void TryInteract()
     {
-        if (player.playerShooter.isBuilding)
-        {
-            player.animControllerPlayer.ToggleBuildMode();
-        }
-
         // Look for player's main collider
         Collider2D[] playerColliders = Physics2D.OverlapCircleAll(
             transform.position, interactRadius, LayerMask.GetMask("Player"));
@@ -132,6 +127,10 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
                 if (!isUpgradesOpen && !CursorManager.Instance.inMenu)
                 {
                     StartCoroutine(OpenUpgradeWindow());
+                    if (player.playerShooter.isBuilding)
+                    {
+                        player.animControllerPlayer.ToggleBuildMode();
+                    }
                     return;
                 }
                 else

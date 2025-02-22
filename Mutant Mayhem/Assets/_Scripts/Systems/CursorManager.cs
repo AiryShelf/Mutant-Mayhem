@@ -299,7 +299,7 @@ public class CursorManager : MonoBehaviour
 
     public void CheckForSimulatedClick(InputAction.CallbackContext context)
     {
-        if (!InputManager.GetJoystickAsMouseState() || !usingCustomCursor)
+        if (InputManager.LastUsedDevice != Gamepad.current || !InputManager.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
         //Debug.Log("Simulated click started on currentHoveredObject: " + currentHoveredObject);

@@ -16,7 +16,6 @@ public class DeviceTextSwitcher : MonoBehaviour
     [SerializeField] string gamepadText;
 
     string _stringToReplace;
-    int listenerCount = 0;
 
     void Start()
     {
