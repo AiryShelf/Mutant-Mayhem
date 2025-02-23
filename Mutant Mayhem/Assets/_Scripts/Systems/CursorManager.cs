@@ -186,10 +186,12 @@ public class CursorManager : MonoBehaviour
 
     public void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
     {
+        if (uiPos == (Vector2)customCursorTrans.position) return;
+
         switch (rangeType)
         {
             case CursorRangeType.Radius:
-                uiPos = ClampUiPositionToScreenCircle(uiPos, worldCenter, worldRadius, Camera.main);
+                uiPos = ClampUiPositionToScreenCircle(uiPos, worldCenter, worldRadius);
                 customCursorTrans.position = uiPos;
                 break;
             case CursorRangeType.Bounds:
@@ -552,7 +554,7 @@ public class CursorManager : MonoBehaviour
         return customCursorTrans.position;
     }
 
-    Vector2 ClampUiPositionToScreenCircle(Vector2 screenPos, Vector2 worldCenter, float worldRadius, Camera cam)
+    Vector2 ClampUiPositionToScreenCircle(Vector2 screenPos, Vector2 worldCenter, float worldRadius)
     {
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Vector2 worldOffset = worldPos - worldCenter;
@@ -563,7 +565,7 @@ public class CursorManager : MonoBehaviour
             // Clamp the offset to the screen radius.
             worldOffset = worldOffset.normalized * worldRadius;
             Vector2 clampedWorldPos = worldCenter + worldOffset;
-            screenPos = cam.WorldToScreenPoint(clampedWorldPos);
+            screenPos = Camera.main.WorldToScreenPoint(clampedWorldPos);
         }
 
         return screenPos;

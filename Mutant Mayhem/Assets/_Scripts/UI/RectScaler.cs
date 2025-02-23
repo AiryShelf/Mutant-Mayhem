@@ -1,18 +1,25 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class RectScaler : MonoBehaviour
 {
     public RectTransform rectToScale;
+    [SerializeField] bool touchScreenOnly = true;
+    
+    [Header("Scaling Factors")]
+    [SerializeField] float wideScale = 1.2f;
+    [SerializeField] float midWideScale = 1.1f;
     [SerializeField] float default16x9Scale = 1.0f;
-    [SerializeField] float midScale = 0.75f;
-    [SerializeField] float narrowScale = 0.5f;
+    [SerializeField] float midNarrowScale = 0.87f;
+    [SerializeField] float narrowScale = 0.75f;
     int lastWidth, lastHeight;
+    float scaleFactor;
 
     void OnEnable()
     {
-        AdjustJoystickScale();
         StartCoroutine(CheckScreenScale());
     }
 
@@ -21,23 +28,32 @@ public class RectScaler : MonoBehaviour
         StopAllCoroutines();
     }
 
-    void AdjustJoystickScale()
+    void AdjustScale()
     {
+        if (touchScreenOnly && InputManager.LastUsedDevice != Touchscreen.current) return;
+
         float aspectRatio = (float)Screen.width / Screen.height;
+        scaleFactor = default16x9Scale;
 
-        float scaleFactor = default16x9Scale;
-
-        if (aspectRatio < 1.6f) // Narrower than 16:10 (e.g., 4:3)
+        if (aspectRatio >= 2.0f)
         {
-            scaleFactor = 0.5f; // Reduce scale
+            scaleFactor = wideScale;
         }
-        else if (aspectRatio < 1.77f) // Between 16:10 and 16:9
+        else if (aspectRatio > 1.85f)
         {
-            scaleFactor = 0.75f;
+            scaleFactor = midWideScale;
+        }
+        else if (aspectRatio >= 1.77f)
+        {
+            scaleFactor = default16x9Scale;
+        }
+        else if (aspectRatio > 1.5f) 
+        {
+            scaleFactor = midNarrowScale;
         }
         else
         {
-            scaleFactor = default16x9Scale; // Keep default scale
+            scaleFactor = narrowScale;
         }
 
         // Apply scaling
@@ -46,16 +62,21 @@ public class RectScaler : MonoBehaviour
 
     IEnumerator CheckScreenScale()
     {
+        yield return null;
+
         while (gameObject.activeInHierarchy)
         {
-            yield return new WaitForSecondsRealtime(2);
-            
-            if (Screen.width != lastWidth || Screen.height != lastHeight)
+            if ((touchScreenOnly && InputManager.LastUsedDevice == Touchscreen.current) || !touchScreenOnly)
             {
-                lastWidth = Screen.width;
-                lastHeight = Screen.height;
-                AdjustJoystickScale();
+                if (Screen.width != lastWidth || Screen.height != lastHeight)
+                {
+                    lastWidth = Screen.width;
+                    lastHeight = Screen.height;
+                    AdjustScale();
+                }
             }
+            
+            yield return new WaitForSecondsRealtime(2);
         }
     }
 }

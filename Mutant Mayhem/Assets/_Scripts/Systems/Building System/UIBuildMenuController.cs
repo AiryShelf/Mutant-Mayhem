@@ -38,7 +38,7 @@ public class UIBuildMenuController : MonoBehaviour
         }
 
         buildingSystem = FindObjectOfType<BuildingSystem>();
-        InitializeBuildList();             
+        InitializeBuildList();
     }
     
     void OnEnable()
@@ -136,6 +136,9 @@ public class UIBuildMenuController : MonoBehaviour
             return;
         
         Vector2 scroll = context.ReadValue<Vector2>();
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            scroll = new Vector2(0, -scroll.y);
+            
         if (scroll.y > 0)
             ScrollUp();
         else if (scroll.y < 0)

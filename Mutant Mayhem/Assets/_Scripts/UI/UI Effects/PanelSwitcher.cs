@@ -11,8 +11,6 @@ public class PanelSwitcher : MonoBehaviour
     public UI_PanelBase[] panels;
     public Button[] tabButtons;
     public float swipeDuration = 0.5f;
-    public FadeCanvasGroupsWave prevButton;
-    public FadeCanvasGroupsWave nextButton;
     public bool isTriggered;
     bool isOpen;
 

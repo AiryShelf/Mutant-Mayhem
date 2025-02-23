@@ -427,7 +427,7 @@ public class Player : MonoBehaviour
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
         float scaledDistance = Mathf.Lerp(aimMinDist, aimDistance, curvedMagnitude);
 
-        if (playerShooter.isBuilding || playerShooter.isRepairing)
+        if (playerShooter.isBuilding || playerShooter.isRepairing || InputManager.LastUsedDevice == Keyboard.current)
         {
             aimWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
             //lastAimDir = Vector3.zero;
