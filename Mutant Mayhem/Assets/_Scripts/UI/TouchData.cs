@@ -8,7 +8,8 @@ public enum TouchPurpose
     Joystick,
     Shoot,
     UI,
-    Melee
+    Melee,
+    BuildMenu
 }
 
 public class TouchData

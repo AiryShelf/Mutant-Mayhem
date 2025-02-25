@@ -12,7 +12,10 @@ public class TouchManager : MonoBehaviour
     
     public VirtualJoystick moveJoystick;
     public VirtualJoystick aimJoystick;
+    public UIBuildMenuController buildMenuController;
+    public RectTransform buildPanelRect;
     public Player player;
+    
 
     private Dictionary<int, TouchData> activeTouches = new Dictionary<int, TouchData>();
     Rect screenBounds = new Rect(0,0,0,0);
@@ -30,7 +33,7 @@ public class TouchManager : MonoBehaviour
             return;
         }
 
-        screenBounds = new Rect(0, 0, Screen.width, Screen.height);
+        RefreshScreenBounds();
     }
 
     void Update()
@@ -89,7 +92,7 @@ public class TouchManager : MonoBehaviour
             aimJoystick.ResetJoystick();
         }
 
-        screenBounds = new Rect(0, 0, Screen.width, Screen.height);
+        RefreshScreenBounds();
     }
 
     //public void SetAimJoystickActive()
@@ -97,6 +100,11 @@ public class TouchManager : MonoBehaviour
     public bool GetVirtualJoysticksActive()
     {
         return moveJoystick.isActiveAndEnabled;
+    }
+
+    public void RefreshScreenBounds()
+    {
+        screenBounds = new Rect(0, 0, Screen.width, Screen.height);
     }
 
     #region Tap / Move
@@ -108,18 +116,28 @@ public class TouchManager : MonoBehaviour
         {
             Debug.Log($"Touch hit {hitUIObject.name}");
 
-            if (IsInJoystickRegion(position, moveJoystick))
+            if (IsInRegion(position, moveJoystick.transform as RectTransform))
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
             }
-            else if (IsInJoystickRegion(position, aimJoystick))
+            else if (IsInRegion(position, aimJoystick.transform as RectTransform))
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
             }
             else
             {
-                // It's a UI button or other UI
-                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
+                // Build menu
+                if (player != null && IsInRegion(position, buildPanelRect))
+                {
+                    activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.BuildMenu, position);
+                    buildMenuController.isTouchScrolling = true;
+                    //CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
+                }
+                else
+                {
+                    // Other UI
+                    activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
+                }
             }
         }
         else
@@ -138,6 +156,7 @@ public class TouchManager : MonoBehaviour
                     }
                 }
 
+                // Melee
                 if (existingShootFingerIds.Count > 1)
                 {
                     Debug.Log("Two-Finger Tap Detected! Trigger Melee instead!");
@@ -151,6 +170,7 @@ public class TouchManager : MonoBehaviour
                 }
                 else
                 {
+                    // Shoot
                     Debug.Log("Single-Finger Tap Detected!  Trigger Shoot");
                     player.animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
                     
@@ -158,7 +178,6 @@ public class TouchManager : MonoBehaviour
                     player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
                 }
             }
-            
         }
     }
 
@@ -217,6 +236,9 @@ public class TouchManager : MonoBehaviour
                 // Release UI press
                 // If it was a button press, you can finalize the click here
                 break;
+            case TouchPurpose.BuildMenu:
+                buildMenuController.isTouchScrolling = false;
+                break;
         };
     }
 
@@ -272,10 +294,8 @@ public class TouchManager : MonoBehaviour
     }
 
     // Example method to check if the position is in the joystick region
-    private bool IsInJoystickRegion(Vector2 screenPos, VirtualJoystick joystick)
+    private bool IsInRegion(Vector2 screenPos, RectTransform rect)
     {
-        if (joystick == null) return false;
-        RectTransform rect = joystick.GetComponent<RectTransform>();
         if (rect == null) return false;
 
         // Convert the screen position to local rect transform space

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class RectScaler : MonoBehaviour
+public class DeviceRectAdjuster : MonoBehaviour
 {
     public RectTransform rectToScale;
     [SerializeField] bool touchScreenOnly = true;
@@ -15,8 +15,29 @@ public class RectScaler : MonoBehaviour
     [SerializeField] float default16x9Scale = 1.0f;
     [SerializeField] float midNarrowScale = 0.87f;
     [SerializeField] float narrowScale = 0.75f;
+
+    [Header("Custom Scaling Pivot")]
+    [SerializeField] bool useCustomPivot = false;
+    [SerializeField] Vector2 cutomScalePivot = new Vector2(0.5f, 0.5f);
+
+    [Header("Positions Adjustments")]
+    [SerializeField] Vector2 narrowPositionOffset = Vector2.zero;
+
+    private void OnValidate()
+    {
+        cutomScalePivot.x = Mathf.Clamp(cutomScalePivot.x, 0f, 1f);
+        cutomScalePivot.y = Mathf.Clamp(cutomScalePivot.y, 0f, 1f);
+    }
+
+    Vector2 startPivot;
+    Vector2 startAnchoredPos;
     int lastWidth, lastHeight;
     float scaleFactor;
+
+    void Awake()
+    {
+        startAnchoredPos = rectToScale.anchoredPosition;
+    }
 
     void OnEnable()
     {
@@ -56,8 +77,44 @@ public class RectScaler : MonoBehaviour
             scaleFactor = narrowScale;
         }
 
+        if (useCustomPivot)
+        {
+            startPivot = rectToScale.pivot;
+            rectToScale.pivot = cutomScalePivot;
+        }
+
         // Apply scaling
         rectToScale.localScale = Vector3.one * scaleFactor;
+
+        if (useCustomPivot)
+            rectToScale.pivot = startPivot;
+    }
+
+    void AdjustPosition()
+    {
+        if (touchScreenOnly && InputManager.LastUsedDevice != Touchscreen.current) return;
+
+        float aspectRatio = (float)Screen.width / Screen.height;
+        if (aspectRatio >= 2.0f)
+        {
+            rectToScale.anchoredPosition = startAnchoredPos;
+        }
+        else if (aspectRatio > 1.85f)
+        {
+            rectToScale.anchoredPosition = startAnchoredPos;
+        }
+        else if (aspectRatio >= 1.77f)
+        {
+            rectToScale.anchoredPosition = startAnchoredPos;
+        }
+        else if (aspectRatio > 1.5f) 
+        {
+            rectToScale.anchoredPosition = startAnchoredPos;
+        }
+        else
+        {
+            rectToScale.anchoredPosition = startAnchoredPos + narrowPositionOffset;
+        }
     }
 
     IEnumerator CheckScreenScale()
@@ -73,6 +130,7 @@ public class RectScaler : MonoBehaviour
                     lastWidth = Screen.width;
                     lastHeight = Screen.height;
                     AdjustScale();
+                    AdjustPosition();
                 }
             }
             

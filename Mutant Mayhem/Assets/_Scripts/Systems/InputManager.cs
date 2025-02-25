@@ -170,7 +170,7 @@ public class InputManager : MonoBehaviour
                 break;
         }
 
-        Debug.Log($"Last Used Device set to: {LastUsedDevice}");
+        Debug.Log($"LastUsedDevice set to: {LastUsedDevice}");
     }
 
     #endregion

@@ -4083,6 +4083,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4882761678303406109}
+  - component: {fileID: 6798560561077587379}
   - component: {fileID: 7272709474169754842}
   - component: {fileID: 5410607307861375079}
   - component: {fileID: 2447190070173860996}
@@ -4114,6 +4115,28 @@ RectTransform:
   m_AnchoredPosition: {x: -167.03, y: -48.109}
   m_SizeDelta: {x: 314.0518, y: 286.424}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6798560561077587379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5412830215635259468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91640ab9ac3286942a523f7cad078535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectToScale: {fileID: 4882761678303406109}
+  touchScreenOnly: 1
+  wideScale: 1.2
+  midWideScale: 1.1
+  default16x9Scale: 1
+  midNarrowScale: 1
+  narrowScale: 1
+  useCustomPivot: 1
+  cutomScalePivot: {x: 0.5, y: 0}
+  narrowPositionOffset: {x: 0, y: 0}
 --- !u!114 &7272709474169754842
 MonoBehaviour:
   m_ObjectHideFlags: 0

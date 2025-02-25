@@ -28,6 +28,7 @@ public class BuildingSystem : MonoBehaviour
     }
     public static float buildRange = 6f;
     public LineRendererCircle buildRangeCircle;
+    [SerializeField] float buildCamLerpTime = 0.35f;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersToClearOnBuild;
     public UIBuildMenuController buildMenuController;
@@ -347,12 +348,15 @@ public class BuildingSystem : MonoBehaviour
     {
         if (isLocked)
         {
-            cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
+            if (InputManager.LastUsedDevice == Keyboard.current)
+                cameraController.ZoomAndFocus(player.transform, -2, 0.25f, buildCamLerpTime, true, false);
+            else
+                cameraController.ZoomAndFocus(player.transform, -4, 0.25f, buildCamLerpTime, true, false);
             mouseLooker.lockedToPlayer = true;
         }
         else
         {
-            cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
+            cameraController.ZoomAndFocus(player.transform, 0, 1, buildCamLerpTime, false, false);
             mouseLooker.lockedToPlayer = false;
         }  
     }

@@ -122,6 +122,7 @@ public class CursorManager : MonoBehaviour
     void Update()
     {
         if (usingCustomCursor)
+            //Debug.Log("No CustomCursorControl: disabled");       
             CustomCursorControl();
         else 
         {
@@ -181,17 +182,18 @@ public class CursorManager : MonoBehaviour
 
     public void MoveCustomCursorWorldToUi(Vector2 worldPos)
     {
-        customCursorTrans.position = (Vector2)Camera.main.WorldToScreenPoint(worldPos);
+        //customCursorTrans.position = (Vector2)Camera.main.WorldToScreenPoint(worldPos);
     }
 
     public void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
     {
         if (uiPos == (Vector2)customCursorTrans.position) return;
+        //Debug.Log("CursorManager: Received uiPos: " + uiPos);
 
         switch (rangeType)
         {
             case CursorRangeType.Radius:
-                uiPos = ClampUiPositionToScreenCircle(uiPos, worldCenter, worldRadius);
+                uiPos = ClampUiPositionToWorldCircle(uiPos, worldCenter, worldRadius);
                 customCursorTrans.position = uiPos;
                 break;
             case CursorRangeType.Bounds:
@@ -201,7 +203,7 @@ public class CursorManager : MonoBehaviour
         customCursorTrans.position = uiPos;
         player.aimWorldPos = Camera.main.ScreenToWorldPoint(uiPos);
         player.lastAimDir = player.aimWorldPos - player.transform.position;
-        Debug.Log("Moved custom cursor to: " + uiPos);
+        //Debug.Log($"CursorManager: Moved custom cursor via {rangeType} clamp to: {uiPos}");
     }
 
     public void CustomCursorControl()
@@ -219,6 +221,54 @@ public class CursorManager : MonoBehaviour
             return;
         }
 
+        (float joystickInputMagnitude, Vector2 direction, float targetSpeed) = GetJoystickData();
+
+        // If the joystick is near the center, set velocity to zero.
+        if (joystickInputMagnitude <= joystickDeadzone)
+            cursorVelocity = Vector2.zero;
+        else
+            ApplyAcceleration(direction, targetSpeed);
+
+        // Calculate displacement for this frame.
+        Vector2 newAimDir = cursorVelocity * Time.unscaledDeltaTime;
+
+        //Vector2 newAimDir = joystickInput * cursorSpeedFactor * curvedMagnitude * Time.unscaledDeltaTime;
+        //Debug.Log($"New Aim Dir: {newAimDir}");
+        Vector2 newCursorPos;
+        Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
+
+        if (player != null && player.stats.playerShooter.isBuilding)
+        {
+            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
+            
+            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, 
+                               BuildingSystem.buildRange, screenBounds);
+        }
+        else if (player != null && player.stats.playerShooter.isRepairing)
+        {
+            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
+            float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
+                          player.stats.playerShooter.currentGunSO.bulletSpeed;
+            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, 
+                               player.stats.playerShooter.muzzleTrans.position, range, screenBounds);
+        } 
+        else
+        {
+            Vector2 currentPos = GetCustomCursorUiPos();
+            //Debug.Log($"currentPos: {currentPos}");
+            newCursorPos = currentPos + newAimDir;
+            if (newCursorPos != currentPos)
+            {
+                //Debug.Log($"CustomCursorControl() attempting to move within screen bounds: {screenBounds} to new position: {newCursorPos}");
+                MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
+            }
+        }
+
+        //Debug.Log($"CursorManager: New Cursor Pos: {newCursorPos}");
+    }
+
+    (float, Vector2, float) GetJoystickData()
+    {
         Vector2 joystickInput = Vector2.zero;
         if (InputManager.LastUsedDevice == Touchscreen.current)
             joystickInput = aimJoystick.JoystickOutput;
@@ -233,66 +283,26 @@ public class CursorManager : MonoBehaviour
         //Debug.Log($"Curved Magnitude: {curvedMagnitude}");
         //Debug.Log($"Cursor Speed Factor: {cursorSpeedFactor}");
 
-        float targetSpeed = cursorSpeedFactor * curvedMagnitude * joystickInputMagnitude; // [New] Full speed.
-        Vector2 direction = (joystickInputMagnitude > 0f) ? joystickInput.normalized : Vector2.zero; // [New] Direction of movement.
+        float targetSpeed = cursorSpeedFactor * curvedMagnitude * joystickInputMagnitude;
+        Vector2 direction = (joystickInputMagnitude > 0f) ? joystickInput.normalized : Vector2.zero;
 
-        // If the joystick is near the center, set velocity to zero.
-        if (joystickInputMagnitude <= joystickDeadzone)
+        return (joystickInputMagnitude, direction, targetSpeed);
+    }
+
+    void ApplyAcceleration(Vector2 direction, float targetSpeed)
+    {
+        float currentSpeed = cursorVelocity.magnitude;
+        if (targetSpeed > currentSpeed)
         {
-            cursorVelocity = Vector2.zero;
+            // Accelerate gradually until reaching full speed.
+            currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, cursorAcceleration * Time.unscaledDeltaTime);
         }
         else
         {
-            float currentSpeed = cursorVelocity.magnitude;
-            if (targetSpeed > currentSpeed)
-            {
-                // Accelerate gradually until reaching full speed.
-                currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, cursorAcceleration * Time.unscaledDeltaTime); // [New]
-            }
-            else
-            {
-                // If the joystick input is reduced, immediately set to the new target speed.
-                currentSpeed = targetSpeed; // [New]
-            }
-            cursorVelocity = direction * currentSpeed; // [New]
+            // If the joystick input is reduced, immediately set to the new target speed.
+            currentSpeed = targetSpeed;
         }
-
-        // Calculate displacement for this frame.
-        Vector2 newAimDir = cursorVelocity * Time.unscaledDeltaTime;
-
-        //Vector2 newAimDir = joystickInput * cursorSpeedFactor * curvedMagnitude * Time.unscaledDeltaTime;
-        //Debug.Log($"New Aim Dir: {newAimDir}");
-        Vector2 newCursorPos;
-
-        if (player != null && player.stats.playerShooter.isBuilding)
-        {
-            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
-            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, 
-                               BuildingSystem.buildRange, new Rect());
-        }
-        else if (player != null && player.stats.playerShooter.isRepairing)
-        {
-            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
-            Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
-            float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
-                          player.stats.playerShooter.currentGunSO.bulletSpeed;
-            MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, 
-                               player.stats.playerShooter.muzzleTrans.position, range, screenBounds);
-        } 
-        else
-        {
-            Vector2 currentPos = GetCustomCursorUiPos();
-            //Debug.Log($"currentPos: {currentPos}");
-            newCursorPos = currentPos + newAimDir;
-            if (newCursorPos != currentPos)
-            {
-                Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
-                //Debug.Log($"CustomCursorControl() attempting to move within screen bounds: {screenBounds} to new position: {newCursorPos}");
-                MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
-            }
-        }
-
-        //Debug.Log($"CursorManager: New Cursor Pos: {newCursorPos}");
+        cursorVelocity = direction * currentSpeed;
     }
 
     #endregion
@@ -554,15 +564,15 @@ public class CursorManager : MonoBehaviour
         return customCursorTrans.position;
     }
 
-    Vector2 ClampUiPositionToScreenCircle(Vector2 screenPos, Vector2 worldCenter, float worldRadius)
+    Vector2 ClampUiPositionToWorldCircle(Vector2 screenPos, Vector2 worldCenter, float worldRadius)
     {
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Vector2 worldOffset = worldPos - worldCenter;
         
-        // Check if the screen position is outside the screen-space circle.
+        // Check if the screen position is outside the world-space circle.
         if (worldOffset.sqrMagnitude > worldRadius * worldRadius)
         {
-            // Clamp the offset to the screen radius.
+            // Clamp the offset to the world radius.
             worldOffset = worldOffset.normalized * worldRadius;
             Vector2 clampedWorldPos = worldCenter + worldOffset;
             screenPos = Camera.main.WorldToScreenPoint(clampedWorldPos);

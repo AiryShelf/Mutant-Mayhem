@@ -37,18 +37,21 @@ public class VirtualJoystick : MonoBehaviour,
     private enum ActionType { None, Shoot, Melee, Sprint }
     private ActionType currentActionType = ActionType.None;
 
+    Vector2 startPos;
     private Vector2 _startPos;
     private bool _isDragging = false;
     private int _pointerId = -1;
     InputAction.CallbackContext emptyContext = new InputAction.CallbackContext();
     Coroutine delayCancelCoroutine;
+    Vector2 pointerDownPos;
 
     private void Awake()
     {
         if (background == null)
             background = GetComponent<RectTransform>();
 
-        _startPos = background.anchoredPosition;
+        startPos = background.anchoredPosition;
+        _startPos = startPos;
         //Debug.Log("Virtual Joystick Start Pos: " + _startPos);
     }
 
@@ -65,10 +68,12 @@ public class VirtualJoystick : MonoBehaviour,
         //Debug.Log("Virtual Joystick: OnPointerDown");
         if (!isFixed)
         {
+            _startPos = background.anchoredPosition;
             background.anchoredPosition = ScreenPointToAnchorPosition(eventData.position);
             handle.anchoredPosition = Vector2.zero;
         }
 
+        pointerDownPos = ScreenPointToAnchorPosition(eventData.position);
         _isDragging = true;
         _pointerId = eventData.pointerId;
 
@@ -82,7 +87,7 @@ public class VirtualJoystick : MonoBehaviour,
 
         //Debug.Log("Virtual Joystick: OnDrag");
         Vector2 pos = ScreenPointToAnchorPosition(eventData.position);
-        Vector2 offset = pos - (Vector2)background.anchoredPosition;
+        Vector2 offset = pos - pointerDownPos;
         float magnitude = Mathf.Clamp(offset.magnitude, 0f, handleRange);
         Vector2 direction = offset.normalized * magnitude;
 
@@ -109,8 +114,8 @@ public class VirtualJoystick : MonoBehaviour,
 
         if (!isFixed)
         {
-            background.anchoredPosition = _startPos;
-            handle.anchoredPosition = _startPos;
+            background.anchoredPosition = startPos;
+            handle.anchoredPosition = startPos;
         }
 
         if (isHoldingAction)

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
 {
+    [SerializeField] RectTransform buildPanelRect;
+    [SerializeField] float dragDeadzone = 10f;
     public GridLayoutGroup buttonLayoutGrid;
     public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
@@ -15,6 +17,8 @@ public class UIBuildMenuController : MonoBehaviour
     public FadeCanvasGroupsWave fadeCanvasGroups;
     //[SerializeField] GameObject tutorialBuildPanelPrefab;
 
+    public bool isTouchScrolling = false;
+    public Vector2 touchStartPos;
     int currentIndex;
     Player player;
     BuildingSystem buildingSystem;
@@ -137,15 +141,34 @@ public class UIBuildMenuController : MonoBehaviour
         
         Vector2 scroll = context.ReadValue<Vector2>();
         if (InputManager.LastUsedDevice == Touchscreen.current)
-            scroll = new Vector2(0, -scroll.y);
+        {
+            //Vector2 touchPos = CursorManager.Instance.GetCustomCursorUiPos();
+            //if (touchStartPos == Vector2.zero) 
+                //return;
             
+            //Debug.Log("BuildMenu: customCursorPos: " + touchStartPos);
+            //if (!IsPositionWithinRect(buildPanelRect, touchStartPos))
+                //return;
+            if (!isTouchScrolling)
+                return;
+            scroll = new Vector2(0, -scroll.y);
+            if (Mathf.Abs(scroll.y) < dragDeadzone)
+                return;
+            
+        }
+
         if (scroll.y > 0)
             ScrollUp();
         else if (scroll.y < 0)
             ScrollDown();
     }
 
-    void ScrollUp()
+    private bool IsPositionWithinRect(RectTransform rectTransform, Vector2 screenPosition)
+    {
+        return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, screenPosition);
+    }
+
+    public void ScrollUp()
     {
         if (currentIndex <= 0)
             return;
@@ -163,7 +186,7 @@ public class UIBuildMenuController : MonoBehaviour
         currentIndex = startIndex;  
     }
 
-    void ScrollDown()
+    public void ScrollDown()
     {
         if (currentIndex >= uiStructureList.Count - 1)
             return;

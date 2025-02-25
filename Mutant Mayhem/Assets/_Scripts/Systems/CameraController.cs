@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
     CinemachineFramingTransposer playerFramingTransposer;
     CinemachineFramingTransposer mouseFramingTransposer;
 
+    float playerCamOrthoSizeStart;
     float playerDZWidth;
     float playerDZHeight;
     float mouseDZWidth;
@@ -48,6 +49,7 @@ public class CameraController : MonoBehaviour
     Coroutine mouseSzCoroutine2;
 
     bool deathZoomStarted;
+    bool isBuildZooming;
 
     void Awake()
     {
@@ -55,6 +57,8 @@ public class CameraController : MonoBehaviour
         mouseFramingTransposer = mouseLookerCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
         // Store defaults
+        playerCamOrthoSizeStart = playerCamera.m_Lens.OrthographicSize;
+
         playerDZWidth = playerFramingTransposer.m_DeadZoneWidth;
         playerDZHeight = playerFramingTransposer.m_DeadZoneHeight;
         mouseDZWidth = mouseFramingTransposer.m_DeadZoneWidth;
@@ -164,9 +168,12 @@ public class CameraController : MonoBehaviour
         SetCameraDamping(dampingAmount, lockCameras);
  
         // Lerp ortho size
-        float initialOrthoSize = playerCamera.m_Lens.OrthographicSize;
-        orthoSizeLerpCoroutine = GameTools.StartCoroutine(GameTools.LerpFloat(initialOrthoSize, 
-            initialOrthoSize + orthoZoomAmount, duration, UpdateOrthoSize));
+        if (orthoSizeLerpCoroutine != null)
+            StopCoroutine(orthoSizeLerpCoroutine);
+        
+        float currentOrthoSize = playerCamera.m_Lens.OrthographicSize;
+        orthoSizeLerpCoroutine = GameTools.StartCoroutine(GameTools.LerpFloat(currentOrthoSize, 
+                                 playerCamOrthoSizeStart + orthoZoomAmount, duration, UpdateOrthoSize));
     }
 
     private IEnumerator LerpToLiveMousePosition(float duration)

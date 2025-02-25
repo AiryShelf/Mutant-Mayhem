@@ -193,7 +193,10 @@ public class Player : MonoBehaviour
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         SettingsManager.Instance.ApplyGameplaySettings();
 
+        StartCoroutine(DelayScreenBoundReset());
         TouchManager.Instance.player = this;
+        TouchManager.Instance.buildMenuController = stats.structureStats.buildingSystem.buildMenuController;
+        TouchManager.Instance.buildPanelRect = TouchManager.Instance.buildMenuController.transform as RectTransform;
         CursorManager.Instance.Initialize();
         CursorManager.Instance.inMenu = false;
         CursorManager.Instance.MoveCustomCursorWorldToUi(transform.position);
@@ -222,6 +225,18 @@ public class Player : MonoBehaviour
         
         StartCoroutine(Sprint(false));
         RefreshMoveForces();
+    }
+
+    IEnumerator DelayScreenBoundReset()
+    {
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+
+        TouchManager.Instance.RefreshScreenBounds();
     }
 
     void FixedUpdate()
@@ -429,13 +444,14 @@ public class Player : MonoBehaviour
 
         if (playerShooter.isBuilding || playerShooter.isRepairing || InputManager.LastUsedDevice == Keyboard.current)
         {
+            //Debug.Log("Player: Aiming to cursorPos");
             aimWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
             //lastAimDir = Vector3.zero;
         }
-        else if (TouchManager.Instance.GetVirtualJoysticksActive() && 
-                 SettingsManager.Instance.useFastJoystickAim && 
-                 joystickInputMagnitude > joystickDeadzone)
+        else if ((TouchManager.Instance.GetVirtualJoysticksActive() || InputManager.LastUsedDevice == Gamepad.current) && 
+                 SettingsManager.Instance.useFastJoystickAim && joystickInputMagnitude > joystickDeadzone)
         {
+            //Debug.Log("Player: Joysticks are active, using fastJoystickAim");
             // Instant Joystick Aim
             lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
             aimWorldPos = transform.position + lastAimDir;
@@ -444,12 +460,14 @@ public class Player : MonoBehaviour
                  CursorManager.Instance.usingCustomCursor && 
                  !SettingsManager.Instance.useFastJoystickAim)
         {
+            //Debug.Log("Player: Joysticks are actice, not using fastJoystickAim, aiming to lastAimDir");
             // Use custom cursor position directly for aiming
             aimWorldPos = transform.position + lastAimDir;
             //lastAimDir = Vector3.zero; // Reset last joystick aim direction
         }
         else
         {
+            //Debug.Log("Player: Joysticks are NOT actice, aiming to cursorPos");
             aimWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
             //lastAimDir = Vector3.zero;
 
@@ -558,7 +576,7 @@ public class Player : MonoBehaviour
 
     void Move()
     {
-        if (Touchscreen.current != null)
+        if (InputManager.LastUsedDevice == Touchscreen.current)
             rawInput = TouchManager.Instance.moveJoystick.JoystickOutput;
 
         Vector2 moveDir;
