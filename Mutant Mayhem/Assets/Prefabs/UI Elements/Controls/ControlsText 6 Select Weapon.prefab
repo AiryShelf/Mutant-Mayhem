@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ControlsText 6 Select Weapon
       objectReference: {fileID: 0}
+    - target: {fileID: 683855099680284588, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -26,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_AnchorMin.x
@@ -34,15 +38,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_LocalPosition.x
@@ -74,11 +78,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -84.5
       objectReference: {fileID: 0}
     - target: {fileID: 728263422432825296, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -94,15 +98,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1035930355204040997, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: gamepadText
-      value: D-Pad (L & R) - Toolbar
+      value: Toolbar - D-Pad (L & R)
       objectReference: {fileID: 0}
     - target: {fileID: 1035930355204040997, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: keyboardText
-      value: 1-5 - Select Weapon
+      value: Select Weapon - 1-5
       objectReference: {fileID: 0}
     - target: {fileID: 1035930355204040997, guid: a0283dfcfb2d5364aa298a15f1ca6b14, type: 3}
       propertyPath: touchscreenText
-      value: Tap Toolbar - Select
+      value: Select Gun - Tap Toolbar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

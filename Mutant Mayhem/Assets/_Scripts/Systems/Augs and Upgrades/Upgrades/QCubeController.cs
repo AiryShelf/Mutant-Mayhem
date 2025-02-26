@@ -165,6 +165,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
 
+        player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
         fireAction.Disable();
         throwAction.Disable();
         if (InputManager.LastUsedDevice == Gamepad.current)

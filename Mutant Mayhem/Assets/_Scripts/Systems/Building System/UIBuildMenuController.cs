@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
 {
-    [SerializeField] RectTransform buildPanelRect;
+    [SerializeField] float touchscreenScrollDelay = 0.2f;
     [SerializeField] float dragDeadzone = 10f;
     public GridLayoutGroup buttonLayoutGrid;
     public GridLayoutGroup textLayoutGrid;
@@ -15,9 +15,9 @@ public class UIBuildMenuController : MonoBehaviour
     [SerializeField] ScrollRectController scrollRectController;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
-    //[SerializeField] GameObject tutorialBuildPanelPrefab;
 
     public bool isTouchScrolling = false;
+    bool isScrollDelay = false;
     public Vector2 touchStartPos;
     int currentIndex;
     Player player;
@@ -59,19 +59,24 @@ public class UIBuildMenuController : MonoBehaviour
         InputActionMap playerActionMap = player.inputAsset.FindActionMap("Player");
         swapWithDestroyAction = playerActionMap.FindAction("Toolbar");
 
-        scrollAction.performed += OnScroll;
+        //scrollAction.performed += OnScroll;
         swapWithDestroyAction.performed += buildingSystem.SwapWithDestroyTool;
     }
 
     void OnDisable()
     {
-        scrollAction.performed -= OnScroll;
+        //scrollAction.performed -= OnScroll;
     }
 
     void Start()
     {
         fadeCanvasGroups.InitializeToFadedOut(); 
         myCanvasGroup.blocksRaycasts = false; 
+    }
+
+    void Update()
+    {
+        Vector2 scrollDelta = scrollAction.ReadValue<Vector2>();
     }
 
     void InitializeBuildList()
@@ -136,7 +141,8 @@ public class UIBuildMenuController : MonoBehaviour
 
     void OnScroll(InputAction.CallbackContext context)
     {
-        if (!player.stats.playerShooter.isBuilding)
+        Debug.Log("OnScroll performed");
+        if (!isMenuOpen)
             return;
         
         Vector2 scroll = context.ReadValue<Vector2>();
@@ -151,16 +157,29 @@ public class UIBuildMenuController : MonoBehaviour
                 //return;
             if (!isTouchScrolling)
                 return;
+            
             scroll = new Vector2(0, -scroll.y);
             if (Mathf.Abs(scroll.y) < dragDeadzone)
                 return;
-            
         }
 
-        if (scroll.y > 0)
-            ScrollUp();
-        else if (scroll.y < 0)
-            ScrollDown();
+        if (!isScrollDelay)
+        {
+            if (scroll.y > 0)
+                ScrollUp();
+            else if (scroll.y < 0)
+                ScrollDown();
+        }
+
+        if (InputManager.LastUsedDevice == Touchscreen.current && !isScrollDelay)
+            StartCoroutine(ScrollDelay());
+    }
+
+    IEnumerator ScrollDelay()
+    {
+        isScrollDelay = true;
+        yield return new WaitForSecondsRealtime(touchscreenScrollDelay);
+        isScrollDelay = false;
     }
 
     private bool IsPositionWithinRect(RectTransform rectTransform, Vector2 screenPosition)

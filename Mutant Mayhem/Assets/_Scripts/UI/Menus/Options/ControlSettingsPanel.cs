@@ -120,7 +120,7 @@ public class ControlSettingsPanel : MonoBehaviour
 
     void FastJoystickAimToggle(bool isOn)
     {
-        joystickCursorSpeedSlider.interactable = !isOn;
+        //joystickCursorSpeedSlider.interactable = !isOn;
         if (ProfileManager.Instance.currentProfile != null)
         {
             ProfileManager.Instance.currentProfile.isFastJoystickAimEnabled = isOn;

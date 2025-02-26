@@ -109,11 +109,12 @@ public class Player : MonoBehaviour
 
     Coroutine sprintCoroutine;
     float sprintSpeedAmount;
-    Vector2 rawInput;
+    public Vector2 rawInput;
     Vector2 muzzleDirToMouse;
     float muzzleAngleToMouse;
     Rigidbody2D myRb;
     Stamina myStamina;
+    public bool isSprinting;
     public PlayerShooter playerShooter;
     static bool _isDead; // Backing field
     public static event Action<bool> OnPlayerDestroyed;
@@ -210,7 +211,10 @@ public class Player : MonoBehaviour
 
         TimeControl.Instance.SubscribePlayerTimeControl(this);
         TimeControl.Instance.ResetTimeScale();
-        Application.targetFrameRate = 120;
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            Application.targetFrameRate = 60;
+        else
+            Application.targetFrameRate = 120;
         
         SFXManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
@@ -333,7 +337,8 @@ public class Player : MonoBehaviour
             animControllerPlayer.SwitchGunsStart(4);
             toolbarSelector.SwitchBoxes(4);
         }
-        else if (Keyboard.current.cKey.isPressed || Gamepad.current.dpad.up.isPressed)
+        else if ((Keyboard.current != null && Keyboard.current.cKey.isPressed) || 
+                 (Gamepad.current != null && Gamepad.current.dpad.up.isPressed))
         {
             if (playerShooter.currentGunIndex != 4)
             {
@@ -348,7 +353,7 @@ public class Player : MonoBehaviour
             }
             return;
         }
-        else if (Gamepad.current.dpad.left.isPressed)
+        else if (Gamepad.current != null && Gamepad.current.dpad.left.isPressed)
         {
             int index = GetNextUnlockedGun(playerShooter.currentGunIndex, -1);
             if (index != -1)
@@ -357,7 +362,7 @@ public class Player : MonoBehaviour
                 toolbarSelector.SwitchBoxes(index);
             }
         }
-        else if (Gamepad.current.dpad.right.isPressed)
+        else if (Gamepad.current != null && Gamepad.current.dpad.right.isPressed)
         {
             int index = GetNextUnlockedGun(playerShooter.currentGunIndex, 1);
             if (index != -1)

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] Transform qCubeTrans;
     [SerializeField] float deathLerpTime = 2f;
+    [SerializeField] float wideTouchscreenZoomBias = -2f;
+    float zoomBias = 0;
 
     CinemachineFramingTransposer playerFramingTransposer;
     CinemachineFramingTransposer mouseFramingTransposer;
@@ -92,6 +95,36 @@ public class CameraController : MonoBehaviour
         QCubeController.OnCubeDestroyed -= HandleCubeDeath;
     }
 
+    void Start()
+    {
+        if (InputManager.LastUsedDevice != Touchscreen.current) return;
+
+        float aspectRatio = (float)Screen.width / Screen.height;
+
+        if (aspectRatio >= 2.0f)
+        {
+            zoomBias = wideTouchscreenZoomBias;
+        }
+        else if (aspectRatio > 1.85f)
+        {
+            zoomBias = wideTouchscreenZoomBias;
+        }
+        else if (aspectRatio >= 1.77f)
+        {
+            zoomBias = 0;
+        }
+        else if (aspectRatio > 1.5f) 
+        {
+            zoomBias = 0;
+        }
+        else
+        {
+            zoomBias = 0;
+        }
+    }
+
+    #region Settings
+
     void ResetCameraSettings()
     {
         playerFramingTransposer.m_DeadZoneWidth = playerDZWidth;
@@ -133,6 +166,10 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Zoom & Focus
+
     public void ZoomAndFocus(Transform targetTrans, float orthoZoomAmount, float dampingAmount, 
                                               float duration, bool focusPlayer, bool focusMouseLooker)
     {
@@ -167,40 +204,23 @@ public class CameraController : MonoBehaviour
         }
         SetCameraDamping(dampingAmount, lockCameras);
  
-        // Lerp ortho size
+        // Lerp ortho size (Zoom)
         if (orthoSizeLerpCoroutine != null)
             StopCoroutine(orthoSizeLerpCoroutine);
         
         float currentOrthoSize = playerCamera.m_Lens.OrthographicSize;
         orthoSizeLerpCoroutine = GameTools.StartCoroutine(GameTools.LerpFloat(currentOrthoSize, 
-                                 playerCamOrthoSizeStart + orthoZoomAmount, duration, UpdateOrthoSize));
-    }
-
-    private IEnumerator LerpToLiveMousePosition(float duration)
-    {
-        float elapsedTime = 0f;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / duration);
-
-            // Get the mouse position in world space
-            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
-            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePos);
-            mouseWorldPosition.z = mouseLooker.transform.position.z; // Ensure the same z-plane for the 2D camera
-
-            // Lerp mouseLooker to the current mouse world position
-            mouseLooker.transform.position = Vector3.Lerp(mouseLooker.transform.position, mouseWorldPosition, t);
-
-            yield return null;
-        }
+                                 playerCamOrthoSizeStart + orthoZoomAmount + zoomBias, duration, UpdateOrthoSize));
     }
 
     void UpdateOrthoSize(float newSize)
     {
         playerCamera.m_Lens.OrthographicSize = newSize;
     }
+
+    #endregion
+
+    #region Damping
 
     void SetCameraDamping(float dampingValue, bool lockCameras)
     {
@@ -230,6 +250,10 @@ public class CameraController : MonoBehaviour
                 mouseYDamping, 1f, value => mouseFramingTransposer.m_YDamping = value));
         }
     }
+
+    #endregion
+
+    #region Lock Cameras
 
     void LockCamerasToTarget(bool playerLock, bool mouseLookerLock)
     {
@@ -286,6 +310,10 @@ public class CameraController : MonoBehaviour
                 mouseSZHeight, 1f, value => mouseFramingTransposer.m_SoftZoneHeight = value));
         }
     }
+
+    #endregion
+
+    #region Coroutines
 
     IEnumerator LerpCameraWeight(float targetWeight, int cameraIndex, float duration)
     {
@@ -393,4 +421,6 @@ public class CameraController : MonoBehaviour
             mouseSzCoroutine2 = null;
         }
     }
+
+    #endregion
 }

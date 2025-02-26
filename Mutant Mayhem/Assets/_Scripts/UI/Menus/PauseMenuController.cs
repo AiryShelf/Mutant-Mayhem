@@ -57,13 +57,20 @@ public class PauseMenuController : MonoBehaviour
 
     public void PauseButtonPressed()
     {
+        if (player.IsDead) return;
+
+        if (qCubeController.isUpgradesOpen)
+            qCubeController.CloseUpgradeWindow();
+        if (buildingSystem.isInBuildMode)
+            buildingSystem.ToggleBuildMenu();
+            
         EscapePressed(new InputAction.CallbackContext());
     }
 
     void EscapePressed(InputAction.CallbackContext context)
     {
-        if (TutorialManager.NumTutorialsOpen > 0)
-            return;
+        //if (TutorialManager.NumTutorialsOpen > 0)
+            //return;
 
         if (isOptionsOpen)
         {

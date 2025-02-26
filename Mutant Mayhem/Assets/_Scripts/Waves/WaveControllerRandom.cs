@@ -74,7 +74,8 @@ public class WaveControllerRandom : MonoBehaviour
 
     public void NextWaveButtonPressed()
     {
-        OnNextWaveInput(new InputAction.CallbackContext());
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            OnNextWaveInput(new InputAction.CallbackContext());
     }
 
     void OnNextWaveInput(InputAction.CallbackContext context)

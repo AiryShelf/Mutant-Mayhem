@@ -347,7 +347,7 @@ public class TileManager : MonoBehaviour
             return;
         else if (healthDifference < 0)
         {
-            //if (healthAtStart >= maxHealth)
+            if (healthAtStart >= maxHealth)
                 ConstructionManager.Instance.AddRepairJob(new DroneJob(DroneJobType.Repair, GridCenterToWorld(rootPos)));
 
             color = textFlyHealthLossColor;
@@ -356,7 +356,7 @@ public class TileManager : MonoBehaviour
         }
         else if (healthDifference > 0)
         {
-            if (_TileStatsDict[rootPos].health >= maxHealth -1)
+            if (_TileStatsDict[rootPos].health >= maxHealth - 1)
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
         }
 

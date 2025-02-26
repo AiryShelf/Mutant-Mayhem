@@ -55,15 +55,17 @@ MonoBehaviour:
   currentProfile:
     profileName: 
     researchPoints: 0
+    completedPlanets: []
     playthroughs: 0
     maxWaveSurvived: 0
-    isTutorialEnabled: 0
     difficultyLevel: 0
+    qualityLevel: 0
+    isTutorialEnabled: 0
     isStandardWASD: 0
     isSpacebarEnabled: 0
     isFastJoystickAimEnabled: 0
     joystickCursorSpeed: 0
-    completedPlanets: []
+    virtualAimJoystickDisabled: 0
 --- !u!114 &6658943725255159057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +90,7 @@ MonoBehaviour:
   CreditsMult: 1
   isSpacebarEnabled: 1
   joystickCursorSpeed: 800
+  isVirtualAimJoystickVisible: 1
 --- !u!114 &8090136197738410126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,7 +153,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30a82250db309334c990c5c27fbead12, type: 2}
   - {fileID: 11400000, guid: b7640d8dff9ebe642a68a622772f6b65, type: 2}
   - {fileID: 11400000, guid: 713a3f95429097642b435cf5c38cc5f4, type: 2}
-  maxAugmentationsStart: 8
+  maxAugmentationsStart: 12
   maxAugs: 0
   currentResearchPoints: 0
   grenadeAmmoMult: 1

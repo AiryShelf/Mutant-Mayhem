@@ -325,7 +325,8 @@ public class BuildingSystem : MonoBehaviour
             
             Debug.Log("Joystick turned off from BuildingSystem");
 
-            LockCameraToPlayer(false);
+            if (!player.stats.playerShooter.isRepairing)
+                LockCameraToPlayer(false);
             
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;

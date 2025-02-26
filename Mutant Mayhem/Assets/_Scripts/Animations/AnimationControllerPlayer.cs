@@ -434,6 +434,8 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void FireInput_Performed(InputAction.CallbackContext context)
     {
+        if (!fireAction.enabled) return;
+        
         bodyAnim.SetBool("isAiming", true);
         isFireInput = true;
     }
@@ -482,7 +484,9 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void ThrowInput_Performed(InputAction.CallbackContext context)
     {  
-        if (!meleeAnimPlaying && player.stats.grenadeAmmo > 0)
+        if (meleeAnimPlaying)
+            MessagePanel.PulseMessage("Can't throw grenades while melee attacking!", Color.yellow);
+        else if (player.stats.grenadeAmmo > 0)
         {
             if (playerShooter.isBuilding)
                 ToggleBuildMode();

@@ -182,7 +182,7 @@ public class CursorManager : MonoBehaviour
 
     public void MoveCustomCursorWorldToUi(Vector2 worldPos)
     {
-        //customCursorTrans.position = (Vector2)Camera.main.WorldToScreenPoint(worldPos);
+        customCursorTrans.position = (Vector2)Camera.main.WorldToScreenPoint(worldPos);
     }
 
     public void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
@@ -201,8 +201,12 @@ public class CursorManager : MonoBehaviour
                 break;
         }
         customCursorTrans.position = uiPos;
-        player.aimWorldPos = Camera.main.ScreenToWorldPoint(uiPos);
-        player.lastAimDir = player.aimWorldPos - player.transform.position;
+
+        if (player != null)
+        {
+            player.aimWorldPos = Camera.main.ScreenToWorldPoint(uiPos);
+            player.lastAimDir = player.aimWorldPos - player.transform.position;
+        }
         //Debug.Log($"CursorManager: Moved custom cursor via {rangeType} clamp to: {uiPos}");
     }
 

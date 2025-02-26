@@ -33,6 +33,7 @@ public class SettingsManager : MonoBehaviour
     [Header("Controls Settings")]
     public bool isSpacebarEnabled = true;
     public float joystickCursorSpeed = 600;
+    public bool isVirtualAimJoystickVisible = true;
 
     WaveControllerRandom waveController;  
     Player player;
@@ -77,6 +78,7 @@ public class SettingsManager : MonoBehaviour
             isSpacebarEnabled = true;
             useFastJoystickAim = false;
             joystickCursorSpeed = 600;
+            isVirtualAimJoystickVisible = true;
             return;
         }
         Debug.Log($"Loading settings from profile: {currentProfile.profileName}");
@@ -92,7 +94,8 @@ public class SettingsManager : MonoBehaviour
             ProfileManager.Instance.SaveCurrentProfile();
         }
         joystickCursorSpeed = currentProfile.joystickCursorSpeed;
-        Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}");
+        isVirtualAimJoystickVisible = !currentProfile.virtualAimJoystickDisabled;
+        Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}, VirtualAimJoystickVisible = {isVirtualAimJoystickVisible}");
 
         ApplyMovementSettings();
         ApplyControlSettings();
@@ -187,6 +190,7 @@ public class SettingsManager : MonoBehaviour
     void ApplyControlSettings()
     {
         CursorManager.Instance.cursorSpeedFactor = joystickCursorSpeed;
+        TouchManager.Instance.SetVirtualAimJoystickVisible(isVirtualAimJoystickVisible);
 
         player = FindObjectOfType<Player>();
         if (player == null)

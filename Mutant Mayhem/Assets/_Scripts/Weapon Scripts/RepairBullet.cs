@@ -55,7 +55,7 @@ public class RepairBullet : Bullet
         while (distanceTravelled < travelDistance)
         {
             distanceTravelled = Vector3.Distance(startPosition, transform.position);
-            yield return new WaitForEndOfFrame(); // Wait for the next frame
+            yield return new WaitForEndOfFrame();
         }
 
         // Lock to target pos to avoid missses
@@ -64,20 +64,30 @@ public class RepairBullet : Bullet
         // Build if blueprint
         if (!tileManager.CheckTileFullHealth(transform.position))
         {
-            Vector2 pos = transform.position;
             bool isBlueprint = false;
-            if (tileManager.IsTileBlueprint(pos))
+            if (tileManager.IsTileBlueprint(target))
             {
+                Vector3Int gridPos = tileManager.WorldToGrid(target);
+                if (!tileManager.CheckBlueprintCellsAreClear(gridPos))
+                {
+                    TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+                    textFly.transform.position = target;
+                    textFly.Initialize("Blocked!", Color.red, 
+                                    1, hitDir.normalized, true, 1.2f);
+
+                    PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+                    yield break;
+                }
                 isBlueprint = true;
-                tileManager.BuildBlueprintAt(pos, -damage, 1.3f, hitDir);
+                tileManager.BuildBlueprintAt(target, -damage, 1.3f, hitDir);
             }
             
             if (!isBlueprint)
             {
-                float repairCost = tileManager.GetRepairCostAt(pos, -damage);
+                float repairCost = tileManager.GetRepairCostAt(target, -damage);
                 if (BuildingSystem.PlayerCredits >= repairCost)
                 {
-                    tileManager.ModifyHealthAt(pos, -damage, 1.3f, hitDir);
+                    tileManager.ModifyHealthAt(target, -damage, 1.3f, hitDir);
                     BuildingSystem.PlayerCredits -= repairCost;
                 }
                 else
@@ -88,8 +98,8 @@ public class RepairBullet : Bullet
                 }
             }
                 
-            ParticleManager.Instance.PlayRepairEffect(pos, transform.right);
-            SFXManager.Instance.PlaySoundAt(hitSound, pos);
+            ParticleManager.Instance.PlayRepairEffect(target, transform.right);
+            SFXManager.Instance.PlaySoundAt(hitSound, target);
             StatsCounterPlayer.AmountRepairedByPlayer -= damage;
             //Debug.Log("Ran repair code");
         }

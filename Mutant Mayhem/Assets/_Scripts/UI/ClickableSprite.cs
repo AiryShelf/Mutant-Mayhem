@@ -1,16 +1,21 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class ClickableSprite : MonoBehaviour
 {
-    [SerializeField] private Collider2D targetCollider;  // Assign a specific Collider2D
-    [SerializeField] private UnityEvent onClick;  // UnityEvent to assign functions in the Inspector
+    [SerializeField] Collider2D targetCollider;
+    [SerializeField] UnityEvent onClick;  // UnityEvent to assign functions in the Inspector
 
-    private void Update()
+    void Update()
     {
         if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
+            // Check for UI Elements
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Pointer.current.deviceId))
+                return;
+                
             Vector2 screenPosition = Pointer.current.position.ReadValue();
             Vector2 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
 
@@ -22,7 +27,7 @@ public class ClickableSprite : MonoBehaviour
         }
     }
 
-    private void CheckRaycastHits(Vector2 worldPosition)
+    void CheckRaycastHits(Vector2 worldPosition)
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(worldPosition, Vector2.zero);
 
