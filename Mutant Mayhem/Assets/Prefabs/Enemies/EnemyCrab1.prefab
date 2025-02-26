@@ -67,8 +67,8 @@ MonoBehaviour:
   startLocalScale: {x: 0, y: 0, z: 0}
   minSize: 1
   randColorRange: 0.2
-  gaussMeanSize: 1.5
-  gaussStdDev: 0.3
+  gaussMeanSize: 1.3
+  gaussStdDev: 0.2
   <health>k__BackingField: {fileID: 7349244352346262760}
   <unfreezeTime>k__BackingField: 0.5
   CurrentStateDebug: 
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 2
+  animSpeedFactor: 1
   switchToRunBuffer: 1.6
   maxAnimSpeed: 10
   myAnimator: {fileID: 0}
@@ -219,7 +219,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1753738897, guid: 44a4f2321fd54094a8b665462f06687c, type: 3}
-  m_Color: {r: 0.735849, g: 0.735849, b: 0.735849, a: 1}
+  m_Color: {r: 0.51999384, g: 0.6509434, b: 0.5004895, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -280,7 +280,7 @@ MonoBehaviour:
   - {x: -0.025125083, y: -0.045585968, z: 0}
   m_ShapePathHash: -232648934
   m_Mesh: {fileID: 0}
-  m_InstanceId: 252712
+  m_InstanceId: 67946
   m_LocalBounds:
     m_Center: {x: 0.00024374202, y: -0.00013599545, z: 0}
     m_Extent: {x: 0.03492998, y: 0.045548275, z: 0}

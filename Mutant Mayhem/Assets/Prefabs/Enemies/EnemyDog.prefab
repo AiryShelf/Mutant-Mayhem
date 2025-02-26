@@ -67,8 +67,8 @@ MonoBehaviour:
   startLocalScale: {x: 0, y: 0, z: 0}
   minSize: 1
   randColorRange: 0.2
-  gaussMeanSize: 2
-  gaussStdDev: 0.3
+  gaussMeanSize: 1.3
+  gaussStdDev: 0.2
   <health>k__BackingField: {fileID: -3465499167211957796}
   <unfreezeTime>k__BackingField: 0.25
   CurrentStateDebug: 
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 1
+  animSpeedFactor: 0.7
   switchToRunBuffer: 0.35
   maxAnimSpeed: 3
   myAnimator: {fileID: 0}
@@ -278,7 +278,7 @@ MonoBehaviour:
   - {x: 0.08678463, y: -0.019966379, z: 0}
   m_ShapePathHash: -2108260162
   m_Mesh: {fileID: 0}
-  m_InstanceId: 212866
+  m_InstanceId: 48218
   m_LocalBounds:
     m_Center: {x: 0.0088474825, y: 0.0002141241, z: 0}
     m_Extent: {x: 0.08640965, y: 0.020342423, z: 0}

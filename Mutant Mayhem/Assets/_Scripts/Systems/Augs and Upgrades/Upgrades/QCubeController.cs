@@ -10,6 +10,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] GameObject tutorialUpgradePanelPrefab;
     [SerializeField] RectTransform gamePlayCanvas;
+    [SerializeField] CameraController cameraController;
 
     [Header("Death")]
     [SerializeField] TextMeshProUGUI deathTitleText;
@@ -164,6 +165,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
 
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
+        cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.35f, true, false);
 
         player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
         fireAction.Disable();
@@ -182,6 +184,8 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
             InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
 
         CursorManager.Instance.inMenu = false;
+        if (!player.stats.playerShooter.isBuilding && !player.stats.playerShooter.isRepairing)
+            cameraController.ZoomAndFocus(player.transform, 0, 1, 0.35f, false, false);
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
