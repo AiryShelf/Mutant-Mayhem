@@ -163,6 +163,9 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         wasRepairing = player.stats.playerShooter.isRepairing;
         player.stats.playerShooter.isRepairing = false;
 
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            CursorManager.Instance.SetCustomCursorVisible(false);
+
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
         cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.35f, true, false);
@@ -186,6 +189,8 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         CursorManager.Instance.inMenu = false;
         if (!player.stats.playerShooter.isBuilding && !player.stats.playerShooter.isRepairing)
             cameraController.ZoomAndFocus(player.transform, 0, 1, 0.35f, false, false);
+
+        CursorManager.Instance.SetCustomCursorVisible(true);
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
