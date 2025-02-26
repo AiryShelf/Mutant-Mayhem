@@ -253,10 +253,7 @@ public class UIAugPanel : MonoBehaviour
 
     public void RemoveAug()
     {
-        if (selectedUiAugmentation == null)
-        {
-            return;
-        }
+        if (selectedUiAugmentation == null) return;
 
         selectedUiAugmentation.RemoveFromSelectedAugs();
         UpdatePanelTextandButtons();
@@ -264,6 +261,8 @@ public class UIAugPanel : MonoBehaviour
 
     public void OnRemoveClicked()
     {
+        if (selectedUiAugmentation == null) return;
+
         // Check RP available to remove aug
         if (augManager.currentResearchPoints - selectedUiAugmentation.totalCost < 0)
         {

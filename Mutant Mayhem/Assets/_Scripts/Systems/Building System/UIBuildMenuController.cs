@@ -59,13 +59,13 @@ public class UIBuildMenuController : MonoBehaviour
         InputActionMap playerActionMap = player.inputAsset.FindActionMap("Player");
         swapWithDestroyAction = playerActionMap.FindAction("Toolbar");
 
-        //scrollAction.performed += OnScroll;
+        scrollAction.performed += OnScroll;
         swapWithDestroyAction.performed += buildingSystem.SwapWithDestroyTool;
     }
 
     void OnDisable()
     {
-        //scrollAction.performed -= OnScroll;
+        scrollAction.performed -= OnScroll;
     }
 
     void Start()
@@ -146,40 +146,11 @@ public class UIBuildMenuController : MonoBehaviour
             return;
         
         Vector2 scroll = context.ReadValue<Vector2>();
-        if (InputManager.LastUsedDevice == Touchscreen.current)
-        {
-            //Vector2 touchPos = CursorManager.Instance.GetCustomCursorUiPos();
-            //if (touchStartPos == Vector2.zero) 
-                //return;
-            
-            //Debug.Log("BuildMenu: customCursorPos: " + touchStartPos);
-            //if (!IsPositionWithinRect(buildPanelRect, touchStartPos))
-                //return;
-            if (!isTouchScrolling)
-                return;
-            
-            scroll = new Vector2(0, -scroll.y);
-            if (Mathf.Abs(scroll.y) < dragDeadzone)
-                return;
-        }
-
-        if (!isScrollDelay)
-        {
-            if (scroll.y > 0)
-                ScrollUp();
-            else if (scroll.y < 0)
-                ScrollDown();
-        }
-
-        if (InputManager.LastUsedDevice == Touchscreen.current && !isScrollDelay)
-            StartCoroutine(ScrollDelay());
-    }
-
-    IEnumerator ScrollDelay()
-    {
-        isScrollDelay = true;
-        yield return new WaitForSecondsRealtime(touchscreenScrollDelay);
-        isScrollDelay = false;
+        
+        if (scroll.y > 0)
+            ScrollUp();
+        else if (scroll.y < 0)
+            ScrollDown();
     }
 
     private bool IsPositionWithinRect(RectTransform rectTransform, Vector2 screenPosition)

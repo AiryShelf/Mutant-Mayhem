@@ -122,11 +122,16 @@ public class HUDStatsPanel : MonoBehaviour
         yield return new WaitForEndOfFrame(); 
         creditsText.gameObject.SetActive(true);
         yield return new WaitForEndOfFrame(); 
-        */
-        //Screen.SetResolution(Screen.width / 2, Screen.height / 2, Screen.fullScreen);
-        //yield return new WaitForEndOfFrame(); 
-        //yield return new WaitForEndOfFrame(); 
+        
+        Screen.SetResolution(Screen.width / 2, Screen.height / 2, Screen.fullScreen);
+        yield return new WaitForFixedUpdate(); 
+        yield return new WaitForFixedUpdate(); 
+        yield return new WaitForFixedUpdate(); 
+        yield return new WaitForFixedUpdate(); 
+        yield return new WaitForFixedUpdate(); 
+        yield return new WaitForFixedUpdate();
         Screen.SetResolution(Screen.width * 2, Screen.height * 2, Screen.fullScreen);
+        */
     }
 
     void UpdateStaminaStats()

@@ -22,6 +22,7 @@ public class UIMothershipController : MonoBehaviour
         CursorManager.Instance.inMenu = true;
         TouchManager.Instance.SetVirtualJoysticksActive(false);
         AugManager.Instance.Initialize();
+        AugManager.Instance.RefreshCurrentRP();
 
         //InputController.SetLastUsedDevice(null);
         InputManager.SetJoystickMouseControl(true);
@@ -48,6 +49,22 @@ public class UIMothershipController : MonoBehaviour
         augPanel.UpdateUIAugs();
     }
 
+    IEnumerator LaunchGameCoroutine()
+    {
+        // 1) Start loading your game scene asynchronously
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(2, LoadSceneMode.Single);
+        
+        // 2) Wait until scene load has finished
+        while (!asyncLoad.isDone)
+            yield return null;
+
+        // 3) Now unload unused assets to free memory
+        yield return Resources.UnloadUnusedAssets();
+
+        // 4) Force garbage collection on the CPU side
+        System.GC.Collect();
+    }
+
     public void OnLaunch()
     {
         if (AugManager.selectedAugsWithLvls.Count < 1)
@@ -59,7 +76,7 @@ public class UIMothershipController : MonoBehaviour
         augPanel.TrackRPCosts();
 
         //QualitySettings.SetQualityLevel(qualityLevelStart); // High quality
-        SceneManager.LoadScene(2);
+        StartCoroutine(LaunchGameCoroutine());
     }
 
     public void OnConfirmLaunch()

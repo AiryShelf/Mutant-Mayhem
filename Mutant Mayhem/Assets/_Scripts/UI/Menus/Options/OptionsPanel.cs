@@ -8,13 +8,12 @@ public class OptionsPanel : MonoBehaviour
 {
     public FadeCanvasGroupsWave fadeGroup;
     [SerializeField] TMP_Dropdown qualityDropdown;
-    [SerializeField] TMP_Dropdown resolutionDropdown;
+    //[SerializeField] TMP_Dropdown resolutionDropdown;
     [SerializeField] Toggle vSyncToggle;
     [SerializeField] Toggle tutorialToggle;
     [SerializeField] Toggle virtualAimStickToggle;
 
     QualityManager qualityManager;
-    List<Resolution> validResolutions = new List<Resolution>();
 
     void OnEnable()
     {
@@ -107,11 +106,11 @@ public class OptionsPanel : MonoBehaviour
     {
         qualityManager.SetVSync(isOn);
     }
-
+    /*
     void PopulateResolutionDropdown() // CHANGED
     {
         // Clear existing items
-        resolutionDropdown.ClearOptions();
+        //resolutionDropdown.ClearOptions();
 
         // This fetches all the resolutions supported by the device
         Resolution[] allResolutions = Screen.resolutions;
@@ -159,18 +158,18 @@ public class OptionsPanel : MonoBehaviour
             options.Add(res.width + " x " + res.height);
         }
 
-        resolutionDropdown.AddOptions(options);
+        //resolutionDropdown.AddOptions(options);
 
         // Find the current resolution in our subset and set dropdown accordingly
         Resolution current = Screen.currentResolution;
         int currentIndex = validResolutions.FindIndex(r => r.width == current.width && r.height == current.height);
         if (currentIndex >= 0)
         {
-            resolutionDropdown.SetValueWithoutNotify(currentIndex);
+            //resolutionDropdown.SetValueWithoutNotify(currentIndex);
         }
         else
         {
-            resolutionDropdown.SetValueWithoutNotify(0);
+            //resolutionDropdown.SetValueWithoutNotify(0);
         }
     }
 
@@ -182,8 +181,9 @@ public class OptionsPanel : MonoBehaviour
         Resolution chosenRes = validResolutions[index];
 
         // FullScreenMode.ExclusiveFullScreen or FullScreenMode.FullScreenWindow can be set here if needed.
-        Screen.SetResolution(chosenRes.width, chosenRes.height, true); 
+        //Screen.SetResolution(chosenRes.width, chosenRes.height, true); 
     }
+    */
 
     #endregion
 }
