@@ -123,15 +123,15 @@ RectTransform:
   m_GameObject: {fileID: 467492635686653673}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8333333, y: 0.8333333, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5693103160870628474}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -93.25639}
-  m_SizeDelta: {x: 187.2, y: 27.0153}
+  m_AnchoredPosition: {x: 0, y: -100.88}
+  m_SizeDelta: {x: 187.2, y: 37.7617}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5127849519586416754
 CanvasRenderer:
@@ -161,11 +161,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Or, tap anywhere with
-
-    1 - 3 Fingers
-
-'
+  m_text: "Or, tap anywhere \nwith 1 - 3 fingers\n(First finger aims)\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
