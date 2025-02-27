@@ -17,6 +17,7 @@ public class WaveControllerRandom : MonoBehaviour
     public TextMeshProUGUI nextWaveButtonName; // Used to store and universally access a 'string' 
 
     [Header("Wave Properties")]
+    [SerializeField] int creditsPerWave = 150; // Additive bonus, ie. wave 2 == 200, wave 3 == 300
     public int currentWaveIndex = 0;
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public float timeBetweenWaves = 0; // Amount of day-time after difficulty setting
@@ -178,6 +179,7 @@ public class WaveControllerRandom : MonoBehaviour
         isNight = false;
         MessagePanel.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
+        BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
 
         StartCoroutine(NextWaveTimer());
 
