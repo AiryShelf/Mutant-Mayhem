@@ -24,6 +24,7 @@ public class PlanetSO : ScriptableObject
 
     [Header("WaveController Settings:")]
     [Header("Wave Properties")]
+    public int creditsPerWave = 150; // Additive bonus (waveIndex*creditsPerWave)
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public float wavesTillAddBase = 1; 
     public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave

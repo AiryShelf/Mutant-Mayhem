@@ -10,29 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
-  m_Name: Planet_BarrenMoon 3
+  m_Name: Planet_5R_BarrenMoon 2
   m_EditorClassIdentifier: 
   typeOfBody: Moon
-  bodyName: Nullastra
+  bodyName: Desolaria
   description: Test world
   properties:
   - {fileID: 11400000, guid: e11315d0651de4901b950aea74698ee8, type: 2}
-  - {fileID: 11400000, guid: fb42734f9c19b4d3088c2ba8a6d5fbde, type: 2}
+  - {fileID: 11400000, guid: b4c59f65b5fcb40b5ba5a465abb008f7, type: 2}
+  - {fileID: 11400000, guid: 26671e0cedbcb41f88602c4966358917, type: 2}
   - {fileID: 11400000, guid: b21c583d2f34d49228dd989b7c86c45b, type: 2}
-  terrainTile: {fileID: 11400000, guid: e44794305818745d5aa59eda637fb018, type: 2}
+  terrainTile: {fileID: 11400000, guid: 35a53aa0304e2495a8f4e13616494163, type: 2}
   mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
-  highRezPlanetPrefab: {fileID: 4567349013123969168, guid: 38e58a8fd4b25477a9e515475a504015, type: 3}
+  highRezPlanetPrefab: {fileID: 7682716504387378719, guid: 0e7ef414a44e84966bfebe6a96c0cf2f, type: 3}
   prerequisitePlanets:
-  - {fileID: 11400000, guid: 387b81dd0246744d1b7317072823d3e0, type: 2}
-  basePoints: 150
-  pointsPerWave: 18
-  growthControlFactor: 0.14
-  timeBetweenWavesBase: 100
+  - {fileID: 11400000, guid: 249364d42aab8435983f149d30aae9c2, type: 2}
+  basePoints: 200
+  pointsPerWave: 20
+  growthControlFactor: 0.15
+  creditsPerWave: 450
+  timeBetweenWavesBase: 95
   wavesTillAddBase: 1
   batchMultiplierStart: 7
   subwaveDelayMultStart: 0.6
   spawnRadiusBuffer: 40
-  damageMultiplier: 1.8
-  healthMultiplier: 1.8
-  speedMultiplier: 1.8
+  damageMultiplier: 1.75
+  healthMultiplier: 1.75
+  speedMultiplier: 1.75
   sizeMultiplier: 1

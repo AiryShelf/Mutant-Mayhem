@@ -10,29 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
-  m_Name: Planet_Jungle
+  m_Name: Planet_3L_Swampy
   m_EditorClassIdentifier: 
   typeOfBody: Planet
-  bodyName: Verdara
+  bodyName: Murkoth
   description: Test world
   properties:
   - {fileID: 11400000, guid: 5fee3fdfd06574f45a87247cada47b86, type: 2}
   - {fileID: 11400000, guid: 60322a5669fbc4dfb9843cfb45980ef3, type: 2}
-  - {fileID: 11400000, guid: 08173bc9948cc4b0aac65187a0951298, type: 2}
+  - {fileID: 11400000, guid: 363d2eb6d30ac4eb8bf06619a8107dc8, type: 2}
+  - {fileID: 11400000, guid: 42db63a5d3f244e6094b0076ef0558a6, type: 2}
   terrainTile: {fileID: 11400000, guid: 5fef0d2be254641858541301792a3d7f, type: 2}
-  mission: {fileID: 11400000, guid: 7fb026761eebc4073be042f225a6b178, type: 2}
-  highRezPlanetPrefab: {fileID: 6406680207806220279, guid: 1dc3fe7cfe47c41bd8b84deb654cd5f7, type: 3}
+  mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  highRezPlanetPrefab: {fileID: 2764024321802469039, guid: 4c4e64777f9b24b14a19ee2d8a60623a, type: 3}
   prerequisitePlanets:
-  - {fileID: 11400000, guid: b7efa2ea19572d24eb9c7f975ae2fc9f, type: 2}
-  basePoints: 75
-  pointsPerWave: 12
-  growthControlFactor: 0.1
-  timeBetweenWavesBase: 115
+  - {fileID: 11400000, guid: a547c5fe3f0a54a9c820ebbf5f7bd5d4, type: 2}
+  basePoints: 125
+  pointsPerWave: 16
+  growthControlFactor: 0.13
+  creditsPerWave: 300
+  timeBetweenWavesBase: 105
   wavesTillAddBase: 1
-  batchMultiplierStart: 4
-  subwaveDelayMultStart: 0.95
+  batchMultiplierStart: 6
+  subwaveDelayMultStart: 0.7
   spawnRadiusBuffer: 40
-  damageMultiplier: 1.15
-  healthMultiplier: 1.15
-  speedMultiplier: 1.15
+  damageMultiplier: 1.6
+  healthMultiplier: 1.6
+  speedMultiplier: 1.6
   sizeMultiplier: 1

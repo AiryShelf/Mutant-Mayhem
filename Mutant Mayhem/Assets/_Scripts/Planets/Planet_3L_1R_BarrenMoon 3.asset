@@ -10,29 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
-  m_Name: Planet_BarrenMoon 4
+  m_Name: Planet_3L_1R_BarrenMoon 3
   m_EditorClassIdentifier: 
   typeOfBody: Moon
-  bodyName: Starkos
+  bodyName: Nullastra
   description: Test world
   properties:
   - {fileID: 11400000, guid: e11315d0651de4901b950aea74698ee8, type: 2}
   - {fileID: 11400000, guid: fb42734f9c19b4d3088c2ba8a6d5fbde, type: 2}
   - {fileID: 11400000, guid: b21c583d2f34d49228dd989b7c86c45b, type: 2}
   terrainTile: {fileID: 11400000, guid: e44794305818745d5aa59eda637fb018, type: 2}
-  mission: {fileID: 11400000, guid: 7fb026761eebc4073be042f225a6b178, type: 2}
-  highRezPlanetPrefab: {fileID: 4567349013123969168, guid: a9d18f8b08dc04661ba1b3ea382ccd3b, type: 3}
+  mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  highRezPlanetPrefab: {fileID: 4567349013123969168, guid: 38e58a8fd4b25477a9e515475a504015, type: 3}
   prerequisitePlanets:
-  - {fileID: 11400000, guid: b7efa2ea19572d24eb9c7f975ae2fc9f, type: 2}
-  basePoints: 75
-  pointsPerWave: 12
-  growthControlFactor: 0.11
-  timeBetweenWavesBase: 115
+  - {fileID: 11400000, guid: 387b81dd0246744d1b7317072823d3e0, type: 2}
+  basePoints: 150
+  pointsPerWave: 18
+  growthControlFactor: 0.14
+  creditsPerWave: 300
+  timeBetweenWavesBase: 100
   wavesTillAddBase: 1
-  batchMultiplierStart: 4
-  subwaveDelayMultStart: 0.9
+  batchMultiplierStart: 7
+  subwaveDelayMultStart: 0.6
   spawnRadiusBuffer: 40
-  damageMultiplier: 1.2
-  healthMultiplier: 1.2
-  speedMultiplier: 1.2
+  damageMultiplier: 1.8
+  healthMultiplier: 1.8
+  speedMultiplier: 1.8
   sizeMultiplier: 1

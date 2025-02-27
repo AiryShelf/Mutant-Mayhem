@@ -10,30 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
-  m_Name: Planet_Snowy
+  m_Name: Planet_5L_Martian
   m_EditorClassIdentifier: 
   typeOfBody: Planet
-  bodyName: Cryonova
-  description: Test world
+  bodyName: Hadeius
+  description: Insanely hard
   properties:
   - {fileID: 11400000, guid: e11315d0651de4901b950aea74698ee8, type: 2}
-  - {fileID: 11400000, guid: b4c59f65b5fcb40b5ba5a465abb008f7, type: 2}
   - {fileID: 11400000, guid: 71a159e77cc1a42a38448c37493acb6a, type: 2}
-  - {fileID: 11400000, guid: 878a9ff596b2c4f1a9eb011a6affd4d1, type: 2}
-  terrainTile: {fileID: 11400000, guid: e44794305818745d5aa59eda637fb018, type: 2}
+  - {fileID: 11400000, guid: 26671e0cedbcb41f88602c4966358917, type: 2}
+  - {fileID: 11400000, guid: 363d2eb6d30ac4eb8bf06619a8107dc8, type: 2}
+  terrainTile: {fileID: 11400000, guid: 5022308844c484a44ab24abd5a67d31f, type: 2}
   mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
-  highRezPlanetPrefab: {fileID: 1671366277103789922, guid: f5e36168f07d649d2ac01c3decf6c6bb, type: 3}
+  highRezPlanetPrefab: {fileID: 2836995048495469220, guid: eb522152c47c642b6bcfdfce22e13c4e, type: 3}
   prerequisitePlanets:
-  - {fileID: 11400000, guid: 0a468734fc5a24976aeced050bc74eb2, type: 2}
+  - {fileID: 11400000, guid: 9c54d8e0c4e7e4b6489e188784247e12, type: 2}
   basePoints: 200
   pointsPerWave: 20
   growthControlFactor: 0.15
+  creditsPerWave: 450
   timeBetweenWavesBase: 90
-  wavesTillAddBase: 1
+  wavesTillAddBase: 0.5
   batchMultiplierStart: 8
   subwaveDelayMultStart: 0.5
   spawnRadiusBuffer: 32
-  damageMultiplier: 1.9
-  healthMultiplier: 1.9
-  speedMultiplier: 1.9
-  sizeMultiplier: 1
+  damageMultiplier: 2
+  healthMultiplier: 2
+  speedMultiplier: 2
+  sizeMultiplier: 0.9
