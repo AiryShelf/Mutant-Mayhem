@@ -265,7 +265,7 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.GrenadeBuyAmmo] = 200;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 100;
         consumablesUpgBaseCosts[ConsumablesUpgrade.BuyConstructionDrone] = 500;
-        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 1000;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 1500;
 
         // Gun Stats
         laserUpgBaseCosts[GunStatsUpgrade.GunDamage] = 250;
@@ -566,6 +566,14 @@ public class UpgradeManager : MonoBehaviour
                                       "2 billion times,or there is a bug!  Let me know!", Color.red);
             return;
         }
+
+        if ((ClassManager.Instance.selectedClass == PlayerClass.Fighter && 
+            upgType == ConsumablesUpgrade.BuyAttackDrone) ||
+            (ClassManager.Instance.selectedClass == PlayerClass.Builder && 
+            upgType == ConsumablesUpgrade.BuyConstructionDrone))
+            {
+                cost /= 2;
+            }
         
         if (upgrade.Apply(player.stats))
         {
@@ -582,6 +590,7 @@ public class UpgradeManager : MonoBehaviour
         {
             //Debug.Log(upgType + " already full");
             MessagePanel.PulseMessage("It's already full", Color.yellow);
+            return;
         }
     }
 

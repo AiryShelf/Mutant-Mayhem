@@ -120,11 +120,6 @@ public class TileManager : MonoBehaviour
         Matrix4x4 matrix = Matrix4x4.Rotate(q);
         blueprintTilemap.SetTransformMatrix(gridPos, matrix);
 
-        if (ruleTile.structureSO.isTurret)
-        {
-            turretManager.currentNumTurrets++;
-        }
-
         return true;
     }
 

@@ -188,7 +188,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
 
         CursorManager.Instance.inMenu = false;
         if (!player.stats.playerShooter.isBuilding && !player.stats.playerShooter.isRepairing)
-            cameraController.ZoomAndFocus(player.transform, 0, 1, 0.35f, false, false);
+            cameraController.ZoomAndFocus(player.transform, 0, 1, 1f, false, false);
         else 
             buildingSystem.LockCameraToPlayer(true);
 

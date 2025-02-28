@@ -548,13 +548,15 @@ public class BuyConstructionDroneUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 2), baseCost, int.MaxValue);
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 1), baseCost, int.MaxValue);
         return cost;
     }
 
     public static int GetCost(Player player, int baseCost)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 2), baseCost, int.MaxValue);
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 1), baseCost, int.MaxValue);
+        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
+            cost /= 2;
         return cost;
     }
 }
@@ -583,7 +585,9 @@ public class BuyAttackDroneUpgrade : Upgrade
         {
             // Cost doubles for each drone above the starting amount
             int newDroneCount = activeDrones - startingDrones + 1;
-            return Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
+            //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            return newCost;
         }
     }
 
@@ -600,7 +604,9 @@ public class BuyAttackDroneUpgrade : Upgrade
         {
             // Cost doubles for each drone above the starting amount
             int newDroneCount = activeDrones - startingDrones + 1;
-            return Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
+            //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            return newCost;
         }
     }
 }
