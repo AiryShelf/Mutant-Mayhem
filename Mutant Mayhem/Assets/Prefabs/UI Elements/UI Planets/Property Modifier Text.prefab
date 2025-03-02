@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 97155491955674802}
   - component: {fileID: 6702377736276605681}
   m_Layer: 5
-  m_Name: Modifier Text
+  m_Name: Property Modifier Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 100, y: 0}
-  m_SizeDelta: {x: 154, y: 13}
+  m_SizeDelta: {x: 200, y: 13}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2205590166873517916
 CanvasRenderer:
@@ -113,8 +113,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

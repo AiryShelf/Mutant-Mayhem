@@ -21,6 +21,7 @@ public class DeviceRectAdjuster : MonoBehaviour
     [SerializeField] Vector2 cutomScalePivot = new Vector2(0.5f, 0.5f);
 
     [Header("Positions Adjustments")]
+    [SerializeField] Vector2 widePositionOffest = Vector2.zero;
     [SerializeField] Vector2 narrowPositionOffset = Vector2.zero;
 
     private void OnValidate()
@@ -97,11 +98,11 @@ public class DeviceRectAdjuster : MonoBehaviour
         float aspectRatio = (float)Screen.width / Screen.height;
         if (aspectRatio >= 2.0f)
         {
-            rectToScale.anchoredPosition = startAnchoredPos;
+            rectToScale.anchoredPosition = widePositionOffest;
         }
         else if (aspectRatio > 1.85f)
         {
-            rectToScale.anchoredPosition = startAnchoredPos;
+            rectToScale.anchoredPosition = widePositionOffest;
         }
         else if (aspectRatio >= 1.77f)
         {
