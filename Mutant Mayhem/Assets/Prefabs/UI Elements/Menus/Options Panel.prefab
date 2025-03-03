@@ -1065,12 +1065,13 @@ MonoBehaviour:
   rectToScale: {fileID: 8353789901146059663}
   touchScreenOnly: 1
   wideScale: 1.2
-  midWideScale: 1.1
-  default16x9Scale: 1
+  midWideScale: 1.2
+  default16x9Scale: 1.2
   midNarrowScale: 1
   narrowScale: 1
   useCustomPivot: 1
   cutomScalePivot: {x: 0.5, y: 0}
+  defaultWidePositionOffest: {x: 0, y: 0}
   narrowPositionOffset: {x: 0, y: 0}
 --- !u!114 &6466690513043990042
 MonoBehaviour:
@@ -1112,10 +1113,12 @@ MonoBehaviour:
   individualElements:
   - {fileID: 3705524314506088784}
   - {fileID: 6288828315270501067}
-  - {fileID: 6562745478812076757}
   - {fileID: 7006004997589424746}
   - {fileID: 8446304858595706440}
   - {fileID: 6320722971602039020}
+  - {fileID: 9006171495382104591}
+  - {fileID: 803202318406732129}
+  - {fileID: 6562745478812076757}
   fadeStartDelay: 0
   delayBetweenElements: 0.025
   fadeStartTime: 0.1
@@ -4404,7 +4407,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 5
+  m_ChildAlignment: 2
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
@@ -5335,7 +5338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886930125334324057, guid: 06659a9328db57e4faacb1bba02d80b4, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 886930125334324057, guid: 06659a9328db57e4faacb1bba02d80b4, type: 3}
       propertyPath: m_LocalScale.x
@@ -5383,7 +5386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886930125334324057, guid: 06659a9328db57e4faacb1bba02d80b4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -10.001099
+      value: -7.5
       objectReference: {fileID: 0}
     - target: {fileID: 886930125334324057, guid: 06659a9328db57e4faacb1bba02d80b4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

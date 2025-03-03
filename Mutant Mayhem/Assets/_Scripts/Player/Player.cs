@@ -211,7 +211,7 @@ public class Player : MonoBehaviour
 
         TimeControl.Instance.SubscribePlayerTimeControl(this);
         TimeControl.Instance.ResetTimeScale();
-        if (InputManager.LastUsedDevice == Touchscreen.current)
+        if (InputManager.IsMobile())
             Application.targetFrameRate = 60;
         else
             Application.targetFrameRate = 120;
@@ -229,6 +229,7 @@ public class Player : MonoBehaviour
         
         StartCoroutine(Sprint(false));
         RefreshMoveForces();
+        ScreenScaleChecker.InvokeAspectRatioChanged();
     }
 
     IEnumerator DelayScreenBoundReset()

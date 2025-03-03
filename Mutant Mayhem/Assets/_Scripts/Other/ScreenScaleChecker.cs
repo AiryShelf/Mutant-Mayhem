@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -41,7 +42,7 @@ public class ScreenScaleChecker : MonoBehaviour
                 lastWidth = Screen.width;
                 lastHeight = Screen.height;
                 CurrentAspectRatio = (float)lastWidth / lastHeight;
-                OnAspectRatioChanged?.Invoke(CurrentAspectRatio);
+                InvokeAspectRatioChanged();
             }
             
             yield return new WaitForSecondsRealtime(timeBetweenChecks);
@@ -56,8 +57,12 @@ public class ScreenScaleChecker : MonoBehaviour
     IEnumerator DelayInvoke()
     {
         yield return new WaitForEndOfFrame();
-        yield return null;
-        yield return new WaitForSecondsRealtime(1);
+    
+        InvokeAspectRatioChanged();
+    }
+
+    public static void InvokeAspectRatioChanged()
+    {
         OnAspectRatioChanged?.Invoke(CurrentAspectRatio);
     }
 }

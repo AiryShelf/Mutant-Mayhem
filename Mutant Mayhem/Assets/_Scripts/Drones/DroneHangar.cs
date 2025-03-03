@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DroneHangar : MonoBehaviour
@@ -10,6 +11,7 @@ public class DroneHangar : MonoBehaviour
     public int maxAttackDrones;
     [SerializeField] float launchDelay = 0.5f;
     public float detectionRadius = 6f;
+    [SerializeField] int repairAmountPerSec = 10;
 
     [SerializeField] Collider2D detectionCollider;
 
@@ -20,6 +22,7 @@ public class DroneHangar : MonoBehaviour
     {
         SpawnStartDrones();
         StartCoroutine(LookForJobs());
+        StartCoroutine(RepairDrones());
     }
 
     #region Drones
@@ -111,6 +114,24 @@ public class DroneHangar : MonoBehaviour
         }
 
         return count;
+    }
+
+    IEnumerator RepairDrones()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+
+            // Heal one drone at a time
+            foreach(var drone in dockedDrones)
+            {
+                if (drone.droneHealth.GetHealth() < drone.droneHealth.GetMaxHealth())
+                {
+                    drone.droneHealth.ModifyHealth(repairAmountPerSec, 1, Vector2.zero, gameObject);
+                    break;
+                }
+            }
+        }
     }
 
     #endregion

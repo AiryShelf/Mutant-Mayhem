@@ -44,6 +44,18 @@ public class MainMenuController : MonoBehaviour
         CursorManager.Instance.inMenu = true;
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
         TouchManager.Instance.SetVirtualJoysticksActive(false);
+        StartCoroutine(DelayStartActions());
+    }
+
+    IEnumerator DelayStartActions()
+    {
+        yield return new WaitForFixedUpdate();
+
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+        {
+            CursorManager.Instance.MoveCustomCursorTo(Vector2.zero, CursorRangeType.Bounds, Vector2.zero, 0, new Rect(0, 0, 1, 1));
+            CursorManager.Instance.SetCustomCursorVisible(false);
+        }
     }
 
     public void OnStartGame()
@@ -70,6 +82,7 @@ public class MainMenuController : MonoBehaviour
             optionsPanel.fadeGroup.isTriggered = true;
             optionsPanel.Initialize();
             isOptionsOpen = true;
+            ScreenScaleChecker.InvokeAspectRatioChanged();
         }
         else
         {
@@ -87,6 +100,7 @@ public class MainMenuController : MonoBehaviour
             controlsPanel.fadeGroup.isTriggered = true;
             controlsPanel.Initialize();
             isControlsOpen = true;
+            ScreenScaleChecker.InvokeAspectRatioChanged();
         }
         else
         {
@@ -104,6 +118,7 @@ public class MainMenuController : MonoBehaviour
             profileFadeGroup.isTriggered = true;
             isProfilesOpen = true;
             profileSelectionUI.UpdateProfilePanel();
+            ScreenScaleChecker.InvokeAspectRatioChanged();
         }
         else
         {

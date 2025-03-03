@@ -286,7 +286,7 @@ public class TileManager : MonoBehaviour
         if (_TileStatsDict.ContainsKey(gridPos))
         {
             rootPos = GridToRootPos(gridPos);
-            pos = GridCenterToWorld(rootPos);
+            //pos = GridCenterToWorld(rootPos);
         }
         else
             return true;  // To stop building
@@ -306,7 +306,7 @@ public class TileManager : MonoBehaviour
             _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
             AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
 
-            ConstructionManager.Instance.RemoveBuildJob(pos);
+            ConstructionManager.Instance.RemoveBuildJob(GridCenterToWorld(rootPos));
             //ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
             return true;
         }
@@ -394,6 +394,8 @@ public class TileManager : MonoBehaviour
 
     void UpdateTileDamageSprite(Vector3Int rootPos)
     {
+        if (_TileStatsDict[rootPos].isBlueprint) return;
+        
         if (_TileStatsDict[rootPos].health == 0)
         {
             StatsCounterPlayer.StructuresLost++;

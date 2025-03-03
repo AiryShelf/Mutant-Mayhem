@@ -33,7 +33,7 @@ public class Drone : MonoBehaviour
     protected Coroutine alignCoroutine;
     protected Coroutine jobHeightCoroutine;
     protected Coroutine jobCheckCoroutine;
-    DroneHealth droneHealth; 
+    public DroneHealth droneHealth; 
 
     public virtual void Initialize(TurretGunSO droneGun)
     {

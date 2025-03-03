@@ -44,7 +44,7 @@ public class InputManager : MonoBehaviour
             else if (Touchscreen.current != null)
                 LastUsedDevice = Touchscreen.current;
         }
-
+        
         //LogPlatform();
     }
 

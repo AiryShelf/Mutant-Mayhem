@@ -34,7 +34,7 @@ public class ProfileManager : MonoBehaviour
             ClearAllPlayerPrefsForEditor();
 
         Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
-        Initialize();
+        //Initialize();
     }
 
     void Start()

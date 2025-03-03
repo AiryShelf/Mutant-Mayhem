@@ -30,6 +30,7 @@ public class DeviceRectAdjuster : MonoBehaviour
         cutomScalePivot.y = Mathf.Clamp(cutomScalePivot.y, 0f, 1f);
     }
 
+    float startScaleFactor;
     Vector2 startPivot;
     Vector2 startAnchoredPos;
     int lastWidth, lastHeight;
@@ -38,17 +39,23 @@ public class DeviceRectAdjuster : MonoBehaviour
 
     void Awake()
     {
-        startAnchoredPos = rectToScale.anchoredPosition;
-        ScreenScaleChecker.OnAspectRatioChanged += AspectRatioChanged;
+        startScaleFactor = rectToScale.localScale.x;
+        if (rectToScale.localScale.y != startScaleFactor)
+            Debug.LogWarning("DeviceRectScaler: Detected object with unsymetrical scaling.  X scale does not equal Y scale!");
     }
 
     void OnDestroy()
     {
         ScreenScaleChecker.OnAspectRatioChanged -= AspectRatioChanged;
+        InputManager.Instance.LastUsedDeviceChanged -= DeviceChanged;
     }
 
     void Start()
     {
+        startAnchoredPos = rectToScale.anchoredPosition;
+        ScreenScaleChecker.OnAspectRatioChanged += AspectRatioChanged;
+        InputManager.Instance.LastUsedDeviceChanged += DeviceChanged;
+
         StartCoroutine(DelayStart());
     }
 
@@ -60,9 +67,10 @@ public class DeviceRectAdjuster : MonoBehaviour
 
     void AdjustScale()
     {
-        if (touchScreenOnly && InputManager.LastUsedDevice != Touchscreen.current) return;
+        scaleFactor = startScaleFactor;
+        ScaleRect(scaleFactor);
 
-        scaleFactor = default16x9Scale;
+        if (touchScreenOnly && InputManager.LastUsedDevice != Touchscreen.current) return;
 
         if (aspectRatio >= 2.0f)
         {
@@ -85,6 +93,11 @@ public class DeviceRectAdjuster : MonoBehaviour
             scaleFactor = narrowScale;
         }
 
+        ScaleRect(scaleFactor);
+    }
+
+    void ScaleRect(float scaleFactor)
+    {
         if (useCustomPivot)
         {
             startPivot = rectToScale.pivot;
@@ -100,6 +113,8 @@ public class DeviceRectAdjuster : MonoBehaviour
 
     void AdjustPosition()
     {
+        rectToScale.anchoredPosition = startAnchoredPos;
+
         if (touchScreenOnly && InputManager.LastUsedDevice != Touchscreen.current) return;
 
         if (aspectRatio >= 2.0f)
@@ -127,6 +142,12 @@ public class DeviceRectAdjuster : MonoBehaviour
     void AspectRatioChanged(float aspectRatio)
     {
         this.aspectRatio = aspectRatio;
+        AdjustScale();
+        AdjustPosition();
+    }
+
+    void DeviceChanged(InputDevice device)
+    {
         AdjustScale();
         AdjustPosition();
     }

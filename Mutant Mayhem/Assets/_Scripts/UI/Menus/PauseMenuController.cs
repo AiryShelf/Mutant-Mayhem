@@ -78,6 +78,12 @@ public class PauseMenuController : MonoBehaviour
             return;
         }
 
+        if (isControlsOpen)
+        {
+            ToggleControlsMenu();
+            return;
+        }
+
         //Debug.Log("escape pressed");
         if (!player.IsDead && !buildingSystem.isInBuildMode 
             && !qCubeController.isUpgradesOpen)
