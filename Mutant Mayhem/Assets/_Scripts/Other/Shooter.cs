@@ -41,6 +41,7 @@ public class Shooter : MonoBehaviour
     public float currentAccuracy;
     protected PlayerShooter playerShooter;
     protected TurretShooter turretShooter;
+    bool initialized;
 
     
     protected virtual void Awake()
@@ -61,6 +62,28 @@ public class Shooter : MonoBehaviour
 
     protected virtual void Start()
     {
+        if (!initialized)
+            Initialize();
+    }
+    
+    public void InitializeDrone(GunSO gun)
+    {
+        gunList.Clear();
+        gunList.Add(gun);
+        ApplyPlanetProperties();
+
+        // Initialize first gun
+        SwitchGuns(0);
+        gunsAmmoInClips[0] = 0;
+        isReloading = true;
+
+        criticalHit = GetComponent<CriticalHit>();
+        StartChargingGuns();
+        initialized = true;
+    }
+
+    public void Initialize()
+    {
         CopyGunList();
         ApplyPlanetProperties();
 
@@ -71,6 +94,7 @@ public class Shooter : MonoBehaviour
 
         criticalHit = GetComponent<CriticalHit>();
         StartChargingGuns();
+        initialized = true;
     }
 
     protected virtual void Update()
@@ -104,6 +128,8 @@ public class Shooter : MonoBehaviour
 
     protected void CopyGunList()
     {
+        gunList.Clear();
+
         // Make a working copy of the gun list
         foreach (GunSO gun in _gunListSource)
         {

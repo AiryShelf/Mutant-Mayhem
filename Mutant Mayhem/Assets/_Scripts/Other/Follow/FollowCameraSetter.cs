@@ -9,6 +9,6 @@ public class FollowCameraSetter : MonoBehaviour
 
     void Start()
     {
-        followCamera.Follow = CursorManager.Instance.worldCursorTrans;
+        followCamera.Follow = CursorManager.Instance.customCursorWorld;
     }
 }

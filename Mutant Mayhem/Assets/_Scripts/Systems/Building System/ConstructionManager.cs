@@ -8,7 +8,7 @@ public class ConstructionManager : MonoBehaviour
     [SerializeField] int maxDronesPerJob;
     // Lists track jobs and number of assigned drones
     List<KeyValuePair<DroneBuildJob, int>> buildJobs = new List<KeyValuePair<DroneBuildJob, int>>();
-    List<KeyValuePair<DroneJob, int>> repairJobs = new List<KeyValuePair<DroneJob, int>>();
+    Dictionary<Vector2, (DroneJob job, int count)> repairJobs = new Dictionary<Vector2, (DroneJob, int)>();
 
     TileManager tileManager;
     BuildingSystem buildingSystem;
@@ -54,19 +54,11 @@ public class ConstructionManager : MonoBehaviour
 
     public void AddRepairJob(DroneJob repairJob)
     {
-        foreach (var kvp in repairJobs)
-        {
-            if (kvp.Key.jobPosition == repairJob.jobPosition)
-            {
-                //Debug.LogWarning($"ContructionManager: Tired to add a RepairJob that already exists at {repairJob.jobPosition}!");
-                return;
-            }
-        }
-
-        repairJobs.Add(new KeyValuePair<DroneJob, int>(repairJob, 0));
+        repairJobs[repairJob.jobPosition] = (repairJob, 0);
         Debug.Log($"ConstructionManager: Added repairJob at: {repairJob.jobPosition}");
     }
 
+    /*
     public void InsertRepairJob(DroneJob repairJob)
     {
         foreach (var kvp in repairJobs)
@@ -81,6 +73,7 @@ public class ConstructionManager : MonoBehaviour
         repairJobs.Insert(0, new KeyValuePair<DroneJob, int>(repairJob, 0));
         Debug.Log($"ConstructionManager: Inserted repairJob at: {repairJob.jobPosition}");
     }
+    */
 
     #endregion
 
@@ -97,18 +90,7 @@ public class ConstructionManager : MonoBehaviour
         }
 
         // Remove jobs from the repairJobs list
-        int repairJobsRemoved = repairJobs.RemoveAll(kvp => kvp.Key.jobPosition == pos);
-
-        if (repairJobsRemoved > 1)
-        {
-            Debug.LogError($"ConstructionManager: Removed {repairJobsRemoved} repair job(s) at position {pos}");
-        }
-
-        // If no jobs were found in either list
-        if (buildJobsRemoved == 0 && repairJobsRemoved == 0)
-        {
-            Debug.LogWarning($"ConstructionManager: No jobs found at position {pos} to remove.");
-        }
+        repairJobs.Remove(pos);
     }
 
     public void RemoveBuildJob(DroneBuildJob jobToRemove)
@@ -137,25 +119,12 @@ public class ConstructionManager : MonoBehaviour
 
     public void RemoveRepairJob(DroneJob jobToRemove)
     {
-        int removedCount = repairJobs.RemoveAll(kvp => kvp.Key == jobToRemove);
-
-        if (removedCount > 1)
-            Debug.LogError($"ConstructionManager: Found and removed multiple repair jobs for the same key: {jobToRemove}");
-
-        if (removedCount == 0)
-            Debug.LogError($"ConstructionManager: No repair job found for the key: {jobToRemove}");
+        repairJobs.Remove(jobToRemove.jobPosition);
     }
 
     public void RemoveRepairJob(Vector2 positionToRemove)
     {
-        // Remove all jobs matching the specified position
-        int removedCount = repairJobs.RemoveAll(kvp => kvp.Key.jobPosition == positionToRemove);
-
-        if (removedCount > 1)
-            Debug.LogError($"ConstructionManager: Found and removed multiple repair jobs at the same position: {positionToRemove}");
-
-        if (removedCount == 0)
-            Debug.LogError($"ConstructionManager: No repair job found to remove at the position: {positionToRemove}");
+        repairJobs.Remove(positionToRemove);
     }
 
     #endregion
@@ -194,15 +163,15 @@ public class ConstructionManager : MonoBehaviour
         DroneJob job = new DroneJob(DroneJobType.None, Vector2.zero);
         int leastDronesAssigned = int.MaxValue;
 
-        for (int i = 0; i < repairJobs.Count; i++)
+        foreach (var repairJob in repairJobs)
         {
-            int dronesAssigned = repairJobs[i].Value;
+            int dronesAssigned = repairJob.Value.count;
 
             // Select the job with the fewest drones assigned
             if (dronesAssigned < leastDronesAssigned &&
                 dronesAssigned < maxDronesPerJob)
             {
-                job = repairJobs[i].Key;
+                job = repairJob.Value.job;
                 leastDronesAssigned = dronesAssigned;
             }
         }
@@ -231,17 +200,12 @@ public class ConstructionManager : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < repairJobs.Count; i++)
-            {
-                if (repairJobs[i].Key == job)
-                {
-                    repairJobs[i] = new KeyValuePair<DroneJob, int>(job, repairJobs[i].Value + value);
-                    break;
-                }
-            }
+            if (repairJobs.ContainsKey(job.jobPosition))
+                repairJobs[job.jobPosition] = (job, repairJobs[job.jobPosition].count + value);
         }
     }
 
+    /*
     public DroneJob GetNearestJob(Vector2 pos)
     {
         DroneJob closestJob = null;
@@ -270,6 +234,7 @@ public class ConstructionManager : MonoBehaviour
 
         return closestJob;
     }
+    */
 
     public bool CheckIfBuildJobExists(DroneBuildJob buildJob)
     {
@@ -286,7 +251,7 @@ public class ConstructionManager : MonoBehaviour
     {
         foreach (var kvp in repairJobs)
         {
-            if (kvp.Key == repairJob)
+            if (kvp.Value.job == repairJob)
                 return true;
         }
 

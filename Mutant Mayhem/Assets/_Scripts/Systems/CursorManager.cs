@@ -13,7 +13,8 @@ public class CursorManager : MonoBehaviour
     public static CursorManager Instance { get; private set; }
 
     [SerializeField] InputActionAsset inputActionAsset;
-    public Transform worldCursorTrans;
+    public Transform customCursorWorld;
+    [SerializeField] Image customCursorUI;
     
     [Header("Aim Cursor")]
     public float aimDistance = 20f;
@@ -34,7 +35,9 @@ public class CursorManager : MonoBehaviour
     [SerializeField] Vector2 repairCursorHotspot = Vector2.zero;
 
     [Header("Custom Cursor")]
+    public VirtualJoystick aimJoystick;
     public bool usingCustomCursor = false;
+    public bool inMenu;
     public float cursorSpeedMin = 200;
     public float cursorSpeedMax = 1600;
     public float cursorSpeedFactor = 600;
@@ -42,18 +45,14 @@ public class CursorManager : MonoBehaviour
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
     Vector2 cursorVelocity = Vector2.zero;
     public float cursorAcceleration = 1000f;
-    [SerializeField] Image customCursorImage;
     [SerializeField] int rayDistance = 100;
     public GameObject currentHoveredObject = null;
     [SerializeField] GraphicRaycaster persistentCanvasGR;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
-    public bool inMenu;
 
     Player player;
 
-    bool initialized;
-    bool isDropdownOpen = false;
-    bool wasJoystickAsMouse = false;
+    bool initialized = false;
     
     Transform customCursorTrans;
     InputAction clickAction;
@@ -68,7 +67,7 @@ public class CursorManager : MonoBehaviour
         { 4, new List<GameObject>() }  // InputFields
     };
     float updateCount = 0f;
-    [SerializeField] float framesPerUpdate = 6;
+    [SerializeField] float framesPerHoverUpdate = 6;
 
     void Awake()
     {
@@ -84,20 +83,6 @@ public class CursorManager : MonoBehaviour
         }
 
         SetCustomCursorVisible(false);
-        Initialize();
-    }
-
-    public void Initialize()
-    {
-        initialized = true;
-        player = FindObjectOfType<Player>();
-        InputActionMap uiActionMap = inputActionAsset.FindActionMap("UI");
-        clickAction = uiActionMap.FindAction("SimulatedClick");
-        clickAction.started += CheckForSimulatedClick;
-        cancelAction = uiActionMap.FindAction("Cancel");
-        cancelAction.started += OnCancelPressed;
-        customCursorTrans = customCursorImage.transform;
-        SetAimCursor();
     }
 
     void OnEnable()
@@ -111,9 +96,33 @@ public class CursorManager : MonoBehaviour
         cancelAction.started -= OnCancelPressed;
     }
 
+    void Start()
+    {
+        Initialize();
+    }
+    
+    public void Initialize()
+    {
+        
+        aimJoystick = TouchManager.Instance.aimJoystick;
+        player = FindObjectOfType<Player>();
+
+        if (initialized) return;
+
+        InputActionMap uiActionMap = inputActionAsset.FindActionMap("UI");
+        clickAction = uiActionMap.FindAction("SimulatedClick");
+        clickAction.started += CheckForSimulatedClick;
+        cancelAction = uiActionMap.FindAction("Cancel");
+        cancelAction.started += OnCancelPressed;
+        customCursorTrans = customCursorUI.transform;
+        initialized = true;
+        SetAimCursor();
+    }
+
     void Update()
     {
         if (usingCustomCursor)
+            //Debug.Log("No CustomCursorControl: disabled");       
             CustomCursorControl();
         else 
         {
@@ -122,7 +131,7 @@ public class CursorManager : MonoBehaviour
         }
 
         updateCount++;
-        if (updateCount >= framesPerUpdate)
+        if (updateCount >= framesPerHoverUpdate)
         {
             CustomCursorHover();
             updateCount = 0;
@@ -137,10 +146,10 @@ public class CursorManager : MonoBehaviour
     public void SetCustomCursorVisible(bool visible)
     {
         if (usingCustomCursor)
-            customCursorImage.enabled = visible;
+            customCursorUI.enabled = visible;
         else 
         {
-            customCursorImage.enabled = false;
+            customCursorUI.enabled = false;
             if (currentHoveredObject != null)
             {
                 PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
@@ -162,7 +171,10 @@ public class CursorManager : MonoBehaviour
     public void SetGraphicRaycasters(List<GraphicRaycaster> raycasters)
     {
         graphicRaycasters.Clear();
-        graphicRaycasters = raycasters;
+        
+        foreach(var rc in raycasters)
+            graphicRaycasters.Add(rc);
+
         graphicRaycasters.Add(persistentCanvasGR);
     }
 
@@ -173,12 +185,15 @@ public class CursorManager : MonoBehaviour
         customCursorTrans.position = (Vector2)Camera.main.WorldToScreenPoint(worldPos);
     }
 
-    void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
+    public void MoveCustomCursorTo(Vector2 uiPos, CursorRangeType rangeType, Vector2 worldCenter, float worldRadius, Rect rect)
     {
+        if (uiPos == (Vector2)customCursorTrans.position) return;
+        //Debug.Log("CursorManager: Received uiPos: " + uiPos);
+
         switch (rangeType)
         {
             case CursorRangeType.Radius:
-                uiPos = ClampUiPositionToScreenCircle(uiPos, worldCenter, worldRadius, Camera.main);
+                uiPos = ClampUiPositionToWorldCircle(uiPos, worldCenter, worldRadius);
                 customCursorTrans.position = uiPos;
                 break;
             case CursorRangeType.Bounds:
@@ -186,56 +201,37 @@ public class CursorManager : MonoBehaviour
                 break;
         }
         customCursorTrans.position = uiPos;
+
+        if (player != null)
+        {
+            player.aimWorldPos = Camera.main.ScreenToWorldPoint(uiPos);
+            player.lastAimDir = player.aimWorldPos - player.transform.position;
+        }
+        //Debug.Log($"CursorManager: Moved custom cursor via {rangeType} clamp to: {uiPos}");
     }
 
     public void CustomCursorControl()
     {
-        if (SettingsManager.Instance.useFastJoystickAim && !inMenu && Gamepad.current.rightStickButton.wasPressedThisFrame)
+        if (SettingsManager.Instance.useFastJoystickAim && !inMenu && 
+            Gamepad.current != null && Gamepad.current.rightStickButton.wasPressedThisFrame)
         {
-            InputController.SetJoystickMouseControl(!InputController.GetJoystickAsMouseState());
+            InputManager.SetJoystickMouseControl(!InputManager.GetJoystickAsMouseState());
             MessagePanel.PulseMessage("Aim mode switched! Cick right thumbstick to switch back", Color.yellow);
         }
 
-        if (!InputController.GetJoystickAsMouseState())
+        if (!InputManager.GetJoystickAsMouseState())
         {
             cursorVelocity = Vector2.zero;
             return;
         }
 
-        Vector2 joystickInput = Vector2.zero;
-        if (Gamepad.current != null)
-            joystickInput = Gamepad.current.rightStick.ReadValue();
-        //Debug.Log($"Joystick input: {joystickInput}");
-
-        float joystickInputMagnitude = joystickInput.magnitude;
-        //Debug.Log($"Joystick Input Magnitude: {joystickInputMagnitude}");
-        float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, cursorSpeedCurveMagnitude);
-        //Debug.Log($"Curved Magnitude: {curvedMagnitude}");
-        //Debug.Log($"Cursor Speed Factor: {cursorSpeedFactor}");
-
-        float targetSpeed = cursorSpeedFactor * curvedMagnitude * joystickInputMagnitude; // [New] Full speed.
-        Vector2 direction = (joystickInputMagnitude > 0f) ? joystickInput.normalized : Vector2.zero; // [New] Direction of movement.
+        (float joystickInputMagnitude, Vector2 direction, float targetSpeed) = GetJoystickData();
 
         // If the joystick is near the center, set velocity to zero.
         if (joystickInputMagnitude <= joystickDeadzone)
-        {
             cursorVelocity = Vector2.zero;
-        }
         else
-        {
-            float currentSpeed = cursorVelocity.magnitude;
-            if (targetSpeed > currentSpeed)
-            {
-                // Accelerate gradually until reaching full speed.
-                currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, cursorAcceleration * Time.unscaledDeltaTime); // [New]
-            }
-            else
-            {
-                // If the joystick input is reduced, immediately set to the new target speed.
-                currentSpeed = targetSpeed; // [New]
-            }
-            cursorVelocity = direction * currentSpeed; // [New]
-        }
+            ApplyAcceleration(direction, targetSpeed);
 
         // Calculate displacement for this frame.
         Vector2 newAimDir = cursorVelocity * Time.unscaledDeltaTime;
@@ -243,17 +239,18 @@ public class CursorManager : MonoBehaviour
         //Vector2 newAimDir = joystickInput * cursorSpeedFactor * curvedMagnitude * Time.unscaledDeltaTime;
         //Debug.Log($"New Aim Dir: {newAimDir}");
         Vector2 newCursorPos;
+        Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
 
         if (player != null && player.stats.playerShooter.isBuilding)
         {
             newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
+            
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, 
-                               BuildingSystem.buildRange, new Rect());
+                               BuildingSystem.buildRange, screenBounds);
         }
         else if (player != null && player.stats.playerShooter.isRepairing)
         {
             newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
-            Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
             float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                           player.stats.playerShooter.currentGunSO.bulletSpeed;
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, 
@@ -264,12 +261,52 @@ public class CursorManager : MonoBehaviour
             Vector2 currentPos = GetCustomCursorUiPos();
             //Debug.Log($"currentPos: {currentPos}");
             newCursorPos = currentPos + newAimDir;
-            Rect screenBounds = new Rect(0, 0, Screen.width, Screen.height);
-            //Debug.Log($"CustomCursorControl() attempting to move within screen bounds: {screenBounds} to new position: {newCursorPos}");
-            MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
+            if (newCursorPos != currentPos)
+            {
+                //Debug.Log($"CustomCursorControl() attempting to move within screen bounds: {screenBounds} to new position: {newCursorPos}");
+                MoveCustomCursorTo(newCursorPos, CursorRangeType.Bounds, Vector2.zero, 0f, screenBounds);
+            }
         }
 
-        //Debug.Log($"New Cursor Pos: {newCursorPos}");
+        //Debug.Log($"CursorManager: New Cursor Pos: {newCursorPos}");
+    }
+
+    (float, Vector2, float) GetJoystickData()
+    {
+        Vector2 joystickInput = Vector2.zero;
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            joystickInput = aimJoystick.JoystickOutput;
+        else if (InputManager.LastUsedDevice == Gamepad.current)
+            joystickInput = Gamepad.current.rightStick.ReadValue();
+        
+        //Debug.Log($"Joystick input: {joystickInput}");
+
+        float joystickInputMagnitude = joystickInput.magnitude;
+        //Debug.Log($"Joystick Input Magnitude: {joystickInputMagnitude}");
+        float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, cursorSpeedCurveMagnitude);
+        //Debug.Log($"Curved Magnitude: {curvedMagnitude}");
+        //Debug.Log($"Cursor Speed Factor: {cursorSpeedFactor}");
+
+        float targetSpeed = cursorSpeedFactor * curvedMagnitude * joystickInputMagnitude;
+        Vector2 direction = (joystickInputMagnitude > 0f) ? joystickInput.normalized : Vector2.zero;
+
+        return (joystickInputMagnitude, direction, targetSpeed);
+    }
+
+    void ApplyAcceleration(Vector2 direction, float targetSpeed)
+    {
+        float currentSpeed = cursorVelocity.magnitude;
+        if (targetSpeed > currentSpeed)
+        {
+            // Accelerate gradually until reaching full speed.
+            currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, cursorAcceleration * Time.unscaledDeltaTime);
+        }
+        else
+        {
+            // If the joystick input is reduced, immediately set to the new target speed.
+            currentSpeed = targetSpeed;
+        }
+        cursorVelocity = direction * currentSpeed;
     }
 
     #endregion
@@ -278,7 +315,7 @@ public class CursorManager : MonoBehaviour
 
     public void CheckForSimulatedClick(InputAction.CallbackContext context)
     {
-        if (!InputController.GetJoystickAsMouseState() || !usingCustomCursor)
+        if (InputManager.LastUsedDevice != Gamepad.current || !InputManager.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
         //Debug.Log("Simulated click started on currentHoveredObject: " + currentHoveredObject);
@@ -371,7 +408,7 @@ public class CursorManager : MonoBehaviour
 
     public void CustomCursorHover()
     {
-        if (!InputController.GetJoystickAsMouseState() || !usingCustomCursor)
+        if (!InputManager.GetJoystickAsMouseState() || !usingCustomCursor)
             return;
 
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
@@ -531,18 +568,18 @@ public class CursorManager : MonoBehaviour
         return customCursorTrans.position;
     }
 
-    Vector2 ClampUiPositionToScreenCircle(Vector2 screenPos, Vector2 worldCenter, float worldRadius, Camera cam)
+    Vector2 ClampUiPositionToWorldCircle(Vector2 screenPos, Vector2 worldCenter, float worldRadius)
     {
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Vector2 worldOffset = worldPos - worldCenter;
         
-        // Check if the screen position is outside the screen-space circle.
+        // Check if the screen position is outside the world-space circle.
         if (worldOffset.sqrMagnitude > worldRadius * worldRadius)
         {
-            // Clamp the offset to the screen radius.
+            // Clamp the offset to the world radius.
             worldOffset = worldOffset.normalized * worldRadius;
             Vector2 clampedWorldPos = worldCenter + worldOffset;
-            screenPos = cam.WorldToScreenPoint(clampedWorldPos);
+            screenPos = Camera.main.WorldToScreenPoint(clampedWorldPos);
         }
 
         return screenPos;
@@ -568,30 +605,30 @@ public class CursorManager : MonoBehaviour
         if (player != null && player.playerShooter.currentGunIndex == 4)
         {
             SetRepairCursor();
-            customCursorImage.sprite = repairCursor;
-            customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            customCursorUI.sprite = repairCursor;
+            customCursorUI.rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
         else
         {
             // Aiming cursor
             Cursor.SetCursor(aimCursorTexture, aimCursorHotspot, CursorMode.Auto);
-            customCursorImage.sprite = aimCursor;
-            customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            customCursorUI.sprite = aimCursor;
+            customCursorUI.rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
     }
 
     public void SetBuildCursor()
     {
         Cursor.SetCursor(buildCursorTexture, buildCursorHotspot, CursorMode.Auto);
-        customCursorImage.sprite = buildCursor;
-        customCursorImage.rectTransform.pivot = customBuildCursorPivot;
+        customCursorUI.sprite = buildCursor;
+        customCursorUI.rectTransform.pivot = customBuildCursorPivot;
     }
 
     public void SetRepairCursor()
     {
         Cursor.SetCursor(repairCursorTexture, repairCursorHotspot, CursorMode.Auto);
-        customCursorImage.sprite = repairCursor;
-        customCursorImage.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        customCursorUI.sprite = repairCursor;
+        customCursorUI.rectTransform.pivot = new Vector2(0.5f, 0.5f);
     }
 
     public void SetSystemCursor()

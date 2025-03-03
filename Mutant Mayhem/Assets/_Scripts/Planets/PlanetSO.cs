@@ -12,6 +12,7 @@ public class PlanetSO : ScriptableObject
     public List<PlanetPropertySO> properties;
     public Tile terrainTile;
     public Mission mission;
+    public int nightToSurvive = 10;
     public GameObject highRezPlanetPrefab;
     public List<PlanetSO> prerequisitePlanets;
 
@@ -24,6 +25,7 @@ public class PlanetSO : ScriptableObject
 
     [Header("WaveController Settings:")]
     [Header("Wave Properties")]
+    public int creditsPerWave = 150; // Additive bonus (waveIndex*creditsPerWave)
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public float wavesTillAddBase = 1; 
     public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave

@@ -84,7 +84,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6791506771164599335}
-  - component: {fileID: 8679035063009093564}
+  - component: {fileID: 4311379649128071712}
   m_Layer: 0
   m_Name: Task_Sprint
   m_TagString: Untagged
@@ -115,7 +115,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8679035063009093564
+--- !u!114 &4311379649128071712
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 936962933341166503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 580ba9ec9e2645c42a6c7a2b73203c49, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e563b44599932d4c83b9ff3b23eaa7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   taskText: {fileID: 3111313659524009458}
@@ -133,11 +133,7 @@ MonoBehaviour:
   isComplete: 0
   progress: 0
   missionPanelController: {fileID: 0}
-  timeToPerformAction: 2
-  inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
-  actionMapName: Player
-  actionName: Move
-  secondActionName: Sprint
+  timeToSprint: 4
 --- !u!1 &8264780875990421883
 GameObject:
   m_ObjectHideFlags: 0

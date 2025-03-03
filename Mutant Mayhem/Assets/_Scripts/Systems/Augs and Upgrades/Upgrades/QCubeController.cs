@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class QCubeController : MonoBehaviour
+public class QCubeController : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] GameObject tutorialUpgradePanelPrefab;
     [SerializeField] RectTransform gamePlayCanvas;
+    [SerializeField] CameraController cameraController;
 
     [Header("Death")]
     [SerializeField] TextMeshProUGUI deathTitleText;
@@ -108,11 +110,11 @@ public class QCubeController : MonoBehaviour
 
     void OnQCubeInteract(InputAction.CallbackContext context)
     {
-        if (player.playerShooter.isBuilding)
-        {
-            player.animControllerPlayer.ToggleBuildMode();
-        }
+        TryInteract();
+    }
 
+    public void TryInteract()
+    {
         // Look for player's main collider
         Collider2D[] playerColliders = Physics2D.OverlapCircleAll(
             transform.position, interactRadius, LayerMask.GetMask("Player"));
@@ -123,9 +125,13 @@ public class QCubeController : MonoBehaviour
                 //Debug.Log("Player in QCube Range");
 
                 // Open or close menu
-                if (!isUpgradesOpen)
+                if (!isUpgradesOpen && !CursorManager.Instance.inMenu)
                 {
                     StartCoroutine(OpenUpgradeWindow());
+                    if (player.playerShooter.isBuilding)
+                    {
+                        player.animControllerPlayer.ToggleBuildMode();
+                    }
                     return;
                 }
                 else
@@ -137,17 +143,17 @@ public class QCubeController : MonoBehaviour
         }
 
         if (!isUpgradesOpen)
-            {
-                MessagePanel.PulseMessage("Not close enough to access the " +
-                                        "Q-Cube. Get closer!", Color.yellow);
-                // Player is not in range, show UI message to the player
-                //Debug.Log("Player NOT in QCube Range!");
-            }
-            else
-            {
-                CloseUpgradeWindow();
-                return;
-            }
+        {
+            MessagePanel.PulseMessage("Not close enough to access the " +
+                                    "Q-Cube. Get closer!", Color.yellow);
+            // Player is not in range, show UI message to the player
+            //Debug.Log("Player NOT in QCube Range!");
+        }
+        else
+        {
+            CloseUpgradeWindow();
+            return;
+        }
     }
 
     IEnumerator OpenUpgradeWindow()
@@ -157,12 +163,17 @@ public class QCubeController : MonoBehaviour
         wasRepairing = player.stats.playerShooter.isRepairing;
         player.stats.playerShooter.isRepairing = false;
 
-        InputController.SetJoystickMouseControl(true);
-        CursorManager.Instance.inMenu = true;
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            CursorManager.Instance.SetCustomCursorVisible(false);
 
+        InputManager.SetJoystickMouseControl(true);
+        CursorManager.Instance.inMenu = true;
+        cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.35f, true, false);
+
+        player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
         fireAction.Disable();
         throwAction.Disable();
-        if (InputController.LastUsedDevice == Gamepad.current)
+        if (InputManager.LastUsedDevice == Gamepad.current)
             toolbarAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
@@ -173,9 +184,15 @@ public class QCubeController : MonoBehaviour
         if (player.stats.playerShooter.currentGunIndex == 4) // Repair Gun
             player.stats.playerShooter.isRepairing = true;
         else
-            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
 
         CursorManager.Instance.inMenu = false;
+        if (!player.stats.playerShooter.isBuilding && !player.stats.playerShooter.isRepairing)
+            cameraController.ZoomAndFocus(player.transform, 0, 1, 1f, false, false);
+        else 
+            buildingSystem.LockCameraToPlayer(true);
+
+        CursorManager.Instance.SetCustomCursorVisible(true);
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();
@@ -194,5 +211,10 @@ public class QCubeController : MonoBehaviour
 
         randomIndex = UnityEngine.Random.Range(0, cubeDeathSubtitles.Count);
         deathSubtitleText.text = cubeDeathSubtitles[randomIndex];
-    } 
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        TryInteract();
+    }
 }

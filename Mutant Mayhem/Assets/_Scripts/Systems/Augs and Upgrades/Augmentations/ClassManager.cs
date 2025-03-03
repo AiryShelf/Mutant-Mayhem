@@ -55,7 +55,7 @@ public class ClassManager : MonoBehaviour
                 buildingSystem.structureCostMult -= 0.2f;
                 player.stats.structureStats.maxTurrets = 1;
                 player.playerShooter.gunsUnlocked[4] = true; // Repair gun
-                player.playerShooter.gunList[4].damage += 2; 
+                player.playerShooter.gunList[4].damage *= 2; 
                 player.stats.numStartBuilderDrones = 4;
                 player.stats.numStartAttackDrones = 0;
                 break;

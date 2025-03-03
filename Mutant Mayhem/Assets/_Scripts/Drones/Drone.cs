@@ -8,9 +8,6 @@ public class Drone : MonoBehaviour
     public string objectPoolName = "";
     public DroneType droneType = DroneType.Builder;
     public float moveSpeed = 3;
-    public float buildSpeed = 0.1f;  // For upgrades, most of stats should be moved to PlayerStats
-    public float actionDelay = 1;
-    public float repairSpeed = 1;
     public DroneJob currentJob;
     public Rigidbody2D rb;
     public SpriteRenderer sr;
@@ -36,7 +33,7 @@ public class Drone : MonoBehaviour
     protected Coroutine alignCoroutine;
     protected Coroutine jobHeightCoroutine;
     protected Coroutine jobCheckCoroutine;
-    DroneHealth droneHealth; 
+    public DroneHealth droneHealth; 
 
     public virtual void Initialize(TurretGunSO droneGun)
     {
@@ -48,8 +45,7 @@ public class Drone : MonoBehaviour
         }
         droneHealth.SetHealth(droneHealth.GetMaxHealth());
 
-        shooter.gunList[0] = droneGun;
-        shooter.SwitchGuns(0);
+        shooter.InitializeDrone(droneGun);
 
         if (this is AttackDrone attackDrone)
             attackDrone.shooter.StartChargingGuns();

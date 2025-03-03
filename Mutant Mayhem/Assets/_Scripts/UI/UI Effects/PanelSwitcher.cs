@@ -11,8 +11,6 @@ public class PanelSwitcher : MonoBehaviour
     public UI_PanelBase[] panels;
     public Button[] tabButtons;
     public float swipeDuration = 0.5f;
-    public FadeCanvasGroupsWave prevButton;
-    public FadeCanvasGroupsWave nextButton;
     public bool isTriggered;
     bool isOpen;
 
@@ -57,11 +55,11 @@ public class PanelSwitcher : MonoBehaviour
         // Check swipe input
         if (isOpen)
         {
-            if (Keyboard.current.qKey.wasPressedThisFrame ||
-                Gamepad.current.leftShoulder.wasPressedThisFrame)
+            if ((Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame) ||
+                (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame))
                 SwipeLeft();
-            else if (Keyboard.current.eKey.wasPressedThisFrame ||
-                     Gamepad.current.rightShoulder.wasPressedThisFrame)
+            else if ((Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame) ||
+                     (Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame))
                 SwipeRight();
         }
     }

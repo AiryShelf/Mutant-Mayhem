@@ -12,15 +12,15 @@ public class MouseLooker : MonoBehaviour
     public bool deathTriggered;
     public bool lockedToPlayer;
     Vector3 mousePos;
-    InputController inputController;
+    InputManager inputController;
     InputDevice currentDevice;
 
     void Start()
     {
-        inputController = InputController.Instance;
+        inputController = InputManager.Instance;
         inputController.LastUsedDeviceChanged += OnLastUsedDeviceChanged;
 
-        OnLastUsedDeviceChanged(InputController.LastUsedDevice);
+        OnLastUsedDeviceChanged(InputManager.LastUsedDevice);
 
         gameObject.transform.parent = null;
     }

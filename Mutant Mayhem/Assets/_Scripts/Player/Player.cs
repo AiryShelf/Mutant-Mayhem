@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
     public float joystickDeadzone = 0.05f;
     [SerializeField] float joystickCurveMagnitude = 2;
 
+
     [Header("Sound")]
     [SerializeField] SoundSO walkGrassSound;
     [SerializeField] SoundSO walkWoodSound;
@@ -86,6 +87,7 @@ public class Player : MonoBehaviour
     [SerializeField] SoundSO walkMetalSound;
 
     [Header("Other")]
+    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
     public InputActionAsset inputAsset;
     [SerializeField] GameObject grenadePrefab;
     [SerializeField] Transform headImageTrans;
@@ -99,19 +101,20 @@ public class Player : MonoBehaviour
 
     [SerializeField] float experimentRotationConstant; 
     
-    Vector3 aimPos = Vector3.zero;
-    Vector3 lastAimDir = Vector3.zero;
+    [Header("Dynamic Vars, Don't set here")]
+    public Vector3 aimWorldPos = Vector3.zero;
+    public Vector3 lastAimDir = Vector3.zero;
     float aimDistance = 10;
     float aimMinDist = 5;
-    Rect blankRect = new Rect();
 
     Coroutine sprintCoroutine;
     float sprintSpeedAmount;
-    Vector2 rawInput;
+    public Vector2 rawInput;
     Vector2 muzzleDirToMouse;
     float muzzleAngleToMouse;
     Rigidbody2D myRb;
     Stamina myStamina;
+    public bool isSprinting;
     public PlayerShooter playerShooter;
     static bool _isDead; // Backing field
     public static event Action<bool> OnPlayerDestroyed;
@@ -135,14 +138,16 @@ public class Player : MonoBehaviour
     float lastFootstepTime;
     float footstepCooldown = 0.1f;
     int previousGunIndex;
-    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     InputAction sprintAction;
+    InputAction pointAction;
+    InputAction clickAction;
+    Coroutine delayShootCancel;
+    bool isFiring = false;
 
     void Awake()
     {
         //KillAllEnemies();
-        TimeControl.Instance.ResetTimeScale();
 
         stats.player = GetComponent<Player>();
         playerShooter = GetComponent<PlayerShooter>();
@@ -159,38 +164,60 @@ public class Player : MonoBehaviour
         IsDead = false;
 
         // Inputs
-        InputActionMap actionMap = inputAsset.FindActionMap("Player");
-        sprintAction = actionMap.FindAction("Sprint");
-        aimDistance = CursorManager.Instance.aimDistance;
-        aimMinDist = CursorManager.Instance.aimMinDistance;
+        InputActionMap playerMap = inputAsset.FindActionMap("Player");
+        sprintAction = playerMap.FindAction("Sprint");
+        InputActionMap uiMap = inputAsset.FindActionMap("UI");
+        pointAction = uiMap.FindAction("Point");
+        clickAction = uiMap.FindAction("Click");
     }
 
     void OnEnable()
     {
         sprintAction.performed += SprintInput_Performed;
         sprintAction.canceled += SprintInput_Cancelled;
-        TimeControl.Instance.SubscribePlayerTimeControl(this);
+        //pointAction.performed += OnPoint_Performed;
+        //clickAction.performed += OnClick_Performed;
     }
 
     void OnDisable()
     {
         sprintAction.performed -= SprintInput_Performed;
         sprintAction.canceled -= SprintInput_Cancelled;
+        //pointAction.performed -= OnPoint_Performed;
+        //clickAction.performed -= OnClick_Performed;
         TimeControl.Instance.UnsubscribePlayerTimeControl(this);
     }
 
     void Start()
     {
-        Application.targetFrameRate = 120;
+        StartCoroutine(ForceCanvasUpdate());
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        SettingsManager.Instance.ApplyGameplaySettings();
+
+        StartCoroutine(DelayScreenBoundReset());
+        TouchManager.Instance.player = this;
+        TouchManager.Instance.buildMenuController = stats.structureStats.buildingSystem.buildMenuController;
+        TouchManager.Instance.buildPanelRect = TouchManager.Instance.buildMenuController.transform as RectTransform;
+        CursorManager.Instance.Initialize();
+        CursorManager.Instance.inMenu = false;
+        CursorManager.Instance.MoveCustomCursorWorldToUi(transform.position);
+        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+                TouchManager.Instance.SetVirtualJoysticksActive(true);
+        InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+        LinkVirtualJoysticks();
+        aimDistance = CursorManager.Instance.aimDistance;
+        aimMinDist = CursorManager.Instance.aimMinDistance;
+
+        TimeControl.Instance.SubscribePlayerTimeControl(this);
+        TimeControl.Instance.ResetTimeScale();
+        if (InputManager.IsMobile())
+            Application.targetFrameRate = 60;
+        else
+            Application.targetFrameRate = 120;
         
         SFXManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
-        
-        CursorManager.Instance.Initialize();
-        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
-        SettingsManager.Instance.ApplyGameplaySettings();
 
         TurretManager.Instance.Initialize(this);
         UpgradeManager.Instance.Initialize();
@@ -202,6 +229,50 @@ public class Player : MonoBehaviour
         
         StartCoroutine(Sprint(false));
         RefreshMoveForces();
+        ScreenScaleChecker.InvokeAspectRatioChanged();
+    }
+
+    IEnumerator DelayScreenBoundReset()
+    {
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+
+        TouchManager.Instance.RefreshScreenBounds();
+    }
+
+    void FixedUpdate()
+    {
+        if (!IsDead)
+        {
+            LookAtMouse();
+            Move();
+        }
+        else
+        {
+            playerShooter.isShooting = false; 
+        }
+    }
+
+    IEnumerator ForceCanvasUpdate()
+    {
+        // Wait for the end of the frame to ensure everything is initialized.
+        yield return new WaitForSeconds(2);
+        Canvas.ForceUpdateCanvases();
+    }
+
+    void LinkVirtualJoysticks()
+    {
+        VirtualJoystick[] allVirtualJoysticks = FindObjectsOfType<VirtualJoystick>(true);
+
+        foreach (var stick in allVirtualJoysticks)
+        {
+            stick.animControllerPlayer = animControllerPlayer;
+            stick.player = this;
+        }
     }
 
     void KillAllEnemies()
@@ -219,19 +290,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        if (!IsDead)
-        {
-            LookAtMouse();
-            Move();
-        }
-        else
-        {
-            playerShooter.isShooting = false; 
-        }
-    }
-
     public void PlayFootStepSound()
     {
         // Need check for ground type
@@ -244,7 +302,7 @@ public class Player : MonoBehaviour
 
     #region Inputs
 
-    void SprintInput_Performed(InputAction.CallbackContext context)
+    public void SprintInput_Performed(InputAction.CallbackContext context)
     {
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
@@ -252,7 +310,7 @@ public class Player : MonoBehaviour
         Debug.Log("Sprint was triggered");
     }
 
-    void SprintInput_Cancelled(InputAction.CallbackContext context)
+    public void SprintInput_Cancelled(InputAction.CallbackContext context)
     {
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
@@ -280,7 +338,8 @@ public class Player : MonoBehaviour
             animControllerPlayer.SwitchGunsStart(4);
             toolbarSelector.SwitchBoxes(4);
         }
-        else if (Keyboard.current.cKey.isPressed || Gamepad.current.dpad.up.isPressed)
+        else if ((Keyboard.current != null && Keyboard.current.cKey.isPressed) || 
+                 (Gamepad.current != null && Gamepad.current.dpad.up.isPressed))
         {
             if (playerShooter.currentGunIndex != 4)
             {
@@ -295,7 +354,7 @@ public class Player : MonoBehaviour
             }
             return;
         }
-        else if (Gamepad.current.dpad.left.isPressed)
+        else if (Gamepad.current != null && Gamepad.current.dpad.left.isPressed)
         {
             int index = GetNextUnlockedGun(playerShooter.currentGunIndex, -1);
             if (index != -1)
@@ -304,7 +363,7 @@ public class Player : MonoBehaviour
                 toolbarSelector.SwitchBoxes(index);
             }
         }
-        else if (Gamepad.current.dpad.right.isPressed)
+        else if (Gamepad.current != null && Gamepad.current.dpad.right.isPressed)
         {
             int index = GetNextUnlockedGun(playerShooter.currentGunIndex, 1);
             if (index != -1)
@@ -316,21 +375,21 @@ public class Player : MonoBehaviour
     }
 
     int GetNextUnlockedGun(int startIndex, int direction)
-{
-    int totalWeapons = playerShooter.gunsUnlocked.Count;
-    int index = startIndex;
-
-    for (int i = 0; i < totalWeapons; i++)
     {
-        index = (index + direction + totalWeapons) % totalWeapons; // Loop around
-        if (playerShooter.gunsUnlocked[index]) 
-            return index;
+        int totalWeapons = playerShooter.gunsUnlocked.Count;
+        int index = startIndex;
+
+        for (int i = 0; i < totalWeapons; i++)
+        {
+            index = (index + direction + totalWeapons) % totalWeapons; // Loop around
+            if (playerShooter.gunsUnlocked[index]) 
+                return index;
+        }
+
+        return -1; // No unlocked weapon found (shouldn't happen unless all are locked)
     }
 
-    return -1; // No unlocked weapon found (shouldn't happen unless all are locked)
-}
-
-    void SwitchToGun(int gunIndex)
+    public void SwitchToGun(int gunIndex)
     {
         if (playerShooter.currentGunIndex != gunIndex && 
             animControllerPlayer.SwitchGunsStart(gunIndex))
@@ -369,7 +428,8 @@ public class Player : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        rawInput = value.Get<Vector2>();    
+        rawInput = value.Get<Vector2>(); 
+        //Debug.Log($"OnMove called, rawInput: {rawInput}");
     }
 
     #endregion
@@ -379,57 +439,63 @@ public class Player : MonoBehaviour
     void LookAtMouse()
     {
         Vector2 joystickInput = Vector2.zero;
-        if (Gamepad.current != null)
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            joystickInput = TouchManager.Instance.aimJoystick.JoystickOutput;
+        else if (InputManager.LastUsedDevice == Gamepad.current)
             joystickInput = Gamepad.current.rightStick.ReadValue();
 
         float joystickInputMagnitude = joystickInput.magnitude;
         float curvedMagnitude = Mathf.Pow(joystickInputMagnitude, joystickCurveMagnitude);
         float scaledDistance = Mathf.Lerp(aimMinDist, aimDistance, curvedMagnitude);
 
-        if (InputController.GetJoystickAsMouseState() && CursorManager.Instance.usingCustomCursor)
+        if (playerShooter.isBuilding || playerShooter.isRepairing || InputManager.LastUsedDevice == Keyboard.current)
         {
+            //Debug.Log("Player: Aiming to cursorPos");
+            aimWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            //lastAimDir = Vector3.zero;
+        }
+        else if ((TouchManager.Instance.GetVirtualJoysticksActive() || InputManager.LastUsedDevice == Gamepad.current) && 
+                 SettingsManager.Instance.useFastJoystickAim && joystickInputMagnitude > joystickDeadzone)
+        {
+            //Debug.Log("Player: Joysticks are active, using fastJoystickAim");
+            // Instant Joystick Aim
+            lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
+            aimWorldPos = transform.position + lastAimDir;
+        }
+        else if (InputManager.GetJoystickAsMouseState() && 
+                 CursorManager.Instance.usingCustomCursor && 
+                 !SettingsManager.Instance.useFastJoystickAim)
+        {
+            //Debug.Log("Player: Joysticks are actice, not using fastJoystickAim, aiming to lastAimDir");
             // Use custom cursor position directly for aiming
-            aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
-            lastAimDir = Vector3.zero; // Reset last joystick aim direction
+            aimWorldPos = transform.position + lastAimDir;
+            //lastAimDir = Vector3.zero; // Reset last joystick aim direction
         }
         else
         {
-            // Mouse position
-            if (InputController.LastUsedDevice == Keyboard.current)
+            //Debug.Log("Player: Joysticks are NOT actice, aiming to cursorPos");
+            aimWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
+            //lastAimDir = Vector3.zero;
+
+            if (lastAimDir != Vector3.zero)
             {
-                aimPos = CursorManager.Instance.GetCustomCursorWorldPos();
-                lastAimDir = Vector3.zero;
-            }
-            // Touchscreen
-            else if (InputController.LastUsedDevice == Touchscreen.current)
-            {
-                //aimPos = Touchscreen.current.
-            }
-            // Joystick input
-            else if (joystickInputMagnitude > joystickDeadzone)
-            {
-                lastAimDir = (Vector3)(joystickInput.normalized * scaledDistance);
-                aimPos = transform.position + lastAimDir;
-            }
-            else if (lastAimDir != Vector3.zero)
-            {
-                aimPos = transform.position + lastAimDir;
-                //lastAimDir = aimPos;
+                // For Instant Joystick Aim lock
+                aimWorldPos = transform.position + lastAimDir;
             }
         }
 
         // Aim or virtual mouse for joystick
-        if (!InputController.GetJoystickAsMouseState())
-            CursorManager.Instance.MoveCustomCursorWorldToUi(aimPos);
+        //if (!InputManager.GetJoystickAsMouseState())
+            CursorManager.Instance.MoveCustomCursorWorldToUi(aimWorldPos);
 
-        if ((transform.position - aimPos).magnitude > 
+        if ((transform.position - aimWorldPos).magnitude > 
             (transform.position - muzzleTrans.position).magnitude + 0.5f)
         {
-            muzzleDirToMouse = aimPos - muzzleTrans.transform.position;
+            muzzleDirToMouse = aimWorldPos - muzzleTrans.transform.position;
         }
         else
         {
-            muzzleDirToMouse = aimPos - transform.position;
+            muzzleDirToMouse = aimWorldPos - transform.position;
         }
 
         muzzleDirToMouse.Normalize();
@@ -448,7 +514,7 @@ public class Player : MonoBehaviour
         playerMainTrans.rotation = Quaternion.Slerp(
             playerMainTrans.rotation, targetRotation, Time.deltaTime * dynamicSpeed);
 
-        RotateHead(aimPos);
+        RotateHead(aimWorldPos);
     }
 
     void RotateHead(Vector3 mousePos)
@@ -516,6 +582,9 @@ public class Player : MonoBehaviour
 
     void Move()
     {
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            rawInput = TouchManager.Instance.moveJoystick.JoystickOutput;
+
         Vector2 moveDir;
 
         if (useStandardWASD == true)

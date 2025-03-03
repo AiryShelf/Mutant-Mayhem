@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
 {
+    [SerializeField] float touchscreenScrollDelay = 0.2f;
+    [SerializeField] float dragDeadzone = 10f;
     public GridLayoutGroup buttonLayoutGrid;
     public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
@@ -13,13 +15,16 @@ public class UIBuildMenuController : MonoBehaviour
     [SerializeField] ScrollRectController scrollRectController;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
-    //[SerializeField] GameObject tutorialBuildPanelPrefab;
 
+    public bool isTouchScrolling = false;
+    bool isScrollDelay = false;
+    public Vector2 touchStartPos;
     int currentIndex;
     Player player;
     BuildingSystem buildingSystem;
     InputAction scrollAction;
     InputAction swapWithDestroyAction;
+    bool isMenuOpen = false;
 
     void Awake()
     {
@@ -37,7 +42,7 @@ public class UIBuildMenuController : MonoBehaviour
         }
 
         buildingSystem = FindObjectOfType<BuildingSystem>();
-        InitializeBuildList();             
+        InitializeBuildList();
     }
     
     void OnEnable()
@@ -69,6 +74,11 @@ public class UIBuildMenuController : MonoBehaviour
         myCanvasGroup.blocksRaycasts = false; 
     }
 
+    void Update()
+    {
+        Vector2 scrollDelta = scrollAction.ReadValue<Vector2>();
+    }
+
     void InitializeBuildList()
     {
         // Initialize structures list and fade groups list
@@ -88,46 +98,7 @@ public class UIBuildMenuController : MonoBehaviour
             fadeCanvasGroups.individualElements.Add(uiStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
         }
-
-        //SetButtonNavigation();
     }
-    
-    /*
-    void SetButtonNavigation()
-    {
-        for (int i = 0; i < uiStructureList.Count; i++)
-        {
-            Button button = uiStructureList[i].GetComponent<Button>();
-            Navigation nav = button.navigation;
-            nav.mode = Navigation.Mode.Explicit;
-
-            if (i == 0)
-            {
-                // First button - no upward navigation
-                nav.selectOnUp = null;
-                nav.selectOnDown = uiStructureList[i + 1].GetComponent<Button>();
-
-                button.navigation = nav;
-            }
-            else if (i == uiStructureList.Count - 1)
-            {
-                // Last button - no downward navigation
-                nav.selectOnUp = uiStructureList[i - 1].GetComponent<Button>();
-                nav.selectOnDown = null;
-
-                button.navigation = nav;
-            }
-            else
-            {
-                // Middle buttons - navigate both up and down
-                //nav.selectOnUp = structureButtonInstances[i - 1].GetComponent<Button>();
-                //nav.selectOnDown = structureButtonInstances[i + 1].GetComponent<Button>();
-            }
-
-            //button.navigation = nav;
-        }
-    }
-    */
 
     public void RefreshBuildList()
     {
@@ -139,18 +110,11 @@ public class UIBuildMenuController : MonoBehaviour
         }
     }
 
-    public void OpenBuildMenu(bool open)
+    public void ToggleBuildMenu()
     {
-        if (open)
-        {
-            fadeCanvasGroups.isTriggered = true;
-            myCanvasGroup.blocksRaycasts = true;
-        }
-        else
-        {
-            fadeCanvasGroups.isTriggered = false;
-            myCanvasGroup.blocksRaycasts = false;
-        }
+        fadeCanvasGroups.isTriggered = !isMenuOpen;
+        myCanvasGroup.blocksRaycasts = !isMenuOpen;
+        isMenuOpen = !isMenuOpen;
     }
 
     public bool SetMenuSelection(StructureSO structure)
@@ -177,17 +141,24 @@ public class UIBuildMenuController : MonoBehaviour
 
     void OnScroll(InputAction.CallbackContext context)
     {
-        if (!player.stats.playerShooter.isBuilding)
+        Debug.Log("OnScroll performed");
+        if (!isMenuOpen)
             return;
         
         Vector2 scroll = context.ReadValue<Vector2>();
+        
         if (scroll.y > 0)
             ScrollUp();
         else if (scroll.y < 0)
             ScrollDown();
     }
 
-    void ScrollUp()
+    private bool IsPositionWithinRect(RectTransform rectTransform, Vector2 screenPosition)
+    {
+        return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, screenPosition);
+    }
+
+    public void ScrollUp()
     {
         if (currentIndex <= 0)
             return;
@@ -205,7 +176,7 @@ public class UIBuildMenuController : MonoBehaviour
         currentIndex = startIndex;  
     }
 
-    void ScrollDown()
+    public void ScrollDown()
     {
         if (currentIndex >= uiStructureList.Count - 1)
             return;

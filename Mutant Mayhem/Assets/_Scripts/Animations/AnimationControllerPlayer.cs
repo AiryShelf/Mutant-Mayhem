@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class AnimationControllerPlayer : MonoBehaviour
 {
@@ -285,7 +286,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             
         if (!playerShooter.isBuilding)
         {
-            buildingSystemController.ToggleBuildMenu(true);
+            buildingSystemController.ToggleBuildMenu();
             playerShooter.isBuilding = true;
             bodyAnim.SetBool("isBuilding", true);
             bodyAnim.SetBool("isAiming", false);
@@ -303,7 +304,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
         else
         {
-            buildingSystemController.ToggleBuildMenu(false);
+            buildingSystemController.ToggleBuildMenu();
             playerShooter.isBuilding = false;
             bodyAnim.SetBool("isBuilding", false);
             bodyAnim.SetBool("isAiming", true);
@@ -431,18 +432,20 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
 
-    void FireInput_Performed(InputAction.CallbackContext context)
+    public void FireInput_Performed(InputAction.CallbackContext context)
     {
+        if (!fireAction.enabled) return;
+        
         bodyAnim.SetBool("isAiming", true);
         isFireInput = true;
     }
 
-    void FireInput_Cancelled(InputAction.CallbackContext context)
+    public void FireInput_Cancelled(InputAction.CallbackContext context)
     {   
         isFireInput = false;       
     }
 
-    void MeleeInput_Performed(InputAction.CallbackContext context)
+    public void MeleeInput_Performed(InputAction.CallbackContext context)
     {
         if (hasMeleeStamina && !throwAnimPlaying)
         {
@@ -457,7 +460,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         }   
     }
 
-    void MeleeInput_Cancelled(InputAction.CallbackContext context)
+    public void MeleeInput_Cancelled(InputAction.CallbackContext context)
     {
         bodyAnim.SetBool("isMeleeing", false);
         bodyAnim.SetBool("isAiming", true);
@@ -467,9 +470,23 @@ public class AnimationControllerPlayer : MonoBehaviour
         }
     }
 
+    public void ThrowButtonPressed()
+    {
+        ThrowInput_Performed(new InputAction.CallbackContext());
+        StartCoroutine(DelayThrowCancel());
+    }
+
+    IEnumerator DelayThrowCancel()
+    {
+        yield return new WaitForSeconds(0.2f);
+        ThrowInput_Cancelled(new InputAction.CallbackContext());
+    }
+
     public void ThrowInput_Performed(InputAction.CallbackContext context)
     {  
-        if (!meleeAnimPlaying && player.stats.grenadeAmmo > 0)
+        if (meleeAnimPlaying)
+            MessagePanel.PulseMessage("Can't throw grenades while melee attacking!", Color.yellow);
+        else if (player.stats.grenadeAmmo > 0)
         {
             if (playerShooter.isBuilding)
                 ToggleBuildMode();
@@ -483,6 +500,8 @@ public class AnimationControllerPlayer : MonoBehaviour
                 waitToLowerWeaponCoroutine = null;
             }
         }
+        else
+            MessagePanel.PulseMessage("No more grenades!  But some at the Cube!", Color.red);
     }
 
     public void ThrowInput_Cancelled(InputAction.CallbackContext context)

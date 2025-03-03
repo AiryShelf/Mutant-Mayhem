@@ -11,6 +11,7 @@ public class ControlsPanel : MonoBehaviour
     [SerializeField] string hideControlsStr;
     [SerializeField] string showControlsStr;
     [SerializeField] TextMeshProUGUI header;
+    [SerializeField] DeviceTextSwitcher headerTextSwitcher;
     [SerializeField] GridLayoutGroup gridLayoutGroup;
     [SerializeField] List<GameObject> controlsToFade;
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroupsWave;
@@ -70,6 +71,8 @@ public class ControlsPanel : MonoBehaviour
                 fadeCanvasGroupsWave.isTriggered = true;
                 header.text = hideControlsStr;
             }
+
+            headerTextSwitcher.ResetAndUpdate();
         }
     }
     

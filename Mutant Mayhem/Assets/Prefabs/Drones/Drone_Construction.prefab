@@ -89,9 +89,6 @@ MonoBehaviour:
   objectPoolName: Drone_Construction
   droneType: 0
   moveSpeed: 8
-  buildSpeed: 20
-  actionDelay: 1
-  repairSpeed: 20
   currentJob:
     jobType: 0
     jobPosition: {x: 0, y: 0}
@@ -105,12 +102,13 @@ MonoBehaviour:
   hoverScaleFactor: 0.1
   rotationSpeed: 0.013
   launchOrLandMinScale: 0.5
-  launchOrLandScaleSpeed: 0.03
+  launchOrLandScaleSpeed: 0.04
   flyingAlpha: 0.75
   jobHeightMinScale: 0.85
   myHangar: {fileID: 0}
   isFlying: 0
   heightScaleStart: 1.2
+  droneHealth: {fileID: 0}
 --- !u!114 &4250599866353163505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38050b0764aa0d44d9ba8237023e929c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gunListSource: []
+  _gunListSource:
+  - {fileID: 11400000, guid: 6ff8615f6cabc4d14b7ab2988b9dec60, type: 2}
   gunTrans: {fileID: 3688259929015718581}
   muzzleTrans: {fileID: 3688259929015718581}
   casingEjectorTrans: {fileID: 3688259929015718581}
@@ -156,8 +155,7 @@ MonoBehaviour:
   gunRecoil: {fileID: 0}
   gunsAmmoInClips: 0a000000
   accuracyHoningSpeed: 0
-  gunList:
-  - {fileID: 11400000, guid: 6ff8615f6cabc4d14b7ab2988b9dec60, type: 2}
+  gunList: []
   currentGunIndex: 0
   currentGunSO: {fileID: 0}
   TurretReloadTime: 1

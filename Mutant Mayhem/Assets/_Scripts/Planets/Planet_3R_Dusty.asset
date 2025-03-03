@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
+  m_Name: Planet_3R_Dusty
+  m_EditorClassIdentifier: 
+  typeOfBody: Moon
+  bodyName: Dunexus
+  description: Test world
+  properties:
+  - {fileID: 11400000, guid: e11315d0651de4901b950aea74698ee8, type: 2}
+  - {fileID: 11400000, guid: b21c583d2f34d49228dd989b7c86c45b, type: 2}
+  - {fileID: 11400000, guid: 7e2f80d85981b48dbba3e9b48ea7b032, type: 2}
+  terrainTile: {fileID: 11400000, guid: e84de0cd9a07c4837bc0e6ef3cc97bdd, type: 2}
+  mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  nightToSurvive: 20
+  highRezPlanetPrefab: {fileID: 750975858702359263, guid: 93695440d73c7486db1d6028b39ebfa6, type: 3}
+  prerequisitePlanets:
+  - {fileID: 11400000, guid: 9ecded26d5e074d71a1f9e9a417dd1d8, type: 2}
+  basePoints: 175
+  pointsPerWave: 26
+  growthControlFactor: 0.26
+  creditsPerWave: 350
+  timeBetweenWavesBase: 105
+  wavesTillAddBase: 1
+  batchMultiplierStart: 5
+  subwaveDelayMultStart: 0.8
+  spawnRadiusBuffer: 40
+  damageMultiplier: 1.45
+  healthMultiplier: 1.45
+  speedMultiplier: 1.45
+  sizeMultiplier: 1

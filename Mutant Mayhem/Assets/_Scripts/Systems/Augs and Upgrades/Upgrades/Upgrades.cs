@@ -164,6 +164,7 @@ public class PlayerReloadSpeedUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
+        Debug.Log("Reload Speed Applied");
         playerStats.reloadFactor += UpgAmount;
     }
 
@@ -173,7 +174,7 @@ public class PlayerReloadSpeedUpgrade : Upgrade
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
-            newCost *= 2;
+            newCost = Mathf.CeilToInt(newCost * 1.6f);
         }
         return newCost;
     }
@@ -548,13 +549,17 @@ public class BuyConstructionDroneUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 2), baseCost, int.MaxValue);
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 1), baseCost, int.MaxValue);
+        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
+            cost /= 2;
         return cost;
     }
 
     public static int GetCost(Player player, int baseCost)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 2), baseCost, int.MaxValue);
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count - player.stats.numStartBuilderDrones + 1), baseCost, int.MaxValue);
+        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
+            cost /= 2;
         return cost;
     }
 }
@@ -577,13 +582,20 @@ public class BuyAttackDroneUpgrade : Upgrade
 
         if (activeDrones < startingDrones)
         {
-            return baseCost;
+            int newCost = baseCost;
+            if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
+                newCost = Mathf.FloorToInt(newCost / 1.5f);
+            return newCost;
         }
         else
         {
-            // Cost doubles for each drone above the starting amount
+            // Increment cost
             int newDroneCount = activeDrones - startingDrones + 1;
-            return Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
+            if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
+                newCost = Mathf.FloorToInt(newCost / 1.5f);
+            //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            return newCost;
         }
     }
 
@@ -594,13 +606,20 @@ public class BuyAttackDroneUpgrade : Upgrade
 
         if (activeDrones < startingDrones)
         {
-            return baseCost;
+            int newCost = baseCost;
+            if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
+                newCost = Mathf.FloorToInt(newCost / 1.5f);
+            return newCost;
         }
         else
         {
-            // Cost doubles for each drone above the starting amount
+            // Increment cost
             int newDroneCount = activeDrones - startingDrones + 1;
-            return Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
+            if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
+                newCost = Mathf.FloorToInt(newCost / 1.5f);
+            //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
+            return newCost;
         }
     }
 }
@@ -676,7 +695,7 @@ public class MaxTurretsUpgrade : Upgrade
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
-            newCost *= 2;
+            newCost = baseCost * level;
         }
         return newCost;
     }
@@ -1019,7 +1038,6 @@ public class TurretReloadSpeedUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        TurretGunSO turretGun = gunSO as TurretGunSO;
         DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
     }
 

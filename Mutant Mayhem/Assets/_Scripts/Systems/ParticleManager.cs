@@ -163,6 +163,8 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayBulletBlood(Vector2 hitPos, Vector2 hitDir)
     {
+        if (QualityManager.CurrentQualityLevel == QualityLevel.VeryLow) return;
+        
         SetPositionAndRotation(bulletBlood, hitPos, hitDir);
         bulletBlood.Emit(6);
         SetPositionAndRotation(bloodSpray, hitPos, hitDir);
@@ -175,7 +177,7 @@ public class ParticleManager : MonoBehaviour
 
     #endregion
 
-    #region Casing / Clips
+    #region Casings / Clips
 
     public void PlayRepairCasing_Gun(Transform ejectorTrans, Quaternion rot, bool isElevated)
     {
@@ -198,7 +200,8 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayBulletCasingFly_SMG(Transform ejectorTrans, Quaternion rot, bool isElevated)
     {
-        GameObject casingObj = Instantiate(casingPrefab_SMG, ejectorTrans.position, Quaternion.identity);
+        GameObject casingObj = PoolManager.Instance.GetFromPool("Casing_SMG");
+        casingObj.transform.position = ejectorTrans.position;
 
         BulletCasingFly casingFly = casingObj.GetComponent<BulletCasingFly>();
         if (casingFly != null)
@@ -215,7 +218,8 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayBulletCasingFly_Rifle(Transform ejectorTrans, Quaternion rot, bool isElevated)
     {
-        GameObject casingObj = Instantiate(casingPrefab_Rifle, ejectorTrans.position, Quaternion.identity);
+        GameObject casingObj = PoolManager.Instance.GetFromPool("Casing_SMG");
+        casingObj.transform.position = ejectorTrans.position;
 
         BulletCasingFly casingFly = casingObj.GetComponent<BulletCasingFly>();
         if (casingFly != null)
@@ -278,6 +282,8 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayMeleeBlood(Vector2 hitPos, Vector2 hitDir)
     {
+        if (QualityManager.CurrentQualityLevel == QualityLevel.VeryLow) return;
+
         //Debug.Log("MeleeBlood played");
         SetPositionAndRotation(meleeBlood, hitPos, hitDir);
         meleeBlood.Emit(11);

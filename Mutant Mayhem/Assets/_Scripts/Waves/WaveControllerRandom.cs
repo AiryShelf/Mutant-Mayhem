@@ -16,7 +16,8 @@ public class WaveControllerRandom : MonoBehaviour
     [SerializeField] TextMeshProUGUI nextWaveText;
     public TextMeshProUGUI nextWaveButtonName; // Used to store and universally access a 'string' 
 
-    [Header("Wave Properties")]
+    [Header("Wave Properties, mostly set by Planets")]
+    public int creditsPerWave = 150; // Additive bonus (waveIndex*creditsPerWave)
     public int currentWaveIndex = 0;
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public float timeBetweenWaves = 0; // Amount of day-time after difficulty setting
@@ -26,7 +27,7 @@ public class WaveControllerRandom : MonoBehaviour
     public float subwaveDelayMult = 1;
     public int spawnRadiusBuffer = 16;
 
-    [Header("Enemy Multipliers")]
+    [Header("Enemy Multipliers, mostly set by Planets")]
     public int batchMultStart = 5; // Starting batch multiplier for each Subwave
     public int batchMultiplier = 5; // Current batch multiplier
     public float damageMultStart = 1;
@@ -72,6 +73,12 @@ public class WaveControllerRandom : MonoBehaviour
         nextWaveTimer = StartCoroutine(NextWaveTimer());
     }
 
+    public void NextWaveButtonPressed()
+    {
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            OnNextWaveInput(new InputAction.CallbackContext());
+    }
+
     void OnNextWaveInput(InputAction.CallbackContext context)
     {
         Debug.Log("NextWave Input detected");
@@ -110,7 +117,7 @@ public class WaveControllerRandom : MonoBehaviour
         countdown = timeBetweenWaves;
         while (countdown > 0)
         {
-            nextWaveText.text = $"Time until night {currentWaveIndex + 1}: " + countdown.ToString("#") + $"s.  Press '{nextWaveButtonName.text}' to skip";
+            nextWaveText.text = $"Time until night {currentWaveIndex + 1}: " + countdown.ToString("#") + $"s.  {nextWaveButtonName.text} to skip";
             
             yield return new WaitForSeconds(1);
             countdown--;
@@ -172,6 +179,10 @@ public class WaveControllerRandom : MonoBehaviour
         isNight = false;
         MessagePanel.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
+        BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
+
+        if (currentWaveIndex >= PlanetManager.Instance.currentPlanet.nightToSurvive)
+            ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
 
         StartCoroutine(NextWaveTimer());
 

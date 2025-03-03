@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -29,12 +28,14 @@ public class BuildingSystem : MonoBehaviour
     }
     public static float buildRange = 6f;
     public LineRendererCircle buildRangeCircle;
+    [SerializeField] float buildCamLerpTime = 0.35f;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersToClearOnBuild;
     public UIBuildMenuController buildMenuController;
     [SerializeField] QCubeController qCubeController;
     [SerializeField] MouseLooker mouseLooker;
     [SerializeField] CameraController cameraController;
+    [SerializeField] TextMeshProUGUI buildButtonText;
 
     [Header("Tilemaps")]
     [SerializeField] TileManager tileManager;
@@ -143,7 +144,7 @@ public class BuildingSystem : MonoBehaviour
 
     #region Inputs
 
-    void OnBuild()
+    public void OnBuild()
     {
         if (!isInBuildMode)
         {
@@ -190,6 +191,23 @@ public class BuildingSystem : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(lastSelectedUiObject);
     }
 
+    public void RotateButtonPressed_isLeft(bool left)
+    {
+        if (!isInBuildMode || structureInHand.structureType == AllStructureSOs[2].structureType)
+            return;
+
+        if (left)
+        {
+            currentRotation += 90;
+        }   
+        else
+        {
+            currentRotation -= 90;
+        }
+
+        Rotate(structureInHand.ruleTileStructure.structureSO);
+    }
+
     void OnRotate(InputAction.CallbackContext context)
     {
         // Return if not in build mode or is holding destroy tool
@@ -205,15 +223,14 @@ public class BuildingSystem : MonoBehaviour
             currentRotation -= 90;
         }
 
-        Debug.Log(context.control.name);
-
-        // Normalize the rotation to be within the range (0, 360)
-        currentRotation = (currentRotation % 360 + 360) % 360;
+        //Debug.Log(context.control.name);
         Rotate(structureInHand.ruleTileStructure.structureSO);
     }
 
     void Rotate(StructureSO structure)
     {
+        // Normalize the rotation to be within the range (0, 360)
+        currentRotation = (currentRotation % 360 + 360) % 360;
         RemoveBuildHighlight();
         // Ensure use of original SO cell positions for rotation
         if (AllStructureSOs.Contains(structure))
@@ -259,30 +276,31 @@ public class BuildingSystem : MonoBehaviour
 
     #region Menu / Unlock
 
-    public void ToggleBuildMenu(bool on)
+    public void ToggleBuildMenu()
     {
         //Debug.Log("ToggleBuildMenu Called");
 
-        if (on)
+        if (!isInBuildMode)
         {
             qCubeController.CloseUpgradeWindow();
 
-            if (InputController.LastUsedDevice == Gamepad.current)
+            if (InputManager.LastUsedDevice == Gamepad.current)
             {
                 helpAction.Disable();
                 toolbarAction.Disable();
             }
 
-            CursorManager.Instance.inMenu = true;
+            //CursorManager.Instance.inMenu = true;
+            buildButtonText.text = "Close";
             CursorManager.Instance.SetBuildCursor();
-            InputController.SetJoystickMouseControl(true);
+            InputManager.SetJoystickMouseControl(true);
 
             LockCameraToPlayer(true);
 
             isInBuildMode = true;
             SetBuildRangeCircle();
             player.playerShooter.isBuilding = true;
-            buildMenuController.OpenBuildMenu(true);
+            buildMenuController.ToggleBuildMenu();
             
             //Debug.Log("Opened Build Panel");
             structureInHand = lastStructureInHand;
@@ -294,23 +312,25 @@ public class BuildingSystem : MonoBehaviour
             helpAction.Enable();
             toolbarAction.Enable();
 
-            CursorManager.Instance.inMenu = false;
+            //CursorManager.Instance.inMenu = false;
+            buildButtonText.text = "Build";
             CursorManager.Instance.SetAimCursor();
             if (player.stats.playerShooter.isRepairing)
                 SetRepairRangeCircle();
             else
             {
-                InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
                 buildRangeCircle.EnableCircle(false);
             }
             
             Debug.Log("Joystick turned off from BuildingSystem");
 
-            LockCameraToPlayer(false);
+            if (!player.stats.playerShooter.isRepairing)
+                LockCameraToPlayer(false);
             
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;
-            buildMenuController.OpenBuildMenu(false);
+            buildMenuController.ToggleBuildMenu();
             
             float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
 
@@ -329,12 +349,15 @@ public class BuildingSystem : MonoBehaviour
     {
         if (isLocked)
         {
-            cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.5f, true, false);
+            if (InputManager.LastUsedDevice == Keyboard.current)
+                cameraController.ZoomAndFocus(player.transform, -2, 0.25f, buildCamLerpTime, true, false);
+            else
+                cameraController.ZoomAndFocus(player.transform, -4, 0.25f, buildCamLerpTime, true, false);
             mouseLooker.lockedToPlayer = true;
         }
         else
         {
-            cameraController.ZoomAndFocus(player.transform, 0, 1, 1, false, false);
+            cameraController.ZoomAndFocus(player.transform, 0, 1, buildCamLerpTime, false, false);
             mouseLooker.lockedToPlayer = false;
         }  
     }
@@ -375,7 +398,7 @@ public class BuildingSystem : MonoBehaviour
         else
         {
             buildRangeCircle.transform.position = player.transform.position;
-            InputController.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
             buildRangeCircle.EnableCircle(false);
         }
     }
@@ -543,15 +566,9 @@ public class BuildingSystem : MonoBehaviour
             highlightedTilePos = mouseGridPos;
 
         // Find player grid position
-        //playerGridPos = structureTilemap.WorldToCell(player.transform.position);
-        Vector2 mouseWorldPos; 
-        if (InputController.LastUsedDevice == Gamepad.current)
-            mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
-        else 
-            mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Vector2 mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
 
         // Highlight if in range and conditions met.
-        //if (InRange(playerGridPos, mouseGridPos, (Vector3Int) structureInHand.actionRange))
         if (!InRange(player.transform.position, mouseWorldPos, buildRange))
         {
             inRange = false;
@@ -714,13 +731,9 @@ public class BuildingSystem : MonoBehaviour
 
     private Vector3Int GetMouseToGridPos()
     {
-        Vector3 mousePos;
-        if (InputController.LastUsedDevice == Gamepad.current)
-            mousePos = CursorManager.Instance.GetCustomCursorWorldPos();
-        else
-            mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Vector3 cursorPos = CursorManager.Instance.GetCustomCursorWorldPos();
 
-        Vector3Int mouseCellPos = structureTilemap.WorldToCell(mousePos);
+        Vector3Int mouseCellPos = structureTilemap.WorldToCell(cursorPos);
         mouseCellPos.z = 0;
 
         return mouseCellPos;

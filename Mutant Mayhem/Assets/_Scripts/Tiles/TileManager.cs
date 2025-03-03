@@ -120,11 +120,6 @@ public class TileManager : MonoBehaviour
         Matrix4x4 matrix = Matrix4x4.Rotate(q);
         blueprintTilemap.SetTransformMatrix(gridPos, matrix);
 
-        if (ruleTile.structureSO.isTurret)
-        {
-            turretManager.currentNumTurrets++;
-        }
-
         return true;
     }
 
@@ -291,7 +286,7 @@ public class TileManager : MonoBehaviour
         if (_TileStatsDict.ContainsKey(gridPos))
         {
             rootPos = GridToRootPos(gridPos);
-            pos = GridCenterToWorld(rootPos);
+            //pos = GridCenterToWorld(rootPos);
         }
         else
             return true;  // To stop building
@@ -311,7 +306,7 @@ public class TileManager : MonoBehaviour
             _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
             AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
 
-            ConstructionManager.Instance.RemoveBuildJob(pos);
+            ConstructionManager.Instance.RemoveBuildJob(GridCenterToWorld(rootPos));
             //ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
             return true;
         }
@@ -356,7 +351,7 @@ public class TileManager : MonoBehaviour
         }
         else if (healthDifference > 0)
         {
-            if (_TileStatsDict[rootPos].health >= maxHealth -1)
+            if (_TileStatsDict[rootPos].health >= maxHealth - 1)
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
         }
 
@@ -399,6 +394,8 @@ public class TileManager : MonoBehaviour
 
     void UpdateTileDamageSprite(Vector3Int rootPos)
     {
+        if (_TileStatsDict[rootPos].isBlueprint) return;
+        
         if (_TileStatsDict[rootPos].health == 0)
         {
             StatsCounterPlayer.StructuresLost++;

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
+  m_Name: Planet_2R_Tundra
+  m_EditorClassIdentifier: 
+  typeOfBody: Planet
+  bodyName: Gelidion
+  description: Test world
+  properties:
+  - {fileID: 11400000, guid: fb42734f9c19b4d3088c2ba8a6d5fbde, type: 2}
+  - {fileID: 11400000, guid: 42db63a5d3f244e6094b0076ef0558a6, type: 2}
+  - {fileID: 11400000, guid: 08173bc9948cc4b0aac65187a0951298, type: 2}
+  terrainTile: {fileID: 11400000, guid: 28feabfe82041f04d8d2b549a6d567a0, type: 2}
+  mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  nightToSurvive: 20
+  highRezPlanetPrefab: {fileID: 5847670205162426469, guid: a74374d32c392400ea54bd141850c39f, type: 3}
+  prerequisitePlanets:
+  - {fileID: 11400000, guid: ad0f48611402b4e46b8e11e16b333857, type: 2}
+  basePoints: 150
+  pointsPerWave: 24
+  growthControlFactor: 0.24
+  creditsPerWave: 250
+  timeBetweenWavesBase: 110
+  wavesTillAddBase: 1
+  batchMultiplierStart: 4
+  subwaveDelayMultStart: 0.9
+  spawnRadiusBuffer: 40
+  damageMultiplier: 1.3
+  healthMultiplier: 1.3
+  speedMultiplier: 1.3
+  sizeMultiplier: 1
