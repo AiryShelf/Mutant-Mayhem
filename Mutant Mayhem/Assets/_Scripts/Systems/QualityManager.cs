@@ -1,14 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum QualityLevel
+{
+    VeryLow = 0,
+    Low = 1,
+    Medium = 2,
+    High = 3,
+    VeryHigh = 4,
+    Ultra = 5,
+}
+
 public class QualityManager : MonoBehaviour
 {
+    public static QualityLevel CurrentQualityLevel;
+    public static event Action<QualityLevel> OnQualitySettingsChanged;
+
     void Awake()
     {
         if (PlayerPrefs.HasKey("Graphics_Quality"))
         {
-            QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Graphics_Quality"));
+            int qualityLevel = PlayerPrefs.GetInt("Graphics_Quality");
+            QualitySettings.SetQualityLevel(qualityLevel);
+            CurrentQualityLevel = (QualityLevel)qualityLevel;
+            OnQualitySettingsChanged?.Invoke((QualityLevel)qualityLevel);
         }
         else
         {
@@ -40,39 +57,41 @@ public class QualityManager : MonoBehaviour
 
         Debug.Log($"GPU: {gpuName}, VRAM: {vram}MB, CPU Cores: {cpuCores}, RAM: {ram}MB, Resolution: {screenWidth}x{screenHeight}");
 
-        int qualityLevel = 3; // Default to High
+        QualityLevel qualityLevel = QualityLevel.High; // Default to High
 
         // Assign quality level based on hardware
         if (vram >= 8000 && cpuCores >= 10 && ram >= 32000)
         {
-            qualityLevel = 5; // Ultra
+            qualityLevel = QualityLevel.Ultra;
         }
         else if (vram >= 6000 && cpuCores >= 8 && ram >= 16000)
         {
-            qualityLevel = 4; // Very High
+            qualityLevel = QualityLevel.VeryHigh;
         }
         else if (vram >= 4000 && cpuCores >= 6 && ram >= 12000)
         {
-            qualityLevel = 3; // High
+            qualityLevel = QualityLevel.High;
         }
         else if (vram >= 2000 && cpuCores >= 4 && ram >= 8000)
         {
-            qualityLevel = 2; // Medium
+            qualityLevel = QualityLevel.Medium;
         }
         else if (vram >= 1000 && cpuCores >= 2 && ram >= 4000)
         {
-            qualityLevel = 1; // Low
+            qualityLevel = QualityLevel.Low;
         }
         else
         {
-            qualityLevel = 0; // Very Low
+            qualityLevel = QualityLevel.VeryLow;
         }
 
-        QualitySettings.SetQualityLevel(qualityLevel, true);
-        PlayerPrefs.SetInt("Graphics_Quality", qualityLevel);
+        QualitySettings.SetQualityLevel((int)qualityLevel, true);
+        PlayerPrefs.SetInt("Graphics_Quality", (int)qualityLevel);
         PlayerPrefs.Save();
 
-        Debug.Log($"Graphics Quality Auto-Set to: {QualitySettings.names[qualityLevel]} (Level {qualityLevel})");
+        CurrentQualityLevel = qualityLevel;
+        OnQualitySettingsChanged?.Invoke(qualityLevel);
+        Debug.Log($"Graphics Quality Auto-Set to: {QualitySettings.names[(int)qualityLevel]} (Level {qualityLevel})");
     }
 
     public void SetGraphicsQuality(int index)
@@ -90,6 +109,9 @@ public class QualityManager : MonoBehaviour
         if (PlayerPrefs.HasKey("VSync"))
             SetVSync(PlayerPrefs.GetInt("VSync") > 0);
 
-        Debug.Log("Graphics Quality set to: " + index);
+        CurrentQualityLevel = (QualityLevel)index;
+        OnQualitySettingsChanged?.Invoke((QualityLevel)index);
+
+        Debug.Log("Graphics Quality set to index: " + index + ", " + CurrentQualityLevel);
     }
 }

@@ -28,12 +28,22 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        if (Keyboard.current != null)
-            LastUsedDevice = Keyboard.current;
-        else if (Gamepad.current != null)
-            LastUsedDevice = Gamepad.current;
-        else if (Touchscreen.current != null)
-            LastUsedDevice = Touchscreen.current;
+        if (Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            Debug.Log("Forcing Touchscreen on mobile in Awake.");
+            LastUsedDevice = Touchscreen.current; 
+        }
+        else
+        {
+            // If not on mobile, fall back to keyboard/gamepad checks
+            if (Keyboard.current != null)
+                LastUsedDevice = Keyboard.current;
+            else if (Gamepad.current != null)
+                LastUsedDevice = Gamepad.current;
+            else if (Touchscreen.current != null)
+                LastUsedDevice = Touchscreen.current;
+        }
 
         //LogPlatform();
     }
@@ -171,6 +181,13 @@ public class InputManager : MonoBehaviour
         }
 
         Debug.Log($"LastUsedDevice set to: {LastUsedDevice}");
+    }
+
+    public static bool IsMobile()
+    {
+        return SystemInfo.deviceType == DeviceType.Handheld ||
+            Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer;
     }
 
     #endregion

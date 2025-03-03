@@ -20,6 +20,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] Vector3 initialScale = new Vector3(0.3f, 0.3f, 1f);
     [SerializeField] Vector3 maxScale = new Vector3(1f, 1f, 1f);
     public Animator meleeAnimator;
+    [SerializeField] SpriteRenderer meleeSprite;
     [SerializeField] SoundSO meleeSound;
 
     ContactFilter2D contactFilter;
@@ -58,11 +59,14 @@ public class MeleeControllerEnemy : MonoBehaviour
     public void Reset()
     {
         meleeAnimator.Rebind();
+        meleeAnimator.Update(0f);
+        meleeAnimator.Play("No Attack");
         
         waitToAttack = false;
         meleeDamage = meleeDamageStart;
         knockback = knockbackStart;
         attackDelay = attackDelayStart;
+        meleeSprite.enabled = false;
     }
 
     IEnumerator ScaleMeleeObject()

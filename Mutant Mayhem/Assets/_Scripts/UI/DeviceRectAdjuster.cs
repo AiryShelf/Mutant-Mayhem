@@ -34,27 +34,34 @@ public class DeviceRectAdjuster : MonoBehaviour
     Vector2 startAnchoredPos;
     int lastWidth, lastHeight;
     float scaleFactor;
+    float aspectRatio;
 
     void Awake()
     {
         startAnchoredPos = rectToScale.anchoredPosition;
+        ScreenScaleChecker.OnAspectRatioChanged += AspectRatioChanged;
     }
 
-    void OnEnable()
+    void OnDestroy()
     {
-        StartCoroutine(CheckScreenScale());
+        ScreenScaleChecker.OnAspectRatioChanged -= AspectRatioChanged;
     }
 
-    void OnDisable()
+    void Start()
     {
-        StopAllCoroutines();
+        StartCoroutine(DelayStart());
+    }
+
+    IEnumerator DelayStart()
+    {
+        yield return new WaitForSeconds(1f);
+        AspectRatioChanged(ScreenScaleChecker.CurrentAspectRatio);
     }
 
     void AdjustScale()
     {
         if (touchScreenOnly && InputManager.LastUsedDevice != Touchscreen.current) return;
 
-        float aspectRatio = (float)Screen.width / Screen.height;
         scaleFactor = default16x9Scale;
 
         if (aspectRatio >= 2.0f)
@@ -95,18 +102,17 @@ public class DeviceRectAdjuster : MonoBehaviour
     {
         if (touchScreenOnly && InputManager.LastUsedDevice != Touchscreen.current) return;
 
-        float aspectRatio = (float)Screen.width / Screen.height;
         if (aspectRatio >= 2.0f)
         {
-            rectToScale.anchoredPosition = defaultWidePositionOffest;
+            rectToScale.anchoredPosition = startAnchoredPos + defaultWidePositionOffest;
         }
         else if (aspectRatio > 1.85f)
         {
-            rectToScale.anchoredPosition = defaultWidePositionOffest;
+            rectToScale.anchoredPosition = startAnchoredPos + defaultWidePositionOffest;
         }
         else if (aspectRatio >= 1.77f)
         {
-            rectToScale.anchoredPosition = defaultWidePositionOffest;
+            rectToScale.anchoredPosition = startAnchoredPos + defaultWidePositionOffest;
         }
         else if (aspectRatio > 1.5f) 
         {
@@ -118,24 +124,10 @@ public class DeviceRectAdjuster : MonoBehaviour
         }
     }
 
-    IEnumerator CheckScreenScale()
+    void AspectRatioChanged(float aspectRatio)
     {
-        yield return null;
-
-        while (gameObject.activeInHierarchy)
-        {
-            if ((touchScreenOnly && InputManager.LastUsedDevice == Touchscreen.current) || !touchScreenOnly)
-            {
-                if (Screen.width != lastWidth || Screen.height != lastHeight)
-                {
-                    lastWidth = Screen.width;
-                    lastHeight = Screen.height;
-                    AdjustScale();
-                    AdjustPosition();
-                }
-            }
-            
-            yield return new WaitForSecondsRealtime(2);
-        }
+        this.aspectRatio = aspectRatio;
+        AdjustScale();
+        AdjustPosition();
     }
 }

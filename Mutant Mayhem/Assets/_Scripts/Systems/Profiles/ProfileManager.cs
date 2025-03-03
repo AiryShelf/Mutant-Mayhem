@@ -34,7 +34,7 @@ public class ProfileManager : MonoBehaviour
             ClearAllPlayerPrefsForEditor();
 
         Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
-        //Initialize();
+        Initialize();
     }
 
     void Start()
@@ -137,7 +137,7 @@ public class ProfileManager : MonoBehaviour
                 if (OnProfileIsSet != null)
                 {
                     Debug.Log("Invoking OnProfileIsSet event.");
-                    OnProfileIsSet.Invoke(currentProfile);
+                    OnProfileIsSet?.Invoke(currentProfile);
                 }
                 return;
             }

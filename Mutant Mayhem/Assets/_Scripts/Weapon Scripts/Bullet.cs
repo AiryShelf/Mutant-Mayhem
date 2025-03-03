@@ -84,6 +84,8 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    #region Hit
+
     protected virtual void Hit(Collider2D otherCollider, Vector2 point)
     {
         bool isCritical = false;
@@ -110,9 +112,11 @@ public class Bullet : MonoBehaviour
             ParticleManager.Instance.PlayBulletHitWall(point, hitDir);
 
             // If player projectile, do 1/3 damage
-            if (otherCollider.gameObject.layer == LayerMask.NameToLayer("PlayerProjectiles"))
+            if (gameObject.CompareTag("PlayerBullet"))
             {
-                tileManager.ModifyHealthAt(point, -damageNew / 3, damageScale, hitDir);
+                damageNew /= 3;
+                damageScale = damageNew / (damage / 3);
+                tileManager.ModifyHealthAt(point, -damageNew, damageScale, hitDir);
             }
             else
             {
@@ -124,8 +128,6 @@ public class Bullet : MonoBehaviour
         DroneHealth droneHealth = otherCollider.GetComponent<DroneHealth>();
         if (droneHealth != null)
         {
-            
-            
             HitDrone(droneHealth, hitDir, point, damageNew);
         }
 
@@ -136,6 +138,10 @@ public class Bullet : MonoBehaviour
         // Return to pool
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
+
+    #endregion
+
+    #region Hit Enemy
 
     void HitEnemy(EnemyBase enemy, Vector2 hitDir, Vector2 point, float damageNew)
     {
@@ -159,12 +165,17 @@ public class Bullet : MonoBehaviour
         // Create AI Trigger
         if (AiTrggerPrefab != null)
         {
-            //Debug.Log("AiTrigger instantiated");
-            GameObject triggerObj = Instantiate(AiTrggerPrefab, point, Quaternion.identity);
+            //Debug.Log("AiTrigger activated");
+            GameObject triggerObj = PoolManager.Instance.GetFromPool("Trigger_PlayerBulletHit");
+            triggerObj.transform.position = point;
             triggerObj.GetComponent<AiTrigger>().origin = this.origin;
             triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
         } 
     }
+
+    #endregion
+
+    #region Hit Drone
 
     void HitDrone(Health health, Vector2 hitDir, Vector2 point, float damageNew)
     {
@@ -184,10 +195,13 @@ public class Bullet : MonoBehaviour
         // Create AI Trigger
         if (AiTrggerPrefab != null)
         {
-            //Debug.Log("AiTrigger instantiated");
-            GameObject triggerObj = Instantiate(AiTrggerPrefab, point, Quaternion.identity);
+            //Debug.Log("AiTrigger activated");
+            GameObject triggerObj = PoolManager.Instance.GetFromPool("Trigger_PlayerBulletHit");
+            triggerObj.transform.position = point;
             triggerObj.GetComponent<AiTrigger>().origin = this.origin;
             triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
         } 
     }
+
+    #endregion
 }

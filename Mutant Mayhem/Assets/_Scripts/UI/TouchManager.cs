@@ -67,6 +67,20 @@ public class TouchManager : MonoBehaviour
             Vector2 touchPos = touchControl.position.ReadValue();
             var phase = touchControl.phase.ReadValue();
 
+            if (!activeTouches.ContainsKey(fingerId))
+            {
+                BeginTouch(fingerId, touchPos, false);
+            }
+
+            if (phase == UnityEngine.InputSystem.TouchPhase.Moved)
+            {
+                MoveTouch(fingerId, touchPos);
+            }
+            else if (phase == UnityEngine.InputSystem.TouchPhase.Ended || phase == UnityEngine.InputSystem.TouchPhase.Canceled)
+            {
+                EndTouch(fingerId);
+            }
+
             switch (phase)
             {
                 case UnityEngine.InputSystem.TouchPhase.Began:
@@ -146,15 +160,15 @@ public class TouchManager : MonoBehaviour
 
     private void BeginTouch(int fingerId, Vector2 position, bool wasExisting)
     {
-        Debug.Log($"TouchManager: Screen Resolution: {Screen.width}x{Screen.height}");
-        Debug.Log($"TouchManager: Native Resolution: {Screen.currentResolution.width}x{Screen.currentResolution.height}");
-        Debug.Log($"TouchManager: Render Scale: {ScalableBufferManager.widthScaleFactor}x{ScalableBufferManager.heightScaleFactor}");
-        Debug.Log($"TouchManager: Tap Position: {position}");
+        //Debug.Log($"TouchManager: Screen Resolution: {Screen.width}x{Screen.height}");
+        //Debug.Log($"TouchManager: Native Resolution: {Screen.currentResolution.width}x{Screen.currentResolution.height}");
+        //Debug.Log($"TouchManager: Render Scale: {ScalableBufferManager.widthScaleFactor}x{ScalableBufferManager.heightScaleFactor}");
+        //Debug.Log($"TouchManager: Tap Position: {position}");
 
         // Raycast to see if it's over UI
         if (IsPointerOverUI(position, out GameObject hitUIObject))
         {
-            Debug.Log($"Touch hit {hitUIObject.name}");
+            //Debug.Log($"Touch hit {hitUIObject.name}");
 
             if (IsInRegion(position, moveJoystick.transform as RectTransform))
             {

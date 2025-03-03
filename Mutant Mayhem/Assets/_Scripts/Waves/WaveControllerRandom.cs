@@ -16,7 +16,7 @@ public class WaveControllerRandom : MonoBehaviour
     [SerializeField] TextMeshProUGUI nextWaveText;
     public TextMeshProUGUI nextWaveButtonName; // Used to store and universally access a 'string' 
 
-    [Header("Wave Properties")]
+    [Header("Wave Properties, mostly set by Planets")]
     public int creditsPerWave = 150; // Additive bonus (waveIndex*creditsPerWave)
     public int currentWaveIndex = 0;
     public float timeBetweenWavesBase = 90; // Base amount of day-time
@@ -27,7 +27,7 @@ public class WaveControllerRandom : MonoBehaviour
     public float subwaveDelayMult = 1;
     public int spawnRadiusBuffer = 16;
 
-    [Header("Enemy Multipliers")]
+    [Header("Enemy Multipliers, mostly set by Planets")]
     public int batchMultStart = 5; // Starting batch multiplier for each Subwave
     public int batchMultiplier = 5; // Current batch multiplier
     public float damageMultStart = 1;
@@ -180,6 +180,9 @@ public class WaveControllerRandom : MonoBehaviour
         MessagePanel.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
+
+        if (currentWaveIndex >= PlanetManager.Instance.currentPlanet.nightToSurvive)
+            ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
 
         StartCoroutine(NextWaveTimer());
 

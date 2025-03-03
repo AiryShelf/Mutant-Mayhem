@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8139212174090041862}
   - component: {fileID: 8722324806740529920}
   - component: {fileID: 4264041264545848409}
+  - component: {fileID: 2053209394963471173}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6761599780747075878}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -61,7 +62,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputActionAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
-  worldCursorTrans: {fileID: 0}
+  customCursorWorld: {fileID: 0}
+  customCursorUI: {fileID: 0}
   aimDistance: 20
   aimMinDistance: 3
   aimCursorTexture: {fileID: 2800000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
@@ -74,23 +76,24 @@ MonoBehaviour:
   repairCursorTexture: {fileID: 2800000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
   repairCursor: {fileID: 21300000, guid: 028cb4fe669db6d40816b9cec8829858, type: 3}
   repairCursorHotspot: {x: 24, y: 24}
-  moveJoystick: {fileID: 0}
   aimJoystick: {fileID: 0}
   usingCustomCursor: 0
+  inMenu: 0
   cursorSpeedMin: 200
   cursorSpeedMax: 1200
   cursorSpeedFactor: 600
   joystickDeadzone: 0.05
   cursorSpeedCurveMagnitude: 1
   cursorAcceleration: 1200
-  customCursorImage: {fileID: 0}
   rayDistance: 500
   currentHoveredObject: {fileID: 0}
   persistentCanvasGR: {fileID: 0}
-  graphicRaycasters: []
-  inMenu: 0
+  graphicRaycasters:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   filteredResults: []
-  framesPerUpdate: 6
+  framesPerHoverUpdate: 6
 --- !u!114 &8139212174090041862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,6 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveJoystick: {fileID: 0}
   aimJoystick: {fileID: 0}
+  buildMenuController: {fileID: 0}
+  buildPanelRect: {fileID: 0}
   player: {fileID: 0}
 --- !u!114 &8722324806740529920
 MonoBehaviour:
@@ -131,3 +136,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineRectTransform: {fileID: 0}
+--- !u!114 &2053209394963471173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6761599780747075878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df984e757a9319e4ebbd541702f3ee4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

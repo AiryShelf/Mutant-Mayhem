@@ -55,9 +55,6 @@ MonoBehaviour:
   objectPoolName: Drone_Attack
   droneType: 1
   moveSpeed: 10
-  buildSpeed: 0
-  actionDelay: 1
-  repairSpeed: 0
   currentJob:
     jobType: 0
     jobPosition: {x: 0, y: 0}
@@ -113,7 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38050b0764aa0d44d9ba8237023e929c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gunListSource: []
+  _gunListSource:
+  - {fileID: 11400000, guid: 1faf041caa9594cc597a294d6d679700, type: 2}
   gunTrans: {fileID: 3688259929015718581}
   muzzleTrans: {fileID: 3688259929015718581}
   casingEjectorTrans: {fileID: 3688259929015718581}
@@ -124,8 +122,7 @@ MonoBehaviour:
   gunRecoil: {fileID: 0}
   gunsAmmoInClips: 05000000
   accuracyHoningSpeed: 4
-  gunList:
-  - {fileID: 11400000, guid: 1faf041caa9594cc597a294d6d679700, type: 2}
+  gunList: []
   currentGunIndex: 0
   currentGunSO: {fileID: 0}
   TurretReloadTime: 2

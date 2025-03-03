@@ -21,12 +21,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b21c583d2f34d49228dd989b7c86c45b, type: 2}
   terrainTile: {fileID: 11400000, guid: e44794305818745d5aa59eda637fb018, type: 2}
   mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  nightToSurvive: 20
   highRezPlanetPrefab: {fileID: 4567349013123969168, guid: 38e58a8fd4b25477a9e515475a504015, type: 3}
   prerequisitePlanets:
   - {fileID: 11400000, guid: 387b81dd0246744d1b7317072823d3e0, type: 2}
-  basePoints: 150
-  pointsPerWave: 18
-  growthControlFactor: 0.14
+  basePoints: 200
+  pointsPerWave: 28
+  growthControlFactor: 0.28
   creditsPerWave: 300
   timeBetweenWavesBase: 100
   wavesTillAddBase: 1

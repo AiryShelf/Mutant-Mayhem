@@ -153,7 +153,7 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MoveSpeed] = 50;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.StrafeSpeed] = 50;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.SprintFactor] = 20;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 10; // Deprecated
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 10;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.WeaponHandling] = 20;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeDamage] = 150;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeKnockback] = 150;
@@ -241,7 +241,7 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MoveSpeed] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StrafeSpeed] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.SprintFactor] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 200; // Deprecated
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 300;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.WeaponHandling] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 250;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeKnockback] = 150;
@@ -255,7 +255,7 @@ public class UpgradeManager : MonoBehaviour
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.StructureMaxHealth] = 500;
-        structureStatsUpgBaseCosts[StructureStatsUpgrade.MaxTurrets] = 6000;
+        structureStatsUpgBaseCosts[StructureStatsUpgrade.MaxTurrets] = 4000;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretRotSpeed] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretSensors] = 500;
 
@@ -265,7 +265,7 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.GrenadeBuyAmmo] = 200;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 100;
         consumablesUpgBaseCosts[ConsumablesUpgrade.BuyConstructionDrone] = 500;
-        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 1500;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 2000;
 
         // Gun Stats
         laserUpgBaseCosts[GunStatsUpgrade.GunDamage] = 250;
@@ -340,7 +340,7 @@ public class UpgradeManager : MonoBehaviour
             case PlayerStatsUpgrade.SprintFactor:
                 return new SprintFactorUpgrade();
             case PlayerStatsUpgrade.PlayerReloadSpeed:
-                return new TurretReloadSpeedUpgrade();
+                return new PlayerReloadSpeedUpgrade();
             case PlayerStatsUpgrade.MeleeDamage:
                 return new MeleeDamageUpgrade();
             case PlayerStatsUpgrade.MeleeKnockback:

@@ -17,6 +17,15 @@ public class CorpseController : MonoBehaviour
         mySr = GetComponent<SpriteRenderer>();
     }
 
+    void Start()
+    {
+        if (InputManager.IsMobile())
+        {
+            timeToStartFade /= 2;
+            timeForFade /= 1.5f;
+        }   
+    }
+
     void OnEnable()
     {
         // Select random corpseSprite
