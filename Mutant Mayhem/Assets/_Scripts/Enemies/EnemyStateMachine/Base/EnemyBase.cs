@@ -36,7 +36,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     #region State Machine
 
     [Header("State Machine Logic")]
-    [SerializeField] string CurrentStateDebug;
+    public string CurrentStateDebug;
     public EnemyStateMachine StateMachine { get; set; }
     public EnemyIdleState IdleState { get; set; }
     public EnemyChaseState ChaseState { get; set; }
@@ -247,10 +247,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         {
             float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
             Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y,
-                                    Mathf.LerpAngle(rb.rotation, angle, 
-                                    Time.fixedDeltaTime * rotateSpeedBase * speedMultipliers));
+                                          Mathf.LerpAngle(rb.rotation, angle, 
+                                          Time.fixedDeltaTime * rotateSpeedBase * speedMultipliers));
             transform.rotation = Quaternion.Euler(rotator);
-            facingDirection = velocity.normalized;
+            facingDirection = transform.right;
         }
     }
 

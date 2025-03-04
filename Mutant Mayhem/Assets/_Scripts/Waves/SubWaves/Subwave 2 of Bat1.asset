@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f411a83dda025504e9ceda316622b576, type: 3}
-  m_Name: Idle-Move Towards Base
+  m_Script: {fileID: 11500000, guid: 5048820a1e26fa04585ca53dc5d474be, type: 3}
+  m_Name: Subwave 2 of Bat1
   m_EditorClassIdentifier: 
-  rotateSpeedMultiplier: 20
-  RandomMovementSpeedMult: 1
+  enemyPrefabList:
+  - {fileID: 5437049528478583412, guid: 175cf7add0fa9c04db8b90d868a2b961, type: 3}
+  numberToSpawn: 02000000

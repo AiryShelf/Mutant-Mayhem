@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7727547690862283729}
   - component: {fileID: 2826357740213786751}
   - component: {fileID: 7273215281728813120}
+  - component: {fileID: 7580828302623498820}
   m_Layer: 14
   m_Name: Collider
   m_TagString: Untagged
@@ -110,6 +111,20 @@ MonoBehaviour:
   meleeSprite: {fileID: 3418149694153841801}
   meleeSound: {fileID: 11400000, guid: 6a3e0d5445d7e404b87530c84e4e7443, type: 2}
   waitToAttack: 0
+  isElevated: 0
+--- !u!114 &7580828302623498820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2418118557250910398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 091894930b6235f49aa376de43c7cd15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  critHitData: {fileID: 11400000, guid: db90c81c170118c45aae896c864ceb99, type: 2}
 --- !u!1 &6206577042995397695
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +134,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2925875389884354145}
-  - component: {fileID: 297836844488316550}
   m_Layer: 14
   m_Name: MeleeEnemy
   m_TagString: Untagged
@@ -144,19 +158,6 @@ Transform:
   - {fileID: 7727547690862283729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &297836844488316550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6206577042995397695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 091894930b6235f49aa376de43c7cd15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  critHitData: {fileID: 11400000, guid: 75f40019fd50ce64ebd3fa6b2ffffedb, type: 2}
 --- !u!1 &8399387714106813490
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +253,7 @@ Animator:
   m_GameObject: {fileID: 8399387714106813490}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3b345fd4778b96b4199de4f16336408e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 394d659ebc42b3444b458de5526b6a92, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

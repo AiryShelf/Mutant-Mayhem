@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8337055654658417259}
-  - component: {fileID: 2287118628182994943}
+  - component: {fileID: -7520197687316877731}
   - component: {fileID: -3464740676881263840}
   - component: {fileID: -1088399054778233193}
-  - component: {fileID: 7778531637580325232}
+  - component: {fileID: 2148359155153488195}
   m_Layer: 11
-  m_Name: EnemyDogCorpse
+  m_Name: EnemyBat1Corpse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2287118628182994943
+--- !u!114 &-7520197687316877731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,15 +48,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   corpseSprites:
-  - {fileID: -76738502, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
-  - {fileID: 1391046010, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
-  - {fileID: 337060656, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
-  - {fileID: -1386016734, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
-  - {fileID: -541390898, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
-  - {fileID: 2124268010, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
+  - {fileID: -1713076737, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: 1912503813, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: -2005939955, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: -1377585623, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: -1832778814, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
   timeToStartFade: 50
   timeForFade: 20
-  corpsePoolName: Dog_Corpse
+  corpsePoolName: Bat1_Corpse
 --- !u!50 &-3464740676881263840
 Rigidbody2D:
   serializedVersion: 4
@@ -69,7 +68,7 @@ Rigidbody2D:
   m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1.2
+  m_Mass: 0.5
   m_LinearDrag: 6
   m_AngularDrag: 10
   m_GravityScale: 0
@@ -117,9 +116,9 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.18, y: 0.08}
-  m_Direction: 1
---- !u!212 &7778531637580325232
+  m_Size: {x: 0.08, y: 0.08}
+  m_Direction: 0
+--- !u!212 &2148359155153488195
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -160,14 +159,14 @@ SpriteRenderer:
   m_SortingLayerID: -1063702457
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 406789917, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
-  m_Color: {r: 0.6, g: 0.6, b: 0.6, a: 0.8}
+  m_Sprite: {fileID: -1713076737, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  m_Color: {r: 0.6392157, g: 0.6384834, b: 0.6384834, a: 0.8}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.16}
+  m_Size: {x: 0.32, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

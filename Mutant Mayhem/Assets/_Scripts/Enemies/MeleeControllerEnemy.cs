@@ -13,7 +13,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] float selfKnockback = 5f;
     public float attackDelay = 1f;
     public float attackDelayStart = 1;
-    [SerializeField] LayerMask hitLayers;
+    public LayerMask hitLayers;
     [SerializeField] float meleeTile_DotProdRange = -1f;
     [SerializeField] Collider2D meleeCollider;
     [SerializeField] float scaleDuration = 0.1f;
@@ -32,6 +32,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     [Header("Dynamic, don't set here")]
     public bool waitToAttack;
+    public bool isElevated;
 
     void Awake()
     {
@@ -234,10 +235,10 @@ public class MeleeControllerEnemy : MonoBehaviour
         else if (collider.CompareTag("Drone"))
         {
             Drone drone = collider.GetComponent<Drone>();
-            if (drone.isFlying)
+            if (drone.isFlying && !isElevated)
                 return;
 
-            Debug.Log("Enemy found drone not flying, trying to hit");
+            //Debug.Log("Enemy found drone, trying to hit");
             Health health = collider.GetComponent<Health>();
             if (health)
                 Hit(health, point);

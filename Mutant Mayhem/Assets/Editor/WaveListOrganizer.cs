@@ -10,24 +10,24 @@ public class MyScriptEditor : Editor
     SerializedProperty subWavesList;
     SerializedProperty subWaveStylesList;
     SerializedProperty subWaveMultipliersList;
-    SerializedProperty timesToTriggerSubWavesList;
+    //SerializedProperty timesToTriggerSubWavesList;
 
     SerializedProperty constantWavesList;
     SerializedProperty constantWaveStylesList;
     SerializedProperty constantWaveMultipliersList;
-    SerializedProperty timesToTriggerConstantWavesList;
+    //SerializedProperty timesToTriggerConstantWavesList;
 
     void OnEnable()
     {
         subWavesList = serializedObject.FindProperty("subWaves");
         subWaveStylesList = serializedObject.FindProperty("subWaveStyles");
         subWaveMultipliersList = serializedObject.FindProperty("subWaveMultipliers");
-        timesToTriggerSubWavesList = serializedObject.FindProperty("timesToTriggerSubWaves");
+        //timesToTriggerSubWavesList = serializedObject.FindProperty("timesToTriggerSubWaves");
 
         constantWavesList = serializedObject.FindProperty("constantWaves");
         constantWaveStylesList = serializedObject.FindProperty("constantWaveStyles");
         constantWaveMultipliersList = serializedObject.FindProperty("constantWaveMultipliers");
-        timesToTriggerConstantWavesList = serializedObject.FindProperty("timesToTriggerConstantWaves");
+        //timesToTriggerConstantWavesList = serializedObject.FindProperty("timesToTriggerConstantWaves");
     }
 
     public override void OnInspectorGUI()
@@ -47,7 +47,7 @@ public class MyScriptEditor : Editor
             EditorGUILayout.PropertyField(subWavesList, true);
             EditorGUILayout.PropertyField(subWaveStylesList, true);
             EditorGUILayout.PropertyField(subWaveMultipliersList, true);
-            EditorGUILayout.PropertyField(timesToTriggerSubWavesList, true);
+            //EditorGUILayout.PropertyField(timesToTriggerSubWavesList, true);
             EditorGUI.indentLevel--;
 
             // For text or ints:
@@ -63,7 +63,7 @@ public class MyScriptEditor : Editor
             EditorGUILayout.PropertyField(constantWavesList, true);
             EditorGUILayout.PropertyField(constantWaveStylesList, true);
             EditorGUILayout.PropertyField(constantWaveMultipliersList, true);
-            EditorGUILayout.PropertyField(timesToTriggerConstantWavesList, true);
+            //EditorGUILayout.PropertyField(timesToTriggerConstantWavesList, true);
             EditorGUI.indentLevel--;
         }
 

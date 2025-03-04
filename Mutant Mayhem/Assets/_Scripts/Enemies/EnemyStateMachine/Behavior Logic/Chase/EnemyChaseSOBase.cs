@@ -91,7 +91,7 @@ public class EnemyChaseSOBase : ScriptableObject
 
         if (enemyBase.IsWithinShootDistance)
         {
-            enemyBase.StateMachine.ChangeState(enemyBase.ShootState);
+            //enemyBase.StateMachine.ChangeState(enemyBase.ShootState);
         }
     }
     public virtual void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) { }

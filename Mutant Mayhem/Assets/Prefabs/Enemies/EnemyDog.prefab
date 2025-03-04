@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 1}
+  m_LocalScale: {x: 6, y: 6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6455359244774574349}
@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00faea303665ef4f97b516bef1e04e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPoolName: Dog
+  objectPoolName: Dog1
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
@@ -97,7 +97,7 @@ MonoBehaviour:
   textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   hasDied: 0
-  corpsePoolName: Dog_Corpse
+  corpsePoolName: Dog1_Corpse
   healthToCreditsDivisor: 1.2
 --- !u!114 &8299610102731463758
 MonoBehaviour:

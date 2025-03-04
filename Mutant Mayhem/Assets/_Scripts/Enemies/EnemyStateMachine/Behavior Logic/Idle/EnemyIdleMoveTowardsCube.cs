@@ -4,7 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Idle-Move Towards Cube", 
                  menuName = "Enemy Logic/Idle Logic/Move Towards Cube")]
-public class EnemyIdleWanderTowardsCube : EnemyIdleSOBase
+public class EnemyIdleMoveTowardsCube : EnemyIdleSOBase
 {
     [SerializeField] private float RandomMovementSpeedMult = 1f;
     

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 34564ee4d10749f418ea6e54c8f75ad5
+guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -44,13 +44,13 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 0
+  spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 75
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -94,19 +94,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -123,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dog_Corpses_0
+      name: Mutant_Bat1_Corpses_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 16
+        width: 40
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bbff2e26079e8e2408baeb1edd0763db
-      internalID: -76738502
+      spriteID: 6fc8b9cac5d2c694abd3641cff4269a0
+      internalID: -1713076737
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog_Corpses_1
+      name: Mutant_Bat1_Corpses_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 40
         y: 0
-        width: 32
-        height: 16
+        width: 40
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1baa0b15183a8974a87751424f755ddd
-      internalID: 1391046010
+      spriteID: 3b7e0b71f7c7d314a8d07bf3f52402de
+      internalID: 1912503813
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog_Corpses_2
+      name: Mutant_Bat1_Corpses_2
       rect:
         serializedVersion: 2
-        x: 64
+        x: 80
         y: 0
-        width: 32
-        height: 16
+        width: 40
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,20 +166,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c53bd439959771543ae33454a17619aa
-      internalID: 337060656
+      spriteID: 010aae10d1f29a546a944cc9e8ee24c9
+      internalID: -2005939955
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog_Corpses_3
+      name: Mutant_Bat1_Corpses_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 120
         y: 0
-        width: 32
-        height: 16
+        width: 40
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,41 +187,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f61cfde07307d074eaa0b9f108d1507a
-      internalID: -1386016734
+      spriteID: 811193ec228bf9b4692e1618dd173c3e
+      internalID: -1377585623
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog_Corpses_4
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7daea738a4a1b814cbf9cf41318122ec
-      internalID: -541390898
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Dog_Corpses_5
+      name: Mutant_Bat1_Corpses_4
       rect:
         serializedVersion: 2
         x: 160
         y: 0
-        width: 32
-        height: 16
+        width: 40
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,8 +208,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9b333d127033ce444b7b304bc9fd04e4
-      internalID: 2124268010
+      spriteID: 57512d161f4e94c40bbafcd12ba7cc64
+      internalID: -1832778814
       vertices: []
       indices: 
       edges: []
@@ -259,12 +225,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dog_Corpses_0: -76738502
-      Dog_Corpses_1: 1391046010
-      Dog_Corpses_2: 337060656
-      Dog_Corpses_3: -1386016734
-      Dog_Corpses_4: -541390898
-      Dog_Corpses_5: 2124268010
+      Mutant_Bat1_Corpses_0: -1713076737
+      Mutant_Bat1_Corpses_1: 1912503813
+      Mutant_Bat1_Corpses_2: -2005939955
+      Mutant_Bat1_Corpses_3: -1377585623
+      Mutant_Bat1_Corpses_4: -1832778814
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
