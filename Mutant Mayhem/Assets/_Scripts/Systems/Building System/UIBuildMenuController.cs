@@ -77,12 +77,18 @@ public class UIBuildMenuController : MonoBehaviour
 
     void InitializeBuildList()
     {
+        uiStructureList.Clear();
+        int index = 0;
         // Initialize structures list and fade groups list
         foreach (GameObject obj in structureButtonPrefabs)
         {
             // Create button in button layout group
             GameObject newButton = Instantiate(obj, buttonLayoutGrid.transform);
             UIStructure uiStructure = newButton.GetComponent<UIStructure>();
+
+            uiStructure.originalSiblingIndex = index;
+            index++;
+
             uiStructure.Initialize(buildingSystem, scrollRectController);
             uiStructureList.Add(uiStructure);
 
@@ -94,6 +100,8 @@ public class UIBuildMenuController : MonoBehaviour
             fadeCanvasGroups.individualElements.Add(uiStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
         }
+
+        RefreshBuildList();
     }
 
     #region Refresh / Toggle
@@ -108,8 +116,16 @@ public class UIBuildMenuController : MonoBehaviour
         }
 
         uiStructureList = uiStructureList
-        .OrderByDescending(structure => BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
-        .ToList();
+            .OrderByDescending(structure => BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
+            .ThenBy(structure => structure.originalSiblingIndex)
+            .ToList();
+
+        for (int i = 0; i < uiStructureList.Count; i++)
+        {
+            uiStructureList[i].transform.SetSiblingIndex(i);
+            uiStructureList[i].textInstance.transform.SetSiblingIndex(i);
+            
+        }
     }
 
     public void ToggleBuildMenu()

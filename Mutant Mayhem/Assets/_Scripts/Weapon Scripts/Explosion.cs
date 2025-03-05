@@ -95,7 +95,20 @@ public class Explosion : MonoBehaviour
         {
             // Convert the tile position back to world space
             Vector2 tileCenter = tileManager.GridCenterToWorld(tilePos);
+            Vector3 worldPos = tileManager.GridToWorld(tilePos);
 
+            // Hit structures with no collider, such as Razor Wire
+            if (!tileManager.IsTileBlueprint(worldPos) &&
+                !tileManager.CheckGridIsClear(tilePos, LayerMask.GetMask("Structures"), true) &&
+                tileManager.GetStructureAt(worldPos).structureType != StructureType.Mine)
+            {
+                
+                float distToPoint = Vector2.Distance(explosionPos, worldPos);
+                Vector2 direction = worldPos - transform.position;
+                float totalDamage = Mathf.Clamp(damage / distToPoint, 0, damage);
+                float damageScale = totalDamage / damage + 1;
+                tileManager.ModifyHealthAt(worldPos, -totalDamage, damageScale, direction);
+            }
             // Create bounds for the tile, based on tile size
             Vector3 tileSize = tileManager.StructureGrid.cellSize;
             Bounds tileBounds = new Bounds(tileCenter, tileSize);

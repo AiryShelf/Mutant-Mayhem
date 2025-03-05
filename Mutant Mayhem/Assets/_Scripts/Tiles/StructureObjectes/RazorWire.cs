@@ -1,20 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class RazorWire : MonoBehaviour
 {
     public float slowFactor = 0.3f;
     public float damageInterval = 1f;
     public float damageAmount = 7f;
+    [SerializeField] float distBeforeDamage = 0.2f;
     private Dictionary<Collider2D, Coroutine> enemyDamageCoroutines = new Dictionary<Collider2D, Coroutine>();
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the object is an enemy.
         if (other.CompareTag("Enemy"))
         {
-            // **Change:** Assume enemy has an EnemyMovement component with ApplySlow method.
             EnemyBase enemyBase = other.GetComponent<EnemyBase>();
             if (enemyBase != null)
             {
@@ -29,10 +29,8 @@ public class RazorWire : MonoBehaviour
                 enemyDamageCoroutines.Add(other, coroutine);
             }
         }
-        // Check if the object is the player.
         else if (other.CompareTag("Player"))
         {
-            // **Change:** Assume the player has a PlayerMovement component with an ApplySlow method.
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
@@ -51,7 +49,6 @@ public class RazorWire : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            // **Change:** Remove the slow effect from the enemy.
             EnemyBase enemyBase = other.GetComponent<EnemyBase>();
             if (enemyBase != null)
             {
@@ -67,22 +64,36 @@ public class RazorWire : MonoBehaviour
         }
         else if (other.CompareTag("Player"))
         {
-            // **Change:** Remove the slow effect from the player.
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
                 player.RemoveSlowFactor(slowFactor);
+            }
+
+            if (enemyDamageCoroutines.ContainsKey(other))
+            {
+                StopCoroutine(enemyDamageCoroutines[other]);
+                enemyDamageCoroutines.Remove(other);
             }
         }
     }
 
     IEnumerator DamageOverTime(Health health)
     {
+        Vector2 lastPosition = Vector2.zero;
+
         while (true)
         {
             if (health != null && health.gameObject.activeInHierarchy)
             {
-                health.ModifyHealth(-damageAmount, 1, GameTools.GetRandomDirection(), gameObject);
+                Vector3 currentPosition = health.gameObject.transform.position;
+                if (Vector3.Distance(lastPosition, currentPosition) >= distBeforeDamage)
+                {
+                    // Apply damage only if sufficient movement has occurred.
+                    health.ModifyHealth(-damageAmount, 1, GameTools.GetRandomDirection(), gameObject);
+                    TileManager.Instance.ModifyHealthAt(transform.position, -damageAmount, 1, GameTools.GetRandomDirection());
+                    lastPosition = currentPosition;
+                }
             }
             else break;
 

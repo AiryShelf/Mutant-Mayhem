@@ -17,6 +17,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     ScrollRectController scrollRectController;
     BuildingSystem buildingSystem;
     Player player;
+    public int originalSiblingIndex;
 
     bool initialized;
 

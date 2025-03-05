@@ -121,7 +121,11 @@ public class TileManager : MonoBehaviour
         if (ruleTile.structureSO.structureType == StructureType.OneByOneWall ||
             ruleTile.structureSO.structureType == StructureType.RazorWire)
         {
-            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
+            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile);
+        }
+        else if (ruleTile.structureSO.structureType == StructureType.OneByOneCorner)
+        {
+            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
         }
         else
         {
@@ -155,6 +159,10 @@ public class TileManager : MonoBehaviour
             ruleTile.structureSO.structureType == StructureType.RazorWire)
         {
             AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
+        }
+        else if (ruleTile.structureSO.structureType == StructureType.OneByOneCorner)
+        {
+            AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.buildUiTile);
         }
         else
         {
@@ -728,6 +736,12 @@ public class TileManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    public StructureSO GetStructureAt(Vector2 worldPos)
+    {
+        Vector3Int gridPos = WorldToGrid(worldPos);
+        return _TileStatsDict[gridPos].ruleTileStructure.structureSO;
     }
 
     #endregion

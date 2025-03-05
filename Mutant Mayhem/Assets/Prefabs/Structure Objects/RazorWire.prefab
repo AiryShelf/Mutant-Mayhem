@@ -49,6 +49,7 @@ MonoBehaviour:
   slowFactor: 0.25
   damageInterval: 1
   damageAmount: 5
+  distBeforeDamage: 0.3
 --- !u!212 &6691833866599050853
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -98,7 +99,7 @@ SpriteRenderer:
   m_Size: {x: 0.32, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &-4876650021502639944

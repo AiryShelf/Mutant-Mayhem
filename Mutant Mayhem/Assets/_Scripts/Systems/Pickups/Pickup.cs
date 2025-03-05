@@ -53,7 +53,10 @@ public class Pickup : MonoBehaviour
         {
             myPos = transform.position;
             gridPos = tileManager.WorldToGrid(myPos);
-            if (!tileManager.IsTileBlueprint(myPos) &&
+            if (TileManager.StructureTilemap.GetTile(gridPos) &&
+                !tileManager.IsTileBlueprint(myPos) &&
+                tileManager.GetStructureAt(myPos).structureType != StructureType.RazorWire &&
+                tileManager.GetStructureAt(myPos).structureType != StructureType.Mine &&
                 !tileManager.CheckGridIsClear(gridPos, LayerMask.GetMask("Structures"), true))
             {
                 Vector2 dir = myPos - tileManager.GridCenterToWorld(gridPos);
