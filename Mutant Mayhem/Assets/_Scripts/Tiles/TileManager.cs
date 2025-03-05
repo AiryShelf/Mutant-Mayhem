@@ -15,6 +15,8 @@ public class TileStats
 
 public class TileManager : MonoBehaviour
 {
+    public static TileManager Instance { get; private set; }
+
     // This stores the TileStats/reference for each tile in 
     // the Structures Tilemap (on "Structures" layer)
     private static Dictionary<Vector3Int, TileStats> _TileStatsDict = 
@@ -68,6 +70,16 @@ public class TileManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         player = FindObjectOfType<Player>();
         buildingSystem = FindObjectOfType<BuildingSystem>();
         turretManager = FindObjectOfType<TurretManager>();
@@ -106,10 +118,11 @@ public class TileManager : MonoBehaviour
 
         _TileStatsDict[gridPos].health *= 0.99f;
 
-        if (ruleTile.structureSO.tileName == "Wall")
+        if (ruleTile.structureSO.structureType == StructureType.OneByOneWall ||
+            ruleTile.structureSO.structureType == StructureType.RazorWire)
+        {
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
-        else if (ruleTile.structureSO.tileName == "Wall Corner")
-            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
+        }
         else
         {
             blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
@@ -138,10 +151,11 @@ public class TileManager : MonoBehaviour
         //}
 
         // Set and rotate animated tile
-        if (ruleTile.structureSO.tileName == "Wall")
+        if (ruleTile.structureSO.structureType == StructureType.OneByOneWall ||
+            ruleTile.structureSO.structureType == StructureType.RazorWire)
+        {
             AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
-        else if (ruleTile.structureSO.tileName == "Wall Corner")
-            AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.buildUiTile);
+        }
         else
         {
             AnimatedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[0]);
@@ -181,8 +195,8 @@ public class TileManager : MonoBehaviour
         StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
         if (type == StructureType.OneByOneWall ||
             type == StructureType.OneByOneCorner ||
-            type == StructureType.TwoByTwoWall ||
-            type == StructureType.TwoByTwoCorner)
+            type == StructureType.RazorWire ||
+            type == StructureType.Mine)
         {
             float randomRotationZ = Random.Range(0f, 360f);  
             Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));
@@ -332,8 +346,13 @@ public class TileManager : MonoBehaviour
         float healthAtStart = _TileStatsDict[rootPos].health;
         float maxHealth = _TileStatsDict[rootPos].maxHealth;
 
-        _TileStatsDict[rootPos].health += value;
-        _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 0, maxHealth);
+        if (!(_TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.RazorWire &&
+            value > 0))
+        {
+            _TileStatsDict[rootPos].health += value;
+            _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 0, maxHealth);
+        }
+        
         //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
 
         float healthDifference = _TileStatsDict[rootPos].health - healthAtStart;
@@ -342,7 +361,7 @@ public class TileManager : MonoBehaviour
             return;
         else if (healthDifference < 0)
         {
-            //if (healthAtStart >= maxHealth)
+            if (_TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType != StructureType.RazorWire)
                 ConstructionManager.Instance.AddRepairJob(new DroneJob(DroneJobType.Repair, GridCenterToWorld(rootPos)));
 
             color = textFlyHealthLossColor;

@@ -13,6 +13,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     [Header("Movement")]
     public float moveSpeedBaseStart;
     public float moveSpeedBase = 1f;
+    float slowFactor = 1;
     public float rotateSpeedBaseStart = 3f;
     public float rotateSpeedBase = 3f;
     public float startMass; // For debug, don't set
@@ -216,13 +217,12 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     public void Die()
     {
-        
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 
     #endregion
 
-    #region Movement Functions
+    #region Movement
 
     public void MoveEnemy(Vector2 velocity)
     {
@@ -230,10 +230,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         if (!isHit)
         {
             if (EnemyChaseSOBaseInstance.isSprinting)
-                rb.AddForce(moveSpeedBase * velocity); 
+                rb.AddForce(moveSpeedBase * slowFactor * velocity); 
             else 
             {
-                Vector2 force = moveSpeedBase * velocity;
+                Vector2 force = moveSpeedBase * slowFactor * velocity;
                 Vector2 acc = force / rb.mass;
                 Vector2 deltaV = acc * Time.fixedDeltaTime;
                 rb.velocity += deltaV;  
@@ -252,6 +252,16 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
             transform.rotation = Quaternion.Euler(rotator);
             facingDirection = transform.right;
         }
+    }
+
+    public void ApplySlowFactor(float factor)
+    {
+        slowFactor = Mathf.Clamp(slowFactor - factor, 0.3f, 1);
+    }
+
+    public void RemoveSlowFactor(float factor)
+    {
+        slowFactor = Mathf.Clamp(slowFactor + factor, 0.3f, 1);
     }
 
     #endregion

@@ -107,6 +107,7 @@ public class Player : MonoBehaviour
     float aimDistance = 10;
     float aimMinDist = 5;
 
+    float slowFactor = 1;
     Coroutine sprintCoroutine;
     float sprintSpeedAmount;
     public Vector2 rawInput;
@@ -615,9 +616,19 @@ public class Player : MonoBehaviour
         }
 
         float speed = Mathf.Lerp(stats.strafeForce, stats.moveForce, speedFactor);
-        moveDir *= speed * sprintSpeedAmount;
+        moveDir *= speed * slowFactor * sprintSpeedAmount;
 
         myRb.AddForce(moveDir);
+    }
+
+    public void ApplySlowFactor(float factor)
+    {
+        slowFactor = Mathf.Clamp(slowFactor - factor, 0.3f, 1);
+    }
+
+    public void RemoveSlowFactor(float factor)
+    {
+        slowFactor = Mathf.Clamp(slowFactor + factor, 0.3f, 1);
     }
 
     #endregion

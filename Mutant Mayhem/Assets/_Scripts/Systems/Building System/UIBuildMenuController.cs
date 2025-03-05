@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -74,11 +75,6 @@ public class UIBuildMenuController : MonoBehaviour
         myCanvasGroup.blocksRaycasts = false; 
     }
 
-    void Update()
-    {
-        Vector2 scrollDelta = scrollAction.ReadValue<Vector2>();
-    }
-
     void InitializeBuildList()
     {
         // Initialize structures list and fade groups list
@@ -100,6 +96,8 @@ public class UIBuildMenuController : MonoBehaviour
         }
     }
 
+    #region Refresh / Toggle
+
     public void RefreshBuildList()
     {
         foreach (UIStructure structure in uiStructureList)
@@ -108,6 +106,10 @@ public class UIBuildMenuController : MonoBehaviour
             if (BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
                 structure.MakeInteractable();
         }
+
+        uiStructureList = uiStructureList
+        .OrderByDescending(structure => BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
+        .ToList();
     }
 
     public void ToggleBuildMenu()
@@ -116,6 +118,10 @@ public class UIBuildMenuController : MonoBehaviour
         myCanvasGroup.blocksRaycasts = !isMenuOpen;
         isMenuOpen = !isMenuOpen;
     }
+
+    #endregion
+
+    #region Select
 
     public bool SetMenuSelection(StructureSO structure)
     {
@@ -138,6 +144,10 @@ public class UIBuildMenuController : MonoBehaviour
         Debug.LogError("UIBuildMenuController: SetMenuSelection failed");
         return false;
     }
+
+    #endregion
+
+    #region Scroll
 
     void OnScroll(InputAction.CallbackContext context)
     {
@@ -193,4 +203,6 @@ public class UIBuildMenuController : MonoBehaviour
 
         currentIndex = startIndex;        
     }
+
+    #endregion
 }

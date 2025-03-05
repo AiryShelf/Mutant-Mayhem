@@ -2143,7 +2143,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30ec7ebc1d74ec344aa2b3bcab2ad624, type: 2}
   - {fileID: 11400000, guid: 0e27f3256cf034c41873cfc22ffe0a71, type: 2}
   - {fileID: 11400000, guid: 8f9fabdf0d76de84bb552cd55fc0d75d, type: 2}
-  unlockedStructuresStart: 000001010101000101000000
+  - {fileID: 11400000, guid: a5868e627c1a479458a424fe31120e7c, type: 2}
+  - {fileID: 11400000, guid: 210a259ba59c64e40a0545472e67f644, type: 2}
+  unlockedStructuresStart: 0000010101010001010000000101
   structureInHand: {fileID: 11400000, guid: 021f2b6683987ec4286e4718b2fb3839, type: 2}
   buildRangeCircle: {fileID: 1334816597}
   buildCamLerpTime: 0.35
@@ -13492,7 +13494,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 705.2276, y: -255.48059}
+  m_AnchoredPosition: {x: 1625.8873, y: -142.17119}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1.1, y: -0.1}
 --- !u!114 &562144389
@@ -18241,10 +18243,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 787260958}
-  - component: {fileID: 787260966}
   - component: {fileID: 787260961}
   - component: {fileID: 787260965}
   - component: {fileID: 787260964}
+  - component: {fileID: 787260966}
   - component: {fileID: 787260960}
   - component: {fileID: 787260959}
   - component: {fileID: 787260962}
@@ -18342,9 +18344,11 @@ MonoBehaviour:
   - {fileID: 4389413302329801690, guid: 34a4d6328a254c140a9859c711879b7e, type: 3}
   - {fileID: 4389413302329801690, guid: da7305f6a6b0d406b99213994bc707af, type: 3}
   - {fileID: 4389413302329801690, guid: 1a2a069d889b013499430adf43bc20a6, type: 3}
+  - {fileID: 4389413302329801690, guid: a9d6a02051f569742822c362e79a7ae6, type: 3}
   - {fileID: 6350679092703647354, guid: cb269e2e3ee835e45a9dd36ec6250b8f, type: 3}
   - {fileID: 6350679092703647354, guid: 10c8aa028d2716c4595c514b1d814790, type: 3}
   - {fileID: 6350679092703647354, guid: 4fc62e7697060e74a937d9c95fb06b57, type: 3}
+  - {fileID: 4389413302329801690, guid: 88246766bd8756c48be5583eb22df4f9, type: 3}
   uiStructureList: []
   scrollRectController: {fileID: 1565839556}
   myCanvasGroup: {fileID: 787260962}

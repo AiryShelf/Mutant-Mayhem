@@ -48,6 +48,8 @@ public enum StructureType
     GunTurret2,
     RocketTurret2,
     Window,
+    Mine,
+    RazorWire,
     None
 }
 
