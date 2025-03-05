@@ -13,7 +13,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] float selfKnockback = 5f;
     public float attackDelay = 1f;
     public float attackDelayStart = 1;
-    public LayerMask hitLayers;
+    [SerializeField] LayerMask hitLayers;
     [SerializeField] float meleeTile_DotProdRange = -1f;
     [SerializeField] Collider2D meleeCollider;
     [SerializeField] float scaleDuration = 0.1f;
@@ -45,8 +45,8 @@ public class MeleeControllerEnemy : MonoBehaviour
         {
             useTriggers = false
         };
-        contactFilter.SetLayerMask(hitLayers);
-
+        
+        SetContactFilter(hitLayers);
         colliders = new List<Collider2D>(10);
 
         //transform.localScale = initialScale;
@@ -57,17 +57,29 @@ public class MeleeControllerEnemy : MonoBehaviour
         StopAllCoroutines();
     }
 
+    public void SetContactFilter(LayerMask layerMask)
+    {
+        contactFilter.SetLayerMask(layerMask);
+    }
+
+    public void ResetContactFilter()
+    {
+        contactFilter.SetLayerMask(hitLayers);
+    }
+
     public void Reset()
     {
-        meleeAnimator.Rebind();
+        //meleeAnimator.Rebind();
         meleeAnimator.Update(0f);
         meleeAnimator.Play("No Attack");
+        meleeCollider.enabled = true;
+        meleeCollider.transform.localScale = maxScale;
         
         waitToAttack = false;
         meleeDamage = meleeDamageStart;
         knockback = knockbackStart;
         attackDelay = attackDelayStart;
-        meleeSprite.enabled = false;
+        //meleeSprite.enabled = false;
     }
 
     IEnumerator ScaleMeleeObject()

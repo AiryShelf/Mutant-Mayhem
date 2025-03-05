@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Bullet : MonoBehaviour
 {
     public LayerMask hitLayers;
     LayerMask hitLayersStart;
     public GunType gunType;
+    public Light2D bulletLight;
 
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected SoundSO shootSound;

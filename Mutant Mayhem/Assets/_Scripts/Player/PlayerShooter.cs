@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -51,6 +52,17 @@ public class PlayerShooter : Shooter
     {
         UpdateDynamicAccuracy();
         Shoot();
+    }
+
+    public void SetElevated(bool elevated)
+    {
+        isElevated = elevated;
+
+        flashlight1.shadowsEnabled = !elevated;
+        flashlight2.shadowsEnabled = !elevated;
+        gunSights.isElevated = elevated;
+        if (muzzleLight != null)
+            muzzleLight.shadowsEnabled = !elevated;
     }
 
     public float GetRange()
@@ -134,6 +146,8 @@ public class PlayerShooter : Shooter
         if (muzzleFlash != null)
             Destroy(muzzleFlash);
         muzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, muzzleTrans);
+        muzzleLight = muzzleFlash.GetComponent<Light2D>();
+        muzzleLight.shadowsEnabled = !isElevated;
         muzzleFlash.SetActive(false);
 
         // Sights

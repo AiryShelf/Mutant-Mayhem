@@ -53,6 +53,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2101376
   gunType: 0
+  bulletLight: {fileID: 437489146593608577}
   rb: {fileID: 2082839547474369568}
   shootSound: {fileID: 11400000, guid: d1a670dd6a028e44ea46ade3654e29b0, type: 2}
   hitSound: {fileID: 11400000, guid: 6ffb3c9e7bd64ec4f978af323e6aea7a, type: 2}
@@ -399,8 +400,8 @@ MonoBehaviour:
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowIntensityEnabled: 0
-  m_ShadowIntensity: 0.75
+  m_ShadowIntensityEnabled: 1
+  m_ShadowIntensity: 1
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:

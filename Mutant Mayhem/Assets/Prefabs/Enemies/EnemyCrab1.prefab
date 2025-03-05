@@ -280,7 +280,7 @@ MonoBehaviour:
   - {x: -0.025125083, y: -0.045585968, z: 0}
   m_ShapePathHash: -232648934
   m_Mesh: {fileID: 0}
-  m_InstanceId: 217378
+  m_InstanceId: 160144
   m_LocalBounds:
     m_Center: {x: 0.00024374202, y: -0.00013599545, z: 0}
     m_Extent: {x: 0.03492998, y: 0.045548275, z: 0}
@@ -480,8 +480,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3418149694153841801, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -830474088, guid: f7ac6a522fa50874086a779d775e44d5, type: 3}
+    - target: {fileID: 3418149694153841801, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418149694153841801, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6206577042995397695, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Name
@@ -505,7 +513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7871392400316664067, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.084
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 8762316274977813352, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Sprite

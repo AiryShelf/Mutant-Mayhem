@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 public class Shooter : MonoBehaviour
@@ -29,6 +30,7 @@ public class Shooter : MonoBehaviour
     public bool isElevated;
     public bool hasTarget;
     protected GameObject muzzleFlash;
+    protected Light2D muzzleLight;
     public GunSights gunSights;
     protected Coroutine reloadRoutine;
     protected int clipSize;
@@ -223,6 +225,8 @@ public class Shooter : MonoBehaviour
                 damage *= bulletDamageMult;
                 break;
         }
+        if (isElevated && bullet.bulletLight != null)
+            bullet.bulletLight.shadowsEnabled = false;
         bullet.damage = damage;
         bullet.damageVariance = currentGunSO.damageVariance;
         bullet.origin = this.transform;
@@ -268,6 +272,7 @@ public class Shooter : MonoBehaviour
             Destroy(muzzleFlash);
         //Debug.Log("MuzzleFlash instantiated");
         muzzleFlash = Instantiate(gunList[i].muzzleFlashPrefab, muzzleTrans);
+        muzzleLight = muzzleFlash.GetComponent<Light2D>();
         muzzleFlash.SetActive(false);
 
         // Sights

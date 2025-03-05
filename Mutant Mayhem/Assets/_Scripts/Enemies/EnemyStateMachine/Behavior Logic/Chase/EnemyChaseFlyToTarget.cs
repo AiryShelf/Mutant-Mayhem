@@ -17,7 +17,6 @@ public class EnemyChaseFlyToTarget : EnemyChaseSOBase
     [SerializeField] float diveScaleDivisor = 1.7f;
 
     float time;
-    LayerMask hitLayersStart;
     Vector3 moveDir;
     float sineVal;
     Vector3 perpendicular;
@@ -30,7 +29,6 @@ public class EnemyChaseFlyToTarget : EnemyChaseSOBase
     public override void Initialize(GameObject gameObject, EnemyBase enemy)
     {
         base.Initialize(gameObject, enemy);
-        hitLayersStart = enemy.meleeController.hitLayers;
         localScaleStart = enemy.transform.localScale;
     }  
 
@@ -38,13 +36,13 @@ public class EnemyChaseFlyToTarget : EnemyChaseSOBase
     {
         base.DoEnterLogic();
         time = 0;
-        enemyBase.meleeController.hitLayers = hitLayers;
+        enemyBase.meleeController.SetContactFilter(hitLayers);
     }
 
     public override void DoExitLogic() 
     {
         base.DoExitLogic();
-        enemyBase.meleeController.hitLayers = hitLayersStart;
+        enemyBase.meleeController.ResetContactFilter();
         enemyBase.transform.localScale = localScaleStart;
     }
 

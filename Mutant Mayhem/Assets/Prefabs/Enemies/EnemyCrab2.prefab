@@ -280,7 +280,7 @@ MonoBehaviour:
   - {x: 0.01524747, y: -0.045341525, z: 0}
   m_ShapePathHash: -346284597
   m_Mesh: {fileID: 0}
-  m_InstanceId: 212950
+  m_InstanceId: 160206
   m_LocalBounds:
     m_Center: {x: 0.00025871396, y: 0.0000718385, z: 0}
     m_Extent: {x: 0.035007473, y: 0.045518838, z: 0}
@@ -412,6 +412,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3418149694153841801, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -830474088, guid: f7ac6a522fa50874086a779d775e44d5, type: 3}
+    - target: {fileID: 3418149694153841801, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418149694153841801, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6206577042995397695, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Name
       value: MeleeNew
@@ -430,7 +442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7871392400316664067, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.13
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 8762316274977813352, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Sprite
