@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlanetManager : MonoBehaviour
 {
-    public static PlanetManager Instance;
+    public static PlanetManager Instance { get; private set; }
     public List<PlanetSO> planetsSource;
     public PlanetSO currentPlanet { get; private set; }
 
@@ -182,7 +182,7 @@ public class PlanetManager : MonoBehaviour
 
         waveController.creditsPerWave = currentPlanet.creditsPerWave; // Additive bonus (waveIndex*creditsPerWave)
         waveController.timeBetweenWavesBase = currentPlanet.timeBetweenWavesBase; // Base amount of day-time
-        waveController.wavesTillAddBase = currentPlanet.wavesTillAddBase; // Affects max index to choose subwaves from
+        waveController.wavesTillAddIndex = currentPlanet.wavesTillAddIndex; // Affects max index to choose subwaves from
         waveController.subwaveDelayMultStart = currentPlanet.subwaveDelayMultStart;
         waveController.spawnRadiusBuffer = currentPlanet.spawnRadiusBuffer;
 

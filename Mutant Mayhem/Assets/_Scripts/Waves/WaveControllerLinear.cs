@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+/*
 public class WaveControllerLinear : MonoBehaviour
 {
     [SerializeField] List<WaveSOBase> allWaveBases;
@@ -66,7 +66,7 @@ public class WaveControllerLinear : MonoBehaviour
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
 
-        waveSpawner.masterWave = allWaveBases[0];
+        waveSpawner.waveBase = allWaveBases[0];
         currentWave = 0;
     }
 
@@ -112,7 +112,7 @@ public class WaveControllerLinear : MonoBehaviour
         // Switch Spawner to new WaveBase
         int index = (int)Mathf.Floor(currentWave / wavesPerBase);
         index = Mathf.Clamp(index, 0, allWaveBases.Count - 1);
-        waveSpawner.masterWave = allWaveBases[index];
+        waveSpawner.waveBase = allWaveBases[index];
         // Need to add logic to handle the end of the list.
         // Maybe restart with larger multipliers?  Or a random new list?
 
@@ -177,3 +177,4 @@ public class WaveControllerLinear : MonoBehaviour
                                - currentWave / 100f, 0.1f, 100);
     }
 }
+*/

@@ -188,8 +188,8 @@ public class Explosion : MonoBehaviour
                     rb.AddForce(direction.normalized * forceMagnitude, ForceMode2D.Impulse);
 
                     // Apply damage
-                    float totalDamage = Mathf.Clamp(damage / 2 / distToPoint, 0, damage / 2);
-                    float damageScale = totalDamage / (damage / 2) + 1;
+                    float totalDamage = Mathf.Clamp(damage / 3 / distToPoint, 0, damage / 2);
+                    float damageScale = totalDamage / (damage / 3) + 1;
                     droneHealth.ModifyHealth(-totalDamage, damageScale, direction, gameObject);
                     continue;
                 }

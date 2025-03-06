@@ -29,9 +29,11 @@ MonoBehaviour:
   basePoints: 225
   pointsPerWave: 28
   growthControlFactor: 0.28
+  waveSOBase: {fileID: 11400000, guid: fd60d16256f032942b461499664e92a0, type: 2}
+  maxIndexToSelectAtStart: 3
+  wavesTillAddIndex: 1
   creditsPerWave: 400
   timeBetweenWavesBase: 100
-  wavesTillAddBase: 1
   batchMultiplierStart: 7
   subwaveDelayMultStart: 0.6
   spawnRadiusBuffer: 40

@@ -76,6 +76,8 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         player = FindObjectOfType<Player>();
     }
 
+    #region Select
+
     public void OnSelect(BaseEventData data)
     {
         TryToSelect();
@@ -117,9 +119,6 @@ public class UIStructure : MonoBehaviour, ISelectHandler
 
         button.Select();
         return true;
-
-        // Force selection
-        
     }
     
     public void MakeInteractable()
@@ -127,6 +126,10 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         button.interactable = true;
         SetText(BuildingSystem.PlayerCredits);
     }
+
+    #endregion
+
+    #region Text
 
     void SetText(float playerCredits)
     {
@@ -167,4 +170,6 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             greenColorTag + structureSO.maxHealth + " HP" + endColorTag;
         }
     }
+
+    #endregion
 }

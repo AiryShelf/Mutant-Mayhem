@@ -33,7 +33,7 @@ public class StatModifierEntry
     public float multiplier;
 }
 
-[CreateAssetMenu(fileName = "PlanetProperty", menuName = "Game/Planet Property")]
+[CreateAssetMenu(fileName = "PlanetProperty", menuName = "Game/Planets/Planet Property")]
 public class PlanetPropertySO : ScriptableObject
 {
     public string propertyName;

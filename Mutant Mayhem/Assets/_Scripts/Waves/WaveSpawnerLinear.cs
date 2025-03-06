@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/*
 public class WaveSpawnerLinear : MonoBehaviour
 {
     public Transform qCubeTrans;
@@ -253,3 +254,5 @@ public class WaveSpawnerLinear : MonoBehaviour
         return new Vector2(x, y);
     }
 }
+
+*/

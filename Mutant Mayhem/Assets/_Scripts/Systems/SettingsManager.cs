@@ -24,7 +24,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Difficulty Multipliers")]
     public float WaveDifficultyMult = 1; // Multiplies enemy stats on spawning
-    public int WavesTillAddWaveBase = 0; // down harder, hard enemies appear sooner
+    public int WavesTillAddWaveBaseDifficultyAdjust = 0; // down harder, hard enemies appear sooner
     public float SubwaveListGrowthFactor = 0; // up harder, more waves added over time
     public float SubwaveDelayMult = 1; // Time between Subwaves
     public float BatchSpawnMult = 1; // Multiplies number of enemies per batch in each Subwave
@@ -126,7 +126,7 @@ public class SettingsManager : MonoBehaviour
             case DifficultyLevel.Easy:
                 waveController.timeBetweenWaves = waveController.timeBetweenWavesBase + 60;
                 WaveDifficultyMult = 0.7f;
-                WavesTillAddWaveBase = 1;
+                WavesTillAddWaveBaseDifficultyAdjust = -1;
                 SubwaveListGrowthFactor = 0.8f;
                 SubwaveDelayMult = 1.3f;
                 BatchSpawnMult = 0.7f;
@@ -138,7 +138,7 @@ public class SettingsManager : MonoBehaviour
             case DifficultyLevel.Normal:
                 waveController.timeBetweenWaves = waveController.timeBetweenWavesBase;
                 WaveDifficultyMult = 1;
-                WavesTillAddWaveBase = 0;
+                WavesTillAddWaveBaseDifficultyAdjust = 0;
                 SubwaveListGrowthFactor = 1f;
                 SubwaveDelayMult = 1;
                 BatchSpawnMult = 1;
@@ -149,7 +149,7 @@ public class SettingsManager : MonoBehaviour
             case DifficultyLevel.Hard:
                 waveController.timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
                 WaveDifficultyMult = 1.5f;
-                WavesTillAddWaveBase = -1;
+                WavesTillAddWaveBaseDifficultyAdjust = 1;
                 SubwaveListGrowthFactor = 1.2f;
                 SubwaveDelayMult = 0.8f;
                 BatchSpawnMult = 1.2f;

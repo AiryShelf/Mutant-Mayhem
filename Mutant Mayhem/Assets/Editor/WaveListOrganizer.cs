@@ -68,9 +68,6 @@ public class MyScriptEditor : Editor
         }
 
         EditorGUILayout.LabelField("");
-
-        waveBase.minEnemiesToNextWave = 
-            EditorGUILayout.IntField("Min Enemies To Next Wave", waveBase.minEnemiesToNextWave);
         
         serializedObject.ApplyModifiedProperties();
     }

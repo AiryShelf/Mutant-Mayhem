@@ -21,8 +21,7 @@ public class WaveControllerRandom : MonoBehaviour
     public int currentWaveIndex = 0;
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public float timeBetweenWaves = 0; // Amount of day-time after difficulty setting
-    public float spawnRadius = 60; // DEPRECATED, now uses dynamic radius plus a buffer set by planetSO
-    public float wavesTillAddBase = 1; // Affects max index to choose subwaves from
+    public float wavesTillAddIndex = 1; // Waves until raising max index to choose subwaves from
     public float subwaveDelayMultStart = 1f;
     public float subwaveDelayMult = 1;
     public int spawnRadiusBuffer = 16;

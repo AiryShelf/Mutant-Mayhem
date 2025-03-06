@@ -11,8 +11,7 @@ public class WaveSpawnerRandom : MonoBehaviour
     [SerializeField] Tilemap structureTilemap;
     [SerializeField] LayerMask checkClearLayers;
     public Transform qCubeTrans;
-    public WaveSOBase masterWave;
-    [SerializeField] int maxIndexToSelectAtStart;
+    public WaveSOBase waveBase;
     [SerializeField] WaveSOBase currentWave;
     [SerializeField] int numSubwavesAtStart;
     [SerializeField] int timeToNextSubWave;
@@ -32,8 +31,9 @@ public class WaveSpawnerRandom : MonoBehaviour
     {
         centerPoint = qCubeTrans.position;
 
-        // Copy the master wave
-        currentWave = Instantiate(masterWave, transform);       
+        // Get the Master Wave, create an empty wave to build
+        waveBase = PlanetManager.Instance.currentPlanet.waveSOBase;
+        currentWave = Instantiate(new WaveSOBase());       
     }
 
     #region Build Wave
@@ -60,35 +60,38 @@ public class WaveSpawnerRandom : MonoBehaviour
                          SettingsManager.Instance.SubwaveListGrowthFactor);
 
         // Build Wave
+        PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
         int prevSubwaveIndex = 0;
         int timeInSequence = 0;
         for (int i = 0; i < numberOfSubwaves; i++)
         {
             // Find max index to select based on current wave, plus starting max index
-            int maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex / waveController.wavesTillAddBase) 
-                           + maxIndexToSelectAtStart - SettingsManager.Instance.WavesTillAddWaveBase;
-            maxIndex = Mathf.Clamp(maxIndex, 0, masterWave.subWaves.Count - 1);
-            Debug.Log("maxIndex for wave " + waveController.currentWaveIndex + ": " + maxIndex);
+            int maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex / waveController.wavesTillAddIndex) +
+                           currentPlanet.maxIndexToSelectAtStart + 
+                           SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
+            maxIndex = Mathf.Clamp(maxIndex, 0, waveBase.subWaves.Count - 1);
+            Debug.Log("MaxIndex for wave " + waveController.currentWaveIndex + ": " + maxIndex);
 
-            // Select random index, wave, and style. Prevent doubles
+            // Select random index, and subwave
             int subWaveIndex = Random.Range(0, maxIndex + 1);
             if (maxIndex > 0)
             {
+                // Prevent doubles
                 while (subWaveIndex == prevSubwaveIndex)
                 {
                     subWaveIndex = Random.Range(0, maxIndex + 1);
                 }
             }
-            SubWaveSO waveToAdd = masterWave.subWaves[subWaveIndex];
+            SubWaveSO subwaveToAdd = waveBase.subWaves[subWaveIndex];
 
             // Allow for extra waveSyles to select from
             int styleIndex = Random.Range(0, maxIndex + 1);
-            styleIndex = Mathf.Clamp(styleIndex, 0, masterWave.subWaveStyles.Count - 1);
-            SubWaveStyleSO styleToAdd = masterWave.subWaveStyles[styleIndex];
+            styleIndex = Mathf.Clamp(styleIndex, 0, waveBase.subWaveStyles.Count - 1);
+            SubWaveStyleSO styleToAdd = waveBase.subWaveStyles[styleIndex];
 
             // Add selection to list
-            currentWave.subWaves.Add(waveToAdd);
-            currentWave.subWaveMultipliers.Add(masterWave.subWaveMultipliers[subWaveIndex]);
+            currentWave.subWaves.Add(subwaveToAdd);
+            currentWave.subWaveMultipliers.Add(waveBase.subWaveMultipliers[subWaveIndex]);
             //Debug.Log("Added SubWave: " + waveToAdd.name);
             currentWave.subWaveStyles.Add(styleToAdd);
             //Debug.Log("Added SubWave Style: " + styleToAdd.name);
