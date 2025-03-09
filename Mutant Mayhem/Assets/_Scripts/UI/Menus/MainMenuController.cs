@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] OptionsPanel optionsPanel;
     [SerializeField] ControlSettingsPanel controlsPanel;
     [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
+    [SerializeField] CreditsRoll creditsRoll;
     [SerializeField] InputActionAsset inputAsset;
     [SerializeField] ProfileSelectionUI profileSelectionUI;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters;
@@ -21,6 +23,7 @@ public class MainMenuController : MonoBehaviour
     bool isProfilesOpen;
     bool isOptionsOpen;
     bool isControlsOpen;
+    bool isCreditsOpen;
 
     void OnEnable() 
     {
@@ -125,6 +128,20 @@ public class MainMenuController : MonoBehaviour
             // Close profiles panel
             profileFadeGroup.isTriggered = false;
             isProfilesOpen = false;
+        }
+    }
+
+    public void ToggleCredits()
+    {
+        if (!isCreditsOpen)
+        {
+            creditsRoll.RollCredits();
+            isCreditsOpen = true;
+        }
+        else
+        {
+            creditsRoll.StopCredits();
+            isCreditsOpen = false;
         }
     }
 

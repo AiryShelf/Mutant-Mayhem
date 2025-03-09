@@ -69,7 +69,6 @@ public class BuildingSystem : MonoBehaviour
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
     TurretManager turretManager;
 
-    Vector3Int previousHighlightPos = Vector3Int.zero;
     Coroutine clearStructureInHand;
     Coroutine lockBuildCircleToMuzzle;
     public GameObject lastSelectedUiObject;
@@ -104,7 +103,7 @@ public class BuildingSystem : MonoBehaviour
     {
         rotateStructureAction.started -= OnRotate;
         cheatCodeCreditsAction.started -= OnCheatCodeCredits;
-   
+
         _UnlockedStructuresDict.Clear();   
     }
 
@@ -234,7 +233,6 @@ public class BuildingSystem : MonoBehaviour
         // Normalize the rotation to be within the range (0, 360)
         currentRotation = (currentRotation % 360 + 360) % 360;
         RemoveBuildHighlight();
-        previousHighlightPos += Vector3Int.one;
         // Ensure use of original SO cell positions for rotation
         if (AllStructureSOs.Contains(structure))
             structure = AllStructureSOs[AllStructureSOs.IndexOf(structure)];
@@ -558,10 +556,6 @@ public class BuildingSystem : MonoBehaviour
     private void HighlightTile()
     {
         Vector3Int mouseGridPos = GetMouseToGridPos();
-        if (mouseGridPos == previousHighlightPos)
-            return;
-
-        previousHighlightPos = mouseGridPos;
         mouseGridPos.z = 0;
         ActionType currentAction = structureInHand.actionType;
         
