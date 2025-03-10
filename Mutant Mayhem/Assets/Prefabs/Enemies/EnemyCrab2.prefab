@@ -88,8 +88,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00796190f03ebc5459f70101a21ce7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMaxHealth: 70
-  maxHealth: 70
+  startMaxHealth: 90
+  maxHealth: 90
   deathTorque: 30
   painSound: {fileID: 11400000, guid: dc0429e7a6c0fba48956d18ff1936bda, type: 2}
   painSoundCooldown: 0.3
@@ -98,7 +98,7 @@ MonoBehaviour:
   textFlyAlphaMax: 0.8
   hasDied: 0
   corpsePoolName: Crab2_Corpse
-  healthToCreditsDivisor: 2.1
+  healthToCreditsDivisor: 2.5
 --- !u!114 &8299610102731463758
 MonoBehaviour:
   m_ObjectHideFlags: 0

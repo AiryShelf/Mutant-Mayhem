@@ -173,6 +173,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         health.SetMaxHealth(randomSizeFactor / PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize] * 
                             health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
+        Debug.Log("RandomSizeFacto: " + randomSizeFactor + ", waveController.damageMultiplier: " + waveController.damageMultiplier);
         meleeController.meleeDamage *= randomSizeFactor * waveController.damageMultiplier;
         meleeController.attackDelay = meleeController.attackDelayStart * waveController.attackDelayMult;
         meleeController.knockback *= randomSizeFactor;

@@ -87,8 +87,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00796190f03ebc5459f70101a21ce7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMaxHealth: 20
-  maxHealth: 20
+  startMaxHealth: 15
+  maxHealth: 15
   deathTorque: 60
   painSound: {fileID: 11400000, guid: d9275a96bf51bad45881b1b0963795ab, type: 2}
   painSoundCooldown: 0.3
@@ -97,7 +97,7 @@ MonoBehaviour:
   textFlyAlphaMax: 0.8
   hasDied: 0
   corpsePoolName: Bat1_Corpse
-  healthToCreditsDivisor: 1.2
+  healthToCreditsDivisor: 0.5
 --- !u!114 &8299610102731463758
 MonoBehaviour:
   m_ObjectHideFlags: 0
