@@ -28,11 +28,10 @@ public class GunSO : ScriptableObject
     public SoundSO selectedSound;
 
     [Header("Effects")]
-    public GameObject emptyClipPrefab;
+    public string emptyClipPoolName;
     public GameObject muzzleFlashPrefab;
     public GameObject laserSight;
     public Vector2 muzzleLocalPos;
-    public GameObject bulletCasingPrefab;
     public string FXManagerCasingMethodName;
     public Vector2 casingLocalPos;
     public float muzzleFlashTime;

@@ -205,7 +205,10 @@ public class ParticleManager : MonoBehaviour
 
         BulletCasingFly casingFly = casingObj.GetComponent<BulletCasingFly>();
         if (casingFly != null)
+        {
             casingFly.casingTrans = ejectorTrans;
+            casingFly.StartFly();
+        }
         else 
             Debug.LogError("CasingFly component not found for " + casingPrefab_SMG + " in ParticleManager");
 
@@ -218,12 +221,15 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayBulletCasingFly_Rifle(Transform ejectorTrans, Quaternion rot, bool isElevated)
     {
-        GameObject casingObj = PoolManager.Instance.GetFromPool("Casing_SMG");
+        GameObject casingObj = PoolManager.Instance.GetFromPool("Casing_GunTurret");
         casingObj.transform.position = ejectorTrans.position;
 
         BulletCasingFly casingFly = casingObj.GetComponent<BulletCasingFly>();
         if (casingFly != null)
+        {
             casingFly.casingTrans = ejectorTrans;
+            casingFly.StartFly();
+        }
         else 
             Debug.LogError("CasingFly component not found for " + casingPrefab_Rifle + " in ParticleManager");
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BulletCasingFly : MonoBehaviour
 {
-    
+    public string objectPoolName;
+
     [SerializeField] float scaleFactor = 0.5f;
     [SerializeField] float durationSensitivity;
     [SerializeField] float rotateSpeed;
@@ -18,12 +19,25 @@ public class BulletCasingFly : MonoBehaviour
     [SerializeField] float minScale = 1f;
     [SerializeField] float duration;
     [SerializeField] float stopSpeed = 1f;
-    [SerializeField] string casingMethodName;
+    [SerializeField] string casingMethodName; // For turning casing object into particles on ground
     public Transform casingTrans;
     Quaternion rot;
     float deg;
 
-    void Start()
+    void OnDisable()
+    {
+        casingTrans = null;
+        StopAllCoroutines();
+    }
+
+    void FixedUpdate()
+    {
+        deg += rotateSpeed;
+        rot = Quaternion.Euler(0, 0, deg);
+        transform.rotation = rot;
+    }
+
+    public void StartFly()
     {
         deg = Random.Range(0, 360);
         rot = Quaternion.Euler(0, 0, deg);
@@ -43,13 +57,6 @@ public class BulletCasingFly : MonoBehaviour
 
         rotateSpeed = Random.Range(-rotateSpeed, rotateSpeed);
         transform.parent = null;
-    }
-
-    void FixedUpdate()
-    {
-        deg += rotateSpeed;
-        rot = Quaternion.Euler(0, 0, deg);
-        transform.rotation = rot;
     }
 
     IEnumerator Fly(float startHeight, float peakHeight, float duration)
@@ -81,6 +88,8 @@ public class BulletCasingFly : MonoBehaviour
 
         ParticleManager.Instance.PlayCasingEffectByName(casingMethodName, 
                                     transform, transform.rotation, false);
-        Destroy(gameObject);
+
+        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+        //Destroy(gameObject);
     }
 }

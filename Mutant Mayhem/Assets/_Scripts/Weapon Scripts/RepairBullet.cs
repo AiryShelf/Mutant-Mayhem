@@ -61,9 +61,10 @@ public class RepairBullet : Bullet
         // Lock to target pos to avoid missses
         transform.position = target;
 
-        // Build if blueprint
+        
         if (!tileManager.CheckTileFullHealth(transform.position))
         {
+            // Build blueprint
             bool isBlueprint = false;
             if (tileManager.IsTileBlueprint(target))
             {
@@ -82,7 +83,9 @@ public class RepairBullet : Bullet
                 tileManager.BuildBlueprintAt(target, -damage, 1.3f, hitDir);
             }
             
-            if (!isBlueprint)
+            // Repair, but not Razor Wire
+            bool isRepairable = tileManager.GetStructureAt(target).structureType != StructureType.RazorWire;
+            if (!isBlueprint && isRepairable)
             {
                 float repairCost = tileManager.GetRepairCostAt(target, -damage);
                 if (BuildingSystem.PlayerCredits >= repairCost)
@@ -97,10 +100,13 @@ public class RepairBullet : Bullet
                     yield break;
                 }
             }
-                
-            ParticleManager.Instance.PlayRepairEffect(target, transform.right);
-            SFXManager.Instance.PlaySoundAt(hitSound, target);
-            StatsCounterPlayer.AmountRepairedByPlayer -= damage;
+
+            if (isRepairable) 
+            {
+                ParticleManager.Instance.PlayRepairEffect(target, transform.right);
+                SFXManager.Instance.PlaySoundAt(hitSound, target);
+                StatsCounterPlayer.AmountRepairedByPlayer -= damage;    
+            }
             //Debug.Log("Ran repair code");
         }
 

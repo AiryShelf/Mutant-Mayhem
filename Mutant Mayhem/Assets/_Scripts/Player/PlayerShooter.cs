@@ -259,8 +259,8 @@ public class PlayerShooter : Shooter
     {
         base.Fire();
         
-        // if not repair gun (index 9)
-        if (currentGunIndex != 9)
+        // if not repair gun (index 4)
+        if (currentGunIndex != 4)
             StatsCounterPlayer.ShotsFiredByPlayer++;
 
         Kickback();

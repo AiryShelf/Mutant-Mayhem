@@ -106,6 +106,50 @@ public static class GameTools
     public static string ConvertToStatValue(float value)
     {
         float absValue = Mathf.Abs(value);
+
+        // [CHANGED] We create a helper function to format the scaled number 
+        // to a max of three total digits (plus a decimal if needed).
+        string FormatScaled(float scaled)
+        {
+            // Decide how many decimal places to keep, so total digits ≤ 3
+            // e.g. 1.66 -> "1.66" (two decimals); 
+            //      11.66 -> "11.7"  (one decimal, rounding up)
+            //      111.66 -> "112"  (zero decimals, rounding up)
+            int decimals = 0;
+
+            if      (scaled < 10f)   decimals = 2;  // up to "9.99"
+            else if (scaled < 100f)  decimals = 1;  // up to "99.9"
+            else                     decimals = 0;  // 100 or above -> "100" etc.
+
+            // Use rounding instead of flooring
+            float rounded = (float) System.Math.Round(scaled, decimals);
+
+            // Convert to string with the chosen decimal setting
+            // "F" format enforces decimal places
+            return rounded.ToString($"F{decimals}");
+        }
+
+        // Check whether we should show 'M', 'k', or raw integer
+        if (absValue > 999_999f)
+        {
+            // [CHANGED] Scale to millions and format
+            float inMillions = value / 1_000_000f;
+            return $"{FormatScaled(inMillions)} M";
+        }
+        else if (absValue > 999f)
+        {
+            // [CHANGED] Scale to thousands and format
+            float inThousands = value / 1_000f;
+            return $"{FormatScaled(inThousands)} k";
+        }
+        else
+        {
+            // [CHANGED] Even for values under 1000, 
+            // we call the same helper so we get consistent rounding
+            return FormatScaled(value);
+        }
+        /*
+        float absValue = Mathf.Abs(value);
         
         if (absValue > 999_999)
         {
@@ -121,6 +165,7 @@ public static class GameTools
         {
             return Mathf.Floor(value).ToString();
         }
+        */
     }
 
     /// <summary>

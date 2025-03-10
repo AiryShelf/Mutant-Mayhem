@@ -354,12 +354,12 @@ public class TileManager : MonoBehaviour
         float healthAtStart = _TileStatsDict[rootPos].health;
         float maxHealth = _TileStatsDict[rootPos].maxHealth;
 
-        if (!(_TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.RazorWire &&
-            value > 0))
-        {
+        //if (!(_TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.RazorWire &&
+        //    value > 0))
+        //{
             _TileStatsDict[rootPos].health += value;
             _TileStatsDict[rootPos].health = Mathf.Clamp(_TileStatsDict[rootPos].health, 0, maxHealth);
-        }
+        //}
         
         //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
 

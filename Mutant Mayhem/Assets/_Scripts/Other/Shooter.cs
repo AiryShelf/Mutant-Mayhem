@@ -362,14 +362,19 @@ public class Shooter : MonoBehaviour
 
     public void DropClip()
     {
-        if (currentGunSO.emptyClipPrefab != null)
+        if (!string.IsNullOrEmpty(currentGunSO.emptyClipPoolName))
         {
-            GameObject obj = Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
-                                         gunTrans.rotation, clipEjectorTrans);
+            GameObject obj = PoolManager.Instance.GetFromPool(currentGunSO.emptyClipPoolName);
+            obj.transform.position = clipEjectorTrans.position;
+            obj.transform.rotation = gunTrans.rotation;
+            obj.transform.parent = clipEjectorTrans;
+            //GameObject obj = Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
+            //                            gunTrans.rotation, clipEjectorTrans);
             BulletCasingFly casingFly = obj.GetComponent<BulletCasingFly>();
             if (casingFly != null)
             {
                 casingFly.casingTrans = clipEjectorTrans;
+                casingFly.StartFly();
             }
             else
             {
