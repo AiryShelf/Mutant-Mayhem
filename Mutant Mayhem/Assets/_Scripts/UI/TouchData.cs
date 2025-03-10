@@ -10,7 +10,8 @@ public enum TouchPurpose
     Shoot,
     Melee,
     UI,
-    BuildMenu
+    BuildMenu,
+    UpgradePanel,
 }
 
 public class TouchData
@@ -19,7 +20,7 @@ public class TouchData
     public TouchPurpose purpose;
     public Vector2 startPosition;
     public Vector2 currentPosition;
-    public float lastScrollCheckPosY;
+    public Vector2 lastScrollCheckPos;
 
     public TouchData(int fingerId, TouchPurpose purpose, Vector2 startPos)
     {
@@ -27,6 +28,6 @@ public class TouchData
         this.purpose = purpose;
         this.startPosition = startPos;
         this.currentPosition = startPos;
-        lastScrollCheckPosY = startPos.y;
+        lastScrollCheckPos = startPos;
     }
 }

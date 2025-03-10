@@ -13,6 +13,8 @@ public class TouchManager : MonoBehaviour
     
     public VirtualJoystick moveJoystick;
     public VirtualJoystick aimJoystick;
+    public RectTransform upgradePanelRect;
+    public PanelSwitcher upgradePanelSwitcher;
     public UIBuildMenuController buildMenuController;
     public RectTransform buildPanelRect;
     public Player player;
@@ -170,6 +172,7 @@ public class TouchManager : MonoBehaviour
         {
             //Debug.Log($"Touch hit {hitUIObject.name}");
 
+            // Joysticks
             if (IsInRegion(position, moveJoystick.transform as RectTransform))
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
@@ -178,35 +181,38 @@ public class TouchManager : MonoBehaviour
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
             }
-            else
+            else if (IsInRegion(position, upgradePanelRect))
+            {
+                // Upgrade Panel
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UpgradePanel, position);
+            }
+            else if (player != null && IsInRegion(position, upgradePanelRect))   
             {
                 // Build menu
-                if (player != null && IsInRegion(position, buildPanelRect))
-                {
-                    activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.BuildMenu, position);
-                    buildMenuController.isTouchScrolling = true;
-                    //CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
-                }
-                else
-                {
-                    // This prevents accidental taps over UI Elements in the heat of battle (like trying to tap the 3rd finger down)
-                    bool isLooking = false;
-                    foreach (var kvp in activeTouches)
-                    {
-                        if (kvp.Value.purpose == TouchPurpose.Look)
-                        {
-                            isLooking = true;
-                            break;
-                        }
-                    }
-
-                    // other UI
-                    if (isLooking)
-                        AddShootTouch(wasExisting, fingerId, position);
-                    else
-                        activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
-                }
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.BuildMenu, position);
+                buildMenuController.isTouchScrolling = true;
+                //CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
             }
+            else
+            {
+                // This prevents accidental taps over UI Elements in the heat of battle (like trying to tap the 3rd finger down)
+                bool isLooking = false;
+                foreach (var kvp in activeTouches)
+                {
+                    if (kvp.Value.purpose == TouchPurpose.Look)
+                    {
+                        isLooking = true;
+                        break;
+                    }
+                }
+
+                // other UI
+                if (isLooking)
+                    AddShootTouch(wasExisting, fingerId, position);
+                else
+                    activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
+            }
+            
         }
         else
         {
@@ -307,9 +313,25 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.UI:
                 break;
-            case TouchPurpose.BuildMenu:
-                float dragDeltaY = position.y - data.lastScrollCheckPosY;
+            case TouchPurpose.UpgradePanel:
+                float dragDeltaX = position.x - data.lastScrollCheckPos.x;
                 float dragThreshold = 60f;
+
+                if (Mathf.Abs(dragDeltaX) > dragThreshold)
+                {
+                    // If positive dragDeltaY => user is dragging finger up => "scroll down" in menu
+                    if (dragDeltaX > 0)
+                        upgradePanelSwitcher.SwipeRight();
+                    else
+                        upgradePanelSwitcher.SwipeLeft();
+
+                    // Reset lastScrollCheckPosY so we can do another incremental step
+                    data.lastScrollCheckPos = position;
+                }
+                break;
+            case TouchPurpose.BuildMenu:
+                float dragDeltaY = position.y - data.lastScrollCheckPos.y;
+                dragThreshold = 120f;
 
                 if (Mathf.Abs(dragDeltaY) > dragThreshold)
                 {
@@ -320,7 +342,7 @@ public class TouchManager : MonoBehaviour
                         buildMenuController.ScrollUp();
 
                     // Reset lastScrollCheckPosY so we can do another incremental step
-                    data.lastScrollCheckPosY = position.y;
+                    data.lastScrollCheckPos = position;
                 }
                 break;
         }

@@ -69,6 +69,7 @@ public class StructureStats
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] SystemsInitializer systemsInitializer;
     public PlayerStats stats;
 
     [Header("Movement")]
@@ -87,7 +88,7 @@ public class Player : MonoBehaviour
     [SerializeField] SoundSO walkMetalSound;
 
     [Header("Other")]
-    [SerializeField] List<GraphicRaycaster> graphicRaycasters;
+    public List<GraphicRaycaster> graphicRaycasters;
     public InputActionAsset inputAsset;
     [SerializeField] GameObject grenadePrefab;
     [SerializeField] Transform headImageTrans;
@@ -104,8 +105,8 @@ public class Player : MonoBehaviour
     [Header("Dynamic Vars, Don't set here")]
     public Vector3 aimWorldPos = Vector3.zero;
     public Vector3 lastAimDir = Vector3.zero;
-    float aimDistance = 10;
-    float aimMinDist = 5;
+    public float aimDistance = 10;
+    public float aimMinDist = 5;
 
     float slowFactor = 1;
     Coroutine sprintCoroutine;
@@ -191,58 +192,10 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(ForceCanvasUpdate());
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
-        SettingsManager.Instance.ApplyGameplaySettings();
+        systemsInitializer.InitializeLevelStart(this);
 
-        StartCoroutine(DelayScreenBoundReset());
-        TouchManager.Instance.player = this;
-        TouchManager.Instance.buildMenuController = stats.structureStats.buildingSystem.buildMenuController;
-        TouchManager.Instance.buildPanelRect = TouchManager.Instance.buildMenuController.transform as RectTransform;
-        CursorManager.Instance.Initialize();
-        CursorManager.Instance.inMenu = false;
-        CursorManager.Instance.MoveCustomCursorWorldToUi(transform.position);
-        CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        if (InputManager.LastUsedDevice == Touchscreen.current)
-                TouchManager.Instance.SetVirtualJoysticksActive(true);
-        InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
-        LinkVirtualJoysticks();
-        aimDistance = CursorManager.Instance.aimDistance;
-        aimMinDist = CursorManager.Instance.aimMinDistance;
-
-        TimeControl.Instance.SubscribePlayerTimeControl(this);
-        TimeControl.Instance.ResetTimeScale();
-        if (InputManager.IsMobile())
-            Application.targetFrameRate = 60;
-        else
-            Application.targetFrameRate = 120;
-        
-        SFXManager.Instance.Initialize();
-        StatsCounterPlayer.ResetStatsCounts();
-
-        TurretManager.Instance.Initialize(this);
-        UpgradeManager.Instance.Initialize();
-        ClassManager.Instance.ApplyClassEffects(this);
-        AugManager.Instance.ApplySelectedAugmentations();
-        PlanetManager.Instance.ApplyPlanetProperties();
-        
-        FindObjectOfType<WaveControllerRandom>().Initialize();
-        
         StartCoroutine(Sprint(false));
         RefreshMoveForces();
-        ScreenScaleChecker.InvokeAspectRatioChanged();
-    }
-
-    IEnumerator DelayScreenBoundReset()
-    {
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
-
-        TouchManager.Instance.RefreshScreenBounds();
     }
 
     void FixedUpdate()
@@ -258,23 +211,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator ForceCanvasUpdate()
-    {
-        // Wait for the end of the frame to ensure everything is initialized.
-        yield return new WaitForSeconds(2);
-        Canvas.ForceUpdateCanvases();
-    }
-
-    void LinkVirtualJoysticks()
-    {
-        VirtualJoystick[] allVirtualJoysticks = FindObjectsOfType<VirtualJoystick>(true);
-
-        foreach (var stick in allVirtualJoysticks)
-        {
-            stick.animControllerPlayer = animControllerPlayer;
-            stick.player = this;
-        }
-    }
+    
 
     void KillAllEnemies()
     {
