@@ -2004,7 +2004,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 32000
+  m_SortingOrder: 29000
   m_TargetDisplay: 0
 --- !u!114 &2985595616732584891
 MonoBehaviour:
@@ -3314,22 +3314,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Music Player Panel layout 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1971793812318360924, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2525777507708408867, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2891035998162077713, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3886091529734581973, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -3360,19 +3344,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 53.16
-      objectReference: {fileID: 0}
-    - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
+      value: 58.2515
       objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3408,7 +3380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -26.57991
+      value: -29.1257
       objectReference: {fileID: 0}
     - target: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3422,18 +3394,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5123645119988226424, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5906944791527400334, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6551600920510431164, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -0.00017738
-      objectReference: {fileID: 0}
     - target: {fileID: 7305302046872008956, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -3445,10 +3405,6 @@ PrefabInstance:
     - target: {fileID: 7305302046872008956, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7613840642488705777, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8991375232977025867, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
       propertyPath: persistentCanvas
@@ -3465,39 +3421,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1956420557769724850, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4949917846243414734}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
---- !u!1 &3470564897481815094 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1956420557769724850, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
-  m_PrefabInstance: {fileID: 3102828699850188676}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4949917846243414734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3470564897481815094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91640ab9ac3286942a523f7cad078535, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rectToScale: {fileID: 8054584094235459702}
-  touchScreenOnly: 1
-  wideScale: 1
-  midWideScale: 1
-  default16x9Scale: 1
-  midNarrowScale: 0.97
-  narrowScale: 0.95
-  useCustomPivot: 0
-  cutomScalePivot: {x: 0.5, y: 0.5}
-  defaultWidePositionOffest: {x: 0, y: 0}
-  narrowPositionOffset: {x: 0, y: 0}
 --- !u!224 &8054584094235459702 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4956448662489114610, guid: 11365cf6ab89e0942a94953a15648f93, type: 3}
