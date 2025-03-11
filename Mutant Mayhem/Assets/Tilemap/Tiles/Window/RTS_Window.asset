@@ -12,10 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
   m_Name: RTS_Window
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: fc31b4791a673c34dbc5c21a67fd3d94, type: 3}
+  m_DefaultSprite: {fileID: 0}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 2
-  m_TilingRules: []
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 0}
+    m_GameObject: {fileID: 73930863024339825, guid: 7ec6b8e4984014057b8b18341f3ca037, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 0
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions:
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    m_RuleTransform: 0
   structureSO: {fileID: 11400000, guid: f08d517a9c8eb481b86af542df163c91, type: 2}
   damagedTiles:
   - {fileID: 11400000, guid: ad1a0d2a2061f472eae6935962f56900, type: 2}
