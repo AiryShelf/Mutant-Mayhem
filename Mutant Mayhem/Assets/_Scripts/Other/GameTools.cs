@@ -144,6 +144,11 @@ public static class GameTools
         }
         else
         {
+            string rawFormatted = FormatScaled(value);
+            if (rawFormatted.EndsWith(".00") || rawFormatted.EndsWith(".0"))
+            {
+                return value.ToString();
+            }
             // [CHANGED] Even for values under 1000, 
             // we call the same helper so we get consistent rounding
             return FormatScaled(value);

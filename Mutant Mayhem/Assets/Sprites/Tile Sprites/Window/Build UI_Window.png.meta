@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0cc13cf0c47c146968a3604457fad583
+guid: 67ba70710b29f4147beed00241df892c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,11 +43,11 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
+  alignment: 9
+  spritePivot: {x: 0.25, y: 0.75}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -121,138 +121,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Window_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 32
-        height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.75}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: 10, y: 30}
-        - {x: 8, y: 32}
-        - {x: 12, y: 32}
-        - {x: 12, y: 30}
-      - - {x: 8, y: -32}
-        - {x: 10, y: -30}
-        - {x: 12, y: -30}
-        - {x: 12, y: -32}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 09506f27b511841c4ab8a38db1eec1f4
-      internalID: -1123146700
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Window_1
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 0
-        width: 32
-        height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.75}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: 10, y: 30}
-        - {x: 8, y: 32}
-        - {x: 12, y: 32}
-        - {x: 12, y: 30}
-      - - {x: 8, y: -32}
-        - {x: 10, y: -30}
-        - {x: 12, y: -30}
-        - {x: 12, y: -32}
-      tessellationDetail: 0
-      bones: []
-      spriteID: f41a730007c9542ca9e201c38b8fea66
-      internalID: 1376748753
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Window_2
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 32
-        height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.75}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: 10, y: 30}
-        - {x: 8, y: 32}
-        - {x: 12, y: 32}
-        - {x: 12, y: 30}
-      - - {x: 8, y: -32}
-        - {x: 10, y: -30}
-        - {x: 12, y: -30}
-        - {x: 12, y: -32}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 52179497ebe064dc49f698b72145f3a6
-      internalID: -951738359
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Window_3
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 0
-        width: 32
-        height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.75}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: 10, y: 30}
-        - {x: 8, y: 32}
-        - {x: 12, y: 32}
-        - {x: 12, y: 30}
-      - - {x: 8, y: -32}
-        - {x: 10, y: -30}
-        - {x: 12, y: -30}
-        - {x: 12, y: -32}
-      tessellationDetail: 0
-      bones: []
-      spriteID: d870db35854884d1faee2403acaacb5c
-      internalID: 155036960
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Window_0: -1123146700
-      Window_1: 1376748753
-      Window_2: -951738359
-      Window_3: 155036960
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

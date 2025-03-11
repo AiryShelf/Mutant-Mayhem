@@ -48,6 +48,8 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             {
                 button.interactable = false;
             }
+
+            SetText(BuildingSystem.PlayerCredits);
         }
     }
 
@@ -160,14 +162,14 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             textInstance.GetComponent<TextMeshProUGUI>().text = 
             structureSO.tileName + "\n" +
             yellowColorTag + "$" + totalCost + "\n" +
-            greenColorTag + structureSO.maxHealth + " HP" + endColorTag;
+            greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
         }
         else
         {
             textInstance.GetComponent<TextMeshProUGUI>().text = 
             structureSO.tileName + "\n" +
             redColorTag + "$" + totalCost + "\n" +
-            greenColorTag + structureSO.maxHealth + " HP" + endColorTag;
+            greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
         }
     }
 
