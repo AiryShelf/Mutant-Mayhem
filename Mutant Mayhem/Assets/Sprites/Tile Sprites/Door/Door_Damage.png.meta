@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -126,8 +126,8 @@ TextureImporter:
       name: Door_Damage_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
+        x: 0
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -139,8 +139,10 @@ TextureImporter:
         - {x: 0, y: -1}
         - {x: -1, y: -1}
         - {x: -1, y: -24}
-        - {x: -10, y: -32}
-        - {x: 10, y: -32}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
         - {x: 1, y: -24}
         - {x: 1, y: 1}
       - - {x: 1, y: 2}
@@ -148,8 +150,10 @@ TextureImporter:
         - {x: 0, y: 0}
         - {x: -1, y: 0}
         - {x: -1, y: 24}
-        - {x: -10, y: 32}
-        - {x: 10, y: 32}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
         - {x: 1, y: 24}
       tessellationDetail: 0
       bones: []
@@ -163,8 +167,8 @@ TextureImporter:
       name: Door_Damage_1
       rect:
         serializedVersion: 2
-        x: 34
-        y: 2
+        x: 32
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -172,22 +176,26 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: 1, y: 1}
-        - {x: 1, y: -1}
-        - {x: -2, y: -1}
-        - {x: -2, y: -24}
-        - {x: -10, y: -32}
-        - {x: 10, y: -32}
-        - {x: 2, y: -24}
-        - {x: 2, y: 1}
-      - - {x: 2, y: 2}
-        - {x: -1, y: 2}
+      - - {x: 0, y: -1}
+        - {x: 0, y: -1}
+        - {x: -1, y: -1}
+        - {x: -1, y: -24}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
+        - {x: 1, y: -24}
+        - {x: 1, y: 1}
+      - - {x: 1, y: 2}
+        - {x: 1, y: 2}
+        - {x: 0, y: 0}
         - {x: -1, y: 0}
-        - {x: -2, y: 0}
-        - {x: -2, y: 24}
-        - {x: -10, y: 32}
-        - {x: 10, y: 32}
-        - {x: 2, y: 24}
+        - {x: -1, y: 24}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
+        - {x: 1, y: 24}
       tessellationDetail: 0
       bones: []
       spriteID: 1e02108be55bb834a973b475dc1ac6de
@@ -200,8 +208,8 @@ TextureImporter:
       name: Door_Damage_2
       rect:
         serializedVersion: 2
-        x: 66
-        y: 2
+        x: 64
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -209,22 +217,26 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: 1, y: 1}
-        - {x: 1, y: -1}
-        - {x: -2, y: -1}
-        - {x: -2, y: -24}
-        - {x: -10, y: -32}
-        - {x: 10, y: -32}
-        - {x: 2, y: -24}
-        - {x: 2, y: 1}
-      - - {x: 2, y: 2}
-        - {x: -1, y: 2}
+      - - {x: 0, y: -1}
+        - {x: 0, y: -1}
+        - {x: -1, y: -1}
+        - {x: -1, y: -24}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
+        - {x: 1, y: -24}
+        - {x: 1, y: 1}
+      - - {x: 1, y: 2}
+        - {x: 1, y: 2}
+        - {x: 0, y: 0}
         - {x: -1, y: 0}
-        - {x: -2, y: 0}
-        - {x: -2, y: 24}
-        - {x: -10, y: 32}
-        - {x: 10, y: 32}
-        - {x: 2, y: 24}
+        - {x: -1, y: 24}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
+        - {x: 1, y: 24}
       tessellationDetail: 0
       bones: []
       spriteID: b71d4ed9b56cc9b469d3ec12a2aa569d
@@ -237,8 +249,8 @@ TextureImporter:
       name: Door_Damage_3
       rect:
         serializedVersion: 2
-        x: 98
-        y: 2
+        x: 96
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -246,22 +258,26 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: 1, y: 1}
-        - {x: 1, y: -1}
-        - {x: -2, y: -1}
-        - {x: -2, y: -24}
-        - {x: -10, y: -32}
-        - {x: 10, y: -32}
-        - {x: 2, y: -24}
-        - {x: 2, y: 1}
-      - - {x: 2, y: 2}
-        - {x: -1, y: 2}
+      - - {x: 0, y: -1}
+        - {x: 0, y: -1}
+        - {x: -1, y: -1}
+        - {x: -1, y: -24}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
+        - {x: 1, y: -24}
+        - {x: 1, y: 1}
+      - - {x: 1, y: 2}
+        - {x: 1, y: 2}
+        - {x: 0, y: 0}
         - {x: -1, y: 0}
-        - {x: -2, y: 0}
-        - {x: -2, y: 24}
-        - {x: -10, y: 32}
-        - {x: 10, y: 32}
-        - {x: 2, y: 24}
+        - {x: -1, y: 24}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
+        - {x: 1, y: 24}
       tessellationDetail: 0
       bones: []
       spriteID: a3d709b4a0c16594eb2cf740b9e559fa
@@ -274,8 +290,8 @@ TextureImporter:
       name: Door_Damage_4
       rect:
         serializedVersion: 2
-        x: 130
-        y: 2
+        x: 128
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -283,14 +299,18 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: 1, y: -23}
-        - {x: -1, y: -23}
-        - {x: -10, y: -32}
-        - {x: 10, y: -32}
-      - - {x: 1, y: 23}
-        - {x: -1, y: 23}
-        - {x: -10, y: 32}
-        - {x: 10, y: 32}
+      - - {x: -3, y: -26}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
+        - {x: 3, y: -26}
+      - - {x: -3, y: 26}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
+        - {x: 3, y: 26}
       tessellationDetail: 0
       bones: []
       spriteID: b015e2a195939ce4ebb94d94343f57ea
@@ -303,8 +323,8 @@ TextureImporter:
       name: Door_Damage_5
       rect:
         serializedVersion: 2
-        x: 162
-        y: 2
+        x: 160
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -312,14 +332,18 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: 1, y: -23}
-        - {x: -1, y: -23}
-        - {x: -10, y: -32}
-        - {x: 10, y: -32}
-      - - {x: 1, y: 23}
-        - {x: -1, y: 23}
-        - {x: -10, y: 32}
-        - {x: 10, y: 32}
+      - - {x: -3, y: -26}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
+        - {x: 3, y: -26}
+      - - {x: -3, y: 26}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
+        - {x: 3, y: 26}
       tessellationDetail: 0
       bones: []
       spriteID: be841f08277d3b449a224d71ba0647a7
@@ -332,8 +356,8 @@ TextureImporter:
       name: Door_Damage_6
       rect:
         serializedVersion: 2
-        x: 194
-        y: 2
+        x: 192
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -341,14 +365,18 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: 1, y: -23}
-        - {x: -1, y: -23}
-        - {x: -10, y: -32}
-        - {x: 10, y: -32}
-      - - {x: 1, y: 23}
-        - {x: -1, y: 23}
-        - {x: -10, y: 32}
-        - {x: 10, y: 32}
+      - - {x: -3, y: -26}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
+        - {x: 3, y: -26}
+      - - {x: -3, y: 26}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
+        - {x: 3, y: 26}
       tessellationDetail: 0
       bones: []
       spriteID: 4068531fa9afb3542919038a8f40f560
@@ -361,8 +389,41 @@ TextureImporter:
       name: Door_Damage_7
       rect:
         serializedVersion: 2
-        x: 226
-        y: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -3, y: -26}
+        - {x: -7, y: -30}
+        - {x: -7, y: -32}
+        - {x: 7, y: -32}
+        - {x: 7, y: -30}
+        - {x: 3, y: -26}
+      - - {x: -3, y: 26}
+        - {x: -7, y: 30}
+        - {x: -7, y: 32}
+        - {x: 7, y: 32}
+        - {x: 7, y: 30}
+        - {x: 3, y: 26}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a73ce19eba62248fd86d6b054a344566
+      internalID: 1391516913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door_Damage_8
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
         width: 32
         height: 64
       alignment: 9
@@ -372,8 +433,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a73ce19eba62248fd86d6b054a344566
-      internalID: 1391516913
+      spriteID: b82315673b5e74afb8166ae150e9733e
+      internalID: 1957044062
       vertices: []
       indices: 
       edges: []
@@ -397,6 +458,7 @@ TextureImporter:
       Door_Damage_5: 1914542523
       Door_Damage_6: 853391244
       Door_Damage_7: 1391516913
+      Door_Damage_8: 1957044062
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

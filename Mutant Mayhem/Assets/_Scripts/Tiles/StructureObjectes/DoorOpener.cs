@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class DoorOpener : TileObject
 {
     [SerializeField] List<AnimatedTile> doorsOpen;
     [SerializeField] List<AnimatedTile> doorsClosed;
+    [SerializeField] List<Light2D> doorPointLights;
 
     Tilemap animatedTilemap;
     Vector3Int myGridPos;
@@ -50,7 +52,7 @@ public class DoorOpener : TileObject
         UpdateDamage();
     }
 
-    private void UpdateOpenClose()
+    void UpdateOpenClose()
     {
         //Debug.Log("Damage Index: " + damageIndex);
         if (isOpen)
@@ -71,6 +73,8 @@ public class DoorOpener : TileObject
                 tileManager.shadowCaster2DTileMap.Generate();
             }
         }
+
+        UpdateLights();
     }
 
     void UpdateDamage()
@@ -87,7 +91,19 @@ public class DoorOpener : TileObject
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void UpdateLights()
+    {
+        Color lightColor = Color.green;
+        if (isOpen)
+            lightColor = Color.red;
+
+        foreach(var light in doorPointLights)
+        {
+            light.color = lightColor;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
@@ -100,7 +116,7 @@ public class DoorOpener : TileObject
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit2D(Collider2D other)
     {
         if (!destroyed)
         {
