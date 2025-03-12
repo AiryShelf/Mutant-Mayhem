@@ -20,7 +20,7 @@ public class Task_BuildDoors : Task
         if (isComplete) 
             return;
 
-        numberBuilt = StatsCounterPlayer.DoorsBuilt;
+        numberBuilt = StatsCounterPlayer.GatesBuilt;
         progress = (float)numberBuilt / numberToBuild;
         if (progress >= 1)
             SetTaskComplete();

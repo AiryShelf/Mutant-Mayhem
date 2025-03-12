@@ -129,7 +129,7 @@ public class TileManager : MonoBehaviour
         }
         else
         {
-            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.damagedTiles[0]);
+            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile.damagedTiles[0]);
             RefreshSurroundingTiles(gridPos);
         }
 
@@ -204,7 +204,9 @@ public class TileManager : MonoBehaviour
         if (type == StructureType.OneByOneWall ||
             type == StructureType.OneByOneCorner ||
             type == StructureType.RazorWire ||
-            type == StructureType.Mine)
+            type == StructureType.Mine ||
+            type == StructureType.LaserTurret ||
+            type == StructureType.GunTurret)
         {
             float randomRotationZ = Random.Range(0f, 360f);  
             Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));

@@ -286,39 +286,4 @@ public class MeleeControllerEnemy : MonoBehaviour
             scaleCoroutine = StartCoroutine(ScaleMeleeObject());
         }
     }
-
-/*  Trying improved method instead
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!gameObject.activeInHierarchy) 
-            return;
-
-        if (waitToAttack)
-            return;
-
-        // Structures layer# 12
-        if (other.gameObject.layer == 12)
-        {
-            HitStructure(other.ClosestPoint(transform.position));
-        }
-        // Attack Player
-        else if (other.CompareTag("Player") || other.CompareTag("PlayerBody"))
-        {
-            Vector2 point = other.ClosestPoint(transform.position);
-            Health health = other.GetComponentInParent<Health>();
-            if (health)
-                Hit(health, point);
-            else
-                Debug.LogError("Health not found");
-        }
-        // Attack Cube
-        else if (other.CompareTag("QCube"))
-        {
-            Vector2 point = other.ClosestPoint(transform.position);
-            Hit(other.GetComponent<Health>(), point);
-        }        
-    }
-*/
-    
 }

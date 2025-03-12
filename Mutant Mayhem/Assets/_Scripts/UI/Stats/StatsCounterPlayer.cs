@@ -38,7 +38,7 @@ public class StatsCounterPlayer : MonoBehaviour
     [Header("Structures")]
     public static int StructuresBuilt;
     public static int StructuresLost;
-    public static int DoorsBuilt;
+    public static int GatesBuilt;
     public static int WallsBuilt;
     public static int TurretsBuilt;
 
@@ -90,7 +90,7 @@ public class StatsCounterPlayer : MonoBehaviour
         StructuresBuilt = 0;
         StructuresLost = 0;
         AmountRepairedByPlayer = 0;
-        DoorsBuilt = 0;
+        GatesBuilt = 0;
         WallsBuilt = 0;
         TurretsBuilt = 0;
         
@@ -146,7 +146,7 @@ public class StatsCounterPlayer : MonoBehaviour
         {
             {"Total Built:", StructuresBuilt},
             {"Total Lost:", StructuresLost},
-            {"Doors Built", DoorsBuilt},
+            {"Gates Built", GatesBuilt},
             {"Walls Built", WallsBuilt},
             {"Turrets Built", TurretsBuilt},
         };

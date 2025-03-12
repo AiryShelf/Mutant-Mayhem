@@ -522,10 +522,10 @@ public class BuildingSystem : MonoBehaviour
         {
             StatsCounterPlayer.WallsBuilt++;
         }
-        else if (structureInHand.structureType == StructureType.Door || 
-                 structureInHand.structureType == StructureType.BlastDoor)
+        else if (structureInHand.structureType == StructureType.Gate || 
+                 structureInHand.structureType == StructureType.BlastGate)
         {
-            StatsCounterPlayer.DoorsBuilt++;
+            StatsCounterPlayer.GatesBuilt++;
         }
         else if (structureInHand.structureType == StructureType.LaserTurret ||
                  structureInHand.structureType == StructureType.GunTurret)
