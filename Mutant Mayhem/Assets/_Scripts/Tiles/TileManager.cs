@@ -468,7 +468,7 @@ public class TileManager : MonoBehaviour
             Collider2D[] cols = Physics2D.OverlapPointAll(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
             foreach (Collider2D col in cols)
             {
-                TileObject tileObj = col.GetComponent<TileObject>();
+                ITileObject tileObj = col.GetComponent<ITileObject>();
                 if (tileObj != null)
                 {
                     //Debug.Log("TileObject found at: " + rootPos);

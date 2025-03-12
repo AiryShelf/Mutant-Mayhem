@@ -50,6 +50,7 @@ public enum StructureType
     QGate,
     Mine,
     RazorWire,
+    MicroReactor,
     None
 }
 

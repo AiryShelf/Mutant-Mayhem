@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
+  m_Name: StructureSO_MicroReactor
+  m_EditorClassIdentifier: 
+  uiImage: {fileID: 21300000, guid: 6711713248e0a4fb78db29fb99d66e3f, type: 3}
+  tileName: Micro Reactor
+  description: 'A modular micro-reactor.  Generates electricity
+
+
+    Gains a bonus
+    for each adjacent reactor'
+  tileCost: 1000
+  maxHealth: 500
+  health: 500
+  blueprintBuildAmount: 750
+  cellPositions:
+  - {x: 0, y: 0, z: 0}
+  ruleTileStructure: {fileID: 11400000, guid: 56179db756770440fbbae84712338bdc, type: 2}
+  blueprintTile: {fileID: 11400000, guid: a9ec28177d0ff49caa8aa7611e662682, type: 2}
+  structureType: 22
+  isTurret: 0
+  actionType: 1
+  actionRange: {x: 6, y: 6}

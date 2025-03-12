@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
-public class DoorOpener : TileObject
+public class DoorOpener : MonoBehaviour, ITileObject
 {
     [SerializeField] List<AnimatedTile> doorsOpen;
     [SerializeField] List<AnimatedTile> doorsClosed;
@@ -45,7 +45,7 @@ public class DoorOpener : TileObject
         destroyed = true;
     }
 
-    public override void UpdateHealthRatio(float healthRatio)
+    public void UpdateHealthRatio(float healthRatio)
     {
         this.healthRatio = healthRatio;
 
