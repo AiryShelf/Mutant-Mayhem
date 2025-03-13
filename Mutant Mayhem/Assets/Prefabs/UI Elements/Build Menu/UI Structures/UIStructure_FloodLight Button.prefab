@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 467291852663348429}
   - component: {fileID: 496163820105867320}
   m_Layer: 5
-  m_Name: UIStructure_FloodLight Button
+  m_Name: UIStructure_Floodlight Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,13 +54,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d9a75482d6fcbb48a24bffd41cd114e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureSO: {fileID: 11400000, guid: b331a9986a1d6c6428ed8afa393636f4, type: 2}
+  structureSO: {fileID: 11400000, guid: 86a18e7a7abf84b6e9b6244b30711a5a, type: 2}
   button: {fileID: 467291852663348429}
   image: {fileID: 8541260717436885320}
   textPrefab: {fileID: 2430187354095485744, guid: eb9345ad852e67948bc4871ab5be062f, type: 3}
   textLockedAlpha: 0.3
   textInstance: {fileID: 0}
   myRectTransform: {fileID: 7827437853780163098}
+  originalSiblingIndex: 0
 --- !u!114 &-7245967889176055581
 MonoBehaviour:
   m_ObjectHideFlags: 0

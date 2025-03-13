@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,10 @@ using UnityEngine.Rendering.Universal;
 
 public class Daylight : MonoBehaviour
 {
+    public static event Action OnSunrise;
+    public static event Action OnSunset;
+    public static bool isDay;
+
     [SerializeField] Light2D sunlight;
 
     [Header("Sunrise Colors")]
@@ -80,13 +85,16 @@ public class Daylight : MonoBehaviour
         lerpPos = StartCoroutine(ChangeLightPos(true));
         lerpColor = StartCoroutine(ChangeLightColor(sunriseColor1, color1Time));
         yield return lerpColor;
+
+        OnSunrise?.Invoke();
+        isDay = true;
+
         lerpColor = StartCoroutine(ChangeLightColor(sunriseColor2, color2Time));
         yield return lerpColor;
         lerpColor = StartCoroutine(ChangeLightColor(sunriseColor3, color3Time));
         yield return lerpColor;
         lerpColor = StartCoroutine(ChangeLightColor(midDayColor, 1));
         yield return lerpColor;
-        
     }
 
     public IEnumerator PlaySunsetEffect()
@@ -105,11 +113,14 @@ public class Daylight : MonoBehaviour
         lerpPos = StartCoroutine(ChangeLightPos(false));
         lerpColor = StartCoroutine(ChangeLightColor(sunsetColor1, color1Time));
         yield return lerpColor;
+
+        OnSunset?.Invoke();
+        isDay = false;
+
         lerpColor = StartCoroutine(ChangeLightColor(sunsetColor2, color2Time));
         yield return lerpColor;
         lerpColor = StartCoroutine(ChangeLightColor(sunsetColor3, color3Time));
         yield return lerpColor;
-
         lerpColor = StartCoroutine(ChangeLightColor(nightColor, 1));
         yield return lerpColor;
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,18 @@ public class PowerSource : MonoBehaviour
         PowerManager.Instance.AddPowerSource(this); 
     }
 
-    void Oestroy()
+    void OnDestroy()
     {
         PowerManager.Instance.RemovePowerSource(this);       
+    }
+
+    public void TurnOn()
+    {
+
+    }
+
+    public void TurnOff()
+    {
+
     }
 }

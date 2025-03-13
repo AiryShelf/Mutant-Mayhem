@@ -37,7 +37,7 @@ public enum StructureType
     TwoByTwoWall,
     TwoByEightWall,
     TwoByTwoCorner,
-    FloodLight,
+    SolarLight,
     Gate,
     BlastGate,
     ThreeByThreePlatform,
@@ -51,6 +51,7 @@ public enum StructureType
     Mine,
     RazorWire,
     MicroReactor,
+    FloodLight,
     None
 }
 

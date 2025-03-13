@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MicroReactor : PowerSource, ITileObject
+public class MicroReactor : MonoBehaviour, ITileObject
 {
-    // Could add effect for insufficient power
-    
+
+    // Should add effect for insufficient power
 
     public void UpdateHealthRatio(float healthRatio)
     {

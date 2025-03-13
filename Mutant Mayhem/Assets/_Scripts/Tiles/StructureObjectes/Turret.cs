@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Turret : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class Turret : MonoBehaviour
     [SerializeField] float startShootAngle = 45f;
     public CircleCollider2D detectionCollider;
     public Shooter shooter;
+    [SerializeField] List<Light2D> lights; // For power on/off
+
     TurretGunSO myGun;
     Transform target;
     bool hasTarget;
@@ -23,6 +26,7 @@ public class Turret : MonoBehaviour
     Player player;
 
     bool initialized = false;
+    bool hasPower = true;
 
     void Start()
     {
@@ -31,7 +35,7 @@ public class Turret : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!initialized)
+        if (!initialized || !hasPower)
             return;
 
         // Tracking
@@ -121,6 +125,23 @@ public class Turret : MonoBehaviour
         else 
             Debug.Log("Non-turret gun found in TurretShooter");
     }
+
+    public void PowerOn()
+    {
+        hasPower = true;
+        foreach (var light in lights)
+            light.enabled = true;
+    }
+
+    public void PowerOff()
+    {
+        StopAllCoroutines();
+        hasPower = false;
+        foreach (var light in lights)
+            light.enabled = false;
+    }
+
+    #region Tracking
 
     void TrackTarget()
     {
@@ -217,4 +238,6 @@ public class Turret : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionCollider.radius);
     }
+
+    #endregion
 }

@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
   m_Name: RTS_FloodLight
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: a9be036d84e338b4b9f111aa0896355d, type: 3}
+  m_DefaultSprite: {fileID: -1390190386, guid: caab436c8ddca4575b635bcff3e9ae48, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 2
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
-    - {fileID: 21300000, guid: a9be036d84e338b4b9f111aa0896355d, type: 3}
-    m_GameObject: {fileID: 1294433471219372480, guid: 19854f7ba4ceee54abc3ab6910a9f73e, type: 3}
+    - {fileID: 0}
+    m_GameObject: {fileID: 1294433471219372480, guid: 03363247b3daf452b9577639c44b4cb9, type: 3}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
     m_Output: 0
-    m_ColliderType: 2
+    m_ColliderType: 0
     m_RandomTransform: 0
     m_Neighbors: 
     m_NeighborPositions:
@@ -37,8 +37,8 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
     m_RuleTransform: 0
-  structureSO: {fileID: 11400000, guid: b331a9986a1d6c6428ed8afa393636f4, type: 2}
+  structureSO: {fileID: 11400000, guid: 86a18e7a7abf84b6e9b6244b30711a5a, type: 2}
   damagedTiles:
-  - {fileID: 11400000, guid: d493093155151964b903f09348fcaa24, type: 2}
-  destroyedTile: {fileID: 11400000, guid: 768b1ba3a2c934dc6a1310ef5fc21926, type: 2}
+  - {fileID: 11400000, guid: 804c9286a0d8741f7bdfaa52830879f9, type: 2}
+  destroyedTile: {fileID: 11400000, guid: 2cabeeb40e3f04eb5937c6c5f982590f, type: 2}
   buildUiTile: {fileID: 0}

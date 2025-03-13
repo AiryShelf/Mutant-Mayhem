@@ -12,18 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
   m_Name: StructureSO_FloodLight
   m_EditorClassIdentifier: 
-  uiImage: {fileID: 21300000, guid: a9be036d84e338b4b9f111aa0896355d, type: 3}
+  uiImage: {fileID: -1390190386, guid: caab436c8ddca4575b635bcff3e9ae48, type: 3}
   tileName: Flood Light
-  description: A decent flood light to break the darkness.  A little flimsy
-  tileCost: 50
-  maxHealth: 200
-  health: 200
+  description: A powerful directional flood light, keep it protected, there's not
+    much to it.
+  tileCost: 100
+  maxHealth: 400
+  health: 400
   blueprintBuildAmount: 200
   cellPositions:
   - {x: 0, y: 0, z: 0}
-  ruleTileStructure: {fileID: 11400000, guid: e5d724530abd869469b54a3d499e99bb, type: 2}
-  blueprintTile: {fileID: 11400000, guid: a27770210a9f8496b9dab3b38df21671, type: 2}
-  structureType: 9
+  ruleTileStructure: {fileID: 11400000, guid: 2ae9afbfec4e5404085041d7a302837f, type: 2}
+  blueprintTile: {fileID: 11400000, guid: 3265f4d5aaa7d44389f834cd147a307a, type: 2}
+  structureType: 23
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}

@@ -13,6 +13,7 @@ public class PowerManager : MonoBehaviour
     public int powerAvailable;
     public int powerConsumed;
     public int powerTotal;
+    public int powerCut;
     [SerializeField] float timeToCheckPower;
     [SerializeField] float cutTimeMax = 15;
     [SerializeField] float cutTimeMin = 5;
@@ -35,7 +36,7 @@ public class PowerManager : MonoBehaviour
 
     void Start()
     {
-        
+        StartCoroutine(CheckPower());
     }
 
     public void AddPowerSource(PowerSource source)
@@ -59,12 +60,15 @@ public class PowerManager : MonoBehaviour
         powerConsumers.Add(consumer);
         powerConsumed += consumer.powerConsumed;
 
-        CalculatePower();
-
         if (powerConsumed > powerTotal)
         {
-            CutConsumer(consumer);
+            if (cutPowerCoroutine != null)
+                StopCoroutine(cutPowerCoroutine);
+            
+            cutPowerCoroutine = StartCoroutine(CutConsumers());
         }
+
+        CalculatePower();
     }
 
     public void RemovePowerConsumer(PowerConsumer consumer)
@@ -82,39 +86,65 @@ public class PowerManager : MonoBehaviour
 
     IEnumerator CheckPower()
     {
-        yield return new WaitForSeconds(2);
+        while (true)
+        {
+            yield return new WaitForSeconds(2);
 
-        if (cutPowerCoroutine == null && powerConsumed > powerTotal)
-            cutPowerCoroutine = StartCoroutine(CutConsumers());
-
+            if (cutPowerCoroutine == null && powerConsumed > powerTotal)
+                cutPowerCoroutine = StartCoroutine(CutConsumers());
+        }
     }
 
     IEnumerator CutConsumers()
     {
-        //yield return null;
-
-        // Cut randomly until power balanced, hold for a random time
+        // Cut consumers until power is balanced
         while (powerConsumed > powerTotal)
         {
+            // Randomly select a consumer to cut
             int index = UnityEngine.Random.Range(0, powerConsumers.Count);
             CutConsumer(powerConsumers[index]);
+            
+            // Yield to allow state update
+            //yield return null;
         }
 
+        // Check if any cut consumers can be restored to better balance power
+        consumersCut.Sort((a, b) => a.powerConsumed.CompareTo(b.powerConsumed));
+        List<PowerConsumer> restoredConsumers = new List<PowerConsumer>();
+        foreach (var consumer in consumersCut)
+        {
+            if (powerConsumed + consumer.powerConsumed <= powerTotal)
+            {
+                consumer.TurnOn();
+                powerConsumed += consumer.powerConsumed;
+                powerConsumers.Add(consumer);
+                restoredConsumers.Add(consumer);
+            }
+        }
+        foreach (var consumer in restoredConsumers)
+        {
+            consumersCut.Remove(consumer);
+        }
+        
+        CalculatePower();
+        
         float cutTime = UnityEngine.Random.Range(cutTimeMin, cutTimeMax);
         yield return new WaitForSeconds(cutTime);
-
-        // Restore power, cut again.
+        
+        // Restore any remaining cut consumers after waiting
         RestoreCutPower();
-
+        
+        // If still unbalanced, continue cutting
         if (powerConsumed > powerTotal)
             cutPowerCoroutine = StartCoroutine(CutConsumers());
     }
 
     void CutConsumer(PowerConsumer consumer)
     {
-        consumer.CutPower();
+        consumer.TurnOff();
         powerConsumed -= consumer.powerConsumed;
         consumersCut.Add(consumer);
+        powerConsumers.Remove(consumer);
 
         CalculatePower();
     }
@@ -123,8 +153,9 @@ public class PowerManager : MonoBehaviour
     {
         foreach(var consumer in consumersCut)
         {
-            consumer.RestorePower();
+            consumer.TurnOn();
             powerConsumed += consumer.powerConsumed;
+            powerConsumers.Add(consumer);
         }
 
         consumersCut.Clear();

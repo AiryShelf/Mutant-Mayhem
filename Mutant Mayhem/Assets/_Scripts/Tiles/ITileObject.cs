@@ -5,5 +5,4 @@ using UnityEngine;
 public interface ITileObject
 {
     void UpdateHealthRatio(float healthRatio);
-    
 }
