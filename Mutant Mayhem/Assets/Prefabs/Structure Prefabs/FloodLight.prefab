@@ -367,6 +367,62 @@ PrefabInstance:
       propertyPath: powerConsumed
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3736795071969413814}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3736795071969413814}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PowerOn
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PowerOff
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FloodLight, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FloodLight, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

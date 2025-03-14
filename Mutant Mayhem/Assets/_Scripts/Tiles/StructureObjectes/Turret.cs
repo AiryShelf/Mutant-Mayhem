@@ -31,6 +31,15 @@ public class Turret : MonoBehaviour, IPowerConsumer
     void Start()
     {
         //InitializeTurret();
+        reloadImageSr.transform.rotation = Quaternion.identity;
+        StartCoroutine(RotateIcon());
+    }
+
+    IEnumerator RotateIcon()
+    {
+        yield return new WaitForFixedUpdate();
+
+        reloadImageSr.transform.rotation = Quaternion.identity;
     }
 
     void FixedUpdate()
@@ -131,14 +140,22 @@ public class Turret : MonoBehaviour, IPowerConsumer
         hasPower = true;
         pointLights.SetActive(true);
         flashLight.SetActive(true);
+        Debug.Log("Turret: PowerOn ran");
     }
 
     public void PowerOff()
     {
         StopAllCoroutines();
-        hasPower = false;
+        searchRoutine = null;
+        scanRoutine = null;
+        
         pointLights.SetActive(false);
         flashLight.SetActive(false);
+        hasPower = false;
+        hasTarget = false;
+        shooter.hasTarget = false;
+        detectionCollider.radius = 0f;
+        Debug.Log("Turret: PowerOff ran");
     }
 
     #region Tracking
@@ -170,7 +187,7 @@ public class Turret : MonoBehaviour, IPowerConsumer
         {
             // Expand the detection radius to find the next target, cap at max
             detectionCollider.radius += expansionDist;
-            if (detectionCollider.radius > myGun.detectRange)
+            if (detectionCollider.radius >= myGun.detectRange)
             {
                 detectionCollider.radius = myGun.detectRange;
                 yield break;

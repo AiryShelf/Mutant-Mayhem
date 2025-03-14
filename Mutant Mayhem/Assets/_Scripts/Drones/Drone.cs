@@ -361,6 +361,7 @@ public class Drone : MonoBehaviour
             if (attackJob.targetTrans != null)
             {
                 attackDrone.targetTrans = attackJob.targetTrans;
+                //StartCoroutine(DelayNewAction(attackDrone, attackJob.targetTrans, attackDrone.Attack));
                 SetNewAction(attackDrone.Attack);
             }
         }

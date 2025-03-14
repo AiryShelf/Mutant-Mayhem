@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IPowerConsumer
 {
-    public void PowerOn() {}
+    void PowerOn() {}
 
-    public void PowerOff() {}
+    void PowerOff() {}
 }

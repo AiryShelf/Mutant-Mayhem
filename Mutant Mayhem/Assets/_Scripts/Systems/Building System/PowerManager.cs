@@ -44,6 +44,11 @@ public class PowerManager : MonoBehaviour
         powerSources.Add(source);
         powerTotal += source.powerGenerated;
 
+        if (cutPowerCoroutine != null)
+            StopCoroutine(cutPowerCoroutine);
+        
+        cutPowerCoroutine = StartCoroutine(CutConsumers());
+
         CalculatePower();
     }
 
@@ -51,6 +56,11 @@ public class PowerManager : MonoBehaviour
     {
         powerSources.Remove(source);
         powerTotal -= source.powerGenerated;
+
+        if (cutPowerCoroutine != null)
+            StopCoroutine(cutPowerCoroutine);
+        
+        cutPowerCoroutine = StartCoroutine(CutConsumers());
 
         CalculatePower();
     }
@@ -60,13 +70,11 @@ public class PowerManager : MonoBehaviour
         powerConsumers.Add(consumer);
         powerConsumed += consumer.powerConsumed;
 
-        if (powerConsumed > powerTotal)
-        {
-            if (cutPowerCoroutine != null)
-                StopCoroutine(cutPowerCoroutine);
-            
-            cutPowerCoroutine = StartCoroutine(CutConsumers());
-        }
+        if (cutPowerCoroutine != null)
+            StopCoroutine(cutPowerCoroutine);
+        
+        cutPowerCoroutine = StartCoroutine(CutConsumers());
+        
 
         CalculatePower();
     }
@@ -75,6 +83,11 @@ public class PowerManager : MonoBehaviour
     {
         powerConsumers.Remove(consumer);
         powerConsumed -= consumer.powerConsumed;
+
+        if (cutPowerCoroutine != null)
+            StopCoroutine(cutPowerCoroutine);
+        
+        cutPowerCoroutine = StartCoroutine(CutConsumers());
 
         CalculatePower();
     }

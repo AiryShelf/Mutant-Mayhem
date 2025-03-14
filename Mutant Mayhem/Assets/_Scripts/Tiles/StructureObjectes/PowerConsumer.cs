@@ -15,11 +15,20 @@ public class PowerConsumer : MonoBehaviour
     void Start()
     {
         PowerManager.Instance.AddPowerConsumer(this);
+        StartCoroutine(RotateIcon());
+        //noPowerIcon.transform.rotation = Quaternion.identity;
     }
 
     void OnDestroy()
     {
         PowerManager.Instance.RemovePowerConsumer(this);
+    }
+
+    IEnumerator RotateIcon()
+    {
+        yield return new WaitForFixedUpdate();
+
+        noPowerIcon.transform.rotation = Quaternion.identity;
     }
 
     public virtual void PowerOn() 

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2249006455115001357}
+  - component: {fileID: 7721167050539425827}
   - component: {fileID: 2141866513284924294}
   - component: {fileID: 8016086626576023556}
   m_Layer: 16
@@ -35,8 +36,33 @@ Transform:
   - {fileID: 7482729160146513021}
   - {fileID: 409829181513525979}
   - {fileID: 777427005877147895}
+  - {fileID: 6138114859557068116}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7721167050539425827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73930863024339825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b42875951291e45a88c91dca63452304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySR: {fileID: 2141866513284924294}
+  energyFieldDamageSprites:
+  - {fileID: -1717517170, guid: be54cb208e3ab40b4adb15f6eeee78be, type: 3}
+  - {fileID: -975409967, guid: be54cb208e3ab40b4adb15f6eeee78be, type: 3}
+  - {fileID: -566551573, guid: be54cb208e3ab40b4adb15f6eeee78be, type: 3}
+  - {fileID: 69886154, guid: be54cb208e3ab40b4adb15f6eeee78be, type: 3}
+  gateCollider: {fileID: 524527611849307979}
+  gateLights:
+  - {fileID: 6758640025385224054}
+  - {fileID: 7772193830673343865}
+  - {fileID: 8723327608618216239}
+  - {fileID: 8016086626576023556}
 --- !u!212 &2141866513284924294
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -78,7 +104,7 @@ SpriteRenderer:
   m_SortingLayerID: 2022150519
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1123146700, guid: 0cc13cf0c47c146968a3604457fad583, type: 3}
+  m_Sprite: {fileID: -1717517170, guid: be54cb208e3ab40b4adb15f6eeee78be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106,7 +132,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.5
+  m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000473099c06959b352bb1f087377918778f33c0f815d220d4faf41a11b0ba2f4fbe91bfeefe3ad8df5c12f032b7732d700
@@ -450,3 +476,85 @@ MonoBehaviour:
   m_ShapeLightFalloffSize: 0.5
   m_ShapeLightFalloffOffset: {x: 0, y: 0}
   m_ShapePath: []
+--- !u!1001 &6603476772818465384
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2249006455115001357}
+    m_Modifications:
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4113044063929798266, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: m_Name
+      value: PowerConsumer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: powerConsumed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7721167050539425827}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7721167050539425827}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QGate, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QGate, Assembly-CSharp
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+--- !u!4 &6138114859557068116 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+  m_PrefabInstance: {fileID: 6603476772818465384}
+  m_PrefabAsset: {fileID: 0}

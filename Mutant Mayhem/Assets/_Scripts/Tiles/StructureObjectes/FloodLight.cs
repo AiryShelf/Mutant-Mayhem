@@ -42,12 +42,19 @@ public class FloodLight : Light, ITileObject, IPowerConsumer
     {
         hasPower = true;
         lightObj.SetActive(true);
+
+        UpdateTile();
+        //Debug.Log("Floodlight: PowerOn ran");
     }
 
     public void PowerOff()
     {
         hasPower = false;
         lightObj.SetActive(false);
+
+        UpdateTile();
+        //Debug.Log("Floodlight: PowerOff ran");
+
     }
 
     public void UpdateHealthRatio(float healthRatio)
