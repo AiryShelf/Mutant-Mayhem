@@ -8,15 +8,15 @@ public class SolarLight : Light
     [SerializeField] Sprite onSprite;
     [SerializeField] Sprite offSprite;
 
-    protected override void TurnOn()
+    protected override void LightsOn()
     {
-        base.TurnOn();
+        base.LightsOn();
         mySR.sprite = onSprite;
     }
 
-    protected override void TurnOff()
+    protected override void LightsOff()
     {
-        base.TurnOff();
+        base.LightsOff();
         mySR.sprite = offSprite;
     }
 }

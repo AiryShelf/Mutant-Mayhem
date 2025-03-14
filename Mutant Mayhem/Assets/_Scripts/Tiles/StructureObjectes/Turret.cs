@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class Turret : MonoBehaviour
+public class Turret : MonoBehaviour, IPowerConsumer
 {
     public SpriteRenderer reloadImageSr;
     public float detectionRange;
@@ -15,7 +15,8 @@ public class Turret : MonoBehaviour
     [SerializeField] float startShootAngle = 45f;
     public CircleCollider2D detectionCollider;
     public Shooter shooter;
-    [SerializeField] List<Light2D> lights; // For power on/off
+    [SerializeField] GameObject pointLights; // For power on/off
+    [SerializeField] GameObject flashLight;
 
     TurretGunSO myGun;
     Transform target;
@@ -23,7 +24,6 @@ public class Turret : MonoBehaviour
     float detectionRangeSqrd;
     Coroutine searchRoutine;
     Coroutine scanRoutine;
-    Player player;
 
     bool initialized = false;
     bool hasPower = true;
@@ -129,16 +129,16 @@ public class Turret : MonoBehaviour
     public void PowerOn()
     {
         hasPower = true;
-        foreach (var light in lights)
-            light.enabled = true;
+        pointLights.SetActive(true);
+        flashLight.SetActive(true);
     }
 
     public void PowerOff()
     {
         StopAllCoroutines();
         hasPower = false;
-        foreach (var light in lights)
-            light.enabled = false;
+        pointLights.SetActive(false);
+        flashLight.SetActive(false);
     }
 
     #region Tracking

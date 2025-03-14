@@ -115,7 +115,7 @@ public class PowerManager : MonoBehaviour
         {
             if (powerConsumed + consumer.powerConsumed <= powerTotal)
             {
-                consumer.TurnOn();
+                consumer.PowerOn();
                 powerConsumed += consumer.powerConsumed;
                 powerConsumers.Add(consumer);
                 restoredConsumers.Add(consumer);
@@ -141,7 +141,7 @@ public class PowerManager : MonoBehaviour
 
     void CutConsumer(PowerConsumer consumer)
     {
-        consumer.TurnOff();
+        consumer.PowerOff();
         powerConsumed -= consumer.powerConsumed;
         consumersCut.Add(consumer);
         powerConsumers.Remove(consumer);
@@ -153,7 +153,7 @@ public class PowerManager : MonoBehaviour
     {
         foreach(var consumer in consumersCut)
         {
-            consumer.TurnOn();
+            consumer.PowerOn();
             powerConsumed += consumer.powerConsumed;
             powerConsumers.Add(consumer);
         }

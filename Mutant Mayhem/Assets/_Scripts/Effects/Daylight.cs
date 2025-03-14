@@ -85,12 +85,12 @@ public class Daylight : MonoBehaviour
         lerpPos = StartCoroutine(ChangeLightPos(true));
         lerpColor = StartCoroutine(ChangeLightColor(sunriseColor1, color1Time));
         yield return lerpColor;
+        lerpColor = StartCoroutine(ChangeLightColor(sunriseColor2, color2Time));
+        yield return lerpColor;
 
         OnSunrise?.Invoke();
         isDay = true;
 
-        lerpColor = StartCoroutine(ChangeLightColor(sunriseColor2, color2Time));
-        yield return lerpColor;
         lerpColor = StartCoroutine(ChangeLightColor(sunriseColor3, color3Time));
         yield return lerpColor;
         lerpColor = StartCoroutine(ChangeLightColor(midDayColor, 1));

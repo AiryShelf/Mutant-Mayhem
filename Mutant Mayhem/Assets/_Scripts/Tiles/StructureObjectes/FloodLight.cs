@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class FloodLight : Light, ITileObject
+public class FloodLight : Light, ITileObject, IPowerConsumer
 {
-    [SerializeField] List<AnimatedTile> lightsOn;
-    [SerializeField] List<AnimatedTile> lightsOff;
+    [SerializeField] SpriteRenderer headSR;
+    [SerializeField] List<Sprite> headOnDamageSprites;
+    [SerializeField] List<Sprite> headOffDamageSprites;
+    [SerializeField] GameObject lightObj;
     float healthRatio;
     int damageIndex = 0;
     bool isOn = true;
+    bool hasPower = true;
     Vector3Int myGridPos = Vector3Int.zero;
 
     protected override void Start()
@@ -19,22 +22,32 @@ public class FloodLight : Light, ITileObject
         base.Start();
     }
 
-    protected override void TurnOn()
+    protected override void LightsOn()
     {
-        foreach (var light in lights)
-            light.enabled = true;
+        base.LightsOn();
         
         isOn = true;
         UpdateTile();
     }
 
-    protected override void TurnOff()
+    protected override void LightsOff()
     {
-        foreach (var light in lights)
-            light.enabled = false;
+        base.LightsOff();
 
         isOn = false;
         UpdateTile();
+    }
+
+    public void PowerOn()
+    {
+        hasPower = true;
+        lightObj.SetActive(true);
+    }
+
+    public void PowerOff()
+    {
+        hasPower = false;
+        lightObj.SetActive(false);
     }
 
     public void UpdateHealthRatio(float healthRatio)
@@ -46,26 +59,19 @@ public class FloodLight : Light, ITileObject
 
     void UpdateTile()
     {
-        damageIndex = Mathf.FloorToInt(lightsOn.Count * healthRatio);
+        damageIndex = Mathf.FloorToInt(headOnDamageSprites.Count * healthRatio);
 
         //Debug.Log("Damage Index: " + damageIndex);
-        if (isOn)
+        if (isOn && hasPower)
         {
-            TileManager.AnimatedTilemap.SetTile(myGridPos, lightsOn[damageIndex]);
+            headSR.sprite = headOnDamageSprites[damageIndex];
+            //TileManager.AnimatedTilemap.SetTile(myGridPos, lightsOn[damageIndex]);
 
-            if (TileManager.Instance.shadowCaster2DTileMap != null && TileManager.Instance.shadowCaster2DTileMap.gameObject != null)
-            {
-                TileManager.Instance.shadowCaster2DTileMap.Generate();
-            }
         }
         else
         {
-            TileManager.AnimatedTilemap.SetTile(myGridPos, lightsOff[damageIndex]);
-
-            if (TileManager.Instance.shadowCaster2DTileMap != null && TileManager.Instance.shadowCaster2DTileMap.gameObject != null)
-            {
-                TileManager.Instance.shadowCaster2DTileMap.Generate();
-            }
+            headSR.sprite = headOffDamageSprites[damageIndex];
+            //TileManager.AnimatedTilemap.SetTile(myGridPos, lightsOff[damageIndex]);
         }
     }
 }

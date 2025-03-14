@@ -9,28 +9,28 @@ public class Light : MonoBehaviour
 
     protected virtual void Start()
     {
-        Daylight.OnSunrise += TurnOff;
-        Daylight.OnSunset += TurnOn;
+        Daylight.OnSunrise += LightsOff;
+        Daylight.OnSunset += LightsOn;
 
         if (Daylight.isDay)
-            TurnOff();
+            LightsOff();
         else
-            TurnOn();
+            LightsOn();
     }
 
     void OnDestroy()
     {
-        Daylight.OnSunrise -= TurnOff;
-        Daylight.OnSunset -= TurnOn;
+        Daylight.OnSunrise -= LightsOff;
+        Daylight.OnSunset -= LightsOn;
     }
 
-    protected virtual void TurnOn()
+    protected virtual void LightsOn()
     {
         foreach (var light in lights)
             light.enabled = true;
     }
 
-    protected virtual void TurnOff()
+    protected virtual void LightsOff()
     {
         foreach (var light in lights)
             light.enabled = false;

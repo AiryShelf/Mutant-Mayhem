@@ -8,8 +8,6 @@ using UnityEngine.InputSystem;
 
 public class QCubeController : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] GameObject tutorialUpgradePanelPrefab;
-    [SerializeField] RectTransform gamePlayCanvas;
     [SerializeField] CameraController cameraController;
 
     [Header("Death")]
@@ -35,9 +33,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
     [Header("Interaction")]
     public PanelSwitcher panelSwitcher;
     [SerializeField] float interactRadius = 1.5f;
-    [SerializeField] float leaveRadius = 2f;
     public bool isUpgradesOpen;
-    [SerializeField] PauseMenuController pauseMenuController;
     [SerializeField] BuildingSystem buildingSystem;
     [SerializeField] Player player;
     public DroneHangar droneHangar;

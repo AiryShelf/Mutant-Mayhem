@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2226464914604574463}
   - component: {fileID: 7264374519352210525}
+  - component: {fileID: -210557361149602264}
   m_Layer: 0
   m_Name: Drone Flashlight
   m_TagString: Untagged
@@ -82,3 +83,17 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &-210557361149602264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748329058064140412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8682832763c4d27b8337125c8c3e38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lights:
+  - {fileID: 7264374519352210525}

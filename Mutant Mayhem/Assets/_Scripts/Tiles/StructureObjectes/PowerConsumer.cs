@@ -22,7 +22,7 @@ public class PowerConsumer : MonoBehaviour
         PowerManager.Instance.RemovePowerConsumer(this);
     }
 
-    public virtual void TurnOn() 
+    public virtual void PowerOn() 
     { 
         noPowerIcon.enabled = false;
         isOn = true;
@@ -30,7 +30,7 @@ public class PowerConsumer : MonoBehaviour
             onPowerOn.Invoke();
     }
 
-    public virtual void TurnOff() 
+    public virtual void PowerOff() 
     { 
         noPowerIcon.enabled = true;
         isOn = false;
