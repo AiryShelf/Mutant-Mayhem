@@ -24,11 +24,16 @@ public class PowerConsumer : MonoBehaviour
         PowerManager.Instance.RemovePowerConsumer(this);
     }
 
+    void FixedUpdate()
+    {
+        noPowerIcon.transform.rotation = Quaternion.identity;
+    }
+
     IEnumerator RotateIcon()
     {
         yield return new WaitForFixedUpdate();
 
-        noPowerIcon.transform.rotation = Quaternion.identity;
+        
     }
 
     public virtual void PowerOn() 

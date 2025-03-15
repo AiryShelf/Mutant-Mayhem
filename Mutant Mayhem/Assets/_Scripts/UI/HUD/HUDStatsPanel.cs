@@ -33,6 +33,10 @@ public class HUDStatsPanel : MonoBehaviour
     [SerializeField] float qCubeShakeAmount;
     [SerializeField] float qCubeShakeTime;
 
+    [Header("Power ")]
+    [SerializeField] Image powerImage;
+    [SerializeField] TextMeshProUGUI powerText;
+
     Player player;
     PlayerStats playerStats;
     Health playerHealthScript;
@@ -69,6 +73,7 @@ public class HUDStatsPanel : MonoBehaviour
         qCubeHealthScript.OnCubeHealthChanged += UpdateQCubeStatsUI;
         player.stats.playerHealthScript.OnPlayerHealthChanged += UpdateHealthStats;
         player.stats.playerHealthScript.OnPlayerMaxHealthChanged += UpdateHealthStats;
+        PowerManager.Instance.OnPowerChanged += UpdatePowerText;
     }
 
     void OnDisable()
@@ -77,6 +82,7 @@ public class HUDStatsPanel : MonoBehaviour
         qCubeHealthScript.OnCubeHealthChanged -= UpdateQCubeStatsUI;
         player.stats.playerHealthScript.OnPlayerHealthChanged -= UpdateHealthStats;
         player.stats.playerHealthScript.OnPlayerMaxHealthChanged -= UpdateHealthStats;
+        PowerManager.Instance.OnPowerChanged -= UpdatePowerText;
     }
 
     void Start()
@@ -87,6 +93,16 @@ public class HUDStatsPanel : MonoBehaviour
     void FixedUpdate()
     {
         UpdateStaminaStats();
+    }
+
+    void UpdatePowerText(int powerBalance)
+    {
+        if (powerBalance >= 0)
+            powerImage.color = Color.white;
+        else 
+            powerImage.color = Color.red;
+
+        powerText.text = powerBalance.ToString();
     }
 
     IEnumerator DelayStatsUpdate()

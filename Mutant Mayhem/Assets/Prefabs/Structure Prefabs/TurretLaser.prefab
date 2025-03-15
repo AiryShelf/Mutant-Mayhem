@@ -64,6 +64,7 @@ MonoBehaviour:
     m_Bits: 128
   gunRecoil: {fileID: 0}
   gunsAmmoInClips: 00000000
+  reloadImageSr: {fileID: 6791252252512920531}
   accuracyHoningSpeed: 4
   gunList: []
   currentGunIndex: 0
@@ -87,7 +88,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db85efd627dd044198b098f243680c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reloadImageSr: {fileID: 6791252252512920531}
   detectionRange: 0
   rotationSpeed: 0
   expansionDelay: 0.1
@@ -5619,6 +5619,10 @@ PrefabInstance:
     - target: {fileID: 4113044063929798266, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: m_Name
       value: PowerConsumer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: powerConsumed
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Target

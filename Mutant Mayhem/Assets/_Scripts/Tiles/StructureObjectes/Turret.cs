@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Turret : MonoBehaviour, IPowerConsumer
 {
-    public SpriteRenderer reloadImageSr;
+    
     public float detectionRange;
     public float rotationSpeed;
     public float expansionDelay;
@@ -31,15 +31,6 @@ public class Turret : MonoBehaviour, IPowerConsumer
     void Start()
     {
         //InitializeTurret();
-        reloadImageSr.transform.rotation = Quaternion.identity;
-        StartCoroutine(RotateIcon());
-    }
-
-    IEnumerator RotateIcon()
-    {
-        yield return new WaitForFixedUpdate();
-
-        reloadImageSr.transform.rotation = Quaternion.identity;
     }
 
     void FixedUpdate()
@@ -56,16 +47,6 @@ public class Turret : MonoBehaviour, IPowerConsumer
         {
             if (searchRoutine == null)
                 searchRoutine = StartCoroutine(SearchForTarget());
-        }
-
-        // Reload Image
-        if (shooter.gunsAmmoInClips[0] <= 0)
-        {
-            reloadImageSr.enabled = true;
-        }
-        else
-        {
-            reloadImageSr.enabled = false;
         }
     }
 
@@ -138,8 +119,11 @@ public class Turret : MonoBehaviour, IPowerConsumer
     public void PowerOn()
     {
         hasPower = true;
-        pointLights.SetActive(true);
-        flashLight.SetActive(true);
+        if (pointLights != null)
+            pointLights.SetActive(true);
+        if (flashLight != null)
+            flashLight.SetActive(true);
+
         Debug.Log("Turret: PowerOn ran");
     }
 
@@ -149,8 +133,11 @@ public class Turret : MonoBehaviour, IPowerConsumer
         searchRoutine = null;
         scanRoutine = null;
         
-        pointLights.SetActive(false);
-        flashLight.SetActive(false);
+        if (pointLights != null)
+            pointLights.SetActive(false);
+        if (flashLight != null)
+            flashLight.SetActive(false);
+
         hasPower = false;
         hasTarget = false;
         shooter.hasTarget = false;

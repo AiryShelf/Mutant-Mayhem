@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Drone : MonoBehaviour
+public class Drone : MonoBehaviour, IPowerConsumer
 {
     public Shooter shooter;
     public string objectPoolName = "";
@@ -35,6 +35,8 @@ public class Drone : MonoBehaviour
     protected Coroutine jobCheckCoroutine;
     public DroneHealth droneHealth; 
 
+    public virtual void RefreshStats() { }
+
     public virtual void Initialize(TurretGunSO droneGun)
     {
         droneHealth = GetComponent<DroneHealth>();
@@ -51,7 +53,15 @@ public class Drone : MonoBehaviour
             attackDrone.shooter.StartChargingGuns();
     }
 
-    public virtual void RefreshStats() { }
+    public void PowerOn()
+    {
+        //something
+    }
+
+    public void PowerOff()
+    {
+        //something
+    }
 
     #region Launch / Land
 

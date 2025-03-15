@@ -6,13 +6,16 @@ using UnityEngine;
 public class PowerManager : MonoBehaviour
 {
     public static PowerManager Instance;
+    public event Action<int> OnPowerChanged;
 
     public List<PowerSource> powerSources;
     public List<PowerConsumer> powerConsumers;
 
+    public int powerBalance;
     public int powerAvailable;
     public int powerConsumed;
     public int powerTotal;
+    public int powerDemand;
     public int powerCut;
     [SerializeField] float timeToCheckPower;
     [SerializeField] float cutTimeMax = 15;
@@ -69,6 +72,7 @@ public class PowerManager : MonoBehaviour
     {
         powerConsumers.Add(consumer);
         powerConsumed += consumer.powerConsumed;
+        powerDemand += consumer.powerConsumed;
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -83,6 +87,7 @@ public class PowerManager : MonoBehaviour
     {
         powerConsumers.Remove(consumer);
         powerConsumed -= consumer.powerConsumed;
+        powerDemand -= consumer.powerConsumed;
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -95,6 +100,9 @@ public class PowerManager : MonoBehaviour
     void CalculatePower()
     {
         powerAvailable = powerTotal - powerConsumed;
+        powerBalance = powerTotal - powerDemand;
+        
+        OnPowerChanged?.Invoke(powerBalance);
     }
 
     IEnumerator CheckPower()

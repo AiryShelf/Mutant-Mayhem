@@ -16,6 +16,9 @@ public class Shooter : MonoBehaviour
     [SerializeField] protected GunRecoil gunRecoil;
     public List<int> gunsAmmoInClips = new List<int>();
 
+    [Header("Optional")]
+    public SpriteRenderer reloadImageSr;
+
     [Header("For Non-Player Dynamic Accuracy:")]
     public float accuracyHoningSpeed = 4;
     
@@ -60,12 +63,62 @@ public class Shooter : MonoBehaviour
         criticalHit = GetComponent<CriticalHit>();
         */
     }
-    
 
     protected virtual void Start()
     {
         if (!initialized)
             Initialize();
+        
+        StartCoroutine(RotateIcon());
+    }
+
+    protected virtual void Update()
+    {
+        // Reload Image
+        if (reloadImageSr != null)
+        {    
+            if (gunsAmmoInClips[0] <= 0)
+            {
+                reloadImageSr.enabled = true;
+                reloadImageSr.transform.rotation = Quaternion.identity;
+            }
+            else
+            {
+                reloadImageSr.enabled = false;
+            }    
+        }
+
+        if (isReloading)
+        {
+            if (reloadRoutine == null)
+                Reload();
+            return;
+        }
+
+        if (!hasTarget)
+            return;
+
+        // Start reloading after firing a certain number of shots
+        if (ShouldReload())
+        {
+            isReloading = true;
+            return;
+        }
+
+        fireTimer -= Time.deltaTime;
+        if (fireTimer <= 0 && gunsAmmoInClips[currentGunIndex] > 0)
+        {
+            Fire();
+            fireTimer = shootSpeed;
+        }
+    }
+
+    IEnumerator RotateIcon()
+    {
+        yield return new WaitForFixedUpdate();
+
+        if (reloadImageSr != null)
+            reloadImageSr.transform.rotation = Quaternion.identity;
     }
     
     public void InitializeDrone(GunSO gun)
@@ -97,33 +150,6 @@ public class Shooter : MonoBehaviour
         criticalHit = GetComponent<CriticalHit>();
         StartChargingGuns();
         initialized = true;
-    }
-
-    protected virtual void Update()
-    {
-        if (isReloading)
-        {
-            if (reloadRoutine == null)
-                Reload();
-            return;
-        }
-
-        if (!hasTarget)
-            return;
-
-        // Start reloading after firing a certain number of shots
-        if (ShouldReload())
-        {
-            isReloading = true;
-            return;
-        }
-
-        fireTimer -= Time.deltaTime;
-        if (fireTimer <= 0 && gunsAmmoInClips[currentGunIndex] > 0)
-        {
-            Fire();
-            fireTimer = shootSpeed;
-        }
     }
 
     #region Initialize
