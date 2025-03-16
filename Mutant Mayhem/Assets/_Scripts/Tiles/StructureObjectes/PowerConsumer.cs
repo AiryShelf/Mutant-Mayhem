@@ -7,21 +7,35 @@ using UnityEngine.Events;
 public class PowerConsumer : MonoBehaviour
 {
     public int powerConsumed = 1;
-    [SerializeField] SpriteRenderer noPowerIcon;
+    public SpriteRenderer noPowerIcon;
     public bool isOn = true;
     public UnityEvent onPowerOn;
     public UnityEvent onPowerOff;
 
+    Coroutine delayOnRoutine;
+
     void Start()
     {
-        PowerManager.Instance.AddPowerConsumer(this);
-        StartCoroutine(RotateIcon());
+        AddConsumer();
         //noPowerIcon.transform.rotation = Quaternion.identity;
     }
 
     void OnDestroy()
     {
-        PowerManager.Instance.RemovePowerConsumer(this);
+        RemoveConsumer();
+    }
+
+    public void AddConsumer()
+    {
+        PowerManager.Instance.AddPowerConsumer(this);
+        StartCoroutine(RotateIcon());
+    }
+
+    public void RemoveConsumer()
+    {
+        StopAllCoroutines();
+        if (PowerManager.Instance != null)
+            PowerManager.Instance.RemovePowerConsumer(this);
     }
 
     void FixedUpdate()
@@ -44,8 +58,27 @@ public class PowerConsumer : MonoBehaviour
             onPowerOn.Invoke();
     }
 
+    public void DelayPowerOn()
+    {
+        delayOnRoutine = StartCoroutine(DelayOn());
+    }
+
+    IEnumerator DelayOn()
+    {
+        yield return null;
+
+        // This will only run when nullified externally, 
+            // to prevent being turned on and back off again in the same frame  
+        
+        if (delayOnRoutine != null)
+            PowerOn();
+
+        delayOnRoutine = null;
+    }
+
     public virtual void PowerOff() 
     { 
+        delayOnRoutine = null;
         noPowerIcon.enabled = true;
         isOn = false;
         if (onPowerOff != null)

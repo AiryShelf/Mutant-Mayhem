@@ -86,6 +86,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18f125aa47294a01a60f1530a890f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 7531098424993310505}
   shooter: {fileID: 7467090437493003281}
   objectPoolName: Drone_Construction
   droneType: 0
@@ -96,17 +97,20 @@ MonoBehaviour:
   rb: {fileID: 8271507474314208127}
   sr: {fileID: 3379014345932164951}
   lights: {fileID: 382300257879138901}
+  powerConsumer: {fileID: 5724741592887543846}
   minJobDist: 0.6
   hoverEffectTime: 2.5
   hoverEffectVariationFactor: 0.5
   hoverEffectForceFactor: 0.7
   hoverScaleFactor: 0.1
   rotationSpeed: 0.013
-  launchOrLandMinScale: 0.3
+  launchOrLandMinScale: 0.7
   launchOrLandScaleSpeed: 0.04
   flyingAlpha: 0.75
   jobHeightMinScale: 0.85
   myHangar: {fileID: 0}
+  isDocked: 0
+  hasPower: 1
   isFlying: 0
   heightScaleStart: 1.2
   droneHealth: {fileID: 0}
@@ -379,6 +383,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
   m_PrefabInstance: {fileID: 372448218049705687}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5724741592887543846 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+  m_PrefabInstance: {fileID: 372448218049705687}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c45841caa73de43cd9cdd65fca4c3920, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &486324633512041128
 PrefabInstance:
   m_ObjectHideFlags: 0

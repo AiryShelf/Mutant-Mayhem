@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Drone : MonoBehaviour, IPowerConsumer
 {
+    [SerializeField] Animator animator;
     public Shooter shooter;
     public string objectPoolName = "";
     public DroneType droneType = DroneType.Builder;
@@ -12,6 +13,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
     public Rigidbody2D rb;
     public SpriteRenderer sr;
     public GameObject lights;
+    public PowerConsumer powerConsumer;
     [SerializeField] protected float minJobDist = 1f;
     [SerializeField] float hoverEffectTime = 1;
     [SerializeField] float hoverEffectVariationFactor = 0.2f;
@@ -24,6 +26,8 @@ public class Drone : MonoBehaviour, IPowerConsumer
     [SerializeField] float jobHeightMinScale = 0.6f;
 
     public DroneHangar myHangar;
+    public bool isDocked = false;
+    public bool hasPower = true;
     public bool isFlying = false;
     public float heightScaleStart = 1;
     float heightScale = 1;
@@ -55,18 +59,52 @@ public class Drone : MonoBehaviour, IPowerConsumer
 
     public void PowerOn()
     {
-        //something
+        hasPower = true;
+        animator.SetBool("hasPower", true);
+        sr.sortingLayerName = "FireParticles";
+        sr.sortingOrder = 0;
+
+        if (!isDocked)
+        {
+            lights.SetActive(true);
+
+            hoverCoroutine = StartCoroutine(HoverEffect());
+            jobHeightCoroutine = StartCoroutine(RaiseFromJob());
+
+            SetNewAction(FlyToHangar);
+        }
     }
 
     public void PowerOff()
     {
-        //something
+        hasPower = false;
+        animator.SetBool("hasPower", false);
+        
+        if (isDocked) 
+        {
+            powerConsumer.noPowerIcon.enabled = false;
+            return;
+        }
+
+        lights.SetActive(false);
+        myHangar.RemoveDroneFromJob(this);
+        SetJobDone();
+        // Simulate losing power, going down
+        
+
+        if (jobHeightCoroutine != null)
+            StopCoroutine(jobHeightCoroutine);
+        if (hoverCoroutine != null)
+            StopCoroutine(hoverCoroutine);
+
+        SetNewAction(LowerToGround);
     }
 
     #region Launch / Land
 
     public void Launch()
     {
+        isDocked = false;
         rb.simulated = true;
         sr.enabled = true;
         lights.SetActive(true);
@@ -90,6 +128,24 @@ public class Drone : MonoBehaviour, IPowerConsumer
             heightScale -= launchOrLandScaleSpeed;
             UpdateAlphaBasedOnHeight();
         }
+    }
+
+    protected IEnumerator LowerToGround()
+    {
+        yield return null;
+
+        isFlying = false;
+
+        while (heightScale > launchOrLandMinScale)
+        {
+            yield return new WaitForSeconds(0.05f);
+            heightScale -= launchOrLandScaleSpeed;
+            transform.localScale = new Vector3(heightScale, heightScale, 1f);
+            UpdateAlphaBasedOnHeight();
+        }
+
+        sr.sortingLayerName = "Enemy";
+        sr.sortingOrder = -1000;
     }
 
     protected IEnumerator RaiseFromJob()

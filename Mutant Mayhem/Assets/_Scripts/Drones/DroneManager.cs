@@ -63,9 +63,11 @@ public class DroneManager : MonoBehaviour
                 break;
         }
 
+        
         Drone newDrone = PoolManager.Instance.GetFromPool(poolName).GetComponent<Drone>();
         if (newDrone != null)
         {
+            newDrone.powerConsumer.AddConsumer();
             newDrone.Initialize(droneGun);
             droneHangar.AddDrone(newDrone);
             allActiveDrones.Add(newDrone);
@@ -94,6 +96,7 @@ public class DroneManager : MonoBehaviour
                 break;
         }
 
+        drone.powerConsumer.RemoveConsumer();
         PoolManager.Instance.ReturnToPool(drone.objectPoolName, drone.gameObject);
     }
 

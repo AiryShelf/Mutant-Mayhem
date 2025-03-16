@@ -6,7 +6,7 @@ public class ReturnToPoolSingleFixed : MonoBehaviour
 {
     [SerializeField] string objectPoolName;
 
-    void Start()
+    void OnEnable()
     {
         StartCoroutine(DestroyAfterFixedUpdate());
     }

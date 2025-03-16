@@ -70,6 +70,8 @@ public class PowerManager : MonoBehaviour
 
     public void AddPowerConsumer(PowerConsumer consumer)
     {
+        if (powerConsumers.Contains(consumer)) return;
+        
         powerConsumers.Add(consumer);
         powerConsumed += consumer.powerConsumed;
         powerDemand += consumer.powerConsumed;
@@ -115,6 +117,8 @@ public class PowerManager : MonoBehaviour
                 cutPowerCoroutine = StartCoroutine(CutConsumers());
         }
     }
+
+    #region Power Cuts
 
     IEnumerator CutConsumers()
     {
@@ -174,7 +178,7 @@ public class PowerManager : MonoBehaviour
     {
         foreach(var consumer in consumersCut)
         {
-            consumer.PowerOn();
+            consumer.DelayPowerOn();
             powerConsumed += consumer.powerConsumed;
             powerConsumers.Add(consumer);
         }
@@ -183,4 +187,6 @@ public class PowerManager : MonoBehaviour
 
         CalculatePower();
     }
+
+    #endregion
 }

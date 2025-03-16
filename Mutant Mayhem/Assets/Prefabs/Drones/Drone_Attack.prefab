@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc6dd45ff6844b9fbf93f3168746706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 7531098424993310505}
   shooter: {fileID: -7526314183592093641}
   objectPoolName: Drone_Attack
   droneType: 1
@@ -63,17 +64,20 @@ MonoBehaviour:
   rb: {fileID: 8271507474314208127}
   sr: {fileID: 3379014345932164951}
   lights: {fileID: 8022975895623362790}
+  powerConsumer: {fileID: 4455034139439169600}
   minJobDist: 1
   hoverEffectTime: 2.5
   hoverEffectVariationFactor: 0.5
   hoverEffectForceFactor: 0.7
   hoverScaleFactor: 0.15
   rotationSpeed: 0.025
-  launchOrLandMinScale: 0.5
+  launchOrLandMinScale: 0.7
   launchOrLandScaleSpeed: 0.04
   flyingAlpha: 1
   jobHeightMinScale: 1
   myHangar: {fileID: 0}
+  isDocked: 0
+  hasPower: 1
   isFlying: 0
   heightScaleStart: 1
   droneHealth: {fileID: 0}
@@ -592,11 +596,38 @@ PrefabInstance:
       propertyPath: powerConsumed
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: -8186209936180108193}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: -8186209936180108193}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Drone, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Drone, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+--- !u!114 &4455034139439169600 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
+  m_PrefabInstance: {fileID: 8613724148144914097}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c45841caa73de43cd9cdd65fca4c3920, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8719159830275723661 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1047849780288499516, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}

@@ -55,12 +55,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   structureSO: {fileID: 11400000, guid: 0e27f3256cf034c41873cfc22ffe0a71, type: 2}
+  powerCost: 5
   button: {fileID: 9020968919622290046}
   image: {fileID: 9075938444613245568}
   textPrefab: {fileID: 2430187354095485744, guid: eb9345ad852e67948bc4871ab5be062f, type: 3}
   textLockedAlpha: 0.3
   textInstance: {fileID: 0}
   myRectTransform: {fileID: 7905587880830385406}
+  originalSiblingIndex: 0
 --- !u!114 &-1933563720144715493
 MonoBehaviour:
   m_ObjectHideFlags: 0

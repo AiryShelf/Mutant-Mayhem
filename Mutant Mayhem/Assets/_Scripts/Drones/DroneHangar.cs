@@ -68,6 +68,7 @@ public class DroneHangar : MonoBehaviour
     public void LandDrone(Drone drone)
     {
         drone.myHangar = this;
+        drone.isDocked = true;
         drone.currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
         dockedDrones.Add(drone);
         drone.rb.simulated = false;
@@ -83,15 +84,14 @@ public class DroneHangar : MonoBehaviour
         if (dockedDrones.Contains(drone))
             dockedDrones.Remove(drone);
 
+        RemoveDroneFromJob(drone);
+    }
+
+    public void RemoveDroneFromJob(Drone drone)
+    {
         if (drone.currentJob == null)
             return;
 
-        RemoveDroneFromJob(drone);
-        
-    }
-
-    void RemoveDroneFromJob(Drone drone)
-    {
         switch (drone.droneType)
         {
             case DroneType.Builder:
@@ -252,7 +252,7 @@ public class DroneHangar : MonoBehaviour
             Drone freeDrone = null;
             foreach (Drone dockedDrone in dockedDrones)
             {
-                if (dockedDrone.currentJob.jobType != DroneJobType.None)
+                if (dockedDrone.currentJob.jobType != DroneJobType.None || !dockedDrone.hasPower)
                     continue;
 
                 job = GetDroneJob(dockedDrone.droneType);

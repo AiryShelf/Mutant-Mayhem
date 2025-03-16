@@ -8,6 +8,7 @@ using TMPro;
 public class UIStructure : MonoBehaviour, ISelectHandler
 {
     public StructureSO structureSO;
+    [SerializeField] int powerCost = 0;
     [SerializeField] Button button;
     [SerializeField] Image image;
     public GameObject textPrefab;
@@ -154,6 +155,23 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             textInstance.GetComponent<TextMeshProUGUI>().text = structureSO.tileName;
             return;
         }
+
+        string powerString = "";
+        string powerCostColorTag;
+        if (powerCost > 0)
+        {
+            if (powerCost <= PowerManager.Instance.powerBalance)
+                powerCostColorTag = yellowColorTag;
+            else
+                powerCostColorTag = redColorTag; 
+
+            powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}, ";
+        }
+        else if (powerCost < 0)
+        {
+            powerCostColorTag = greenColorTag;
+            powerString = $"{powerCostColorTag}<sprite=0>+{Mathf.Abs(powerCost)}{endColorTag}, ";
+        }
         
         int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);
         // Set yellow or red depending on affordability
@@ -161,14 +179,14 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         {
             textInstance.GetComponent<TextMeshProUGUI>().text = 
             structureSO.tileName + "\n" +
-            yellowColorTag + "$" + totalCost + "\n" +
+            powerString + yellowColorTag + "$" + totalCost + "\n" +
             greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
         }
         else
         {
             textInstance.GetComponent<TextMeshProUGUI>().text = 
             structureSO.tileName + "\n" +
-            redColorTag + "$" + totalCost + "\n" +
+            powerString + redColorTag + "$" + totalCost + "\n" +
             greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
         }
     }

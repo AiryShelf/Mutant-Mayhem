@@ -20,6 +20,8 @@ public class UIUpgrade : MonoBehaviour
     public bool unlocked = true;
 
     [SerializeField] string UiName;
+    [SerializeField] int powerCost;
+    [SerializeField] int productionCost;
     [TextArea(3,10)]
     public string tooltipDescription;
     
@@ -233,6 +235,23 @@ public class UIUpgrade : MonoBehaviour
         else
             costColorTag = redColorTag;
 
+        string powerString = "";
+        string powerCostColorTag;
+        if (powerCost > 0)
+        {
+            if (powerCost <= PowerManager.Instance.powerBalance)
+                powerCostColorTag = yellowColorTag;
+            else
+                powerCostColorTag = redColorTag; 
+
+            powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}, ";
+        }
+        else if (powerCost < 0)
+        {
+            powerCostColorTag = greenColorTag;
+            powerString = $"{powerCostColorTag}<sprite=0>+{Mathf.Abs(powerCost)}{endColorTag}, ";
+        }
+
         // Upgrade buttons text
         if (showLevelsText)
         {
@@ -244,15 +263,15 @@ public class UIUpgrade : MonoBehaviour
             }
             else
             {
-                upgradeText.text = UiName + ": " + greenColorTag + statValueString + " " + cyanColorTag + upgAmountString + endColorTag + 
-                                    "\nLvl " + (upgLvl + 1) + ": " + costColorTag + "$" + upgCost + endColorTag;
+                upgradeText.text = $"{UiName}: {greenColorTag}{statValueString}{endColorTag} {cyanColorTag}{upgAmountString}{endColorTag}" + 
+                                    $"\nLvl {upgLvl + 1}: {powerString}{costColorTag}${upgCost}{endColorTag}";
             }
         }
         else
         {
             // No levels text
-            upgradeText.text = UiName + ": " + greenColorTag + statValueString + " " + cyanColorTag + upgAmountString + endColorTag +
-                                "\n" + costColorTag + "$" + upgCost + endColorTag; 
+            upgradeText.text = $"{UiName}: {greenColorTag}{statValueString}{endColorTag} {cyanColorTag}{upgAmountString}{endColorTag}" +
+                                $"\n{powerString}{costColorTag} ${upgCost}{endColorTag}"; 
         }
 
         //Debug.Log("Upgrade UI text updated");
