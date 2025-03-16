@@ -9,6 +9,7 @@ public class DoorOpener : MonoBehaviour, ITileObject
     [SerializeField] List<AnimatedTile> doorsOpen;
     [SerializeField] List<AnimatedTile> doorsClosed;
     [SerializeField] List<Light2D> doorPointLights;
+    [SerializeField] bool usesPower;
 
     Tilemap animatedTilemap;
     Vector3Int myGridPos;

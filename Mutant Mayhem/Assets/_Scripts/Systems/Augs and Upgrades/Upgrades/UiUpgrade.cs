@@ -264,7 +264,7 @@ public class UIUpgrade : MonoBehaviour
             else
             {
                 upgradeText.text = $"{UiName}: {greenColorTag}{statValueString}{endColorTag} {cyanColorTag}{upgAmountString}{endColorTag}" + 
-                                    $"\nLvl {upgLvl + 1}: {powerString}{costColorTag}${upgCost}{endColorTag}";
+                                    $"\n{greenColorTag}Lvl {upgLvl + 1}: {powerString}{costColorTag}${upgCost}{endColorTag}";
             }
         }
         else

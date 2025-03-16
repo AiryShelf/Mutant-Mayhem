@@ -31,7 +31,7 @@ RectTransform:
   m_GameObject: {fileID: 6350679092703647354}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1557403100377833042}
@@ -55,12 +55,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   structureSO: {fileID: 11400000, guid: 9edf2ada6d9e43c4199956e12c9cc199, type: 2}
+  powerCost: 0
   button: {fileID: 9020968919622290046}
   image: {fileID: 9075938444613245568}
   textPrefab: {fileID: 2430187354095485744, guid: eb9345ad852e67948bc4871ab5be062f, type: 3}
   textLockedAlpha: 0.3
   textInstance: {fileID: 0}
   myRectTransform: {fileID: 7905587880830385406}
+  originalSiblingIndex: 0
 --- !u!114 &-1933563720144715493
 MonoBehaviour:
   m_ObjectHideFlags: 0

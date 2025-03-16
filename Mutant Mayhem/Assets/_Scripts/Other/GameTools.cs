@@ -111,15 +111,11 @@ public static class GameTools
         // to a max of three total digits (plus a decimal if needed).
         string FormatScaled(float scaled)
         {
-            // Decide how many decimal places to keep, so total digits ≤ 3
-            // e.g. 1.66 -> "1.66" (two decimals); 
-            //      11.66 -> "11.7"  (one decimal, rounding up)
-            //      111.66 -> "112"  (zero decimals, rounding up)
             int decimals = 0;
 
-            if      (scaled < 10f)   decimals = 2;  // up to "9.99"
-            else if (scaled < 100f)  decimals = 1;  // up to "99.9"
-            else                     decimals = 0;  // 100 or above -> "100" etc.
+            if      (scaled < 10f)   decimals = 2;
+            else if (scaled < 100f)  decimals = 1;
+            else                     decimals = 0;
 
             // Use rounding instead of flooring
             float rounded = (float) System.Math.Round(scaled, decimals);
@@ -147,7 +143,7 @@ public static class GameTools
             string rawFormatted = FormatScaled(value);
             if (rawFormatted.EndsWith(".00") || rawFormatted.EndsWith(".0"))
             {
-                return value.ToString();
+                return value.ToString("F1");
             }
             // [CHANGED] Even for values under 1000, 
             // we call the same helper so we get consistent rounding
