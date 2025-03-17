@@ -87,6 +87,15 @@ public class PlayerShooter : Shooter
         Debug.Log("Unlocked gun index: " + i);
     }
 
+    public void LockGun(int i)
+    {
+        gunsUnlocked[i] = false;
+        toolbarSelector.LockBoxImage(i);
+        
+        if (currentGunIndex == i)
+            player.SwitchToGun(0);
+    }
+
     public void ReloadPlayer()
     {
         if (currentGunIndex != 0)

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class StatsCounterPlayer : MonoBehaviour
 {
+    [Header("Stat Counts:")]
     [Header("Misc")]
     public static float TotalPlayTime;
     public static int EnemiesKilledByPlayer;

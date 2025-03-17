@@ -114,6 +114,22 @@ public class TileManager : MonoBehaviour
             MessagePanel.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
             return false;
         }
+
+        if (ruleTile.structureSO.canBuildOnlyOne)
+        {
+            if (buildingSystem.buildOnlyOneList.Contains(ruleTile.structureSO))
+            {
+                MessagePanel.Instance.DelayMessage("You've already built one.  One is the max!", Color.red, 0.1f);
+                return false;
+            }
+            else 
+            {
+                buildingSystem.buildOnlyOneList.Add(ruleTile.structureSO);
+                BuildingSystem._UnlockedStructuresDict[ruleTile.structureSO.structureType] = false;
+                buildingSystem.buildMenuController.RefreshBuildList();
+            }
+        }
+
         ConstructionManager.Instance.AddBuildJob(buildJob);
 
         _TileStatsDict[gridPos].health *= 0.99f;
@@ -147,6 +163,8 @@ public class TileManager : MonoBehaviour
         Matrix4x4 matrix = blueprintTilemap.GetTransformMatrix(rootPos);
         blueprintTilemap.SetTile(rootPos, null);
         blueprintTilemap.SetTransformMatrix(rootPos, matrix);
+
+        buildingSystem.UnlockStructures(ruleTile.structureSO);
         
         //if (!AddNewTileToDict(gridPos, rotatedStructure))
         //{
@@ -224,6 +242,22 @@ public class TileManager : MonoBehaviour
         Matrix4x4 matrix;
         int tileRot;
         Tilemap tilemap;
+        RuleTileStructure ruleTile = _TileStatsDict[rootPos].ruleTileStructure;
+
+        buildingSystem.LockStructures(ruleTile.structureSO);
+
+        if (ruleTile.structureSO.canBuildOnlyOne)
+        {
+            if (buildingSystem.buildOnlyOneList.Contains(ruleTile.structureSO))
+            {
+                buildingSystem.buildOnlyOneList.Remove(ruleTile.structureSO);
+                BuildingSystem._UnlockedStructuresDict[ruleTile.structureSO.structureType] = true;
+                buildingSystem.buildMenuController.RefreshBuildList();
+            }
+            else 
+                Debug.LogError("TileManager: Removed a 'buildOnlyOne' tile that was not tracked in 'buildOnlyOneList'");
+        }
+
         if (tile != null)
         {
             tilemap = blueprintTilemap;
@@ -237,8 +271,8 @@ public class TileManager : MonoBehaviour
             matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
             tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
         }
-        RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
-        List<Vector3Int> sourcePositions = rts.structureSO.cellPositions;
+        
+        List<Vector3Int> sourcePositions = ruleTile.structureSO.cellPositions;
         //List<Vector3Int> rotatedPositions = GetStructurePositions(tilemap, rootPos);
         List<Vector3Int> rotatedPositions = StructureRotator.RotateCellPositionsBack(sourcePositions, tileRot);
 
@@ -250,7 +284,7 @@ public class TileManager : MonoBehaviour
         //blueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
         // Check for turrets
-        if (rts.structureSO.isTurret)
+        if (ruleTile.structureSO.isTurret)
             turretManager.RemoveTurret(rootPos);
 
         // Remove from list and dict
@@ -276,7 +310,6 @@ public class TileManager : MonoBehaviour
     public void RefundTileAt(Vector3Int gridPos)
     {
         // Get remaining health ratio and tile cost
-        
         int tileCost = (int)_TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
         int refund;
         
@@ -291,11 +324,9 @@ public class TileManager : MonoBehaviour
             refund = Mathf.FloorToInt(ratio * buildingSystem.structureCostMult * tileCost);
             refund = Mathf.Clamp(refund, 0, Mathf.FloorToInt(buildingSystem.structureCostMult * tileCost * 0.75f));
         }
-        
 
         // Refund cost
         BuildingSystem.PlayerCredits += refund;
-
         //Debug.Log("Refunded a tile");
     }
 

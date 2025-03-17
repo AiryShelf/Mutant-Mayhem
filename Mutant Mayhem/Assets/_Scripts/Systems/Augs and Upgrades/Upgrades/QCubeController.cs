@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 
 public class QCubeController : MonoBehaviour, IPointerClickHandler
 {
+    public static QCubeController Instance;
+
     [SerializeField] CameraController cameraController;
 
     [Header("Death")]
@@ -31,6 +33,13 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
     }
    
     [Header("Interaction")]
+    public UiUpgradePanel lasersPanel;
+    public UiUpgradePanel bulletsPanel;
+    public UiUpgradePanel structuresPanel;
+    public UiUpgradePanel repairPanel;
+    public UiUpgradePanel explosivesPanel;
+    public UiUpgradePanel dronesPanel;
+
     public PanelSwitcher panelSwitcher;
     [SerializeField] float interactRadius = 1.5f;
     public bool isUpgradesOpen;
@@ -49,6 +58,16 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        } 
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         IsCubeDestroyed = false;
         playerActionMap = player.inputAsset.FindActionMap("Player");
         qCubeAction = playerActionMap.FindAction("QCube");
@@ -83,6 +102,56 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
             {
                 CloseUpgradeWindow();
             }
+        }
+    }
+
+    public void UnlockUpgradePanel(UpgradePanelType upgradePanelType)
+    {
+        switch (upgradePanelType)
+        {
+            case UpgradePanelType.Lasers:
+                lasersPanel.OnUnlocked();
+                break;
+            case UpgradePanelType.Bullets:
+                bulletsPanel.OnUnlocked();
+                break;
+            case UpgradePanelType.Structures:
+                structuresPanel.OnUnlocked();
+                break;
+            case UpgradePanelType.Repair:
+                repairPanel.OnUnlocked();
+                break;
+            case UpgradePanelType.Explosives:
+                explosivesPanel.OnUnlocked();
+                break;
+            case UpgradePanelType.Drones:
+                dronesPanel.OnUnlocked();
+                break;
+        }
+    }
+
+    public void LockUpgradePanel(UpgradePanelType upgradePanelType)
+    {
+        switch (upgradePanelType)
+        {
+            case UpgradePanelType.Lasers:
+                lasersPanel.OnLocked();
+                break;
+            case UpgradePanelType.Bullets:
+                bulletsPanel.OnLocked();
+                break;
+            case UpgradePanelType.Structures:
+                structuresPanel.OnLocked();
+                break;
+            case UpgradePanelType.Repair:
+                repairPanel.OnLocked();
+                break;
+            case UpgradePanelType.Explosives:
+                explosivesPanel.OnLocked();
+                break;
+            case UpgradePanelType.Drones:
+                dronesPanel.OnLocked();
+                break;
         }
     }
 

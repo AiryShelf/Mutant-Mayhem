@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,6 +11,8 @@ using UnityEngine.Tilemaps;
 
 public class BuildingSystem : MonoBehaviour
 {
+    public static BuildingSystem Instance;
+
     public List<StructureSO> AllStructureSOs;
     [SerializeField] List<bool> unlockedStructuresStart;
     public StructureSO structureInHand;
@@ -58,6 +61,8 @@ public class BuildingSystem : MonoBehaviour
     public int currentRotation;
     private Vector3Int highlightedTilePos;
     public bool allHighlighted;
+    public List<StructureSO> buildOnlyOneList;
+    
     bool inRange;
     Player player;
     InputActionMap playerActionMap;
@@ -73,6 +78,19 @@ public class BuildingSystem : MonoBehaviour
     Coroutine lockBuildCircleToMuzzle;
     public GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        } 
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     void OnEnable()
     {
@@ -158,12 +176,12 @@ public class BuildingSystem : MonoBehaviour
             if (structureInHand.actionType == ActionType.Build)
             {
                 Build(highlightedTilePos);
-                //StartCoroutine(DelayUIReselect());
+                StartCoroutine(DelayUIReselect());
             }
             else if (structureInHand.actionType == ActionType.Destroy)
             {
                 RemoveTile(destroyPositions[0]);
-                //StartCoroutine(DelayUIReselect());
+                StartCoroutine(DelayUIReselect());
             }
         }
         // Messages for failed to build or destroy
@@ -173,7 +191,7 @@ public class BuildingSystem : MonoBehaviour
                 //MessagePanel.Instance.DelayMessage("Area not clear for building", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.Instance.DelayMessage("Unable to destroy", Color.yellow, 0.1f);
-            //StartCoroutine(DelayUIReselect());
+            StartCoroutine(DelayUIReselect());
         }
         else
         {
@@ -181,7 +199,7 @@ public class BuildingSystem : MonoBehaviour
                 MessagePanel.Instance.DelayMessage("Too far away to build", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
                 MessagePanel.Instance.DelayMessage("Too far away to destroy", Color.yellow, 0.1f);
-            //StartCoroutine(DelayUIReselect());
+            StartCoroutine(DelayUIReselect());
         }
     }
 
@@ -304,7 +322,10 @@ public class BuildingSystem : MonoBehaviour
             buildMenuController.ToggleBuildMenu();
             
             //Debug.Log("Opened Build Panel");
-            structureInHand = lastStructureInHand;
+            if (_UnlockedStructuresDict.ContainsKey(structureInHand.structureType) && _UnlockedStructuresDict[structureInHand.structureType])
+                structureInHand = lastStructureInHand;
+            else 
+                structureInHand = AllStructureSOs[2]; // Set to Destroy Tool
             
             StartCoroutine(DelayMenuSelection()); // So that FadeCanvasGroupsWave can turn the elements on
         }
@@ -419,7 +440,6 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-
     IEnumerator DelayMenuSelection()
     {
         yield return new WaitForSeconds(0.1f);
@@ -454,10 +474,39 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    public void UnlockStructures(List<StructureType> structures)
+    public void UnlockStructures(StructureSO structureBuilt)
     {
-        foreach (StructureType structure in structures)
-            _UnlockedStructuresDict[structure] = true;
+        QCubeController.Instance.UnlockUpgradePanel(structureBuilt.panelToUnlock);
+
+        foreach (var structure in structureBuilt.structuresToUnlock)
+        {
+            _UnlockedStructuresDict[structure.structureType] = true;
+        }
+
+        buildMenuController.RefreshBuildList();
+
+        if (structureBuilt.canBuildOnlyOne)
+        {
+            buildMenuController.SetMenuSelection(AllStructureSOs[2]); // Set to destroy tool
+            ChangeStructureInHand(AllStructureSOs[2]);
+        }
+        
+    }
+
+    public void LockStructures(StructureSO structureRemoved)
+    {
+        QCubeController.Instance.LockUpgradePanel(structureRemoved.panelToUnlock);
+
+        foreach (var structure in structureRemoved.structuresToUnlock)
+        {
+            if (structure.structureType == structureInHand.structureType)
+            {
+                buildMenuController.SetMenuSelection(AllStructureSOs[2]); // Set to destroy tool
+                ChangeStructureInHand(AllStructureSOs[2]);
+            }
+
+            _UnlockedStructuresDict[structure.structureType] = false;
+        }
 
         buildMenuController.RefreshBuildList();
     }
@@ -492,6 +541,12 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
 
+        if (buildOnlyOneList.Contains(structureInHand))
+        {
+            MessagePanel.Instance.DelayMessage("You've already built one.  One is the max!", Color.red, 0.1f);
+            return;
+        }
+
         // Add Tile
         if (tileManager.AddBlueprintAt(gridPos, structureInHand.blueprintTile, currentRotation))
         {
@@ -504,6 +559,8 @@ public class BuildingSystem : MonoBehaviour
             }
 
             AddToStatCounter();
+            if (structureInHand.canBuildOnlyOne)
+                buildOnlyOneList.Add(structureInHand);
         }
         else
             MessagePanel.Instance.DelayMessage("Unable to build there.  It's blocked!", Color.red, 0.1f);
@@ -553,7 +610,7 @@ public class BuildingSystem : MonoBehaviour
 
     #region Highlight / Preview
 
-    private void HighlightTile()
+    void HighlightTile()
     {
         Vector3Int mouseGridPos = GetMouseToGridPos();
         mouseGridPos.z = 0;
@@ -733,7 +790,7 @@ public class BuildingSystem : MonoBehaviour
 
     #region Checks
 
-    private Vector3Int GetMouseToGridPos()
+    Vector3Int GetMouseToGridPos()
     {
         Vector3 cursorPos = CursorManager.Instance.GetCustomCursorWorldPos();
 
@@ -743,7 +800,7 @@ public class BuildingSystem : MonoBehaviour
         return mouseCellPos;
     }
 
-    private bool InRange(Vector2 positionA, Vector2 positionB, float radius)
+    bool InRange(Vector2 positionA, Vector2 positionB, float radius)
     {
         // Calculate the squared distance between positionA and positionB
         float distanceSquared = (positionA.x - positionB.x) * (positionA.x - positionB.x) +
@@ -753,7 +810,7 @@ public class BuildingSystem : MonoBehaviour
     return distanceSquared <= radius * radius;
     }
 
-    private bool CheckHighlightConditions(RuleTileStructure mousedTile, StructureSO structureInHand)
+    bool CheckHighlightConditions(RuleTileStructure mousedTile, StructureSO structureInHand)
     {
         if (structureInHand.actionType == ActionType.Select ||
             structureInHand.actionType == ActionType.Destroy)

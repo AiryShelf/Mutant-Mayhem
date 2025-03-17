@@ -10,6 +10,7 @@ public class ToolbarSelector : MonoBehaviour
     [SerializeField] List<Image> gunImages;
     Image currentBox;
     Player player;
+    Image startImage;
     Color unselectedColor;
     [SerializeField] Color selectedColor;
 
@@ -39,7 +40,15 @@ public class ToolbarSelector : MonoBehaviour
     {
         Image image = gunImages[i];
         image.color = new Color(1,1,1,1);
-        Debug.Log("Toolbarselector played upgEffect");
+        //Debug.Log("Toolbarselector played upgEffect");
         UpgradeManager.Instance.upgradeEffects.ToolbarUpgradeEffect((Vector2)image.transform.position);
+    }
+
+    public void LockBoxImage(int i)
+    {
+        Image image = gunImages[i];
+        image.color = new Color(0, 0, 0, 0.4f);
+        //Debug.Log("Toolbarselector played upgEffect");
+        //UpgradeManager.Instance.upgradeEffects.ToolbarUpgradeEffect((Vector2)image.transform.position);
     }
 }

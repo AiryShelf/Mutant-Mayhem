@@ -17,13 +17,17 @@ public class StructureSO : ScriptableObject
     public List<Vector3Int> cellPositions;
 
     [Header("Tile Type")]
-    
     public RuleTileStructure ruleTileStructure;
     public RuleTileStructure blueprintTile;
     public StructureType structureType;
     public bool isTurret;
     public ActionType actionType;
     public Vector2Int actionRange = new Vector2Int(5, 5);
+
+    [Header("Optional")]
+    public UpgradePanelType panelToUnlock;
+    public List<StructureSO> structuresToUnlock;
+    public bool canBuildOnlyOne = false;
 }
 
 public enum StructureType
@@ -52,6 +56,8 @@ public enum StructureType
     RazorWire,
     MicroReactor,
     FloodLight,
+    EngineeringBay,
+    PhotonicsBay,
     None
 }
 

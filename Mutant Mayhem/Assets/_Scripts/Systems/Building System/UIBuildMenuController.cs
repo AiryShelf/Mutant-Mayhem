@@ -112,7 +112,10 @@ public class UIBuildMenuController : MonoBehaviour
         {
             // Make unlocked structures interactable
             if (BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
-                structure.MakeInteractable();
+                structure.MakeInteractable(true);
+            else
+                structure.MakeInteractable(false);
+            
         }
 
         uiStructureList = uiStructureList

@@ -43,7 +43,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             // If unlocked to player
             if (BuildingSystem._UnlockedStructuresDict[structureSO.structureType])
             {
-                MakeInteractable();
+                MakeInteractable(true);
             }
             else
             {
@@ -59,7 +59,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         // If unlocked to player
         if (BuildingSystem._UnlockedStructuresDict[structureSO.structureType])
         {
-            MakeInteractable();
+            MakeInteractable(true);
         }
         else
         {
@@ -100,7 +100,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             return false;
         }
 
-        buildingSystem.StartCoroutine(buildingSystem.DelayUIReselect());
+        //buildingSystem.StartCoroutine(buildingSystem.DelayUIReselect());
         // Lock the scroll rect to this selected object.        
         scrollRectController.SnapTo(myRectTransform);
 
@@ -124,10 +124,18 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         return true;
     }
     
-    public void MakeInteractable()
+    public void MakeInteractable(bool interactable)
     {
-        button.interactable = true;
-        SetText(BuildingSystem.PlayerCredits);
+        button.interactable = interactable;
+
+        if (interactable)
+        {
+            SetText(BuildingSystem.PlayerCredits);
+        }
+        else
+        {
+            SetText(BuildingSystem.PlayerCredits);
+        }
     }
 
     #endregion
