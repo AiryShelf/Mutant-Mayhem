@@ -28,6 +28,13 @@ public class UiUpgradePanel : UI_PanelBase
 
     [Header("Unlockables (Optional)")]
     [SerializeField] GameObject unlockPanel;
+    [SerializeField] TextMeshProUGUI unlockPanelInfoText;
+    [SerializeField] Image noPowerImage;
+    [SerializeField] Image buildToUnlockImage;
+    [SerializeField] Sprite buildSpriteNoPower;
+    Sprite buildSpriteStart;
+    [SerializeField] string unlockPanelNoPowerString;
+    string unlockPanelStartString;
     [SerializeField] TextMeshProUGUI unlockCostText;
     [SerializeField] int unlockCost;
     public string techUnlockMessageName;
@@ -36,8 +43,7 @@ public class UiUpgradePanel : UI_PanelBase
     [SerializeField] UpgradeFamily upgradeFamily;
     [SerializeField] int playerGunIndex;
 
-    [Header("Unlock Structure")]
-    [SerializeField] List<StructureSO> structuresToUnlock;
+    [Header("Unlock Structure")] // Partially moved to StructureSO
     [SerializeField] bool addTurretSlot;
 
     [Header("Unlock Buttons")]
@@ -48,6 +54,11 @@ public class UiUpgradePanel : UI_PanelBase
 
     void Awake()
     {
+        if (buildToUnlockImage != null)
+            buildSpriteStart = buildToUnlockImage.sprite;
+        if (unlockPanelInfoText != null)
+            unlockPanelStartString = unlockPanelInfoText.text;
+
         player = FindObjectOfType<Player>();
         buildingSystem = FindObjectOfType<BuildingSystem>();
 
@@ -148,7 +159,7 @@ public class UiUpgradePanel : UI_PanelBase
         upg.Initialize();
     }
 
-    public void OnUnlocked()
+    public void OnUnlocked(bool playEffect)
     {
         isUnlocked = true;
 
@@ -157,26 +168,29 @@ public class UiUpgradePanel : UI_PanelBase
             player.playerShooter.UnlockGun(playerGunIndex);
 
         // Unlock Structures, add turret
-        buildingSystem.UnlockStructures(BuildingSystem.Instance.structureInHand);
+        buildingSystem.UnlockStructures(BuildingSystem.Instance.structureInHand, playEffect);
         if (addTurretSlot)
             player.stats.structureStats.maxTurrets++;
 
         // Initialize and open upgrades panel
         buttonsGrid.GetComponent<CanvasGroup>().alpha = 1;
         textGrid.GetComponent<CanvasGroup>().alpha = 1;
-        //StartCoroutine(DelayFadeGroupTrigger(true));
-        //StartCoroutine(DelayTrigger());
-        unlockPanel.gameObject.SetActive(false);
+        //StartCoroutine(DelayFadeGroupTrigger(true, false));
+        unlockPanel.SetActive(false);
 
-        UpgradeManager.Instance.upgradeEffects.PlayUpgradeButtonEffect();
+        if (playEffect)
+            UpgradeManager.Instance.upgradeEffects.PlayUnlockEffect();
         //Debug.Log("UiUpgradePanel played upgEffect");
 
         UnlockButtons(true);
 
-        MessagePanel.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
+        if (playEffect)
+        {
+            MessagePanel.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
+        }
     }
 
-    public void OnLocked()
+    public void OnLocked(bool playEffect)
     {
         isUnlocked = false;
 
@@ -185,23 +199,41 @@ public class UiUpgradePanel : UI_PanelBase
             player.playerShooter.LockGun(playerGunIndex);
 
         // Unlock Structures, add turret
-        buildingSystem.LockStructures(BuildingSystem.Instance.structureInHand);
+        buildingSystem.LockStructures(BuildingSystem.Instance.structureInHand, playEffect);
         if (addTurretSlot)
             player.stats.structureStats.maxTurrets--;
 
         // Initialize and open upgrades panel
         buttonsGrid.GetComponent<CanvasGroup>().alpha = 0;
         textGrid.GetComponent<CanvasGroup>().alpha = 0;
-        StartCoroutine(DelayFadeGroupTrigger(false));
-        //StartCoroutine(DelayTrigger());
-        unlockPanel.gameObject.SetActive(true);
+        //StartCoroutine(DelayFadeGroupTrigger(false, true));
+        unlockPanel.SetActive(true);
 
-        //UpgradeManager.Instance.upgradeEffects.PlayUpgradeButtonEffect();
+        //if (playEffect)
+            //UpgradeManager.Instance.upgradeEffects.PlayUpgradeButtonEffect();
         //Debug.Log("UiUpgradePanel played upgEffect");
 
         UnlockButtons(false);
 
-        MessagePanel.PulseMessage(techUnlockMessageName + " locked!", Color.red);
+        if (playEffect)
+        {
+            MessagePanel.PulseMessage(techUnlockMessageName + " locked!", Color.red);
+            if (unlockPanelInfoText != null)
+                unlockPanelInfoText.text = unlockPanelStartString;
+            if (buildToUnlockImage != null)
+                buildToUnlockImage.sprite = buildSpriteStart;
+                
+            noPowerImage.enabled = false;
+        }
+        else
+        {
+            if (unlockPanelInfoText != null)
+                unlockPanelInfoText.text = unlockPanelNoPowerString;
+            if (buildSpriteNoPower != null)
+                buildToUnlockImage.sprite = buildSpriteNoPower;
+
+            noPowerImage.enabled = true;
+        }
     }
 
     public void OnUnlockClick() // DEPRICATED
@@ -218,16 +250,14 @@ public class UiUpgradePanel : UI_PanelBase
                 player.playerShooter.UnlockGun(playerGunIndex);
 
             // Unlock Structures, add turret
-            buildingSystem.UnlockStructures(BuildingSystem.Instance.structureInHand);
+            buildingSystem.UnlockStructures(BuildingSystem.Instance.structureInHand, true);
             if (addTurretSlot)
                 player.stats.structureStats.maxTurrets++;
 
             // Initialize and open upgrades panel
             buttonsGrid.GetComponent<CanvasGroup>().alpha = 1;
             textGrid.GetComponent<CanvasGroup>().alpha = 1;
-            StartCoroutine(DelayFadeGroupTrigger(true));
-            //StartCoroutine(DelayTrigger());
-            unlockPanel.gameObject.SetActive(false);
+            StartCoroutine(DelayFadeGroupTrigger(true, false));
 
             UpgradeManager.Instance.upgradeEffects.PlayUpgradeButtonEffect();
             //Debug.Log("UiUpgradePanel played upgEffect");
@@ -255,10 +285,14 @@ public class UiUpgradePanel : UI_PanelBase
         }
     }
 
-    IEnumerator DelayFadeGroupTrigger(bool isTriggered)
+    IEnumerator DelayFadeGroupTrigger(bool isTriggered, bool isUnlockPanelActive)
     {
         yield return new WaitForEndOfFrame();
+
         fadeCanvasGroups.isTriggered = isTriggered;
+
+        if (unlockPanel != null)
+            unlockPanel.SetActive(isUnlockPanelActive);
     }
 
     void UnlockButtons(bool unlocked)

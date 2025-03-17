@@ -8,7 +8,6 @@ using UnityEngine;
 public class EnemyChaseFlyToTarget : EnemyChaseSOBase
 {
     [SerializeField] private float moveSpeedMult = 1.2f;
-    [SerializeField] float distToStopChase = 0.2f;
     [SerializeField] LayerMask hitLayers;
 
     [Header("Flight Variation:")]

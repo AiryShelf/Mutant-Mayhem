@@ -14,7 +14,6 @@ public class MeleeControllerEnemy : MonoBehaviour
     public float attackDelay = 1f;
     public float attackDelayStart = 1;
     [SerializeField] LayerMask hitLayers;
-    [SerializeField] float meleeTile_DotProdRange = -1f;
     [SerializeField] Collider2D meleeCollider;
     [SerializeField] float scaleDuration = 0.1f;
     [SerializeField] Vector3 initialScale = new Vector3(0.3f, 0.3f, 1f);

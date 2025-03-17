@@ -24,7 +24,7 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
         TileManager.AnimatedTilemap.SetTile(rootPos, powerOnDamageTiles[damageIndex]);
 
         glow.gameObject.SetActive(true);
-        BuildingSystem.Instance.UnlockStructures(engineeringBaySO);
+        BuildingSystem.Instance.UnlockStructures(engineeringBaySO, false);
     }
 
     public void PowerOff()
@@ -36,7 +36,7 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
         TileManager.AnimatedTilemap.SetTile(rootPos, powerOffDamageTiles[damageIndex]);
 
         glow.gameObject.SetActive(false);
-        BuildingSystem.Instance.LockStructures(engineeringBaySO);
+        BuildingSystem.Instance.LockStructures(engineeringBaySO, false);
     }
 
     public void UpdateHealthRatio(float healthRatio)

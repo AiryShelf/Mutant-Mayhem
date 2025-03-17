@@ -12,7 +12,6 @@ public class MessagePanel : MonoBehaviour
     [SerializeField] TextPulser textPulser;
     [SerializeField] float timeToDisplay = 6f;
     [SerializeField] float pulseTime = 0.5f;
-    [SerializeField] float minMessageTime = 2f;
     public static float TimeToDisplay;
 
     Color startColor;

@@ -43,10 +43,22 @@ public class UpgradeEffects : MonoBehaviour
 
     public void PlayUpgradeButtonEffect()
     {
-        uiButtonUpgAppliedFX.transform.position = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Vector2 worldPos;
+        if (InputManager.LastUsedDevice == Keyboard.current)
+            worldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        else
+            worldPos = CursorManager.Instance.GetCustomCursorWorldPos();
+
+        uiButtonUpgAppliedFX.transform.position = worldPos;
         uiButtonUpgAppliedFX.Play();
 
         PlayerUpgradeEffectAt(player.transform.position);
+    }
+
+    public void PlayUnlockEffect()
+    {
+        uiButtonUpgAppliedFX.transform.position = QCubeController.Instance.transform.position;
+        uiButtonUpgAppliedFX.Play();
     }
 
     public void PlayerUpgradeEffectAt(Vector2 pos)

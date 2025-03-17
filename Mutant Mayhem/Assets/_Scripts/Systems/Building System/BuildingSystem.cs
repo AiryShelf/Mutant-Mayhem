@@ -474,9 +474,9 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    public void UnlockStructures(StructureSO structureBuilt)
+    public void UnlockStructures(StructureSO structureBuilt, bool playEffect)
     {
-        QCubeController.Instance.UnlockUpgradePanel(structureBuilt.panelToUnlock);
+        QCubeController.Instance.UnlockUpgradePanel(structureBuilt.panelToUnlock, playEffect);
 
         foreach (var structure in structureBuilt.structuresToUnlock)
         {
@@ -493,9 +493,9 @@ public class BuildingSystem : MonoBehaviour
         
     }
 
-    public void LockStructures(StructureSO structureRemoved)
+    public void LockStructures(StructureSO structureRemoved, bool playEffect)
     {
-        QCubeController.Instance.LockUpgradePanel(structureRemoved.panelToUnlock);
+        QCubeController.Instance.LockUpgradePanel(structureRemoved.panelToUnlock, playEffect);
 
         foreach (var structure in structureRemoved.structuresToUnlock)
         {

@@ -164,7 +164,7 @@ public class TileManager : MonoBehaviour
         blueprintTilemap.SetTile(rootPos, null);
         blueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
-        buildingSystem.UnlockStructures(ruleTile.structureSO);
+        buildingSystem.UnlockStructures(ruleTile.structureSO, true);
         
         //if (!AddNewTileToDict(gridPos, rotatedStructure))
         //{
@@ -244,7 +244,7 @@ public class TileManager : MonoBehaviour
         Tilemap tilemap;
         RuleTileStructure ruleTile = _TileStatsDict[rootPos].ruleTileStructure;
 
-        buildingSystem.LockStructures(ruleTile.structureSO);
+        buildingSystem.LockStructures(ruleTile.structureSO, true);
 
         if (ruleTile.structureSO.canBuildOnlyOne)
         {

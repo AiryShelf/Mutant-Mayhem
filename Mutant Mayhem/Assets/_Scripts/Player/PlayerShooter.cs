@@ -16,7 +16,6 @@ public class PlayerShooter : Shooter
     Coroutine shootingCoroutine;
     bool waitToShoot;
     float reloadNotificationTimer = 0;
-    [SerializeField] float reloadAccuracyLoss = 8f;
 
     public bool canShoot = true;
     public bool isShooting;

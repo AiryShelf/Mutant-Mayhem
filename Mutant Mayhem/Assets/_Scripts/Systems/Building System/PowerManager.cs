@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PowerManager : MonoBehaviour
@@ -23,6 +24,7 @@ public class PowerManager : MonoBehaviour
 
     Coroutine cutPowerCoroutine;
     List<PowerConsumer> consumersCut = new List<PowerConsumer>();
+    bool initialized = false;
 
     void Awake()
     {
@@ -39,13 +41,27 @@ public class PowerManager : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(DelayInitialize());
+    }
+
+    IEnumerator DelayInitialize()
+    {
+        yield return new WaitForFixedUpdate();
+
+        initialized = true;
+        CalculatePower();
+        OnPowerChanged?.Invoke(powerBalance);
         StartCoroutine(CheckPower());
     }
 
     public void AddPowerSource(PowerSource source)
     {
+        if (source == null) return;
+        
         powerSources.Add(source);
         powerTotal += source.powerGenerated;
+
+        if (!initialized) return;
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -57,8 +73,12 @@ public class PowerManager : MonoBehaviour
 
     public void RemovePowerSource(PowerSource source)
     {
+        if (source == null) return;
+
         powerSources.Remove(source);
         powerTotal -= source.powerGenerated;
+
+        if (!initialized) return;
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -70,11 +90,13 @@ public class PowerManager : MonoBehaviour
 
     public void AddPowerConsumer(PowerConsumer consumer)
     {
-        if (powerConsumers.Contains(consumer)) return;
+        if (consumer == null || powerConsumers.Contains(consumer)) return;
         
         powerConsumers.Add(consumer);
         powerConsumed += consumer.powerConsumed;
         powerDemand += consumer.powerConsumed;
+
+        if (!initialized) return;
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -87,9 +109,13 @@ public class PowerManager : MonoBehaviour
 
     public void RemovePowerConsumer(PowerConsumer consumer)
     {
+        if (consumer == null) return;
+
         powerConsumers.Remove(consumer);
         powerConsumed -= consumer.powerConsumed;
         powerDemand -= consumer.powerConsumed;
+
+        if (!initialized) return;
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -122,6 +148,8 @@ public class PowerManager : MonoBehaviour
 
     IEnumerator CutConsumers()
     {
+        MessagePanel.PulseMessage("WARNING: Power Outages!", Color.red);
+
         // Cut consumers until power is balanced
         while (powerConsumed > powerTotal)
         {

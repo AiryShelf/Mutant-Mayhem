@@ -14,8 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 1934889526, guid: 31f5d60f150f54742b72632686f068fc, type: 3}
   tileName: Engineering Bay
-  description: Allows for more advanced structures and upgrades
-  tileCost: 2000
+  description: 'Allows for more advanced structures and upgrades
+
+
+    Unlocks Structure
+    Tech upgrades'
+  tileCost: 1000
   maxHealth: 800
   health: 800
   blueprintBuildAmount: 2000
@@ -36,6 +40,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86a18e7a7abf84b6e9b6244b30711a5a, type: 2}
   - {fileID: 11400000, guid: be57d7f42b2b34863bf9df509f6e6d1f, type: 2}
   - {fileID: 11400000, guid: a5868e627c1a479458a424fe31120e7c, type: 2}
-  - {fileID: 11400000, guid: f08d517a9c8eb481b86af542df163c91, type: 2}
   - {fileID: 11400000, guid: d86990c4953b54712a496e25b24ab4e5, type: 2}
   canBuildOnlyOne: 1

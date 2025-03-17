@@ -5,6 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 public class PhotonicsBay : MonoBehaviour, IPowerConsumer
 {
+    [SerializeField] StructureSO photonicsBaySO;
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] List<Light2D> lights;
 
@@ -13,6 +14,8 @@ public class PhotonicsBay : MonoBehaviour, IPowerConsumer
         spriteRenderer.enabled = true;
         foreach (var light in lights)
             light.gameObject.SetActive(true);
+
+        BuildingSystem.Instance.UnlockStructures(photonicsBaySO, false);
     }
 
     public void PowerOff()
@@ -20,5 +23,7 @@ public class PhotonicsBay : MonoBehaviour, IPowerConsumer
         spriteRenderer.enabled = false;
         foreach (var light in lights)
             light.gameObject.SetActive(false);
+
+        BuildingSystem.Instance.LockStructures(photonicsBaySO, false);
     }
 }

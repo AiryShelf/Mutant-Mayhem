@@ -144,8 +144,6 @@ public class Player : MonoBehaviour
     InputAction sprintAction;
     InputAction pointAction;
     InputAction clickAction;
-    Coroutine delayShootCancel;
-    bool isFiring = false;
 
     void Awake()
     {

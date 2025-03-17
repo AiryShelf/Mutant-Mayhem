@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class UIBuildMenuController : MonoBehaviour
 {
-    [SerializeField] float touchscreenScrollDelay = 0.2f;
-    [SerializeField] float dragDeadzone = 10f;
     public GridLayoutGroup buttonLayoutGrid;
     public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
@@ -18,7 +16,6 @@ public class UIBuildMenuController : MonoBehaviour
     public FadeCanvasGroupsWave fadeCanvasGroups;
 
     public bool isTouchScrolling = false;
-    bool isScrollDelay = false;
     public Vector2 touchStartPos;
     int currentIndex;
     Player player;

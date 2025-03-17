@@ -45,7 +45,6 @@ public class CursorManager : MonoBehaviour
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
     Vector2 cursorVelocity = Vector2.zero;
     public float cursorAcceleration = 1000f;
-    [SerializeField] int rayDistance = 100;
     public GameObject currentHoveredObject = null;
     [SerializeField] GraphicRaycaster persistentCanvasGR;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
