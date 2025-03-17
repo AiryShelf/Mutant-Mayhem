@@ -31,15 +31,16 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
             }
         }
     }
-   
-    [Header("Interaction")]
+
+    [Header("Upgrade Panels")]
     public UiUpgradePanel lasersPanel;
     public UiUpgradePanel bulletsPanel;
     public UiUpgradePanel structuresPanel;
     public UiUpgradePanel repairPanel;
     public UiUpgradePanel explosivesPanel;
     public UiUpgradePanel dronesPanel;
-
+   
+    [Header("Interaction")]
     public PanelSwitcher panelSwitcher;
     [SerializeField] float interactRadius = 1.5f;
     public bool isUpgradesOpen;
@@ -234,6 +235,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
         cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.35f, true, false);
+        droneHangar.ShowRangeCircle(true);
 
         player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
         fireAction.Disable();
@@ -258,6 +260,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
             buildingSystem.LockCameraToPlayer(true);
 
         CursorManager.Instance.SetCustomCursorVisible(true);
+        droneHangar.ShowRangeCircle(false);
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DroneHangar : MonoBehaviour
 {
+    public LineRendererCircle droneRangeCircle;
     public List<Drone> controlledDrones;
     public List<Drone> dockedDrones;
     public int maxConstructionDrones;
@@ -23,6 +24,11 @@ public class DroneHangar : MonoBehaviour
         SpawnStartDrones();
         StartCoroutine(LookForJobs());
         StartCoroutine(RepairDrones());
+    }
+
+    public void ShowRangeCircle(bool show)
+    {
+        droneRangeCircle.EnableCircle(show);
     }
 
     #region Drones
