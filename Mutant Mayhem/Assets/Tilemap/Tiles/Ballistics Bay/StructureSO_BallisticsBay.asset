@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
+  m_Name: StructureSO_BallisticsBay
+  m_EditorClassIdentifier: 
+  uiImage: {fileID: 21300000, guid: 3562009c838b94c0cab8cbd6eb27e87f, type: 3}
+  tileName: Ballistics Bay
+  description: 'Unlocks the SMG and Gun Turret
+
+
+    Unlocks Bullet Tech upgrades'
+  tileCost: 2000
+  maxHealth: 1600
+  health: 1600
+  blueprintBuildAmount: 2000
+  cellPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: -1, z: 0}
+  - {x: 2, y: -1, z: 0}
+  - {x: 0, y: -2, z: 0}
+  - {x: 1, y: -2, z: 0}
+  - {x: 2, y: -2, z: 0}
+  ruleTileStructure: {fileID: 11400000, guid: 006f7ff71dd024086a7f446d088b32d8, type: 2}
+  blueprintTile: {fileID: 11400000, guid: 8f9e4b4589b044e548ded6a5a7a7e686, type: 2}
+  structureType: 26
+  isTurret: 0
+  actionType: 1
+  actionRange: {x: 6, y: 6}
+  panelToUnlock: 4
+  structuresToUnlock:
+  - {fileID: 11400000, guid: 8f9fabdf0d76de84bb552cd55fc0d75d, type: 2}
+  canBuildOnlyOne: 1

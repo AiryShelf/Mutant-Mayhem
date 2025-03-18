@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: 6711713248e0a4fb78db29fb99d66e3f, type: 3}
   tileName: Micro Reactor
-  description: 'A modular micro-reactor.  Generates electricity
+  description: 'A modular micro-reactor or generating power
 
 
-    Gains a bonus
-    for each adjacent reactor'
+    Gains a bonus of
+    2 from each adjacent Reactor'
   tileCost: 1500
   maxHealth: 500
   health: 500
@@ -31,3 +31,6 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  panelToUnlock: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0

@@ -18,8 +18,8 @@ MonoBehaviour:
     is tuned to the frequencies of known objects, blocking any unknown object from
     passing the barrier."
   tileCost: 1000
-  maxHealth: 3200
-  health: 3200
+  maxHealth: 3600
+  health: 3600
   blueprintBuildAmount: 1800
   cellPositions:
   - {x: 0, y: 0, z: 0}
@@ -30,3 +30,6 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  panelToUnlock: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0

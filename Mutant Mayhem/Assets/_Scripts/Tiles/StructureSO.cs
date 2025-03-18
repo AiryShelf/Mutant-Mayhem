@@ -58,6 +58,10 @@ public enum StructureType
     FloodLight,
     EngineeringBay,
     PhotonicsBay,
+    BallisticsBay,
+    ExplosivesBay,
+    DroneBay,
+    SolarPanels,
     None
 }
 

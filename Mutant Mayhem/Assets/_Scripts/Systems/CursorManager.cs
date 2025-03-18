@@ -84,13 +84,10 @@ public class CursorManager : MonoBehaviour
         SetCustomCursorVisible(false);
     }
 
-    void OnEnable()
-    {
-        
-    }
-
     void OnDisable()
     {
+        if (!initialized) return;
+
         clickAction.started -= CheckForSimulatedClick;
         cancelAction.started -= OnCancelPressed;
     }

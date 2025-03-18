@@ -584,7 +584,7 @@ public class UpgradeManager : MonoBehaviour
             upgradeEffects.PlayUpgradeButtonEffect();
 
             //Debug.Log("Consumable applied: " + upgType);
-            MessagePanel.PulseMessage("Consumabled applied!", Color.cyan);
+            MessagePanel.PulseMessage("Consumable applied!", Color.cyan);
         }
         else
         {

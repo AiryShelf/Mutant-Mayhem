@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
+  m_Name: RTS_SolarPanel
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: fc31b4791a673c34dbc5c21a67fd3d94, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 21300000, guid: fc31b4791a673c34dbc5c21a67fd3d94, type: 3}
+    m_GameObject: {fileID: 1294433471219372480, guid: 8920e732248474305b3a7f9b8f94c202, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 2
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions:
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    m_RuleTransform: 0
+  structureSO: {fileID: 11400000, guid: 60305f243323149079543736aab3f861, type: 2}
+  damagedTiles:
+  - {fileID: 11400000, guid: 46d9f11ab44ca467bace5250ae2e2393, type: 2}
+  - {fileID: 11400000, guid: ad0a659106185467f874b572026a9c38, type: 2}
+  - {fileID: 11400000, guid: cd1c73579b23a47e3b3b84c358062d25, type: 2}
+  - {fileID: 11400000, guid: 7d1c82e13a7f74f678cfbc74967d530b, type: 2}
+  destroyedTile: {fileID: 11400000, guid: a38498b34179a4a519adeb6f92e1e699, type: 2}
+  buildUiTile: {fileID: 11400000, guid: 15293accf0c024bb0ae242f94fd3322e, type: 2}

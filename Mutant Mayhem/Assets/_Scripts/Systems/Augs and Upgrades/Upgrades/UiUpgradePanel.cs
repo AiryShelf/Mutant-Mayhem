@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public enum UpgradePanelType
 {
+    None,
     Consumables,
     Exosuit,
     Lasers,
@@ -159,7 +160,7 @@ public class UiUpgradePanel : UI_PanelBase
         upg.Initialize();
     }
 
-    public void OnUnlocked(bool playEffect)
+    public void OnUnlocked(StructureSO structure, bool playEffect)
     {
         isUnlocked = true;
 
@@ -168,7 +169,7 @@ public class UiUpgradePanel : UI_PanelBase
             player.playerShooter.UnlockGun(playerGunIndex);
 
         // Unlock Structures, add turret
-        buildingSystem.UnlockStructures(BuildingSystem.Instance.structureInHand, playEffect);
+        //buildingSystem.UnlockStructures(structure, playEffect);
         if (addTurretSlot)
             player.stats.structureStats.maxTurrets++;
 
@@ -190,16 +191,16 @@ public class UiUpgradePanel : UI_PanelBase
         }
     }
 
-    public void OnLocked(bool playEffect)
+    public void OnLocked(StructureSO structure, bool playEffect)
     {
         isUnlocked = false;
 
         // Unlock gun
-        if (upgradeFamily == UpgradeFamily.GunStats)
+        if (upgradeFamily == UpgradeFamily.GunStats && playEffect)
             player.playerShooter.LockGun(playerGunIndex);
 
         // Unlock Structures, add turret
-        buildingSystem.LockStructures(BuildingSystem.Instance.structureInHand, playEffect);
+        //buildingSystem.LockStructures(structure, playEffect);
         if (addTurretSlot)
             player.stats.structureStats.maxTurrets--;
 

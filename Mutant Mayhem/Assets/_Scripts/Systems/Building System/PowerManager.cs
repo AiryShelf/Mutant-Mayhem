@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding.Util;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -49,7 +50,7 @@ public class PowerManager : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         initialized = true;
-        CalculatePower();
+        CalculatePower(true);
         OnPowerChanged?.Invoke(powerBalance);
         StartCoroutine(CheckPower());
     }
@@ -59,7 +60,8 @@ public class PowerManager : MonoBehaviour
         if (source == null) return;
         
         powerSources.Add(source);
-        powerTotal += source.powerGenerated;
+
+        RecalculateNeighborBonuses();
 
         if (!initialized) return;
 
@@ -68,7 +70,7 @@ public class PowerManager : MonoBehaviour
         
         cutPowerCoroutine = StartCoroutine(CutConsumers());
 
-        CalculatePower();
+        CalculatePower(true);
     }
 
     public void RemovePowerSource(PowerSource source)
@@ -76,7 +78,8 @@ public class PowerManager : MonoBehaviour
         if (source == null) return;
 
         powerSources.Remove(source);
-        powerTotal -= source.powerGenerated;
+
+        RecalculateNeighborBonuses();
 
         if (!initialized) return;
 
@@ -85,7 +88,7 @@ public class PowerManager : MonoBehaviour
         
         cutPowerCoroutine = StartCoroutine(CutConsumers());
 
-        CalculatePower();
+        CalculatePower(true);
     }
 
     public void AddPowerConsumer(PowerConsumer consumer)
@@ -104,7 +107,7 @@ public class PowerManager : MonoBehaviour
         cutPowerCoroutine = StartCoroutine(CutConsumers());
         
 
-        CalculatePower();
+        CalculatePower(false);
     }
 
     public void RemovePowerConsumer(PowerConsumer consumer)
@@ -122,11 +125,18 @@ public class PowerManager : MonoBehaviour
         
         cutPowerCoroutine = StartCoroutine(CutConsumers());
 
-        CalculatePower();
+        CalculatePower(false);
     }
 
-    void CalculatePower()
+    void CalculatePower(bool checkSources)
     {
+        if (checkSources)
+        {
+            powerTotal = 0;
+            foreach (var source in powerSources)
+                powerTotal += source.powerGenerated;
+        }
+
         powerAvailable = powerTotal - powerConsumed;
         powerBalance = powerTotal - powerDemand;
         
@@ -139,8 +149,8 @@ public class PowerManager : MonoBehaviour
         {
             yield return new WaitForSeconds(2);
 
-            if (cutPowerCoroutine == null && powerConsumed > powerTotal)
-                cutPowerCoroutine = StartCoroutine(CutConsumers());
+            //if (cutPowerCoroutine == null && powerConsumed > powerTotal)
+                //cutPowerCoroutine = StartCoroutine(CutConsumers());
         }
     }
 
@@ -148,17 +158,18 @@ public class PowerManager : MonoBehaviour
 
     IEnumerator CutConsumers()
     {
-        MessagePanel.PulseMessage("WARNING: Power Outages!", Color.red);
+        if (powerConsumed > powerTotal)
+            MessagePanel.PulseMessage("WARNING: Power Outages!", Color.red);
 
         // Cut consumers until power is balanced
-        while (powerConsumed > powerTotal)
+        while (powerConsumed > powerTotal && powerConsumers.Count > 0)
         {
             // Randomly select a consumer to cut
             int index = UnityEngine.Random.Range(0, powerConsumers.Count);
             CutConsumer(powerConsumers[index]);
             
             // Yield to allow state update
-            //yield return null;
+            yield return null;
         }
 
         // Check if any cut consumers can be restored to better balance power
@@ -179,7 +190,7 @@ public class PowerManager : MonoBehaviour
             consumersCut.Remove(consumer);
         }
         
-        CalculatePower();
+        CalculatePower(false);
         
         float cutTime = UnityEngine.Random.Range(cutTimeMin, cutTimeMax);
         yield return new WaitForSeconds(cutTime);
@@ -199,21 +210,93 @@ public class PowerManager : MonoBehaviour
         consumersCut.Add(consumer);
         powerConsumers.Remove(consumer);
 
-        CalculatePower();
+        CalculatePower(false);
     }
 
     void RestoreCutPower()
     {
         foreach(var consumer in consumersCut)
         {
-            consumer.DelayPowerOn();
+            consumer.PowerOn();
             powerConsumed += consumer.powerConsumed;
             powerConsumers.Add(consumer);
         }
 
         consumersCut.Clear();
 
-        CalculatePower();
+        CalculatePower(false);
+    }
+
+    private void RecalculateNeighborBonuses()
+    {
+        // 1) Reset any neighbor-bonus portion of "powerGenerated" on all sources.
+        foreach (var src in powerSources)
+        {
+            // *** No change here except clarifying comment. ***
+            src.ResetNeighborBonus(); 
+        }
+
+        // 2) For each power source, check all the grid cells it occupies.
+        foreach (var sourceA in powerSources)
+        {
+            var gridPos = TileManager.Instance.WorldToGrid(sourceA.transform.position);
+            var sourceACells = sourceA.occupiedCells; 
+            var sourceAType = sourceA.myStructureType;
+
+            // For each cell that belongs to this power source...
+            List<Vector3Int> foundDirections = new List<Vector3Int>();
+            foreach (var cell in sourceACells)
+            {
+                // 3) Check neighbors in the 4 directions. (Up, Down, Left, Right)
+                Vector3Int[] offsets = new Vector3Int[]
+                {
+                    Vector3Int.up,
+                    Vector3Int.down,
+                    Vector3Int.left,
+                    Vector3Int.right
+                };
+
+                foreach (var offset in offsets)
+                {
+                    if (foundDirections.Contains(offset)) continue;
+
+                    var neighborCell = cell + offset;
+
+                    // Skip if neighborCell is one of the same source's own cells 
+                    // (i.e., we don’t want to add a bonus for adjacency to itself).
+                    if (sourceACells.Contains(neighborCell)) 
+                    {
+                        //Debug.Log("PowerManager: Check found source's occupied position, continue");
+                        continue;
+                    }
+
+                    // 4) Query the TileManager for that neighbor cell’s StructureType.
+                    var worldPos = TileManager.Instance.GridToWorld(neighborCell);
+                    var structure = TileManager.Instance.GetStructureAt(worldPos);
+                    //Debug.Log("PowerManager: structure is " + structure);
+                    StructureType neighborType = StructureType.None;
+                    if (structure != null)
+                        neighborType = structure.structureType;
+                    if (neighborType == sourceAType)
+                    {
+                        var obj = TileManager.StructureTilemap.GetInstantiatedObject(neighborCell);
+                        //Debug.Log("PowerManager: object is " + obj);
+
+                        PowerSource sourceB = null;
+                        if (obj != null)
+                            sourceB = obj.GetComponent<PowerSource>();
+                        // If found, add neighbor bonus to both sides
+                        if (sourceB != null)
+                        {
+                            //Debug.Log("PowerManager: Adding neighbor bonus in direction " + offset);
+                            sourceA.AddNeighborBonus();
+                            sourceB.AddNeighborBonus();
+                            foundDirections.Add(offset);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     #endregion

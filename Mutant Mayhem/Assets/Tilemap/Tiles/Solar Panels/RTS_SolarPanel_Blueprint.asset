@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
+  m_Name: RTS_SolarPanel_Blueprint
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: fc31b4791a673c34dbc5c21a67fd3d94, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_TilingRules: []
+  structureSO: {fileID: 11400000, guid: 60305f243323149079543736aab3f861, type: 2}
+  damagedTiles:
+  - {fileID: 11400000, guid: 46d9f11ab44ca467bace5250ae2e2393, type: 2}
+  destroyedTile: {fileID: 11400000, guid: a38498b34179a4a519adeb6f92e1e699, type: 2}
+  buildUiTile: {fileID: 11400000, guid: 15293accf0c024bb0ae242f94fd3322e, type: 2}

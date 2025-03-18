@@ -16,8 +16,8 @@ MonoBehaviour:
   tileName: Gate
   description: An automatic gate that opens only for you.  Kind of flimsy
   tileCost: 100
-  maxHealth: 1200
-  health: 1200
+  maxHealth: 1500
+  health: 1500
   blueprintBuildAmount: 600
   cellPositions:
   - {x: 0, y: 0, z: 0}
@@ -28,3 +28,6 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  panelToUnlock: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0

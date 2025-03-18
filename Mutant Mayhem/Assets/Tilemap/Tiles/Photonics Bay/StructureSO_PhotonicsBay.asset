@@ -14,27 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: c33fc57ab76c04398a395a5073561850, type: 3}
   tileName: Photonics Bay
-  description: 'Allows for upgrading laser technologies
+  description: 'Allows for upgrading laser technologies and building laser turrets
 
 
-    Unlocks Laser Tech
-    upgrades'
-  tileCost: 2000
-  maxHealth: 800
-  health: 800
+    Unlocks
+    Laser Tech upgrades'
+  tileCost: 1000
+  maxHealth: 1600
+  health: 1600
   blueprintBuildAmount: 2000
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
   - {x: 0, y: -1, z: 0}
   - {x: 1, y: -1, z: 0}
+  - {x: 2, y: -1, z: 0}
+  - {x: 0, y: -2, z: 0}
+  - {x: 1, y: -2, z: 0}
+  - {x: 2, y: -2, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: 1254ca11fa0c4489f99da10ba99959dc, type: 2}
   blueprintTile: {fileID: 11400000, guid: d3bf3bd574c4c43c3bd759590d90adac, type: 2}
   structureType: 25
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
-  panelToUnlock: 2
+  panelToUnlock: 3
   structuresToUnlock:
   - {fileID: 11400000, guid: 0e27f3256cf034c41873cfc22ffe0a71, type: 2}
   - {fileID: 11400000, guid: f08d517a9c8eb481b86af542df163c91, type: 2}

@@ -16,8 +16,6 @@ public class AugManager : MonoBehaviour
     public int maxAugs;
     public int currentResearchPoints;
 
-    string lastUsedProfile = "";
-
     // Vals to pass to other systems and objects
     public int grenadeAmmoMult = 1;
     public float grenadeCostMult = 1;

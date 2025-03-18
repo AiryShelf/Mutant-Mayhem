@@ -107,6 +107,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         buildingSystem.ChangeStructureInHand(structureSO);
         //Debug.Log("OnSelect ran");
 
+        /*
         if (structureSO.isTurret)
         {
             int turrets = TurretManager.Instance.currentNumTurrets;
@@ -119,6 +120,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             else
                 MessagePanel.PulseMessage(turrets + " of " + maxTurrets + " turrets built", Color.cyan);
         }
+        */
 
         button.Select();
         return true;

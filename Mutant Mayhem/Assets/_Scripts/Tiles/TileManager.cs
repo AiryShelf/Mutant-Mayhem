@@ -774,7 +774,10 @@ public class TileManager : MonoBehaviour
     public StructureSO GetStructureAt(Vector2 worldPos)
     {
         Vector3Int gridPos = WorldToGrid(worldPos);
-        return _TileStatsDict[gridPos].ruleTileStructure.structureSO;
+        if (_TileStatsDict.ContainsKey(gridPos))
+            return _TileStatsDict[gridPos].ruleTileStructure.structureSO;
+        else 
+            return null;
     }
 
     #endregion

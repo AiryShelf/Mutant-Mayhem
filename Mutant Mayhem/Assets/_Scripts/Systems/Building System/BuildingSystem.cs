@@ -474,18 +474,18 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    public void UnlockStructures(StructureSO structureBuilt, bool playEffect)
+    public void UnlockStructures(StructureSO rootStructure, bool playEffect)
     {
-        QCubeController.Instance.UnlockUpgradePanel(structureBuilt.panelToUnlock, playEffect);
+        QCubeController.Instance.UnlockUpgradePanel(rootStructure, playEffect);
 
-        foreach (var structure in structureBuilt.structuresToUnlock)
+        foreach (var structure in rootStructure.structuresToUnlock)
         {
             _UnlockedStructuresDict[structure.structureType] = true;
         }
 
         buildMenuController.RefreshBuildList();
 
-        if (structureBuilt.canBuildOnlyOne)
+        if (rootStructure.canBuildOnlyOne && playEffect)
         {
             buildMenuController.SetMenuSelection(AllStructureSOs[2]); // Set to destroy tool
             ChangeStructureInHand(AllStructureSOs[2]);
@@ -493,11 +493,17 @@ public class BuildingSystem : MonoBehaviour
         
     }
 
-    public void LockStructures(StructureSO structureRemoved, bool playEffect)
+    public void LockStructures(StructureSO rootStructure, bool playEffect)
     {
-        QCubeController.Instance.LockUpgradePanel(structureRemoved.panelToUnlock, playEffect);
+        QCubeController.Instance.LockUpgradePanel(rootStructure, playEffect);
 
-        foreach (var structure in structureRemoved.structuresToUnlock)
+        if (structureInHand.structureType == rootStructure.structureType)
+        {
+            buildMenuController.SetMenuSelection(AllStructureSOs[2]); // Set to destroy tool
+                ChangeStructureInHand(AllStructureSOs[2]);
+        }
+
+        foreach (var structure in rootStructure.structuresToUnlock)
         {
             if (structure.structureType == structureInHand.structureType)
             {
@@ -700,7 +706,7 @@ public class BuildingSystem : MonoBehaviour
         else if (currentAction == ActionType.Select ||
                  currentAction == ActionType.Interact)
         {
-            // Do stuff
+            // Do stuff?
         } 
     }
 

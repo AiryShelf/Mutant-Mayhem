@@ -5,11 +5,19 @@ using UnityEngine;
 
 public class PowerSource : MonoBehaviour
 {
+    int basePower;
     public int powerGenerated = 5;
     public int neighborBonus = 1;
+    public StructureType myStructureType;
+
+    public List<Vector3Int> occupiedCells = new List<Vector3Int>();
 
     void Start()
     {
+        basePower = powerGenerated;
+        var gridPos = TileManager.Instance.WorldToGrid(transform.position);
+        occupiedCells = TileManager.Instance.GetStructurePositions(TileManager.StructureTilemap, gridPos);
+
         PowerManager.Instance.AddPowerSource(this); 
     }
 
@@ -18,13 +26,13 @@ public class PowerSource : MonoBehaviour
         PowerManager.Instance.RemovePowerSource(this);       
     }
 
-    public void TurnOn()
+    public void AddNeighborBonus()
     {
-
+        powerGenerated += neighborBonus;
     }
 
-    public void TurnOff()
+    public void ResetNeighborBonus()
     {
-
+        powerGenerated = basePower;
     }
 }

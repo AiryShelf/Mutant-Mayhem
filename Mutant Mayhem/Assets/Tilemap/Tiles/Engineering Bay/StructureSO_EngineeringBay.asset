@@ -18,27 +18,31 @@ MonoBehaviour:
 
 
     Unlocks Structure
-    Tech upgrades'
-  tileCost: 1000
-  maxHealth: 800
-  health: 800
+    Tech upgrades and Turret Slots'
+  tileCost: 2000
+  maxHealth: 1600
+  health: 1600
   blueprintBuildAmount: 2000
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
   - {x: 0, y: -1, z: 0}
   - {x: 1, y: -1, z: 0}
+  - {x: 2, y: -1, z: 0}
+  - {x: 0, y: -2, z: 0}
+  - {x: 1, y: -2, z: 0}
+  - {x: 2, y: -2, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: e6fb101277f114cc7921a95774f943bf, type: 2}
   blueprintTile: {fileID: 11400000, guid: 7947883b70219411b8feefb397ba9176, type: 2}
   structureType: 24
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
-  panelToUnlock: 4
+  panelToUnlock: 5
   structuresToUnlock:
   - {fileID: 11400000, guid: 2eadd0f295ced3b43b781e342f830847, type: 2}
   - {fileID: 11400000, guid: 86a18e7a7abf84b6e9b6244b30711a5a, type: 2}
   - {fileID: 11400000, guid: be57d7f42b2b34863bf9df509f6e6d1f, type: 2}
   - {fileID: 11400000, guid: a5868e627c1a479458a424fe31120e7c, type: 2}
-  - {fileID: 11400000, guid: d86990c4953b54712a496e25b24ab4e5, type: 2}
   canBuildOnlyOne: 1

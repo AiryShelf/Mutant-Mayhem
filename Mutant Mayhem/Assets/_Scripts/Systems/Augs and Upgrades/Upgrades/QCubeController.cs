@@ -106,52 +106,52 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void UnlockUpgradePanel(UpgradePanelType upgradePanelType, bool playEffect)
+    public void UnlockUpgradePanel(StructureSO structure, bool playEffect)
     {
-        switch (upgradePanelType)
+        switch (structure.panelToUnlock)
         {
             case UpgradePanelType.Lasers:
-                lasersPanel.OnUnlocked(playEffect);
+                lasersPanel.OnUnlocked(structure, playEffect);
                 break;
             case UpgradePanelType.Bullets:
-                bulletsPanel.OnUnlocked(playEffect);
+                bulletsPanel.OnUnlocked(structure, playEffect);
                 break;
             case UpgradePanelType.Structures:
-                structuresPanel.OnUnlocked(playEffect);
+                structuresPanel.OnUnlocked(structure, playEffect);
                 break;
             case UpgradePanelType.Repair:
-                repairPanel.OnUnlocked(playEffect);
+                repairPanel.OnUnlocked(structure, playEffect);
                 break;
             case UpgradePanelType.Explosives:
-                explosivesPanel.OnUnlocked(playEffect);
+                explosivesPanel.OnUnlocked(structure, playEffect);
                 break;
             case UpgradePanelType.Drones:
-                dronesPanel.OnUnlocked(playEffect);
+                dronesPanel.OnUnlocked(structure, playEffect);
                 break;
         }
     }
 
-    public void LockUpgradePanel(UpgradePanelType upgradePanelType, bool playEffect)
+    public void LockUpgradePanel(StructureSO structure, bool playEffect)
     {
-        switch (upgradePanelType)
+        switch (structure.panelToUnlock)
         {
             case UpgradePanelType.Lasers:
-                lasersPanel.OnLocked(playEffect);
+                lasersPanel.OnLocked(structure, playEffect);
                 break;
             case UpgradePanelType.Bullets:
-                bulletsPanel.OnLocked(playEffect);
+                bulletsPanel.OnLocked(structure, playEffect);
                 break;
             case UpgradePanelType.Structures:
-                structuresPanel.OnLocked(playEffect);
+                structuresPanel.OnLocked(structure, playEffect);
                 break;
             case UpgradePanelType.Repair:
-                repairPanel.OnLocked(playEffect);
+                repairPanel.OnLocked(structure, playEffect);
                 break;
             case UpgradePanelType.Explosives:
-                explosivesPanel.OnLocked(playEffect);
+                explosivesPanel.OnLocked(structure, playEffect);
                 break;
             case UpgradePanelType.Drones:
-                dronesPanel.OnLocked(playEffect);
+                dronesPanel.OnLocked(structure, playEffect);
                 break;
         }
     }

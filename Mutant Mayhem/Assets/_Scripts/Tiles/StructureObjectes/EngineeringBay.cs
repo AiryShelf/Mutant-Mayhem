@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
@@ -10,7 +9,7 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
     [SerializeField] StructureSO engineeringBaySO;
     [SerializeField] List<AnimatedTile> powerOnDamageTiles;
     [SerializeField] List<AnimatedTile> powerOffDamageTiles;
-    [SerializeField] Light2D glow;
+    [SerializeField] List<Light2D> lights;
 
     float healthRatio;
     int damageIndex;
@@ -23,7 +22,7 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
         damageIndex = Mathf.FloorToInt(powerOnDamageTiles.Count * healthRatio);
         TileManager.AnimatedTilemap.SetTile(rootPos, powerOnDamageTiles[damageIndex]);
 
-        glow.gameObject.SetActive(true);
+        SwitchLights(true);
         BuildingSystem.Instance.UnlockStructures(engineeringBaySO, false);
     }
 
@@ -35,12 +34,18 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
         damageIndex = Mathf.FloorToInt(powerOffDamageTiles.Count * healthRatio);
         TileManager.AnimatedTilemap.SetTile(rootPos, powerOffDamageTiles[damageIndex]);
 
-        glow.gameObject.SetActive(false);
+        SwitchLights(false);
         BuildingSystem.Instance.LockStructures(engineeringBaySO, false);
     }
 
     public void UpdateHealthRatio(float healthRatio)
     {
         this.healthRatio = healthRatio;
+    }
+
+    void SwitchLights(bool on)
+    {
+        foreach (var light in lights)
+            light.gameObject.SetActive(on);
     }
 }

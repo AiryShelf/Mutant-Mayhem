@@ -16,9 +16,9 @@ MonoBehaviour:
   tileName: Wall
   description: A concrete wall section
   tileCost: 50
-  maxHealth: 800
-  health: 800
-  blueprintBuildAmount: 400
+  maxHealth: 1000
+  health: 1000
+  blueprintBuildAmount: 500
   cellPositions:
   - {x: 0, y: 0, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: 7ba813e8503324946a825ce843ae42f2, type: 2}
@@ -27,3 +27,6 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  panelToUnlock: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0

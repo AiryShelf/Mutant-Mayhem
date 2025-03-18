@@ -126,6 +126,8 @@ public class UIBuildMenuController : MonoBehaviour
             uiStructureList[i].textInstance.transform.SetSiblingIndex(i);
             
         }
+
+        SetMenuSelection(buildingSystem.structureInHand);
     }
 
     public void ToggleBuildMenu()
@@ -157,7 +159,7 @@ public class UIBuildMenuController : MonoBehaviour
             }
         }
 
-        Debug.LogError("UIBuildMenuController: SetMenuSelection failed");
+        //Debug.LogError("UIBuildMenuController: SetMenuSelection failed");
         return false;
     }
 
@@ -167,7 +169,7 @@ public class UIBuildMenuController : MonoBehaviour
 
     void OnScroll(InputAction.CallbackContext context)
     {
-        Debug.Log("OnScroll performed");
+        //Debug.Log("OnScroll performed");
         if (!isMenuOpen)
             return;
         
@@ -177,11 +179,6 @@ public class UIBuildMenuController : MonoBehaviour
             ScrollUp();
         else if (scroll.y < 0)
             ScrollDown();
-    }
-
-    private bool IsPositionWithinRect(RectTransform rectTransform, Vector2 screenPosition)
-    {
-        return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, screenPosition);
     }
 
     public void ScrollUp()
