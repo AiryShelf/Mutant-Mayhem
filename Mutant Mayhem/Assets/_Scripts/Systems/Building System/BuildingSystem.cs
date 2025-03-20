@@ -17,6 +17,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] List<bool> unlockedStructuresStart;
     public StructureSO structureInHand;
     public static event Action<float> OnPlayerCreditsChanged;
+    public event Action<bool> OnBuildMenuOpen;
     private static float playerCredits;
     public static float PlayerCredits
     {
@@ -31,7 +32,7 @@ public class BuildingSystem : MonoBehaviour
         }
     }
     public static float buildRange = 6f;
-    public LineRendererCircle buildRangeCircle;
+    public RangeCircle buildRangeCircle;
     [SerializeField] float buildCamLerpTime = 0.35f;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersToClearOnBuild;
@@ -57,9 +58,22 @@ public class BuildingSystem : MonoBehaviour
 
     public static Dictionary<StructureType, bool> _UnlockedStructuresDict = 
                                         new Dictionary<StructureType, bool>();
-    public bool isInBuildMode;
+    bool _isInBuildMode;
+    public bool isInBuildMode
+    {
+        get => _isInBuildMode;
+        set 
+        { 
+            if (_isInBuildMode != value)
+            {
+                _isInBuildMode = value;
+                OnBuildMenuOpen?.Invoke(_isInBuildMode);
+            }
+        }
+    }
     public int currentRotation;
-    private Vector3Int highlightedTilePos;
+    Vector3Int highlightedPos;
+    Vector3Int lastHighlightedPos;
     public bool allHighlighted;
     public List<StructureSO> buildOnlyOneList;
     
@@ -175,7 +189,7 @@ public class BuildingSystem : MonoBehaviour
         {
             if (structureInHand.actionType == ActionType.Build)
             {
-                Build(highlightedTilePos);
+                Build(highlightedPos);
                 StartCoroutine(DelayUIReselect());
             }
             else if (structureInHand.actionType == ActionType.Destroy)
@@ -258,6 +272,8 @@ public class BuildingSystem : MonoBehaviour
             return;
         structureInHand = StructureRotator.RotateStructure(structure, currentRotation);
         //lastStructureInHand = structureInHand;
+
+        //lastHighlightedPos += Vector3Int.up * 100;
     }
 
     public void SwapWithDestroyTool(InputAction.CallbackContext context)
@@ -337,15 +353,14 @@ public class BuildingSystem : MonoBehaviour
             //CursorManager.Instance.inMenu = false;
             buildButtonText.text = "Build";
             CursorManager.Instance.SetAimCursor();
+            buildRangeCircle.EnableCircle(false);
             if (player.stats.playerShooter.isRepairing)
                 SetRepairRangeCircle();
             else
             {
                 InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
-                buildRangeCircle.EnableCircle(false);
+                //Debug.Log("Joystick turned off from BuildingSystem");
             }
-            
-            Debug.Log("Joystick turned off from BuildingSystem");
 
             if (!player.stats.playerShooter.isRepairing)
                 LockCameraToPlayer(false);
@@ -387,12 +402,12 @@ public class BuildingSystem : MonoBehaviour
     public void SetBuildRangeCircle()
     {
         if (lockBuildCircleToMuzzle != null)
-                StopCoroutine(lockBuildCircleToMuzzle);
+            StopCoroutine(lockBuildCircleToMuzzle);
 
         buildRangeCircle.transform.parent = player.stats.playerShooter.transform;
         buildRangeCircle.transform.position = player.stats.playerShooter.transform.position;
-        buildRangeCircle.EnableCircle(true);
         buildRangeCircle.radius = buildRange;
+        buildRangeCircle.EnableCircle(true);
     }
 
     public void SetRepairRangeCircle()
@@ -403,6 +418,7 @@ public class BuildingSystem : MonoBehaviour
         if (player.stats.playerShooter.isRepairing)
         {
             LockCameraToPlayer(true);
+            buildRangeCircle.EnableCircle(true);
             buildRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                                       player.stats.playerShooter.currentGunSO.bulletSpeed;
 
@@ -421,7 +437,6 @@ public class BuildingSystem : MonoBehaviour
         {
             buildRangeCircle.transform.position = player.transform.position;
             InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
-            buildRangeCircle.EnableCircle(false);
         }
     }
 
@@ -557,7 +572,7 @@ public class BuildingSystem : MonoBehaviour
         if (tileManager.AddBlueprintAt(gridPos, structureInHand.blueprintTile, currentRotation))
         {
             PlayerCredits -= structureInHand.tileCost * structureCostMult;
-            RemoveBuildHighlight();
+            //RemoveBuildHighlight();
 
             if (structureInHand.isTurret)
             {
@@ -623,16 +638,19 @@ public class BuildingSystem : MonoBehaviour
         ActionType currentAction = structureInHand.actionType;
         
         // Replace the highlight position for build or destroy
-        RemoveBuildHighlight();
+        
         if (currentAction != ActionType.Build && tileManager.ContainsTileKey(mouseGridPos))
-            highlightedTilePos = tileManager.GridToRootPos(mouseGridPos);
+            highlightedPos = tileManager.GridToRootPos(mouseGridPos);
         else 
-            highlightedTilePos = mouseGridPos;
+            highlightedPos = mouseGridPos;
 
+        if (highlightedPos != lastHighlightedPos)
+            RemoveBuildHighlight();
+        
         // Find player grid position
         Vector2 mouseWorldPos = CursorManager.Instance.GetCustomCursorWorldPos();
 
-        // Highlight if in range and conditions met.
+        // Return if not in range
         if (!InRange(player.transform.position, mouseWorldPos, buildRange))
         {
             inRange = false;
@@ -643,42 +661,47 @@ public class BuildingSystem : MonoBehaviour
         inRange = true;
         if (currentAction == ActionType.Destroy)
         {
-            HighlightForDestroy(highlightedTilePos);
+            HighlightForDestroy(highlightedPos);
             
-            if (tileManager.ContainsTileKey(highlightedTilePos))
+            if (tileManager.ContainsTileKey(highlightedPos))
             {
-                Vector3Int rootPos = tileManager.GridToRootPos(highlightedTilePos);
+                Vector3Int rootPos = tileManager.GridToRootPos(highlightedPos);
 
-                Matrix4x4 matrix = animatedTilemap.GetTransformMatrix(highlightedTilePos);
+                Matrix4x4 matrix = animatedTilemap.GetTransformMatrix(highlightedPos);
                 int rotation = StructureRotator.GetRotationFromMatrix(matrix);
-                TileBase tile = animatedTilemap.GetTile(highlightedTilePos);
+                TileBase tile = animatedTilemap.GetTile(highlightedPos);
                     
                 SetPreviewImageDestroy(rootPos, tile, new Color(1, 0, 0, 0.5f), -rotation);
             }
+            lastHighlightedPos = highlightedPos;
             
             return;
         }
 
         if (currentAction == ActionType.Destroy && !CheckHighlightConditions(
-            structureTilemap.GetTile<RuleTileStructure>(highlightedTilePos), structureInHand))
+            structureTilemap.GetTile<RuleTileStructure>(highlightedPos), structureInHand))
         { 
             allHighlighted = false;
+            lastHighlightedPos = highlightedPos;
             return;
         }
 
         // Set preview build Image
         if (currentAction == ActionType.Build)
         {
-            if (structureInHand.ruleTileStructure.buildUiTile != null)
+            if (highlightedPos != lastHighlightedPos)
             {
-                SetPreviewImageBuild(highlightedTilePos, 
-                                    structureInHand.ruleTileStructure.buildUiTile, 
-                                    new Color(1, 1, 1, 0.8f));
+                if (structureInHand.blueprintTile.buildUiTile != null)
+                {
+                    SetPreviewImageBuild(highlightedPos, 
+                                        structureInHand.blueprintTile.buildUiTile, 
+                                        new Color(1, 1, 1, 0.8f));
+                }
+                else
+                    SetPreviewImageBuild(highlightedPos, 
+                                        structureInHand.blueprintTile.damagedTiles[0], 
+                                        new Color(1, 1, 1, 0.8f));
             }
-            else
-                SetPreviewImageBuild(highlightedTilePos, 
-                                    structureInHand.ruleTileStructure.damagedTiles[0], 
-                                    new Color(1, 1, 1, 0.8f));
         }
 
         // Highlight the tiles for building
@@ -687,18 +710,18 @@ public class BuildingSystem : MonoBehaviour
         {
             foreach (Vector3Int pos in structureInHand.cellPositions)
             {                
-                if (tileManager.CheckGridIsClear(highlightedTilePos + pos, layersForBuildClearCheck, true))
+                if (tileManager.CheckGridIsClear(highlightedPos + pos, layersForBuildClearCheck, true))
                 {
                     Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
-                    highlightTilemap.SetTile(highlightedTilePos + newPos, highlightedTileAsset);
-                    highlightTilemap.SetTileFlags(highlightedTilePos + newPos, TileFlags.None);
-                    highlightTilemap.SetColor(highlightedTilePos + newPos, new Color(1, 1, 1, 0.5f));
+                    highlightTilemap.SetTile(highlightedPos + newPos, highlightedTileAsset);
+                    highlightTilemap.SetTileFlags(highlightedPos + newPos, TileFlags.None);
+                    highlightTilemap.SetColor(highlightedPos + newPos, new Color(1, 1, 1, 0.5f));
                 }
                 else
                 {
                     // Show X where grid is not clear
                     Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
-                    highlightTilemap.SetTile(highlightedTilePos + newPos, blockedTileAsset);
+                    highlightTilemap.SetTile(highlightedPos + newPos, blockedTileAsset);
                     allHighlighted = false;
                 }   
             }
@@ -708,13 +731,15 @@ public class BuildingSystem : MonoBehaviour
         {
             // Do stuff?
         } 
+        lastHighlightedPos = highlightedPos;
     }
 
     void RemoveBuildHighlight()
     {
+        Debug.Log("Removed Build Highlight");
         // Remove preview image
-        Vector3Int previewImagePos = new Vector3Int(highlightedTilePos.x, 
-                                        highlightedTilePos.y, highlightedTilePos.z);
+        Vector3Int previewImagePos = new Vector3Int(lastHighlightedPos.x, 
+                                        lastHighlightedPos.y, lastHighlightedPos.z);
         previewTilemap.SetTile(previewImagePos, null);
         StructureRotator.ResetTileMatrix(previewTilemap, previewImagePos);
 
@@ -724,10 +749,11 @@ public class BuildingSystem : MonoBehaviour
         foreach (Vector3Int pos in structureInHand.cellPositions)
         {
             Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
-            highlightTilemap.SetTile(highlightedTilePos + newPos, null);               
+            highlightTilemap.SetTile(lastHighlightedPos + newPos, null);               
         }
         
         allHighlighted = false;
+        lastHighlightedPos += Vector3Int.up * 100;
     }
 
     void RemoveDestroyHighlight()
@@ -775,9 +801,32 @@ public class BuildingSystem : MonoBehaviour
         if (structureInHand.structureType == StructureType.Mine)
             StructureRotator.RotateTileAt(previewTilemap, imageTilePos, 0);
         else
+        {
             StructureRotator.RotateTileAt(previewTilemap, imageTilePos, currentRotation);
+            //Matrix4x4 matrix = previewTilemap.GetTransformMatrix(gridPos); // Need rootPos?
+            //tileManager.StartCoroutine(tileManager.RotateTileObject(previewTilemap, gridPos, matrix));
+        }
+        
         previewTilemap.SetTileFlags(imageTilePos, TileFlags.None);
         previewTilemap.SetColor(imageTilePos, color);
+
+        StartCoroutine(DelayRotateHighlightObject());
+    }
+
+    IEnumerator DelayRotateHighlightObject()
+    {
+        yield return new WaitForFixedUpdate();
+        //yield return new WaitForFixedUpdate();
+        //yield return new WaitForFixedUpdate();
+        // Rotate structure object
+        var obj = previewTilemap.GetInstantiatedObject(highlightedPos);
+        if (obj != null)
+        {
+            //Matrix4x4 matrix = previewTilemap.GetTransformMatrix(rootPos);
+            //TileManager.Instance.StartCoroutine(TileManager.Instance.RotateTileObject(previewTilemap, ))
+            obj.transform.rotation = Quaternion.Euler(0, 0, currentRotation);
+            Debug.Log("BuildingSystem: Found tileObject on Rotate, attempting to rotate object");
+        }
     }
 
     void SetPreviewImageDestroy(Vector3Int gridPos, TileBase tile, Color color, int rotation)

@@ -12,12 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
   m_Name: RTS_MicroReactor_Blueprint
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: fc31b4791a673c34dbc5c21a67fd3d94, type: 3}
+  m_DefaultSprite: {fileID: 21300000, guid: 6711713248e0a4fb78db29fb99d66e3f, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 2
-  m_TilingRules: []
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 21300000, guid: 6711713248e0a4fb78db29fb99d66e3f, type: 3}
+    m_GameObject: {fileID: 4634583227703960095, guid: d2498ef5acab7434bb7ee47c7f02cbf7, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions:
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    m_RuleTransform: 0
   structureSO: {fileID: 11400000, guid: be57d7f42b2b34863bf9df509f6e6d1f, type: 2}
   damagedTiles:
   - {fileID: 11400000, guid: 2543d43709704409e8b1cbebaa78fd2f, type: 2}
   destroyedTile: {fileID: 11400000, guid: 0985b1d24c75441cf9561546c666a490, type: 2}
-  buildUiTile: {fileID: 11400000, guid: 07bf4b89b20ea42188826341f9ea39cc, type: 2}
+  buildUiTile: {fileID: 11400000, guid: bbfed6a2f9f8d4165a8044c3b6d68741, type: 2}

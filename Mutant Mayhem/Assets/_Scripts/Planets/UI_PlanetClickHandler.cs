@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public PlanetSO planetSO;
-    [SerializeField] LineRendererCircle selectableCircle;
+    [SerializeField] RangeCircle selectableCircle;
     [SerializeField] GameObject highlightPrefab;
     [SerializeField] GameObject highlightLockedPrefab;
     [SerializeField] GameObject selectedHighlightPrefab;

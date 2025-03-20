@@ -25,6 +25,8 @@ public class StructureSO : ScriptableObject
     public Vector2Int actionRange = new Vector2Int(5, 5);
 
     [Header("Optional")]
+    public int powerGenerated;
+    public int powerNeighborBonus;
     public UpgradePanelType panelToUnlock;
     public List<StructureSO> structuresToUnlock;
     public bool canBuildOnlyOne = false;

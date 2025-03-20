@@ -191,6 +191,13 @@ public class PlanetManager : MonoBehaviour
         waveController.healthMultStart = currentPlanet.healthMultiplier * statMultipliers[PlanetStatModifier.EnemyHealth];
         waveController.speedMultStart = currentPlanet.speedMultiplier * statMultipliers[PlanetStatModifier.EnemyMoveSpeed];
         waveController.sizeMultStart = currentPlanet.sizeMultiplier * statMultipliers[PlanetStatModifier.EnemySize];
+        waveController.batchMultGrowthTime = currentPlanet.batchMultGrowthTime;
+        waveController.damageMultGrowthTime = currentPlanet.damageMultGrowthTime;
+        waveController.attackDelayMultGrowthTime = currentPlanet.attackDelayMultGrowthTime;
+        waveController.healthMultGrowthTime = currentPlanet.healthMultGrowthTime;
+        waveController.speedMultGrowthTime = currentPlanet.speedMultGrowthTime;
+        waveController.sizeMultGrowthTime = currentPlanet.sizeMultGrowthTime;
+        waveController.subwaveDelayMultGrowthTime = currentPlanet.subwaveDelayMultGrowthTime;
     }
 
     void ApplyToBkgGenerator()

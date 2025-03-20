@@ -133,25 +133,14 @@ public class TileManager : MonoBehaviour
         ConstructionManager.Instance.AddBuildJob(buildJob);
 
         _TileStatsDict[gridPos].health *= 0.99f;
-
-        if (ruleTile.structureSO.structureType == StructureType.OneByOneWall ||
-            ruleTile.structureSO.structureType == StructureType.RazorWire)
-        {
-            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile);
-        }
-        else if (ruleTile.structureSO.structureType == StructureType.OneByOneCorner)
-        {
-            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
-        }
-        else
-        {
-            blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile.damagedTiles[0]);
-            RefreshSurroundingTiles(gridPos);
-        }
+        
+        blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile);
 
         Quaternion q = Quaternion.Euler(0, 0, rotation);
         Matrix4x4 matrix = Matrix4x4.Rotate(q);
         blueprintTilemap.SetTransformMatrix(gridPos, matrix);
+
+        StartCoroutine(RotateTileObject(blueprintTilemap, gridPos, matrix));
 
         return true;
     }
@@ -203,7 +192,7 @@ public class TileManager : MonoBehaviour
         StructureTilemap.SetTransformMatrix(rootPos, matrix);
         //StructureRotator.RotateTileAt(StructureTilemap, rootPos, rotation);
 
-        StartCoroutine(RotateTileObject(rootPos, matrix));
+        StartCoroutine(RotateTileObject(StructureTilemap, rootPos, matrix));
 
         ClearParticlesAndDebris(rootPos);                
         shadowCaster2DTileMap.Generate();
@@ -234,6 +223,20 @@ public class TileManager : MonoBehaviour
 
     public void RemoveTileAt(Vector3Int gridPos)
     {
+        /*
+        var obj = StructureTilemap.GetInstantiatedObject(gridPos);
+        if (obj != null)
+        {
+            var powerSource = obj.GetComponent<PowerSource>();
+            if (powerSource != null)
+                PowerManager.Instance.RemovePowerSource(powerSource);
+
+            var powerConsumer = obj.GetComponentInChildren<PowerConsumer>();
+            if (powerConsumer != null)
+                PowerManager.Instance.RemovePowerConsumer(powerConsumer);
+        }
+        */
+
         ConstructionManager.Instance.TileRemoved(GridCenterToWorld(gridPos));
         Vector3Int rootPos = GridToRootPos(gridPos);
         
@@ -868,14 +871,14 @@ public class TileManager : MonoBehaviour
 
     #region Tools
 
-    IEnumerator RotateTileObject(Vector3Int gridPos, Matrix4x4 matrix)
+    public IEnumerator RotateTileObject(Tilemap tilemap, Vector3Int gridPos, Matrix4x4 matrix)
     {
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForEndOfFrame();
 
         float angleRadians = Mathf.Atan2(matrix.m01, matrix.m00); // m01 = sin, m00 = cos
         float angleDegrees = -angleRadians * Mathf.Rad2Deg;
 
-        GameObject tileObj = StructureTilemap.GetInstantiatedObject(gridPos);
+        GameObject tileObj = tilemap.GetInstantiatedObject(gridPos);
 
         // Rotate GameObject
         if (tileObj != null)

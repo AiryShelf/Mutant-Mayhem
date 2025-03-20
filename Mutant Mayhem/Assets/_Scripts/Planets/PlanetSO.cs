@@ -31,6 +31,13 @@ public class PlanetSO : ScriptableObject
     public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
     public float subwaveDelayMultStart = 1f; // Time between subwaves
     public int spawnRadiusBuffer = 16;
+    public int batchMultGrowthTime = 2;
+    public int damageMultGrowthTime = 5;
+    public int attackDelayMultGrowthTime = 60;
+    public int healthMultGrowthTime = 20; 
+    public int speedMultGrowthTime = 20;
+    public int sizeMultGrowthTime = 40;
+    public int subwaveDelayMultGrowthTime = 40;
 
     [Header("Enemy Multipliers")]
     public float damageMultiplier = 1;

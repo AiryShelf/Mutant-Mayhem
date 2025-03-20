@@ -180,7 +180,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         else if (powerCost < 0)
         {
             powerCostColorTag = greenColorTag;
-            powerString = $"{powerCostColorTag}<sprite=0>+{Mathf.Abs(powerCost)}{endColorTag}, ";
+            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(powerCost)}{endColorTag}, ";
         }
         
         int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);

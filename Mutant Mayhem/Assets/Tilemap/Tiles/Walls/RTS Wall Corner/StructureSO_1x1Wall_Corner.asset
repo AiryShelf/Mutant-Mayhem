@@ -18,7 +18,7 @@ MonoBehaviour:
   tileCost: 25
   maxHealth: 500
   health: 500
-  blueprintBuildAmount: 250
+  blueprintBuildAmount: 200
   cellPositions:
   - {x: 0, y: 0, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: bfb097d757b8b427f8a857b450967173, type: 2}
@@ -27,6 +27,8 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  powerGenerated: 0
+  powerNeighborBonus: 0
   panelToUnlock: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0
