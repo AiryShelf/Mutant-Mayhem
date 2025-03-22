@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ConnectorBase : MonoBehaviour
+public class ConnectorBaseOLD : MonoBehaviour
 {
+    /*
     public StructureSO myStructure;
     public List<StructureSO> structuresToLink;
     [SerializeField] List<Connector> myConnectors;
@@ -57,7 +58,7 @@ public class ConnectorBase : MonoBehaviour
     {
         if (connectorDirections.Contains(connector.myDir) || connections.Contains(connector)) return;
 
-        Debug.Log("ConnectorBase: Removed Connection");
+        Debug.Log("ConnectorBase: Added Connection");
         connections.Add(connector);
         connectorDirections.Add(connector.myDir);
         UpdatePowerText();
@@ -104,8 +105,12 @@ public class ConnectorBase : MonoBehaviour
             dirs.Add(c.myDir);
         }
         foreach (var c in connectorsToRemove)
+        {
+            Debug.Log("Removed connector: " + c.gameObject);
             connections.Remove(c);
+        }
 
         powerGeneratedText.text = "<sprite=1>" + (myStructure.powerGenerated + powerToAdd).ToString();
     }
+    */
 }

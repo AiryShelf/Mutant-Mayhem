@@ -47,7 +47,7 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] Tilemap structureTilemap;
     [SerializeField] Tilemap animatedTilemap;
     [SerializeField] Tilemap highlightTilemap;
-    [SerializeField] Tilemap previewTilemap;
+    public Tilemap previewTilemap;
     [SerializeField] TileBase highlightedTileAsset;
     [SerializeField] TileBase destroyTileAsset;
     [SerializeField] TileBase blockedTileAsset;
@@ -86,6 +86,7 @@ public class BuildingSystem : MonoBehaviour
     InputAction buildAction;
     InputAction cheatCodeCreditsAction;
     List<Vector3Int> destroyPositions = new List<Vector3Int>();
+    public List<Vector3Int> highlightPositions = new List<Vector3Int>();
     TurretManager turretManager;
 
     Coroutine clearStructureInHand;
@@ -708,6 +709,8 @@ public class BuildingSystem : MonoBehaviour
         allHighlighted = true;
         if (currentAction == ActionType.Build)
         {
+            highlightPositions.Clear();
+
             foreach (Vector3Int pos in structureInHand.cellPositions)
             {                
                 if (tileManager.CheckGridIsClear(highlightedPos + pos, layersForBuildClearCheck, true))
@@ -723,7 +726,9 @@ public class BuildingSystem : MonoBehaviour
                     Vector3Int newPos = new Vector3Int(pos.x, pos.y, -1);
                     highlightTilemap.SetTile(highlightedPos + newPos, blockedTileAsset);
                     allHighlighted = false;
-                }   
+                }
+
+                highlightPositions.Add(highlightedPos + pos);
             }
         }             
         else if (currentAction == ActionType.Select ||
@@ -736,7 +741,7 @@ public class BuildingSystem : MonoBehaviour
 
     void RemoveBuildHighlight()
     {
-        Debug.Log("Removed Build Highlight");
+        //Debug.Log("Removed Build Highlight");
         // Remove preview image
         Vector3Int previewImagePos = new Vector3Int(lastHighlightedPos.x, 
                                         lastHighlightedPos.y, lastHighlightedPos.z);
@@ -776,7 +781,7 @@ public class BuildingSystem : MonoBehaviour
         if (animatedTilemap.GetTile(gridPos))
             destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(animatedTilemap, gridPos));
         else
-            destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(tileManager.blueprintTilemap, gridPos));
+            destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(TileManager.BlueprintTilemap, gridPos));
         if (destroyPositions.Count > 0)
         {
             foreach (Vector3Int pos in destroyPositions)
@@ -816,22 +821,17 @@ public class BuildingSystem : MonoBehaviour
     IEnumerator DelayRotateHighlightObject()
     {
         yield return new WaitForFixedUpdate();
-        //yield return new WaitForFixedUpdate();
-        //yield return new WaitForFixedUpdate();
         // Rotate structure object
         var obj = previewTilemap.GetInstantiatedObject(highlightedPos);
         if (obj != null)
         {
-            //Matrix4x4 matrix = previewTilemap.GetTransformMatrix(rootPos);
-            //TileManager.Instance.StartCoroutine(TileManager.Instance.RotateTileObject(previewTilemap, ))
             obj.transform.rotation = Quaternion.Euler(0, 0, currentRotation);
-            Debug.Log("BuildingSystem: Found tileObject on Rotate, attempting to rotate object");
+            //Debug.Log("BuildingSystem: Found tileObject on Rotate, attempting to rotate object");
         }
     }
 
     void SetPreviewImageDestroy(Vector3Int gridPos, TileBase tile, Color color, int rotation)
     {
-        // PROBLEMS HERE
         Vector3Int imageTilePos = new Vector3Int(gridPos.x, gridPos.y, gridPos.z);
         //Debug.Log($"Setting destroy preview image at {imageTilePos} with rotation {rotation}");
         

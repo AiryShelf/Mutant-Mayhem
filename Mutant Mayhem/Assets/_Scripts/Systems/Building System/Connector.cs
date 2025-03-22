@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Connector : MonoBehaviour
+public class ConnectorOLD : MonoBehaviour
 {
+    /*
     public ConnectorBase myBase;
     [SerializeField] SpriteRenderer sr;
     [SerializeField] Color connectedColor;
@@ -11,36 +12,35 @@ public class Connector : MonoBehaviour
 
     Color startColor;
     public bool isConnected = false;
-    ConnectorReceiver connectedConnector;
+    ConnectorReceiver connectedReceiver;
+    Collider2D myCollider;
+    Bounds bounds;
 
     void OnDisable()
     {
-        connectedConnector = null;
+        Debug.Log("Connector disabled");
+        connectedReceiver = null;
         isConnected = false;      
     }
 
     void Start()
     {
-        startColor = sr.color;
-    }
+        myCollider = GetComponent<Collider2D>();
 
-    void Update()
-    {
+        bounds = myCollider.bounds;
+        startColor = sr.color;
     }
 
     void LateUpdate()
     {
-        if (connectedConnector == null || !connectedConnector.gameObject.activeInHierarchy)
+        if (connectedReceiver == null || !connectedReceiver.gameObject.activeInHierarchy)
         {
             BreakConnection();
             return;
         }
 
         // Get the collider's bounds
-        Collider2D myCollider = GetComponent<Collider2D>();
-        if (myCollider == null) return;
-
-        Bounds bounds = myCollider.bounds;
+        
 
         // Check for colliding Connectors within these bounds
         Collider2D[] foundColliders = Physics2D.OverlapBoxAll(bounds.center, bounds.size, 0, LayerMask.GetMask("BuildUI")); 
@@ -48,7 +48,8 @@ public class Connector : MonoBehaviour
         bool stillConnected = false;
         foreach (var col in foundColliders)
         {
-            if (col.gameObject == connectedConnector.gameObject)
+            Debug.Log("Found collider: " + col.gameObject);
+            if (col.gameObject == connectedReceiver.gameObject)
                 stillConnected = true;
         }
 
@@ -56,13 +57,13 @@ public class Connector : MonoBehaviour
         {
             BreakConnection();
             // Check for existing connector
-            Collider2D foundCollider = Physics2D.OverlapBox(bounds.center, bounds.size, 0, LayerMask.GetMask("BuildUI:"));
+            Collider2D foundCollider = Physics2D.OverlapBox(bounds.center, bounds.size, 0, LayerMask.GetMask("BuildUI"));
             if (foundCollider != null)
             {
-                connectedConnector = foundCollider.gameObject.GetComponent<ConnectorReceiver>();
-                if (connectedConnector != null)
+                connectedReceiver = foundCollider.gameObject.GetComponent<ConnectorReceiver>();
+                if (connectedReceiver != null)
                 {
-                    if (myBase.structuresToLink.Contains(connectedConnector.myStructure))
+                    if (myBase.structuresToLink.Contains(connectedReceiver.myStructure))
                         MakeConnection();
                 }
             }
@@ -74,46 +75,49 @@ public class Connector : MonoBehaviour
         Debug.Log("Attempting to make connection");
         isConnected = true;
         sr.color = connectedColor;
-        myBase.AddConnection(this);
+        //myBase.AddConnection(this); ****
     }
 
     public void BreakConnection()
     {
-        if (!isConnected) return;
-
         sr.color = startColor;
-        myBase.RemoveConnection(this, true);
+
+        if (!isConnected) return;
+        
+        //myBase.RemoveConnection(this, true); ****
         isConnected = false;
-        connectedConnector = null;
+        connectedReceiver = null;
     }
 
     public void Disable()
     {
         sr.color = startColor;
-        myBase.RemoveConnection(this, false);
+        //myBase.RemoveConnection(this, false); ****
         isConnected = false;
-        connectedConnector = null;
+        connectedReceiver = null;
         gameObject.SetActive(false);
     }
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    public void OnTriggerStay2D(Collider2D collision)
     {
-        if (connectedConnector != null) return;
+        if (connectedReceiver != null) return;
 
-        connectedConnector = collision.gameObject.GetComponent<ConnectorReceiver>();
-        if (connectedConnector != null)
+        Debug.Log("OnTiggerStay ran, with no connected receiver");
+        connectedReceiver = collision.gameObject.GetComponent<ConnectorReceiver>();
+        if (connectedReceiver != null)
         {
-            if (myBase.structuresToLink.Contains(connectedConnector.myStructure))
+            Debug.Log("OnTiggerStay found a ConnectorReceiver");
+            if (myBase.structuresToLink.Contains(connectedReceiver.myStructure))
                 MakeConnection();
         }
     }
 
-    
+    /*
     public void OnTriggerExit2D(Collider2D collision)
     {
         var exitingConnector = collision.gameObject.GetComponent<ConnectorReceiver>();
         if (exitingConnector != null && exitingConnector == connectedConnector)
             BreakConnection();
     }
-    
+    */
 }

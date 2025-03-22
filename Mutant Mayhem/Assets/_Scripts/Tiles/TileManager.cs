@@ -26,7 +26,7 @@ public class TileManager : MonoBehaviour
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
 
-    public Tilemap blueprintTilemap;
+    public static Tilemap BlueprintTilemap;
     public static Tilemap AnimatedTilemap;
     [SerializeField] Tilemap destroyedTilemap;
     [SerializeField] Tilemap damageTilemap;
@@ -85,6 +85,7 @@ public class TileManager : MonoBehaviour
         turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
+        BlueprintTilemap = GameObject.Find("BlueprintTilemap").GetComponent<Tilemap>();
         destroyedTilemap = GameObject.Find("DestroyedTilemap").GetComponent<Tilemap>();
         //if (!ReadTilemapToDict())
             //Debug.LogError("Error when trying to read the starting tilemap to dict");
@@ -134,13 +135,13 @@ public class TileManager : MonoBehaviour
 
         _TileStatsDict[gridPos].health *= 0.99f;
         
-        blueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile);
+        BlueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile);
 
         Quaternion q = Quaternion.Euler(0, 0, rotation);
         Matrix4x4 matrix = Matrix4x4.Rotate(q);
-        blueprintTilemap.SetTransformMatrix(gridPos, matrix);
+        BlueprintTilemap.SetTransformMatrix(gridPos, matrix);
 
-        StartCoroutine(RotateTileObject(blueprintTilemap, gridPos, matrix));
+        StartCoroutine(RotateTileObject(BlueprintTilemap, gridPos, matrix));
 
         return true;
     }
@@ -149,9 +150,9 @@ public class TileManager : MonoBehaviour
     {
         _TileStatsDict[rootPos].isBlueprint = false;
         _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
-        Matrix4x4 matrix = blueprintTilemap.GetTransformMatrix(rootPos);
-        blueprintTilemap.SetTile(rootPos, null);
-        blueprintTilemap.SetTransformMatrix(rootPos, matrix);
+        Matrix4x4 matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
+        BlueprintTilemap.SetTile(rootPos, null);
+        BlueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
         buildingSystem.UnlockStructures(ruleTile.structureSO, true);
         
@@ -241,7 +242,7 @@ public class TileManager : MonoBehaviour
         Vector3Int rootPos = GridToRootPos(gridPos);
         
         // Find rotation matrix of tile at gridPos, convert source positions to rotation
-        var tile = blueprintTilemap.GetTile(rootPos);
+        var tile = BlueprintTilemap.GetTile(rootPos);
         Matrix4x4 matrix;
         int tileRot;
         Tilemap tilemap;
@@ -263,9 +264,9 @@ public class TileManager : MonoBehaviour
 
         if (tile != null)
         {
-            tilemap = blueprintTilemap;
-            matrix = blueprintTilemap.GetTransformMatrix(rootPos);
-            tileRot = StructureRotator.GetRotationFromMatrix(blueprintTilemap.GetTransformMatrix(rootPos));
+            tilemap = BlueprintTilemap;
+            matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
+            tileRot = StructureRotator.GetRotationFromMatrix(BlueprintTilemap.GetTransformMatrix(rootPos));
         }
         else
         {
@@ -281,7 +282,7 @@ public class TileManager : MonoBehaviour
 
 
         AnimatedTilemap.SetTile(rootPos, null);
-        blueprintTilemap.SetTile(rootPos, null);
+        BlueprintTilemap.SetTile(rootPos, null);
 
         //AnimatedTilemap.SetTransformMatrix(rootPos, matrix);
         //blueprintTilemap.SetTransformMatrix(rootPos, matrix);
@@ -316,7 +317,7 @@ public class TileManager : MonoBehaviour
         int tileCost = (int)_TileStatsDict[gridPos].ruleTileStructure.structureSO.tileCost;
         int refund;
         
-        if (blueprintTilemap.GetTile(gridPos))
+        if (BlueprintTilemap.GetTile(gridPos))
         {
             refund = tileCost;
         }
@@ -763,7 +764,7 @@ public class TileManager : MonoBehaviour
 
     public bool CheckBlueprintCellsAreClear(Vector3Int gridPos)
     {
-        List<Vector3Int> structurePositions = new List<Vector3Int>(GetStructurePositions(blueprintTilemap, gridPos));
+        List<Vector3Int> structurePositions = new List<Vector3Int>(GetStructurePositions(BlueprintTilemap, gridPos));
         foreach (var pos in structurePositions)
         {
 

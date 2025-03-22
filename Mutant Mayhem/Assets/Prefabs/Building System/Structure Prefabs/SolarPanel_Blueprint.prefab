@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8382883749813251698}
   - component: {fileID: 6691833866599050853}
-  - component: {fileID: 7764094524250829304}
   m_Layer: 0
-  m_Name: SolarPanel
+  m_Name: SolarPanel_Blueprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +40,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1294433471219372480}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -86,24 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7764094524250829304
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1294433471219372480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b3e410efdbba4497b4a5437e28d5091, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  structure: {fileID: 11400000, guid: 60305f243323149079543736aab3f861, type: 2}
-  startPower: 0
-  powerGenerated: 1
-  neighborBonus: 1
-  myStructureType: 29
-  occupiedCells: []
 --- !u!1001 &9021127313951105981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -153,19 +134,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 362139914800004867, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
-      propertyPath: powerSource
-      value: 
-      objectReference: {fileID: 7764094524250829304}
-    - target: {fileID: 1721638370199299297, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
-      propertyPath: m_isPreferredWidthDirty
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721638370199299297, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
-      propertyPath: m_AutoSizeIterationCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721638370199299297, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
-      propertyPath: m_isPreferredHeightDirty
+      propertyPath: isBlueprint
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1917937861045858594, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
@@ -178,7 +147,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 60305f243323149079543736aab3f861, type: 2}
     - target: {fileID: 4308942874392562589, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
       propertyPath: m_Name
-      value: Connector Base SolarPanel
+      value: Connector Base 2x2
       objectReference: {fileID: 0}
     - target: {fileID: 4382516036689288554, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
       propertyPath: myStructure

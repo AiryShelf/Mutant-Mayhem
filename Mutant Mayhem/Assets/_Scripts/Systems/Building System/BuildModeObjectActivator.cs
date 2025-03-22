@@ -5,6 +5,7 @@ using UnityEngine;
 public class BuildModeObjectActivator : MonoBehaviour
 {
     [SerializeField] GameObject objectToToggle;
+    [SerializeField] List<StructureType> typesToMatch = new List<StructureType>();
 
     void Start()
     {
@@ -19,6 +20,21 @@ public class BuildModeObjectActivator : MonoBehaviour
 
     void BuildMenuOpen(bool open)
     {
-        objectToToggle.SetActive(open);
+        if (open)
+            StartCoroutine(CheckForMatch());
+        else
+        {
+            StopAllCoroutines();
+            objectToToggle.SetActive(false);
+        }
+    }
+
+    IEnumerator CheckForMatch()
+    {
+        while (true)
+        {
+            objectToToggle.SetActive(typesToMatch.Contains(BuildingSystem.Instance.structureInHand.structureType));
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
     }
 }

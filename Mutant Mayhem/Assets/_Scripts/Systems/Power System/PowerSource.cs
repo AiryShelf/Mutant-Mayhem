@@ -36,11 +36,16 @@ public class PowerSource : MonoBehaviour
 
     public void AddNeighborBonus()
     {
-        powerGenerated += neighborBonus;
+        //powerGenerated += neighborBonus;
     }
 
     public void ResetNeighborBonus()
     {
-        powerGenerated = startPower;
+        //powerGenerated = startPower;
+    }
+
+    public void SetNeighborBonus(int neighborBonus)
+    {
+        powerGenerated = startPower + neighborBonus;
     }
 }
