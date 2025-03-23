@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
+  m_Name: StructureSO_RepairBay
+  m_EditorClassIdentifier: 
+  uiImage: {fileID: -1561074817, guid: a93be24f8fada4f69877d7da4589e7fe, type: 3}
+  tileName: Repair Bay
+  description: 'Allows for repair upgrades and drone repair
+
+
+    Unlocks Repair
+    Tech upgrades and Drone Repair'
+  tileCost: 2000
+  maxHealth: 1600
+  health: 1600
+  blueprintBuildAmount: 2000
+  cellPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: -1, z: 0}
+  - {x: 2, y: -1, z: 0}
+  - {x: 0, y: -2, z: 0}
+  - {x: 1, y: -2, z: 0}
+  - {x: 2, y: -2, z: 0}
+  ruleTileStructure: {fileID: 11400000, guid: 483909c3ce8664473aaa52fc6308d823, type: 2}
+  blueprintTile: {fileID: 11400000, guid: cd984354d63404b7f8fb0d2c1af2f98e, type: 2}
+  structureType: 30
+  isTurret: 0
+  actionType: 1
+  actionRange: {x: 6, y: 6}
+  powerGenerated: 0
+  powerNeighborBonus: 0
+  panelToUnlock: 6
+  structuresToUnlock: []
+  canBuildOnlyOne: 1

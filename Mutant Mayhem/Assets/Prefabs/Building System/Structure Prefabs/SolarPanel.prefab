@@ -103,6 +103,7 @@ MonoBehaviour:
   powerGenerated: 1
   neighborBonus: 1
   myStructureType: 29
+  myConnectorBase: {fileID: 8662655378531933374}
   occupiedCells: []
 --- !u!1001 &9021127313951105981
 PrefabInstance:
@@ -217,6 +218,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
+--- !u!114 &8662655378531933374 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 362139914800004867, guid: b248d2ff61f97424f947703e4df4b789, type: 3}
+  m_PrefabInstance: {fileID: 9021127313951105981}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bfd22d3e697f4d5b8ea1a618c7119fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &9220487336920188767 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 199490027623589090, guid: b248d2ff61f97424f947703e4df4b789, type: 3}

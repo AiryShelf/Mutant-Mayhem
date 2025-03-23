@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 3096168706463568029}
   - component: {fileID: 5601309822990652990}
   m_Layer: 0
-  m_Name: Micro Reactor
+  m_Name: MicroReactor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -359,6 +359,7 @@ MonoBehaviour:
   powerGenerated: 10
   neighborBonus: 2
   myStructureType: 22
+  myConnectorBase: {fileID: 7410814253407455890}
   occupiedCells: []
 --- !u!1 &4738179561447342693
 GameObject:
@@ -697,3 +698,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 199490027623589090, guid: 83eeb3a043228481594f4edd57e00c27, type: 3}
   m_PrefabInstance: {fileID: 5775246989713328961}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7410814253407455890 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3962407658274750931, guid: 83eeb3a043228481594f4edd57e00c27, type: 3}
+  m_PrefabInstance: {fileID: 5775246989713328961}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bfd22d3e697f4d5b8ea1a618c7119fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

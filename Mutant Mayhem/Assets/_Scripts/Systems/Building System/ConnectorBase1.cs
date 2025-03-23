@@ -7,18 +7,19 @@ public class ConnectorBase : MonoBehaviour
 {
     public StructureSO myStructure;
     public List<StructureSO> structuresToLink;
-    [SerializeField] List<Connector> myConnectors;
+    public List<Connector> myConnectors;
     [SerializeField] TextMeshPro powerGeneratedText;
     [SerializeField] PowerSource powerSource;
 
     [Header("Dyanamic vars, don't set here")]
     public int powerToAdd = 0;
-    [SerializeField] List<Connector> connections; // Serialized for debug
+    [SerializeField] List<Connector> connections;
+    [SerializeField] List<Connector> uiConnections;
 
     void OnEnable()
     {
         UpdatePowerText();
-        StartCoroutine(CheckConnections());
+        StartCoroutine(CheckConnectionsContinuous());
     }
 
     void OnDisable()
@@ -31,71 +32,113 @@ public class ConnectorBase : MonoBehaviour
         powerGeneratedText.transform.rotation = Quaternion.identity;
     }
 
-    IEnumerator CheckConnections()
+    IEnumerator CheckConnectionsContinuous()
     {
         while (true)
         {
-            foreach (var connector in myConnectors)
-            {
-                List<Vector3Int> otherPositions;
-                var pos = connector.transform.position;
-                var gridPos = TileManager.Instance.WorldToGrid(pos);
-                var structure = TileManager.Instance.GetStructureAt(pos);
-                StructureType foundType = StructureType.None;
-                if (structure != null)
-                {
-                    foundType = structure.structureType;
-                    otherPositions = TileManager.Instance.GetStructurePositions(TileManager.AnimatedTilemap, gridPos);
-                }
-                else
-                {
-                    if (BuildingSystem.Instance.highlightPositions.Contains(gridPos))
-                        foundType = BuildingSystem.Instance.structureInHand.structureType;
-                }
-
-                if (foundType == StructureType.None)
-                    RemoveConnection(connector);
-                else
-                {
-                    foreach (var s in structuresToLink)
-                    {
-                        if (foundType == s.structureType)
-                            AddConnection(connector);
-                    }
-                }
-            }
+            CheckConnections(true);
             yield return new WaitForSecondsRealtime(0.1f);
         }
     }
 
-    public void AddConnection(Connector connector)
+    public void CheckConnections(bool checkBuildHighlight)
     {
-        if (connections.Contains(connector)) return;
+        foreach (var connector in myConnectors)
+        {
+            var pos = connector.transform.position;
+            bool isRealTile =  !TileManager.Instance.IsTileBlueprint(pos);
+            
+            var gridPos = TileManager.Instance.WorldToGrid(pos);
+            var structure = TileManager.Instance.GetStructureAt(pos);
+            StructureType foundType = StructureType.None;
+            if (structure != null)
+            {
+                foundType = structure.structureType;
+                foreach (var s in structuresToLink)
+                {
+                    if (foundType == s.structureType)
+                        AddConnection(connector, isRealTile);
+                }
+            }
+            else if (checkBuildHighlight)
+            {
+                if (BuildingSystem.Instance.highlightPositions.Contains(gridPos))
+                {
+                    foundType = BuildingSystem.Instance.structureInHand.structureType;
+                    foreach (var s in structuresToLink)
+                    {
+                        if (foundType == s.structureType)
+                            AddConnection(connector, false);
+                    }
+                }
+            }
 
-        //Debug.Log("ConnectorBase: Added Connection");
-        connections.Add(connector);
+            if (foundType == StructureType.None)
+                RemoveConnection(connector);
+            else
+            {
+                
+            }
+        }
+    }
+
+    public void AddConnection(Connector connector, bool isRealConnection)
+    {
         connector.MakeConnection();
+
+        if (!isRealConnection)
+        {
+            AddUiConnection(connector);
+            return;
+        }
+        else
+            AddUiConnection(connector);
+
+        if (connections.Contains(connector)) return;
+        connections.Add(connector);
         UpdatePowerText();
 
         if (powerSource != null)
-            powerSource.SetNeighborBonus(powerToAdd);
+            powerSource.AddNeighborBonus();
+    }
+
+    public void AddUiConnection(Connector connector)
+    {
+        if (uiConnections.Contains(connector)) return;
+
+        uiConnections.Add(connector);
+        UpdatePowerText();
     }
 
     public void RemoveConnection(Connector connector)
     {
-        if (!connections.Contains(connector)) return;
-
-        //Debug.Log("ConnectorBase: Removed Connection");
-        connections.Remove(connector);
+        RemoveUiConnection(connector);
         connector.BreakConnection();
+
+        if (!connections.Contains(connector)) return;
+        connections.Remove(connector);
         UpdatePowerText();
+
+        if (powerSource != null)
+            powerSource.RemoveNeighborBonus();
+    }
+
+    void RemoveUiConnection(Connector connector)
+    {
+        if (uiConnections.Contains(connector))
+            uiConnections.Remove(connector);
+
+        UpdatePowerText();
+    }
+
+    void UpdateGeneratedPower()
+    {
+
     }
 
     public void UpdatePowerText()
     {
-        powerToAdd = 0;
-        foreach (var c in connections)
-            powerToAdd += myStructure.powerNeighborBonus;
+        powerToAdd = uiConnections.Count * myStructure.powerNeighborBonus;
 
         powerGeneratedText.text = "<sprite=1>" + (myStructure.powerGenerated + powerToAdd).ToString();
     }

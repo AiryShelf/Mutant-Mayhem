@@ -10,6 +10,7 @@ public class PowerSource : MonoBehaviour
     public int powerGenerated;
     public int neighborBonus;
     public StructureType myStructureType;
+    public ConnectorBase myConnectorBase;
 
     public List<Vector3Int> occupiedCells = new List<Vector3Int>();
 
@@ -36,12 +37,17 @@ public class PowerSource : MonoBehaviour
 
     public void AddNeighborBonus()
     {
-        //powerGenerated += neighborBonus;
+        powerGenerated += neighborBonus;
+    }
+
+    public void RemoveNeighborBonus()
+    {
+        powerGenerated -= neighborBonus;
     }
 
     public void ResetNeighborBonus()
     {
-        //powerGenerated = startPower;
+        powerGenerated = startPower;
     }
 
     public void SetNeighborBonus(int neighborBonus)

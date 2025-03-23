@@ -5,15 +5,10 @@ using UnityEngine;
 public class Connector : MonoBehaviour
 {
     [SerializeField] SpriteRenderer sr;
+    [SerializeField] Color startColor;
     [SerializeField] Color connectedColor;
-
-    Color startColor;
+    
     public bool isConnected = false;
-
-    void Start()
-    {
-        startColor = sr.color;
-    }
 
     public void MakeConnection()
     {

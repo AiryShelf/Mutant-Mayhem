@@ -60,11 +60,9 @@ public class PowerManager : MonoBehaviour
         
         powerSources.Add(source);
 
-        RecalculateNeighborBonuses();
+        StartCoroutine(RecalculateNeighborBonuses());
 
         if (!initialized) return;
-
-        CalculatePower(true);
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -74,15 +72,17 @@ public class PowerManager : MonoBehaviour
 
     public void RemovePowerSource(PowerSource source)
     {
-        if (source == null) return;
+        if (source == null) 
+        {
+            Debug.LogError("PowerManager: Tired to remove null power source");
+            return;
+        }
 
         powerSources.Remove(source);
 
-        RecalculateNeighborBonuses();
+        StartCoroutine(RecalculateNeighborBonuses());
 
         if (!initialized) return;
-
-        CalculatePower(true);
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
@@ -176,7 +176,7 @@ public class PowerManager : MonoBehaviour
             CutConsumer(currentConsumers[index]);
             
             // Yield to allow state update
-            yield return null;
+            //yield return null;
         }
 
         // Check if any cut consumers can be restored to better balance power
@@ -238,8 +238,49 @@ public class PowerManager : MonoBehaviour
 
     #region  Neighbor Bonus
 
-    private void RecalculateNeighborBonuses()
+    
+    IEnumerator RecalculateNeighborBonuses()
     {
+        yield return null;
+        foreach (var source in powerSources)
+        {
+            if (source.myConnectorBase != null)
+                source.myConnectorBase.CheckConnections(false);
+        }
+        CalculatePower(true);
+        /*
+        foreach (var source in powerSources)
+        {
+            if (source.myConnectorBase == null) continue;
+
+            foreach (var connector in source.myConnectorBase.myConnectors)
+            {
+                var pos = connector.transform.position;
+                if (TileManager.Instance.IsTileBlueprint(pos)) continue;
+
+                var gridPos = TileManager.Instance.WorldToGrid(pos);
+                var structure = TileManager.Instance.GetStructureAt(pos);
+                StructureType foundType = StructureType.None;
+                if (structure != null)
+                    foundType = structure.structureType;
+
+                if (foundType == StructureType.None)
+                    source.myConnectorBase.RemoveConnection(connector);
+                else
+                {
+                    foreach (var s in source.myConnectorBase.structuresToLink)
+                    {
+                        if (foundType == s.structureType)
+                            source.myConnectorBase.AddConnection(connector);
+                    }
+                }
+            }
+        }
+        
+
+
+        /*
+
         // 1) Reset any neighbor-bonus portion of "powerGenerated" on all sources.
         foreach (var src in powerSources)
         {
@@ -309,6 +350,7 @@ public class PowerManager : MonoBehaviour
                 }
             }
         }
+        */
     }
 
     #endregion

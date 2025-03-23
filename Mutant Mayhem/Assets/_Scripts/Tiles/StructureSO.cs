@@ -64,6 +64,7 @@ public enum StructureType
     ExplosivesBay,
     DroneBay,
     SolarPanels,
+    RepairBay,
     None
 }
 

@@ -135,7 +135,7 @@ public class TileManager : MonoBehaviour
 
         _TileStatsDict[gridPos].health *= 0.99f;
         
-        BlueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile);
+        BlueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile.buildUiTile);
 
         Quaternion q = Quaternion.Euler(0, 0, rotation);
         Matrix4x4 matrix = Matrix4x4.Rotate(q);
@@ -727,6 +727,8 @@ public class TileManager : MonoBehaviour
         if (_TileStatsDict.ContainsKey(gridPos))
         {
             Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
+            if (!_TileStatsDict.ContainsKey(rootPos)) return null;
+
             RuleTileStructure rts = _TileStatsDict[rootPos].ruleTileStructure;
             
             // Get original positions
@@ -778,6 +780,7 @@ public class TileManager : MonoBehaviour
     public StructureSO GetStructureAt(Vector2 worldPos)
     {
         Vector3Int gridPos = WorldToGrid(worldPos);
+
         if (_TileStatsDict.ContainsKey(gridPos))
             return _TileStatsDict[gridPos].ruleTileStructure.structureSO;
         else 

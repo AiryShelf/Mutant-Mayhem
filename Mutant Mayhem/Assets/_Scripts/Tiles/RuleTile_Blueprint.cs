@@ -6,18 +6,6 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(fileName = "RuleTile_Blueprint", menuName = "Tiles and Structures/RuleTile_Blueprint")]
 public class RuleTile_Blueprint : RuleTile
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public override void GetTileData(Vector3Int location, ITilemap tilemap, ref TileData tileData)
     {
         // Call the base method to retrieve default tile data.

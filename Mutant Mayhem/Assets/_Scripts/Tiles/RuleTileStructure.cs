@@ -14,6 +14,7 @@ public class RuleTileStructure : RuleTile
     [Header("Optional")]
     public TileBase buildUiTile;
 
+    /*
     public override void GetTileData(Vector3Int location, ITilemap tilemap, ref TileData tileData)
     {
         // Call the base method to retrieve default tile data.
@@ -24,14 +25,6 @@ public class RuleTileStructure : RuleTile
 
         // By not setting tileData.transform here, we maintain the rotation already defined in the tilemap's transform matrix.
         // If further customization is needed, you can modify the transform by combining the current matrix with additional rotations.
-    }
-
-    /*
-    public override void GetTileData(Vector3Int location, ITilemap tilemap, ref TileData tileData) 
-    {
-        base.GetTileData(location, tilemap, ref tileData);
-        tileData.colliderType = Tile.ColliderType.Sprite;
-        tileData.sprite = transparentSprite;
     }
     */
 }

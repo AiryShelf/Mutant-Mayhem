@@ -656,6 +656,7 @@ public class BuildingSystem : MonoBehaviour
         {
             inRange = false;
             allHighlighted = false;
+            highlightPositions = new List<Vector3Int>();
             return;
         }
 

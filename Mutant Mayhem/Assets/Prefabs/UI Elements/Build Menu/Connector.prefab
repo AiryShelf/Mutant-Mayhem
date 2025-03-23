@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sr: {fileID: 7453678954415672351}
-  connectedColor: {r: 0, g: 1, b: 1, a: 0.7529412}
+  startColor: {r: 0, g: 1, b: 1, a: 0.2509804}
+  connectedColor: {r: 0, g: 1, b: 1, a: 1}
   isConnected: 0
 --- !u!212 &7453678954415672351
 SpriteRenderer:
@@ -90,7 +91,7 @@ SpriteRenderer:
   m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 857569184, guid: af2d781b71fbf4d77a159db3a733ceb8, type: 3}
-  m_Color: {r: 0, g: 1, b: 1, a: 0.3764706}
+  m_Color: {r: 0, g: 1, b: 1, a: 0.2509804}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
