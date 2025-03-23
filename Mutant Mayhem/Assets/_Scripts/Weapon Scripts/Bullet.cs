@@ -82,7 +82,7 @@ public class Bullet : MonoBehaviour
                                                  raycastDir.magnitude * Time.fixedDeltaTime, hitLayers);
         if (raycast.collider)
         {
-            Hit(raycast.collider, raycast.point + raycastDir/10 * Time.fixedDeltaTime);
+            Hit(raycast.collider, raycast.point + raycastDir/32 * Time.fixedDeltaTime);
         }
     }
 

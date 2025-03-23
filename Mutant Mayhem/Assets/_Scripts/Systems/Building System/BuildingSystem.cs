@@ -579,6 +579,8 @@ public class BuildingSystem : MonoBehaviour
             {
                 turretManager.currentNumTurrets++;
             }
+            if (structureInHand.canBuildOnlyOne)
+                buildMenuController.ScrollUp();
 
             AddToStatCounter();
             if (structureInHand.canBuildOnlyOne)
