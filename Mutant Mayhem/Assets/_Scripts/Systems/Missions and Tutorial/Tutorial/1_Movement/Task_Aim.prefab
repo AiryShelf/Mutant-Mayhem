@@ -84,9 +84,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6791506771164599335}
-  - component: {fileID: 7566344093144572086}
+  - component: {fileID: -35575605196181337}
   m_Layer: 0
-  m_Name: Task_FireShots
+  m_Name: Task_Aim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,7 +115,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7566344093144572086
+--- !u!114 &-35575605196181337
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 936962933341166503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa4c3a4e1c27d744f859e27b741aeb9d, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a6b4ecdcdf814463860aa2bf62fd72b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   taskText: {fileID: 2185812458923376966}
@@ -133,7 +133,7 @@ MonoBehaviour:
   isComplete: 0
   progress: 0
   missionPanelController: {fileID: 0}
-  shotsToFire: 10
+  distToAim: 32
 --- !u!1 &8264780875990421883
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +219,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_text
-      value: '''Left Click'' to shoot x 10'
+      value: Use the mouse to aim
       objectReference: {fileID: 0}
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Pivot.x
@@ -303,19 +303,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: gamepadText
-      value: Right Trigger
+      value: '''Right Stick'''
       objectReference: {fileID: 0}
     - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: keyboardText
-      value: Left Click
+      value: Use the mouse
       objectReference: {fileID: 0}
     - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: touchscreenText
-      value: R-Joystick 1
+      value: Tap / drag anywhere
       objectReference: {fileID: 0}
     - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: stringToReplace_BlankAll
-      value: Left Click
+      value: Use the mouse
       objectReference: {fileID: 0}
     - target: {fileID: 8840805616247617409, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Name
