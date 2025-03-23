@@ -223,64 +223,64 @@ public class TouchManager : MonoBehaviour
     void AddShootTouch(bool wasExisting, int fingerId, Vector2 position)
     {
         if (player != null)
+        {
+            if (!wasExisting)
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Shoot, position);
+
+            List<int> existingLookFingerIds = new List<int>();
+            foreach (var kvp in activeTouches)
             {
-                if (!wasExisting)
-                    activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Shoot, position);
+                if (kvp.Value.purpose == TouchPurpose.Look)
+                    existingLookFingerIds.Add(kvp.Value.fingerId);
+            }
 
-                List<int> existingLookFingerIds = new List<int>();
-                foreach (var kvp in activeTouches)
+            // Check if there is already a finger down shooting
+            List<int> existingShootFingerIds = new List<int>();
+            foreach (var kvp in activeTouches)
+            {
+                if (kvp.Value.purpose == TouchPurpose.Shoot || 
+                    kvp.Value.purpose == TouchPurpose.Melee ||
+                    kvp.Value.purpose == TouchPurpose.Look)
                 {
-                    if (kvp.Value.purpose == TouchPurpose.Look)
-                        existingLookFingerIds.Add(kvp.Value.fingerId);
-                }
-
-                // Check if there is already a finger down shooting
-                List<int> existingShootFingerIds = new List<int>();
-                foreach (var kvp in activeTouches)
-                {
-                    if (kvp.Value.purpose == TouchPurpose.Shoot || 
-                        kvp.Value.purpose == TouchPurpose.Melee ||
-                        kvp.Value.purpose == TouchPurpose.Look)
-                    {
-                        existingShootFingerIds.Add(kvp.Value.fingerId);
-                    }
-                }
-
-                if (existingShootFingerIds.Count > 2)
-                {
-                    // Melee
-                    //Debug.Log("Two-Finger Tap Detected! Trigger Melee instead!");
-                    foreach(var id in existingShootFingerIds)
-                    {
-                        if (activeTouches[id].purpose == TouchPurpose.Shoot)
-                            activeTouches[id].purpose = TouchPurpose.Melee;
-                    }
-
-                    activeTouches[fingerId].purpose = TouchPurpose.Melee;
-
-                    player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
-                    player.animControllerPlayer.MeleeInput_Performed(new InputAction.CallbackContext()); 
-                }
-                else if (existingShootFingerIds.Count == 2)
-                {
-                    // Shoot
-                    //Debug.Log("Single-Finger Tap Detected!  Trigger Shoot");
-                    foreach(var id in existingShootFingerIds)
-                    {
-                        if (activeTouches[id].purpose == TouchPurpose.Melee)
-                            activeTouches[id].purpose = TouchPurpose.Shoot;
-                    }
-                        
-                    player.animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
-                }
-                else 
-                {
-                    // Only one finger down, Look
-                    activeTouches[fingerId].purpose = TouchPurpose.Look;
-                    CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
-                    player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
+                    existingShootFingerIds.Add(kvp.Value.fingerId);
                 }
             }
+
+            if (existingShootFingerIds.Count > 2)
+            {
+                // Melee
+                //Debug.Log("Two-Finger Tap Detected! Trigger Melee instead!");
+                foreach(var id in existingShootFingerIds)
+                {
+                    if (activeTouches[id].purpose == TouchPurpose.Shoot)
+                        activeTouches[id].purpose = TouchPurpose.Melee;
+                }
+
+                activeTouches[fingerId].purpose = TouchPurpose.Melee;
+
+                player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
+                player.animControllerPlayer.MeleeInput_Performed(new InputAction.CallbackContext()); 
+            }
+            else if (existingShootFingerIds.Count == 2)
+            {
+                // Shoot
+                //Debug.Log("Single-Finger Tap Detected!  Trigger Shoot");
+                foreach(var id in existingShootFingerIds)
+                {
+                    if (activeTouches[id].purpose == TouchPurpose.Melee)
+                        activeTouches[id].purpose = TouchPurpose.Shoot;
+                }
+                    
+                player.animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
+            }
+            else 
+            {
+                // Only one finger down, Look
+                activeTouches[fingerId].purpose = TouchPurpose.Look;
+                CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
+                player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
+            }
+        }
     }
 
     private void MoveTouch(int fingerId, Vector2 position)
@@ -399,6 +399,7 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.BuildMenu:
                 buildMenuController.isTouchScrolling = false;
+                EventSystem.current.SetSelectedGameObject(null);
                 break;
         };
     }

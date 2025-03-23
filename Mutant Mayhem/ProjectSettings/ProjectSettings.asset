@@ -139,8 +139,9 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: v0.3.7
-  preloadedAssets: []
+  bundleVersion: 0.3.7
+  preloadedAssets:
+  - {fileID: 11400000, guid: 4a848f7fcd60d064ea238c4712635abf, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -163,6 +164,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.KamJamGames.MutantMayhem
     Standalone: com.KamJam-Games.Mutant-Mayhem
+    iPhone: com.KamJam-Games.Mutant-Mayhem
   buildNumber:
     Standalone: 1
     VisionOS: 0
@@ -185,7 +187,7 @@ PlayerSettings:
   StripUnusedMeshComponents: 0
   strictShaderVariantMatching: 0
   VertexChannelCompressionMask: 4054
-  iPhoneSdkVersion: 988
+  iPhoneSdkVersion: 989
   iOSTargetOSVersionString: 12.0
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
