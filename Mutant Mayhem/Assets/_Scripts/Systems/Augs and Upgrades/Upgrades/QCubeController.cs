@@ -42,13 +42,16 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
    
     [Header("Interaction")]
     public PanelSwitcher panelSwitcher;
+    public RectTransform backPanel;
     [SerializeField] float interactRadius = 1.5f;
     public bool isUpgradesOpen;
     [SerializeField] BuildingSystem buildingSystem;
     [SerializeField] Player player;
     public DroneHangar droneHangar;
-    bool wasRepairing = false;
+    [SerializeField] CanvasGroup missionPanelGroup;
 
+
+    bool wasRepairing = false;
     InputActionMap playerActionMap;
     InputAction qCubeAction;
     InputAction fireAction;
@@ -244,6 +247,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
             toolbarAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
+        //missionPanelGroup.alpha = 0;
     }
 
     public void CloseUpgradeWindow()
@@ -270,6 +274,7 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         isUpgradesOpen = false;
 
         StopAllCoroutines();
+        missionPanelGroup.alpha = 1;
     }
 
     public void RandomizeDeathMessages()

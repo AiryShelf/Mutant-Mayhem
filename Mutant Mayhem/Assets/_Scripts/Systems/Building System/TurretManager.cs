@@ -52,7 +52,7 @@ public class TurretManager : MonoBehaviour
         }
 
         StartCoroutine(GetGameObject(rootPos));
-        //currentNumTurrets++;
+        currentNumTurrets++;
     }
 
     IEnumerator GetGameObject(Vector3Int rootPos)

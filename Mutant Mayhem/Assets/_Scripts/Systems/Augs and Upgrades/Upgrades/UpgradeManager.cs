@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
@@ -653,6 +654,9 @@ public class UpgradeManager : MonoBehaviour
 
             upgrade.Apply(gun, gunUpgLevels[upgType]);
             upgradeEffects.PlayUpgradeButtonEffect();
+
+            if (upgType == GunStatsUpgrade.GunRange && gunIndex == 4) // Repair gun
+                BuildingSystem.Instance.UpdateRepairRangeCircle();
             
             gunUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
                                        gunUpgBaseCosts[upgType], gunUpgLevels[upgType] + 1);

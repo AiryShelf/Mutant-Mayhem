@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class UI_PlanetPanel : MonoBehaviour
@@ -33,7 +34,8 @@ public class UI_PlanetPanel : MonoBehaviour
 
     void Start()
     {
-        showMapButtonStartColors = mapButton.colors;
+        if (mapButton != null)
+            showMapButtonStartColors = mapButton.colors;
         LoadPropertyCards(PlanetManager.Instance.currentPlanet);
 
         if (highRezPlanetsGroup == null) return;

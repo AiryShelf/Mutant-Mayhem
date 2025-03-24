@@ -188,7 +188,6 @@ public class PlayerShooter : Shooter
             InputManager.SetJoystickMouseControl(true);
             if (!playerStats.structureStats.buildingSystem.isInBuildMode)
             {
-                playerStats.structureStats.buildingSystem.buildRangeCircle.EnableCircle(true);
                 playerStats.structureStats.buildingSystem.SetRepairRangeCircle();
                 CursorManager.Instance.inMenu = true;
             }
@@ -200,7 +199,7 @@ public class PlayerShooter : Shooter
                 playerStats.structureStats.buildingSystem.SetBuildRangeCircle();
             else
             {
-                playerStats.structureStats.buildingSystem.buildRangeCircle.EnableCircle(false);
+                playerStats.structureStats.buildingSystem.repairRangeCircle.EnableCircle(false);
                 playerStats.structureStats.buildingSystem.LockCameraToPlayer(false);
                 //BuildingSystem.Instance.buildRangeCircle.radius = BuildingSystem.buildRange;
                 InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);

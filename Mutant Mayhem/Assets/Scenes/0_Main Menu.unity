@@ -363,6 +363,7 @@ MonoBehaviour:
   narrowScale: 1
   useCustomPivot: 0
   cutomScalePivot: {x: 0.5, y: 0.5}
+  widePositionOffest: {x: 0, y: 0}
   defaultWidePositionOffest: {x: 0, y: 0}
   narrowPositionOffset: {x: 0, y: 0}
 --- !u!1 &249093548
@@ -1708,6 +1709,7 @@ MonoBehaviour:
   narrowScale: 1
   useCustomPivot: 0
   cutomScalePivot: {x: 0.5, y: 0.5}
+  widePositionOffest: {x: 0, y: 0}
   defaultWidePositionOffest: {x: 0, y: 0}
   narrowPositionOffset: {x: 0, y: 0}
 --- !u!1 &1020114747
@@ -5424,6 +5426,18 @@ PrefabInstance:
     - target: {fileID: 6234001106352034131, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8117771959295914364, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8117771959295914364, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8117771959295914364, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -210.10153
       objectReference: {fileID: 0}
     - target: {fileID: 8734088982773982132, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_Pivot.x

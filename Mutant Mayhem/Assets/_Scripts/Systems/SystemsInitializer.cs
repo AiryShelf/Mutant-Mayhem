@@ -5,18 +5,6 @@ using UnityEngine.InputSystem;
 
 public class SystemsInitializer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void InitializeLevelStart(Player player)
     {
         StartCoroutine(ForceCanvasUpdate());
@@ -28,7 +16,7 @@ public class SystemsInitializer : MonoBehaviour
         TouchManager.Instance.buildMenuController = player.stats.structureStats.buildingSystem.buildMenuController;
         TouchManager.Instance.buildPanelRect = TouchManager.Instance.buildMenuController.transform as RectTransform;
         TouchManager.Instance.upgradePanelSwitcher = player.stats.structureStats.cubeController.panelSwitcher;
-        TouchManager.Instance.upgradePanelRect = player.stats.structureStats.cubeController.panelSwitcher.transform as RectTransform;
+        TouchManager.Instance.upgradePanelRect = player.stats.structureStats.cubeController.backPanel;
         CursorManager.Instance.Initialize();
         CursorManager.Instance.inMenu = false;
         CursorManager.Instance.MoveCustomCursorWorldToUi(transform.position);

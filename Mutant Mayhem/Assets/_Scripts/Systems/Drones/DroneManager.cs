@@ -50,7 +50,7 @@ public class DroneManager : MonoBehaviour
                     return false;
                 }
                 poolName = "Drone_Construction";
-                droneGun = droneGunList[1];
+                droneGun = droneGunList[0];
                 break;
             case DroneType.Attacker:
                 if (droneHangar.GetDroneCount(DroneType.Attacker) >= droneHangar.maxAttackDrones)
@@ -59,7 +59,7 @@ public class DroneManager : MonoBehaviour
                     return false;
                 }
                 poolName = "Drone_Attack";
-                droneGun = droneGunList[0];
+                droneGun = droneGunList[1];
                 break;
         }
 

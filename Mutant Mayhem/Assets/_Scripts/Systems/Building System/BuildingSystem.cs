@@ -33,6 +33,7 @@ public class BuildingSystem : MonoBehaviour
     }
     public static float buildRange = 6f;
     public RangeCircle buildRangeCircle;
+    public RangeCircle repairRangeCircle;
     [SerializeField] float buildCamLerpTime = 0.35f;
     public LayerMask layersForBuildClearCheck;
     [SerializeField] LayerMask layersToClearOnBuild;
@@ -409,6 +410,7 @@ public class BuildingSystem : MonoBehaviour
         buildRangeCircle.transform.position = player.stats.playerShooter.transform.position;
         buildRangeCircle.radius = buildRange;
         buildRangeCircle.EnableCircle(true);
+        repairRangeCircle.EnableCircle(false);
     }
 
     public void SetRepairRangeCircle()
@@ -419,11 +421,10 @@ public class BuildingSystem : MonoBehaviour
         if (player.stats.playerShooter.isRepairing)
         {
             LockCameraToPlayer(true);
-            buildRangeCircle.EnableCircle(true);
-            buildRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
-                                      player.stats.playerShooter.currentGunSO.bulletSpeed;
+            repairRangeCircle.EnableCircle(true);
+            UpdateRepairRangeCircle();
 
-            lockBuildCircleToMuzzle = StartCoroutine(LockBuildCircleToMuzzle());
+            lockBuildCircleToMuzzle = StartCoroutine(LockRepairCircleToMuzzle());
 
             //Vector3 worldPos = player.stats.playerShooter.muzzleTrans.position;
             //Vector3 localPos = player.transform.InverseTransformPoint(worldPos);
@@ -441,7 +442,13 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    IEnumerator LockBuildCircleToMuzzle()
+    public void UpdateRepairRangeCircle()
+    {
+        repairRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
+                                      player.stats.playerShooter.currentGunSO.bulletSpeed;
+    }
+
+    IEnumerator LockRepairCircleToMuzzle()
     {
         while (true)
         {
@@ -450,7 +457,7 @@ public class BuildingSystem : MonoBehaviour
             //player.transform.TransformPoint(player.stats.playerShooter.muzzleTrans.position);
             //Debug.Log($"MuzzleTrans worldPos = {worldPos}, localPos = {localPos}");
 
-            buildRangeCircle.transform.position = worldPos;
+            repairRangeCircle.transform.position = worldPos;
 
             yield return null;
         }
@@ -575,10 +582,6 @@ public class BuildingSystem : MonoBehaviour
             PlayerCredits -= structureInHand.tileCost * structureCostMult;
             //RemoveBuildHighlight();
 
-            if (structureInHand.isTurret)
-            {
-                turretManager.currentNumTurrets++;
-            }
             if (structureInHand.canBuildOnlyOne)
                 buildMenuController.ScrollUp();
 

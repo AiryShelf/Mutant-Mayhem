@@ -83,46 +83,26 @@ public class UIStructure : MonoBehaviour, ISelectHandler
 
     public void OnSelect(BaseEventData data)
     {
-        TryToSelect();
+        TryToSelect(true);
     }
 
-    public bool TryToSelect()
+    public bool TryToSelect(bool SetMenuSelection)
     {
         if (!initialized)
-        {
-            //Debug.LogError("UIStructure was not initialized on selection");
             return false;
-        }
 
         if (!button.interactable)
-        {
-            //Debug.LogError("UIStructure was not interactable on selection");
             return false;
-        }
 
-        //buildingSystem.StartCoroutine(buildingSystem.DelayUIReselect());
         // Lock the scroll rect to this selected object.        
         scrollRectController.SnapTo(myRectTransform);
 
         buildingSystem.ChangeStructureInHand(structureSO);
         //Debug.Log("OnSelect ran");
 
-        /*
-        if (structureSO.isTurret)
-        {
-            int turrets = TurretManager.Instance.currentNumTurrets;
-            int maxTurrets = player.stats.structureStats.maxTurrets;
-
-            if (turrets == maxTurrets)
-                MessagePanel.PulseMessage(turrets + " of " + maxTurrets + " turrets built!  Unlock more in Structure Upgrades", Color.red);
-            else if (maxTurrets == 0)
-                MessagePanel.PulseMessage("You can't build any turrets yet!  Unlock Structure Upgrades first", Color.red);
-            else
-                MessagePanel.PulseMessage(turrets + " of " + maxTurrets + " turrets built", Color.cyan);
-        }
-        */
-
         button.Select();
+        if (SetMenuSelection)
+            BuildingSystem.Instance.buildMenuController.SetMenuSelection(structureSO);
         return true;
     }
     

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ public class UIBuildMenuController : MonoBehaviour
     [SerializeField] List<GameObject> structureButtonPrefabs;
     public List<UIStructure> uiStructureList;
     [SerializeField] ScrollRectController scrollRectController;
+    [SerializeField] TextMeshProUGUI infoPanelHeader;
+    [SerializeField] TextMeshProUGUI infoPanelDescription;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
 
@@ -150,10 +153,12 @@ public class UIBuildMenuController : MonoBehaviour
             
             if (uiStructure.structureSO.tileName == structure.tileName)
             {
-                if (!uiStructure.TryToSelect())
+                if (!uiStructure.TryToSelect(false))
                     return false;
                     
                 currentIndex = uiStructureList.IndexOf(uiStructure);
+                infoPanelHeader.text = uiStructure.structureSO.tileName;
+                infoPanelDescription.text = uiStructure.structureSO.description;
                 //Debug.Log("BuildMenu selection changed to " + uiStructure.name);
                 return true;
             }

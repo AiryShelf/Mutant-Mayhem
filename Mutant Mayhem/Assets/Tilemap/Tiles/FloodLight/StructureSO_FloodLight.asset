@@ -17,8 +17,8 @@ MonoBehaviour:
   description: A powerful directional flood light, keep it protected, there's not
     much to it.
   tileCost: 100
-  maxHealth: 400
-  health: 400
+  maxHealth: 300
+  health: 300
   blueprintBuildAmount: 500
   cellPositions:
   - {x: 0, y: 0, z: 0}
@@ -28,3 +28,8 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  powerGenerated: 0
+  powerNeighborBonus: 0
+  panelToUnlock: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0

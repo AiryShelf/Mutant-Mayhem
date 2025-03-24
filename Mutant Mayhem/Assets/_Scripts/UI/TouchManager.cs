@@ -186,7 +186,7 @@ public class TouchManager : MonoBehaviour
                 // Upgrade Panel
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UpgradePanel, position);
             }
-            else if (player != null && IsInRegion(position, upgradePanelRect))   
+            else if (player != null && IsInRegion(position, buildPanelRect))   
             {
                 // Build menu
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.BuildMenu, position);
@@ -315,12 +315,12 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.UpgradePanel:
                 float dragDeltaX = position.x - data.lastScrollCheckPos.x;
-                float dragThreshold = 60f;
+                float dragThreshold = 80f;
 
                 if (Mathf.Abs(dragDeltaX) > dragThreshold)
                 {
                     // If positive dragDeltaY => user is dragging finger up => "scroll down" in menu
-                    if (dragDeltaX > 0)
+                    if (dragDeltaX < 0)
                         upgradePanelSwitcher.SwipeRight();
                     else
                         upgradePanelSwitcher.SwipeLeft();
@@ -331,7 +331,7 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.BuildMenu:
                 float dragDeltaY = position.y - data.lastScrollCheckPos.y;
-                dragThreshold = 120f;
+                dragThreshold = 80f;
 
                 if (Mathf.Abs(dragDeltaY) > dragThreshold)
                 {
@@ -399,7 +399,7 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.BuildMenu:
                 buildMenuController.isTouchScrolling = false;
-                EventSystem.current.SetSelectedGameObject(null);
+                //EventSystem.current.SetSelectedGameObject(null);
                 break;
         };
     }
@@ -455,7 +455,6 @@ public class TouchManager : MonoBehaviour
         return false;
     }
 
-    // Example method to check if the position is in the joystick region
     private bool IsInRegion(Vector2 screenPos, RectTransform rect)
     {
         if (rect == null) return false;

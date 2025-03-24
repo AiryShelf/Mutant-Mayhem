@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
+  m_Name: StructureSO_LandMine
+  m_EditorClassIdentifier: 
+  uiImage: {fileID: 21300000, guid: 67cc74cad1f9ebb4aa68cd72a4f8c3a1, type: 3}
+  tileName: Land Mine
+  description: An underground pressure triggered explisive device.  Does not explode
+    if a clone is too close
+  tileCost: 100
+  maxHealth: 1
+  health: 1
+  blueprintBuildAmount: 200
+  cellPositions:
+  - {x: 0, y: 0, z: 0}
+  ruleTileStructure: {fileID: 11400000, guid: 882d4a576d40b9449a536c3060bdc770, type: 2}
+  blueprintTile: {fileID: 11400000, guid: 0d2407b620e4dd846af5257d29b8c57c, type: 2}
+  structureType: 20
+  isTurret: 0
+  actionType: 1
+  actionRange: {x: 6, y: 6}
+  powerGenerated: 0
+  powerNeighborBonus: 0
+  panelToUnlock: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0

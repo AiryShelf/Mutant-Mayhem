@@ -16,15 +16,13 @@ MonoBehaviour:
   tileName: Solar Panels
   description: 'An array of solar panels for generating power.  Very flimsy
 
-
     Supplies
-    continuous power, thanks to build in batteries
+    continuous power
 
-    Gains a bonus of 1 from each
-    adjacent Solar Panel'
+    Gains a bonus of 1 from each connected power source'
   tileCost: 250
-  maxHealth: 400
-  health: 400
+  maxHealth: 300
+  health: 300
   blueprintBuildAmount: 500
   cellPositions:
   - {x: 0, y: 0, z: 0}

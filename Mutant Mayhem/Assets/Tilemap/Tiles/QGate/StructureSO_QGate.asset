@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: -1123146700, guid: 0cc13cf0c47c146968a3604457fad583, type: 3}
   tileName: Q-Gate
-  description: "A quantum barrier that only you can shoot and walk through.  \n\nIt
-    is tuned to the frequencies of known objects, blocking any unknown object from
-    passing the barrier."
+  description: A quantum barrier that only clones can shoot and walk through.
   tileCost: 1000
   maxHealth: 3600
   health: 3600
@@ -30,6 +28,8 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  powerGenerated: 0
+  powerNeighborBonus: 0
   panelToUnlock: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0

@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: a9be036d84e338b4b9f111aa0896355d, type: 3}
   tileName: Solar Light
-  description: A decent solar light to break the darkness.  A little flimsy
+  description: 'A decent solar light to break the darkness
+
+
+    Very flimsy but
+    hard to hit'
   tileCost: 50
   maxHealth: 200
   health: 200
@@ -27,3 +31,8 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  powerGenerated: 0
+  powerNeighborBonus: 0
+  panelToUnlock: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0
