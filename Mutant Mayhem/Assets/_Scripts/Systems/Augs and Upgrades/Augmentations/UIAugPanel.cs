@@ -237,20 +237,6 @@ public class UIAugPanel : MonoBehaviour
 
     #region Add/Remove Augs+Lvls
 
-    public bool AddAug(int level)
-    {
-        if (selectedUiAugmentation == null)
-        {
-            return false;
-        }
-
-        bool added = selectedUiAugmentation.AddToSelectedAugs(level);
-        UpdatePanelTextandButtons();
-        UpdateUIAugs();
-
-        return added;
-    }
-
     public void RemoveAug()
     {
         if (selectedUiAugmentation == null) return;
@@ -408,19 +394,12 @@ public class UIAugPanel : MonoBehaviour
         if (aug is Aug_MaxAugs _maxAugs)
         {
             int maxAugLevelsInc;
-            int levelInc;
             if (level > 0)
-            {
                 maxAugLevelsInc = _maxAugs.lvlAddIncrement;
-                levelInc = -1;
-            }
             else
-            {
                 maxAugLevelsInc = _maxAugs.lvlNegIncrement;
-                levelInc = 1;
-            }
 
-            if (augManager.GetCurrentLevelCount() + levelInc <= augManager.maxAugs - maxAugLevelsInc)
+            if (augManager.GetCurrentLevelCount() <= augManager.maxAugs - maxAugLevelsInc)
             {
                 augManager.maxAugs -= maxAugLevelsInc;
                 augLvlsAdded -= maxAugLevelsInc;
