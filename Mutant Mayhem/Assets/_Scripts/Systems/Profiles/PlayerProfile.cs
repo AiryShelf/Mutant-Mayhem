@@ -34,7 +34,7 @@ public class PlayerProfile
         isStandardWASD = true;
         isSpacebarEnabled = true;
         isFastJoystickAimEnabled = false;
-        joystickCursorSpeed = 600;
+        joystickCursorSpeed = 800;
         virtualAimJoystickDisabled = false;
     }
 }

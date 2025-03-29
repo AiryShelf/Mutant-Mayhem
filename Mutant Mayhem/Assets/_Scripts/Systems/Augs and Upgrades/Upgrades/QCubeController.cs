@@ -48,8 +48,6 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
     [SerializeField] BuildingSystem buildingSystem;
     [SerializeField] Player player;
     public DroneHangar droneHangar;
-    [SerializeField] CanvasGroup missionPanelGroup;
-
 
     bool wasRepairing = false;
     InputActionMap playerActionMap;
@@ -274,7 +272,6 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
         isUpgradesOpen = false;
 
         StopAllCoroutines();
-        missionPanelGroup.alpha = 1;
     }
 
     public void RandomizeDeathMessages()

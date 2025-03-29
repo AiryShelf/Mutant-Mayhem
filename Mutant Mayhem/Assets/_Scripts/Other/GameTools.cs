@@ -265,7 +265,7 @@ public static class GameTools
         sr.color = startColor;
     }
 
-    public static IEnumerator FlashImage(Image image, float flashTime, float flashSpeed, Color flashColor, Color startColor)
+    public static IEnumerator FlashImage(Image image, float flashTime, float flashDelay, Color flashColor, Color startColor)
     {
         if (image == null)
         {
@@ -276,7 +276,7 @@ public static class GameTools
         float timeElapsed = 0;
         while (timeElapsed < flashTime)
         {
-            float t = Mathf.PingPong(timeElapsed / flashSpeed, 1);
+            float t = Mathf.PingPong(timeElapsed / flashDelay, 1);
             image.color = Color.Lerp(startColor, flashColor, t);
             yield return null;
             timeElapsed += Time.deltaTime;

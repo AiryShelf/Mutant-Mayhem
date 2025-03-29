@@ -30,10 +30,9 @@ public class SettingsManager : MonoBehaviour
     public float BatchSpawnMult = 1; // Multiplies number of enemies per batch in each Subwave
     public float CreditsMult = 1;
 
-    [Header("Controls Settings")]
-    public bool isSpacebarEnabled = true;
-    public float joystickCursorSpeed = 600;
-    public bool isVirtualAimJoystickVisible = true;
+    bool isSpacebarEnabled = true;
+    float joystickCursorSpeed;
+    bool isVirtualAimJoystickVisible = true;
 
     WaveControllerRandom waveController;  
     Player player;
@@ -77,7 +76,7 @@ public class SettingsManager : MonoBehaviour
             useStandardWASD = true;
             isSpacebarEnabled = true;
             useFastJoystickAim = false;
-            joystickCursorSpeed = 600;
+            joystickCursorSpeed = CursorManager.cursorSpeedFactorDefault;
             isVirtualAimJoystickVisible = true;
             return;
         }
@@ -87,10 +86,10 @@ public class SettingsManager : MonoBehaviour
         useStandardWASD = currentProfile.isStandardWASD;
         isSpacebarEnabled = currentProfile.isSpacebarEnabled;
         useFastJoystickAim = currentProfile.isFastJoystickAimEnabled;
-        if (currentProfile.joystickCursorSpeed < 100)
+        if (currentProfile.joystickCursorSpeed < CursorManager.Instance.cursorSpeedMin)
         {
-            currentProfile.joystickCursorSpeed = 600;
-            Debug.Log($"Profile: {currentProfile} had an abnormally slow cursor speed, resetting to default");
+            currentProfile.joystickCursorSpeed = CursorManager.cursorSpeedFactorDefault;
+            Debug.LogWarning($"Profile: {currentProfile} had an abnormally slow cursor speed, resetting to default");
             ProfileManager.Instance.SaveCurrentProfile();
         }
         joystickCursorSpeed = currentProfile.joystickCursorSpeed;

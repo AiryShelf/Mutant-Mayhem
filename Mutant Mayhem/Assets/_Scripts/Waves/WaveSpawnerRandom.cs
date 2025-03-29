@@ -26,6 +26,7 @@ public class WaveSpawnerRandom : MonoBehaviour
     Vector2 centerPoint;
     int waveSeconds;
     Coroutine waveTimer;
+    float halfWidth, halfHeight;
 
     void Start()
     {
@@ -254,17 +255,16 @@ public class WaveSpawnerRandom : MonoBehaviour
         }
 
         // Get starting point, angle, radius
-        float spawnRadius = CalculateSpawnRadiusAndCenter();
-        Vector2 spawnPos = GetPointOnCircumference(spawnRadius, 0, 1, true);
-        float spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
+        (halfWidth, halfHeight) = CalculateSquareBounds();
+        Vector2 spawnPos;
+        float spawnAngle = 0;
 
         int listIndex = 0;
         while (_enemyPrefabList.Count > 0)
         {
             // Next new batch point 
-            spawnPos = GetPointOnCircumference(
-                        spawnRadius, spawnAngle, subWaveStyle.spreadForNextBatch, 
-                        subWaveStyle.randomizeNextBatchSpread);
+            spawnPos = GetPointOnSquareBoundary(spawnAngle, subWaveStyle.spreadForNextBatch, 
+                       subWaveStyle.randomizeNextBatchSpread, halfWidth, halfHeight);
             spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, spawnPos - (Vector2)transform.position);
 
@@ -305,7 +305,7 @@ public class WaveSpawnerRandom : MonoBehaviour
                 }
 
                 // Spawn
-                StartCoroutine(TryToSpawn(spawnPos, subWave, listIndex, spawnRadius, spawnAngle));
+                StartCoroutine(TryToSpawn(spawnPos, spawnAngle, subWave, subWaveStyle, listIndex));
                 _numberToSpawn[listIndex]--;
 
                 // Apply selection type
@@ -319,8 +319,8 @@ public class WaveSpawnerRandom : MonoBehaviour
                     listIndex = 0;
 
                 // Get next spawn around batchAngle
-                spawnPos = GetPointOnCircumference(spawnRadius, batchAngle, 
-                                                   subWaveStyle.spreadForBatch, true);
+                spawnPos = GetPointOnSquareBoundary(spawnAngle, subWaveStyle.spreadForNextBatch, 
+                           subWaveStyle.randomizeNextBatchSpread, halfWidth, halfHeight);;
                 spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
 
                 yield return new WaitForSeconds(subWaveStyle.timeToNextSpawn);
@@ -340,7 +340,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator TryToSpawn(Vector2 spawnPos, SubWaveSO subWave, int index, float radius, float angle)
+    IEnumerator TryToSpawn(Vector2 spawnPos, float spawnAngle, SubWaveSO subWave, SubWaveStyleSO style, int index)
     {
         bool spawned = false;
         float radSpread = 0;
@@ -350,7 +350,8 @@ public class WaveSpawnerRandom : MonoBehaviour
             yield return null;
             if (!spawned)
             {
-                spawnPos = GetPointOnCircumference(radius, angle, radSpread, true);
+                spawnPos = GetPointOnSquareBoundary(spawnAngle, style.spreadForNextBatch, 
+                       style.randomizeNextBatchSpread, halfWidth, halfHeight);
                 radSpread += 0.02f;
             }
         }
@@ -418,8 +419,10 @@ public class WaveSpawnerRandom : MonoBehaviour
         return spawnRadius;
     }
 
+    // Deptricated ***
     Vector2 GetPointOnCircumference(float radius, float startRadAngle, float radSpread, bool randomize)
     {
+        // Depricated ***
         if (randomize)
             startRadAngle += Random.Range(-radSpread * Mathf.PI, radSpread * Mathf.PI);
         else
@@ -429,6 +432,74 @@ public class WaveSpawnerRandom : MonoBehaviour
         float y = centerPoint.y + radius * Mathf.Sin(startRadAngle);
     
         return new Vector2(x, y);
+    }
+
+    // Call this once after you have minBounds, maxBounds, etc.
+    (float, float) CalculateSquareBounds()
+    {
+        Vector3 minBounds = Vector3.positiveInfinity;
+        Vector3 maxBounds = Vector3.negativeInfinity;
+
+        List<Vector3Int> allPositions = tileManager.GetAllStructurePositions();
+        allPositions.Add(new Vector3Int((int)qCubeTrans.position.x, (int)qCubeTrans.position.y, (int)qCubeTrans.position.z));
+
+        if (allPositions == null || allPositions.Count == 0)
+        {
+            Debug.LogWarning("No structure positions found. Using default spawn radius.");
+            centerPoint = qCubeTrans.position;
+            return (0, 0);
+        }
+
+        foreach (Vector3 structurePosition in allPositions)
+        {
+            minBounds = Vector3.Min(minBounds, structurePosition);
+            maxBounds = Vector3.Max(maxBounds, structurePosition);
+        }
+
+        centerPoint = (minBounds + maxBounds) / 2;
+
+        // Then we do something like:
+        float width  = maxBounds.x - minBounds.x;
+        float height = maxBounds.y - minBounds.y;
+        
+        // centerPoint is midpoint
+        centerPoint = (minBounds + maxBounds) * 0.5f;
+
+        // Add your spawnRadiusBuffer to each dimension
+        // e.g. halfWidth = (width / 2) + spawnRadiusBuffer
+        float halfWidth  = (width  * 0.5f) + waveController.spawnRadiusBuffer;
+        float halfHeight = (height * 0.5f) + waveController.spawnRadiusBuffer;
+
+        return (halfWidth, halfHeight);
+    }
+
+    Vector2 GetPointOnSquareBoundary(float startRadAngle, float radSpread, bool randomize, float halfWidth, float halfHeight)
+    {
+        // 1) Add random offset if needed
+        if (randomize)
+            startRadAngle += Random.Range(-radSpread * Mathf.PI, radSpread * Mathf.PI);
+        else
+            startRadAngle += radSpread * Mathf.PI;
+
+        // 2) Convert angle to direction
+        float dirX = Mathf.Cos(startRadAngle);
+        float dirY = Mathf.Sin(startRadAngle);
+
+        // 3) Solve intersection with boundary
+        float tX = (Mathf.Abs(dirX) > 0.0001f)
+            ? (halfWidth / Mathf.Abs(dirX))
+            : float.MaxValue;
+        float tY = (Mathf.Abs(dirY) > 0.0001f)
+            ? (halfHeight / Mathf.Abs(dirY))
+            : float.MaxValue;
+
+        float t = Mathf.Min(tX, tY);
+
+        // 4) Final spawn position
+        float spawnX = centerPoint.x + t * dirX;
+        float spawnY = centerPoint.y + t * dirY;
+
+        return new Vector2(spawnX, spawnY);
     }
 
     #endregion

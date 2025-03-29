@@ -16,10 +16,29 @@ public class UI_MissionPanelController : MonoBehaviour
     [SerializeField] RectTransform backPanel;
     [SerializeField] protected float timeToShowCompleted = 2f;
     [SerializeField] ObjectiveInfoPanel objectiveInfoPanel;
-
     public int currentObjectiveIndex;
 
+    [Header("Panel Open Effect")]
+    [SerializeField] CanvasGroup missionPanelGroup;
+    [SerializeField] float delayOpenTime = 8;
+    [SerializeField] Image panelOutline;
+    [SerializeField] Image backPanelImage;
+    [SerializeField] float panelFlashTime = 4;
+    [SerializeField] float panelFlashDelay = 0.25f;
+    [SerializeField] Color flashColorOutline;
+    Color startColorOutline;
+    Color startColorBackPanel;
+    
+
     void Start()
+    {
+        missionPanelGroup.alpha = 0;
+        startColorOutline = panelOutline.color;
+        startColorBackPanel = backPanelImage.color;
+        StartCoroutine(PanelOpenEffect());
+    }
+
+    void Initialize()
     {
         foreach (Transform child in objectivesGrid)
         {
@@ -34,7 +53,19 @@ public class UI_MissionPanelController : MonoBehaviour
             AddMission(TutorialManager.Instance.tutorialMission, true);
         }
 
+        missionPanelGroup.alpha = 1;
         StartMission();
+    }
+
+    IEnumerator PanelOpenEffect()
+    {
+        yield return new WaitForSecondsRealtime(delayOpenTime);
+
+        Initialize();
+        StartCoroutine(GameTools.FlashImage(backPanelImage, panelFlashTime, panelFlashDelay, flashColorOutline, startColorBackPanel));
+        StartCoroutine(GameTools.FlashImage(panelOutline, panelFlashTime, panelFlashDelay, flashColorOutline, startColorOutline));
+
+        
     }
 
     public void AddMission(Mission mission, bool setAsCurrentMission)

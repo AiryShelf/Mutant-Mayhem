@@ -11,6 +11,7 @@ public enum CursorRangeType { Radius, Bounds }
 public class CursorManager : MonoBehaviour
 {
     public static CursorManager Instance { get; private set; }
+    public static int cursorSpeedFactorDefault = 800;
 
     [SerializeField] InputActionAsset inputActionAsset;
     public Transform customCursorWorld;
@@ -40,7 +41,7 @@ public class CursorManager : MonoBehaviour
     public bool inMenu;
     public float cursorSpeedMin = 200;
     public float cursorSpeedMax = 1600;
-    public float cursorSpeedFactor = 600;
+    public float cursorSpeedFactor = 800;
     public float joystickDeadzone = 0.05f;
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
     Vector2 cursorVelocity = Vector2.zero;

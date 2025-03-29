@@ -135,7 +135,7 @@ public class TileManager : MonoBehaviour
 
         _TileStatsDict[gridPos].health *= 0.99f;
         
-        BlueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.structureSO.blueprintTile.buildUiTile);
+        BlueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
 
         Quaternion q = Quaternion.Euler(0, 0, rotation);
         Matrix4x4 matrix = Matrix4x4.Rotate(q);
