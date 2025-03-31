@@ -7,5 +7,5 @@ using UnityEngine;
 public class SubWaveSO : ScriptableObject
 {
     public List<GameObject> enemyPrefabList;
-    public List<int> numberToSpawn;
+    public List<float> numberToSpawn;
 }

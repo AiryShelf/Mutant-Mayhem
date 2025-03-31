@@ -319,7 +319,7 @@ public class TileManager : MonoBehaviour
         
         if (BlueprintTilemap.GetTile(gridPos))
         {
-            refund = tileCost;
+            refund = Mathf.FloorToInt(tileCost * buildingSystem.structureCostMult);
         }
         else
         {

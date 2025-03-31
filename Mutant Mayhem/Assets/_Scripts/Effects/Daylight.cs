@@ -41,6 +41,11 @@ public class Daylight : MonoBehaviour
     bool isSunUp;
     bool isSunDown;
 
+    void Awake()
+    {
+        isDay = false;
+    }
+
     void Start()
     {
         mainCamera = Camera.main;

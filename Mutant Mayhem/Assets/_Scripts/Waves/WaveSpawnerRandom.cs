@@ -242,7 +242,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         
         // Make copy of wave to be created
         List<GameObject> _enemyPrefabList = new List<GameObject>(subWave.enemyPrefabList);
-        List<int> _numberToSpawn = new List<int>(subWave.numberToSpawn);
+        List<float> _numberToSpawn = new List<float>(subWave.numberToSpawn);
 
         // Get batchMultiplier
         float batchMult = GetBatchMultiplier(subWaveIndex, true);
