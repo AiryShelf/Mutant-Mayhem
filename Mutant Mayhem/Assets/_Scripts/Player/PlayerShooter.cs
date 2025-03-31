@@ -10,7 +10,6 @@ public class PlayerShooter : Shooter
     public List<bool> gunsUnlocked;
     [SerializeField] SpriteRenderer gunSR;
     public Light2D flashlight1;
-    public Light2D flashlight2;
     [SerializeField] Animator bodyAnim;
     public int[] gunsAmmo;
     Coroutine shootingCoroutine;
@@ -58,7 +57,6 @@ public class PlayerShooter : Shooter
         isElevated = elevated;
 
         flashlight1.shadowsEnabled = !elevated;
-        flashlight2.shadowsEnabled = !elevated;
         gunSights.isElevated = elevated;
         if (muzzleLight != null)
             muzzleLight.shadowsEnabled = !elevated;

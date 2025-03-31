@@ -101,7 +101,7 @@ public class RepairBullet : Bullet
                 }
             }
 
-            if (isRepairable) 
+            if (isRepairable || isBlueprint) 
             {
                 ParticleManager.Instance.PlayRepairEffect(target, transform.right);
                 SFXManager.Instance.PlaySoundAt(hitSound, target);

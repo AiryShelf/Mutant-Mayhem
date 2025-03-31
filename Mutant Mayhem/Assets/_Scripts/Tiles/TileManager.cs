@@ -399,6 +399,8 @@ public class TileManager : MonoBehaviour
         //}
         
         //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
+        bool isException = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.Mine ||
+                           _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.RazorWire;
 
         float healthDifference = _TileStatsDict[rootPos].health - healthAtStart;
         Color color = textFlyHealthGainColor;
@@ -406,7 +408,7 @@ public class TileManager : MonoBehaviour
             return;
         else if (healthDifference < 0)
         {
-            if (_TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType != StructureType.RazorWire)
+            if (!isException)
                 ConstructionManager.Instance.AddRepairJob(new DroneJob(DroneJobType.Repair, GridCenterToWorld(rootPos)));
 
             color = textFlyHealthLossColor;
@@ -419,10 +421,13 @@ public class TileManager : MonoBehaviour
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
         }
 
-        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
-        textFly.transform.position = point;
-        textFly.Initialize(Mathf.Abs(healthDifference).ToString("#0"), color, 
-                           textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);
+        if (!isException)
+        {
+            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+            textFly.transform.position = point;
+            textFly.Initialize(Mathf.Abs(healthDifference).ToString("#0"), color, 
+                            textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);
+        }
 
         UpdateTileDamageSprite(rootPos);
     }
