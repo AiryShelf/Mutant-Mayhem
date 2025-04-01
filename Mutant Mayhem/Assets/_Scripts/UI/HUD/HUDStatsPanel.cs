@@ -115,6 +115,8 @@ public class HUDStatsPanel : MonoBehaviour
         qCubeHealth = FindObjectOfType<QCubeHealth>();
         UpdateQCubeStatsUI(qCubeHealth.GetHealth());
 
+        Screen.SetResolution(Screen.width, Screen.height, Screen.fullScreen);
+
         /*
         var rt = creditsText.GetComponent<RectTransform>();
         LayoutRebuilder.ForceRebuildLayoutImmediate(rt);

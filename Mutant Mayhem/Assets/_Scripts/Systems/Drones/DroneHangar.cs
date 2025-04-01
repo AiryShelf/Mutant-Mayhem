@@ -174,6 +174,8 @@ public class DroneHangar : MonoBehaviour
 
         for (int i = 0; i < attackJobs.Count; i++)
         {
+            CleanUpAttackJobs();
+
             int dronesAssigned = attackJobs[i].Value;
 
             if (attackJobs[i].Key.targetTrans == null)
@@ -191,6 +193,20 @@ public class DroneHangar : MonoBehaviour
         IncrementAssignedDrones_Attack(job, 1);
 
         return job;
+    }
+
+    void CleanUpAttackJobs()
+    {
+        List<KeyValuePair<DroneAttackJob, int>> jobsToRemove = new List<KeyValuePair<DroneAttackJob, int>>();
+
+        foreach (var kvp in attackJobs)
+        {
+            if (!kvp.Key.targetTrans.gameObject.activeInHierarchy)
+                jobsToRemove.Add(kvp);
+        }
+
+        foreach (var kvp in jobsToRemove)
+            attackJobs.Remove(kvp);
     }
 
     void IncrementAssignedDrones_Attack(DroneJob job, int value)
