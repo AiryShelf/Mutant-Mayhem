@@ -32,6 +32,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     [Header("Dynamic, don't set here")]
     public bool waitToAttack;
     public bool isElevated;
+    public EnemyBase enemyBase;
 
     void Awake()
     {
@@ -82,24 +83,24 @@ public class MeleeControllerEnemy : MonoBehaviour
     }
 
     IEnumerator ScaleMeleeObject()
-{
-    float elapsed = 0f;
-    Vector3 startScale = initialScale;
-    Vector3 targetScale = maxScale;
-
-    while (elapsed < scaleDuration)
     {
-        elapsed += Time.deltaTime;
-        float t = elapsed / scaleDuration;
-        meleeCollider.transform.localScale = Vector3.Lerp(startScale, targetScale, t); // Smoothly scale the object
-        yield return null;
+        float elapsed = 0f;
+        Vector3 startScale = initialScale;
+        Vector3 targetScale = maxScale;
+
+        while (elapsed < scaleDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / scaleDuration;
+            meleeCollider.transform.localScale = Vector3.Lerp(startScale, targetScale, t); // Smoothly scale the object
+            yield return null;
+        }
+
+        transform.localScale = targetScale; // Ensure the final scale is set
     }
 
-    transform.localScale = targetScale; // Ensure the final scale is set
-}
-
     void Hit(Health otherHealth, Vector2 point)
-    {   
+    {
         float damage = GetDamage();
 
         StartCoroutine(AttackTimer());
@@ -119,6 +120,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
         StatsCounterPlayer.MeleeAttacksByEnemies++;
         StatsCounterPlayer.MeleeDamageByEnemies += damage;
+        
     }
 
     void HitStructure(Vector2 point)

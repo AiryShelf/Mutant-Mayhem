@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable, ITriggerCheckable
 {
+    [Header("Enemy Base")]
     public string objectPoolName;
     public AnimationControllerEnemy animControllerEnemy;
     public MeleeControllerEnemy meleeController;
@@ -70,7 +71,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     WaveControllerRandom waveController;
 
-    void Awake()
+    public virtual void Awake()
     {
         waveController = FindObjectOfType<WaveControllerRandom>();
 
@@ -119,6 +120,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         //CurrentStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
+    
+
     public void ResetStats()
     {
         isHit = false;
@@ -131,7 +134,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         meleeController.Reset();
 
         StateMachine.ChangeState(IdleState);
-        RandomizeStats();
+        if (randomize) RandomizeStats();
     }
 
     #endregion
@@ -216,7 +219,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         health.Knockback(dir, knockback);
     }
 
-    public void Die()
+    public virtual void Die()
     {
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }

@@ -151,6 +151,7 @@ public class WaveControllerRandom : MonoBehaviour
             StopCoroutine(nextWaveTimer);
         
         waveSpawner.StartWave();
+        EvolutionManager.Instance.SpawnWave();
 
         // Set wave UI text
         UpdateWaveTimer(true);
@@ -186,6 +187,8 @@ public class WaveControllerRandom : MonoBehaviour
         MessagePanel.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
+
+        EvolutionManager.Instance.EndWaveAndEvolve();
 
         if (currentWaveIndex >= PlanetManager.Instance.currentPlanet.nightToSurvive)
             ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
