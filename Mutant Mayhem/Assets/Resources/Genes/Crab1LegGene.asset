@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a07a12b3b174a759dd9cfee90782a4, type: 3}
+  m_Name: Crab1LegGene
+  m_EditorClassIdentifier: 
+  id: Leg_Crab1
+  leftLegAnimatorController: {fileID: 9100000, guid: 895c15b364fed42ef959f480a9dfbdb4, type: 2}
+  rightLegAnimatorController: {fileID: 9100000, guid: 7f83b240045f24bf29c656c9bfd0efe3, type: 2}
+  animSpeedFactor: 1
+  switchToRunBuffer: 1.6
+  maxAnimSpeed: 10

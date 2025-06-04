@@ -6,7 +6,9 @@ using UnityEngine.InputSystem;
 
 public class WaveControllerRandom : MonoBehaviour
 {
-    [SerializeField] WaveSpawnerRandom waveSpawner;
+    public static WaveControllerRandom Instance = null;
+
+    public WaveSpawnerRandom waveSpawner;
 
     [Header("UI Wave Info")]
     public FadeCanvasGroupsWave nextWaveFadeGroup;
@@ -38,7 +40,7 @@ public class WaveControllerRandom : MonoBehaviour
     public int attackDelayMultGrowthTime;
     public float healthMultStart = 1;
     public float healthMultiplier = 1;
-    public int healthMultGrowthTime; 
+    public int healthMultGrowthTime;
     public float speedMultStart = 1;
     public float speedMultiplier = 1;
     public int speedMultGrowthTime;
@@ -46,7 +48,7 @@ public class WaveControllerRandom : MonoBehaviour
     public float sizeMultiplier = 1;
     public int sizeMultGrowthTime;
     public int subwaveDelayMultGrowthTime;
-    
+
     InputActionMap playerActionMap;
     InputAction nextWaveAction;
     Player player;
@@ -57,10 +59,21 @@ public class WaveControllerRandom : MonoBehaviour
     Daylight daylight;
     float countdown;
 
+    void Awake()
+    {
+        if (Instance) { Destroy(gameObject); return; }
+        Instance = this;
+    }
+
     void OnDisable()
     {
         if (nextWaveAction != null)
             nextWaveAction.performed -= OnNextWaveInput;
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
     }
 
     public void Initialize()
@@ -78,6 +91,8 @@ public class WaveControllerRandom : MonoBehaviour
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
     }
+
+    #region Next Wave Input
 
     public void NextWaveButtonPressed()
     {
@@ -104,7 +119,7 @@ public class WaveControllerRandom : MonoBehaviour
         {
             waveInfoFadeGroup.isTriggered = true;
             nextWaveFadeGroup.isTriggered = false;
-            
+
             currentNightText.text = "Night " + (currentWaveIndex + 1);
         }
         else
@@ -124,7 +139,7 @@ public class WaveControllerRandom : MonoBehaviour
         while (countdown > 0)
         {
             nextWaveText.text = $"Time until night {currentWaveIndex + 1}: " + countdown.ToString("#") + $"s.  {nextWaveButtonName.text} to skip";
-            
+
             yield return new WaitForSeconds(1);
             countdown--;
 
@@ -132,12 +147,16 @@ public class WaveControllerRandom : MonoBehaviour
             {
                 MessagePanel.PulseMessage(Mathf.CeilToInt(countdown) + " seconds to the next night!", Color.red);
             }
-            
+
         }
 
         StopAllCoroutines();
         StartCoroutine(StartWave());
     }
+
+    #endregion
+
+    #region Start / End Wave
 
     IEnumerator StartWave()
     {
@@ -149,7 +168,7 @@ public class WaveControllerRandom : MonoBehaviour
 
         if (nextWaveTimer != null)
             StopCoroutine(nextWaveTimer);
-        
+
         waveSpawner.StartWave();
         EvolutionManager.Instance.SpawnWave();
 
@@ -163,17 +182,17 @@ public class WaveControllerRandom : MonoBehaviour
             enemyCountText.text = "Enemies Detected: " + EnemyCounter.EnemyCount;
 
             yield return new WaitForEndOfFrame();
-            timeElapsed += Time.deltaTime; 
+            timeElapsed += Time.deltaTime;
         }
 
         // Check for end of wave
         while (!waveSpawner.waveComplete)
-        {      
+        {
             enemyCountText.text = "Enemies Detected: " + EnemyCounter.EnemyCount;
 
-            yield return new WaitForEndOfFrame(); 
+            yield return new WaitForEndOfFrame();
         }
-        
+
         // Let one wave initiate ending, if multiple
         if (endWave == null)
             endWave = StartCoroutine(EndWave());
@@ -201,27 +220,33 @@ public class WaveControllerRandom : MonoBehaviour
         daylight.StartCoroutine(daylight.PlaySunriseEffect());
     }
 
+    #endregion
+
+    #region Wave Difficulty
+
     void IncrementWaveDifficulty()
     {
-        batchMultiplier = Mathf.FloorToInt(batchMultStart + currentWaveIndex / batchMultGrowthTime * 
+        batchMultiplier = Mathf.FloorToInt(batchMultStart + currentWaveIndex / batchMultGrowthTime *
                           SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = damageMultStart + currentWaveIndex / damageMultGrowthTime * 
+        damageMultiplier = damageMultStart + currentWaveIndex / damageMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult *
                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];
         // Doubles the attack speed in 30 waves
-        attackDelayMult = attackDelayStart - currentWaveIndex / attackDelayMultGrowthTime / 
+        attackDelayMult = attackDelayStart - currentWaveIndex / attackDelayMultGrowthTime /
                            SettingsManager.Instance.WaveDifficultyMult;
         attackDelayMult = Mathf.Clamp(attackDelayMult, 0.2f, float.MaxValue);
-        healthMultiplier = healthMultStart + currentWaveIndex / healthMultGrowthTime * 
+        healthMultiplier = healthMultStart + currentWaveIndex / healthMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult *
                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];
-        speedMultiplier = speedMultStart + currentWaveIndex / speedMultGrowthTime *  
+        speedMultiplier = speedMultStart + currentWaveIndex / speedMultGrowthTime *
                           SettingsManager.Instance.WaveDifficultyMult *
                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyMoveSpeed];
-        sizeMultiplier = sizeMultStart + currentWaveIndex / sizeMultGrowthTime *   
+        sizeMultiplier = sizeMultStart + currentWaveIndex / sizeMultGrowthTime *
                          SettingsManager.Instance.WaveDifficultyMult *
                          PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize];
-        subwaveDelayMult = Mathf.Clamp(subwaveDelayMultStart - currentWaveIndex / subwaveDelayMultGrowthTime * 
+        subwaveDelayMult = Mathf.Clamp(subwaveDelayMultStart - currentWaveIndex / subwaveDelayMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);
     }
+    
+    #endregion
 }

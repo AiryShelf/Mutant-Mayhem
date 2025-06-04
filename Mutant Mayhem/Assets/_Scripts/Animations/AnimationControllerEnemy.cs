@@ -6,15 +6,15 @@ using UnityEngine;
 public class AnimationControllerEnemy : MonoBehaviour
 {
     public float animSpeedFactor = 1f;
-    [SerializeField] float switchToRunBuffer = 1.1f;
-    [SerializeField] float maxAnimSpeed = 10;
+    public float switchToRunBuffer = 1.1f;
+    public float maxAnimSpeed = 10;
 
-    public Animator myAnimator;
+    [SerializeField] Animator myAnimator;
     EnemyBase enemy;
-    Rigidbody2D enemyRb;
-    float baseSpeed;
+    protected Rigidbody2D myRb;
+    protected float baseSpeed;
 
-    void Start()
+    protected virtual void Start()
     {
         enemy = GetComponent<EnemyBase>();
         myAnimator = GetComponentInChildren<Animator>();
@@ -22,20 +22,20 @@ public class AnimationControllerEnemy : MonoBehaviour
         if (enemy != null)
         {
             baseSpeed = enemy.moveSpeedBase;
-            enemyRb = enemy.GetComponent<Rigidbody2D>();
+            myRb = enemy.GetComponent<Rigidbody2D>();
         }
     }
 
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
         UpdateEnemy();
     }
 
-    void UpdateEnemy()
+    protected virtual void UpdateEnemy()
     {
         if (enemy != null)
         {
-            float speed = enemyRb.velocity.magnitude;
+            float speed = myRb.velocity.magnitude;
 
             if (speed > baseSpeed * switchToRunBuffer)
             {

@@ -120,8 +120,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         //CurrentStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
 
-    
-
     public void ResetStats()
     {
         isHit = false;

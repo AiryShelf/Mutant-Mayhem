@@ -16,57 +16,105 @@ public class DefaultGeneticOps
 
     public Genome Crossover(Genome a, Genome b)
     {
-        return new Genome(
-            Random.value < 0.5f ? a.bodyId : b.bodyId,
-            Random.value < 0.5f ? a.headId : b.headId,
-            Random.value < 0.5f ? a.leftLegId : b.leftLegId,
-            Random.value < 0.5f ? a.rightLegId : b.rightLegId,
-            Mathf.Lerp(a.bodyScale, b.bodyScale, Random.value),
-            Mathf.Lerp(a.headScale, b.headScale, Random.value),
-            Mathf.Lerp(a.leftLegScale, b.leftLegScale, Random.value),
-            Mathf.Lerp(a.rightLegScale, b.rightLegScale, Random.value)
-        );
+        Debug.Log("Crossover between genomes: " + a + " and " + b);
+
+        if (a == null || b == null)
+        {
+            Debug.LogError("Crossover failed: One or both genomes are null.");
+            return null;
+        }
+        if (a.numberOfGenes != b.numberOfGenes)
+        {
+            Debug.LogError($"Crossover failed: Number of genes mismatch. a: {a.numberOfGenes}, b: {b.numberOfGenes}");
+            return null;
+        }
+
+        // Start with a copy of A
+        string bodyId = a.bodyId;
+        string headId = a.headId;
+        string legId = a.legId;
+        float bodyScale = a.bodyScale;
+        float headScale = a.headScale;
+        float legScale = a.legScale;
+
+        // Decide how many parts to exchange (min 1, max all but one)
+        int partsToSwap = Random.Range(1, a.numberOfGenes);
+        var partIndices = new System.Collections.Generic.HashSet<int>();
+        while (partIndices.Count < partsToSwap)
+            partIndices.Add(Random.Range(0, a.numberOfGenes));
+
+        foreach (int index in partIndices)
+        {
+            switch (index)
+            {
+                case 0: // body
+                    bodyId = b.bodyId;
+                    bodyScale = Mathf.Lerp(a.bodyScale, b.bodyScale, Random.value);
+                    break;
+                case 1: // head
+                    headId = b.headId;
+                    headScale = Mathf.Lerp(a.headScale, b.headScale, Random.value);
+                    break;
+                case 2: // legs
+                    legId = b.legId;
+                    legScale = Mathf.Lerp(a.legScale, b.legScale, Random.value);
+                    break;
+                default:
+                    Debug.LogError($"Invalid index {index} in crossover operation. numberOfGenes is out of range. Expected 0, 1, or 2.");
+                    break;
+            }
+        }
+
+        return new Genome(bodyId, headId, legId, bodyScale, headScale, legScale);
     }
 
-    public void Mutate(Genome g, float mutationRate, float difficultyScale)
+    public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
     {
+        bool mutatedPart = false;
         // 🔸 mutate part choice
-        if (Random.value < mutationRate)
-            g.bodyId = RandomChoice(bodies).id;
-        if (Random.value < mutationRate)
-            g.headId = RandomChoice(heads).id;
-        if (Random.value < mutationRate)
-            g.leftLegId = RandomChoice(legs).id;
-        if (Random.value < mutationRate)
-            g.rightLegId = RandomChoice(legs).id;
+        if (Random.value < mutationRate && !mutatedPart)
+        {
+            genome.bodyId = RandomChoice(bodies).id;
+            mutatedPart = true;
+        }
+        if (Random.value < mutationRate && !mutatedPart)
+        {
+            genome.headId = RandomChoice(heads).id;
+            mutatedPart = true;
+        }
+        if (Random.value < mutationRate && !mutatedPart)
+        {
+            genome.legId = RandomChoice(legs).id;
+            mutatedPart = true;
+        }
 
         // 🔸 mutate scales
-        float delta = 0.15f;
-        float maxTotal = 4f + difficultyScale;
+        float delta = 0.2f * (1 + EvolutionManager.Instance._currentWave) * (1 + EvolutionManager.Instance.difficultyScalePerWave);
+        Debug.Log("EvolutionManager delta: " + delta);
 
-        if (Random.value < mutationRate) g.bodyScale += Random.Range(-delta, delta);
-        if (Random.value < mutationRate) g.headScale += Random.Range(-delta, delta);
-        if (Random.value < mutationRate) g.leftLegScale += Random.Range(-delta, delta);
-        if (Random.value < mutationRate) g.rightLegScale += Random.Range(-delta, delta);
+        if (Random.value < mutationRate) genome.bodyScale += Random.Range(-delta, delta);
+        if (Random.value < mutationRate) genome.headScale += Random.Range(-delta, delta);
+        if (Random.value < mutationRate) genome.legScale += Random.Range(-delta, delta);
 
-        ClampAndNormalize(ref g, maxTotal);
+        ClampAndNormalize(ref genome, difficultyScaleTotal);
     }
 
-    private void ClampAndNormalize(ref Genome g, float maxTotal)
+    public void ClampAndNormalize(ref Genome genome, float maxTotal)
     {
-        g.bodyScale     = Mathf.Clamp(g.bodyScale, 0.5f, 1.5f);
-        g.headScale     = Mathf.Clamp(g.headScale, 0.5f, 1.5f);
-        g.leftLegScale  = Mathf.Clamp(g.leftLegScale, 0.5f, 1.5f);
-        g.rightLegScale = Mathf.Clamp(g.rightLegScale, 0.5f, 1.5f);
+        // Keep parts from getting too small
+        float minPerGene = (maxTotal / genome.numberOfGenes) * 0.5f;
+        genome.bodyScale = Mathf.Max(genome.bodyScale, minPerGene);
+        genome.headScale = Mathf.Max(genome.headScale, minPerGene);
+        genome.legScale  = Mathf.Max(genome.legScale, minPerGene);
 
-        float total = g.bodyScale + g.headScale + g.leftLegScale + g.rightLegScale;
+        // Normalize scales to fit within maxTotal
+        float total = genome.bodyScale + genome.headScale + genome.legScale;
         if (total > maxTotal)
         {
             float factor = maxTotal / total;
-            g.bodyScale *= factor;
-            g.headScale *= factor;
-            g.leftLegScale *= factor;
-            g.rightLegScale *= factor;
+            genome.bodyScale *= factor;
+            genome.headScale *= factor;
+            genome.legScale *= factor;
         }
     }
 

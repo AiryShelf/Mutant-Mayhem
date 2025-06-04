@@ -4,6 +4,11 @@ using UnityEngine;
 public class LegGeneSO : ScriptableObject       // 🔸 NEW
 {
     public string id = "Leg_Default";
-    public Sprite lSprite;
-    public Sprite rSprite;
+    public RuntimeAnimatorController leftLegAnimatorController;
+    public RuntimeAnimatorController rightLegAnimatorController;
+
+    [Header("Leg Animations Settings")]
+    public float animSpeedFactor;
+    public float switchToRunBuffer;
+    public float maxAnimSpeed;
 }

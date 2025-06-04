@@ -33,6 +33,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     public bool waitToAttack;
     public bool isElevated;
     public EnemyBase enemyBase;
+    public float damageDealt = 0;
 
     void Awake()
     {
@@ -82,30 +83,13 @@ public class MeleeControllerEnemy : MonoBehaviour
         //meleeSprite.enabled = false;
     }
 
-    IEnumerator ScaleMeleeObject()
-    {
-        float elapsed = 0f;
-        Vector3 startScale = initialScale;
-        Vector3 targetScale = maxScale;
-
-        while (elapsed < scaleDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / scaleDuration;
-            meleeCollider.transform.localScale = Vector3.Lerp(startScale, targetScale, t); // Smoothly scale the object
-            yield return null;
-        }
-
-        transform.localScale = targetScale; // Ensure the final scale is set
-    }
-
     void Hit(Health otherHealth, Vector2 point)
     {
         float damage = GetDamage();
 
         StartCoroutine(AttackTimer());
-
         meleeAnimator.SetTrigger("Melee");
+        
         myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback);
         Vector2 hitDir = (Vector2)otherHealth.transform.position - point;
         otherHealth.Knockback(hitDir, knockback);
@@ -120,7 +104,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
         StatsCounterPlayer.MeleeAttacksByEnemies++;
         StatsCounterPlayer.MeleeDamageByEnemies += damage;
-        
+        damageDealt += damage;
     }
 
     void HitStructure(Vector2 point)
@@ -143,6 +127,23 @@ public class MeleeControllerEnemy : MonoBehaviour
 
         PlayMeleeSound(point);
         StatsCounterPlayer.MeleeAttacksByEnemies++;
+    }
+
+    IEnumerator ScaleMeleeObject()
+    {
+        float elapsed = 0f;
+        Vector3 startScale = initialScale;
+        Vector3 targetScale = maxScale;
+
+        while (elapsed < scaleDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / scaleDuration;
+            meleeCollider.transform.localScale = Vector3.Lerp(startScale, targetScale, t); // Smoothly scale the object
+            yield return null;
+        }
+
+        transform.localScale = targetScale; // Ensure the final scale is set
     }
 
     float GetDamage()
@@ -204,7 +205,7 @@ public class MeleeControllerEnemy : MonoBehaviour
                 }
             }
 
-            HandleCollision(targetCollider, attackPoint);
+            HandleMeleeCollision(targetCollider, attackPoint);
         }
 
         //StartCoroutine(AttackTimer());
@@ -227,7 +228,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         return int.MaxValue;
     }
 
-    void HandleCollision(Collider2D collider, Vector2 point)
+    void HandleMeleeCollision(Collider2D collider, Vector2 point)
     {
         if (collider.CompareTag("Player") || collider.CompareTag("PlayerBody"))
         {

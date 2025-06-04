@@ -22,6 +22,7 @@ public class WaveSpawnerRandom : MonoBehaviour
     public bool waveSpawning;
     public int numberOfSubwaves;
     public bool waveComplete;
+    public int maxIndex = 0;
 
     Vector2 centerPoint;
     int waveSeconds;
@@ -30,11 +31,13 @@ public class WaveSpawnerRandom : MonoBehaviour
 
     void Start()
     {
-        centerPoint = qCubeTrans.position;
+        PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
+        maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex /
+                                    waveController.wavesTillAddIndex) +
+                                    currentPlanet.maxIndexToSelectAtStart + 
+                                    SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
 
-        // Get the Master Wave, create an empty wave to build
-        waveBase = PlanetManager.Instance.currentPlanet.waveSOBase;
-        currentWave = Instantiate(new WaveSOBase());       
+        centerPoint = qCubeTrans.position;  
     }
 
     #region Build Wave
@@ -51,28 +54,38 @@ public class WaveSpawnerRandom : MonoBehaviour
 
     void BuildWave()
     {
-        currentWave.subWaves.Clear();
-        currentWave.subWaveMultipliers.Clear();
-        currentWave.subWaveStyles.Clear();
-        currentWave.timesToTriggerSubwaves.Clear();
+        // Get the Master Wave, create an empty wave to build
+        PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
+        if (currentPlanet == null)
+        {
+            Debug.LogError("PlanetManager.Instance.currentPlanet is null in BuildWave");
+            return;
+        }
+        waveBase = currentPlanet.waveSOBase;
+        currentWave = ScriptableObject.CreateInstance<WaveSOBase>();
+        currentWave.subWaves = new List<SubWaveSO>();
+        currentWave.subWaveMultipliers = new List<float>();
+        currentWave.constantWaveMultipliers = new List<float>();
+        currentWave.subWaveStyles = new List<SubWaveStyleSO>();
+        currentWave.timesToTriggerSubwaves = new List<int>();
+        currentWave.timesToTriggerConstantWaves = new List<int>();
 
         // Add more subwaves over time, apply difficulty
         numberOfSubwaves = Mathf.CeilToInt(numSubwavesAtStart + waveController.currentWaveIndex * 
-                         SettingsManager.Instance.SubwaveListGrowthFactor);
+                           SettingsManager.Instance.SubwaveListGrowthFactor);
+        
+        // Find max index to select based on current wave, plus starting max index
+        maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex /
+                                    waveController.wavesTillAddIndex) +
+                                    currentPlanet.maxIndexToSelectAtStart + 
+                                    SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
+        maxIndex = Mathf.Clamp(maxIndex, 0, waveBase.subWaves.Count - 1);
+        Debug.Log("MaxIndex for wave " + waveController.currentWaveIndex + ": " + maxIndex);
 
-        // Build Wave
-        PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
         int prevSubwaveIndex = 0;
         int timeInSequence = 0;
         for (int i = 0; i < numberOfSubwaves; i++)
         {
-            // Find max index to select based on current wave, plus starting max index
-            int maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex / waveController.wavesTillAddIndex) +
-                           currentPlanet.maxIndexToSelectAtStart + 
-                           SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
-            maxIndex = Mathf.Clamp(maxIndex, 0, waveBase.subWaves.Count - 1);
-            Debug.Log("MaxIndex for wave " + waveController.currentWaveIndex + ": " + maxIndex);
-
             // Select random index, and subwave
             int subWaveIndex = Random.Range(0, maxIndex + 1);
             if (maxIndex > 0)
@@ -90,13 +103,13 @@ public class WaveSpawnerRandom : MonoBehaviour
             styleIndex = Mathf.Clamp(styleIndex, 0, waveBase.subWaveStyles.Count - 1);
             SubWaveStyleSO styleToAdd = waveBase.subWaveStyles[styleIndex];
 
-            // Add selection to list
+            // Add selections to lists
             currentWave.subWaves.Add(subwaveToAdd);
             currentWave.subWaveMultipliers.Add(waveBase.subWaveMultipliers[subWaveIndex]);
-            //Debug.Log("Added SubWave: " + waveToAdd.name);
             currentWave.subWaveStyles.Add(styleToAdd);
-            //Debug.Log("Added SubWave Style: " + styleToAdd.name);
             currentWave.timesToTriggerSubwaves.Add(timeInSequence);
+            //Debug.Log("Added SubWave: " + waveToAdd.name);
+            //Debug.Log("Added SubWave Style: " + styleToAdd.name);
 
             // Find next time slot
             int delay = Mathf.CeilToInt(timeToNextSubWave);
@@ -340,6 +353,10 @@ public class WaveSpawnerRandom : MonoBehaviour
         yield return null;
     }
 
+    #endregion
+
+    #region Spawn Enemies
+
     IEnumerator TryToSpawn(Vector2 spawnPos, float spawnAngle, SubWaveSO subWave, SubWaveStyleSO style, int index)
     {
         bool spawned = false;
@@ -383,6 +400,10 @@ public class WaveSpawnerRandom : MonoBehaviour
             return false;
         }
     }
+
+    #endregion
+
+    #region Spawn Helpers
 
     float CalculateSpawnRadiusAndCenter()
     {

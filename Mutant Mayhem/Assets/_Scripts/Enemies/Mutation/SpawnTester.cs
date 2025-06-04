@@ -12,7 +12,6 @@ public class SpawnTester : MonoBehaviour
             var g = new Genome(
                 "Body_Dog",                 // temp until you make more bodies
                 "Head_Dog",
-                "Leg_Bat",
                 "Leg_Bat");
 
             e.ApplyGenome(g);

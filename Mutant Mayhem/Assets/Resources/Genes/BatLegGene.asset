@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: BatLegGene
   m_EditorClassIdentifier: 
   id: Leg_Bat
-  lSprite: {fileID: 21300000, guid: bce879ae3359d45bfbcb09fbddfae1a9, type: 3}
-  rSprite: {fileID: 21300000, guid: b949f1cbec9da4ebbb9f024912017dcf, type: 3}
+  leftLegAnimatorController: {fileID: 9100000, guid: 8a17212a3ebd14b18a0da2e53090ef52, type: 2}
+  rightLegAnimatorController: {fileID: 9100000, guid: 71e51e3ba54204faa893424987d2ee9c, type: 2}
+  animSpeedFactor: 0.6
+  switchToRunBuffer: 1.6
+  maxAnimSpeed: 1

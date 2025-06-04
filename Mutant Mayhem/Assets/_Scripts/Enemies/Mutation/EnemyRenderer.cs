@@ -3,15 +3,15 @@ using UnityEngine;
 public class EnemyRenderer : MonoBehaviour
 {
     [Header("Anchors")]
-    [SerializeField] private Transform headAnchor;
-    [SerializeField] private Transform leftLegAnchor;
-    [SerializeField] private Transform rightLegAnchor;
+    [SerializeField] Transform headAnchor;
+    [SerializeField] Transform leftLegAnchor;
+    [SerializeField] Transform rightLegAnchor;
 
     [Header("Sprite Renderers")]
-    [SerializeField] private SpriteRenderer bodySR;
-    [SerializeField] private SpriteRenderer headSR;
-    [SerializeField] private SpriteRenderer leftLegSR;
-    [SerializeField] private SpriteRenderer rightLegSR;
+    [SerializeField] Transform enemyBaseTransform;
+    [SerializeField] SpriteRenderer bodySR;
+    [SerializeField] SpriteRenderer headSR;
+    [SerializeField] AnimationControllerMutant animationControllerMutant;
 
     public void ApplyGenome(Genome g)
     {
@@ -20,51 +20,26 @@ public class EnemyRenderer : MonoBehaviour
         // Look‑ups
         var bodyGene = GeneDatabase.Body(g.bodyId);
         var headGene = GeneDatabase.Head(g.headId);
-        var lLegGene = GeneDatabase.Leg(g.leftLegId);
-        var rLegGene = GeneDatabase.Leg(g.rightLegId);
+        var legGene = GeneDatabase.Leg(g.legId);
 
-        /* 1️⃣  Set sprites (unchanged) */
+        /* 1️⃣  Set sprites and animators */
         bodySR.sprite = bodyGene.sprite;
         headSR.sprite = headGene.sprite;
-        leftLegSR.sprite = lLegGene.lSprite;
-        rightLegSR.sprite = rLegGene.rSprite;
+        animationControllerMutant.leftLegAnimator.runtimeAnimatorController = legGene.leftLegAnimatorController;
+        animationControllerMutant.rightLegAnimator.runtimeAnimatorController = legGene.rightLegAnimatorController;
+        animationControllerMutant.animSpeedFactor = legGene.animSpeedFactor;
+        animationControllerMutant.switchToRunBuffer = legGene.switchToRunBuffer;
+        animationControllerMutant.maxAnimSpeed = legGene.maxAnimSpeed;
 
         /* 2️⃣  ✏  CHANGED  — Apply scales */
+        enemyBaseTransform.localScale = Vector3.one * g.bodyScale;  // Scale the whole enemy base
         bodySR.transform.localScale = Vector3.one * g.bodyScale;
-        headSR.transform.localScale = Vector3.one * g.headScale;
-        leftLegSR.transform.localScale = Vector3.one * g.leftLegScale;
-        rightLegSR.transform.localScale = Vector3.one * g.rightLegScale;
+        headAnchor.localScale = Vector3.one * g.headScale;
+        leftLegAnchor.localScale = Vector3.one * g.legScale;
+        rightLegAnchor.localScale = Vector3.one * g.legScale;
 
-        /* 3️⃣  ✏  CHANGED  — Anchor positions scale with BODY */
         headAnchor.localPosition = bodyGene.headAnchorOffset * g.bodyScale;
         leftLegAnchor.localPosition = bodyGene.leftLegAnchorOffset * g.bodyScale;
         rightLegAnchor.localPosition = bodyGene.rightLegAnchorOffset * g.bodyScale;
     }
-    
-#if UNITY_EDITOR
-    // 🔸 Convenience button in Inspector for quick preview
-    [ContextMenu("Apply Random Genome")]
-    private void ApplyRandom()
-    {
-        var g = new Genome(
-            GetRandom<BodyGeneSO>().id,
-            GetRandom<HeadGeneSO>().id,
-            GetRandom<LegGeneSO>().id,
-            GetRandom<LegGeneSO>().id,
-            Random.Range(0.7f, 1.3f),  // body scale
-            Random.Range(0.7f, 1.3f),  // head scale
-            Random.Range(0.7f, 1.3f),  // left leg scale
-            Random.Range(0.7f, 1.3f)   // right leg scale
-        );
-
-        ApplyGenome(g);
-    }
-    private T GetRandom<T>() where T : UnityEngine.Object
-    {
-        var all = Resources.FindObjectsOfTypeAll(typeof(T));
-        if (all.Length == 0) return null;
-
-        return (T)all[Random.Range(0, all.Length)];
-    }
-#endif
 }

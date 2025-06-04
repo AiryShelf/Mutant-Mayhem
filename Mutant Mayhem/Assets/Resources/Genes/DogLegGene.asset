@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: DogLegGene
   m_EditorClassIdentifier: 
   id: Leg_Dog
-  lSprite: {fileID: 21300000, guid: 4eb734042026849b99835c27521815e1, type: 3}
-  rSprite: {fileID: 21300000, guid: 2a9ed389dac7e4787a6c6537753eead9, type: 3}
+  leftLegAnimatorController: {fileID: 9100000, guid: 0d58df23366ee47d0b37d6128c7a3a1a, type: 2}
+  rightLegAnimatorController: {fileID: 9100000, guid: c3efb6bd98cf7459b8c12ee913af07fb, type: 2}
+  animSpeedFactor: 0.7
+  switchToRunBuffer: 0.4
+  maxAnimSpeed: 3
