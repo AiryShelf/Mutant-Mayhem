@@ -20,6 +20,10 @@ public class EvolutionManager : MonoBehaviour
 
     // ───────────────────────────────────────────────── Internals ─────────────────────────────────────────
     readonly Dictionary<EnemyVariant, List<EnemyIndividual>> _population = new();
+    public Dictionary<EnemyVariant, List<EnemyIndividual>> GetPopulation()
+    {
+        return _population;
+    }
     readonly Dictionary<EnemyVariant, List<EnemyIndividual>> _liveThisWave = new();
 
     DefaultGeneticOps _ops;
@@ -188,6 +192,7 @@ public class EvolutionManager : MonoBehaviour
         {
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
+                Debug.Log("EvolutionManager: Adding genome to starting population for variant " + v + ": " + g);
                 var genomeCopy = new Genome(
                     g.bodyId,
                     g.headId,
@@ -210,18 +215,18 @@ public class EvolutionManager : MonoBehaviour
         int currentMaxIndex = WaveControllerRandom.Instance.waveSpawner.maxIndex;
         if (currentMaxIndex <= _previousMaxIndex) return;
 
-        Debug.Log("EvolutionManager: Adding new unlocks for wave " + _currentWave);
+        Debug.Log($"EvolutionManager: Adding new unlocks for wave {_currentWave} with previousIndex {_previousMaxIndex} and maxIndex {currentMaxIndex}.");
 
         PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
         if (currentPlanet == null) return;
 
         int popIncreasePerVariant = currentPlanet.waveSOBase.subWaves[currentMaxIndex].popIncreasePerVariant;
-        for (int i = _previousMaxIndex; i < currentMaxIndex; i++)
+        for (int i = _previousMaxIndex; i <= currentMaxIndex; i++)
         {
             // Add new genomes from the current wave
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
-                Debug.Log("EvolutionManager: Adding new genome to wave" + i + ": " + g);
+                Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyId} {g.headId} {g.legId}");
                 var genomeCopy = new Genome(
                     g.bodyId, g.headId, g.legId,
                     g.bodyScale, g.headScale, g.legScale);
@@ -233,12 +238,12 @@ public class EvolutionManager : MonoBehaviour
                     for (int j = 0; j < popIncreasePerVariant; j++)
                     {
                         _population[variant].Add(new EnemyIndividual(genomeCopy, variant));
-                        Debug.Log("PopulationPerVariant increased to " + populationPerVariant + " for variant " + variant);
                     }
                 }
-                popIncreasePerVariant += popIncreasePerVariant;
+                populationPerVariant += popIncreasePerVariant;
             }
         }
+        Debug.Log($"EvolutionManager: Population increased by {popIncreasePerVariant * _population.Count} for wave _{_currentWave}");
         _previousMaxIndex = currentMaxIndex;
     }
 

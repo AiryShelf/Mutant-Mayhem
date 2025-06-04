@@ -31,19 +31,32 @@ public class WaveSpawnerRandom : MonoBehaviour
 
     void Start()
     {
-        PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
-        maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex /
-                                    waveController.wavesTillAddIndex) +
-                                    currentPlanet.maxIndexToSelectAtStart + 
-                                    SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
+        CalculateMaxIndex();
 
         centerPoint = qCubeTrans.position;  
     }
 
     #region Build Wave
+    
+    public void CalculateMaxIndex()
+    {
+        // Calculate maxIndex based on current wave index and planet settings
+        PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
+        if (currentPlanet == null)
+        {
+            Debug.LogError("PlanetManager.Instance.currentPlanet is null in CalculateMaxIndex");
+            return;
+        }
+        maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex /
+                                    waveController.wavesTillAddIndex) +
+                                    currentPlanet.maxIndexToSelectAtStart + 
+                                    SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
+        maxIndex = Mathf.Clamp(maxIndex, 0, waveBase.subWaves.Count - 1);
+        Debug.Log("MaxIndex for wave " + waveController.currentWaveIndex + " set to: " + maxIndex);
+    }
 
     public void StartWave()
-    {       
+    {
         if (waveTimer != null)
         {
             StopCoroutine(waveTimer);
@@ -73,14 +86,8 @@ public class WaveSpawnerRandom : MonoBehaviour
         // Add more subwaves over time, apply difficulty
         numberOfSubwaves = Mathf.CeilToInt(numSubwavesAtStart + waveController.currentWaveIndex * 
                            SettingsManager.Instance.SubwaveListGrowthFactor);
-        
-        // Find max index to select based on current wave, plus starting max index
-        maxIndex = Mathf.FloorToInt(waveController.currentWaveIndex /
-                                    waveController.wavesTillAddIndex) +
-                                    currentPlanet.maxIndexToSelectAtStart + 
-                                    SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
-        maxIndex = Mathf.Clamp(maxIndex, 0, waveBase.subWaves.Count - 1);
-        Debug.Log("MaxIndex for wave " + waveController.currentWaveIndex + ": " + maxIndex);
+
+        CalculateMaxIndex();
 
         int prevSubwaveIndex = 0;
         int timeInSequence = 0;

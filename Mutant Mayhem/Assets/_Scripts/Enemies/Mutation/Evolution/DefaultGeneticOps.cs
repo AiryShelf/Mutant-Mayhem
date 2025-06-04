@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DefaultGeneticOps
 {
@@ -68,36 +69,49 @@ public class DefaultGeneticOps
         return new Genome(bodyId, headId, legId, bodyScale, headScale, legScale);
     }
 
-    public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
+public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
+{
+    bool mutatedPart = false;
+
+    var population = EvolutionManager.Instance.GetPopulation();
+
+    if (population.Count > 0)
     {
-        bool mutatedPart = false;
-        // 🔸 mutate part choice
-        if (Random.value < mutationRate && !mutatedPart)
-        {
-            genome.bodyId = RandomChoice(bodies).id;
-            mutatedPart = true;
-        }
-        if (Random.value < mutationRate && !mutatedPart)
-        {
-            genome.headId = RandomChoice(heads).id;
-            mutatedPart = true;
-        }
-        if (Random.value < mutationRate && !mutatedPart)
-        {
-            genome.legId = RandomChoice(legs).id;
-            mutatedPart = true;
-        }
+        // Flatten population to a single list
+        var allIndividuals = new List<EnemyIndividual>();
+        foreach (var list in population.Values)
+            allIndividuals.AddRange(list);
 
-        // 🔸 mutate scales
-        float delta = 0.2f * (1 + EvolutionManager.Instance._currentWave) * (1 + EvolutionManager.Instance.difficultyScalePerWave);
-        Debug.Log("EvolutionManager delta: " + delta);
-
-        if (Random.value < mutationRate) genome.bodyScale += Random.Range(-delta, delta);
-        if (Random.value < mutationRate) genome.headScale += Random.Range(-delta, delta);
-        if (Random.value < mutationRate) genome.legScale += Random.Range(-delta, delta);
-
-        ClampAndNormalize(ref genome, difficultyScaleTotal);
+        if (allIndividuals.Count > 0)
+        {
+            if (Random.value < mutationRate && !mutatedPart)
+            {
+                genome.bodyId = RandomChoice(allIndividuals).genome.bodyId;
+                mutatedPart = true;
+            }
+            if (Random.value < mutationRate && !mutatedPart)
+            {
+                genome.headId = RandomChoice(allIndividuals).genome.headId;
+                mutatedPart = true;
+            }
+            if (Random.value < mutationRate && !mutatedPart)
+            {
+                genome.legId = RandomChoice(allIndividuals).genome.legId;
+                mutatedPart = true;
+            }
+        }
     }
+
+    // 🔸 mutate scales
+    float delta = 0.2f * (1 + EvolutionManager.Instance._currentWave) * (1 + EvolutionManager.Instance.difficultyScalePerWave);
+    Debug.Log("EvolutionManager delta: " + delta);
+
+    if (Random.value < mutationRate) genome.bodyScale += Random.Range(-delta, delta);
+    if (Random.value < mutationRate) genome.headScale += Random.Range(-delta, delta);
+    if (Random.value < mutationRate) genome.legScale += Random.Range(-delta, delta);
+
+    ClampAndNormalize(ref genome, difficultyScaleTotal);
+}
 
     public void ClampAndNormalize(ref Genome genome, float maxTotal)
     {
@@ -119,4 +133,5 @@ public class DefaultGeneticOps
     }
 
     private T RandomChoice<T>(T[] arr) => arr[Random.Range(0, arr.Length)];
+    private T RandomChoice<T>(List<T> list) => list[Random.Range(0, list.Count)];
 }

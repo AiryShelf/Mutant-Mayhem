@@ -207,6 +207,7 @@ public class WaveControllerRandom : MonoBehaviour
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
 
+        waveSpawner.CalculateMaxIndex();
         EvolutionManager.Instance.EndWaveAndEvolve();
 
         if (currentWaveIndex >= PlanetManager.Instance.currentPlanet.nightToSurvive)

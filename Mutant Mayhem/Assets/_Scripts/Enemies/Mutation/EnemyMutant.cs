@@ -61,7 +61,7 @@ public class EnemyMutant : EnemyBase
         // Apply scales to health, damage, and movement speed
         health.SetMaxHealth(health.GetMaxHealth() * g.bodyScale);
         meleeController.meleeDamage *= g.headScale;
-        moveSpeedBase *= Mathf.Clamp(g.legScale / 4, 0.3f, 3);
+        moveSpeedBase *= Mathf.Clamp(g.legScale / 6, 0.3f, 3);
 
         Debug.Log($"Applied genome scales - Body: {g.bodyScale}, Head: {g.headScale}, Legs: {g.legScale}");
     }
