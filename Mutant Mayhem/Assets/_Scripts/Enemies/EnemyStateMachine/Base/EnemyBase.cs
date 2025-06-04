@@ -20,7 +20,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public float startMass; // For debug, don't set
 
     [Header("Randomize")]
-    public bool randomize;
+    public bool isMutant;
     public float randSpeedRange = 0.1f;
     public Vector3 startLocalScale;
     public float minSize;
@@ -75,25 +75,13 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     {
         waveController = FindObjectOfType<WaveControllerRandom>();
 
-        // Logic machine linked to state machine
-        EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
-        EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
-        EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
-        //EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
-
-        StateMachine = new EnemyStateMachine();
-        IdleState = new EnemyIdleState(this, StateMachine);
-        ChaseState = new EnemyChaseState(this, StateMachine);
-        ShootState = new EnemyShootState(this, StateMachine);
-        //MeleeState = new EnemyMeleeState(this, StateMachine);
-
         rb = GetComponent<Rigidbody2D>();
 
         startMass = rb.mass;
         startLocalScale = transform.localScale;
         moveSpeedBaseStart = moveSpeedBase;
 
-        StateMachine.Initialize(IdleState);
+        InitializeStateMachine();
     }
 
     void OnDisable() 
@@ -103,16 +91,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     void Start()
     {
-        EnemyIdleSOBaseInstance.Initialize(gameObject, this);
-        EnemyChaseSOBaseInstance.Initialize(gameObject, this);
-        EnemyShootSOBaseInstance.Initialize(gameObject, this);
-        //EnemyMeleeSOBaseInstance.Initialize(gameObject, this);
+        if (!isMutant) InitializeSOLogic(); 
     }
 
     void Update()
     {
         StateMachine.CurrentEnemyState.FrameUpdate();
     }
+
     void FixedUpdate() 
     {
         StateMachine.CurrentEnemyState.PhysicsUpdate();
@@ -132,7 +118,67 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         meleeController.Reset();
 
         StateMachine.ChangeState(IdleState);
-        if (randomize) RandomizeStats();
+        if (!isMutant) RandomizeStats();
+    }
+
+    public void InitializeStateMachine()
+    {
+        // Logic machine linked to state machine
+        EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
+        EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
+        EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
+        //EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
+
+        StateMachine = new EnemyStateMachine();
+        IdleState = new EnemyIdleState(this, StateMachine);
+        ChaseState = new EnemyChaseState(this, StateMachine);
+        ShootState = new EnemyShootState(this, StateMachine);
+        //MeleeState = new EnemyMeleeState(this, StateMachine);
+
+        StateMachine.Initialize(IdleState);
+    }
+
+    public void InitializeSOLogic()
+    {
+        StateMachine.ChangeState(IdleState);
+
+        // Initialize the SO logic for the enemy
+        EnemyIdleSOBaseInstance.Initialize(gameObject, this);
+        EnemyChaseSOBaseInstance.Initialize(gameObject, this);
+        EnemyShootSOBaseInstance.Initialize(gameObject, this);
+        //EnemyMeleeSOBaseInstance.Initialize(gameObject, this);
+    }
+
+    public void RestartStateMachine()
+    {
+        // Optional: Stop any ongoing logic
+        StopAllCoroutines();
+
+        // Optionally null out old state machine and states
+        StateMachine = null;
+        IdleState = null;
+        ChaseState = null;
+        ShootState = null;
+        MeleeState = null;
+
+        // Re-instantiate new ScriptableObject logic
+        EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
+        EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
+        EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
+
+        // Recreate state machine and states
+        StateMachine = new EnemyStateMachine();
+        IdleState = new EnemyIdleState(this, StateMachine);
+        ChaseState = new EnemyChaseState(this, StateMachine);
+        ShootState = new EnemyShootState(this, StateMachine);
+
+        // Initialize states
+        StateMachine.Initialize(IdleState);
+
+        // Initialize the SO logic with references to this GameObject
+        EnemyIdleSOBaseInstance.Initialize(gameObject, this);
+        EnemyChaseSOBaseInstance.Initialize(gameObject, this);
+        EnemyShootSOBaseInstance.Initialize(gameObject, this);
     }
 
     #endregion

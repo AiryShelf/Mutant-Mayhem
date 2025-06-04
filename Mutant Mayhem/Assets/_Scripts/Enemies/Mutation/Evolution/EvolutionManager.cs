@@ -106,12 +106,6 @@ public class EvolutionManager : MonoBehaviour
                     continue;
                 }
 
-                var enemyRenderer = enemy.GetComponent<EnemyRenderer>();
-                if (enemyRenderer == null)
-                {
-                    Debug.LogError("EvolutionManager: EnemyMutant prefab must have an EnemyRenderer component!");
-                    continue;
-                }
                 ind.fitness = 0f;
                 enemyMutant.InitializeMutant(ind);
 
@@ -199,7 +193,9 @@ public class EvolutionManager : MonoBehaviour
                     g.legId,
                     g.bodyScale,
                     g.headScale,
-                    g.legScale
+                    g.legScale,
+                    g.idleSOBase,
+                    g.chaseSOBase
                 );
 
                 _ops.ClampAndNormalize(ref genomeCopy, difficultyScaleTotal);
@@ -229,7 +225,8 @@ public class EvolutionManager : MonoBehaviour
                 Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyId} {g.headId} {g.legId}");
                 var genomeCopy = new Genome(
                     g.bodyId, g.headId, g.legId,
-                    g.bodyScale, g.headScale, g.legScale);
+                    g.bodyScale, g.headScale, g.legScale,
+                    g.idleSOBase, g.chaseSOBase);
 
                 _ops.ClampAndNormalize(ref genomeCopy, difficultyScaleTotal);
 
@@ -319,5 +316,5 @@ public class EnemyIndividual
 
     public EnemyIndividual CloneBare() => new EnemyIndividual(new Genome(
         genome.bodyId, genome.headId, genome.legId,
-        genome.bodyScale, genome.headScale, genome.legScale), variant);
+        genome.bodyScale, genome.headScale, genome.legScale, genome.idleSOBase, genome.chaseSOBase), variant);
 }

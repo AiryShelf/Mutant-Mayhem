@@ -7,7 +7,12 @@ public class LegGeneSO : ScriptableObject       // 🔸 NEW
     public RuntimeAnimatorController leftLegAnimatorController;
     public RuntimeAnimatorController rightLegAnimatorController;
 
-    [Header("Leg Animations Settings")]
+    [Header("Behavior Settings")]
+    public EnemyIdleSOBase idleSOBase;
+    public EnemyChaseSOBase chaseSOBase;
+    public bool isFlying = false;
+
+    [Header("Leg Animation Settings")]
     public float animSpeedFactor;
     public float switchToRunBuffer;
     public float maxAnimSpeed;

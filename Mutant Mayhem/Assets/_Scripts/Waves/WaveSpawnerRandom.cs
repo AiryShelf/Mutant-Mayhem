@@ -31,6 +31,7 @@ public class WaveSpawnerRandom : MonoBehaviour
 
     void Start()
     {
+        waveBase = PlanetManager.Instance.currentPlanet.waveSOBase;
         CalculateMaxIndex();
 
         centerPoint = qCubeTrans.position;  

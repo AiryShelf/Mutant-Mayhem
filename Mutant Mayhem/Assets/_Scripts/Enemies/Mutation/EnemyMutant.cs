@@ -8,11 +8,6 @@ public class EnemyMutant : EnemyBase
     public EnemyIndividual individual;
     public EnemyRenderer enemyRenderer;
 
-    public override void Awake()
-    {
-        base.Awake();
-    }
-
     public void InitializeMutant(EnemyIndividual ind)
     {
         if (ind == null)
@@ -24,6 +19,10 @@ public class EnemyMutant : EnemyBase
         AssignIndividual(ind);
         ApplyGenomeToPartStats();
         ApplyGenomeToEnemyRenderer();
+
+        //InitializeStateMachine();
+        ApplyGenomeToStateMachine();
+        RestartStateMachine();
     }
 
     public void AssignIndividual(EnemyIndividual individual)
@@ -52,7 +51,7 @@ public class EnemyMutant : EnemyBase
     {
         if (individual == null)
         {
-            Debug.LogWarning("No individual assigned to ApplyGenomeToParts.");
+            Debug.LogWarning("No individual assigned on ApplyGenomeToParts.");
             return;
         }
 
@@ -75,5 +74,17 @@ public class EnemyMutant : EnemyBase
         }
 
         enemyRenderer.ApplyGenome(individual.genome);
+    }
+
+    void ApplyGenomeToStateMachine()
+    {
+        EnemyIdleSOBaseInstance = Instantiate(individual.genome.idleSOBase);
+        EnemyChaseSOBaseInstance = Instantiate(individual.genome.chaseSOBase);
+
+        if (EnemyIdleSOBaseInstance == null || EnemyChaseSOBaseInstance == null)
+        {
+            Debug.LogError("EnemyIdleSOBase or EnemyChaseSOBase is null, failed to apply to state machine.");
+            return;
+        }
     }
 }

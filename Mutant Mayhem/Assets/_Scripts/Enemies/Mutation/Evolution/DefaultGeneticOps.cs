@@ -37,6 +37,8 @@ public class DefaultGeneticOps
         float bodyScale = a.bodyScale;
         float headScale = a.headScale;
         float legScale = a.legScale;
+        EnemyIdleSOBase idleSOBase = a.idleSOBase;
+        EnemyChaseSOBase chaseSOBase = a.chaseSOBase;
 
         // Decide how many parts to exchange (min 1, max all but one)
         int partsToSwap = Random.Range(1, a.numberOfGenes);
@@ -59,6 +61,8 @@ public class DefaultGeneticOps
                 case 2: // legs
                     legId = b.legId;
                     legScale = Mathf.Lerp(a.legScale, b.legScale, Random.value);
+                    idleSOBase = b.idleSOBase;
+                    chaseSOBase = b.chaseSOBase;
                     break;
                 default:
                     Debug.LogError($"Invalid index {index} in crossover operation. numberOfGenes is out of range. Expected 0, 1, or 2.");
@@ -66,7 +70,8 @@ public class DefaultGeneticOps
             }
         }
 
-        return new Genome(bodyId, headId, legId, bodyScale, headScale, legScale);
+        return new Genome(bodyId, headId, legId, bodyScale, headScale, legScale,
+                          idleSOBase, chaseSOBase);
     }
 
 public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
@@ -96,7 +101,10 @@ public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal
             }
             if (Random.value < mutationRate && !mutatedPart)
             {
-                genome.legId = RandomChoice(allIndividuals).genome.legId;
+                var individual = RandomChoice(allIndividuals);
+                genome.legId = individual.genome.legId;
+                genome.idleSOBase = individual.genome.idleSOBase;
+                genome.chaseSOBase = individual.genome.chaseSOBase;
                 mutatedPart = true;
             }
         }
