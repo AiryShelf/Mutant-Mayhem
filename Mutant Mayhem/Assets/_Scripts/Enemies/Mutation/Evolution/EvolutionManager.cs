@@ -188,14 +188,14 @@ public class EvolutionManager : MonoBehaviour
             {
                 Debug.Log("EvolutionManager: Adding genome to starting population for variant " + v + ": " + g);
                 var genomeCopy = new Genome(
-                    g.bodyId,
-                    g.headId,
-                    g.legId,
-                    g.bodyScale,
-                    g.headScale,
-                    g.legScale,
-                    g.idleSOBase,
-                    g.chaseSOBase
+                    g.bodyGene.id,
+                    g.headGene.id,
+                    g.legGene.id,
+                    g.bodyGene.scale,
+                    g.headGene.scale,
+                    g.legGene.scale,
+                    g.legGene.idleSOBase,
+                    g.legGene.chaseSOBase
                 );
 
                 _ops.ClampAndNormalize(ref genomeCopy, difficultyScaleTotal);

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SpawnTester : MonoBehaviour
 {
-    public EnemyRenderer enemyPrefab;
+    public MutantRenderer enemyPrefab;
 
     void Start()
     {

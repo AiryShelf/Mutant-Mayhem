@@ -43,7 +43,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public EnemyIdleState IdleState { get; set; }
     public EnemyChaseState ChaseState { get; set; }
     public EnemyShootState ShootState { get; set; }
-    public EnemyMeleeState MeleeState { get; set; }
+    //public EnemyMeleeState MeleeState { get; set; }
 
     public bool IsAggroed { get; set; }
     public bool IsShotAggroed { get; set; }
@@ -60,16 +60,16 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     [SerializeField] private EnemyShootSOBase EnemyShootSOBase;
     [SerializeField] private EnemyMeleeSOBase EnemyMeleeSOBase;
 
-    public EnemyIdleSOBase EnemyIdleSOBaseInstance { get; set; }
-    public EnemyChaseSOBase EnemyChaseSOBaseInstance { get; set; }
-    public EnemyShootSOBase EnemyShootSOBaseInstance { get; set; }
-    public EnemyMeleeSOBase EnemyMeleeSOBaseInstance { get; set; }
+    public EnemyIdleSOBase EnemyIdleSOBaseInstance;
+    public EnemyChaseSOBase EnemyChaseSOBaseInstance;
+    public EnemyShootSOBase EnemyShootSOBaseInstance;
+    public EnemyMeleeSOBase EnemyMeleeSOBaseInstance;
 
     #endregion
 
     #region Initialize / Reset
 
-    WaveControllerRandom waveController;
+    protected WaveControllerRandom waveController;
 
     public virtual void Awake()
     {
@@ -105,20 +105,36 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         // For SM debug
         //CurrentStateDebug = StateMachine.CurrentEnemyState.ToString();
     }
+    
+    public Rigidbody2D GetRigidbody()
+    {
+        return rb;
+    }
 
-    public void ResetStats()
+    public void ResetStatsEnemy()
     {
         isHit = false;
         health.hasDied = false;
         health.SetMaxHealth(health.startMaxHealth);
         health.SetHealth(health.GetMaxHealth());
+
         moveSpeedBase = moveSpeedBaseStart;
         rb.mass = startMass;
         transform.localScale = startLocalScale;
-        meleeController.Reset();
 
+        meleeController.Reset();
         StateMachine.ChangeState(IdleState);
-        if (!isMutant) RandomizeStats();
+        RandomizeStats();
+    }
+
+    void ResetStatsMutant()
+    {
+        isHit = false;
+        health.hasDied = false;
+        health.SetHealth(health.GetMaxHealth());
+
+        meleeController.Reset();
+        StateMachine.ChangeState(IdleState);
     }
 
     public void InitializeStateMachine()
@@ -143,10 +159,12 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         StateMachine.ChangeState(IdleState);
 
         // Initialize the SO logic for the enemy
-        EnemyIdleSOBaseInstance.Initialize(gameObject, this);
-        EnemyChaseSOBaseInstance.Initialize(gameObject, this);
-        EnemyShootSOBaseInstance.Initialize(gameObject, this);
-        //EnemyMeleeSOBaseInstance.Initialize(gameObject, this);
+        if (EnemyIdleSOBaseInstance != null)
+            EnemyIdleSOBaseInstance.Initialize(gameObject, this);
+        if (EnemyChaseSOBaseInstance != null)
+            EnemyChaseSOBaseInstance.Initialize(gameObject, this);
+        if (EnemyShootSOBaseInstance != null)
+            EnemyShootSOBaseInstance.Initialize(gameObject, this);
     }
 
     public void RestartStateMachine()
@@ -154,17 +172,26 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         // Optional: Stop any ongoing logic
         StopAllCoroutines();
 
+        // Clean up old SO instances to prevent stale logic when the object is reused from the pool
+        if (EnemyIdleSOBaseInstance != null) Destroy(EnemyIdleSOBaseInstance);
+        if (EnemyChaseSOBaseInstance != null) Destroy(EnemyChaseSOBaseInstance);
+        if (EnemyShootSOBaseInstance != null) Destroy(EnemyShootSOBaseInstance);
+
+
         // Optionally null out old state machine and states
         StateMachine = null;
         IdleState = null;
         ChaseState = null;
         ShootState = null;
-        MeleeState = null;
 
         // Re-instantiate new ScriptableObject logic
-        EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
-        EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
-        EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
+        if (EnemyIdleSOBase != null)
+            EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
+        if (EnemyChaseSOBase != null)
+            EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
+        if (EnemyShootSOBase != null)
+            EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
+
 
         // Recreate state machine and states
         StateMachine = new EnemyStateMachine();
@@ -172,20 +199,34 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         ChaseState = new EnemyChaseState(this, StateMachine);
         ShootState = new EnemyShootState(this, StateMachine);
 
-        // Initialize states
         StateMachine.Initialize(IdleState);
 
+        // Initialize stats and state
+        if (isMutant)
+            ResetStatsMutant();
+        else
+            ResetStatsEnemy();
+
         // Initialize the SO logic with references to this GameObject
-        EnemyIdleSOBaseInstance.Initialize(gameObject, this);
-        EnemyChaseSOBaseInstance.Initialize(gameObject, this);
-        EnemyShootSOBaseInstance.Initialize(gameObject, this);
+        InitializeSOLogic();
+    }
+
+    /// <summary>
+    /// Swap the ScriptableObject behaviour set at runtime then rebuild the state‑machine.
+    /// Call this right after retrieving the enemy from the pool if you need variant‑specific logic.
+    /// </summary>
+    public void ApplyBehaviourSet(EnemyIdleSOBase idleSO, EnemyChaseSOBase chaseSO, EnemyShootSOBase shootSO)
+    {
+        EnemyIdleSOBase = idleSO;
+        EnemyChaseSOBase = chaseSO;
+        EnemyShootSOBase = shootSO;
     }
 
     #endregion
 
-    #region Randomize
+        #region Randomize
 
-    void RandomizeStats()
+        void RandomizeStats()
     {
         //Debug.Log($"Randomize stats started with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
         

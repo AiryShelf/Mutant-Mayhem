@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyRenderer : MonoBehaviour
+public class MutantRenderer : MonoBehaviour
 {
     [Header("Anchors")]
     [SerializeField] Transform headAnchor;
@@ -8,7 +8,7 @@ public class EnemyRenderer : MonoBehaviour
     [SerializeField] Transform rightLegAnchor;
 
     [Header("Sprite Renderers")]
-    [SerializeField] Transform enemyBaseTransform;
+    //[SerializeField] Transform enemyBaseTransform;
     [SerializeField] SpriteRenderer bodySR;
     [SerializeField] SpriteRenderer headSR;
     [SerializeField] AnimationControllerMutant animationControllerMutant;
@@ -18,9 +18,9 @@ public class EnemyRenderer : MonoBehaviour
         GeneDatabase.InitialiseIfNeeded();
 
         // Look‑ups
-        var bodyGene = GeneDatabase.Body(g.bodyId);
-        var headGene = GeneDatabase.Head(g.headId);
-        var legGene = GeneDatabase.Leg(g.legId);
+        var bodyGene = GeneDatabase.Body(g.bodyGene.id);
+        var headGene = GeneDatabase.Head(g.headGene.id);
+        var legGene = GeneDatabase.Leg(g.legGene.id);
 
         /* 1️⃣  Set sprites and animators */
         bodySR.sprite = bodyGene.sprite;
@@ -32,14 +32,14 @@ public class EnemyRenderer : MonoBehaviour
         animationControllerMutant.maxAnimSpeed = legGene.maxAnimSpeed;
 
         /* 2️⃣  ✏  CHANGED  — Apply scales */
-        enemyBaseTransform.localScale = Vector3.one * g.bodyScale;  // Scale the whole enemy base
-        bodySR.transform.localScale = Vector3.one * g.bodyScale;
-        headAnchor.localScale = Vector3.one * g.headScale;
-        leftLegAnchor.localScale = Vector3.one * g.legScale;
-        rightLegAnchor.localScale = Vector3.one * g.legScale;
+        //enemyBaseTransform.localScale = Vector3.one * g.bodyScale;  // Scale the whole enemy base
+        bodySR.transform.localScale = Vector3.one * g.bodyGene.scale;
+        headAnchor.localScale = Vector3.one * g.headGene.scale;
+        leftLegAnchor.localScale = Vector3.one * g.legGene.scale;
+        rightLegAnchor.localScale = Vector3.one * g.legGene.scale;
 
-        headAnchor.localPosition = bodyGene.headAnchorOffset * g.bodyScale;
-        leftLegAnchor.localPosition = bodyGene.leftLegAnchorOffset * g.bodyScale;
-        rightLegAnchor.localPosition = bodyGene.rightLegAnchorOffset * g.bodyScale;
+        headAnchor.localPosition = bodyGene.headAnchorOffset * g.bodyGene.scale;
+        leftLegAnchor.localPosition = bodyGene.leftLegAnchorOffset * g.bodyGene.scale;
+        rightLegAnchor.localPosition = bodyGene.rightLegAnchorOffset * g.bodyGene.scale;
     }
 }

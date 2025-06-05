@@ -5,4 +5,5 @@ public class HeadGeneSO : ScriptableObject      // 🔸 NEW
 {
     public string id = "Head_Default";
     public Sprite sprite;
+    public float scale = 1f;
 }

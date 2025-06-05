@@ -6,6 +6,7 @@ public class LegGeneSO : ScriptableObject       // 🔸 NEW
     public string id = "Leg_Default";
     public RuntimeAnimatorController leftLegAnimatorController;
     public RuntimeAnimatorController rightLegAnimatorController;
+    public float scale = 1f;
 
     [Header("Behavior Settings")]
     public EnemyIdleSOBase idleSOBase;

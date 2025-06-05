@@ -1,12 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyMutant : EnemyBase
 {
     [Header("Mutation")]
     public EnemyIndividual individual;
-    public EnemyRenderer enemyRenderer;
+    public MutantRenderer mutantRenderer;
+    public Rigidbody2D mutantRb;
+    public CapsuleCollider2D bodyCollider;
+
+    public override void Awake()
+    {
+        waveController = FindObjectOfType<WaveControllerRandom>();
+
+        rb = mutantRb;
+
+        startMass = rb.mass;
+        startLocalScale = transform.localScale;
+        moveSpeedBaseStart = moveSpeedBase;
+
+        InitializeStateMachine();
+    }
 
     public void InitializeMutant(EnemyIndividual ind)
     {
@@ -20,8 +36,7 @@ public class EnemyMutant : EnemyBase
         ApplyGenomeToPartStats();
         ApplyGenomeToEnemyRenderer();
 
-        //InitializeStateMachine();
-        ApplyGenomeToStateMachine();
+        ApplyBehaviourSet(ind.genome.idleSOBase, ind.genome.chaseSOBase, ind.genome.shootSOBase);
         RestartStateMachine();
     }
 
@@ -47,6 +62,9 @@ public class EnemyMutant : EnemyBase
         }
         base.Die();
     }
+
+    #region Apply Genome
+
     public void ApplyGenomeToPartStats()
     {
         if (individual == null)
@@ -57,34 +75,29 @@ public class EnemyMutant : EnemyBase
 
         Genome g = individual.genome;
 
-        // Apply scales to health, damage, and movement speed
-        health.SetMaxHealth(health.GetMaxHealth() * g.bodyScale);
-        meleeController.meleeDamage *= g.headScale;
-        moveSpeedBase *= Mathf.Clamp(g.legScale / 6, 0.3f, 3);
+        // Apply scales
+        health.SetMaxHealth(health.GetMaxHealth() * g.bodyGene.scale);
+        rb.mass = startMass * g.bodyGene.scale;
+        bodyCollider.offset = g.bodyColliderOffset;
+        bodyCollider.size = g.bodyColliderSize * g.bodyGene.scale;
 
-        Debug.Log($"Applied genome scales - Body: {g.bodyScale}, Head: {g.headScale}, Legs: {g.legScale}");
+        meleeController.meleeDamage *= g.headScale;
+
+        moveSpeedBase *= Mathf.Clamp(g.legScale / 2, 0.3f, 3);
+
+        Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");
     }
 
     void ApplyGenomeToEnemyRenderer()
     {
-        if (enemyRenderer == null)
+        if (mutantRenderer == null)
         {
             Debug.LogWarning("No enemy renderer assigned to ApplyGenomeToEnemyRenderer.");
             return;
         }
 
-        enemyRenderer.ApplyGenome(individual.genome);
+        mutantRenderer.ApplyGenome(individual.genome);
     }
 
-    void ApplyGenomeToStateMachine()
-    {
-        EnemyIdleSOBaseInstance = Instantiate(individual.genome.idleSOBase);
-        EnemyChaseSOBaseInstance = Instantiate(individual.genome.chaseSOBase);
-
-        if (EnemyIdleSOBaseInstance == null || EnemyChaseSOBaseInstance == null)
-        {
-            Debug.LogError("EnemyIdleSOBase or EnemyChaseSOBase is null, failed to apply to state machine.");
-            return;
-        }
-    }
+    #endregion
 }

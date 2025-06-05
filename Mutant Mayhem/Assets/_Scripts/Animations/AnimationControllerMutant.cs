@@ -16,7 +16,7 @@ public class AnimationControllerMutant : AnimationControllerEnemy
         if (myMutant != null)
         {
             baseSpeed = myMutant.moveSpeedBase;
-            myRb = myMutant.GetComponent<Rigidbody2D>();
+            myRb = myMutant.GetRigidbody();
         }
     }
 

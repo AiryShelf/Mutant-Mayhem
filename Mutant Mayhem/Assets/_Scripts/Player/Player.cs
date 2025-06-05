@@ -243,7 +243,7 @@ public class Player : MonoBehaviour
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
         sprintCoroutine = StartCoroutine(Sprint(true));
-        Debug.Log("Sprint was triggered");
+        //Debug.Log("Sprint was triggered");
     }
 
     public void SprintInput_Cancelled(InputAction.CallbackContext context)
@@ -251,7 +251,7 @@ public class Player : MonoBehaviour
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
         sprintCoroutine = StartCoroutine(Sprint(false));
-        Debug.Log("Sprint was cancelled");
+        //Debug.Log("Sprint was cancelled");
     }
 
     void OnToolbar()
