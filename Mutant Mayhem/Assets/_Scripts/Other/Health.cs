@@ -113,7 +113,7 @@ public class Health : MonoBehaviour
         corpse.transform.position = transform.position;
         corpse.transform.rotation = transform.rotation;
         corpse.transform.localScale = transform.localScale;
-        corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;
+        corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponentInChildren<SpriteRenderer>().color;
     }
 
     public virtual void Die() { }

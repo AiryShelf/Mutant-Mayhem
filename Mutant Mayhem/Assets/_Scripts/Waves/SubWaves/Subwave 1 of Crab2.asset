@@ -17,15 +17,5 @@ MonoBehaviour:
   numberToSpawn:
   - 1
   genomeList:
-  - bodyId: Body_Crab2
-    headId: Head_Crab2
-    legId: Leg_Crab2
-    bodyScale: 6
-    headScale: 6
-    legScale: 6
-    idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
-    chaseSOBase: {fileID: 11400000, guid: e800cd9523d9f6344b43d6463422dd23, type: 2}
-    shootSOBase: {fileID: 0}
-    bodyColliderOffset: {x: 0, y: 0}
-    bodyColliderSize: {x: 0, y: 0}
+  - {fileID: 11400000, guid: 26cc5572ae26749628f5c3d5bcc31e9f, type: 2}
   popIncreasePerVariant: 1

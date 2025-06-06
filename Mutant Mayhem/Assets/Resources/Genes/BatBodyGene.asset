@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Body_Bat
   sprite: {fileID: 21300000, guid: bcc92f64bb94d47f09a0e6f669d787f1, type: 3}
+  scale: 2
+  bodyColliderOffset: {x: 0, y: 0}
+  bodyColliderSize: {x: 1, y: 1}
   headAnchorOffset: {x: 0.05, y: 0}
   leftLegAnchorOffset: {x: 0.02, y: 0.03}
   rightLegAnchorOffset: {x: 0.02, y: -0.03}

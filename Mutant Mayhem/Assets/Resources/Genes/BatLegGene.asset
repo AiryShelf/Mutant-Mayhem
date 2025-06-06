@@ -15,9 +15,10 @@ MonoBehaviour:
   id: Leg_Bat
   leftLegAnimatorController: {fileID: 9100000, guid: 8a17212a3ebd14b18a0da2e53090ef52, type: 2}
   rightLegAnimatorController: {fileID: 9100000, guid: 71e51e3ba54204faa893424987d2ee9c, type: 2}
-  scale: 1
+  scale: 2
   idleSOBase: {fileID: 11400000, guid: 7dc61f6d55ac28d4e9e2478e3724dc80, type: 2}
   chaseSOBase: {fileID: 11400000, guid: eb3cd8804b94be74b81dfc0f2849458c, type: 2}
+  shootSOBase: {fileID: 0}
   isFlying: 1
   animSpeedFactor: 0.6
   switchToRunBuffer: 1.6

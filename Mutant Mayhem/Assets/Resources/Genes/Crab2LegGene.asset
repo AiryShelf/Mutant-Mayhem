@@ -15,8 +15,11 @@ MonoBehaviour:
   id: Leg_Crab2
   leftLegAnimatorController: {fileID: 9100000, guid: 75776207d03b544fb9b865852baa409d, type: 2}
   rightLegAnimatorController: {fileID: 9100000, guid: b7d0d9f0db74640b3b808ffb6e4b27c3, type: 2}
+  scale: 6
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   chaseSOBase: {fileID: 11400000, guid: e800cd9523d9f6344b43d6463422dd23, type: 2}
+  shootSOBase: {fileID: 0}
+  isFlying: 0
   animSpeedFactor: 1
   switchToRunBuffer: 1.6
   maxAnimSpeed: 10

@@ -11,6 +11,7 @@ public class LegGeneSO : ScriptableObject       // 🔸 NEW
     [Header("Behavior Settings")]
     public EnemyIdleSOBase idleSOBase;
     public EnemyChaseSOBase chaseSOBase;
+    public EnemyShootSOBase shootSOBase;
     public bool isFlying = false;
 
     [Header("Leg Animation Settings")]

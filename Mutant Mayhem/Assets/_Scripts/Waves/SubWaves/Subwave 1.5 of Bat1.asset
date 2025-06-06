@@ -17,12 +17,5 @@ MonoBehaviour:
   numberToSpawn:
   - 1.5
   genomeList:
-  - bodyId: Body_Bat
-    headId: Head_Bat
-    legId: Leg_Bat
-    bodyScale: 2
-    headScale: 2
-    legScale: 2
-    idleSOBase: {fileID: 11400000, guid: 7dc61f6d55ac28d4e9e2478e3724dc80, type: 2}
-    chaseSOBase: {fileID: 11400000, guid: eb3cd8804b94be74b81dfc0f2849458c, type: 2}
+  - {fileID: 11400000, guid: b768e9ed15f8e495689b59dfc762d087, type: 2}
   popIncreasePerVariant: 1

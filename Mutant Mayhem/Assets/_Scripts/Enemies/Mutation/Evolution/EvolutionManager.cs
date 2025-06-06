@@ -187,19 +187,10 @@ public class EvolutionManager : MonoBehaviour
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
                 Debug.Log("EvolutionManager: Adding genome to starting population for variant " + v + ": " + g);
-                var genomeCopy = new Genome(
-                    g.bodyGene.id,
-                    g.headGene.id,
-                    g.legGene.id,
-                    g.bodyGene.scale,
-                    g.headGene.scale,
-                    g.legGene.scale,
-                    g.legGene.idleSOBase,
-                    g.legGene.chaseSOBase
-                );
+                var genome = g.ToGenome();
 
-                _ops.ClampAndNormalize(ref genomeCopy, difficultyScaleTotal);
-                list.Add(new EnemyIndividual(genomeCopy, v));
+                _ops.ClampAndNormalize(ref genome, difficultyScaleTotal);
+                list.Add(new EnemyIndividual(genome, v));
             }
         }
 
@@ -222,19 +213,16 @@ public class EvolutionManager : MonoBehaviour
             // Add new genomes from the current wave
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
-                Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyId} {g.headId} {g.legId}");
-                var genomeCopy = new Genome(
-                    g.bodyId, g.headId, g.legId,
-                    g.bodyScale, g.headScale, g.legScale,
-                    g.idleSOBase, g.chaseSOBase);
+                Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyGene.id} {g.headGene.id} {g.legGene.id}");
+                var genome = g.ToGenome();
 
-                _ops.ClampAndNormalize(ref genomeCopy, difficultyScaleTotal);
+                _ops.ClampAndNormalize(ref genome, difficultyScaleTotal);
 
                 foreach (var variant in _population.Keys.ToArray())
                 {
                     for (int j = 0; j < popIncreasePerVariant; j++)
                     {
-                        _population[variant].Add(new EnemyIndividual(genomeCopy, variant));
+                        _population[variant].Add(new EnemyIndividual(genome, variant));
                     }
                 }
                 populationPerVariant += popIncreasePerVariant;
@@ -252,13 +240,13 @@ public class EvolutionManager : MonoBehaviour
         for (int i = 0; i < populationPerVariant; i++)
         {
             var g = new Genome(
-                GetRandom<BodyGeneSO>().id,
-                GetRandom<HeadGeneSO>().id,
-                GetRandom<LegGeneSO>().id,
-                Random.Range(2, 4f),    // body
-                Random.Range(2, 4f),    // head
-                Random.Range(2, 4f)     // leg
+                GetRandom<BodyGeneSO>(),
+                GetRandom<HeadGeneSO>(),
+                GetRandom<LegGeneSO>()
             );
+            g.bodyGene.scale = Random.Range(2f, 4f);
+            g.headGene.scale = Random.Range(2f, 4f);
+            g.legGene.scale = Random.Range(2f, 4f);
 
             _ops.ClampAndNormalize(ref g, difficultyScaleTotal);
 
@@ -314,7 +302,5 @@ public class EnemyIndividual
         fitness += amount;
     }
 
-    public EnemyIndividual CloneBare() => new EnemyIndividual(new Genome(
-        genome.bodyId, genome.headId, genome.legId,
-        genome.bodyScale, genome.headScale, genome.legScale, genome.idleSOBase, genome.chaseSOBase), variant);
+    public EnemyIndividual CloneBare() => new EnemyIndividual(new Genome(genome.bodyGene, genome.headGene, genome.legGene), variant);
 }

@@ -111,7 +111,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         return rb;
     }
 
-    public void ResetStatsEnemy()
+    public void ResetStats()
     {
         isHit = false;
         health.hasDied = false;
@@ -124,17 +124,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
         meleeController.Reset();
         StateMachine.ChangeState(IdleState);
-        RandomizeStats();
-    }
 
-    void ResetStatsMutant()
-    {
-        isHit = false;
-        health.hasDied = false;
-        health.SetHealth(health.GetMaxHealth());
+        if (!isMutant) RandomizeStats();
 
-        meleeController.Reset();
-        StateMachine.ChangeState(IdleState);
+        RandomizeColor();
     }
 
     public void InitializeStateMachine()
@@ -201,12 +194,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
         StateMachine.Initialize(IdleState);
 
-        // Initialize stats and state
-        if (isMutant)
-            ResetStatsMutant();
-        else
-            ResetStatsEnemy();
-
         // Initialize the SO logic with references to this GameObject
         InitializeSOLogic();
     }
@@ -224,30 +211,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     #endregion
 
-        #region Randomize
+    #region Randomize
 
-        void RandomizeStats()
+    void RandomizeStats()
     {
         //Debug.Log($"Randomize stats started with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
         
         // Randomize speed
         moveSpeedBase *= Random.Range(1 - randSpeedRange, 1 + randSpeedRange);
-
-        // Randomize color, allowing it to change more drastically over time
-        float red = sr.color.r;
-        float green = sr.color.g;
-        float blue = sr.color.b;
-
-        red += Random.Range(-randColorRange, randColorRange);
-        if (red < 0.15f)
-            red += 0.2f;
-        green += Random.Range(-randColorRange, randColorRange);
-        if (green < 0.15f)
-            green += 0.2f;
-        blue += Random.Range(-randColorRange, randColorRange);
-        if (blue < 0.15f)
-            blue += 0.2f;
-        sr.color = new Color(red, green, blue);
         
         // Randomize size, apply multipliers
         GaussianRandom _gaussianRandom = new GaussianRandom();
@@ -270,6 +241,25 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         animControllerEnemy.animSpeedFactor /= randomSizeFactor;
 
         //Debug.Log($"Randomize stats finished with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
+    }
+
+    public virtual void RandomizeColor()
+    {
+        // Randomize color, allowing it to change more drastically over time
+        float red = sr.color.r;
+        float green = sr.color.g;
+        float blue = sr.color.b;
+
+        red += Random.Range(-randColorRange, randColorRange);
+        if (red < 0.15f)
+            red += 0.2f;
+        green += Random.Range(-randColorRange, randColorRange);
+        if (green < 0.15f)
+            green += 0.2f;
+        blue += Random.Range(-randColorRange, randColorRange);
+        if (blue < 0.15f)
+            blue += 0.2f;
+        sr.color = new Color(red, green, blue);
     }
 
     #endregion

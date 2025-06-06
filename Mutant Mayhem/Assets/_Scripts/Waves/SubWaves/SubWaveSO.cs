@@ -8,6 +8,6 @@ public class SubWaveSO : ScriptableObject
 {
     public List<GameObject> enemyPrefabList;
     public List<float> numberToSpawn;
-    public List<Genome> genomeList;
+    public List<GenomeSO> genomeList;
     public int popIncreasePerVariant = 1;
 }

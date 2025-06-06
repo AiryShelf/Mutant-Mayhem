@@ -389,15 +389,16 @@ public class WaveSpawnerRandom : MonoBehaviour
         {
             EnemyCounter.EnemyCount++;
 
-            EnemyBase enemyBase = subWave.enemyPrefabList[index].GetComponent<EnemyBase>();
-            if (enemyBase == null)
+            EnemyBase enemyBasePrefab = subWave.enemyPrefabList[index].GetComponent<EnemyBase>();
+            if (enemyBasePrefab == null)
             {
                 Debug.LogError("Could not find EnemyBase in prefab when spawning enemy");
                 return false;
             }
 
-            GameObject enemyObj = PoolManager.Instance.GetFromPool(enemyBase.objectPoolName);
-            enemyObj.GetComponent<EnemyBase>().ResetStatsEnemy();
+            GameObject enemyObj = PoolManager.Instance.GetFromPool(enemyBasePrefab.objectPoolName);
+            EnemyBase enemyBase = enemyObj.GetComponent<EnemyBase>();
+            enemyBase.ResetStats();
             enemyObj.transform.position = spawnPos;
             
             return true;

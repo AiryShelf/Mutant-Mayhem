@@ -17,15 +17,5 @@ MonoBehaviour:
   numberToSpawn:
   - 1
   genomeList:
-  - bodyId: Body_Dog
-    headId: Head_Dog
-    legId: Leg_Dog
-    bodyScale: 6
-    headScale: 6
-    legScale: 6
-    idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
-    chaseSOBase: {fileID: 11400000, guid: eb3cd8804b94be74b81dfc0f2849458c, type: 2}
-    shootSOBase: {fileID: 0}
-    bodyColliderOffset: {x: 0.007076533, y: 0}
-    bodyColliderSize: {x: 0.14, y: 0.06605736}
+  - {fileID: 11400000, guid: 7203b62ca48f342b498d617c9c53bbdb, type: 2}
   popIncreasePerVariant: 1

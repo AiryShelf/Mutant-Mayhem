@@ -17,8 +17,7 @@ public class DefaultGeneticOps
 
     public Genome Crossover(Genome a, Genome b)
     {
-        Debug.Log("Crossover between genomes: " + a + " and " + b);
-
+        // Validate parents
         if (a == null || b == null)
         {
             Debug.LogError("Crossover failed: One or both genomes are null.");
@@ -30,19 +29,14 @@ public class DefaultGeneticOps
             return null;
         }
 
-        // Start with a copy of A
-        string bodyId = a.bodyGene.id;
-        string headId = a.headGene.id;
-        string legId = a.legGene.id;
-        float bodyScale = a.bodyGene.scale;
-        float headScale = a.headGene.scale;
-        float legScale = a.legGene.scale;
-        EnemyIdleSOBase idleSOBase = a.legGene.idleSOBase;
-        EnemyChaseSOBase chaseSOBase = a.legGene.chaseSOBase;
+        // Start with all genes from parent A
+        BodyGeneSO bodyGene = a.bodyGene;
+        HeadGeneSO headGene = a.headGene;
+        LegGeneSO  legGene  = a.legGene;
 
-        // Decide how many parts to exchange (min 1, max all but one)
+        // Decide how many parts to swap (min 1, max 2)
         int partsToSwap = Random.Range(1, a.numberOfGenes);
-        var partIndices = new System.Collections.Generic.HashSet<int>();
+        var partIndices = new HashSet<int>();
         while (partIndices.Count < partsToSwap)
             partIndices.Add(Random.Range(0, a.numberOfGenes));
 
@@ -51,32 +45,24 @@ public class DefaultGeneticOps
             switch (index)
             {
                 case 0: // body
-                    bodyId = b.bodyGene.id;
-                    bodyScale = Mathf.Lerp(a.bodyGene.scale, b.bodyGene.scale, Random.value);
-                    Debug.Log("Swapped to bodyId: " + bodyId + ", bodyScale: " + bodyScale);
+                    bodyGene = b.bodyGene;
+                    bodyGene.scale = Mathf.Lerp(a.bodyGene.scale, b.bodyGene.scale, Random.Range(0f, 1f));
+                    Debug.Log($"[Crossover] Swapped body gene to “{bodyGene.id}”");
                     break;
                 case 1: // head
-                    headId = b.headGene.id;
-                    headScale = Mathf.Lerp(a.headGene.scale, b.headGene.scale, Random.value);
-                    Debug.Log("Swapped to headId: " + headId + ", headScale: " + headScale);
+                    headGene = b.headGene;
+                    headGene.scale = Mathf.Lerp(a.headGene.scale, b.headGene.scale, Random.Range(0f, 1f));
+                    Debug.Log($"[Crossover] Swapped head gene to “{headGene.id}”");
                     break;
                 case 2: // legs
-                    legId = b.legGene.id;
-                    legScale = Mathf.Lerp(a.legGene.scale, b.legGene.scale, Random.value);
-                    idleSOBase = b.idleSOBase;
-                    chaseSOBase = b.chaseSOBase;
-                    Debug.Log("Swapped to legId: " + legId + ", legScale: " + legScale);
-                    Debug.Log("Swapped idleSOBase: " + (idleSOBase != null ? idleSOBase.name : "null") +
-                              ", chaseSOBase: " + (chaseSOBase != null ? chaseSOBase.name : "null"));
-                    break;
-                default:
-                    Debug.LogError($"Invalid index {index} in crossover operation. numberOfGenes is out of range. Expected 0, 1, or 2.");
+                    legGene = b.legGene;
+                    legGene.scale = Mathf.Lerp(a.legGene.scale, b.legGene.scale, Random.Range(0f, 1f));
+                    Debug.Log($"[Crossover] Swapped leg gene to “{legGene.id}”");
                     break;
             }
         }
 
-        return new Genome(bodyId, headId, legId, bodyScale, headScale, legScale,
-                          idleSOBase, chaseSOBase);
+        return new Genome(bodyGene, headGene, legGene);
     }
 
 public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
@@ -98,20 +84,17 @@ public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal
             {
                 if (Random.value < mutationRate && !mutatedPart)
                 {
-                    genome.bodyId = RandomChoice(allIndividuals).genome.bodyId;
+                    genome.bodyGene = RandomChoice(allIndividuals).genome.bodyGene;
                     mutatedPart = true;
                 }
                 if (Random.value < mutationRate && !mutatedPart)
                 {
-                    genome.headId = RandomChoice(allIndividuals).genome.headId;
+                    genome.headGene = RandomChoice(allIndividuals).genome.headGene;
                     mutatedPart = true;
                 }
                 if (Random.value < mutationRate && !mutatedPart)
                 {
-                    var individual = RandomChoice(allIndividuals);
-                    genome.legId = individual.genome.legId;
-                    genome.idleSOBase = individual.genome.idleSOBase;
-                    genome.chaseSOBase = individual.genome.chaseSOBase;
+                    genome.legGene = RandomChoice(allIndividuals).genome.legGene;
                     mutatedPart = true;
                 }
             }

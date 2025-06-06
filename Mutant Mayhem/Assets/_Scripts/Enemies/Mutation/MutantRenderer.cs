@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MutantRenderer : MonoBehaviour
@@ -12,6 +13,16 @@ public class MutantRenderer : MonoBehaviour
     [SerializeField] SpriteRenderer bodySR;
     [SerializeField] SpriteRenderer headSR;
     [SerializeField] AnimationControllerMutant animationControllerMutant;
+
+    SpriteRenderer leftLegSR;
+    SpriteRenderer rightLegSR;
+
+    void Awake()
+    {
+        // Get the SpriteRenderers from the AnimationControllerMutant
+        leftLegSR = animationControllerMutant.leftLegAnimator.GetComponent<SpriteRenderer>();
+        rightLegSR = animationControllerMutant.rightLegAnimator.GetComponent<SpriteRenderer>();
+    }
 
     public void ApplyGenome(Genome g)
     {
@@ -41,5 +52,38 @@ public class MutantRenderer : MonoBehaviour
         headAnchor.localPosition = bodyGene.headAnchorOffset * g.bodyGene.scale;
         leftLegAnchor.localPosition = bodyGene.leftLegAnchorOffset * g.bodyGene.scale;
         rightLegAnchor.localPosition = bodyGene.rightLegAnchorOffset * g.bodyGene.scale;
+    }
+
+    public void RandomizeColor(float randColorRange)
+    {
+        SpriteRenderer[] renderers = new SpriteRenderer[]
+        {
+            bodySR,
+            headSR,
+            leftLegSR,
+            rightLegSR
+        };
+
+        foreach (var renderer in renderers)
+        {
+            Color color = renderer.color;
+            float red = color.r + Random.Range(-randColorRange, randColorRange);
+            float green = color.g + Random.Range(-randColorRange, randColorRange);
+            float blue = color.b + Random.Range(-randColorRange, randColorRange);
+
+            if (red + green + blue < 0.75f)
+            {
+                var factor = 0.75f / (red + green + blue);
+                red *= factor;
+                green *= factor;
+                blue *= factor;
+            }
+
+            red = Mathf.Clamp01(red);
+            green = Mathf.Clamp01(green);
+            blue = Mathf.Clamp01(blue);
+
+            renderer.color = new Color(red, green, blue, color.a);
+        }
     }
 }

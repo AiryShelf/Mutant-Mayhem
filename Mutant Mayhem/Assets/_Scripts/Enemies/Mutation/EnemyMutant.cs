@@ -33,11 +33,13 @@ public class EnemyMutant : EnemyBase
         }
 
         AssignIndividual(ind);
+        LegGeneSO legGene = ind.genome.legGene;
+        ApplyBehaviourSet(legGene.idleSOBase, legGene.chaseSOBase, legGene.shootSOBase);
+        RestartStateMachine();
+        ResetStats();
+        
         ApplyGenomeToPartStats();
         ApplyGenomeToEnemyRenderer();
-
-        ApplyBehaviourSet(ind.genome.idleSOBase, ind.genome.chaseSOBase, ind.genome.shootSOBase);
-        RestartStateMachine();
     }
 
     public void AssignIndividual(EnemyIndividual individual)
@@ -63,6 +65,11 @@ public class EnemyMutant : EnemyBase
         base.Die();
     }
 
+    public override void RandomizeColor()
+    {
+        mutantRenderer.RandomizeColor(randColorRange);
+    }
+
     #region Apply Genome
 
     public void ApplyGenomeToPartStats()
@@ -78,12 +85,12 @@ public class EnemyMutant : EnemyBase
         // Apply scales
         health.SetMaxHealth(health.GetMaxHealth() * g.bodyGene.scale);
         rb.mass = startMass * g.bodyGene.scale;
-        bodyCollider.offset = g.bodyColliderOffset;
-        bodyCollider.size = g.bodyColliderSize * g.bodyGene.scale;
+        bodyCollider.offset = g.bodyGene.bodyColliderOffset;
+        bodyCollider.size = g.bodyGene.bodyColliderSize * g.bodyGene.scale;
 
-        meleeController.meleeDamage *= g.headScale;
+        meleeController.meleeDamage *= g.headGene.scale;
 
-        moveSpeedBase *= Mathf.Clamp(g.legScale / 2, 0.3f, 3);
+        moveSpeedBase *= Mathf.Clamp(g.legGene.scale / 2, 0.3f, 3);
 
         Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");
     }
