@@ -7,17 +7,17 @@ using UnityEngine;
 public class GenomeSO : ScriptableObject
 {
     [Header("Genes")]
-    public BodyGeneSO bodyGene;
-    public HeadGeneSO headGene;
-    public LegGeneSO  legGene;
+    public BodyGeneSO bodyGeneSO;
+    public HeadGeneSO headGeneSO;
+    public LegGeneSO  legGeneSO;
 
     public Genome ToGenome()
     {
-        return new Genome(bodyGene, headGene, legGene)
+        return new Genome(bodyGeneSO, headGeneSO, legGeneSO)
         {
-            bodyGene = bodyGene,
-            headGene = headGene,
-            legGene =  legGene         
+            bodyGene = Instantiate(bodyGeneSO),
+            headGene = Instantiate(headGeneSO),
+            legGene = Instantiate(legGeneSO)      
         };
     }
 }

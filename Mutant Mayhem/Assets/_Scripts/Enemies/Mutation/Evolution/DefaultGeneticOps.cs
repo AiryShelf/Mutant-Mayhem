@@ -47,16 +47,19 @@ public class DefaultGeneticOps
                 case 0: // body
                     bodyGene = b.bodyGene;
                     bodyGene.scale = Mathf.Lerp(a.bodyGene.scale, b.bodyGene.scale, Random.Range(0f, 1f));
+                    bodyGene.color = Color.Lerp(a.bodyGene.color, b.bodyGene.color, Random.Range(0f, 1f));
                     Debug.Log($"[Crossover] Swapped body gene to “{bodyGene.id}”");
                     break;
                 case 1: // head
                     headGene = b.headGene;
                     headGene.scale = Mathf.Lerp(a.headGene.scale, b.headGene.scale, Random.Range(0f, 1f));
+                    headGene.color = Color.Lerp(a.headGene.color, b.headGene.color, Random.Range(0f, 1f));
                     Debug.Log($"[Crossover] Swapped head gene to “{headGene.id}”");
                     break;
                 case 2: // legs
                     legGene = b.legGene;
                     legGene.scale = Mathf.Lerp(a.legGene.scale, b.legGene.scale, Random.Range(0f, 1f));
+                    legGene.color = Color.Lerp(a.legGene.color, b.legGene.color, Random.Range(0f, 1f));
                     Debug.Log($"[Crossover] Swapped leg gene to “{legGene.id}”");
                     break;
             }
@@ -70,35 +73,51 @@ public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal
     bool mutatedPart = false;
 
     var population = EvolutionManager.Instance.GetPopulation();
-    Debug.Log("Population variant count: " + population.Count);
+    Debug.Log("[Mutate] Population variant count: " + population.Count);
 
     if (population.Count > 0)
-        {
-            //
-            var allIndividuals = new List<EnemyIndividual>();
-            foreach (var list in population.Values)
-                allIndividuals.AddRange(list);
-            Debug.Log("All individuals count: " + allIndividuals.Count);
+    {
+        var allIndividuals = new List<EnemyIndividual>();
+        foreach (var list in population.Values)
+            allIndividuals.AddRange(list);
+        Debug.Log("[Mutate] All individuals count: " + allIndividuals.Count);
 
-            if (allIndividuals.Count > 0)
+        if (allIndividuals.Count > 0)
+        {
+            if (Random.value < mutationRate)
             {
-                if (Random.value < mutationRate && !mutatedPart)
-                {
-                    genome.bodyGene = RandomChoice(allIndividuals).genome.bodyGene;
-                    mutatedPart = true;
-                }
-                if (Random.value < mutationRate && !mutatedPart)
-                {
-                    genome.headGene = RandomChoice(allIndividuals).genome.headGene;
-                    mutatedPart = true;
-                }
-                if (Random.value < mutationRate && !mutatedPart)
-                {
-                    genome.legGene = RandomChoice(allIndividuals).genome.legGene;
-                    mutatedPart = true;
-                }
+                BodyGeneSO newGene = RandomChoice(allIndividuals).genome.bodyGene;
+                Color newColor = Color.Lerp(genome.bodyGene.color, newGene.color, Random.Range(0f, 1f));
+                newGene.color = newColor;
+                newGene.scale = genome.bodyGene.scale;
+                Debug.Log($"[Mutate] Mutated body gene {genome.bodyGene.id} to: {newGene.id}");
+
+                genome.bodyGene = newGene;
+                mutatedPart = true;
+            }
+            if (Random.value < mutationRate && !mutatedPart)
+            {
+                HeadGeneSO newGene = RandomChoice(allIndividuals).genome.headGene;
+                Color newColor = Color.Lerp(genome.headGene.color, newGene.color, Random.Range(0f, 1f));
+                newGene.color = newColor;
+                newGene.scale = genome.headGene.scale;
+                Debug.Log($"[Mutate] Mutated head gene {genome.headGene.id} to: {newGene.id}");
+
+                genome.headGene = newGene;
+                mutatedPart = true;
+            }
+            if (Random.value < mutationRate && !mutatedPart)
+            {
+                LegGeneSO newGene = RandomChoice(allIndividuals).genome.legGene;
+                Color newColor = Color.Lerp(genome.legGene.color, newGene.color, Random.Range(0f, 1f));
+                newGene.color = newColor;
+                newGene.scale = genome.legGene.scale;
+                Debug.Log($"[Mutate] Mutated leg gene {genome.legGene.id} to: {newGene.id}");
+
+                genome.legGene = newGene;
             }
         }
+    }
 
     // 🔸 mutate scales
     float delta = 0.2f * (1 + EvolutionManager.Instance._currentWave);

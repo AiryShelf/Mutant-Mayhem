@@ -213,7 +213,7 @@ public class EvolutionManager : MonoBehaviour
             // Add new genomes from the current wave
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
-                Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyGene.id} {g.headGene.id} {g.legGene.id}");
+                Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyGeneSO.id} {g.headGeneSO.id} {g.legGeneSO.id}");
                 var genome = g.ToGenome();
 
                 _ops.ClampAndNormalize(ref genome, difficultyScaleTotal);

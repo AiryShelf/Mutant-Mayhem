@@ -1,11 +1,13 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "EnemyEvolution/Genes/Leg")]
-public class LegGeneSO : ScriptableObject       // 🔸 NEW
+public class LegGeneSO : ScriptableObject
 {
     public string id = "Leg_Default";
     public RuntimeAnimatorController leftLegAnimatorController;
     public RuntimeAnimatorController rightLegAnimatorController;
+
+    public Color color = Color.white;
     public float scale = 1f;
 
     [Header("Behavior Settings")]

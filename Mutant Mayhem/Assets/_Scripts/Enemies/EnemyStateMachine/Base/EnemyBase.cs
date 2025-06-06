@@ -52,7 +52,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     #endregion
 
-    #region SO Logic Setup
+    #region SO Logic
 
     // Reference these in Inspector
     [SerializeField] private EnemyIdleSOBase EnemyIdleSOBase;
@@ -125,9 +125,11 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         meleeController.Reset();
         StateMachine.ChangeState(IdleState);
 
-        if (!isMutant) RandomizeStats();
-
-        RandomizeColor();
+        if (!isMutant)
+        {
+            RandomizeStats();
+            RandomizeColor();
+        }
     }
 
     public void InitializeStateMachine()
@@ -145,19 +147,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         //MeleeState = new EnemyMeleeState(this, StateMachine);
 
         StateMachine.Initialize(IdleState);
-    }
-
-    public void InitializeSOLogic()
-    {
-        StateMachine.ChangeState(IdleState);
-
-        // Initialize the SO logic for the enemy
-        if (EnemyIdleSOBaseInstance != null)
-            EnemyIdleSOBaseInstance.Initialize(gameObject, this);
-        if (EnemyChaseSOBaseInstance != null)
-            EnemyChaseSOBaseInstance.Initialize(gameObject, this);
-        if (EnemyShootSOBaseInstance != null)
-            EnemyShootSOBaseInstance.Initialize(gameObject, this);
     }
 
     public void RestartStateMachine()
@@ -198,10 +187,19 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         InitializeSOLogic();
     }
 
-    /// <summary>
-    /// Swap the ScriptableObject behaviour set at runtime then rebuild the state‑machine.
-    /// Call this right after retrieving the enemy from the pool if you need variant‑specific logic.
-    /// </summary>
+    public void InitializeSOLogic()
+    {
+        StateMachine.ChangeState(IdleState);
+
+        // Initialize the SO logic for the enemy
+        if (EnemyIdleSOBaseInstance != null)
+            EnemyIdleSOBaseInstance.Initialize(gameObject, this);
+        if (EnemyChaseSOBaseInstance != null)
+            EnemyChaseSOBaseInstance.Initialize(gameObject, this);
+        if (EnemyShootSOBaseInstance != null)
+            EnemyShootSOBaseInstance.Initialize(gameObject, this);
+    }
+
     public void ApplyBehaviourSet(EnemyIdleSOBase idleSO, EnemyChaseSOBase chaseSO, EnemyShootSOBase shootSO)
     {
         EnemyIdleSOBase = idleSO;

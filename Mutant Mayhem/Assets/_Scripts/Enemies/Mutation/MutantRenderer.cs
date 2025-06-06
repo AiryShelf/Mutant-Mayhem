@@ -13,6 +13,7 @@ public class MutantRenderer : MonoBehaviour
     [SerializeField] SpriteRenderer bodySR;
     [SerializeField] SpriteRenderer headSR;
     [SerializeField] AnimationControllerMutant animationControllerMutant;
+    [SerializeField] float minColorBrightness = 0.75f;
 
     SpriteRenderer leftLegSR;
     SpriteRenderer rightLegSR;
@@ -71,9 +72,22 @@ public class MutantRenderer : MonoBehaviour
             float green = color.g + Random.Range(-randColorRange, randColorRange);
             float blue = color.b + Random.Range(-randColorRange, randColorRange);
 
-            if (red + green + blue < 0.75f)
+            // Clamp color values to stay within range
+            Mathf.Clamp01(red);
+            Mathf.Clamp01(green);
+            Mathf.Clamp01(blue);
+
+            // prevent division by zero, ensure color is bright enough
+            if (red + green + blue == 0f)
             {
-                var factor = 0.75f / (red + green + blue);
+                red = minColorBrightness / 3;
+                green = minColorBrightness / 3;
+                blue = minColorBrightness / 3;
+            }
+            else
+            if (red + green + blue < minColorBrightness)
+            {
+                var factor = minColorBrightness / (red + green + blue);
                 red *= factor;
                 green *= factor;
                 blue *= factor;
@@ -85,5 +99,35 @@ public class MutantRenderer : MonoBehaviour
 
             renderer.color = new Color(red, green, blue, color.a);
         }
+    }
+
+    public Color RandomizePartColor(Color color, float randColorRange)
+    {
+        float red = color.r + Random.Range(-randColorRange, randColorRange);
+        float green = color.g + Random.Range(-randColorRange, randColorRange);
+        float blue = color.b + Random.Range(-randColorRange, randColorRange);
+
+        // Clamp color values to stay within range
+        red = Mathf.Clamp01(red);
+        green = Mathf.Clamp01(green);
+        blue = Mathf.Clamp01(blue);
+
+        // prevent division by zero, ensure color is bright enough
+        if (red + green + blue == 0f)
+        {
+            red = minColorBrightness / 3;
+            green = minColorBrightness / 3;
+            blue = minColorBrightness / 3;
+        }
+        else
+        if (red + green + blue < minColorBrightness)
+        {
+            var factor = minColorBrightness / (red + green + blue);
+            red *= factor;
+            green *= factor;
+            blue *= factor;
+        }
+
+        return new Color(red, green, blue, color.a);
     }
 }
