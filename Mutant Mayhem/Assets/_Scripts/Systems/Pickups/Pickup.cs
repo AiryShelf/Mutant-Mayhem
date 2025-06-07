@@ -103,7 +103,7 @@ public class Pickup : MonoBehaviour
         PickupsContainerBase container = col.GetComponent<PickupsContainerBase>();
         if (container == null)
         {
-            Debug.Log("No Pickups Container or Receiver detected by pickup");
+            //Debug.Log("No Pickups Container or Receiver detected by pickup");
             return;
         }
         

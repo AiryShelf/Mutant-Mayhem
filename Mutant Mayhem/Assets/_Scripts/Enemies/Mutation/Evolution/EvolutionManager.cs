@@ -19,12 +19,12 @@ public class EvolutionManager : MonoBehaviour
     public float difficultyScalePerWave = 0.2f;
 
     // ───────────────────────────────────────────────── Internals ─────────────────────────────────────────
-    readonly Dictionary<EnemyVariant, List<EnemyIndividual>> _population = new();
-    public Dictionary<EnemyVariant, List<EnemyIndividual>> GetPopulation()
+    readonly Dictionary<MutantVariant, List<MutantIndividual>> _population = new();
+    public Dictionary<MutantVariant, List<MutantIndividual>> GetPopulation()
     {
         return _population;
     }
-    readonly Dictionary<EnemyVariant, List<EnemyIndividual>> _liveThisWave = new();
+    readonly Dictionary<MutantVariant, List<MutantIndividual>> _liveThisWave = new();
 
     DefaultGeneticOps _ops;
     public int _currentWave = 0;
@@ -60,7 +60,7 @@ public class EvolutionManager : MonoBehaviour
     {
         Debug.Log("EvolutionManager: Building generation 0 for all variants.");
         // build generation 0 for each variant
-        foreach (EnemyVariant v in System.Enum.GetValues(typeof(EnemyVariant)))
+        foreach (MutantVariant v in System.Enum.GetValues(typeof(MutantVariant)))
         {
             var startingPop = GetStartingPopulation(v);
             if (startingPop.Count > 0)
@@ -89,7 +89,7 @@ public class EvolutionManager : MonoBehaviour
         foreach (var kvp in _population)
         {
             var individuals = kvp.Value;
-            _liveThisWave[kvp.Key] = new List<EnemyIndividual>(individuals.Count);
+            _liveThisWave[kvp.Key] = new List<MutantIndividual>(individuals.Count);
 
             foreach (var ind in individuals)
             {
@@ -106,19 +106,11 @@ public class EvolutionManager : MonoBehaviour
                     continue;
                 }
 
-                ind.fitness = 0f;
                 enemyMutant.InitializeMutant(ind);
 
                 _liveThisWave[kvp.Key].Add(ind);
             }
         }
-    }
-
-    /// <summary>Call directly from EnemyMutant when it dies.</summary>
-    public void AddFitness(EnemyIndividual individual, float delta)
-    {
-        if (individual == null) return;
-        individual.AddFitness(delta);
     }
 
     /// <summary>Call once when the wave ends (all enemies dead or player triggered).</summary>
@@ -138,7 +130,7 @@ public class EvolutionManager : MonoBehaviour
             int numChildren = Mathf.FloorToInt(populationPerVariant / 2f);
             int eliteCount = Mathf.Max(1, numParents);
 
-            var nextGen = new List<EnemyIndividual>();
+            var nextGen = new List<MutantIndividual>();
 
             // Keep top N parents (clone bare)
             for (int i = 0; i < numParents && i < individuals.Count; i++)
@@ -151,7 +143,7 @@ public class EvolutionManager : MonoBehaviour
                 var parentB = individuals[Random.Range(0, eliteCount)];
                 var childGenome = _ops.Crossover(parentA.genome, parentB.genome);
                 _ops.Mutate(childGenome, mutationRate, difficultyScaleTotal);
-                nextGen.Add(new EnemyIndividual(childGenome, variant));
+                nextGen.Add(new MutantIndividual(childGenome, variant));
             }
 
             _population[variant] = nextGen;
@@ -167,12 +159,12 @@ public class EvolutionManager : MonoBehaviour
 
     #region Helpers ---------------------------------------------------------------
 
-    List<EnemyIndividual> GetStartingPopulation(EnemyVariant v)
+    List<MutantIndividual> GetStartingPopulation(MutantVariant v)
     {
         int maxIndex = WaveControllerRandom.Instance.waveSpawner.maxIndex;
         Debug.Log("EvolutionManager: Getting starting population for variant " + v + " at maxIndex " + maxIndex);
 
-        var list = new List<EnemyIndividual>(populationPerVariant);
+        var list = new List<MutantIndividual>(populationPerVariant);
 
         PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
         if (currentPlanet == null)
@@ -190,7 +182,7 @@ public class EvolutionManager : MonoBehaviour
                 var genome = g.ToGenome();
 
                 _ops.ClampAndNormalize(ref genome, difficultyScaleTotal);
-                list.Add(new EnemyIndividual(genome, v));
+                list.Add(new MutantIndividual(genome, v));
             }
         }
 
@@ -222,7 +214,7 @@ public class EvolutionManager : MonoBehaviour
                 {
                     for (int j = 0; j < popIncreasePerVariant; j++)
                     {
-                        _population[variant].Add(new EnemyIndividual(genome, variant));
+                        _population[variant].Add(new MutantIndividual(genome, variant));
                     }
                 }
                 populationPerVariant += popIncreasePerVariant;
@@ -232,11 +224,11 @@ public class EvolutionManager : MonoBehaviour
         _previousMaxIndex = currentMaxIndex;
     }
 
-    List<EnemyIndividual> CreateRandomPopulation(EnemyVariant v)
+    List<MutantIndividual> CreateRandomPopulation(MutantVariant v)
     {
         Debug.Log("EvolutionManager: Creating random population for variant " + v);
 
-        var list = new List<EnemyIndividual>(populationPerVariant);
+        var list = new List<MutantIndividual>(populationPerVariant);
         for (int i = 0; i < populationPerVariant; i++)
         {
             var g = new Genome(
@@ -250,7 +242,7 @@ public class EvolutionManager : MonoBehaviour
 
             _ops.ClampAndNormalize(ref g, difficultyScaleTotal);
 
-            list.Add(new EnemyIndividual(g, v));
+            list.Add(new MutantIndividual(g, v));
         }
         return list;
     }
@@ -281,26 +273,4 @@ public class EvolutionManager : MonoBehaviour
         Debug.Log($"Difficulty scale increased to {difficultyScaleTotal}");
     }
     #endregion
-}
-
-// ────────────────────────────────────────────────── Helper classes ───────────────
-public enum EnemyVariant { Runner, Chaser, Siege }
-
-public class EnemyIndividual
-{
-    public Genome genome;
-    public EnemyVariant variant;
-    public float fitness;
-
-    public EnemyIndividual(Genome g, EnemyVariant v)
-    {
-        genome = g; variant = v;
-    }
-
-    public void AddFitness(float amount)
-    {
-        fitness += amount;
-    }
-
-    public EnemyIndividual CloneBare() => new EnemyIndividual(new Genome(genome.bodyGene, genome.headGene, genome.legGene), variant);
 }

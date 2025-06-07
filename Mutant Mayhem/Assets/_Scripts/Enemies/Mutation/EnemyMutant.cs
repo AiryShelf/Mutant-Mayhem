@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyMutant : EnemyBase
 {
     [Header("Mutation")]
-    public EnemyIndividual individual;
+    public MutantIndividual individual;
     public MutantRenderer mutantRenderer;
     public Rigidbody2D mutantRb;
     public CapsuleCollider2D bodyCollider;
@@ -24,7 +24,7 @@ public class EnemyMutant : EnemyBase
         InitializeStateMachine();
     }
 
-    public void InitializeMutant(EnemyIndividual ind)
+    public void InitializeMutant(MutantIndividual ind)
     {
         if (ind == null)
         {
@@ -33,6 +33,8 @@ public class EnemyMutant : EnemyBase
         }
 
         AssignIndividual(ind);
+        ind.fitness = 0f;
+
         LegGeneSO legGene = ind.genome.legGene;
         ApplyBehaviourSet(legGene.idleSOBase, legGene.chaseSOBase, legGene.shootSOBase);
         RestartStateMachine();
@@ -42,7 +44,7 @@ public class EnemyMutant : EnemyBase
         ApplyGenomeToEnemyRenderer();
     }
 
-    public void AssignIndividual(EnemyIndividual individual)
+    public void AssignIndividual(MutantIndividual individual)
     {
         if (individual == null)
         {
@@ -56,11 +58,17 @@ public class EnemyMutant : EnemyBase
     {
         if (individual != null)
         {
-            float fitness = health.GetMaxHealth() - health.GetHealth();
-            fitness += meleeController.damageDealt;
+            
+            float healthFitness = health.GetMaxHealth() - health.GetHealth();
+            healthFitness *= 0.5f;
+            Debug.Log("Fitness from health: " + healthFitness);
+            float damageFitness = meleeController.damageDealt;
+            Debug.Log("Fitness from damage dealt: " + damageFitness);
+            float fitness = healthFitness + damageFitness;
+            Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
 
 
-            EvolutionManager.Instance.AddFitness(individual, fitness);
+            individual.AddFitness(fitness);
         }
         base.Die();
     }

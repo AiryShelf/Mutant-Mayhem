@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Body_Crab2
   sprite: {fileID: 21300000, guid: 561f0d7106b5d47348429b67f4d30074, type: 3}
+  color: {r: 1, g: 1, b: 1, a: 1}
   scale: 6
   bodyColliderOffset: {x: 0, y: 0}
-  bodyColliderSize: {x: 1, y: 1}
+  bodyColliderSize: {x: 0.1, y: 0.1}
   headAnchorOffset: {x: 0.04, y: 0}
   leftLegAnchorOffset: {x: 0, y: 0.06}
   rightLegAnchorOffset: {x: 0, y: -0.06}

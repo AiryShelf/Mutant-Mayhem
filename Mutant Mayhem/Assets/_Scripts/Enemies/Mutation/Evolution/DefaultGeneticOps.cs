@@ -77,7 +77,7 @@ public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal
 
     if (population.Count > 0)
     {
-        var allIndividuals = new List<EnemyIndividual>();
+        var allIndividuals = new List<MutantIndividual>();
         foreach (var list in population.Values)
             allIndividuals.AddRange(list);
         Debug.Log("[Mutate] All individuals count: " + allIndividuals.Count);

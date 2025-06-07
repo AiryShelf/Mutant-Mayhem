@@ -135,10 +135,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public void InitializeStateMachine()
     {
         // Logic machine linked to state machine
-        EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
-        EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
-        EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
-        //EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
+        if (EnemyIdleSOBase != null)
+            EnemyIdleSOBaseInstance = Instantiate(EnemyIdleSOBase);
+        if (EnemyChaseSOBase != null)
+            EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
+        if (EnemyShootSOBase != null)
+            EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
+        //if (EnemyMeleeSOBase != null)
+            //EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
 
         StateMachine = new EnemyStateMachine();
         IdleState = new EnemyIdleState(this, StateMachine);
@@ -230,7 +234,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         health.SetMaxHealth(randomSizeFactor / PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize] * 
                             health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
-        Debug.Log("RandomSizeFacto: " + randomSizeFactor + ", waveController.damageMultiplier: " + waveController.damageMultiplier);
+
+        //Debug.Log("RandomSizeFactor: " + randomSizeFactor + ", waveController.damageMultiplier: " + waveController.damageMultiplier);
         meleeController.meleeDamage *= randomSizeFactor * waveController.damageMultiplier;
         meleeController.attackDelay = meleeController.attackDelayStart * waveController.attackDelayMult;
         meleeController.knockback *= randomSizeFactor;

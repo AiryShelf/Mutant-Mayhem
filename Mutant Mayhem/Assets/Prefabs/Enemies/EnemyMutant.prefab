@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 1929912251
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 561f0d7106b5d47348429b67f4d30074, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bcc92f64bb94d47f09a0e6f669d787f1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -431,6 +431,7 @@ MonoBehaviour:
   bodySR: {fileID: 2421378551077471280}
   headSR: {fileID: 5781454356933595287}
   animationControllerMutant: {fileID: 5833339104486537906}
+  minColorBrightness: 0.75
 --- !u!114 &775639655555202655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,7 +501,7 @@ MonoBehaviour:
   - {x: 0.08678463, y: -0.019966379, z: 0}
   m_ShapePathHash: -2108260162
   m_Mesh: {fileID: 0}
-  m_InstanceId: 178670
+  m_InstanceId: 94924
   m_LocalBounds:
     m_Center: {x: 0.0088474825, y: 0.0002141241, z: 0}
     m_Extent: {x: 0.08640965, y: 0.020342423, z: 0}
@@ -563,8 +564,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.1, y: 0.1}
+  m_Offset: {x: -0.03, y: 0}
+  m_Size: {x: 0.16, y: 0.06}
   m_Direction: 1
 --- !u!1 &9030679136587207783
 GameObject:
@@ -820,7 +821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: meleeDamage
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: knockbackStart
@@ -832,7 +833,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: meleeDamageStart
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7727547690862283729, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_LocalScale.x
