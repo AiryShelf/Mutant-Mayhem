@@ -60,35 +60,17 @@ public class MutantRenderer : MonoBehaviour
 
         var path = bodyGeneBase.shadowShapePoints;
 
-        Vector3[] vertices = new Vector3[path.Length + 1];
-        vertices[0] = Vector3.zero;
+        Vector3[] vertices = new Vector3[path.Length];
 
         for (int i = 0; i < path.Length; i++)
         {
             Vector2 p = path[i];
             p.x *= g.bodyGene.scale;
             p.y *= g.bodyGene.scale;
-            vertices[i + 1] = new Vector3(p.x, p.y, 0);
+            vertices[i] = new Vector3(p.x, p.y, 0);
         }
 
         ShadowCaster2DHelper.SetShapePath(shadowCaster2D, vertices);
-
-        /*
-        int[] triangles = new int[path.Length * 3];
-        for (int i = 0; i < path.Length; i++)
-        {
-            int next = (i + 1) % path.Length;
-            triangles[i * 3 + 0] = 0;
-            triangles[i * 3 + 1] = i + 1;
-            triangles[i * 3 + 2] = next + 1;
-        }
-
-        Mesh mesh = new Mesh();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-
-        shadowCaster2D.GetComponent<MeshFilter>().mesh = mesh;
-        */
     }
 
     public void RandomizeColor(float randColorRange)
