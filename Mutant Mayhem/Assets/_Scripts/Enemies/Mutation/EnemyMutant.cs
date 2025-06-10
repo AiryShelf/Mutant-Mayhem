@@ -115,13 +115,16 @@ public class EnemyMutant : EnemyBase
         // Apply scales
         health.SetMaxHealth(health.GetMaxHealth() * g.bodyGene.scale);
         health.SetHealth(health.GetMaxHealth());
-        rb.mass = startMass * g.bodyGene.scale;
+        rb.mass = startMass * g.bodyGene.scale * g.headGene.massModFactor;
         bodyCollider.offset = g.bodyGene.bodyColliderOffset;
         bodyCollider.size = g.bodyGene.bodyColliderSize * g.bodyGene.scale;
         meleeCollider.offset = g.headGene.meleeColliderOffset;
         meleeCollider.size = g.headGene.meleeColliderSize;
 
-        meleeController.meleeDamage *= g.headGene.scale;
+        meleeController.meleeDamage = g.headGene.meleeDamage * g.headGene.scale;
+        meleeController.attackDelay = g.headGene.attackDelay;
+        meleeController.knockback = g.headGene.knockback * g.headGene.scale;
+        meleeController.selfKnockback = g.headGene.selfKnockback * rb.mass;
 
         moveSpeedBase *= Mathf.Clamp(g.legGene.scale, 1, float.MaxValue);
         Debug.Log($"MoveSpeedBase: {moveSpeedBase}, Mass: {rb.mass}");

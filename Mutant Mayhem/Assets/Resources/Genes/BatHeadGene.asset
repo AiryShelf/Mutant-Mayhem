@@ -18,6 +18,8 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: f62a08e0a6fcb4241b69d9b7cba422ad, type: 3}
   meleeColliderOffset: {x: 0.025, y: 0}
   meleeColliderSize: {x: 0.04051865, y: 0.07015181}
-  meleeDamage: 1
-  meleeAttackRate: 1
-  massModifier: 0
+  meleeDamage: 1.33
+  attackDelay: 0.5
+  knockback: 10
+  selfKnockback: 0
+  massModFactor: 0.9

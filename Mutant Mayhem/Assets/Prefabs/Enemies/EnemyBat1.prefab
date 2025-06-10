@@ -61,7 +61,7 @@ MonoBehaviour:
   rotateSpeedBaseStart: 2
   rotateSpeedBase: 2
   startMass: 0
-  randomize: 1
+  isMutant: 0
   randSpeedRange: 0.1
   startLocalScale: {x: 0, y: 0, z: 0}
   minSize: 1.3
@@ -75,6 +75,10 @@ MonoBehaviour:
   EnemyChaseSOBase: {fileID: 11400000, guid: eb3cd8804b94be74b81dfc0f2849458c, type: 2}
   EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
   EnemyMeleeSOBase: {fileID: 0}
+  EnemyIdleSOBaseInstance: {fileID: 0}
+  EnemyChaseSOBaseInstance: {fileID: 0}
+  EnemyShootSOBaseInstance: {fileID: 0}
+  EnemyMeleeSOBaseInstance: {fileID: 0}
 --- !u!114 &7349244352346262760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +474,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: attackDelay
-      value: 0.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: meleeDamage
@@ -486,7 +490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: attackDelayStart
-      value: 0.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: meleeDamageStart

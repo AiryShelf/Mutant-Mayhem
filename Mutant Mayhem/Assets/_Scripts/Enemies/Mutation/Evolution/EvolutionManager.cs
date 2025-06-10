@@ -11,11 +11,12 @@ public class EvolutionManager : MonoBehaviour
     // ───────────────────────────────────────────────── Inspector ──────────────────────────────────────────
     [Header("Setup")]
     [SerializeField] GameObject enemyPrefab;  // the EnemyShell prefab
-    [SerializeField] float mutationRate = 0.08f;
+    [SerializeField] float mutationRate = 0.2f;
 
-    [Tooltip("Difficulty adds to the allowed total scale each generation.")]
+    [Tooltip("Difficulty adds to the allowed total scale of parts for each generation.")]
     public float difficultyScaleTotal = 6;  // Increases with difficulty
     public float difficultyScalePerWave = 0.2f;
+    public int minLifetimesToEvolve = 1;
 
     // ───────────────────────────────────────────────── Internals ─────────────────────────────────────────
     readonly Dictionary<MutantVariant, List<MutantIndividual>> _population = new();
@@ -23,12 +24,14 @@ public class EvolutionManager : MonoBehaviour
     {
         return _population;
     }
-
     DefaultGeneticOps _ops;
+
+    [Header("Runtime State")]
     public int _currentWave = 0;
     public int populationCount = 0;
     int _previousMaxIndex = 0;
     bool _genZeroBuilt = false;
+    WaveSpawnerRandom _waveSpawner;
 
     public static EvolutionManager Instance { get; private set; }
 
@@ -45,9 +48,10 @@ public class EvolutionManager : MonoBehaviour
     {
         if (!WaveControllerRandom.Instance)
         {
-            Debug.LogError("EvolutionManager: WaveControllerRandom instance not found!");
+            Debug.LogWarning("EvolutionManager: WaveControllerRandom instance not found!");
             return;
         }
+        _waveSpawner = WaveControllerRandom.Instance.waveSpawner;
     }
 
     void OnDestroy()
@@ -118,7 +122,7 @@ public class EvolutionManager : MonoBehaviour
         foreach (var individual in individuals)
         {
             var enemy = PoolManager.Instance.GetFromPool("Mutant");
-            var pos = GetRandomSpawnPosition();
+            var pos = _waveSpawner.GetPointOnSquareBoundary(0, Mathf.PI, true);
             enemy.transform.position = pos;
             enemy.transform.rotation = Quaternion.identity;
             EnemyCounter.EnemyCount++;
@@ -148,42 +152,53 @@ public class EvolutionManager : MonoBehaviour
         var kvp = _population.ElementAt(_currentWave % _population.Count);
         var variant = kvp.Key;
 
-        // 1) Evaluate done → Breed next generation, retain top parents
+        // Only Crossover matured individuals
         var individuals = _population[variant];
-        individuals.Sort((a, b) => b.AverageFitness.CompareTo(a.AverageFitness));
+        var matureIndividuals = individuals.Where(ind => ind.lifetimes > minLifetimesToEvolve).ToList();
+        matureIndividuals.Sort((a, b) => b.AverageFitness.CompareTo(a.AverageFitness));
 
-        int numParents = Mathf.CeilToInt(individuals.Count / 2f);
-        int numChildren = Mathf.FloorToInt(individuals.Count / 2f);
+        int numParents = Mathf.CeilToInt(matureIndividuals.Count * 0.8f);
+        int numChildren = Mathf.FloorToInt(matureIndividuals.Count * 0.2f);
         var nextGen = new List<MutantIndividual>();
 
         // Keep top N parents (clone bare)
-        for (int i = 0; i < numParents && i < individuals.Count; i++)
-            nextGen.Add(individuals[i]);
+        for (int i = 0; i < numParents && i < matureIndividuals.Count; i++)
+            nextGen.Add(matureIndividuals[i]);
 
         // Generate children from top parents
         for (int i = 0; i < numChildren; i++)
         {
-            var parentA = individuals[Random.Range(0, numParents)];
-            var parentB = individuals[Random.Range(0, numParents)];
+            var parentA = matureIndividuals[Random.Range(0, numParents)];
+            var parentB = matureIndividuals[Random.Range(0, numParents)];
             var childGenome = _ops.Crossover(parentA.genome, parentB.genome);
-            _ops.Mutate(childGenome, mutationRate, difficultyScaleTotal);
             nextGen.Add(new MutantIndividual(childGenome, variant));
         }
 
+        // Add back young individuals that did not participate in evolution
+        var youngIndividuals = individuals.Where(ind => ind.lifetimes <= minLifetimesToEvolve).ToList();
+        nextGen.AddRange(youngIndividuals);
+
         _population[variant] = nextGen;
+
+        // Apply mutation to the entire population
+        foreach (var ind in _population[variant])
+        {
+            _ops.Mutate(ind.genome, mutationRate, difficultyScaleTotal);
+        }
 
         AddNewUnlocksForWave();
 
         SpawnWaveCycle();
     }
+    
     #endregion
 
     #region Helpers ---------------------------------------------------------------
 
     List<MutantIndividual> GetStartingPopulation(MutantVariant v)
     {
-        int maxIndex = WaveControllerRandom.Instance.waveSpawner.maxIndex;
-        Debug.Log("EvolutionManager: Getting starting population for variant " + v + " at maxIndex " + maxIndex);
+        int maxIndex = _waveSpawner.maxIndex;
+        Debug.Log("EvolutionManager: Adding starting population for variant " + v + " at maxIndex " + maxIndex);
 
         var list = new List<MutantIndividual>();
 
@@ -194,11 +209,11 @@ public class EvolutionManager : MonoBehaviour
             return list;
         }
         
-        for (int i = 0; i < maxIndex; i++)
+        for (int i = 0; i <= maxIndex; i++)
         {
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
-                Debug.Log("EvolutionManager: Adding genome to starting population for variant " + v + ": " + g);
+                Debug.Log($"EvolutionManager: Adding genome to starting population for variant {v}: {g}, from index {i}");
                 var genome = g.ToGenome();
 
                 _ops.ClampAndNormalize(ref genome, difficultyScaleTotal);
@@ -213,7 +228,7 @@ public class EvolutionManager : MonoBehaviour
     }
     void AddNewUnlocksForWave()
     {
-        int currentMaxIndex = WaveControllerRandom.Instance.waveSpawner.maxIndex;
+        int currentMaxIndex = _waveSpawner.maxIndex;
         if (currentMaxIndex <= _previousMaxIndex) return;
 
         Debug.Log($"EvolutionManager: Adding new unlocks for wave {_currentWave} with previousIndex {_previousMaxIndex} and maxIndex {currentMaxIndex}.");
@@ -222,7 +237,7 @@ public class EvolutionManager : MonoBehaviour
         if (currentPlanet == null) return;
 
         int popIncreasePerVariant = currentPlanet.waveSOBase.subWaves[currentMaxIndex].popIncreasePerVariant;
-        for (int i = _previousMaxIndex; i <= currentMaxIndex; i++)
+        for (int i = _previousMaxIndex + 1; i <= currentMaxIndex; i++)
         {
             // Add new genomes from the current wave
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)

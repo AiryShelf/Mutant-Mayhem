@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Head_Dog
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 8
+  scale: 9
   sprite: {fileID: 21300000, guid: 5c69c414df03844e2a6cd9cd32c686dc, type: 3}
   meleeColliderOffset: {x: 0.04, y: 0}
   meleeColliderSize: {x: 0.07, y: 0.07}
-  meleeDamage: 1
-  meleeAttackRate: 1
-  massModifier: 0
+  meleeDamage: 2
+  attackDelay: 0.75
+  knockback: 2.5
+  selfKnockback: 2
+  massModFactor: 1

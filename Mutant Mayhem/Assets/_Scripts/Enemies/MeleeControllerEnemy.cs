@@ -10,7 +10,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] float damageVariance = 0.15f;
     public float knockback = 10f;
     public float knockbackStart;
-    [SerializeField] float selfKnockback = 5f;
+    public float selfKnockback = 5f;
     public float attackDelay = 1f;
     public float attackDelayStart = 1;
     [SerializeField] LayerMask hitLayers;

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Leg_Dog
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 8
+  scale: 9
   leftLegAnimatorController: {fileID: 9100000, guid: 0d58df23366ee47d0b37d6128c7a3a1a, type: 2}
   rightLegAnimatorController: {fileID: 9100000, guid: c3efb6bd98cf7459b8c12ee913af07fb, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
@@ -22,7 +22,7 @@ MonoBehaviour:
   shootSOBase: {fileID: 0}
   isFlying: 0
   moveSpeedBaseStart: 1.8
-  rotateSpeedBaseStart: 3
+  rotateSpeedBaseStart: 5
   animSpeedFactor: 0.7
   switchToRunBuffer: 0.4
   maxAnimSpeed: 3

@@ -3374,6 +3374,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1905054687860393847, guid: 25e358a29d899429e8ebe09f230b8b17, type: 3}
+      propertyPath: minLifetimesToEvolve
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5443799758973928536, guid: 25e358a29d899429e8ebe09f230b8b17, type: 3}
       propertyPath: m_Name
       value: Evolution Manager
