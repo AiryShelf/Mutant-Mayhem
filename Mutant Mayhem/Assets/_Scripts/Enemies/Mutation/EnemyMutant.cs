@@ -36,7 +36,6 @@ public class EnemyMutant : EnemyBase
         }
 
         AssignIndividual(ind);
-        ind.fitness = 0f;
 
         LegGeneSO legGene = ind.genome.legGene;
         ApplyBehaviourSet(legGene.idleSOBase, legGene.chaseSOBase, legGene.shootSOBase);
@@ -63,17 +62,19 @@ public class EnemyMutant : EnemyBase
     {
         if (individual != null)
         {
-            
-            float healthFitness = health.GetMaxHealth();
-            healthFitness *= healthFitnessMultiplier;
-            Debug.Log("Fitness from health: " + healthFitness);
-            float damageFitness = meleeController.damageDealt;
-            Debug.Log("Fitness from damage dealt: " + damageFitness);
-            float fitness = healthFitness + damageFitness;
+            float fitness = 0f;
+            if (individual.variant == MutantVariant.Fighter)
+            {
+                fitness = meleeController.damageDealt;
+                individual.AddFitness(fitness);
+            }
+            else
+            {
+                fitness = health.GetMaxHealth();
+                individual.AddFitness(fitness);
+            }
+
             Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
-
-
-            individual.AddFitness(fitness);
         }
         base.Die();
     }

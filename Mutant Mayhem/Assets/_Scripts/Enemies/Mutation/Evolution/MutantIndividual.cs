@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MutantVariant { Runner, Chaser, Siege }
+public enum MutantVariant { Fighter, Fodder }
 
 public class MutantIndividual
 {
     public Genome genome;
     public MutantVariant variant;
-    public float fitness;
+    public int lifetimes;
+    float cumulativeFitness;
+
+    public float AverageFitness => cumulativeFitness / Mathf.Max(1, lifetimes);
 
     public MutantIndividual(Genome g, MutantVariant v)
     {
@@ -17,8 +20,7 @@ public class MutantIndividual
 
     public void AddFitness(float amount)
     {
-        fitness += amount;
+        cumulativeFitness += amount;
+        lifetimes++;
     }
-
-    public MutantIndividual CloneBare() => new MutantIndividual(new Genome(genome.bodyGene, genome.headGene, genome.legGene), variant);
 }

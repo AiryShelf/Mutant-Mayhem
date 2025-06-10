@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: DogLegGene
   m_EditorClassIdentifier: 
   id: Leg_Dog
-  leftLegAnimatorController: {fileID: 9100000, guid: 0d58df23366ee47d0b37d6128c7a3a1a, type: 2}
-  rightLegAnimatorController: {fileID: 9100000, guid: c3efb6bd98cf7459b8c12ee913af07fb, type: 2}
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 8
+  leftLegAnimatorController: {fileID: 9100000, guid: 0d58df23366ee47d0b37d6128c7a3a1a, type: 2}
+  rightLegAnimatorController: {fileID: 9100000, guid: c3efb6bd98cf7459b8c12ee913af07fb, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   chaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
   shootSOBase: {fileID: 0}
   isFlying: 0
-  moveSpeedBaseStart: 2
+  moveSpeedBaseStart: 1.8
   rotateSpeedBaseStart: 3
   animSpeedFactor: 0.7
   switchToRunBuffer: 0.4

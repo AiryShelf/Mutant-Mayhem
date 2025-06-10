@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: DogHeadGene
   m_EditorClassIdentifier: 
   id: Head_Dog
-  sprite: {fileID: 21300000, guid: 5c69c414df03844e2a6cd9cd32c686dc, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 8
-  meleeColliderOffset: {x: -0.01308453, y: 0}
-  meleeColliderSize: {x: 0.05497387, y: 0.0603709}
+  sprite: {fileID: 21300000, guid: 5c69c414df03844e2a6cd9cd32c686dc, type: 3}
+  meleeColliderOffset: {x: 0.04, y: 0}
+  meleeColliderSize: {x: 0.07, y: 0.07}
   meleeDamage: 1
   meleeAttackRate: 1
   massModifier: 0

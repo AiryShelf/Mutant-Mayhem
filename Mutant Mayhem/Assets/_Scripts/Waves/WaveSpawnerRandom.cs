@@ -28,6 +28,7 @@ public class WaveSpawnerRandom : MonoBehaviour
     int waveSeconds;
     Coroutine waveTimer;
     float halfWidth, halfHeight;
+    MutantVariant previousVariant = MutantVariant.Fighter;
 
     void Start()
     {
@@ -256,11 +257,12 @@ public class WaveSpawnerRandom : MonoBehaviour
 
     IEnumerator SpawnSubWave(int subWaveIndex)
     {
-        //Debug.Log("Start spawning SubWave index: " + subWaveIndex);
+        EvolutionManager.Instance.EvolveAndSpawn();
+        
         // Set up for subwave or constant wave;        
         SubWaveSO subWave = currentWave.subWaves[subWaveIndex];
         SubWaveStyleSO subWaveStyle = currentWave.subWaveStyles[subWaveIndex];
-        
+
         // Make copy of wave to be created
         List<GameObject> _enemyPrefabList = new List<GameObject>(subWave.enemyPrefabList);
         List<float> _numberToSpawn = new List<float>(subWave.numberToSpawn);
@@ -276,7 +278,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         }
 
         // Get starting point, angle, radius
-        (halfWidth, halfHeight) = CalculateSquareBounds();
+        var (halfWidth, halfHeight) = CalculateSquareBounds();
         Vector2 spawnPos;
         float spawnAngle = 0;
 
@@ -288,9 +290,6 @@ public class WaveSpawnerRandom : MonoBehaviour
                        subWaveStyle.randomizeNextBatchSpread, halfWidth, halfHeight);
             spawnAngle = Mathf.Atan2(spawnPos.y, spawnPos.x);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, spawnPos - (Vector2)transform.position);
-
-            // Lock batch to local point
-            float batchAngle = spawnAngle;
             
             // Style's batchAmount start value is increasing with waveController Mult
             int batchSize = Mathf.FloorToInt(subWaveStyle.batchAmount * batchMult / 

@@ -11,7 +11,6 @@ public class EvolutionManager : MonoBehaviour
     // ───────────────────────────────────────────────── Inspector ──────────────────────────────────────────
     [Header("Setup")]
     [SerializeField] GameObject enemyPrefab;  // the EnemyShell prefab
-    [SerializeField] int populationPerVariant = 10;
     [SerializeField] float mutationRate = 0.08f;
 
     [Tooltip("Difficulty adds to the allowed total scale each generation.")]
@@ -24,10 +23,10 @@ public class EvolutionManager : MonoBehaviour
     {
         return _population;
     }
-    readonly Dictionary<MutantVariant, List<MutantIndividual>> _liveThisWave = new();
 
     DefaultGeneticOps _ops;
     public int _currentWave = 0;
+    public int populationCount = 0;
     int _previousMaxIndex = 0;
     bool _genZeroBuilt = false;
 
@@ -66,7 +65,6 @@ public class EvolutionManager : MonoBehaviour
             if (startingPop.Count > 0)
             {
                 _population[v] = startingPop;
-                populationPerVariant = startingPop.Count;
             }
             else
             {
@@ -74,12 +72,14 @@ public class EvolutionManager : MonoBehaviour
             }
         }
         _genZeroBuilt = true;
+
+        populationCount = _population.Sum(kvp => kvp.Value.Count);
     }
 
     #region Public API -------------------------------------------------------------
 
     /// <summary>Call at the beginning of a wave.</summary>
-    public void SpawnWave()
+    public void SpawnWaveFull()
     {
         if (!_genZeroBuilt)
         {
@@ -89,7 +89,6 @@ public class EvolutionManager : MonoBehaviour
         foreach (var kvp in _population)
         {
             var individuals = kvp.Value;
-            _liveThisWave[kvp.Key] = new List<MutantIndividual>(individuals.Count);
 
             foreach (var ind in individuals)
             {
@@ -107,53 +106,75 @@ public class EvolutionManager : MonoBehaviour
                 }
 
                 enemyMutant.InitializeMutant(ind);
-
-                _liveThisWave[kvp.Key].Add(ind);
             }
         }
     }
 
-    /// <summary>Call once when the wave ends (all enemies dead or player triggered).</summary>
-    public void EndWaveAndEvolve()
+    void SpawnWaveCycle()
     {
+        var kvp = _population.ElementAt(_currentWave % _population.Count);
+        var individuals = kvp.Value;
+
+        foreach (var individual in individuals)
+        {
+            var enemy = PoolManager.Instance.GetFromPool("Mutant");
+            var pos = GetRandomSpawnPosition();
+            enemy.transform.position = pos;
+            enemy.transform.rotation = Quaternion.identity;
+            EnemyCounter.EnemyCount++;
+
+            var enemyMutant = enemy.GetComponent<EnemyMutant>();
+            if (enemyMutant == null)
+            {
+                Debug.LogError("EvolutionManager: EnemyMutant prefab must have an EnemyMutant component!");
+                continue;
+            }
+
+            enemyMutant.InitializeMutant(individual);
+        }
+    }
+
+    public void EvolveAndSpawn()
+    {
+        if (!_genZeroBuilt)
+        {
+            BuildGenerationZero();
+        }
+
         Debug.Log("EvolutionManager: Ending wave " + _currentWave + " and evolving population.");
         _currentWave++;
         IncrementDifficultyScale();
 
+        var kvp = _population.ElementAt(_currentWave % _population.Count);
+        var variant = kvp.Key;
+
         // 1) Evaluate done → Breed next generation, retain top parents
-        foreach (var variant in _population.Keys.ToArray())
+        var individuals = _population[variant];
+        individuals.Sort((a, b) => b.AverageFitness.CompareTo(a.AverageFitness));
+
+        int numParents = Mathf.CeilToInt(individuals.Count / 2f);
+        int numChildren = Mathf.FloorToInt(individuals.Count / 2f);
+        var nextGen = new List<MutantIndividual>();
+
+        // Keep top N parents (clone bare)
+        for (int i = 0; i < numParents && i < individuals.Count; i++)
+            nextGen.Add(individuals[i]);
+
+        // Generate children from top parents
+        for (int i = 0; i < numChildren; i++)
         {
-            var individuals = _population[variant];
-            individuals.Sort((a, b) => b.fitness.CompareTo(a.fitness));
-
-            int numParents = Mathf.CeilToInt(populationPerVariant / 2f);
-            int numChildren = Mathf.FloorToInt(populationPerVariant / 2f);
-            int eliteCount = Mathf.Max(1, numParents);
-
-            var nextGen = new List<MutantIndividual>();
-
-            // Keep top N parents (clone bare)
-            for (int i = 0; i < numParents && i < individuals.Count; i++)
-                nextGen.Add(individuals[i].CloneBare());
-
-            // Generate children to fill up to populationPerVariant
-            for (int i = 0; i < numChildren; i++)
-            {
-                var parentA = individuals[Random.Range(0, eliteCount)];
-                var parentB = individuals[Random.Range(0, eliteCount)];
-                var childGenome = _ops.Crossover(parentA.genome, parentB.genome);
-                _ops.Mutate(childGenome, mutationRate, difficultyScaleTotal);
-                nextGen.Add(new MutantIndividual(childGenome, variant));
-            }
-
-            _population[variant] = nextGen;
+            var parentA = individuals[Random.Range(0, numParents)];
+            var parentB = individuals[Random.Range(0, numParents)];
+            var childGenome = _ops.Crossover(parentA.genome, parentB.genome);
+            _ops.Mutate(childGenome, mutationRate, difficultyScaleTotal);
+            nextGen.Add(new MutantIndividual(childGenome, variant));
         }
 
-        // Add new unlocks for this wave
+        _population[variant] = nextGen;
+
         AddNewUnlocksForWave();
 
-        // 2) Cleanup old live references
-        _liveThisWave.Clear();
+        SpawnWaveCycle();
     }
     #endregion
 
@@ -164,7 +185,7 @@ public class EvolutionManager : MonoBehaviour
         int maxIndex = WaveControllerRandom.Instance.waveSpawner.maxIndex;
         Debug.Log("EvolutionManager: Getting starting population for variant " + v + " at maxIndex " + maxIndex);
 
-        var list = new List<MutantIndividual>(populationPerVariant);
+        var list = new List<MutantIndividual>();
 
         PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
         if (currentPlanet == null)
@@ -172,7 +193,6 @@ public class EvolutionManager : MonoBehaviour
             Debug.LogError("Current planet is null! Cannot get starting population.");
             return list;
         }
-
         
         for (int i = 0; i < maxIndex; i++)
         {
@@ -185,6 +205,8 @@ public class EvolutionManager : MonoBehaviour
                 list.Add(new MutantIndividual(genome, v));
             }
         }
+
+        _previousMaxIndex = maxIndex;
 
         Debug.Log("EvolutionManager: Starting population for variant " + v + " has " + list.Count + " individuals.");
         return list;
@@ -217,28 +239,28 @@ public class EvolutionManager : MonoBehaviour
                         _population[variant].Add(new MutantIndividual(genome, variant));
                     }
                 }
-                populationPerVariant += popIncreasePerVariant;
             }
         }
         Debug.Log($"EvolutionManager: Population increased by {popIncreasePerVariant * _population.Count} for wave _{_currentWave}");
         _previousMaxIndex = currentMaxIndex;
+        populationCount = _population.Sum(kvp => kvp.Value.Count);
     }
 
     List<MutantIndividual> CreateRandomPopulation(MutantVariant v)
     {
         Debug.Log("EvolutionManager: Creating random population for variant " + v);
 
-        var list = new List<MutantIndividual>(populationPerVariant);
-        for (int i = 0; i < populationPerVariant; i++)
+        var list = new List<MutantIndividual>();
+        for (int i = 0; i < 10; i++)
         {
             var g = new Genome(
                 GetRandom<BodyGeneSO>(),
                 GetRandom<HeadGeneSO>(),
                 GetRandom<LegGeneSO>()
             );
-            g.bodyGene.scale = Random.Range(2f, 4f);
-            g.headGene.scale = Random.Range(2f, 4f);
-            g.legGene.scale = Random.Range(2f, 4f);
+            g.bodyGene.scale = Random.Range(5f, 10f);
+            g.headGene.scale = Random.Range(5f, 10f);
+            g.legGene.scale = Random.Range(5f, 10f);
 
             _ops.ClampAndNormalize(ref g, difficultyScaleTotal);
 
