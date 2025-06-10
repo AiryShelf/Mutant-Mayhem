@@ -15,13 +15,14 @@ MonoBehaviour:
   id: Body_Dog
   sprite: {fileID: 21300000, guid: f8f6156dd9df443d285f45b189fe92a1, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 6
-  bodyColliderOffset: {x: 0.005, y: 0}
-  bodyColliderSize: {x: 0.15, y: 0.06}
+  scale: 8
   headAnchorOffset: {x: 0.08, y: 0}
   leftLegAnchorOffset: {x: 0, y: 0.03}
   rightLegAnchorOffset: {x: 0, y: -0.03}
-  castsShadows: 1
+  bodyColliderOffset: {x: 0.005, y: 0}
+  bodyColliderSize: {x: 0.15, y: 0.06}
+  startMass: 0.15
+  startHealth: 15
   shadowShapePoints:
   - {x: 0.050000157, y: 0.020000227}
   - {x: -0.05999818, y: 0.020001302}

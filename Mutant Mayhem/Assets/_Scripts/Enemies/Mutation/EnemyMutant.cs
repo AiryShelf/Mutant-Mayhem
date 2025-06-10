@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class EnemyMutant : EnemyBase
 {
-    [Header("Mutation")]
     public MutantIndividual individual;
+
+    [Header("Mutation")]
     public MutantRenderer mutantRenderer;
     public Rigidbody2D mutantRb;
     public CapsuleCollider2D bodyCollider;
+    public BoxCollider2D meleeCollider;
+    public float healthFitnessMultiplier = 0.25f;
 
     public override void Awake()
     {
@@ -38,6 +41,8 @@ public class EnemyMutant : EnemyBase
         LegGeneSO legGene = ind.genome.legGene;
         ApplyBehaviourSet(legGene.idleSOBase, legGene.chaseSOBase, legGene.shootSOBase);
         RestartStateMachine();
+
+        ApplyGenomeToEnemyBase();
         ResetStats();
         
         ApplyGenomeToPartStats();
@@ -59,8 +64,8 @@ public class EnemyMutant : EnemyBase
         if (individual != null)
         {
             
-            float healthFitness = health.GetMaxHealth() - health.GetHealth();
-            healthFitness *= 0.5f;
+            float healthFitness = health.GetMaxHealth();
+            healthFitness *= healthFitnessMultiplier;
             Debug.Log("Fitness from health: " + healthFitness);
             float damageFitness = meleeController.damageDealt;
             Debug.Log("Fitness from damage dealt: " + damageFitness);
@@ -80,6 +85,22 @@ public class EnemyMutant : EnemyBase
 
     #region Apply Genome
 
+    void ApplyGenomeToEnemyBase()
+    {
+        if (individual == null)
+        {
+            Debug.LogWarning("No individual assigned on ApplyGenomeToEnemyBase.");
+            return;
+        }
+
+        Genome g = individual.genome;
+
+        moveSpeedBaseStart = g.legGene.moveSpeedBaseStart;
+        rotateSpeedBaseStart = g.legGene.rotateSpeedBaseStart;
+        startMass = g.bodyGene.startMass;
+        health.startMaxHealth = g.bodyGene.startHealth;
+    }
+
     public void ApplyGenomeToPartStats()
     {
         if (individual == null)
@@ -92,13 +113,17 @@ public class EnemyMutant : EnemyBase
 
         // Apply scales
         health.SetMaxHealth(health.GetMaxHealth() * g.bodyGene.scale);
+        health.SetHealth(health.GetMaxHealth());
         rb.mass = startMass * g.bodyGene.scale;
         bodyCollider.offset = g.bodyGene.bodyColliderOffset;
         bodyCollider.size = g.bodyGene.bodyColliderSize * g.bodyGene.scale;
+        meleeCollider.offset = g.headGene.meleeColliderOffset;
+        meleeCollider.size = g.headGene.meleeColliderSize;
 
         meleeController.meleeDamage *= g.headGene.scale;
 
-        moveSpeedBase *= Mathf.Clamp(g.legGene.scale / 2, 0.3f, 3);
+        moveSpeedBase *= Mathf.Clamp(g.legGene.scale, 1, float.MaxValue);
+        Debug.Log($"MoveSpeedBase: {moveSpeedBase}, Mass: {rb.mass}");
 
         Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");
     }

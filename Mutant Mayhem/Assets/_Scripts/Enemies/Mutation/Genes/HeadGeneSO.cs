@@ -1,10 +1,14 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "EnemyEvolution/Genes/Head")]
-public class HeadGeneSO : ScriptableObject
+public class HeadGeneSO : GeneSOBase
 {
-    public string id = "Head_Default";
     public Sprite sprite;
-    public Color  color = Color.white;
-    public float  scale = 1f;
+
+    [Header("Melee Settings")]
+    public Vector2 meleeColliderOffset = new Vector2(0, 0);
+    public Vector2 meleeColliderSize = new Vector2(1, 1);
+    public float meleeDamage = 1f;
+    public float meleeAttackRate = 1f;
+    public float massModifier = 0f;
 }

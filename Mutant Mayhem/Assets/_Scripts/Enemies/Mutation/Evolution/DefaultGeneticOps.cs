@@ -68,79 +68,53 @@ public class DefaultGeneticOps
         return new Genome(bodyGene, headGene, legGene);
     }
 
-public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
-{
-    bool mutatedPart = false;
-
-    var population = EvolutionManager.Instance.GetPopulation();
-    Debug.Log("[Mutate] Population variant count: " + population.Count);
-
-    if (population.Count > 0)
+    public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
     {
-        var allIndividuals = new List<MutantIndividual>();
-        foreach (var list in population.Values)
-            allIndividuals.AddRange(list);
-        Debug.Log("[Mutate] All individuals count: " + allIndividuals.Count);
+        bool mutatedPart = false;
 
-        if (allIndividuals.Count > 0)
+        var population = EvolutionManager.Instance.GetPopulation();
+        Debug.Log("[Mutate] Population variant count: " + population.Count);
+
+        if (population.Count > 0)
         {
-            if (Random.value < mutationRate)
-            {
-                BodyGeneSO newGene = RandomChoice(allIndividuals).genome.bodyGene;
-                Color newColor = Color.Lerp(genome.bodyGene.color, newGene.color, Random.Range(0f, 1f));
-                newGene.color = newColor;
-                newGene.scale = genome.bodyGene.scale;
-                Debug.Log($"[Mutate] Mutated body gene {genome.bodyGene.id} to: {newGene.id}");
+            var allIndividuals = new List<MutantIndividual>();
+            foreach (var list in population.Values)
+                allIndividuals.AddRange(list);
+            Debug.Log("[Mutate] All individuals count: " + allIndividuals.Count);
 
-                genome.bodyGene = newGene;
-                mutatedPart = true;
-            }
-            if (Random.value < mutationRate && !mutatedPart)
+            if (allIndividuals.Count > 0)
             {
-                HeadGeneSO newGene = RandomChoice(allIndividuals).genome.headGene;
-                Color newColor = Color.Lerp(genome.headGene.color, newGene.color, Random.Range(0f, 1f));
-                newGene.color = newColor;
-                newGene.scale = genome.headGene.scale;
-                Debug.Log($"[Mutate] Mutated head gene {genome.headGene.id} to: {newGene.id}");
-
-                genome.headGene = newGene;
-                mutatedPart = true;
-            }
-            if (Random.value < mutationRate && !mutatedPart)
-            {
-                LegGeneSO newGene = RandomChoice(allIndividuals).genome.legGene;
-                Color newColor = Color.Lerp(genome.legGene.color, newGene.color, Random.Range(0f, 1f));
-                newGene.color = newColor;
-                newGene.scale = genome.legGene.scale;
-                Debug.Log($"[Mutate] Mutated leg gene {genome.legGene.id} to: {newGene.id}");
-
-                genome.legGene = newGene;
+                genome.bodyGene = MutateGene(genome, g => g.bodyGene, allIndividuals, ref mutatedPart, mutationRate, "body");
+                genome.headGene = MutateGene(genome, g => g.headGene, allIndividuals, ref mutatedPart, mutationRate, "head");
+                genome.legGene  = MutateGene(genome, g => g.legGene,  allIndividuals, ref mutatedPart, mutationRate, "leg");
             }
         }
-    }
 
-    // 🔸 mutate scales
-    float delta = 0.2f * (1 + EvolutionManager.Instance._currentWave);
-    Debug.Log("EvolutionManager mutate delta: " + delta);
+        // 🔸 mutate scales
+        float delta = 0.2f * (1 + EvolutionManager.Instance._currentWave);
+        Debug.Log("EvolutionManager mutate delta: " + delta);
 
-    if (Random.value < mutationRate)
-    {
-        genome.bodyGene.scale += Random.Range(-delta, delta);
-        Debug.Log("Mutated bodyScale: " + genome.bodyGene.scale);
-    }
-    if (Random.value < mutationRate) 
-    {
-        genome.headGene.scale += Random.Range(-delta, delta);
-        Debug.Log("Mutated headScale: " + genome.headGene.scale);
-    }
-    if (Random.value < mutationRate)
-    {
-        genome.legGene.scale += Random.Range(-delta, delta);
-        Debug.Log("Mutated legScale: " + genome.legGene.scale);
-    }
+        if (Random.value < mutationRate)
+        {
+            genome.bodyGene.scale += Random.Range(-delta, delta);
+            genome.RandomizePartColor(genome.bodyGene.color);
+            Debug.Log("Mutated bodyScale: " + genome.bodyGene.scale);
+        }
+        if (Random.value < mutationRate) 
+        {
+            genome.headGene.scale += Random.Range(-delta, delta);
+            genome.RandomizePartColor(genome.headGene.color);
+            Debug.Log("Mutated headScale: " + genome.headGene.scale);
+        }
+        if (Random.value < mutationRate)
+        {
+            genome.legGene.scale += Random.Range(-delta, delta);
+            genome.RandomizePartColor(genome.legGene.color);
+            Debug.Log("Mutated legScale: " + genome.legGene.scale);
+        }
 
-    ClampAndNormalize(ref genome, difficultyScaleTotal);
-}
+        ClampAndNormalize(ref genome, difficultyScaleTotal);
+    }
 
     public void ClampAndNormalize(ref Genome genome, float maxTotal)
     {
@@ -148,7 +122,7 @@ public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal
         float minPerGene = (maxTotal / genome.numberOfGenes) * 0.5f;
         genome.bodyGene.scale = Mathf.Max(genome.bodyGene.scale, minPerGene);
         genome.headGene.scale = Mathf.Max(genome.headGene.scale, minPerGene);
-        genome.legGene.scale  = Mathf.Max(genome.legGene.scale, minPerGene);
+        genome.legGene.scale = Mathf.Max(genome.legGene.scale, minPerGene);
 
         // Normalize scales to fit within maxTotal
         float total = genome.bodyGene.scale + genome.headGene.scale + genome.legGene.scale;
@@ -163,4 +137,21 @@ public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal
 
     private T RandomChoice<T>(T[] arr) => arr[Random.Range(0, arr.Length)];
     private T RandomChoice<T>(List<T> list) => list[Random.Range(0, list.Count)];
+
+    private T MutateGene<T>(Genome genome, System.Func<Genome, T> geneSelector, List<MutantIndividual> allIndividuals, ref bool mutatedPart, float mutationRate, string partName) where T : GeneSOBase
+    {
+        if (Random.value < mutationRate && !mutatedPart)
+        {
+            T currentGene = geneSelector(genome);
+            T newGene = geneSelector(RandomChoice(allIndividuals).genome);
+            Color newColor = Color.Lerp(currentGene.color, newGene.color, Random.Range(0f, 1f));
+            newGene.color = newColor;
+            newGene.scale = currentGene.scale;
+            Debug.Log($"[Mutate] Mutated {partName} gene {currentGene.id} to: {newGene.id}");
+
+            mutatedPart = true;
+            return newGene;
+        }
+        return geneSelector(genome);
+    }
 }

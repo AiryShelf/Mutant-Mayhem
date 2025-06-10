@@ -38,11 +38,16 @@ public class MutantRenderer : MonoBehaviour
         var headGeneBase = GeneDatabase.Head(g.headGene.id);
         var legGeneBase = GeneDatabase.Leg(g.legGene.id);
 
-        /* 1️⃣  Set sprites and animators */
+        /* 1️⃣  Set sprites/animators and colors*/
         bodySR.sprite = bodyGeneBase.sprite;
+        bodySR.color = g.bodyGene.color;
         headSR.sprite = headGeneBase.sprite;
+        headSR.color = g.headGene.color;
         animationControllerMutant.leftLegAnimator.runtimeAnimatorController = legGeneBase.leftLegAnimatorController;
+        leftLegSR.color = g.legGene.color;
         animationControllerMutant.rightLegAnimator.runtimeAnimatorController = legGeneBase.rightLegAnimatorController;
+        rightLegSR.color = g.legGene.color;
+
         animationControllerMutant.animSpeedFactor = legGeneBase.animSpeedFactor;
         animationControllerMutant.switchToRunBuffer = legGeneBase.switchToRunBuffer;
         animationControllerMutant.maxAnimSpeed = legGeneBase.maxAnimSpeed;
@@ -58,19 +63,29 @@ public class MutantRenderer : MonoBehaviour
         leftLegAnchor.localPosition = bodyGeneBase.leftLegAnchorOffset * g.bodyGene.scale;
         rightLegAnchor.localPosition = bodyGeneBase.rightLegAnchorOffset * g.bodyGene.scale;
 
-        var path = bodyGeneBase.shadowShapePoints;
-
-        Vector3[] vertices = new Vector3[path.Length];
-
-        for (int i = 0; i < path.Length; i++)
+        if (!g.legGene.bodyCastsShadows)
         {
-            Vector2 p = path[i];
-            p.x *= g.bodyGene.scale;
-            p.y *= g.bodyGene.scale;
-            vertices[i] = new Vector3(p.x, p.y, 0);
+            shadowCaster2D.enabled = false;
+            return;
         }
+        else
+        {
+            // Update shadow shape
+            shadowCaster2D.enabled = true;
 
-        ShadowCaster2DHelper.SetShapePath(shadowCaster2D, vertices);
+            var path = bodyGeneBase.shadowShapePoints;
+            Vector3[] vertices = new Vector3[path.Length];
+
+            for (int i = 0; i < path.Length; i++)
+            {
+                Vector2 p = path[i];
+                p.x *= g.bodyGene.scale;
+                p.y *= g.bodyGene.scale;
+                vertices[i] = new Vector3(p.x, p.y, 0);
+            }
+
+            ShadowCaster2DHelper.SetShapePath(shadowCaster2D, vertices);
+        }
     }
 
     public void RandomizeColor(float randColorRange)
@@ -119,33 +134,5 @@ public class MutantRenderer : MonoBehaviour
         }
     }
 
-    public Color RandomizePartColor(Color color, float randColorRange)
-    {
-        float red = color.r + Random.Range(-randColorRange, randColorRange);
-        float green = color.g + Random.Range(-randColorRange, randColorRange);
-        float blue = color.b + Random.Range(-randColorRange, randColorRange);
-
-        // Clamp color values to stay within range
-        red = Mathf.Clamp01(red);
-        green = Mathf.Clamp01(green);
-        blue = Mathf.Clamp01(blue);
-
-        // prevent division by zero, ensure color is bright enough
-        if (red + green + blue == 0f)
-        {
-            red = minColorBrightness / 3;
-            green = minColorBrightness / 3;
-            blue = minColorBrightness / 3;
-        }
-        else
-        if (red + green + blue < minColorBrightness)
-        {
-            var factor = minColorBrightness / (red + green + blue);
-            red *= factor;
-            green *= factor;
-            blue *= factor;
-        }
-
-        return new Color(red, green, blue, color.a);
-    }
+    
 }

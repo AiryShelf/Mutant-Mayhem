@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 1929912251
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e5a504ff7bc634311b027e55e8e87591, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f8f6156dd9df443d285f45b189fe92a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -497,6 +497,8 @@ MonoBehaviour:
   mutantRenderer: {fileID: 939025091054266882}
   mutantRb: {fileID: 5849212300257372830}
   bodyCollider: {fileID: 6693279220761680982}
+  meleeCollider: {fileID: 2056162773519137511}
+  healthFitnessMultiplier: 0.25
 --- !u!114 &939025091054266882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,7 +587,7 @@ MonoBehaviour:
   - {x: 0.08678463, y: -0.019966379, z: 0}
   m_ShapePathHash: -2108260162
   m_Mesh: {fileID: 0}
-  m_InstanceId: 86434
+  m_InstanceId: 283804
   m_LocalBounds:
     m_Center: {x: 0.0088474825, y: 0.0002141241, z: 0}
     m_Extent: {x: 0.08640965, y: 0.020342423, z: 0}
@@ -725,7 +727,7 @@ SpriteRenderer:
   m_SortingLayerID: 1929912251
   m_SortingLayer: 3
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: f62a08e0a6fcb4241b69d9b7cba422ad, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5c69c414df03844e2a6cd9cd32c686dc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -821,15 +823,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.x
-      value: 0.07368955
+      value: 0.05497387
       objectReference: {fileID: 0}
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.y
-      value: 0.06998694
+      value: 0.060370903
       objectReference: {fileID: 0}
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.x
-      value: -0.02
+      value: -0.013084531
       objectReference: {fileID: 0}
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.y
@@ -903,6 +905,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MeleeNew
       objectReference: {fileID: 0}
+    - target: {fileID: 6206577042995397695, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: meleeDamage
       value: 2
@@ -955,6 +961,11 @@ PrefabInstance:
 --- !u!4 &1381202588149378297 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+  m_PrefabInstance: {fileID: 4301439321457762968}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &2056162773519137511 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
   m_PrefabInstance: {fileID: 4301439321457762968}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6872051605903006424 stripped
