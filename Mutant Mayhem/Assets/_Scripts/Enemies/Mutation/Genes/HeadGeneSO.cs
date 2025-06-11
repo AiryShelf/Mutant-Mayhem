@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "EnemyEvolution/Genes/Head")]
 public class HeadGeneSO : GeneSOBase
 {
     public Sprite sprite;
+    public List<Vector2> headColliderPoints;
 
     [Header("Melee Settings")]
     public Vector2 meleeColliderOffset = new Vector2(0, 0);

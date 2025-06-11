@@ -19,8 +19,15 @@ MonoBehaviour:
   headAnchorOffset: {x: 0.04, y: 0}
   leftLegAnchorOffset: {x: 0, y: 0.06}
   rightLegAnchorOffset: {x: 0, y: -0.06}
-  bodyColliderOffset: {x: 0, y: 0}
-  bodyColliderSize: {x: 0.1, y: 0.1}
+  bodyColliderPoints:
+  - {x: 0.03998266, y: 0.040066406}
+  - {x: 0.019996092, y: 0.060003165}
+  - {x: -0.030000674, y: 0.06000001}
+  - {x: -0.04999627, y: 0.0300019}
+  - {x: -0.050017387, y: -0.030027803}
+  - {x: -0.030007629, y: -0.060004164}
+  - {x: 0.019944344, y: -0.060056694}
+  - {x: 0.039869398, y: -0.040127665}
   startMass: 0.15
   startHealth: 15
   shadowShapePoints:

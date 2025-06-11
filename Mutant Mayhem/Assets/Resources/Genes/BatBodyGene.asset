@@ -13,14 +13,19 @@ MonoBehaviour:
   m_Name: BatBodyGene
   m_EditorClassIdentifier: 
   id: Body_Bat
-  sprite: {fileID: 21300000, guid: bcc92f64bb94d47f09a0e6f669d787f1, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 4
+  sprite: {fileID: 21300000, guid: bcc92f64bb94d47f09a0e6f669d787f1, type: 3}
   headAnchorOffset: {x: 0.05, y: 0}
   leftLegAnchorOffset: {x: 0.02, y: 0.03}
   rightLegAnchorOffset: {x: 0.02, y: -0.03}
-  bodyColliderOffset: {x: -0.03, y: 0}
-  bodyColliderSize: {x: 0.16, y: 0.06}
+  bodyColliderPoints:
+  - {x: 0.049997635, y: 0.030014899}
+  - {x: -0.059959445, y: 0.029980995}
+  - {x: -0.10999991, y: 0.010000018}
+  - {x: -0.10999998, y: -0.009999992}
+  - {x: -0.05999999, y: -0.029999988}
+  - {x: 0.05000004, y: -0.030000148}
   startMass: 0.1
   startHealth: 10
   shadowShapePoints:

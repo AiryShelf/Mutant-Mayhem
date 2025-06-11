@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using TMPro;
 using Unity.VisualScripting;
@@ -51,6 +52,8 @@ public static class GameTools
         );
     }
 
+    #region Lerp Functions
+
     // Example of a lerp coroutine
     public static IEnumerator LerpPosition(Transform objectTransform, Vector3 startPos, Vector3 endPos, float duration)
     {
@@ -87,16 +90,9 @@ public static class GameTools
         onUpdate?.Invoke(endValue);
     }
 
-    public static void TextureOffsetCentered(Material material, Transform transform, Transform target, 
-                                             Vector2 direction, float speed, ref Vector2 currentOffset)
-    {
-        Vector2 targetPos = target.transform.position;
-        transform.position = targetPos;
-        currentOffset += direction * speed * Time.deltaTime;
-        Vector2 newOffset = targetPos/64 + currentOffset;
+    #endregion
 
-        material.mainTextureOffset = newOffset;
-    }
+    #region String Formatting
 
     /// <summary>
     /// Converts a float into a formatted string with "k" for thousands or "M" for millions.
@@ -113,12 +109,12 @@ public static class GameTools
         {
             int decimals = 0;
 
-            if      (scaled < 10f)   decimals = 2;
-            else if (scaled < 100f)  decimals = 1;
-            else                     decimals = 0;
+            if (scaled < 10f) decimals = 2;
+            else if (scaled < 100f) decimals = 1;
+            else decimals = 0;
 
             // Use rounding instead of flooring
-            float rounded = (float) System.Math.Round(scaled, decimals);
+            float rounded = (float)System.Math.Round(scaled, decimals);
 
             // Convert to string with the chosen decimal setting
             // "F" format enforces decimal places
@@ -149,24 +145,6 @@ public static class GameTools
             // we call the same helper so we get consistent rounding
             return FormatScaled(value);
         }
-        /*
-        float absValue = Mathf.Abs(value);
-        
-        if (absValue > 999_999)
-        {
-            float millions = Mathf.Floor(value / 1_000_000f * 100f) / 100f; // Two decimal precision
-            return $"{millions} M";
-        }
-        else if (absValue > 999)
-        {
-            float thousands = Mathf.Floor(value / 1_000f * 100f) / 100f; // Two decimal precision
-            return $"{thousands} k";
-        }
-        else
-        {
-            return Mathf.Floor(value).ToString();
-        }
-        */
     }
 
     /// <summary>
@@ -191,29 +169,29 @@ public static class GameTools
         int seconds = totalSeconds % 60;
 
         string formattedTime = "";
-        
+
         if (hours > 1)
             formattedTime += $"{hours} hours, ";
         else if (hours > 0)
             formattedTime += $"{hours} hour, ";
-        
+
         if (minutes > 1)
             formattedTime += $"{minutes} minutes, ";
         else if (minutes > 0)
             formattedTime += $"{minutes} minute, ";
         else if (hours > 0)
             formattedTime += $"{minutes} minutes, ";
-        
+
         if (seconds > 1)
             formattedTime += $"{seconds} seconds";
         else if (seconds > 0)
             formattedTime += $"{seconds} second";
-        else 
+        else
             formattedTime += $"{seconds} seconds";
 
         return formattedTime.Trim();
     }
-    
+
     public static bool RollForCrit(float critChance)
     {
         return Random.value <= critChance;
@@ -242,6 +220,8 @@ public static class GameTools
         return new Vector2(Mathf.Cos(radian), Mathf.Sin(radian)).normalized;
     }
 
+    #endregion
+
     #region Flash / Pulse
 
     public static IEnumerator FlashSprite(SpriteRenderer sr, float flashTime, float flashSpeed, Color flashColor, Color startColor)
@@ -260,8 +240,8 @@ public static class GameTools
             yield return null;
             timeElapsed += Time.deltaTime;
         }
-            
-        
+
+
         sr.color = startColor;
     }
 
@@ -342,6 +322,128 @@ public static class GameTools
             transform.localScale = scaleStart;
     }
 
+    #endregion
+
+    #region Others
+
+    public static void TextureOffsetCentered(Material material, Transform transform, Transform target,
+                                             Vector2 direction, float speed, ref Vector2 currentOffset)
+    {
+        Vector2 targetPos = target.transform.position;
+        transform.position = targetPos;
+        currentOffset += direction * speed * Time.deltaTime;
+        Vector2 newOffset = targetPos / 64 + currentOffset;
+
+        material.mainTextureOffset = newOffset;
+    }
+    
+    public static List<Vector2> ComputeConvexHull(List<Vector2> points)
+    {
+        if (points.Count < 3)
+            return points;
+
+        List<Vector2> hull = new List<Vector2>();
+
+        // Find the leftmost point
+        Vector2 pointOnHull = points.OrderBy(p => p.x).ThenBy(p => p.y).First();
+
+        Vector2 currentPoint = pointOnHull;
+        Vector2 endpoint;
+
+        do
+        {
+            hull.Add(currentPoint);
+            endpoint = points[0];
+
+            for (int i = 1; i < points.Count; i++)
+            {
+                // If endpoint is currentPoint, or if the currentPoint->endpoint->points[i] makes a right turn
+                float cross = Cross(currentPoint, endpoint, points[i]);
+                if (endpoint == currentPoint || cross < 0f || (cross == 0f && Vector2.Distance(currentPoint, points[i]) > Vector2.Distance(currentPoint, endpoint)))
+                {
+                    endpoint = points[i];
+                }
+            }
+
+            currentPoint = endpoint;
+
+        } while (currentPoint != pointOnHull);
+
+        return hull;
+    }
+
+    private static float Cross(Vector2 o, Vector2 a, Vector2 b)
+    {
+        return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+    }
+
+    public static List<Vector2> OrderPolygonPoints(List<Vector2> points)
+    {
+        if (points == null || points.Count < 3)
+            return points;
+
+        // Compute centroid
+        Vector2 centroid = Vector2.zero;
+        foreach (Vector2 p in points)
+            centroid += p;
+        centroid /= points.Count;
+
+        // Sort points by angle from centroid (produces a perimeter loop)
+        List<Vector2> ordered = points
+            .OrderBy(p => Mathf.Atan2(p.y - centroid.y, p.x - centroid.x))
+            .ToList();
+
+        // Optional: check winding direction and reverse if needed
+        if (!IsClockwise(ordered))
+            ordered.Reverse();
+
+        return ordered;
+    }
+
+    public static List<Vector2> RotatePointsToAnchor(List<Vector2> points, System.Func<Vector2, float> scoreFunc)
+    {
+        if (points == null || points.Count == 0)
+            return points;
+
+        // Find the best anchor point based on scoreFunc (minimizing score)
+        int bestIndex = 0;
+        float bestScore = scoreFunc(points[0]);
+
+        for (int i = 1; i < points.Count; i++)
+        {
+            float score = scoreFunc(points[i]);
+            if (score < bestScore)
+            {
+                bestScore = score;
+                bestIndex = i;
+            }
+        }
+
+        // Rotate list so that bestIndex point is first
+        List<Vector2> rotated = new List<Vector2>();
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            int index = (bestIndex + i) % points.Count;
+            rotated.Add(points[index]);
+        }
+
+        return rotated;
+    }
+
+    private static bool IsClockwise(List<Vector2> points)
+    {
+        // Shoelace formula
+        float sum = 0f;
+        for (int i = 0; i < points.Count; i++)
+        {
+            Vector2 current = points[i];
+            Vector2 next = points[(i + 1) % points.Count];
+            sum += (next.x - current.x) * (next.y + current.y);
+        }
+        return sum > 0f;
+    }
+    
     #endregion
 }
 

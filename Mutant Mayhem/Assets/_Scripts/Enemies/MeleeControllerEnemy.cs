@@ -19,7 +19,6 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] Vector3 initialScale = new Vector3(0.3f, 0.3f, 1f);
     [SerializeField] Vector3 maxScale = new Vector3(1f, 1f, 1f);
     public Animator meleeAnimator;
-    [SerializeField] SpriteRenderer meleeSprite;
     [SerializeField] SoundSO meleeSound;
 
     ContactFilter2D contactFilter;
@@ -46,7 +45,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         {
             useTriggers = false
         };
-        
+
         SetContactFilter(hitLayers);
         colliders = new List<Collider2D>(10);
 
@@ -75,7 +74,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         meleeAnimator.Play("No Attack");
         meleeCollider.enabled = true;
         meleeCollider.transform.localScale = maxScale;
-        
+
         waitToAttack = false;
         meleeDamage = meleeDamageStart;
         knockback = knockbackStart;
@@ -83,13 +82,35 @@ public class MeleeControllerEnemy : MonoBehaviour
         //meleeSprite.enabled = false;
     }
 
+    float GetDamage()
+    {
+        bool isCritical = false;
+        float critMult = 1;
+        if (criticalHit != null)
+            (isCritical, critMult) = criticalHit.RollForCrit(1, 1);
+
+        float damage = meleeDamage;
+        damage *= 1 + Random.Range(-damageVariance, damageVariance);
+        damage *= critMult;
+
+        return damage;
+    }
+    
+    void PlayMeleeSound(Vector2 point)
+    {
+        SFXManager.Instance.PlaySoundAt(meleeSound, point); ;
+    }
+
+    #region Hit Methods ----------------------------------------------------
+
     void Hit(Health otherHealth, Vector2 point)
     {
         float damage = GetDamage();
 
         StartCoroutine(AttackTimer());
         meleeAnimator.SetTrigger("Melee");
-        
+        meleeAnimator.transform.position = point;
+
         myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback);
         Vector2 hitDir = (Vector2)otherHealth.transform.position - point;
         otherHealth.Knockback(hitDir, knockback);
@@ -110,7 +131,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     void HitStructure(Vector2 point)
     {
         float damage = GetDamage();
-        
+
         // Find dotProduct
         Vector2 dir = (point - (Vector2)myHealth.transform.position).normalized;
 
@@ -119,7 +140,8 @@ public class MeleeControllerEnemy : MonoBehaviour
         point += dir / 20;
 
         StartCoroutine(AttackTimer());
-        meleeAnimator.SetTrigger("Melee"); 
+        meleeAnimator.SetTrigger("Melee");
+        meleeAnimator.transform.position = point;
         myHealth.Knockback((Vector2)myHealth.transform.position - point, selfKnockback * 0.8f);
         float damageScale = damage / meleeDamage;
         tileManager.ModifyHealthAt(point, -damage, damageScale, dir);
@@ -129,8 +151,13 @@ public class MeleeControllerEnemy : MonoBehaviour
         StatsCounterPlayer.MeleeAttacksByEnemies++;
     }
 
+    #endregion
+
+    #region Melee Control ----------------------------------------------------
+
     IEnumerator ScaleMeleeObject()
     {
+        // Scale up the melee collider over time
         float elapsed = 0f;
         Vector3 startScale = initialScale;
         Vector3 targetScale = maxScale;
@@ -139,25 +166,11 @@ public class MeleeControllerEnemy : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / scaleDuration;
-            meleeCollider.transform.localScale = Vector3.Lerp(startScale, targetScale, t); // Smoothly scale the object
+            meleeCollider.transform.localScale = Vector3.Lerp(startScale, targetScale, t);
             yield return null;
         }
 
-        transform.localScale = targetScale; // Ensure the final scale is set
-    }
-
-    float GetDamage()
-    {
-        bool isCritical = false;
-        float critMult = 1;
-        if (criticalHit != null)
-            (isCritical, critMult) = criticalHit.RollForCrit(1, 1);
-        
-        float damage = meleeDamage;
-        damage *= 1 + Random.Range(-damageVariance, damageVariance);
-        damage *= critMult;
-
-        return damage;
+        transform.localScale = targetScale;
     }
 
     void OnTriggerStay2D(Collider2D other)
@@ -196,7 +209,7 @@ public class MeleeControllerEnemy : MonoBehaviour
                 Vector2 directionToCube = (Vector2)targetCollider.transform.position - (Vector2)transform.position;
                 float distanceToCube = Vector2.Distance(transform.position, targetCollider.transform.position);
 
-                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, directionToCube, 
+                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, directionToCube,
                                                         distanceToCube, LayerMask.GetMask("Structures"));
                 if (rayHit.collider != null)
                 {
@@ -224,7 +237,7 @@ public class MeleeControllerEnemy : MonoBehaviour
             Debug.Log("Enemy found Drone Priority 4");
             return 4;
         }
-        
+
         return int.MaxValue;
     }
 
@@ -259,11 +272,6 @@ public class MeleeControllerEnemy : MonoBehaviour
         }
     }
 
-    void PlayMeleeSound(Vector2 point)
-    {
-        SFXManager.Instance.PlaySoundAt(meleeSound, point);;
-    }
-
     IEnumerator AttackTimer()
     {
         waitToAttack = true;
@@ -288,4 +296,6 @@ public class MeleeControllerEnemy : MonoBehaviour
             scaleCoroutine = StartCoroutine(ScaleMeleeObject());
         }
     }
+    
+    #endregion
 }
