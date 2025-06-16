@@ -15,6 +15,14 @@ MonoBehaviour:
   id: Leg_Bat
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 2
+  leftLegCorpseSprites:
+  - {fileID: 893603533, guid: 9de259b3530284c2a8f19afb450482cb, type: 3}
+  - {fileID: -1040297807, guid: 9de259b3530284c2a8f19afb450482cb, type: 3}
+  - {fileID: -1506207044, guid: 9de259b3530284c2a8f19afb450482cb, type: 3}
+  rightLegCorpseSprites:
+  - {fileID: -1624182848, guid: 510896f219f9c4235b77f600a10481e4, type: 3}
+  - {fileID: -1414135969, guid: 510896f219f9c4235b77f600a10481e4, type: 3}
+  - {fileID: 1844854100, guid: 510896f219f9c4235b77f600a10481e4, type: 3}
   leftLegAnimatorController: {fileID: 9100000, guid: 8a17212a3ebd14b18a0da2e53090ef52, type: 2}
   rightLegAnimatorController: {fileID: 9100000, guid: 71e51e3ba54204faa893424987d2ee9c, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7dc61f6d55ac28d4e9e2478e3724dc80, type: 2}

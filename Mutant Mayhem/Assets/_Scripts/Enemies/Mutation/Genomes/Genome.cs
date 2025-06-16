@@ -9,8 +9,7 @@ public class Genome
     public LegGeneSO legGene;
 
     public int numberOfGenes => 3;
-    float minColorBrightness = 0.75f;
-    float randColorRange = 0.3f;
+    float minColorBrightness = 1f;
 
     public Genome(BodyGeneSO body, HeadGeneSO head, LegGeneSO leg)
     {
@@ -19,7 +18,7 @@ public class Genome
         legGene = leg;
     }
     
-    public Color RandomizePartColor(Color color)
+    public void RandomizePartColor(GeneSOBase gene, Color color, float randColorRange)
     {
         float red = color.r + Random.Range(-randColorRange, randColorRange);
         float green = color.g + Random.Range(-randColorRange, randColorRange);
@@ -46,6 +45,6 @@ public class Genome
             blue *= factor;
         }
 
-        return new Color(red, green, blue, color.a);
+        gene.color = new Color(red, green, blue, color.a);
     }
 }

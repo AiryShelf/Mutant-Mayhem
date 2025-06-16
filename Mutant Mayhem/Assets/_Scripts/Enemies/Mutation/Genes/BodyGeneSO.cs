@@ -5,6 +5,7 @@ using UnityEngine;
 public class BodyGeneSO : GeneSOBase
 {
     public Sprite sprite;
+    public List<Sprite> corpseSprites;
 
     [Header("Anchor Offsets")]
     public Vector2 headAnchorOffset = new Vector2(0, 0.9f);
@@ -15,6 +16,7 @@ public class BodyGeneSO : GeneSOBase
     public List<Vector2> bodyColliderPoints;
     public float startMass = 1f;
     public float startHealth = 10f;
+    public float freezeTime = 0.5f;
 
     [Header("Shadow Settings")]
     public Vector2[] shadowShapePoints;

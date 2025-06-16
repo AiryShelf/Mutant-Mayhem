@@ -5,6 +5,7 @@ using UnityEngine;
 public class HeadGeneSO : GeneSOBase
 {
     public Sprite sprite;
+    public List<Sprite> corpseSprites;
     public List<Vector2> headColliderPoints;
 
     [Header("Melee Settings")]

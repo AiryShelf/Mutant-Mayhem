@@ -2,28 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CorpseController : MonoBehaviour
+public class EnemyCorpseController : CorpseController
 {
+    [Header("Enemy Corpse Settings")]
     [SerializeField] Sprite[] corpseSprites;
-    [SerializeField] float timeToStartFade;
-    [SerializeField] float timeForFade;
-    [SerializeField] string corpsePoolName = "";
 
     SpriteRenderer mySr;
-    Color startColor;
+
 
     void Awake()
     {
         mySr = GetComponent<SpriteRenderer>();
-    }
-
-    void Start()
-    {
-        if (InputManager.IsMobile())
-        {
-            timeToStartFade /= 2;
-            timeForFade /= 1.5f;
-        }   
     }
 
     void OnEnable()
@@ -34,10 +23,9 @@ public class CorpseController : MonoBehaviour
 
         // Random flip 
         int sign = Random.Range(0, 2) * 2 - 1; // Randomly 1 or -1
-        //Debug.Log(sign);
-        mySr.transform.localScale = new Vector3 (
-                                    mySr.transform.localScale.x, 
-                                    mySr.transform.localScale.y * sign, 
+        mySr.transform.localScale = new Vector3(
+                                    mySr.transform.localScale.x,
+                                    mySr.transform.localScale.y * sign,
                                     mySr.transform.localScale.z);
 
         // Reduce alpha and darken
@@ -51,19 +39,13 @@ public class CorpseController : MonoBehaviour
         StartCoroutine(WaitToFade());
     }
 
-    void OnDisable()
+    protected override void OnDisable()
     {
-        StopAllCoroutines();
+        base.OnDisable();
         mySr.color = startColor;
     }
 
-    IEnumerator WaitToFade()
-    {
-        yield return new WaitForSeconds(timeToStartFade);
-        StartCoroutine(FadeOut());
-    }
-
-    IEnumerator FadeOut()
+    protected override IEnumerator FadeOut()
     {
         startColor = mySr.color;
         float timeElapsed = 0;

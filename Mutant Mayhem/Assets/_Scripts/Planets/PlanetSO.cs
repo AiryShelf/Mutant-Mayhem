@@ -25,7 +25,7 @@ public class PlanetSO : ScriptableObject
     [Header("Wave Properties")]
     public WaveSOBase waveSOBase;
     public int maxIndexToSelectAtStart = 1;
-    public float wavesTillAddIndex = 1; 
+    public float wavesTillAddIndex = 1;
     public int creditsPerWave = 150; // Additive bonus (waveIndex*creditsPerWave)
     public float timeBetweenWavesBase = 90; // Base amount of day-time
     public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
@@ -34,7 +34,7 @@ public class PlanetSO : ScriptableObject
     public int batchMultGrowthTime = 2;
     public int damageMultGrowthTime = 5;
     public int attackDelayMultGrowthTime = 60;
-    public int healthMultGrowthTime = 20; 
+    public int healthMultGrowthTime = 20;
     public int speedMultGrowthTime = 20;
     public int sizeMultGrowthTime = 40;
     public int subwaveDelayMultGrowthTime = 40;
@@ -44,4 +44,13 @@ public class PlanetSO : ScriptableObject
     public float healthMultiplier = 1;
     public float speedMultiplier = 1;
     public float sizeMultiplier = 1; // Smaller is harder
+
+    [Header("Mutations Settings")]
+    public float mutationChance = 0.1f;
+    public float addMutationChancePerWave = 0.02f;
+    public float mutationChanceMax = 0.3f;
+    public float mutationIntensity = 0.1f; // Range of randomization for scale
+    public float addMutationIntensityPerWave = 0.01f;
+    public float mutationIntensityMax = 0.5f;
+    public float totalSpawnFactor = 0.5f;
 }

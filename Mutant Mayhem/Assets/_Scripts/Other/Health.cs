@@ -112,8 +112,22 @@ public class Health : MonoBehaviour
         GameObject corpse = PoolManager.Instance.GetFromPool(poolName);
         corpse.transform.position = transform.position;
         corpse.transform.rotation = transform.rotation;
-        corpse.transform.localScale = transform.localScale;
-        corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponentInChildren<SpriteRenderer>().color;
+        corpse.transform.localScale = transform.localScale * 0.9f; // Scale down a bit
+        
+        var corpseController = corpse.GetComponent<CorpseController>();
+        if (corpseController != null)
+        {
+            if (corpseController is EnemyCorpseController enemyCorpse)
+            {
+                corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponentInChildren<SpriteRenderer>().color;
+            }
+            else if (corpseController is MutantCorpseController mutationCorpse)
+            {
+                mutationCorpse.ApplyGenome(GetComponent<EnemyMutant>().individual.genome);
+            }
+
+            corpseController.corpsePoolName = poolName;
+        }
     }
 
     public virtual void Die() { }

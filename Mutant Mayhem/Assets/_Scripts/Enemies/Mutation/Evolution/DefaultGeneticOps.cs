@@ -3,18 +3,7 @@ using System.Collections.Generic;
 
 public class DefaultGeneticOps
 {
-    private BodyGeneSO[] bodies;
-    private HeadGeneSO[] heads;
-    private LegGeneSO[] legs;
-
-    public DefaultGeneticOps()
-    {
-        GeneDatabase.InitialiseIfNeeded();
-        bodies = Resources.LoadAll<BodyGeneSO>("");
-        heads = Resources.LoadAll<HeadGeneSO>("");
-        legs = Resources.LoadAll<LegGeneSO>("");
-    }
-
+    #region Crossover ---------------------------------------------------------
     public Genome Crossover(Genome a, Genome b)
     {
         // Validate parents
@@ -32,9 +21,9 @@ public class DefaultGeneticOps
         // Start with all genes from parent A
         BodyGeneSO bodyGene = a.bodyGene;
         HeadGeneSO headGene = a.headGene;
-        LegGeneSO  legGene  = a.legGene;
+        LegGeneSO legGene = a.legGene;
 
-        // Decide how many parts to swap (min 1, max 2)
+        // Decide how many parts to swap
         int partsToSwap = Random.Range(1, a.numberOfGenes);
         var partIndices = new HashSet<int>();
         while (partIndices.Count < partsToSwap)
@@ -44,19 +33,19 @@ public class DefaultGeneticOps
         {
             switch (index)
             {
-                case 0: // body
+                case 0: // Body
                     bodyGene = b.bodyGene;
                     bodyGene.scale = Mathf.Lerp(a.bodyGene.scale, b.bodyGene.scale, Random.Range(0f, 1f));
                     bodyGene.color = Color.Lerp(a.bodyGene.color, b.bodyGene.color, Random.Range(0f, 1f));
                     Debug.Log($"[Crossover] Swapped body gene to “{bodyGene.id}”");
                     break;
-                case 1: // head
+                case 1: // Head
                     headGene = b.headGene;
                     headGene.scale = Mathf.Lerp(a.headGene.scale, b.headGene.scale, Random.Range(0f, 1f));
                     headGene.color = Color.Lerp(a.headGene.color, b.headGene.color, Random.Range(0f, 1f));
                     Debug.Log($"[Crossover] Swapped head gene to “{headGene.id}”");
                     break;
-                case 2: // legs
+                case 2: // Legs
                     legGene = b.legGene;
                     legGene.scale = Mathf.Lerp(a.legGene.scale, b.legGene.scale, Random.Range(0f, 1f));
                     legGene.color = Color.Lerp(a.legGene.color, b.legGene.color, Random.Range(0f, 1f));
@@ -68,9 +57,17 @@ public class DefaultGeneticOps
         return new Genome(bodyGene, headGene, legGene);
     }
 
-    public void Mutate(Genome genome, float mutationRate, float difficultyScaleTotal)
+    #endregion
+    
+    #region Mutate ----------------------------------------------------------
+
+    public void Mutate(Genome genome, float difficultyScaleTotal)
     {
-        bool mutatedPart = false;
+        float mutationChance = PlanetManager.Instance.currentPlanet.mutationChance
+                             + (WaveControllerRandom.Instance.currentWaveIndex
+                             * PlanetManager.Instance.currentPlanet.addMutationChancePerWave);
+        mutationChance = Mathf.Clamp(mutationChance, 0f, PlanetManager.Instance.currentPlanet.mutationChanceMax);
+        Debug.Log("[Mutate] Mutation chance: " + mutationChance);
 
         var population = EvolutionManager.Instance.GetPopulation();
         Debug.Log("[Mutate] Population variant count: " + population.Count);
@@ -84,37 +81,47 @@ public class DefaultGeneticOps
 
             if (allIndividuals.Count > 0)
             {
-                genome.bodyGene = MutateGene(genome, g => g.bodyGene, allIndividuals, ref mutatedPart, mutationRate, "body");
-                genome.headGene = MutateGene(genome, g => g.headGene, allIndividuals, ref mutatedPart, mutationRate, "head");
-                genome.legGene  = MutateGene(genome, g => g.legGene,  allIndividuals, ref mutatedPart, mutationRate, "leg");
+                bool partWasMutated = false;
+                genome.bodyGene = MutateGene(genome, g => g.bodyGene, allIndividuals, 
+                                             ref partWasMutated, mutationChance, "body");
+                genome.headGene = MutateGene(genome, g => g.headGene, allIndividuals, 
+                                             ref partWasMutated, mutationChance, "head");
+                genome.legGene = MutateGene(genome, g => g.legGene, allIndividuals, 
+                                             ref partWasMutated, mutationChance, "leg");
             }
         }
 
-        // 🔸 mutate scales
-        float delta = 0.2f * (1 + EvolutionManager.Instance._currentWave);
-        Debug.Log("EvolutionManager mutate delta: " + delta);
+        // 🔸 Mutate scales
+        float delta = PlanetManager.Instance.currentPlanet.mutationIntensity
+                    + (WaveControllerRandom.Instance.currentWaveIndex
+                    * PlanetManager.Instance.currentPlanet.addMutationIntensityPerWave);
+        Debug.Log("[GeneticOps] Mutate delta: " + delta);
 
-        if (Random.value < mutationRate)
+        if (Random.value < mutationChance)
         {
             genome.bodyGene.scale += Random.Range(-delta, delta);
-            genome.RandomizePartColor(genome.bodyGene.color);
+            genome.RandomizePartColor(genome.bodyGene, genome.bodyGene.color, delta);
             Debug.Log("Mutated bodyScale: " + genome.bodyGene.scale);
         }
-        if (Random.value < mutationRate) 
+        if (Random.value < mutationChance)
         {
             genome.headGene.scale += Random.Range(-delta, delta);
-            genome.RandomizePartColor(genome.headGene.color);
+            genome.RandomizePartColor(genome.headGene, genome.headGene.color, delta);
             Debug.Log("Mutated headScale: " + genome.headGene.scale);
         }
-        if (Random.value < mutationRate)
+        if (Random.value < mutationChance)
         {
             genome.legGene.scale += Random.Range(-delta, delta);
-            genome.RandomizePartColor(genome.legGene.color);
+            genome.RandomizePartColor(genome.legGene, genome.legGene.color, delta);
             Debug.Log("Mutated legScale: " + genome.legGene.scale);
         }
 
         ClampAndNormalize(ref genome, difficultyScaleTotal);
     }
+
+    #endregion
+
+    #region  Helpers ---------------------------------------------------------
 
     public void ClampAndNormalize(ref Genome genome, float maxTotal)
     {
@@ -154,4 +161,6 @@ public class DefaultGeneticOps
         }
         return geneSelector(genome);
     }
+    
+    #endregion
 }

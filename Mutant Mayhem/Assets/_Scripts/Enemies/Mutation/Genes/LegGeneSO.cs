@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "EnemyEvolution/Genes/Leg")]
 public class LegGeneSO : GeneSOBase
 {
+    public List<Sprite> leftLegCorpseSprites;
+    public List<Sprite> rightLegCorpseSprites;
     public RuntimeAnimatorController leftLegAnimatorController;
     public RuntimeAnimatorController rightLegAnimatorController;
 

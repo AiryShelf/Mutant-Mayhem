@@ -76,6 +76,8 @@ public class WaveSpawnerRandom : MonoBehaviour
             Debug.LogError("PlanetManager.Instance.currentPlanet is null in BuildWave");
             return;
         }
+        EvolutionManager.Instance.CrossoverAndMutate();
+        
         waveBase = currentPlanet.waveSOBase;
         currentWave = ScriptableObject.CreateInstance<WaveSOBase>();
         currentWave.subWaves = new List<SubWaveSO>();
@@ -280,7 +282,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         Vector2 spawnPos;
         float spawnAngle = 0;
 
-        EvolutionManager.Instance.EvolveAndSpawn();
+        EvolutionManager.Instance.MutateAndSpawn();
 
         int listIndex = 0;
         while (_enemyPrefabList.Count > 0)

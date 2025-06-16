@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 1929912251
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f8f6156dd9df443d285f45b189fe92a1, type: 3}
+  m_Sprite: {fileID: -1500553460, guid: 3aea58f3f24bd415d8bd92fa20b6ec57, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -110,8 +110,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2558630067450504856}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.06, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.02, y: -0.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179,12 +179,12 @@ SpriteRenderer:
   m_SortingLayerID: 1929912251
   m_SortingLayer: 3
   m_SortingOrder: -10
-  m_Sprite: {fileID: -1089516699, guid: 67cce2393a6e84373bd6c509027f5330, type: 3}
+  m_Sprite: {fileID: 1844854100, guid: 510896f219f9c4235b77f600a10481e4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.21, y: 0.1}
+  m_Size: {x: 0.37, y: 0.45}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -216,8 +216,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4594743928455167383}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.06, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.02, y: 0.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -285,12 +285,12 @@ SpriteRenderer:
   m_SortingLayerID: 1929912251
   m_SortingLayer: 3
   m_SortingOrder: -10
-  m_Sprite: {fileID: -928988424, guid: 23c098c0203bb473e8ed3ba1b3196aec, type: 3}
+  m_Sprite: {fileID: 893603533, guid: 9de259b3530284c2a8f19afb450482cb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.11}
+  m_Size: {x: 0.37, y: 0.45}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -539,7 +539,7 @@ MonoBehaviour:
   textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   hasDied: 0
-  corpsePoolName: Dog1_Corpse
+  corpsePoolName: Mutant_Corpse
   healthToCreditsDivisor: 1.5
 --- !u!114 &5833339104486537906
 MonoBehaviour:
@@ -587,7 +587,7 @@ MonoBehaviour:
   - {x: 0.08678463, y: -0.019966379, z: 0}
   m_ShapePathHash: -2108260162
   m_Mesh: {fileID: 0}
-  m_InstanceId: 130518
+  m_InstanceId: 67962
   m_LocalBounds:
     m_Center: {x: 0.0088474825, y: 0.0002141241, z: 0}
     m_Extent: {x: 0.08640965, y: 0.020342423, z: 0}
@@ -694,7 +694,7 @@ Transform:
   m_GameObject: {fileID: 9030679136587207783}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.04, y: 0, z: 0}
+  m_LocalPosition: {x: 0.05, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -742,7 +742,7 @@ SpriteRenderer:
   m_SortingLayerID: 1929912251
   m_SortingLayer: 3
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 26f9527911ecf4fc6a59c629af8c7427, type: 3}
+  m_Sprite: {fileID: 1102412458, guid: 7db94183c81984ac5becf10f3d0f02d6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

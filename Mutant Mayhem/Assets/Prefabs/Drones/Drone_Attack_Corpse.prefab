@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6413020257346474200}
   - component: {fileID: 490372703719684134}
-  - component: {fileID: 1794244936674566167}
+  - component: {fileID: 112957047861037518}
   m_Layer: 0
   m_Name: Drone_Attack_Corpse
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1794244936674566167
+--- !u!114 &112957047861037518
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,13 +94,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3863916214866528614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81c781e599fd3da42bf1fe4e968f26bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 5171ab68bea914d018e37587faea76ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeToStartFade: 50
+  timeForFade: 20
+  corpsePoolName: 
   corpseSprites:
   - {fileID: -1858685964, guid: 885ece188bf2e44ab8cdbbdb07a1f240, type: 3}
   - {fileID: -566171462, guid: 885ece188bf2e44ab8cdbbdb07a1f240, type: 3}
   - {fileID: 1828267188, guid: 885ece188bf2e44ab8cdbbdb07a1f240, type: 3}
-  timeToStartFade: 50
-  timeForFade: 20
-  corpsePoolName: Drone_Construction_Corpse

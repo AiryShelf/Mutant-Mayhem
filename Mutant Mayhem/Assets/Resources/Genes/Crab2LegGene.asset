@@ -15,6 +15,14 @@ MonoBehaviour:
   id: Leg_Crab2
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 9
+  leftLegCorpseSprites:
+  - {fileID: -523251900, guid: 48523fef0bc204565b95f5d6e9f5c114, type: 3}
+  - {fileID: -2127267838, guid: 48523fef0bc204565b95f5d6e9f5c114, type: 3}
+  - {fileID: 1931196534, guid: 48523fef0bc204565b95f5d6e9f5c114, type: 3}
+  rightLegCorpseSprites:
+  - {fileID: 1436371949, guid: 328b8cf71289f4eaca083ffc5c07f70a, type: 3}
+  - {fileID: 1719314548, guid: 328b8cf71289f4eaca083ffc5c07f70a, type: 3}
+  - {fileID: -678372014, guid: 328b8cf71289f4eaca083ffc5c07f70a, type: 3}
   leftLegAnimatorController: {fileID: 9100000, guid: 75776207d03b544fb9b865852baa409d, type: 2}
   rightLegAnimatorController: {fileID: 9100000, guid: b7d0d9f0db74640b3b808ffb6e4b27c3, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}

@@ -45,7 +45,7 @@ public class EnemyMutant : EnemyBase
         ApplyGenomeToEnemyBase();
         ResetStats();
 
-        ApplyGenomeToPartStats();
+        ApplyGenomeToParts();
         ApplyGenomeToEnemyRenderer();
     }
 
@@ -61,6 +61,7 @@ public class EnemyMutant : EnemyBase
 
     public override void Die()
     {
+        // Apply fitness based on variant
         if (individual != null)
         {
             float fitness = 0f;
@@ -77,6 +78,11 @@ public class EnemyMutant : EnemyBase
 
             Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
         }
+        else
+        {
+            Debug.LogError("Individual is null on Die.");
+        }
+        
         base.Die();
     }
 
@@ -103,7 +109,7 @@ public class EnemyMutant : EnemyBase
         health.startMaxHealth = g.bodyGene.startHealth;
     }
 
-    public void ApplyGenomeToPartStats()
+    public void ApplyGenomeToParts()
     {
         if (individual == null)
         {
@@ -115,9 +121,11 @@ public class EnemyMutant : EnemyBase
 
         health.SetMaxHealth(health.GetMaxHealth() * g.bodyGene.scale);
         health.SetHealth(health.GetMaxHealth());
+        unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
         rb.mass = startMass * g.bodyGene.scale * g.headGene.massModFactor;
 
         SetCombinedPolygonCollider(g);
+        bodyCollider.isTrigger = g.legGene.isFlying;
         SetMeleeSettings(g);
 
         moveSpeedBase *= Mathf.Clamp(g.legGene.scale, 1, float.MaxValue);

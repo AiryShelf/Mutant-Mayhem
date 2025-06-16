@@ -16,6 +16,10 @@ MonoBehaviour:
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 8
   sprite: {fileID: 21300000, guid: e5a504ff7bc634311b027e55e8e87591, type: 3}
+  corpseSprites:
+  - {fileID: 656912328, guid: 2fa6d40cffeb04517a1348363c0cbc0e, type: 3}
+  - {fileID: -1012366665, guid: 2fa6d40cffeb04517a1348363c0cbc0e, type: 3}
+  - {fileID: -333416967, guid: 2fa6d40cffeb04517a1348363c0cbc0e, type: 3}
   headAnchorOffset: {x: 0.04, y: 0}
   leftLegAnchorOffset: {x: 0, y: 0.06}
   rightLegAnchorOffset: {x: 0, y: -0.06}
@@ -30,6 +34,7 @@ MonoBehaviour:
   - {x: 0.039869398, y: -0.040127665}
   startMass: 0.15
   startHealth: 15
+  freezeTime: 0.5
   shadowShapePoints:
   - {x: 0.019670164, y: 0.04009227}
   - {x: -0.029569574, y: 0.04001651}

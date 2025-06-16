@@ -15,6 +15,14 @@ MonoBehaviour:
   id: Leg_Dog
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 9
+  leftLegCorpseSprites:
+  - {fileID: 1108041972, guid: 1406eb7e77d4b45099ce57d5fffc8bc8, type: 3}
+  - {fileID: 1391180989, guid: 1406eb7e77d4b45099ce57d5fffc8bc8, type: 3}
+  - {fileID: -726276457, guid: 1406eb7e77d4b45099ce57d5fffc8bc8, type: 3}
+  rightLegCorpseSprites:
+  - {fileID: -767116560, guid: cf84633e8db8f4388bdbb64195dcc2ab, type: 3}
+  - {fileID: 381289637, guid: cf84633e8db8f4388bdbb64195dcc2ab, type: 3}
+  - {fileID: 664062067, guid: cf84633e8db8f4388bdbb64195dcc2ab, type: 3}
   leftLegAnimatorController: {fileID: 9100000, guid: 0d58df23366ee47d0b37d6128c7a3a1a, type: 2}
   rightLegAnimatorController: {fileID: 9100000, guid: c3efb6bd98cf7459b8c12ee913af07fb, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}

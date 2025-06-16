@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8337055654658417259}
-  - component: {fileID: -7520197687316877731}
+  - component: {fileID: -5395847920468814160}
   - component: {fileID: -3464740676881263840}
   - component: {fileID: -1088399054778233193}
   - component: {fileID: 2148359155153488195}
@@ -35,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-7520197687316877731
+--- !u!114 &-5395847920468814160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,18 +44,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 3246120828009000940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81c781e599fd3da42bf1fe4e968f26bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 5171ab68bea914d018e37587faea76ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeToStartFade: 50
+  timeForFade: 20
+  corpsePoolName: 
   corpseSprites:
   - {fileID: 1856040296, guid: e9e36b829459d484996eba83a503d069, type: 3}
   - {fileID: -780611651, guid: e9e36b829459d484996eba83a503d069, type: 3}
   - {fileID: 357672567, guid: e9e36b829459d484996eba83a503d069, type: 3}
   - {fileID: -1898317301, guid: e9e36b829459d484996eba83a503d069, type: 3}
   - {fileID: 585865615, guid: e9e36b829459d484996eba83a503d069, type: 3}
-  timeToStartFade: 50
-  timeForFade: 20
-  corpsePoolName: Crab1_Corpse
 --- !u!50 &-3464740676881263840
 Rigidbody2D:
   serializedVersion: 4
