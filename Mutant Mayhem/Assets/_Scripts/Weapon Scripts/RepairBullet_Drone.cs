@@ -7,7 +7,7 @@ public class RepairBullet_Drone : RepairBullet
     // DEPRECATED
     public override void Fly()
     {
-        SFXManager.Instance.PlaySoundFollow(shootSound, transform);
+        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
 
         target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 

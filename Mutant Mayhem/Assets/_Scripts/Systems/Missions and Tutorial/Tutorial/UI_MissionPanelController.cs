@@ -28,7 +28,6 @@ public class UI_MissionPanelController : MonoBehaviour
     [SerializeField] Color flashColorOutline;
     Color startColorOutline;
     Color startColorBackPanel;
-    
 
     void Start()
     {

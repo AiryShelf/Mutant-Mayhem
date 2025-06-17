@@ -80,7 +80,7 @@ public class Health : MonoBehaviour
         {
             if (Time.time - lastPainSoundTime >= painSoundCooldown)
             {
-                SFXManager.Instance.PlaySoundAt(painSound, transform.position);
+                AudioManager.Instance.PlaySoundAt(painSound, transform.position);
                 lastPainSoundTime = Time.time;
             }
         }

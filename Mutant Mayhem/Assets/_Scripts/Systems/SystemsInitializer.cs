@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,8 +35,8 @@ public class SystemsInitializer : MonoBehaviour
             Application.targetFrameRate = 60;
         else
             Application.targetFrameRate = 120;
-        
-        SFXManager.Instance.Initialize();
+
+        AudioManager.Instance.Initialize();
         StatsCounterPlayer.ResetStatsCounts();
 
         TurretManager.Instance.Initialize(player);
@@ -43,10 +44,12 @@ public class SystemsInitializer : MonoBehaviour
         ClassManager.Instance.ApplyClassEffects(player);
         AugManager.Instance.ApplySelectedAugmentations();
         PlanetManager.Instance.ApplyPlanetProperties();
-        
+
         FindObjectOfType<WaveControllerRandom>().Initialize();
-        
+
         ScreenScaleChecker.InvokeAspectRatioChanged();
+        
+        MessageManager.Instance.StartPlanetDialogue();
     }
 
     IEnumerator ForceCanvasUpdate()

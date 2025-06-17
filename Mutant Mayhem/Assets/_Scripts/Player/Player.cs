@@ -231,7 +231,7 @@ public class Player : MonoBehaviour
         // Need check for ground type
         if (Time.time - lastFootstepTime >= footstepCooldown)
         {
-            SFXManager.Instance.PlaySoundAt(walkGrassSound, transform.position);
+            AudioManager.Instance.PlaySoundAt(walkGrassSound, transform.position);
             lastFootstepTime = Time.time;
         }
     }

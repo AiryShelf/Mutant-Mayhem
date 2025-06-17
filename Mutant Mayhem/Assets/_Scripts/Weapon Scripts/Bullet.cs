@@ -52,7 +52,7 @@ public class Bullet : MonoBehaviour
 
     public virtual void Fly()
     {
-        SFXManager.Instance.PlaySoundFollow(shootSound, transform);
+        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
 
         // Check origin point for collision
         Collider2D other = Physics2D.OverlapPoint(transform.position, hitLayers);
@@ -135,7 +135,7 @@ public class Bullet : MonoBehaviour
 
         // Play bullet hit effect
         ParticleManager.Instance.PlayBulletHitEffect(gunType, point, hitDir);
-        SFXManager.Instance.PlaySoundAt(hitSound, point);
+        AudioManager.Instance.PlaySoundAt(hitSound, point);
         
         // Return to pool
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);

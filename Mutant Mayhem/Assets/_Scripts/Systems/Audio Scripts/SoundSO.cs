@@ -8,6 +8,7 @@ public enum SoundType
     Music,
     SFX,
     UI,
+    Voice,
 }
 
 [CreateAssetMenu(fileName = "NewSound", menuName = "Audio/SoundSO")]
@@ -17,7 +18,6 @@ public class SoundSO : ScriptableObject
     public SoundType soundType = SoundType.SFX;
 
     [Header("AudioSource Settings")]
-    public AudioMixerGroup mixerGroup;
     public AudioClip[] clips;
     public bool loop;
     [Range(0f, 1f)]

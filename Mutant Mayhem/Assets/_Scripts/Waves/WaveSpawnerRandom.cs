@@ -28,7 +28,6 @@ public class WaveSpawnerRandom : MonoBehaviour
     int waveSeconds;
     Coroutine waveTimer;
     public float halfWidth, halfHeight;
-    MutantVariant previousVariant = MutantVariant.Fighter;
 
     void Start()
     {

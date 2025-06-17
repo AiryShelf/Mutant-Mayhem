@@ -50,12 +50,14 @@ MonoBehaviour:
   mixerGroupMusic: {fileID: 8666647766803652247, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   mixerGroupSFX: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   mixerGroupUI: {fileID: -8245916078191116516, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
-  gameplaySnapshot: {fileID: 0}
-  deathSnapshot: {fileID: -4763721442933824587, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
+  mixerGroupVoice: {fileID: 1439442901898170426, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
+  gameplaySnapshot: {fileID: -4763721442933824587, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
+  deathSnapshot: {fileID: 8472319254821508481, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   snapshotFadeTime: 4
   poolSizeMusic: 2
   poolSizeSFX: 60
   poolSizeUI: 5
+  poolSizeVoice: 5
 --- !u!114 &6293564672853078454
 MonoBehaviour:
   m_ObjectHideFlags: 0

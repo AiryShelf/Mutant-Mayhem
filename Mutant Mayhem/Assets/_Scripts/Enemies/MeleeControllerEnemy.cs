@@ -98,7 +98,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     
     void PlayMeleeSound(Vector2 point)
     {
-        SFXManager.Instance.PlaySoundAt(meleeSound, point); ;
+        AudioManager.Instance.PlaySoundAt(meleeSound, point); ;
     }
 
     #region Hit Methods ----------------------------------------------------

@@ -4,14 +4,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class SFXManager : MonoBehaviour
+public class AudioManager : MonoBehaviour
 {
-    public static SFXManager Instance;
+    public static AudioManager Instance;
 
     [Header("Audio Mixer")]
     public AudioMixerGroup mixerGroupMusic;
     public AudioMixerGroup mixerGroupSFX;
     public AudioMixerGroup mixerGroupUI;
+    public AudioMixerGroup mixerGroupVoice;
 
     [Header("Snapshots")]
     public AudioMixerSnapshot gameplaySnapshot;
@@ -30,7 +31,11 @@ public class SFXManager : MonoBehaviour
     public int poolSizeUI = 5;
     private List<AudioSource> sourcesPoolUI;
     private List<AudioSource> sourcesActivePoolUI;
-    
+
+    public int poolSizeVoice = 5;
+    private List<AudioSource> sourcesPoolVoice;
+    private List<AudioSource> sourcesActivePoolVoice;
+
 
     void Awake()
     {
@@ -47,12 +52,15 @@ public class SFXManager : MonoBehaviour
 
         sourcesPoolMusic = CreateAudioSourcePool(mixerGroupMusic, poolSizeMusic);
         sourcesActivePoolMusic = new List<AudioSource>();
-        
+
         sourcesPoolSFX = CreateAudioSourcePool(mixerGroupSFX, poolSizeSFX);
         sourcesActivePoolSFX = new List<AudioSource>();
 
         sourcesPoolUI = CreateAudioSourcePool(mixerGroupUI, poolSizeUI);
         sourcesActivePoolUI = new List<AudioSource>();
+
+        sourcesPoolVoice = CreateAudioSourcePool(mixerGroupVoice, poolSizeVoice);
+        sourcesActivePoolVoice = new List<AudioSource>();
     }
 
     public void Initialize()
@@ -63,9 +71,12 @@ public class SFXManager : MonoBehaviour
     /// <summary>
     /// Plays sound at given position
     /// </summary>
-    public void PlaySoundAt(SoundSO sound, Vector2 pos)
+    public AudioSource PlaySoundAt(SoundSO sound, Vector2 pos)
     {
-        StartCoroutine(PlaySoundAtRoutine(sound, pos));
+        AudioSource source = GetAvailableAudioSource(sound.soundType);
+        StartCoroutine(PlaySoundAtRoutine(sound, pos, source));
+
+        return source;
     }
 
     /// <summary>
@@ -76,10 +87,17 @@ public class SFXManager : MonoBehaviour
         StartCoroutine(PlaySoundFollowRoutine(sound, target));
     }
 
-    private IEnumerator PlaySoundAtRoutine(SoundSO sound, Vector2 pos)
+    public void StopSound(AudioSource source)
     {
-        AudioSource source = GetAvailableAudioSource(sound.soundType);
+        if (source != null && source.isPlaying)
+        {
+            source.Stop();
+            ReturnAudioSourceToPool(source, SoundType.SFX); // Assuming SFX for stopping sound
+        }
+    }
 
+    private IEnumerator PlaySoundAtRoutine(SoundSO sound, Vector2 pos, AudioSource source)
+    {
         if (source != null)
         {
             source.transform.position = pos;
@@ -107,7 +125,7 @@ public class SFXManager : MonoBehaviour
             float rand = Random.Range(-sound.pitchRandRange, sound.pitchRandRange);
             source.pitch += rand;
             source.Play();
-            
+
             while (source.isPlaying)
             {
                 // This 'should' work when adding bullet pooling
@@ -189,11 +207,16 @@ public class SFXManager : MonoBehaviour
                 sourcesActivePool = sourcesActivePoolUI;
                 mixerGroup = mixerGroupUI;
                 break;
+            case SoundType.Voice:
+                sourcesPool = sourcesPoolVoice;
+                sourcesActivePool = sourcesActivePoolVoice;
+                mixerGroup = mixerGroupVoice;
+                break;
             default:
                 sourcesPool = sourcesPoolSFX;
                 sourcesActivePool = sourcesActivePoolSFX;
                 mixerGroup = mixerGroupSFX;
-                break; 
+                break;
         }
 
         // Get AudioSource or add new
@@ -211,7 +234,7 @@ public class SFXManager : MonoBehaviour
 
         return source;
     }
-    
+
     private AudioSource GetNewAudioSource(List<AudioSource> sourcesActivePool, AudioMixerGroup mixerGroup)
     {
         AudioSource source = CreateAudioSource(sourcesActivePoolSFX.Count, mixerGroup);
@@ -239,10 +262,14 @@ public class SFXManager : MonoBehaviour
                 sourcesPool = sourcesPoolUI;
                 sourcesActivePool = sourcesActivePoolUI;
                 break;
+            case SoundType.Voice:
+                sourcesPool = sourcesPoolVoice;
+                sourcesActivePool = sourcesActivePoolVoice;
+                break;
             default:
                 sourcesPool = sourcesPoolSFX;
                 sourcesActivePool = sourcesActivePoolSFX;
-                break; 
+                break;
         }
 
         // Remove from active, return to pool

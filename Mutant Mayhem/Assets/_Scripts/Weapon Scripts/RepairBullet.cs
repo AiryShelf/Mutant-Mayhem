@@ -13,7 +13,7 @@ public class RepairBullet : Bullet
     
     public override void Fly()
     {
-        SFXManager.Instance.PlaySoundFollow(shootSound, transform);
+        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
 
         //if (InputController.LastUsedDevice == Gamepad.current)
             target = CursorManager.Instance.GetCustomCursorWorldPos();
@@ -104,7 +104,7 @@ public class RepairBullet : Bullet
             if (isRepairable || isBlueprint) 
             {
                 ParticleManager.Instance.PlayRepairEffect(target, transform.right);
-                SFXManager.Instance.PlaySoundAt(hitSound, target);
+                AudioManager.Instance.PlaySoundAt(hitSound, target);
                 StatsCounterPlayer.AmountRepairedByPlayer -= damage;    
             }
             //Debug.Log("Ran repair code");

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,6 +10,8 @@ public class WaveControllerRandom : MonoBehaviour
     public static WaveControllerRandom Instance = null;
 
     public WaveSpawnerRandom waveSpawner;
+    public static event Action<int> OnWaveStarted;
+    public static event Action<int> OnWaveEnded;
 
     [Header("UI Wave Info")]
     public FadeCanvasGroupsWave nextWaveFadeGroup;
@@ -170,6 +173,7 @@ public class WaveControllerRandom : MonoBehaviour
             StopCoroutine(nextWaveTimer);
 
         waveSpawner.StartWave();
+        OnWaveStarted?.Invoke(currentWaveIndex);
 
         // Set wave UI text
         UpdateWaveTimer(true);
@@ -201,12 +205,15 @@ public class WaveControllerRandom : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
 
+        OnWaveEnded?.Invoke(currentWaveIndex);
+
         isNight = false;
         MessagePanel.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
 
         waveSpawner.CalculateMaxIndex();
+        OnWaveEnded?.Invoke(currentWaveIndex);
 
         if (currentWaveIndex >= PlanetManager.Instance.currentPlanet.nightToSurvive)
             ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
