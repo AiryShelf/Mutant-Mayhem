@@ -40,7 +40,7 @@ public class ControlsPanel : MonoBehaviour
 
     void Start()
     {
-        if (!TutorialManager.IsTutorialDisabled)
+        if (!PlanetManager.Instance.currentPlanet.mission.isTutorial)
             TogglePanel();
     }
 

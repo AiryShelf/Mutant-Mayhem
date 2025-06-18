@@ -9,13 +9,13 @@ public class PlayerProfile
     public string profileName;
     public int researchPoints;
     public List<string> completedPlanets = new List<string>();
+    public int lastPlanetVisited;
     public int playthroughs;
     public int maxWaveSurvived;
     public DifficultyLevel difficultyLevel;
 
     [Header("Options Settings")]
     public int qualityLevel;
-    public bool isTutorialEnabled;
     public bool isStandardWASD;
     public bool isSpacebarEnabled;
     public bool isFastJoystickAimEnabled;
@@ -26,10 +26,10 @@ public class PlayerProfile
     {
         this.profileName = profileName;
         researchPoints = 0;
+        lastPlanetVisited = 1; // Default to Tsorbia
         playthroughs = 0;
         maxWaveSurvived = 0;
         qualityLevel = -1;
-        isTutorialEnabled = true;
         difficultyLevel = difficulty;
         isStandardWASD = true;
         isSpacebarEnabled = true;

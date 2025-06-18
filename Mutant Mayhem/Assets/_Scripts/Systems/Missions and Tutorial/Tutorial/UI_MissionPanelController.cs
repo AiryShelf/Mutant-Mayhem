@@ -47,11 +47,6 @@ public class UI_MissionPanelController : MonoBehaviour
 
         AddMission(PlanetManager.Instance.currentPlanet.mission, false);
 
-        if (!TutorialManager.IsTutorialDisabled && !missions.Contains(TutorialManager.Instance.tutorialMission))
-        {
-            AddMission(TutorialManager.Instance.tutorialMission, true);
-        }
-
         missionPanelGroup.alpha = 1;
         StartMission();
     }
@@ -80,13 +75,6 @@ public class UI_MissionPanelController : MonoBehaviour
     public void OnShowInfoClicked()
     {
         ShowObjectiveInfoPanel(true);
-    }
-
-    public void OnDisableTutorialClicked()
-    {
-        TutorialManager.SetTutorialState(false);
-        if (currentMission.isTutorial)
-            EndMission();
     }
 
     public void StartMission()
@@ -173,12 +161,6 @@ public class UI_MissionPanelController : MonoBehaviour
         objectiveInfoPanel.gameObject.SetActive(show);
         objectiveInfoPanel.titleText.text = currentMission.objectives[currentObjectiveIndex].objectiveTitle;
         objectiveInfoPanel.descriptionText.text = currentMission.objectives[currentObjectiveIndex].objectiveDescription;
-
-        // Handle 'Disable Tutorial' button
-        //if (currentMission.isTutorial)
-            //objectiveInfoPanel.disableTutorialButton.gameObject.SetActive(true);
-        //else
-            //objectiveInfoPanel.disableTutorialButton.gameObject.SetActive(false);
     }
 
     void ClearTasksGrid()

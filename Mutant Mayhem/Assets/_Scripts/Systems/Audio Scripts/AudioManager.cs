@@ -106,7 +106,12 @@ public class AudioManager : MonoBehaviour
             source.pitch += rand;
             source.Play();
 
-            yield return new WaitWhile(() => source.isPlaying);
+            float clipLength = source.clip.length;
+            while (source.time < clipLength)
+            {
+                // Wait only while the clip is still progressing forward (not stopped or ended)
+                yield return null;
+            }
             ReturnAudioSourceToPool(source, sound.soundType);
         }
         else

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class DeathManager : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class DeathManager : MonoBehaviour
     [SerializeField] FadeCanvasGroupsWave fadeCanvasGroupsWave;
     [SerializeField] UI_DeathStatsListBuilder statsListBuilder;
     [SerializeField] PauseMenuController pauseMenuController;
+    [SerializeField] Button backToShipButton;
     [SerializeField] TextMeshProUGUI deathTitleText;
     [SerializeField] TextMeshProUGUI deathSubtitleText;
     [SerializeField] List<string> cubeDeathTitles;
@@ -118,9 +121,23 @@ public class DeathManager : MonoBehaviour
 
     void TransitionToPanel()
     {
+        // Hide 'Back to Ship' button if this was a tutorial mission
+        if (PlanetManager.Instance.currentPlanet.mission.isTutorial)
+        {
+            backToShipButton.gameObject.SetActive(false);
+            var canvasGroup = backToShipButton.GetComponent<CanvasGroup>();
+            if (canvasGroup && fadeCanvasGroupsWave.individualElements.Contains(canvasGroup))
+            {
+                fadeCanvasGroupsWave.individualElements.Remove(canvasGroup);
+            }
+        }
+
+        MessageManager.Instance.StopAllConversations();
+
         CursorManager.Instance.inMenu = true;
         TouchManager.Instance.SetVirtualJoysticksActive(false);
         InputManager.SetJoystickMouseControl(true);
+
         //SFXManager.Instance.FadeToDeathSnapshot();
         MusicManager.Instance.mainMixer.GetFloat("sfxVolume", out storedSFXVolume);
         StartCoroutine(LerpSFXVolume(Mathf.Clamp(storedSFXVolume + deathSFXFadeAmount, -80, float.MaxValue), 2f));

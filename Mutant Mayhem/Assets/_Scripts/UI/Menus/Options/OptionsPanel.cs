@@ -10,7 +10,6 @@ public class OptionsPanel : MonoBehaviour
     [SerializeField] TMP_Dropdown qualityDropdown;
     //[SerializeField] TMP_Dropdown resolutionDropdown;
     [SerializeField] Toggle vSyncToggle;
-    [SerializeField] Toggle tutorialToggle;
     [SerializeField] Toggle virtualAimStickToggle;
 
     QualityManager qualityManager;
@@ -18,7 +17,6 @@ public class OptionsPanel : MonoBehaviour
     void OnEnable()
     {
         // CHANGED: Use method groups matching UnityEvent signatures.
-        tutorialToggle.onValueChanged.AddListener(ToggleTutorial);
         qualityDropdown.onValueChanged.AddListener(QualityValueChanged);
         vSyncToggle.onValueChanged.AddListener(ToggleVSync);
         virtualAimStickToggle.onValueChanged.AddListener(DisableVirtualAimJoystick);
@@ -30,7 +28,6 @@ public class OptionsPanel : MonoBehaviour
     void OnDisable()
     {
         // CHANGED: Remove listeners using the same method groups.
-        tutorialToggle.onValueChanged.RemoveListener(ToggleTutorial);
         qualityDropdown.onValueChanged.RemoveListener(QualityValueChanged);
         vSyncToggle.onValueChanged.RemoveListener(ToggleVSync);
         virtualAimStickToggle.onValueChanged.RemoveListener(DisableVirtualAimJoystick);
@@ -58,12 +55,10 @@ public class OptionsPanel : MonoBehaviour
             if (qualityLevel == -1)
                 qualityLevel = QualitySettings.GetQualityLevel();
 
-            tutorialToggle.SetIsOnWithoutNotify(currentProfile.isTutorialEnabled);
             virtualAimStickToggle.SetIsOnWithoutNotify(currentProfile.virtualAimJoystickDisabled);
         }
         else
         {
-            tutorialToggle.SetIsOnWithoutNotify(true);
             virtualAimStickToggle.SetIsOnWithoutNotify(true);
         }
 
@@ -71,11 +66,6 @@ public class OptionsPanel : MonoBehaviour
         vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
         
         //PopulateResolutionDropdown();
-    }
-
-    public void ToggleTutorial(bool isOn)
-    {
-        TutorialManager.SetTutorialState(isOn);
     }
 
     void DisableVirtualAimJoystick(bool disabled)

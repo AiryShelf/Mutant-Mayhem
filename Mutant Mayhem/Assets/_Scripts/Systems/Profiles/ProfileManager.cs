@@ -128,6 +128,14 @@ public class ProfileManager : MonoBehaviour
             if (profile.profileName == profileName)
             {
                 currentProfile = profile;
+                if (PlanetManager.Instance != null)
+                {
+                    PlanetManager.Instance.SetCurrentPlanet(currentProfile.lastPlanetVisited);
+                }
+                else
+                {
+                    Debug.LogError("ProfileManager: PlanetManager instance is null, cannot set current planet.");
+                }
 
                 // Store the profile name in PlayerPrefs
                 PlayerPrefs.SetString(LastUsedProfileKey, profileName);

@@ -74,7 +74,7 @@ public class EvolutionManager : MonoBehaviour
             }
             else
             {
-                _population[v] = CreateRandomPopulation(v);
+                _population[v] = new List<MutantIndividual>();
             }
         }
         _genZeroBuilt = true;
@@ -118,6 +118,12 @@ public class EvolutionManager : MonoBehaviour
 
     public void SpawnWaveCycle()
     {
+        if (populationCount == 0)
+        {
+            Debug.LogWarning("EvolutionManager: Population is empty, cannot spawn wave.");
+            return;
+        }
+        
         var kvp = _population.ElementAt(_currentWave % _population.Count);
         var individuals = kvp.Value;
 

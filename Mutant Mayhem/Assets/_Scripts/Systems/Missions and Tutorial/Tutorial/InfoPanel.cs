@@ -11,8 +11,6 @@ public class InfoPanel : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
-    public Button disableTutorialButton;
-    [SerializeField] bool isTutorialPanel = false;
     [SerializeField] InputActionAsset inputAsset;
     public bool pauseOnOpen;
     protected InputActionMap playerActionMap;
@@ -30,13 +28,7 @@ public class InfoPanel : MonoBehaviour
     {
         escapeAction.started += OnEscapePressed;
 
-        TutorialManager.NumTutorialsOpen++;
-
-        if (isTutorialPanel && TutorialManager.IsTutorialDisabled == true)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
+        PanelManager.NumPanelsOpen++;
         
         if (pauseOnOpen)
             TimeControl.Instance.PauseGame(true);
@@ -46,7 +38,7 @@ public class InfoPanel : MonoBehaviour
 
     void OnDisable()
     {
-        TutorialManager.NumTutorialsOpen--;
+        PanelManager.NumPanelsOpen--;
 
         if (escapeAction != null)
             escapeAction.started -= OnEscapePressed;
@@ -54,10 +46,10 @@ public class InfoPanel : MonoBehaviour
 
     void OnEscapePressed(InputAction.CallbackContext context)
     {
-        if (TutorialManager.escIsCooling)
+        if (PanelManager.escIsCooling)
             return;
 
-        TutorialManager.escIsCooling = true;
+        PanelManager.escIsCooling = true;
         OnOKButtonClick();
     }
 
@@ -66,32 +58,12 @@ public class InfoPanel : MonoBehaviour
         StartCoroutine(HandleOnOKButtonClick());
     }
 
-    public virtual void OnDisableButtonClick()
-    {
-        StartCoroutine(HandleOnDisableButtonClick());
-    }
-
     IEnumerator HandleOnOKButtonClick()
     {
         // Block input briefly to avoid unintended clicks
         yield return new WaitForSecondsRealtime(0.1f);
 
         RestorePreviousSelection();
-
-        if (pauseOnOpen)
-            TimeControl.Instance.PauseGame(false);
-        
-        gameObject.SetActive(false);
-    }
-
-    IEnumerator HandleOnDisableButtonClick()
-    {
-        // Block input briefly to avoid unintended clicks
-        //EventSystem.current.SetSelectedGameObject(null);
-        yield return new WaitForSecondsRealtime(0.1f);
-
-        RestorePreviousSelection();
-        //TutorialManager.SetTutorialState(false);
 
         if (pauseOnOpen)
             TimeControl.Instance.PauseGame(false);

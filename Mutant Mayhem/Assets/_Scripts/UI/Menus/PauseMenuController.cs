@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -112,6 +113,8 @@ public class PauseMenuController : MonoBehaviour
             player.stats.playerShooter.isRepairing = false;
             playerActionMap.Disable();
 
+            MessageManager.Instance.PauseMessage();
+
             wasMusicPlaying = !MusicManager.Instance.isPaused;
             if (wasMusicPlaying)
                 MusicManager.Instance.PlayOrPausePressed();
@@ -126,6 +129,8 @@ public class PauseMenuController : MonoBehaviour
                 player.stats.playerShooter.isRepairing = true;
             else
                 InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            
+            MessageManager.Instance.UnPauseMessage();
             
             if (wasMusicPlaying)
                 MusicManager.Instance.PlayOrPausePressed();

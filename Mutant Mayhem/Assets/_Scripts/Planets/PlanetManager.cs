@@ -8,6 +8,7 @@ public class PlanetManager : MonoBehaviour
     public static PlanetManager Instance { get; private set; }
     public List<PlanetSO> planetsSource;
     public PlanetSO currentPlanet { get; private set; }
+    public PlanetSO tutorialPlanet;
 
     [Header("Current Multipliers")]
     public Dictionary<PlanetStatModifier, float> statMultipliers = new Dictionary<PlanetStatModifier, float>();
@@ -22,9 +23,11 @@ public class PlanetManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
 
-        //InitializeStatMultipliers();
-        SetCurrentPlanet(0);
+    void Start()
+    {
+        SetCurrentPlanet(ProfileManager.Instance.currentProfile.lastPlanetVisited);
     }
 
     public void InitializeStatMultipliers()
@@ -40,18 +43,35 @@ public class PlanetManager : MonoBehaviour
     {
         currentPlanet = planetsSource[index];
         GetPlanetProperties();
+
+        if (!currentPlanet.mission.isTutorial)
+        {
+            ProfileManager.Instance.currentProfile.lastPlanetVisited = index;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
     }
 
     public void SetCurrentPlanet(PlanetSO planet)
     {
         int index = planetsSource.IndexOf(planet);
-        if (index != -1)
+        if (!planet.mission.isTutorial)
         {
-            currentPlanet = planetsSource[index];
-            GetPlanetProperties();
+            ProfileManager.Instance.currentProfile.lastPlanetVisited = index;
+            ProfileManager.Instance.SaveCurrentProfile();
         }
-        else
-            Debug.LogError("Planet not found in PlanetManager's list");
+            
+        if (index != -1)
+            {
+                currentPlanet = planetsSource[index];
+                GetPlanetProperties();
+            }
+            else
+                Debug.LogError("Planet not found in PlanetManager's list");
+    }
+
+    public void SetTutorialPlanet()
+    {
+        SetCurrentPlanet(tutorialPlanet);
     }
 
     void GetPlanetProperties()

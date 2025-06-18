@@ -402,7 +402,7 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     void OnEscapePressed(InputAction.CallbackContext context)
     {
-        if (TutorialManager.NumTutorialsOpen > 0)
+        if (PanelManager.NumPanelsOpen > 0)
             return;
             
         if (playerShooter.isBuilding)

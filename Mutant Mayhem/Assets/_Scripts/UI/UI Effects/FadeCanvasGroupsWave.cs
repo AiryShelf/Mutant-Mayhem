@@ -53,6 +53,9 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         }
         foreach (CanvasGroup group in individualElements)
         {
+            if (group == null)
+                continue;
+                
             group.alpha = 0;
             if (deactivateIndivsWithFade)
                 group.gameObject.SetActive(false);

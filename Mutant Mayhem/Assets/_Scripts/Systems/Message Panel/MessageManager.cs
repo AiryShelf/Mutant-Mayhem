@@ -22,6 +22,7 @@ public class MessageManager : MonoBehaviour
 
     bool skipMessage = false;
     bool skipConversation = false;
+    bool isPaused = false;
 
     void Awake()
     {
@@ -185,7 +186,9 @@ public class MessageManager : MonoBehaviour
         speakerNameText.text = message.speakerName;
         speakerNameText.color = message.speakerNameColor;
         messageText.text = message.messageText;
+
         voiceSource = AudioManager.Instance.PlaySoundAt(message.voiceClip, transform.position);
+        if (isPaused) PauseMessage();
 
         if (message.portraitAnimatorController != null)
         {
@@ -216,7 +219,8 @@ public class MessageManager : MonoBehaviour
                 break;
             }
 
-            timer += Time.deltaTime;
+            if (!isPaused) timer += Time.unscaledDeltaTime;
+
             yield return null;
         }
 
@@ -228,6 +232,38 @@ public class MessageManager : MonoBehaviour
         skipMessage = true;
         messagePanel.SetActive(false);
         AudioManager.Instance.StopSound(voiceSource);
+    }
+
+    public void PauseMessage()
+    {
+        isPaused = true;
+        messagePanel.SetActive(false);
+        if (voiceSource != null && voiceSource.isPlaying)
+        {
+            voiceSource.Pause();
+            Debug.Log("MessageManager: Paused message voice clip.");
+        }
+        else
+        {
+            Debug.LogWarning("MessageManager: No voice source is playing to pause.");
+        }
+    }
+
+    public void UnPauseMessage()
+    {
+        messagePanel.SetActive(true);
+        
+        if (voiceSource != null)
+        {
+            voiceSource.Play();
+            Debug.Log("MessageManager: Unpaused message voice clip.");
+        }
+        else
+        {
+            Debug.LogWarning("MessageManager: No voice source is paused to unpause.");
+        }
+        
+        isPaused = false;
     }
     
     #endregion

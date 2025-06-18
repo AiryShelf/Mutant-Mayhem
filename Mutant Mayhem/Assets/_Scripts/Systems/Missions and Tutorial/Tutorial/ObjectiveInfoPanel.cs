@@ -8,9 +8,4 @@ public class ObjectiveInfoPanel : InfoPanel
     {
         base.OnOKButtonClick();
     }
-
-    public override void OnDisableButtonClick()
-    {       
-        base.OnDisableButtonClick();
-    }
 }

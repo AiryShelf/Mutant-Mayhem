@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b005e55afd73dd24f896ec92f0736228, type: 3}
-  m_Name: Mission_SurviveNight1
+  m_Script: {fileID: 11500000, guid: 5048820a1e26fa04585ca53dc5d474be, type: 3}
+  m_Name: Subwave 1.5 of Bat1 Tutorial
   m_EditorClassIdentifier: 
-  missionTitle: Gain a Foothold on the Planet
-  toPassText: Survive Night 1 to pass
-  objectives:
-  - {fileID: 11400000, guid: e61d920369e414c90bf0c95c0b60ca6d, type: 2}
-  isTutorial: 1
+  enemyPrefabList:
+  - {fileID: 5437049528478583412, guid: 175cf7add0fa9c04db8b90d868a2b961, type: 3}
+  numberToSpawn:
+  - 1.5
+  genomeList: []
+  popIncreasePerVariant: 0

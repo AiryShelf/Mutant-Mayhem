@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -70,6 +67,18 @@ public class MainMenuController : MonoBehaviour
         }
 
         SceneManager.LoadScene(1);
+    }
+
+    public void OnStartTutorial()
+    {
+        if (ProfileManager.Instance.currentProfile == null)
+        {
+            ToggleProfiles();
+            return;
+        }
+
+        PlanetManager.Instance.SetTutorialPlanet();
+        SceneManager.LoadScene(2);
     }
 
     public void OnAnimTriggerMenu()

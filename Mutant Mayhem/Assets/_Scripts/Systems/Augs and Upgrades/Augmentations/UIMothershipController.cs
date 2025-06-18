@@ -11,13 +11,10 @@ public class UIMothershipController : MonoBehaviour
     [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     UIAugPanel augPanel;
-    int qualityLevelStart;
 
     void Start()
     {
-        Application.targetFrameRate = 60;
-        qualityLevelStart = QualitySettings.GetQualityLevel();
-        //QualitySettings.SetQualityLevel(3); // High quality
+        PlanetManager.Instance.SetCurrentPlanet(ProfileManager.Instance.currentProfile.lastPlanetVisited);
         
         CursorManager.Instance.inMenu = true;
         TouchManager.Instance.SetVirtualJoysticksActive(false);
