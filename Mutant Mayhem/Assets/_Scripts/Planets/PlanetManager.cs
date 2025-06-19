@@ -201,7 +201,8 @@ public class PlanetManager : MonoBehaviour
         }
 
         waveController.creditsPerWave = currentPlanet.creditsPerWave; // Additive bonus (waveIndex*creditsPerWave)
-        waveController.timeBetweenWavesBase = currentPlanet.timeBetweenWavesBase; // Base amount of day-time
+        waveController.timeBetweenWavesBase = currentPlanet.timeBetweenWavesBase;
+        waveController.ApplyTimeBetweenWaves();
         waveController.wavesTillAddIndex = currentPlanet.wavesTillAddIndex; // Affects max index to choose subwaves from
         waveController.subwaveDelayMultStart = currentPlanet.subwaveDelayMultStart;
         waveController.spawnRadiusBuffer = currentPlanet.spawnRadiusBuffer;

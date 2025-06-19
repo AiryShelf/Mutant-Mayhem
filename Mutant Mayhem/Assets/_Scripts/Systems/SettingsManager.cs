@@ -123,7 +123,6 @@ public class SettingsManager : MonoBehaviour
         switch (difficultyLevel)
         {
             case DifficultyLevel.Easy:
-                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase + 60;
                 WaveDifficultyMult = 0.7f;
                 WavesTillAddWaveBaseDifficultyAdjust = -1;
                 SubwaveListGrowthFactor = 0.8f;
@@ -135,7 +134,6 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Normal:
-                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase;
                 WaveDifficultyMult = 1;
                 WavesTillAddWaveBaseDifficultyAdjust = 0;
                 SubwaveListGrowthFactor = 1f;
@@ -146,7 +144,6 @@ public class SettingsManager : MonoBehaviour
                 break;
 
             case DifficultyLevel.Hard:
-                waveController.timeBetweenWaves = waveController.timeBetweenWavesBase - 30;
                 WaveDifficultyMult = 1.5f;
                 WavesTillAddWaveBaseDifficultyAdjust = 1;
                 SubwaveListGrowthFactor = 1.2f;

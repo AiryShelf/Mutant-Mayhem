@@ -5,7 +5,23 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlanetDialogue", menuName = "Game/Dialogue/PlanetDialogueSO")]
 public class PlanetDialogueSO : ScriptableObject
 {
-    public ConversationSO startConversation;
+    public ConversationData startConversation;
     public List<WaveDialogue> waveDialogues = new List<WaveDialogue>();
-    public ConversationSO missionCompleteConversation;
+    public ConversationData missionCompleteConversation;
+}
+
+[System.Serializable]
+public class WaveDialogue
+{
+    public int waveIndex;
+    public bool playOnWaveStart = true;
+    public ConversationData conversation;
+}
+
+public enum TriggerTime { Start, End }
+
+[System.Serializable]
+public class ConversationData
+{
+    public List<MessageSO> messages;
 }

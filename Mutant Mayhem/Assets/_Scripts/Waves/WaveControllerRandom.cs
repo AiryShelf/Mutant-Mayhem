@@ -229,6 +229,25 @@ public class WaveControllerRandom : MonoBehaviour
 
     #region Wave Difficulty
 
+    public void ApplyTimeBetweenWaves()
+    {
+        switch (SettingsManager.Instance.difficultyLevel)
+        {
+            case DifficultyLevel.Easy:
+                timeBetweenWaves = timeBetweenWavesBase + 60;
+                break;
+            case DifficultyLevel.Normal:
+                timeBetweenWaves = timeBetweenWavesBase;
+                break;
+            case DifficultyLevel.Hard:
+                timeBetweenWaves = timeBetweenWavesBase - 30;
+                break;
+            default:
+                Debug.LogError("Unknown difficulty level set in SettingsManager");
+                return;
+        }
+    }
+
     void IncrementWaveDifficulty()
     {
         batchMultiplier = Mathf.FloorToInt(batchMultStart + currentWaveIndex / batchMultGrowthTime *

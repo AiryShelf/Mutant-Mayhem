@@ -17,5 +17,8 @@ MonoBehaviour:
     It tells you how to skip the day, and go straight to the night.
   taskPrefabs:
   - {fileID: 1578812020269692424, guid: d440e1c10f3954e4f906b5c3bf40377e, type: 3}
-  startConversation: {fileID: 11400000, guid: d5257cbb201b04952bed5e522968632f, type: 2}
-  endConversation: {fileID: 0}
+  startConversation:
+    messages:
+    - {fileID: 11400000, guid: 53474b23a3f0a4448acec8ded719ef2a, type: 2}
+  endConversation:
+    messages: []

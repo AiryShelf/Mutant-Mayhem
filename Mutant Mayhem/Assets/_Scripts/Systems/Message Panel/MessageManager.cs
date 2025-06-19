@@ -15,8 +15,8 @@ public class MessageManager : MonoBehaviour
     public GameObject messagePanel;
 
     PlanetDialogueSO currentPlanetDialogue;
-    ConversationSO currentConversation;
-    List<ConversationSO> queuedConversations = new List<ConversationSO>();
+    ConversationData currentConversation;
+    List<ConversationData> queuedConversations = new List<ConversationData>();
 
     AudioSource voiceSource;
 
@@ -97,7 +97,7 @@ public class MessageManager : MonoBehaviour
         Debug.LogWarning("MessageManager: No conversation found for wave " + waveIndex + " with playOnWaveStart = " + playOnWaveStart);
     }
 
-    public void PlayConversation(ConversationSO conversation)
+    public void PlayConversation(ConversationData conversation)
     {
         if (conversation == null || conversation.messages.Count == 0)
         {

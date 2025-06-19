@@ -9,6 +9,6 @@ public class ObjectiveSO : ScriptableObject
     [TextArea(3, 10)]
     public string objectiveDescription;
     public List<GameObject> taskPrefabs = new List<GameObject>();
-    public ConversationSO startConversation;
-    public ConversationSO endConversation;
+    public ConversationData startConversation;
+    public ConversationData endConversation;
 }

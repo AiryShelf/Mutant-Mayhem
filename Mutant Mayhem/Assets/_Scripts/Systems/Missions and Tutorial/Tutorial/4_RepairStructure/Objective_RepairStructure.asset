@@ -13,17 +13,15 @@ MonoBehaviour:
   m_Name: Objective_RepairStructure
   m_EditorClassIdentifier: 
   objectiveTitle: Build/Repair Structures
-  objectiveDescription: 'Select the Repair Gun with ''C''
-
-
-    The Repair Gun has
-    a short range.  Hover the mouse over a wall or door and shoot at it with the
-    Repair Gun to build or repair it
-
-
-    Switch back to your previous weapon with
-    ''C'''
+  objectiveDescription: "Select the Repair Gun with 'C' \n\nThe Repair Gun has a
+    short range.  Hover the mouse over a wall or door and shoot at it with the Repair
+    Gun to build or repair it\n\nSwitch back to your previous weapon with 'C'"
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 556380baad436534cbf2dd500adeb757, type: 3}
   - {fileID: 936962933341166503, guid: 6b04be376f0255549bd235805d33fb31, type: 3}
   - {fileID: 936962933341166503, guid: 2ea11e2a5b46cda40853e21ea188f91e, type: 3}
+  startConversation:
+    messages:
+    - {fileID: 11400000, guid: 587279ca898304bcf8dccf69ca2ab144, type: 2}
+  endConversation:
+    messages: []

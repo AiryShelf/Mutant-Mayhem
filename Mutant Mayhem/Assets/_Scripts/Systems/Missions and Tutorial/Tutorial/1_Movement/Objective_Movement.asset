@@ -23,5 +23,9 @@ MonoBehaviour:
   - {fileID: 936962933341166503, guid: 3226943c06d19412a865480f0cd67322, type: 3}
   - {fileID: 5576950254171366818, guid: 9f28ce56148c38943a3c3a19d0db93af, type: 3}
   - {fileID: 936962933341166503, guid: 3080c97f691319840b43759009e70b6d, type: 3}
-  startConversation: {fileID: 11400000, guid: d341f0e8f4a754c0083364571a468834, type: 2}
-  endConversation: {fileID: 0}
+  startConversation:
+    messages:
+    - {fileID: 11400000, guid: 166eb96006f2c4b458be811b7fe030d9, type: 2}
+    - {fileID: 11400000, guid: e9cb01b419c6e41a9be819fe74058f79, type: 2}
+  endConversation:
+    messages: []

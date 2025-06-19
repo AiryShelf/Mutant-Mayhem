@@ -12,9 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a8a9a93e8c44cdaad7a24e6ef9628c, type: 3}
   m_Name: PlanetDialogue Tutorial
   m_EditorClassIdentifier: 
-  startConversation: {fileID: 11400000, guid: 7ac8f1a7297a7423e988e6df7a1cbfbd, type: 2}
+  startConversation:
+    messages:
+    - {fileID: 11400000, guid: 1f30e5bef886544138e09feb54b3609a, type: 2}
+    - {fileID: 11400000, guid: b425f470a3a1c46ed85ccf5ef8880fc8, type: 2}
   waveDialogues:
   - waveIndex: 0
     playOnWaveStart: 0
-    conversation: {fileID: 11400000, guid: 231832d3fb3ac41f7a7e9556f67eb363, type: 2}
-  missionCompleteConversation: {fileID: 0}
+    conversation:
+      messages:
+      - {fileID: 11400000, guid: 803c2b5363e63480ab1c973f44ad9285, type: 2}
+  missionCompleteConversation:
+    messages: []
