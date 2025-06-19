@@ -19,6 +19,7 @@ public class MessageManager : MonoBehaviour
     List<ConversationData> queuedConversations = new List<ConversationData>();
 
     AudioSource voiceSource;
+    SoundSO currentSound;
 
     bool skipMessage = false;
     bool skipConversation = false;
@@ -178,6 +179,8 @@ public class MessageManager : MonoBehaviour
         messageText.text = message.messageText;
 
         voiceSource = AudioManager.Instance.PlaySoundAt(message.voiceClip, transform.position);
+        currentSound = message.voiceClip;
+
         if (isPaused) PauseMessage();
 
         if (message.portraitAnimatorController != null)
@@ -221,7 +224,7 @@ public class MessageManager : MonoBehaviour
     {
         skipMessage = true;
         messagePanel.SetActive(false);
-        AudioManager.Instance.StopSound(voiceSource);
+        AudioManager.Instance.StopSound(voiceSource, currentSound.soundType);
     }
 
     public void PauseMessage()

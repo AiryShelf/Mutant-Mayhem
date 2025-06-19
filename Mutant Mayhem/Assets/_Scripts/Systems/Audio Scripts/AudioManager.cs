@@ -87,12 +87,12 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(PlaySoundFollowRoutine(sound, target));
     }
 
-    public void StopSound(AudioSource source)
+    public void StopSound(AudioSource source, SoundType soundType)
     {
         if (source != null && source.isPlaying)
         {
             source.Stop();
-            ReturnAudioSourceToPool(source, SoundType.SFX); // Assuming SFX for stopping sound
+            ReturnAudioSourceToPool(source, soundType);
         }
     }
 
