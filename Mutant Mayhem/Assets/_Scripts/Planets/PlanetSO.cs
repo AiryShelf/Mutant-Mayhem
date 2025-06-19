@@ -11,7 +11,7 @@ public class PlanetSO : ScriptableObject
     public string description;
     public List<PlanetPropertySO> properties;
     public Tile terrainTile;
-    public Mission mission;
+    public MissionSO mission;
     public PlanetDialogueSO planetDialogue;
     public int nightToSurvive = 10;
     public GameObject highRezPlanetPrefab;

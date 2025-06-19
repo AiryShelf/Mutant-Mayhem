@@ -53,8 +53,8 @@ public class MessageManager : MonoBehaviour
 
         if (currentPlanetDialogue.startConversation != null)
         {
-            Debug.Log("MessageManager: Starting planet dialogue with start conversation.");
-            StartCoroutine(ShowConversationRoutine(currentPlanetDialogue.startConversation));
+            Debug.Log("MessageManager: Playing planet " + PlanetManager.Instance.currentPlanet.bodyName + " dialogue with start conversation.");
+            PlayConversation(currentPlanetDialogue.startConversation);
         }
         else
         {
@@ -76,6 +76,7 @@ public class MessageManager : MonoBehaviour
 
     void PlayWaveConversation(int waveIndex, bool playOnWaveStart)
     {
+        Debug.Log("MessageManager: Attempting to play wave conversation for wave " + waveIndex + ", playOnWaveStart = " + playOnWaveStart);
         if (currentPlanetDialogue == null)
         {
             Debug.LogWarning("MessageManager: PlanetDialogueSO is null when trying to play wave conversation.");
@@ -88,7 +89,7 @@ public class MessageManager : MonoBehaviour
                 waveDialogue.waveIndex == waveIndex && waveDialogue.playOnWaveStart == playOnWaveStart)
             {
                 Debug.Log("MessageManager: Playing conversation for wave " + waveIndex);
-                ShowConversation(waveDialogue.conversation);
+                PlayConversation(waveDialogue.conversation);
                 return;
             }
         }
@@ -96,55 +97,42 @@ public class MessageManager : MonoBehaviour
         Debug.LogWarning("MessageManager: No conversation found for wave " + waveIndex + " with playOnWaveStart = " + playOnWaveStart);
     }
 
-    public void ShowConversation(ConversationSO conversation)
+    public void PlayConversation(ConversationSO conversation)
     {
-        if (currentConversation != null)
+        if (conversation == null || conversation.messages.Count == 0)
         {
-            Debug.Log("MessageManager: Current conversation is not null, adding request to queue.");
-            queuedConversations.Add(conversation);
+            Debug.LogWarning("MessageManager: Tried to play a null or empty conversation.");
             return;
         }
 
-        StartCoroutine(ShowConversationRoutine(conversation));
+        queuedConversations.Add(conversation);
+
+        if (currentConversation == null)
+        {
+            StartCoroutine(PlayConversationRoutine());
+        }
     }
 
-    IEnumerator ShowConversationRoutine(ConversationSO conversation)
+    IEnumerator PlayConversationRoutine()
     {
-        skipConversation = false;
-
-        if (conversation == null || conversation.messages.Count == 0)
+        while (queuedConversations.Count > 0)
         {
-            Debug.LogWarning("MessageManager: No messages found in the conversation, or it's null.");
-            yield break;
-        }
-
-        if (currentConversation != null)
-        {
-            queuedConversations.Add(currentConversation);
-            Debug.Log("MessageManager: Current conversation is not null, adding to queue.");
-            yield break;
-        }
-
-        currentConversation = conversation;
-
-        foreach (MessageSO message in conversation.messages)
-        {
-            if (skipConversation)
-            {
-                Debug.Log("MessageManager: Skipping conversation due to skipConversation flag.");
-                break;
-            }
-            yield return StartCoroutine(ShowMessage(message));
-        }
-
-        currentConversation = null;
-
-        if (queuedConversations.Count > 0)
-        {
-            Debug.Log("MessageManager: Processing queued conversations.");
-            ConversationSO nextConversation = queuedConversations[0];
+            currentConversation = queuedConversations[0];
             queuedConversations.RemoveAt(0);
-            StartCoroutine(ShowConversationRoutine(nextConversation));
+
+            skipConversation = false;
+
+            foreach (MessageSO message in currentConversation.messages)
+            {
+                if (skipConversation)
+                {
+                    Debug.Log("MessageManager: Skipping conversation due to skipConversation flag.");
+                    break;
+                }
+                yield return StartCoroutine(PlayMessage(message));
+            }
+
+            currentConversation = null;
         }
     }
 
@@ -176,8 +164,10 @@ public class MessageManager : MonoBehaviour
 
     #region Messages -------------------------------------------------------
 
-    IEnumerator ShowMessage(MessageSO message)
+    IEnumerator PlayMessage(MessageSO message)
     {
+        Debug.Log("MessageManager: Playing message for " + message.speakerName);
+        Debug.Log($"MessageManager: message voice clip: {message.voiceClip?.name}");
         skipMessage = false;
         yield return new WaitForSeconds(message.messageStartDelay);
 

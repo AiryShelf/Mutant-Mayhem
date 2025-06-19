@@ -8,7 +8,6 @@ public class PlanetManager : MonoBehaviour
     public static PlanetManager Instance { get; private set; }
     public List<PlanetSO> planetsSource;
     public PlanetSO currentPlanet { get; private set; }
-    public PlanetSO tutorialPlanet;
 
     [Header("Current Multipliers")]
     public Dictionary<PlanetStatModifier, float> statMultipliers = new Dictionary<PlanetStatModifier, float>();
@@ -42,7 +41,7 @@ public class PlanetManager : MonoBehaviour
     public void SetCurrentPlanet(int index)
     {
         currentPlanet = planetsSource[index];
-        GetPlanetProperties();
+        SetPlanetProperties();
 
         if (!currentPlanet.mission.isTutorial)
         {
@@ -63,7 +62,7 @@ public class PlanetManager : MonoBehaviour
         if (index != -1)
             {
                 currentPlanet = planetsSource[index];
-                GetPlanetProperties();
+                SetPlanetProperties();
             }
             else
                 Debug.LogError("Planet not found in PlanetManager's list");
@@ -71,10 +70,10 @@ public class PlanetManager : MonoBehaviour
 
     public void SetTutorialPlanet()
     {
-        SetCurrentPlanet(tutorialPlanet);
+        SetCurrentPlanet(0);
     }
 
-    void GetPlanetProperties()
+    void SetPlanetProperties()
     {
         if (currentPlanet == null)
         {

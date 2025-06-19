@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_MissionPanelController : MonoBehaviour
 {
-    public List<Mission> missions;
-    [SerializeField] Mission currentMission;
+    public List<MissionSO> missions;
+    [SerializeField] MissionSO currentMission;
     List<Task> _tasks = new List<Task>();
     [SerializeField] TextMeshProUGUI missionTitle;
     [SerializeField] TextMeshProUGUI objectiveTitle;
@@ -62,7 +63,7 @@ public class UI_MissionPanelController : MonoBehaviour
         
     }
 
-    public void AddMission(Mission mission, bool setAsCurrentMission)
+    public void AddMission(MissionSO mission, bool setAsCurrentMission)
     {
         if (setAsCurrentMission)
             missions.Insert(0, mission);
@@ -86,6 +87,8 @@ public class UI_MissionPanelController : MonoBehaviour
 
     void DisplayObjective(int index)
     {
+        MessageManager.Instance.PlayConversation(currentMission.objectives[index].startConversation);
+
         completedStamp.alpha = 0;
         currentObjectiveIndex = index;
 
@@ -108,8 +111,8 @@ public class UI_MissionPanelController : MonoBehaviour
                 RectTransform rect = obj.GetComponent<RectTransform>();
                 if (rect == null)
                 {
-                    Debug.LogError("Could not find rect transform on objective!");
-                    return;
+                    Debug.LogError("Could not find rect transform on task prefab!");
+                    continue;
                 }
 
                 float newHeight = backPanel.sizeDelta.y + rect.sizeDelta.y;
@@ -120,6 +123,8 @@ public class UI_MissionPanelController : MonoBehaviour
 
     void ObjectiveComplete()
     {
+        MessageManager.Instance.PlayConversation(currentMission.objectives[currentObjectiveIndex].endConversation);
+
         completedStamp.alpha = 1;
         StartCoroutine(DisplayCompletedForTime());
     }

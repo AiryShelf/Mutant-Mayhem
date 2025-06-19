@@ -213,7 +213,6 @@ public class WaveControllerRandom : MonoBehaviour
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
 
         waveSpawner.CalculateMaxIndex();
-        OnWaveEnded?.Invoke(currentWaveIndex);
 
         if (currentWaveIndex >= PlanetManager.Instance.currentPlanet.nightToSurvive)
             ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);

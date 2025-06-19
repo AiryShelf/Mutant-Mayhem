@@ -837,8 +837,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 73.33499, y: -92.454}
-  m_SizeDelta: {x: 303.99, y: 108.42459}
+  m_AnchoredPosition: {x: 73.33499, y: -74.999016}
+  m_SizeDelta: {x: 303.99, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3357460300433663793
 CanvasRenderer:
@@ -868,9 +868,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hello, clone.  This is some test text to set the layout of the UI, and
-    how many lines of text it might be able to hold exactly...  It looks promising
-    to fit this last line in!
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -905,7 +903,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 2
   m_wordSpacing: 0
@@ -1517,10 +1515,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 17549167023143412}
-  - {fileID: 3363889856737362896}
   - {fileID: 5682582007678126082}
   - {fileID: 4315311390704809216}
   - {fileID: 124993227124822342}
+  - {fileID: 3363889856737362896}
   m_Father: {fileID: 8734088982773982132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -2970,8 +2968,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 54.763535, y: -22.45263}
-  m_SizeDelta: {x: 266.8537, y: 31.576698}
+  m_AnchoredPosition: {x: -150.65, y: -27.7}
+  m_SizeDelta: {x: 143.33, y: 31.5767}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5311210686367527367
 CanvasRenderer:
@@ -3028,15 +3026,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22
-  m_fontSizeBase: 22
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 2
   m_wordSpacing: 0
@@ -3064,7 +3062,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4085,19 +4083,35 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Colors.m_NormalColor.a
-      value: 0.29411766
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Colors.m_PressedColor.a
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_Colors.m_PressedColor.b
+      value: 0.039649326
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_Colors.m_PressedColor.g
+      value: 0.039649326
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_Colors.m_PressedColor.r
+      value: 0.9339623
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Colors.m_SelectedColor.a
-      value: 0.29411766
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.a
-      value: 0.5882353
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 207421392899699173, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 0.6509434
       objectReference: {fileID: 0}
     - target: {fileID: 645940142893284960, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_text
@@ -4189,11 +4203,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -21.593658
+      value: 14.893
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -21.876373
+      value: -15.216
       objectReference: {fileID: 0}
     - target: {fileID: 1385386184917792786, guid: 4a8e3771ebb52784f9cc82f010b30967, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

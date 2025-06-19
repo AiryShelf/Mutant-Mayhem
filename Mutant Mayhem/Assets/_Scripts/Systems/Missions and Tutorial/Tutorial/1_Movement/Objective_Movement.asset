@@ -13,17 +13,15 @@ MonoBehaviour:
   m_Name: Objective_Movement
   m_EditorClassIdentifier: 
   objectiveTitle: Move Around
-  objectiveDescription: 'Use ''WASD'' keys to move (You can change movement setting
-    in options)
+  objectiveDescription: 'Use the controls list in the bottom left to complete the
+    tasks.
 
 
-    Hold ''Shift'' while moving to sprint
-
-
-    Press ''Enter''
-    to skip to the night'
+    Notice the slowly pulsing banner at the top of the screen, it has
+    instructions to skip to the night for your device, this saves waiting around.'
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 3226943c06d19412a865480f0cd67322, type: 3}
   - {fileID: 5576950254171366818, guid: 9f28ce56148c38943a3c3a19d0db93af, type: 3}
   - {fileID: 936962933341166503, guid: 3080c97f691319840b43759009e70b6d, type: 3}
-  - {fileID: 936962933341166503, guid: e797e0bf2f7c06743847644f08842b32, type: 3}
+  startConversation: {fileID: 11400000, guid: d341f0e8f4a754c0083364571a468834, type: 2}
+  endConversation: {fileID: 0}
