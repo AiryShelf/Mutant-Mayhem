@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
+    [SerializeField] CanvasGroup mainCanvasGroup;
+    [SerializeField] CanvasGroup creditsCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave mainMenuFadeGroup;
     [SerializeField] OptionsPanel optionsPanel;
     [SerializeField] ControlSettingsPanel controlsPanel;
@@ -78,7 +80,8 @@ public class MainMenuController : MonoBehaviour
         }
 
         PlanetManager.Instance.SetTutorialPlanet();
-        SceneManager.LoadScene(2);
+        var hideGroups = new List<CanvasGroup> { mainCanvasGroup, creditsCanvasGroup };
+        VideoPlayerManager.Instance.PlayTutorialVideo(2, hideGroups); // Loads game level after video
     }
 
     public void OnAnimTriggerMenu()

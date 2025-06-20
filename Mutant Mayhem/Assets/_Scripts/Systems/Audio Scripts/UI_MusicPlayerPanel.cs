@@ -29,6 +29,7 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
     [SerializeField] TextMeshProUGUI shuffleButtonText;
     [SerializeField] Color buttonDisabledColor = new Color(0.75f, 0.75f, 0.75f);
     [SerializeField] float sliderDecibelsMin = -24f;
+    [SerializeField] GameObject mainPanel;
     public GameObject persistentCanvas;
 
     public AudioMixer mainMixer;
@@ -225,6 +226,20 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
     #endregion
 
     #region Update UI
+
+    public void ShowPanel(bool show)
+    {
+        if (show)
+        {
+            mainPanel.SetActive(true);
+            OnPlayButton();
+        }
+        else
+        {
+            mainPanel.SetActive(false);
+            OnStopButton();
+        }
+    }
 
     public void UpdateTrackInfo(PlaylistSO playlist, SongSO song)
     {
