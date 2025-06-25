@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Task_BuyStaminaRegen : Task
+public class Task_BuyStructureStatsUpgrade : Task
 {
+    [Header("Buy Structure Stats Upgrade")]
+    [SerializeField] StructureStatsUpgrade structureStatsUpgrade;
     [SerializeField] int levelToReach;
     UpgradeManager upgradeManager;
 
@@ -26,9 +25,9 @@ public class Task_BuyStaminaRegen : Task
         if (isComplete) 
             return;
         
-        progress = (float)upgradeManager.playerStatsUpgLevels[PlayerStatsUpgrade.StaminaRegen] / levelToReach;
+        progress = (float)upgradeManager.structureStatsUpgLevels[structureStatsUpgrade] / levelToReach;
 
-        if (upgradeManager.playerStatsUpgLevels[PlayerStatsUpgrade.StaminaRegen] >= levelToReach)
+        if (upgradeManager.structureStatsUpgLevels[structureStatsUpgrade] >= levelToReach)
         {
             progress = 1;
             SetTaskComplete();

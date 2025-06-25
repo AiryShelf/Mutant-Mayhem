@@ -84,9 +84,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6791506771164599335}
-  - component: {fileID: 6680834598080947063}
+  - component: {fileID: 2357201188957951676}
   m_Layer: 0
-  m_Name: Task_BuildWalls
+  m_Name: Task_Build SolarPanels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,7 +115,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6680834598080947063
+--- !u!114 &2357201188957951676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 936962933341166503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e16d6afcc918ac4da1ae66bb5034892, type: 3}
+  m_Script: {fileID: 11500000, guid: 7466766f32f592f469d36bac6e28e60f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   taskText: {fileID: 5193382617690672815}
@@ -133,6 +133,7 @@ MonoBehaviour:
   isComplete: 0
   progress: 0
   missionPanelController: {fileID: 0}
+  structureType: 29
   numberToBuild: 4
 --- !u!1 &8264780875990421883
 GameObject:
@@ -332,7 +333,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_text
-      value: Build at least 4 wall tiles
+      value: Build 4+ Solar Panels
       objectReference: {fileID: 0}
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Pivot.x

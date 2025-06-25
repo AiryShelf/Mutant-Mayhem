@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -92,6 +93,8 @@ public class BuildingSystem : MonoBehaviour
     Coroutine lockBuildCircleToMuzzle;
     public GameObject lastSelectedUiObject;
     public StructureSO lastStructureInHand;
+
+    
 
     void Awake()
     {
@@ -580,10 +583,11 @@ public class BuildingSystem : MonoBehaviour
             PlayerCredits -= structureInHand.tileCost * structureCostMult;
             //RemoveBuildHighlight();
 
+            AddToStatCounter(structureInHand.structureType);
+
             if (structureInHand.canBuildOnlyOne)
                 buildMenuController.ScrollUp();
 
-            AddToStatCounter();
             if (structureInHand.canBuildOnlyOne)
                 buildOnlyOneList.Add(structureInHand);
         }
@@ -591,29 +595,41 @@ public class BuildingSystem : MonoBehaviour
             MessagePanel.Instance.DelayMessage("Unable to build there.  It's blocked!", Color.red, 0.1f);
     }
 
-    void AddToStatCounter()
+    void AddToStatCounter(StructureType structureType)
     {
-        StatsCounterPlayer.StructuresBuilt++;
+        StatsCounterPlayer.StructuresPlaced++;
 
-        if (structureInHand.structureType == StructureType.OneByFourWall || 
-            structureInHand.structureType == StructureType.OneByOneCorner || 
-            structureInHand.structureType == StructureType.OneByOneWall || 
-            structureInHand.structureType == StructureType.TwoByEightWall ||
-            structureInHand.structureType == StructureType.TwoByTwoCorner || 
-            structureInHand.structureType == StructureType.TwoByTwoWall)
+        if (structureType == StructureType.OneByOneCorner ||
+            structureType == StructureType.OneByOneWall)
         {
-            StatsCounterPlayer.WallsBuilt++;
+            StatsCounterPlayer.WallsPlaced++;
         }
-        else if (structureInHand.structureType == StructureType.Gate || 
-                 structureInHand.structureType == StructureType.BlastGate)
+        else if (structureType == StructureType.Gate ||
+                 structureType == StructureType.BlastGate)
         {
-            StatsCounterPlayer.GatesBuilt++;
+            StatsCounterPlayer.GatesPlaced++;
         }
-        else if (structureInHand.structureType == StructureType.LaserTurret ||
-                 structureInHand.structureType == StructureType.GunTurret)
+        else if (structureType == StructureType.LaserTurret ||
+                 structureType == StructureType.GunTurret)
         {
-            StatsCounterPlayer.TurretsBuilt++;
+            StatsCounterPlayer.TurretsPlaced++;
         }
+        else if (structureType == StructureType.SolarPanels)
+            StatsCounterPlayer.SolarPanelsPlaced++;
+        else if (structureType == StructureType.EngineeringBay)
+            StatsCounterPlayer.EngineeringBaysPlaced++;
+        else if (structureType == StructureType.PhotonicsBay)
+            StatsCounterPlayer.PhotonicsBayPlaced++;
+        else if (structureType == StructureType.BallisticsBay)
+            StatsCounterPlayer.BallisticsBayPlaced++;
+        else if (structureType == StructureType.ExplosivesBay)
+            StatsCounterPlayer.ExplosivesBayPlaced++;
+        else if (structureType == StructureType.RepairBay)
+            StatsCounterPlayer.RepairBayPlaced++;
+        else if (structureType == StructureType.DroneBay)
+            StatsCounterPlayer.DroneBayPlaced++;
+        else
+            Debug.LogError("BuildingSystem: Untracked structure type for stats: " + structureType);
     }
 
     void RemoveTile(Vector3Int gridPos)

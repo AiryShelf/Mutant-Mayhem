@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ae421a5e734c6440b128cabf443e737, type: 3}
   m_Name: Objective_BuildTurret
   m_EditorClassIdentifier: 
-  objectiveTitle: Build a Turret
+  objectiveTitle: Build 2 Turrets
   objectiveDescription: 'Unlocking Turret Tech or Bullet Tech also unlocks a turret
     of that type in the build menu
 
@@ -21,11 +21,11 @@ MonoBehaviour:
     slot.  You can buy more turret slots in the Structure Tech upgrade panel after
     it''s unlocked.'
   taskPrefabs:
-  - {fileID: 936962933341166503, guid: 5bfd2225bb89e194697fbce7027fcb6c, type: 3}
-  - {fileID: 936962933341166503, guid: fbf1787500f41b4448af3c4ef0fae5ea, type: 3}
   - {fileID: 936962933341166503, guid: d245cdf98d95f5a45810164e7809a8a6, type: 3}
-  - {fileID: 936962933341166503, guid: a0263b4437349fd4b92a8e01d73a509d, type: 3}
+  - {fileID: 936962933341166503, guid: 5d74bfc2b4a9042d7bc328fc16707145, type: 3}
+  - {fileID: 936962933341166503, guid: 34fa64e15ef634bd8898a4a48b81b47e, type: 3}
   - {fileID: 936962933341166503, guid: 84673c9032682ec4791ef02c45ea34f2, type: 3}
+  - {fileID: 936962933341166503, guid: b907c54a176124e0c9c9e1573853986b, type: 3}
   startConversation:
     messages:
     - {fileID: 11400000, guid: 6189f85f15f5e43c8bb7ff7558dd7768, type: 2}

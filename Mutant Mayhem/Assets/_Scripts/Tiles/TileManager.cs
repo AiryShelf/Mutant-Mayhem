@@ -155,6 +155,7 @@ public class TileManager : MonoBehaviour
         BlueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
         buildingSystem.UnlockStructures(ruleTile.structureSO, true);
+        AddToStatCounter(ruleTile.structureSO.structureType);
         
         //if (!AddNewTileToDict(gridPos, rotatedStructure))
         //{
@@ -949,14 +950,51 @@ public class TileManager : MonoBehaviour
         Debug.Log("Particle box check: " + inBox);
         return inBox;
     }
+    
+    void AddToStatCounter(StructureType structureType)
+    {
+        StatsCounterPlayer.StructuresBuilt++;
+
+        if (structureType == StructureType.OneByOneCorner ||
+            structureType == StructureType.OneByOneWall)
+        {
+            StatsCounterPlayer.WallsBuilt++;
+        }
+        else if (structureType == StructureType.Gate ||
+                 structureType == StructureType.BlastGate)
+        {
+            StatsCounterPlayer.GatesBuilt++;
+        }
+        else if (structureType == StructureType.LaserTurret ||
+                 structureType == StructureType.GunTurret)
+        {
+            StatsCounterPlayer.TurretsBuilt++;
+        }
+        else if (structureType == StructureType.SolarPanels)
+            StatsCounterPlayer.SolarPanelsBuilt++;
+        else if (structureType == StructureType.EngineeringBay)
+            StatsCounterPlayer.EngineeringBaysBuilt++;
+        else if (structureType == StructureType.PhotonicsBay)
+            StatsCounterPlayer.PhotonicsBayBuilt++;
+        else if (structureType == StructureType.BallisticsBay)
+            StatsCounterPlayer.BallisticsBayBuilt++;
+        else if (structureType == StructureType.ExplosivesBay)
+            StatsCounterPlayer.ExplosivesBayBuilt++;
+        else if (structureType == StructureType.RepairBay)
+            StatsCounterPlayer.RepairBayBuilt++;
+        else if (structureType == StructureType.DroneBay)
+            StatsCounterPlayer.DroneBayBuilt++;
+        else
+            Debug.LogError("BuildingSystem: Untracked structure type for stats: " + structureType);
+    }
 
     #endregion
 
     #region Debug
 
-    private void OnDrawGizmos() 
+    private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red; 
+        Gizmos.color = Color.red;
 
         if (StructureTilemap != null)
         {
@@ -974,7 +1012,7 @@ public class TileManager : MonoBehaviour
 
         Gizmos.color = Color.blue;
 
-        Gizmos.DrawWireCube(newWorldPos, boxSize);      
+        Gizmos.DrawWireCube(newWorldPos, boxSize);
     }
 
     #endregion

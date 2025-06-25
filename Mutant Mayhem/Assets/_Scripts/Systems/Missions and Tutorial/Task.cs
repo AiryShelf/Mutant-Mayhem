@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,6 +24,9 @@ public class Task : MonoBehaviour
 
     public void SetTaskComplete()
     {
+        if (isComplete)
+            return;
+
         progress = 1;
         isComplete = true;
 
@@ -34,6 +38,19 @@ public class Task : MonoBehaviour
         missionPanelController.CheckIfObjectiveComplete();
 
         Debug.Log("Task completed");
+    }
+
+    public void SetTaskIncomplete()
+    {
+        progress = 0;
+        isComplete = false;
+
+        // Hide checkmark, reset text color
+        checkmarkImage.enabled = false;
+        taskText.color = Color.white;
+        progressText.color = Color.grey;
+
+        Debug.Log("Task set to incomplete");
     }
 
     protected void UpdateProgressText()

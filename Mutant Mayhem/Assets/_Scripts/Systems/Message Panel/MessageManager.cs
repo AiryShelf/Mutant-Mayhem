@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MessageManager : MonoBehaviour
 {
     public static MessageManager Instance { get; private set; }
+    public static bool IsConversationActive => Instance != null && Instance.currentConversation != null;
 
     public Animator portraitAnimator;
     public Animator backgroundAnimator;
@@ -202,9 +203,7 @@ public class MessageManager : MonoBehaviour
             backgroundAnimator.runtimeAnimatorController = null;
         }
 
-        float timer = 0f;
-        float duration = message.voiceClip.clips[0].length + message.messageEndDelay;
-        while (timer < duration)
+        while (voiceSource != null)
         {
             if (skipMessage)
             {
@@ -212,10 +211,18 @@ public class MessageManager : MonoBehaviour
                 break;
             }
 
-            if (!isPaused) timer += Time.unscaledDeltaTime;
+            // Wait until voice finishes playing, unless paused
+            if (!isPaused)
+            {
+                if (!voiceSource.isPlaying)
+                    break;
+            }
 
             yield return null;
         }
+        
+        if (!skipMessage)
+            yield return new WaitForSeconds(message.messageEndDelay);
 
         StopMessage();
     }
@@ -229,6 +236,12 @@ public class MessageManager : MonoBehaviour
 
     public void PauseMessage()
     {
+        if (!IsConversationActive)
+        {
+            Debug.LogWarning("MessageManager: No conversation is active to pause.");
+            return;
+        }
+
         isPaused = true;
         messagePanel.SetActive(false);
         if (voiceSource != null && voiceSource.isPlaying)
@@ -244,7 +257,14 @@ public class MessageManager : MonoBehaviour
 
     public void UnPauseMessage()
     {
+        if (!IsConversationActive)
+        {
+            Debug.LogWarning("MessageManager: No conversation is active to unpause.");
+            return;
+        }
+
         messagePanel.SetActive(true);
+        isPaused = false;
         
         if (voiceSource != null)
         {
@@ -255,8 +275,6 @@ public class MessageManager : MonoBehaviour
         {
             Debug.LogWarning("MessageManager: No voice source is paused to unpause.");
         }
-        
-        isPaused = false;
     }
     
     #endregion

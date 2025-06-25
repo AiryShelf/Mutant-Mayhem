@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Task_BuildWalls : Task
+public class Task_BuildStructures : Task
 {
+    [Header("Build Structures")]
+    [SerializeField] StructureType structureType;
     [SerializeField] int numberToBuild;
     int numberBuilt;
 
@@ -20,7 +19,7 @@ public class Task_BuildWalls : Task
         if (isComplete) 
             return;
 
-        numberBuilt = StatsCounterPlayer.WallsBuilt;
+        numberBuilt = StatsCounterPlayer.GetStructuresBuiltByType(structureType);
         progress = (float)numberBuilt / numberToBuild;
         if (progress >= 1)
             SetTaskComplete();

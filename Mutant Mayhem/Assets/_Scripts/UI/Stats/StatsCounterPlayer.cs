@@ -41,7 +41,26 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int StructuresLost;
     public static int GatesBuilt;
     public static int WallsBuilt;
+    public static int SolarPanelsBuilt;
     public static int TurretsBuilt;
+    public static int EngineeringBaysBuilt;
+    public static int PhotonicsBayBuilt;
+    public static int BallisticsBayBuilt;
+    public static int ExplosivesBayBuilt;
+    public static int RepairBayBuilt;
+    public static int DroneBayBuilt;
+
+    public static int StructuresPlaced;
+    public static int WallsPlaced;
+    public static int GatesPlaced;
+    public static int TurretsPlaced;
+    public static int SolarPanelsPlaced;
+    public static int EngineeringBaysPlaced;
+    public static int PhotonicsBayPlaced;
+    public static int BallisticsBayPlaced;
+    public static int ExplosivesBayPlaced;
+    public static int RepairBayPlaced;
+    public static int DroneBayPlaced;
 
     static Dictionary<string, float> MiscStats = new Dictionary<string, float>();
     static Dictionary<string, float> ProjectilesStats = new Dictionary<string, float>();
@@ -94,8 +113,8 @@ public class StatsCounterPlayer : MonoBehaviour
         GatesBuilt = 0;
         WallsBuilt = 0;
         TurretsBuilt = 0;
-        
-        PopulateStatsDict();  
+
+        PopulateStatsDict();
     }
 
     public static void PopulateStatsDict()
@@ -175,5 +194,76 @@ public class StatsCounterPlayer : MonoBehaviour
     public static Dictionary<string, float> GetStructuresStats()
     {
         return StructuresStats;
+    }
+
+    // Add this method:
+    public static int GetStructuresBuiltByType(StructureType type)
+    {
+        switch (type)
+        {
+            case StructureType.Gate:
+                return GatesBuilt;
+            case StructureType.OneByOneWall:
+                return WallsBuilt;
+            case StructureType.OneByOneCorner:
+                return WallsBuilt;
+            case StructureType.GunTurret:
+                return TurretsBuilt;
+            case StructureType.LaserTurret:
+                return TurretsBuilt;
+            case StructureType.SolarPanels:
+                return SolarPanelsBuilt;
+            case StructureType.EngineeringBay:
+                return EngineeringBaysBuilt;
+            case StructureType.PhotonicsBay:
+                return PhotonicsBayBuilt;
+            case StructureType.BallisticsBay:
+                return BallisticsBayBuilt;
+            case StructureType.ExplosivesBay:
+                return ExplosivesBayBuilt;
+            case StructureType.RepairBay:
+                return RepairBayBuilt;
+            case StructureType.DroneBay:
+                return DroneBayBuilt;
+            default:
+                Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
+                                 ". Returning 0.  You may need to add this type to the switch statement.");
+                return 0;
+        }
+    }
+    
+    public static int GetStructuresPlacedByType(StructureType type)
+    {
+        switch (type)
+        {
+            case StructureType.Gate:
+                return GatesPlaced;
+            case StructureType.OneByOneWall:
+                return WallsPlaced;
+            case StructureType.OneByOneCorner:
+                return WallsPlaced;
+            case StructureType.GunTurret:
+                return TurretsPlaced;
+            case StructureType.LaserTurret:
+                return TurretsPlaced;
+            case StructureType.SolarPanels:
+                return SolarPanelsPlaced;
+            case StructureType.EngineeringBay:
+                return EngineeringBaysPlaced;
+            case StructureType.PhotonicsBay:
+                return PhotonicsBayPlaced;
+            case StructureType.BallisticsBay:
+                return BallisticsBayPlaced;
+            case StructureType.ExplosivesBay:
+                return ExplosivesBayPlaced;
+            case StructureType.RepairBay:
+                return RepairBayPlaced;
+            case StructureType.DroneBay:
+                return DroneBayPlaced;
+            default:
+                Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
+                                 ". Returning 0.  You may need to add this type to the switch statement.");
+                return 0;
+        }
     }
 }

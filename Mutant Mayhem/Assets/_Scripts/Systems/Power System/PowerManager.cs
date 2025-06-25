@@ -18,7 +18,6 @@ public class PowerManager : MonoBehaviour
     public int powerTotal;
     public int powerDemand;
     public int powerCut;
-    [SerializeField] float timeToCheckPower;
     [SerializeField] float cutTimeMax = 15;
     [SerializeField] float cutTimeMin = 5;
 

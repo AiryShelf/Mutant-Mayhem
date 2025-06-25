@@ -1,13 +1,10 @@
 using System;
 using System.Collections;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Task_UnlockUpgradePanel : Task
 {
+    [Header("Unlock Upgrade Panel")]
     [SerializeField] string upgPanel_techUnlockMessageName;
     [Header("Optional")]
     [SerializeField] string OR_UpgPanel_techUnlockMessageName;

@@ -136,10 +136,11 @@ public class UI_MissionPanelController : MonoBehaviour
         Debug.Log("Ending Mission: " + missions[0]);
 
         missions.RemoveAt(0);
+        ClearTasksGrid();
+
         if (missions.Count == 0)
         {
             ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
-
             gameObject.SetActive(false);
             return;
         }

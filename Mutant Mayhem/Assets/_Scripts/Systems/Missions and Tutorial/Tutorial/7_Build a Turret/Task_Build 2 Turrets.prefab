@@ -84,9 +84,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6791506771164599335}
-  - component: {fileID: -2744766006675241419}
+  - component: {fileID: 5560157279610110467}
   m_Layer: 0
-  m_Name: Task_BuildDoors
+  m_Name: Task_Build 2 Turrets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,7 +104,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8212465062275708151}
+  - {fileID: 2611377449553002365}
   - {fileID: 8767821237099257048}
   - {fileID: 643149929826714628}
   - {fileID: 6620257963410737043}
@@ -115,7 +115,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &-2744766006675241419
+--- !u!114 &5560157279610110467
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,10 +124,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 936962933341166503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7466766f32f592f469d36bac6e28e60f, type: 3}
+  m_Script: {fileID: 11500000, guid: 43f8a52e2afd9f54990c5682d52e9e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskText: {fileID: 8687659578073550834}
+  taskText: {fileID: 3266575212962219128}
   progressText: {fileID: 3370169023408024958}
   checkmarkImage: {fileID: 5657859157811836529}
   isComplete: 0
@@ -322,7 +322,7 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5513061627727875475, guid: ed51d5c9ecd0b21439d75e76ea4c5c8c, type: 3}
   m_PrefabInstance: {fileID: 3832522194465050955}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &7908846153604628592
+--- !u!1001 &4036400843920772090
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -332,7 +332,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_text
-      value: Build at least 2 gates
+      value: Build second turret
       objectReference: {fileID: 0}
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Pivot.x
@@ -419,15 +419,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
---- !u!224 &8212465062275708151 stripped
+--- !u!224 &2611377449553002365 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-  m_PrefabInstance: {fileID: 7908846153604628592}
+  m_PrefabInstance: {fileID: 4036400843920772090}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8687659578073550834 stripped
+--- !u!114 &3266575212962219128 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-  m_PrefabInstance: {fileID: 7908846153604628592}
+  m_PrefabInstance: {fileID: 4036400843920772090}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1

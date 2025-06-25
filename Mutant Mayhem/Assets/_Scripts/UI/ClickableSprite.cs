@@ -6,16 +6,20 @@ using UnityEngine.EventSystems;
 public class ClickableSprite : MonoBehaviour
 {
     [SerializeField] Collider2D targetCollider;
-    [SerializeField] UnityEvent onClick;  // UnityEvent to assign functions in the Inspector
+    [SerializeField] UnityEvent onClick;
+    [SerializeField] bool touchscreenOnly = false;
 
     void Update()
     {
+        if (touchscreenOnly && Touchscreen.current == null)
+            return;
+
         if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
             // Check for UI Elements
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Pointer.current.deviceId))
                 return;
-                
+
             Vector2 screenPosition = Pointer.current.position.ReadValue();
             Vector2 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
 

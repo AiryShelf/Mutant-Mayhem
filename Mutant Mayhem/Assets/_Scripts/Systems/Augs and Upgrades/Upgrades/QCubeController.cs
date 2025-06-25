@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class QCubeController : MonoBehaviour, IPointerClickHandler
+public class QCubeController : MonoBehaviour
 {
     public static QCubeController Instance;
 
@@ -281,10 +281,5 @@ public class QCubeController : MonoBehaviour, IPointerClickHandler
 
         randomIndex = UnityEngine.Random.Range(0, cubeDeathSubtitles.Count);
         deathSubtitleText.text = cubeDeathSubtitles[randomIndex];
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        TryInteract();
     }
 }
