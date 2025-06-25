@@ -16,4 +16,5 @@ public class HeadGeneSO : GeneSOBase
     public float knockback = 1f;
     public float selfKnockback = 1f;
     public float massModFactor = 1f;
+    public SoundSO meleeSound;
 }

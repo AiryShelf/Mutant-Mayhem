@@ -19,7 +19,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     [SerializeField] Vector3 initialScale = new Vector3(0.3f, 0.3f, 1f);
     [SerializeField] Vector3 maxScale = new Vector3(1f, 1f, 1f);
     public Animator meleeAnimator;
-    [SerializeField] SoundSO meleeSound;
+    public SoundSO meleeSound;
 
     ContactFilter2D contactFilter;
     List<Collider2D> colliders;
@@ -32,7 +32,8 @@ public class MeleeControllerEnemy : MonoBehaviour
     public bool waitToAttack;
     public bool isElevated;
     public EnemyBase enemyBase;
-    public float damageDealt = 0;
+    public float playerDamageDealt = 0;
+    public float structureDamageDealt = 0;
 
     void Awake()
     {
@@ -125,14 +126,13 @@ public class MeleeControllerEnemy : MonoBehaviour
 
         StatsCounterPlayer.MeleeAttacksByEnemies++;
         StatsCounterPlayer.MeleeDamageByEnemies += damage;
-        damageDealt += damage;
+        playerDamageDealt += damage;
     }
 
     void HitStructure(Vector2 point)
     {
         float damage = GetDamage();
 
-        // Find dotProduct
         Vector2 dir = (point - (Vector2)myHealth.transform.position).normalized;
 
         // Move the point "inside" the tile for tileManager dictionary detection
@@ -149,6 +149,7 @@ public class MeleeControllerEnemy : MonoBehaviour
 
         PlayMeleeSound(point);
         StatsCounterPlayer.MeleeAttacksByEnemies++;
+        structureDamageDealt += damage;
     }
 
     #endregion

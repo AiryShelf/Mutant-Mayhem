@@ -7,7 +7,7 @@ public class Health : MonoBehaviour
     public float startMaxHealth;
     [SerializeField] protected float maxHealth = 100f;
     public float deathTorque = 20;
-    [SerializeField] SoundSO painSound;
+    public SoundSO painSound;
     [SerializeField] float painSoundCooldown= 0.3f;
     [SerializeField] protected Color textFlyHealthGainColor;
     [SerializeField] protected Color textFlyHealthLossColor;

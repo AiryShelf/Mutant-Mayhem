@@ -61,28 +61,8 @@ public class EnemyMutant : EnemyBase
 
     public override void Die()
     {
-        // Apply fitness based on variant
-        if (individual != null)
-        {
-            float fitness = 0f;
-            if (individual.variant == MutantVariant.Fighter)
-            {
-                fitness = meleeController.damageDealt;
-                individual.AddFitness(fitness);
-            }
-            else
-            {
-                fitness = health.GetMaxHealth();
-                individual.AddFitness(fitness);
-            }
+        ApplyFitness();
 
-            Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
-        }
-        else
-        {
-            Debug.LogError("Individual is null on Die.");
-        }
-        
         base.Die();
     }
 
@@ -119,13 +99,10 @@ public class EnemyMutant : EnemyBase
 
         Genome g = individual.genome;
 
-        health.SetMaxHealth(health.GetMaxHealth() * g.bodyGene.scale);
-        health.SetHealth(health.GetMaxHealth());
-        unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
+        SetHealthSettings(g);
         rb.mass = startMass * g.bodyGene.scale * g.headGene.massModFactor;
 
         SetCombinedPolygonCollider(g);
-        bodyCollider.isTrigger = g.legGene.isFlying;
         SetMeleeSettings(g);
 
         moveSpeedBase *= Mathf.Clamp(g.legGene.scale, 1, float.MaxValue);
@@ -152,17 +129,27 @@ public class EnemyMutant : EnemyBase
     void SetCombinedPolygonCollider(Genome g)
     {
         List<Vector2> headOrdered = g.headGene.headColliderPoints.Select(p => p * g.headGene.scale).ToList();
-    List<Vector2> bodyOrdered = g.bodyGene.bodyColliderPoints.Select(p => p * g.bodyGene.scale).ToList();
+        List<Vector2> bodyOrdered = g.bodyGene.bodyColliderPoints.Select(p => p * g.bodyGene.scale).ToList();
 
-    List<Vector2> combinedPoints = new List<Vector2>();
-    combinedPoints.AddRange(headOrdered);
-    combinedPoints.AddRange(bodyOrdered);
+        List<Vector2> combinedPoints = new List<Vector2>();
+        combinedPoints.AddRange(headOrdered);
+        combinedPoints.AddRange(bodyOrdered);
 
-    bodyCollider.SetPath(0, combinedPoints.ToArray());
+        bodyCollider.SetPath(0, combinedPoints.ToArray());
+        bodyCollider.isTrigger = g.legGene.isFlying;
+    }
+
+    void SetHealthSettings(Genome g)
+    {
+        health.SetMaxHealth(g.bodyGene.startHealth * g.bodyGene.scale);
+        health.SetHealth(health.GetMaxHealth());
+        health.painSound = g.bodyGene.painSound;
+        unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
     }
 
     void SetMeleeSettings(Genome g)
     {
+        meleeController.meleeSound = g.headGene.meleeSound;
         meleeCollider.offset = g.headGene.meleeColliderOffset;
         meleeCollider.size = g.headGene.meleeColliderSize;
 
@@ -170,6 +157,33 @@ public class EnemyMutant : EnemyBase
         meleeController.attackDelay = g.headGene.attackDelay;
         meleeController.knockback = g.headGene.knockback * g.headGene.scale;
         meleeController.selfKnockback = g.headGene.selfKnockback * rb.mass;
+    }
+
+    void ApplyFitness()
+    {
+        // Apply fitness based on variant
+        if (individual != null)
+        {
+            float fitness;
+            if (individual.variant == MutantVariant.Fighter)
+            {
+                fitness = meleeController.playerDamageDealt
+                          + meleeController.structureDamageDealt / 2;
+                individual.AddFitness(fitness);
+            }
+            else
+            {
+                fitness = health.GetMaxHealth()
+                          + meleeController.structureDamageDealt;
+                individual.AddFitness(fitness);
+            }
+
+            Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
+        }
+        else
+        {
+            Debug.LogError("Individual is null on Die.");
+        }
     }
     
     #endregion

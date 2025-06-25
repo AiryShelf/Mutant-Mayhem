@@ -17,6 +17,7 @@ public class BodyGeneSO : GeneSOBase
     public float startMass = 1f;
     public float startHealth = 10f;
     public float freezeTime = 0.5f;
+    public SoundSO painSound;
 
     [Header("Shadow Settings")]
     public Vector2[] shadowShapePoints;
