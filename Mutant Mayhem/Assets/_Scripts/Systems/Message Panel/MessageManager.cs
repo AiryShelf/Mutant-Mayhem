@@ -220,7 +220,7 @@ public class MessageManager : MonoBehaviour
 
             yield return null;
         }
-        
+
         if (!skipMessage)
             yield return new WaitForSeconds(message.messageEndDelay);
 
@@ -231,7 +231,8 @@ public class MessageManager : MonoBehaviour
     {
         skipMessage = true;
         messagePanel.SetActive(false);
-        AudioManager.Instance.StopSound(voiceSource, currentSound.soundType);
+        if (currentSound != null)
+            AudioManager.Instance.StopSound(voiceSource, currentSound.soundType);
     }
 
     public void PauseMessage()

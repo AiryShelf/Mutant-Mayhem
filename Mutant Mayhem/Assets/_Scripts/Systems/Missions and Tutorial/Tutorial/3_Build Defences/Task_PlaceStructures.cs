@@ -19,7 +19,9 @@ public class Task_PlaceStructures : Task
         if (isComplete) 
             return;
 
-        numberPlaced = StatsCounterPlayer.GetStructuresPlacedByType(structureType);
+        numberPlaced = StatsCounterPlayer.GetStructuresPlacedByType(structureType)
+                      + StatsCounterPlayer.GetStructuresBuiltByType(structureType);
+                      
         progress = (float)numberPlaced / numberToPlace;
         if (progress >= 1)
             SetTaskComplete();

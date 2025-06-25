@@ -155,7 +155,7 @@ public class TileManager : MonoBehaviour
         BlueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
         buildingSystem.UnlockStructures(ruleTile.structureSO, true);
-        AddToStatCounter(ruleTile.structureSO.structureType);
+        AddToBuiltCounter(ruleTile.structureSO.structureType);
         
         //if (!AddNewTileToDict(gridPos, rotatedStructure))
         //{
@@ -225,25 +225,11 @@ public class TileManager : MonoBehaviour
 
     public void RemoveTileAt(Vector3Int gridPos)
     {
-        /*
-        var obj = StructureTilemap.GetInstantiatedObject(gridPos);
-        if (obj != null)
-        {
-            var powerSource = obj.GetComponent<PowerSource>();
-            if (powerSource != null)
-                PowerManager.Instance.RemovePowerSource(powerSource);
-
-            var powerConsumer = obj.GetComponentInChildren<PowerConsumer>();
-            if (powerConsumer != null)
-                PowerManager.Instance.RemovePowerConsumer(powerConsumer);
-        }
-        */
-
         ConstructionManager.Instance.TileRemoved(GridCenterToWorld(gridPos));
         Vector3Int rootPos = GridToRootPos(gridPos);
         
         // Find rotation matrix of tile at gridPos, convert source positions to rotation
-        var tile = BlueprintTilemap.GetTile(rootPos);
+        var blueprintTile = BlueprintTilemap.GetTile(rootPos);
         Matrix4x4 matrix;
         int tileRot;
         Tilemap tilemap;
@@ -263,16 +249,17 @@ public class TileManager : MonoBehaviour
                 Debug.LogError("TileManager: Removed a 'buildOnlyOne' tile that was not tracked in 'buildOnlyOneList'");
         }
 
-        if (tile != null)
+        if (blueprintTile != null)
         {
             tilemap = BlueprintTilemap;
             matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
             tileRot = StructureRotator.GetRotationFromMatrix(BlueprintTilemap.GetTransformMatrix(rootPos));
+            RemoveFromPlacedCounter(ruleTile.structureSO.structureType);
         }
         else
         {
             tilemap = AnimatedTilemap;
-            tile = AnimatedTilemap.GetTile(rootPos);
+            blueprintTile = AnimatedTilemap.GetTile(rootPos);
             matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
             tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
         }
@@ -951,7 +938,7 @@ public class TileManager : MonoBehaviour
         return inBox;
     }
     
-    void AddToStatCounter(StructureType structureType)
+    void AddToBuiltCounter(StructureType structureType)
     {
         StatsCounterPlayer.StructuresBuilt++;
 
@@ -959,33 +946,104 @@ public class TileManager : MonoBehaviour
             structureType == StructureType.OneByOneWall)
         {
             StatsCounterPlayer.WallsBuilt++;
+            StatsCounterPlayer.WallsPlaced--;
         }
         else if (structureType == StructureType.Gate ||
                  structureType == StructureType.BlastGate)
         {
             StatsCounterPlayer.GatesBuilt++;
+            StatsCounterPlayer.GatesPlaced--;
         }
         else if (structureType == StructureType.LaserTurret ||
                  structureType == StructureType.GunTurret)
         {
             StatsCounterPlayer.TurretsBuilt++;
+            StatsCounterPlayer.TurretsPlaced--;
         }
         else if (structureType == StructureType.SolarPanels)
+        {
             StatsCounterPlayer.SolarPanelsBuilt++;
+            StatsCounterPlayer.SolarPanelsPlaced--;
+        }
         else if (structureType == StructureType.EngineeringBay)
+        {
             StatsCounterPlayer.EngineeringBaysBuilt++;
+            StatsCounterPlayer.EngineeringBaysPlaced--;
+        }
         else if (structureType == StructureType.PhotonicsBay)
+        {
             StatsCounterPlayer.PhotonicsBayBuilt++;
+            StatsCounterPlayer.PhotonicsBayPlaced--;
+        }
         else if (structureType == StructureType.BallisticsBay)
+        {
             StatsCounterPlayer.BallisticsBayBuilt++;
+            StatsCounterPlayer.BallisticsBayPlaced--;
+        }
         else if (structureType == StructureType.ExplosivesBay)
+        {
             StatsCounterPlayer.ExplosivesBayBuilt++;
+            StatsCounterPlayer.ExplosivesBayPlaced--;
+        }
         else if (structureType == StructureType.RepairBay)
+        {
             StatsCounterPlayer.RepairBayBuilt++;
+            StatsCounterPlayer.RepairBayPlaced--;
+        }
         else if (structureType == StructureType.DroneBay)
+        {
             StatsCounterPlayer.DroneBayBuilt++;
+            StatsCounterPlayer.DroneBayPlaced--;
+        }
         else
-            Debug.LogError("BuildingSystem: Untracked structure type for stats: " + structureType);
+            Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
+    }
+
+    void RemoveFromPlacedCounter(StructureType structureType)
+    {
+        if (structureType == StructureType.OneByOneCorner ||
+            structureType == StructureType.OneByOneWall)
+        {
+            StatsCounterPlayer.WallsPlaced--;
+        }
+        else if (structureType == StructureType.Gate ||
+                 structureType == StructureType.BlastGate)
+        {
+            StatsCounterPlayer.GatesPlaced--;
+        }
+        else if (structureType == StructureType.LaserTurret ||
+                 structureType == StructureType.GunTurret)
+        {
+            StatsCounterPlayer.TurretsPlaced--;
+        }
+        else if (structureType == StructureType.SolarPanels)
+        {
+            StatsCounterPlayer.SolarPanelsPlaced--;
+        }
+        else if (structureType == StructureType.EngineeringBay)
+        {
+            StatsCounterPlayer.EngineeringBaysPlaced--;
+        }
+        else if (structureType == StructureType.PhotonicsBay)
+        {
+            StatsCounterPlayer.PhotonicsBayPlaced--;
+        }
+        else if (structureType == StructureType.BallisticsBay)
+        {
+            StatsCounterPlayer.BallisticsBayPlaced--;
+        }
+        else if (structureType == StructureType.ExplosivesBay)
+        {
+            StatsCounterPlayer.ExplosivesBayPlaced--;
+        }
+        else if (structureType == StructureType.RepairBay)
+        {
+            StatsCounterPlayer.RepairBayPlaced--;
+        }
+        else if (structureType == StructureType.DroneBay)
+        {
+            StatsCounterPlayer.DroneBayPlaced--;
+        }
     }
 
     #endregion

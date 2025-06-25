@@ -555,7 +555,7 @@ public class BuildingSystem : MonoBehaviour
         // Check Turrets
         if (structureInHand.isTurret)
         {
-            if (turretManager.currentNumTurrets >= player.stats.structureStats.maxTurrets)
+            if (turretManager.currentNumTurrets + StatsCounterPlayer.TurretsPlaced >= player.stats.structureStats.maxTurrets)
             {
                 MessagePanel.Instance.DelayMessage("Turret limit reached.  Use Structure "+
                                       "upgrades to increase the limit", Color.red, 0.1f);
