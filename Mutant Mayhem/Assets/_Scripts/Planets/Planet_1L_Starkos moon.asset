@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9102890faa0dab4bbb1aff4689da930, type: 3}
+  m_Name: Planet_1L_Starkos moon
+  m_EditorClassIdentifier: 
+  typeOfBody: Moon
+  bodyName: Starkos
+  description: The barren moon of Tsorbia
+  properties:
+  - {fileID: 11400000, guid: e11315d0651de4901b950aea74698ee8, type: 2}
+  - {fileID: 11400000, guid: fb42734f9c19b4d3088c2ba8a6d5fbde, type: 2}
+  - {fileID: 11400000, guid: b21c583d2f34d49228dd989b7c86c45b, type: 2}
+  terrainTile: {fileID: 11400000, guid: e44794305818745d5aa59eda637fb018, type: 2}
+  mission: {fileID: 11400000, guid: 7fb026761eebc4073be042f225a6b178, type: 2}
+  planetDialogue: {fileID: 0}
+  nightToSurvive: 15
+  highRezPlanetPrefab: {fileID: 4567349013123969168, guid: a9d18f8b08dc04661ba1b3ea382ccd3b, type: 3}
+  prerequisitePlanets:
+  - {fileID: 11400000, guid: b7efa2ea19572d24eb9c7f975ae2fc9f, type: 2}
+  basePoints: 125
+  pointsPerWave: 22
+  growthControlFactor: 0.22
+  waveSOBase: {fileID: 11400000, guid: 925dbd13c34a44146a54c4f9fbd483ea, type: 2}
+  maxIndexToSelectAtStart: 0
+  wavesTillAddIndex: 1
+  creditsPerWave: 200
+  timeBetweenWavesBase: 115
+  batchMultiplierStart: 3
+  subwaveDelayMultStart: 0.9
+  spawnRadiusBuffer: 40
+  batchMultGrowthTime: 2
+  damageMultGrowthTime: 5
+  attackDelayMultGrowthTime: 60
+  healthMultGrowthTime: 20
+  speedMultGrowthTime: 20
+  sizeMultGrowthTime: 40
+  subwaveDelayMultGrowthTime: 40
+  damageMultiplier: 1.2
+  healthMultiplier: 1.2
+  speedMultiplier: 1.2
+  sizeMultiplier: 1
+  mutationChance: 0.1
+  addMutationChancePerWave: 0.02
+  mutationChanceMax: 0.3
+  mutationIntensity: 0.1
+  addMutationIntensityPerWave: 0.01
+  mutationIntensityMax: 0.5
+  totalSpawnFactor: 0.4

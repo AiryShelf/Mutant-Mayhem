@@ -12,9 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a8a9a93e8c44cdaad7a24e6ef9628c, type: 3}
   m_Name: PlanetDialogue Tsorbia
   m_EditorClassIdentifier: 
-  startConversation: {fileID: 11400000, guid: 068ecfc1332e54fd88b951542eb0c80d, type: 2}
+  startConversation:
+    messages: []
   waveDialogues:
   - waveIndex: 0
     playOnWaveStart: 1
-    conversation: {fileID: 11400000, guid: 84dbdf434a6bd46ed9c56327de04044f, type: 2}
-  missionCompleteConversation: {fileID: 0}
+    conversation:
+      messages:
+      - {fileID: 11400000, guid: f85f7b5ca50154b098f5ded865f920a3, type: 2}
+      - {fileID: 11400000, guid: 8cc31ffa0e21440db8cf5e8ec305d88f, type: 2}
+  - waveIndex: 1
+    playOnWaveStart: 1
+    conversation:
+      messages:
+      - {fileID: 11400000, guid: 61dd36a67bba9495bb6664f1d973d216, type: 2}
+  - waveIndex: 5
+    playOnWaveStart: 1
+    conversation:
+      messages:
+      - {fileID: 11400000, guid: 33f5317ea03ef4928916917a2b1e96ef, type: 2}

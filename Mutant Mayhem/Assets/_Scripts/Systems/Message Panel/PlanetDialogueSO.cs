@@ -7,7 +7,6 @@ public class PlanetDialogueSO : ScriptableObject
 {
     public ConversationData startConversation;
     public List<WaveDialogue> waveDialogues = new List<WaveDialogue>();
-    public ConversationData missionCompleteConversation;
 }
 
 [System.Serializable]
