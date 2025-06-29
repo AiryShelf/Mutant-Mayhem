@@ -15,4 +15,5 @@ public class MessageSO : ScriptableObject
 
     public float messageStartDelay = 0.5f;
     public float messageEndDelay = 3f;
+    public bool touchscreenOnly = false;
 }

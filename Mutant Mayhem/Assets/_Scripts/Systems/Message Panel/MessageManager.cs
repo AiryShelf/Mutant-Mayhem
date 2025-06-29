@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class MessageManager : MonoBehaviour
@@ -10,6 +11,7 @@ public class MessageManager : MonoBehaviour
     public static bool IsConversationActive => Instance != null && Instance.currentConversation != null;
 
     public Animator portraitAnimator;
+    public MessagePortraitController portraitController;
     public Animator backgroundAnimator;
     public TextMeshProUGUI speakerNameText;
     public TextMeshProUGUI messageText;
@@ -131,6 +133,13 @@ public class MessageManager : MonoBehaviour
                     Debug.Log("MessageManager: Skipping conversation due to skipConversation flag.");
                     break;
                 }
+
+                if (message.touchscreenOnly && (InputManager.LastUsedDevice != Touchscreen.current))
+                {
+                    Debug.Log("MessageManager: Skipping touchscreen-only message for " + message.speakerName);
+                    continue;
+                }
+
                 yield return StartCoroutine(PlayMessage(message));
             }
 
@@ -180,6 +189,7 @@ public class MessageManager : MonoBehaviour
         messageText.text = message.messageText;
 
         voiceSource = AudioManager.Instance.PlaySoundAt(message.voiceClip, transform.position);
+        portraitController.SetAudioSource(voiceSource);
         currentSound = message.voiceClip;
 
         if (isPaused) PauseMessage();

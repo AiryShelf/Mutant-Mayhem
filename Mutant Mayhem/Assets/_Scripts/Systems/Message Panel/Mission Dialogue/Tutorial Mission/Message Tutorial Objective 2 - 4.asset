@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 139aacb5572024b789379a9996a761e6, type: 3}
-  m_Name: Message Tutorial Start - 2
+  m_Name: Message Tutorial Objective 2 - 4
   m_EditorClassIdentifier: 
   speakerName: Mothership AI
   speakerNameColor: {r: 0, g: 1, b: 0, a: 1}
   portraitAnimatorController: {fileID: 9100000, guid: 7af1ecc3765c141ad91d659fa60079c2, type: 2}
   backgroundAnimatorController: {fileID: 9100000, guid: e800c7dae2ada4d6f8204663fa6e964e, type: 2}
-  messageText: That blue cube is known as the Quantum Cube and it is your connection
-    to the Mothership.  If it is destroyed, you die, so protect it with your life.
-  voiceClip: {fileID: 11400000, guid: 9c4b3c35e480649e698ab61c806d018e, type: 2}
+  messageText: If these controls are not to your liking, you can turn on the 'Aim
+    Joystick' in the options menu.
+  voiceClip: {fileID: 11400000, guid: 13a860d4a2cff4fd4a32c8dbf00337b1, type: 2}
   messageStartDelay: 0.5
-  messageEndDelay: 1
-  touchscreenOnly: 0
+  messageEndDelay: 3
+  touchscreenOnly: 1
