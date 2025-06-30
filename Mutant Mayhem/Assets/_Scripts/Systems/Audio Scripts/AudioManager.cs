@@ -96,28 +96,22 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PlaySoundAtRoutine(SoundSO sound, Vector2 pos, AudioSource source)
+    IEnumerator PlaySoundAtRoutine(SoundSO sound, Vector2 pos, AudioSource source)
     {
-        if (source != null)
-        {
-            source.transform.position = pos;
-            source = ConfigureSource(source, sound);
-            float rand = Random.Range(-sound.pitchRandRange, sound.pitchRandRange);
-            source.pitch += rand;
-            source.Play();
+        if (source == null) { Debug.LogError("No AudioSource!"); yield break; }
 
-            float clipLength = source.clip.length;
-            while (source.time < clipLength)
-            {
-                // Wait only while the clip is still progressing forward (not stopped or ended)
-                yield return null;
-            }
-            ReturnAudioSourceToPool(source, sound.soundType);
-        }
-        else
-        {
-            Debug.LogError("Did not find or create AudioSource!");
-        }
+        source.transform.position = pos;
+        source = ConfigureSource(source, sound);
+        source.pitch += Random.Range(-sound.pitchRandRange, sound.pitchRandRange);
+
+        AudioClip startedClip = source.clip;      // or source.clip after ConfigureSource
+        source.Play();
+
+        // Wait while *this* clip is still playing on this source.
+        while (source.isPlaying && source.clip == startedClip)
+            yield return null;
+
+        ReturnAudioSourceToPool(source, sound.soundType);
     }
 
     private IEnumerator PlaySoundFollowRoutine(SoundSO sound, Transform target)

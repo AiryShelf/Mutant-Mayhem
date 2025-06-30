@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +20,7 @@ public class UI_MissionPanelController : MonoBehaviour
 
     [Header("Panel Open Effect")]
     [SerializeField] CanvasGroup missionPanelGroup;
+    [SerializeField] Button missionPanelOpenButton;
     [SerializeField] float delayOpenTime = 8;
     [SerializeField] Image panelOutline;
     [SerializeField] Image backPanelImage;
@@ -29,10 +29,12 @@ public class UI_MissionPanelController : MonoBehaviour
     [SerializeField] Color flashColorOutline;
     Color startColorOutline;
     Color startColorBackPanel;
+    bool isPanelOpen = false;
 
     void Start()
     {
-        missionPanelGroup.alpha = 0;
+        ShowMissionPanel(false);
+        completedStamp.alpha = 0;
         startColorOutline = panelOutline.color;
         startColorBackPanel = backPanelImage.color;
         StartCoroutine(PanelOpenEffect());
@@ -48,8 +50,26 @@ public class UI_MissionPanelController : MonoBehaviour
 
         AddMission(PlanetManager.Instance.currentPlanet.mission, false);
 
-        missionPanelGroup.alpha = 1;
+        ShowMissionPanel(true);
         StartMission();
+    }
+
+    public void ShowMissionPanel(bool show)
+    {
+        isPanelOpen = show;
+
+        if (show)
+        {
+            missionPanelGroup.alpha = 1;
+            missionPanelGroup.blocksRaycasts = true;
+            missionPanelOpenButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            missionPanelGroup.alpha = 0;
+            missionPanelGroup.blocksRaycasts = false;
+            missionPanelOpenButton.gameObject.SetActive(true);
+        }
     }
 
     IEnumerator PanelOpenEffect()
@@ -58,9 +78,7 @@ public class UI_MissionPanelController : MonoBehaviour
 
         Initialize();
         StartCoroutine(GameTools.FlashImage(backPanelImage, panelFlashTime, panelFlashDelay, flashColorOutline, startColorBackPanel));
-        StartCoroutine(GameTools.FlashImage(panelOutline, panelFlashTime, panelFlashDelay, flashColorOutline, startColorOutline));
-
-        
+        StartCoroutine(GameTools.FlashImage(panelOutline, panelFlashTime, panelFlashDelay, flashColorOutline, startColorOutline));  
     }
 
     public void AddMission(MissionSO mission, bool setAsCurrentMission)
@@ -119,13 +137,13 @@ public class UI_MissionPanelController : MonoBehaviour
                 backPanel.sizeDelta = new Vector2(backPanel.sizeDelta.x, newHeight);
             }
         }
+        ShowMissionPanel(isPanelOpen);
     }
 
     void ObjectiveComplete()
     {
         MessageManager.Instance.PlayConversation(currentMission.objectives[currentObjectiveIndex].endConversation);
 
-        completedStamp.alpha = 1;
         StartCoroutine(DisplayCompletedForTime());
     }
 
@@ -150,6 +168,8 @@ public class UI_MissionPanelController : MonoBehaviour
 
     IEnumerator DisplayCompletedForTime()
     {
+        completedStamp.alpha = 1;
+        ShowMissionPanel(true);
         yield return new WaitForSeconds(timeToShowCompleted);
 
         int nextObjectiveIndex = currentObjectiveIndex + 1;

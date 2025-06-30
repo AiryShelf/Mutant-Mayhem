@@ -394,11 +394,13 @@ public class BuildingSystem : MonoBehaviour
             else
                 cameraController.ZoomAndFocus(player.transform, -4, 0.25f, buildCamLerpTime, true, false);
             mouseLooker.lockedToPlayer = true;
+            cameraController.SetTouchscreenOffset(false);
         }
         else
         {
             cameraController.ZoomAndFocus(player.transform, 0, 1, buildCamLerpTime, false, false);
             mouseLooker.lockedToPlayer = false;
+            cameraController.SetTouchscreenOffset(true);
         }  
     }
 

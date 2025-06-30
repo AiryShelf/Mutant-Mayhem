@@ -32,7 +32,7 @@ public class SettingsManager : MonoBehaviour
 
     bool isSpacebarEnabled = true;
     float joystickCursorSpeed;
-    bool isVirtualAimJoystickVisible = true;
+    bool isVirtualAimJoystickVisible = false;
 
     WaveControllerRandom waveController;  
     Player player;
@@ -77,7 +77,7 @@ public class SettingsManager : MonoBehaviour
             isSpacebarEnabled = true;
             useFastJoystickAim = false;
             joystickCursorSpeed = CursorManager.cursorSpeedFactorDefault;
-            isVirtualAimJoystickVisible = true;
+            isVirtualAimJoystickVisible = false;
             return;
         }
         Debug.Log($"Loading settings from profile: {currentProfile.profileName}");

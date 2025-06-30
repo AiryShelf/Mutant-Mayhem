@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform qCubeTrans;
     [SerializeField] float deathLerpTime = 2f;
     [SerializeField] float wideTouchscreenZoomBias = -2f;
+    [SerializeField] float touchscreenXOffset = 3;
     float zoomBias = 0;
 
     CinemachineFramingTransposer playerFramingTransposer;
@@ -97,8 +98,16 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        TouchscreenAdjustments();
+    }
+
+    void TouchscreenAdjustments()
+    {
         if (InputManager.LastUsedDevice != Touchscreen.current) return;
 
+        SetTouchscreenOffset(true);
+
+        // Adjust zoom bias based on aspect ratio
         float aspectRatio = (float)Screen.width / Screen.height;
 
         if (aspectRatio >= 2.0f)
@@ -120,6 +129,23 @@ public class CameraController : MonoBehaviour
         else
         {
             zoomBias = 0;
+        }
+    }
+
+    public void SetTouchscreenOffset(bool isOffset)
+    {
+        var framingTransposer = playerCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        if (framingTransposer != null)
+        {
+            if (isOffset)
+            {
+                if (InputManager.LastUsedDevice == Touchscreen.current)
+                    framingTransposer.m_TrackedObjectOffset.x = touchscreenXOffset;
+            }
+            else
+            {
+                framingTransposer.m_TrackedObjectOffset.x = 0;
+            }
         }
     }
 

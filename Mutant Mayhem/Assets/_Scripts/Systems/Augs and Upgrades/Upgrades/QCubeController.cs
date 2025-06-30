@@ -236,6 +236,7 @@ public class QCubeController : MonoBehaviour
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
         cameraController.ZoomAndFocus(player.transform, 0, 0.25f, 0.35f, true, false);
+        cameraController.SetTouchscreenOffset(false);
         droneHangar.ShowRangeCircle(true);
 
         player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
@@ -245,7 +246,6 @@ public class QCubeController : MonoBehaviour
             toolbarAction.Disable();
         panelSwitcher.isTriggered = true;
         isUpgradesOpen = true;
-        //missionPanelGroup.alpha = 0;
     }
 
     public void CloseUpgradeWindow()
@@ -257,7 +257,10 @@ public class QCubeController : MonoBehaviour
 
         CursorManager.Instance.inMenu = false;
         if (!player.stats.playerShooter.isBuilding && !player.stats.playerShooter.isRepairing)
+        {
             cameraController.ZoomAndFocus(player.transform, 0, 1, 1f, false, false);
+            cameraController.SetTouchscreenOffset(true);
+        }
         else 
             buildingSystem.LockCameraToPlayer(true);
 

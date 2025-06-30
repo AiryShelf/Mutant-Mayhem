@@ -18,6 +18,8 @@ public class TouchManager : MonoBehaviour
     public UIBuildMenuController buildMenuController;
     public RectTransform buildPanelRect;
     public Player player;
+    [SerializeField] float upgradePanelSwipeDistance = 200;
+    [SerializeField] float buildPanelSwipeDistance = 80;
     
 
     private Dictionary<int, TouchData> activeTouches = new Dictionary<int, TouchData>();
@@ -289,6 +291,7 @@ public class TouchManager : MonoBehaviour
 
         TouchData data = activeTouches[fingerId];
         data.currentPosition = position;
+        float dragThreshold = upgradePanelSwipeDistance;
 
         switch (data.purpose)
         {
@@ -315,7 +318,6 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.UpgradePanel:
                 float dragDeltaX = position.x - data.lastScrollCheckPos.x;
-                float dragThreshold = 80f;
 
                 if (Mathf.Abs(dragDeltaX) > dragThreshold)
                 {
@@ -331,8 +333,7 @@ public class TouchManager : MonoBehaviour
                 break;
             case TouchPurpose.BuildMenu:
                 float dragDeltaY = position.y - data.lastScrollCheckPos.y;
-                dragThreshold = 80f;
-
+                dragThreshold = buildPanelSwipeDistance;
                 if (Mathf.Abs(dragDeltaY) > dragThreshold)
                 {
                     // If positive dragDeltaY => user is dragging finger up => "scroll down" in menu

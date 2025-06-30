@@ -35,6 +35,6 @@ public class PlayerProfile
         isSpacebarEnabled = true;
         isFastJoystickAimEnabled = false;
         joystickCursorSpeed = 800;
-        virtualAimJoystickDisabled = false;
+        virtualAimJoystickDisabled = true;
     }
 }

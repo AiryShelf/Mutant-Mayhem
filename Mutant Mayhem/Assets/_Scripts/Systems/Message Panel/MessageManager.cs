@@ -147,21 +147,6 @@ public class MessageManager : MonoBehaviour
         }
     }
 
-    public void StopCurrentConversation()
-    {
-        if (currentConversation != null)
-        {
-            Debug.Log("MessageManager: Stopping current conversation.");
-            skipConversation = true;
-            currentConversation = null;
-            StopMessage();
-        }
-        else
-        {
-            Debug.LogWarning("MessageManager: No current conversation to stop.");
-        }
-    }
-
     public void StopAllConversations()
     {
         Debug.Log("MessageManager: Stopping all conversations.");
@@ -189,8 +174,11 @@ public class MessageManager : MonoBehaviour
         messageText.text = message.messageText;
 
         voiceSource = AudioManager.Instance.PlaySoundAt(message.voiceClip, transform.position);
+        Debug.Log($"NEW VoiceSource id={voiceSource.GetInstanceID()} clip={message.voiceClip.name}");
         portraitController.SetAudioSource(voiceSource);
         currentSound = message.voiceClip;
+
+        yield return null;
 
         if (isPaused) PauseMessage();
 
@@ -225,7 +213,10 @@ public class MessageManager : MonoBehaviour
             if (!isPaused)
             {
                 if (!voiceSource.isPlaying)
+                {
+                    Debug.Log("MessageManager: VoiceSource " + voiceSource.name + "finished playing");
                     break;
+                }
             }
 
             yield return null;
@@ -234,15 +225,22 @@ public class MessageManager : MonoBehaviour
         if (!skipMessage)
             yield return new WaitForSeconds(message.messageEndDelay);
 
-        StopMessage();
+        // Stop playing
+        messagePanel.SetActive(false);
+        if (currentSound != null)
+        {
+            AudioManager.Instance.StopSound(voiceSource, currentSound.soundType);
+        }
+        voiceSource = null;
+        currentSound = null;
+        skipMessage = false;
+        
+        yield return null;
     }
 
     public void StopMessage()
     {
         skipMessage = true;
-        messagePanel.SetActive(false);
-        if (currentSound != null)
-            AudioManager.Instance.StopSound(voiceSource, currentSound.soundType);
     }
 
     public void PauseMessage()
