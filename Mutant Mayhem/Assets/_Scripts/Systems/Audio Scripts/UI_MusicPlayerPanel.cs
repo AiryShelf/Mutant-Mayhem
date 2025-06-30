@@ -191,9 +191,12 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
         value = Mathf.Lerp(sliderDecibelsMin, 0, value);
         if (value <= sliderDecibelsMin)
             value = -80;
-        
+
         if (!sfxMuted)
+        {
             mainMixer.SetFloat("sfxVolume", value);
+            mainMixer.SetFloat("voiceVolume", value + 3); // Voice is 3dB louder than SFX
+        }
     }
 
     void SetMusicVolume(float value)
