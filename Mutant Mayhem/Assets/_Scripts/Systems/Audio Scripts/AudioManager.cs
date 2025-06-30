@@ -104,11 +104,10 @@ public class AudioManager : MonoBehaviour
         source = ConfigureSource(source, sound);
         source.pitch += Random.Range(-sound.pitchRandRange, sound.pitchRandRange);
 
-        AudioClip startedClip = source.clip;      // or source.clip after ConfigureSource
+        AudioClip startedClip = source.clip;
         source.Play();
 
-        // Wait while *this* clip is still playing on this source.
-        while (source.isPlaying && source.clip == startedClip)
+        while (source.isPlaying)
             yield return null;
 
         ReturnAudioSourceToPool(source, sound.soundType);

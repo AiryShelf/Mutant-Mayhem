@@ -21,8 +21,7 @@ public class MessageManager : MonoBehaviour
     ConversationData currentConversation;
     List<ConversationData> queuedConversations = new List<ConversationData>();
 
-    AudioSource voiceSource;
-    SoundSO currentSound;
+    [SerializeField] AudioSource voiceSource;
 
     bool skipMessage = false;
     bool skipConversation = false;
@@ -173,10 +172,24 @@ public class MessageManager : MonoBehaviour
         speakerNameText.color = message.speakerNameColor;
         messageText.text = message.messageText;
 
-        voiceSource = AudioManager.Instance.PlaySoundAt(message.voiceClip, transform.position);
-        Debug.Log($"NEW VoiceSource id={voiceSource.GetInstanceID()} clip={message.voiceClip.name}");
+        // Use the preset AudioSource referenced from the inspector
+        if (voiceSource == null)
+        {
+            Debug.LogError("MessageManager: VoiceSource reference is missing!");
+            yield break;
+        }
+
+        voiceSource.Stop();                         // ensure the previous clip is stopped
+        voiceSource.transform.position = transform.position;
+        voiceSource.clip = message.voiceClip.clips[0];  // assign new clip from SoundSO
+
+        // Apply optional random pitch variation carried over from SoundSO
+        float rand = Random.Range(-message.voiceClip.pitchRandRange, message.voiceClip.pitchRandRange);
+        voiceSource.pitch = 1f + rand;
+
+        voiceSource.Play();
+
         portraitController.SetAudioSource(voiceSource);
-        currentSound = message.voiceClip;
 
         yield return null;
 
@@ -209,14 +222,16 @@ public class MessageManager : MonoBehaviour
                 break;
             }
 
-            // Wait until voice finishes playing, unless paused
-            if (!isPaused)
+            if (isPaused)
             {
-                if (!voiceSource.isPlaying)
-                {
-                    Debug.Log("MessageManager: VoiceSource " + voiceSource.name + "finished playing");
-                    break;
-                }
+                yield return null;
+                continue;
+            }
+
+            if (!voiceSource.isPlaying)
+            {
+                Debug.Log("MessageManager: VoiceSource " + voiceSource.name + " finished playing");
+                break;
             }
 
             yield return null;
@@ -227,12 +242,10 @@ public class MessageManager : MonoBehaviour
 
         // Stop playing
         messagePanel.SetActive(false);
-        if (currentSound != null)
+        if (voiceSource != null)
         {
-            AudioManager.Instance.StopSound(voiceSource, currentSound.soundType);
+            voiceSource.Stop();
         }
-        voiceSource = null;
-        currentSound = null;
         skipMessage = false;
         
         yield return null;
@@ -241,6 +254,10 @@ public class MessageManager : MonoBehaviour
     public void StopMessage()
     {
         skipMessage = true;
+        if (voiceSource != null)
+        {
+            voiceSource.Stop();
+        }
     }
 
     public void PauseMessage()
