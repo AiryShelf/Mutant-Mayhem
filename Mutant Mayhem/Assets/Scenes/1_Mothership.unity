@@ -147,14 +147,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3378141277723388513, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3378141277723388513, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4366838514021329109, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -281,10 +273,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9145718512779279473, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9145718512779279473, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
-      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3401,9 +3389,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelsToResize:
   - {fileID: 1562101906}
-  - {fileID: 2126721782}
   - {fileID: 637517100}
   cameraToResize: {fileID: 704429284}
+  enableSafeZoneOverlays: 1
+  topOverlay: {fileID: 0}
+  bottomOverlay: {fileID: 0}
+  leftOverlay: {fileID: 0}
+  rightOverlay: {fileID: 0}
 --- !u!1 &745460330 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1671366277103789922, guid: 640adba9ffc31412e8ded31ae265d7b7, type: 3}
