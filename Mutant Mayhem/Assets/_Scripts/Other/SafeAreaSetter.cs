@@ -74,39 +74,44 @@ public class SafeAreaSetter : MonoBehaviour
         float leftInset = safe.x;
         float rightInset = screenWidth - (safe.x + safe.width);
 
+        float topAnchor = (screenHeight - topInset) / screenHeight;
+        float bottomAnchor = bottomInset / screenHeight;
+        float leftAnchor = leftInset / screenWidth;
+        float rightAnchor = (screenWidth - rightInset) / screenWidth;
+
         if (topOverlay)
         {
-            topOverlay.gameObject.SetActive(true);
-            topOverlay.anchorMin = new Vector2(0, 1);
+            topOverlay.gameObject.SetActive(topInset > 0);
+            topOverlay.anchorMin = new Vector2(0, topAnchor);
             topOverlay.anchorMax = new Vector2(1, 1);
-            topOverlay.offsetMin = new Vector2(0, -topInset);
+            topOverlay.offsetMin = Vector2.zero;
             topOverlay.offsetMax = Vector2.zero;
         }
 
         if (bottomOverlay)
         {
-            bottomOverlay.gameObject.SetActive(true);
+            bottomOverlay.gameObject.SetActive(bottomInset > 0);
             bottomOverlay.anchorMin = new Vector2(0, 0);
-            bottomOverlay.anchorMax = new Vector2(1, 0);
+            bottomOverlay.anchorMax = new Vector2(1, bottomAnchor);
             bottomOverlay.offsetMin = Vector2.zero;
-            bottomOverlay.offsetMax = new Vector2(0, bottomInset);
+            bottomOverlay.offsetMax = Vector2.zero;
         }
 
         if (leftOverlay)
         {
-            leftOverlay.gameObject.SetActive(true);
+            leftOverlay.gameObject.SetActive(leftInset > 0);
             leftOverlay.anchorMin = new Vector2(0, 0);
-            leftOverlay.anchorMax = new Vector2(0, 1);
+            leftOverlay.anchorMax = new Vector2(leftAnchor, 1);
             leftOverlay.offsetMin = Vector2.zero;
-            leftOverlay.offsetMax = new Vector2(leftInset, 0);
+            leftOverlay.offsetMax = Vector2.zero;
         }
 
         if (rightOverlay)
         {
-            rightOverlay.gameObject.SetActive(true);
-            rightOverlay.anchorMin = new Vector2(1, 0);
+            rightOverlay.gameObject.SetActive(rightInset > 0);
+            rightOverlay.anchorMin = new Vector2(rightAnchor, 0);
             rightOverlay.anchorMax = new Vector2(1, 1);
-            rightOverlay.offsetMin = new Vector2(-rightInset, 0);
+            rightOverlay.offsetMin = Vector2.zero;
             rightOverlay.offsetMax = Vector2.zero;
         }
     }
