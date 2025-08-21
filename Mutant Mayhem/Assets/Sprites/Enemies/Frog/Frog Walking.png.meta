@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6c011e599f0a46842ab429f90f04a6ac
+guid: e978f90723308a645a7437fcd9041d8c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -44,13 +44,13 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 0
+  spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -106,102 +106,89 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mutant_Bat1_0
+      name: Frog Walking_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 40
-        height: 64
+        height: 40
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 60ad88cb51c34f145bfd57eebb9f15bf
-      internalID: 890080025
+      spriteID: f49773bff17f05a41a3e932adc65ebe3
+      internalID: -145727580
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mutant_Bat1_1
+      name: Frog Walking_1
       rect:
         serializedVersion: 2
         x: 40
         y: 0
         width: 40
-        height: 64
+        height: 40
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8ee447de55b915d4a99b14cb8a0b1185
-      internalID: 1624049839
+      spriteID: 139792675eb085947adc49260fd0579e
+      internalID: -2015820189
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mutant_Bat1_2
+      name: Frog Walking_2
       rect:
         serializedVersion: 2
         x: 80
         y: 0
         width: 40
-        height: 64
+        height: 40
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8f29b4fa175211e4fb6af091f05cb3ea
-      internalID: -2093782547
+      spriteID: 82eb5d66a8cf6d7489b14be024fc918d
+      internalID: 620403288
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mutant_Bat1_3
+      name: Frog Walking_3
       rect:
         serializedVersion: 2
         x: 120
         y: 0
         width: 40
-        height: 64
+        height: 40
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 610b3580baf98c04b95b8d7c3399291f
-      internalID: 1590279185
+      spriteID: a07391cfcd45d6c49880295582da8d2c
+      internalID: 927551659
       vertices: []
       indices: 
       edges: []
@@ -215,14 +202,12 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: 49b6a8f7ea83fa243b43f7231d5f0d45, type: 3}
-      name: _NormalMap
+    secondaryTextures: []
     nameFileIdTable:
-      Mutant_Bat1_0: 890080025
-      Mutant_Bat1_1: 1624049839
-      Mutant_Bat1_2: -2093782547
-      Mutant_Bat1_3: 1590279185
+      Frog Walking_0: -145727580
+      Frog Walking_1: -2015820189
+      Frog Walking_2: 620403288
+      Frog Walking_3: 927551659
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -178,6 +178,7 @@ public class UI_MissionPanelController : MonoBehaviour
             DisplayObjective(nextObjectiveIndex);
         else 
         {
+            completedStamp.alpha = 0;
             EndMission();
         }
     }
