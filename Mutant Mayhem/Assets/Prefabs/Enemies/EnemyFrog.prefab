@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6793013880b32d345b4656361f000dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPoolName: Crab1
+  objectPoolName: Frog
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
@@ -73,7 +73,7 @@ MonoBehaviour:
   <unfreezeTime>k__BackingField: 0.5
   CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
-  EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
+  EnemyChaseSOBase: {fileID: 11400000, guid: fa4bbe85f7f26934690e2713d5178ce1, type: 2}
   EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
   EnemyMeleeSOBase: {fileID: 0}
   EnemyIdleSOBaseInstance: {fileID: 0}
@@ -284,7 +284,7 @@ MonoBehaviour:
   - {x: -0.025125083, y: -0.045585968, z: 0}
   m_ShapePathHash: -232648934
   m_Mesh: {fileID: 0}
-  m_InstanceId: 89702
+  m_InstanceId: 104844
   m_LocalBounds:
     m_Center: {x: 0.00024374202, y: -0.00013599545, z: 0}
     m_Extent: {x: 0.03492998, y: 0.045548275, z: 0}

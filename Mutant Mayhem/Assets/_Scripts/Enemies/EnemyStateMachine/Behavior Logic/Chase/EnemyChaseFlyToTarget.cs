@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Chase-Direct Chase Fly to Player", 
-                 menuName = "Enemy Logic/Chase Logic/Direct Chase Fly to Player")]
+[CreateAssetMenu(fileName = "Chase-Direct Chase Fly to Target", 
+                 menuName = "Enemy Logic/Chase Logic/Direct Chase Fly to Target")]
 public class EnemyChaseFlyToTarget : EnemyChaseSOBase
 {
     [SerializeField] private float moveSpeedMult = 1.2f;

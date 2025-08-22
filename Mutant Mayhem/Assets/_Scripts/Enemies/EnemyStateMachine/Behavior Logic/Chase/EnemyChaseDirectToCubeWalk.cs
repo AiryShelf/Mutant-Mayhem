@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Chase-Direct Chase Player", 
+[CreateAssetMenu(fileName = "Chase-Direct Chase Cube", 
                  menuName = "Enemy Logic/Chase Logic/Direct Chase Cube Walk")]
 public class EnemyChaseDirectToCubeWalk : EnemyChaseSOBase
 {

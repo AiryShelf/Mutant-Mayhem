@@ -51,7 +51,7 @@ public class Throw : MonoBehaviour
 
             // Scale the grenade
             float scale = scaleFactor * (t < 0.5f ? 2*t : 2*(1-t));
-            transform.localScale = Vector3.one * (scaleFactor+scale);
+            transform.localScale = Vector3.one * (scaleFactor + scale);
 
             yield return null;
         }

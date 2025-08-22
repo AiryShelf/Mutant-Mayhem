@@ -323,11 +323,11 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         }  
     }
 
-    public void ChangeFacingDirection(Vector2 velocity, float speedMultipliers)
+    public void ChangeFacingDirection(Vector2 dir, float speedMultipliers)
     {
         if (!isHit)
         {
-            float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y,
                                           Mathf.LerpAngle(rb.rotation, angle, 
                                           Time.fixedDeltaTime * rotateSpeedBase * speedMultipliers));
