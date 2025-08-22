@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyMutant : EnemyBase
@@ -128,6 +127,7 @@ public class EnemyMutant : EnemyBase
 
     void SetCombinedPolygonCollider(Genome g)
     {
+        // Combines the head and body collider points
         List<Vector2> headOrdered = g.headGene.headColliderPoints.Select(p => p * g.headGene.scale).ToList();
         List<Vector2> bodyOrdered = g.bodyGene.bodyColliderPoints.Select(p => p * g.bodyGene.scale).ToList();
 

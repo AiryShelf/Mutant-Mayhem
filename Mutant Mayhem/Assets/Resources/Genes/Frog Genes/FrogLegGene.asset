@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7a07a12b3b174a759dd9cfee90782a4, type: 3}
-  m_Name: Crab1LegGene
+  m_Name: FrogLegGene
   m_EditorClassIdentifier: 
-  id: Leg_Crab1
+  id: Leg_Frog
   color: {r: 1, g: 1, b: 1, a: 1}
   scale: 8
   leftLegCorpseSprites:
@@ -23,15 +23,15 @@ MonoBehaviour:
   - {fileID: 116276536, guid: f2e353841db3a4035a46910198cf4185, type: 3}
   - {fileID: 1200111421, guid: f2e353841db3a4035a46910198cf4185, type: 3}
   - {fileID: 696442292, guid: f2e353841db3a4035a46910198cf4185, type: 3}
-  leftLegAnimatorController: {fileID: 9100000, guid: 895c15b364fed42ef959f480a9dfbdb4, type: 2}
-  rightLegAnimatorController: {fileID: 9100000, guid: 7f83b240045f24bf29c656c9bfd0efe3, type: 2}
+  leftLegAnimatorController: {fileID: 9100000, guid: e326d40c1191593409ef58c76479fb58, type: 2}
+  rightLegAnimatorController: {fileID: 9100000, guid: ccc7e31594c50f04eb4b7cc6e0bee356, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   chaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
   shootSOBase: {fileID: 0}
   isFlying: 0
   moveSpeedBaseStart: 1
   rotateSpeedBaseStart: 3
-  animSpeedFactor: 1
+  animSpeedFactor: 0.4
   switchToRunBuffer: 1.6
-  maxAnimSpeed: 10
+  maxAnimSpeed: 4
   bodyCastsShadows: 1
