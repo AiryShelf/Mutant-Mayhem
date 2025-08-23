@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Pathfinding;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -325,6 +323,16 @@ public static class GameTools
     #endregion
 
     #region Others
+
+    public static bool AnimatorHasParameter(Animator animator, string paramName)
+    {
+        foreach (var param in animator.parameters)
+        {
+            if (param.name == paramName)
+                return true;
+        }
+        return false;
+    }
 
     public static void TextureOffsetCentered(Material material, Transform transform, Transform target,
                                              Vector2 direction, float speed, ref Vector2 currentOffset)

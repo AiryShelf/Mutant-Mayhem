@@ -17,7 +17,7 @@ public class EnemyChaseJumpToTarget : EnemyChaseSOBase
     [SerializeField] float distToNotJump = 1f;
     [SerializeField] float jumpMaxDistance = 5f;
     [SerializeField] float jumpStartDelay = 0.5f;
-    [SerializeField] float jumpHeightCurve = 2;
+    [SerializeField] float jumpCurveHeight = 2;
     [SerializeField] float jumpHeightScale = 1.5f;
     [SerializeField] float jumpDuration = 1f;
     [SerializeField] float jumpAccuracyRadius = 2f;
@@ -118,8 +118,9 @@ IEnumerator JumpTowardsTarget()
     // Sample target position to predict movement
     Vector2 firstPos = targetTransform != null ? (Vector2)targetTransform.position : targetPos;
     float sampledTime = 0f;
-    
-    // Need to switch animation to sitting, then jump, then back to walking
+
+    // Switch to sitting animation
+    enemyBase.animControllerEnemy.SetSitAnimation(true);
 
     // CHANGED: replace single WaitForSeconds with per-fixed-step sampling
     while (sampledTime < jumpStartDelay)
@@ -143,7 +144,7 @@ IEnumerator JumpTowardsTarget()
     float dt = Mathf.Max(sampledTime, 0.0001f);
     Vector2 measuredVel = (lastPos - firstPos) / dt;      // units per second
 
-    // We predict where the target will be when we LAND, i.e., jumpDuration seconds later.
+    // Predict where the target will be when we LAND, i.e., jumpDuration seconds later.
     float leadTime = jumpDuration;
     Vector2 predictedPos = (targetTransform != null ? (Vector2)targetTransform.position : targetPos) + measuredVel * leadTime;
 
@@ -152,7 +153,7 @@ IEnumerator JumpTowardsTarget()
     if (nowToPred.sqrMagnitude > maxLeadDistance * maxLeadDistance)
         predictedPos = (targetTransform != null ? (Vector2)targetTransform.position : targetPos) + nowToPred.normalized * maxLeadDistance;
 
-    // Find a spot with no obstacles or structures, within min/max jumpDistance
+
     Vector2 fromSelfToPred = predictedPos - (Vector2)transform.position;
 
     // If target is too close, exit jump
@@ -171,33 +172,36 @@ IEnumerator JumpTowardsTarget()
     int iterationCount = 0;
     while (true)
     {
-        // CHANGED: pick a random spot around the *predicted* landing center
+        // Pick a random spot around the predicted landing center
         randomOffset = Random.insideUnitCircle * (jumpAccuracyRadius + iterationCount * 0.5f);
         endPos = predictedPos + (Vector2)randomOffset;
 
         // If endPos is too far, jump max dist
         if ((endPos - startPos).sqrMagnitude > jumpMaxDistance * jumpMaxDistance)
         {
-            Vector2 jumpVector = ((Vector2)endPos - (Vector2)startPos).normalized * jumpMaxDistance; // CHANGED: recompute from endPos
-            endPos = startPos + (Vector3)jumpVector;
+            Vector3 jumpVector = (endPos - startPos).normalized * jumpMaxDistance; // CHANGED: recompute from endPos
+            endPos = startPos + jumpVector;
         }
 
-        // Check for obstacles at endPos
+        // Check for obstacles at endPos  ***** Fix
         Vector3Int gridPos = TileManager.Instance.WorldToGrid(endPos);
-        if (!TileManager.Instance.ContainsTileKey(gridPos) ||
-            TileManager.Instance.GetStructureAt(endPos).structureType != StructureType.ThreeByThreePlatform)
+        if (TileManager.Instance.ContainsTileKey(gridPos) && TileManager.Instance.GetStructureAt(endPos).structureType == StructureType.ThreeByThreePlatform)
         {
             break;
         }
+        if (!TileManager.Instance.ContainsTileKey(gridPos))
+            break;
 
         iterationCount++;
         yield return new WaitForFixedUpdate();
     }
 
-    // perform the jump arc and scale effect
+    // Perform the jump arc and scale effect
     isInAir = true;
     enemyBase.meleeController.isElevated = true;
     enemyBase.gameObject.layer = LayerMask.NameToLayer("FlyingEnemies");
+    enemyBase.animControllerEnemy.SetSitAnimation(false);
+    enemyBase.animControllerEnemy.SetJumpAnimation(true);
     localScaleStart = transform.localScale.x;
 
     float elapsed = 0;
@@ -208,7 +212,7 @@ IEnumerator JumpTowardsTarget()
 
         // Position on parabola
         float x = Mathf.Lerp(startPos.x, endPos.x, t);
-        float y = jumpHeightCurve * (t - t * t) + Mathf.Lerp(startPos.y, endPos.y, t);
+        float y = jumpCurveHeight * (t - t * t) + Mathf.Lerp(startPos.y, endPos.y, t);
         transform.position = new Vector3(x, y, transform.position.z);
 
         // Scale: 1.0 → jumpHeightScale at mid → 1.0
@@ -225,6 +229,7 @@ IEnumerator JumpTowardsTarget()
     jumpCoroutine = null;
     enemyBase.meleeController.isElevated = false;
     enemyBase.gameObject.layer = LayerMask.NameToLayer("Enemies");
+    enemyBase.animControllerEnemy.SetJumpAnimation(false);
 
     // Set cooldown timer
     jumpCooldownTimer = jumpCooldown;

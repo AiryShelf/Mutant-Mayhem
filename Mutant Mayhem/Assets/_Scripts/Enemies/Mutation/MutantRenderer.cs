@@ -13,7 +13,7 @@ public class MutantRenderer : MonoBehaviour
     //[SerializeField] Transform enemyBaseTransform;
     [SerializeField] SpriteRenderer bodySR;
     [SerializeField] SpriteRenderer headSR;
-    [SerializeField] AnimationControllerMutant animationControllerMutant;
+    public AnimationControllerMutant animationControllerMutant;
     [SerializeField] float minColorBrightness = 0.75f;
 
     SpriteRenderer leftLegSR;
@@ -38,7 +38,7 @@ public class MutantRenderer : MonoBehaviour
         var headGeneBase = GeneDatabase.Head(g.headGene.id);
         var legGeneBase = GeneDatabase.Leg(g.legGene.id);
 
-        /* 1️⃣  Set sprites/animators and colors*/
+        // Set sprites/animators and colors
         bodySR.sprite = bodyGeneBase.sprite;
         bodySR.color = g.bodyGene.color;
         headSR.sprite = headGeneBase.sprite;
@@ -52,7 +52,7 @@ public class MutantRenderer : MonoBehaviour
         animationControllerMutant.switchToRunBuffer = legGeneBase.switchToRunBuffer;
         animationControllerMutant.maxAnimSpeed = legGeneBase.maxAnimSpeed;
 
-        /* 2️⃣  ✏  CHANGED  — Apply scales */
+        // Apply scales
         //enemyBaseTransform.localScale = Vector3.one * g.bodyScale;  // Scale the whole enemy base
         bodySR.transform.localScale = Vector3.one * g.bodyGene.scale;
         headAnchor.localScale = Vector3.one * g.headGene.scale;
@@ -132,5 +132,13 @@ public class MutantRenderer : MonoBehaviour
 
             renderer.color = new Color(red, green, blue, color.a);
         }
+    }
+
+    public void SetSortingLayer(string layerName)
+    {
+        bodySR.sortingLayerName = layerName;
+        headSR.sortingLayerName = layerName;
+        leftLegSR.sortingLayerName = layerName;
+        rightLegSR.sortingLayerName = layerName;
     }
 }

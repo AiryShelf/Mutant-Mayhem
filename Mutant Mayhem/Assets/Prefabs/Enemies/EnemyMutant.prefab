@@ -233,7 +233,7 @@ Animator:
   m_GameObject: {fileID: 4594743928455167383}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0d58df23366ee47d0b37d6128c7a3a1a, type: 2}
+  m_Controller: {fileID: 9100000, guid: e326d40c1191593409ef58c76479fb58, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -557,6 +557,7 @@ MonoBehaviour:
   switchToRunBuffer: 0.4
   maxAnimSpeed: 3
   myAnimator: {fileID: 0}
+  bodySR: {fileID: 2421378551077471280}
   leftLegAnimator: {fileID: 5285398481778624195}
   rightLegAnimator: {fileID: 7550190917275667565}
 --- !u!114 &4012186217039654463
@@ -587,7 +588,7 @@ MonoBehaviour:
   - {x: -0.039542824, y: -0.030660767, z: 0}
   m_ShapePathHash: 1675027022
   m_Mesh: {fileID: 0}
-  m_InstanceId: 61754
+  m_InstanceId: 114088
   m_LocalBounds:
     m_Center: {x: -0.004774239, y: 0.000052098185, z: 0}
     m_Extent: {x: 0.055409543, y: 0.030712865, z: 0}

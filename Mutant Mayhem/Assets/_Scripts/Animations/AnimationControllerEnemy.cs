@@ -9,20 +9,22 @@ public class AnimationControllerEnemy : MonoBehaviour
     public float switchToRunBuffer = 1.1f;
     public float maxAnimSpeed = 10;
 
-    [SerializeField] Animator myAnimator;
-    EnemyBase enemy;
+    public Animator myAnimator;
+    SpriteRenderer mySR;
+    EnemyBase enemyBase;
     protected Rigidbody2D myRb;
     protected float baseSpeed;
 
     protected virtual void Start()
     {
-        enemy = GetComponent<EnemyBase>();
+        enemyBase = GetComponent<EnemyBase>();
         myAnimator = GetComponentInChildren<Animator>();
+        mySR = myAnimator.GetComponent<SpriteRenderer>();
 
-        if (enemy != null)
+        if (enemyBase != null)
         {
-            baseSpeed = enemy.moveSpeedBase;
-            myRb = enemy.GetComponent<Rigidbody2D>();
+            baseSpeed = enemyBase.moveSpeedBase;
+            myRb = enemyBase.GetComponent<Rigidbody2D>();
         }
     }
 
@@ -33,7 +35,7 @@ public class AnimationControllerEnemy : MonoBehaviour
 
     protected virtual void UpdateEnemy()
     {
-        if (enemy != null)
+        if (enemyBase != null)
         {
             float speed = myRb.velocity.magnitude;
 
@@ -45,9 +47,41 @@ public class AnimationControllerEnemy : MonoBehaviour
             {
                 myAnimator.SetBool("isRunning", false);
             }
-            float animSpeed = speed * animSpeedFactor;
-            animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
-            myAnimator.speed = animSpeed;
+
+            if (myAnimator.GetBool("isSitting") || myAnimator.GetBool("isJumping"))
+            {
+                myAnimator.speed = 1;
+            }
+            else
+            {
+                float animSpeed = speed * animSpeedFactor;
+                animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
+                myAnimator.speed = animSpeed;
+            }
+
+        }
+    }
+
+    public virtual void SetSitAnimation(bool isSitting)
+    {
+        myAnimator.SetBool("isSitting", isSitting);
+    }
+
+    public virtual void SetJumpAnimation(bool isJumping)
+    {
+        myAnimator.SetBool("isJumping", isJumping);
+        SetSpriteLayerToFlying(isJumping);
+    }
+
+    public virtual void SetSpriteLayerToFlying(bool isFlying)
+    {
+        if (isFlying)
+        {
+            mySR.sortingLayerName = "FireParticles";
+        }
+        else
+        {
+            mySR.sortingLayerName = "Enemies";
         }
     }
 }
