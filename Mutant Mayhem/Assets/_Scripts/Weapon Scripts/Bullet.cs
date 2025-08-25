@@ -14,26 +14,27 @@ public class Bullet : MonoBehaviour
     [SerializeField] protected SoundSO shootSound;
     [SerializeField] protected SoundSO hitSound;
 
-    [Header("Dynamic vars, don't set here")]
+    [Header("Set by GunSO for Player, and manually here for Enemies' projectiles")]
     public string objectPoolName;
 
     [Header("Optional")]
     [SerializeField] GameObject AiTrggerPrefab;
     [SerializeField] float AITriggerSize;
 
-    [HideInInspector] public float damage = 10;
-    [HideInInspector] public float damageVariance;
-    [HideInInspector] public float knockback = 1f;
-    [HideInInspector] public float destroyTime;
+    [Header("Set by GunSO for Player, and manually here for Enemies' projectiles")]
+    public float damage = 10;
+    public float damageVariance;
+    public float knockback = 1f;
+    public float destroyTime;
     [HideInInspector] public Vector2 velocity;
     [HideInInspector] public Transform origin;
-    [HideInInspector] public CriticalHit criticalHit;
-    [HideInInspector] public float critChanceMult = 1;
-    [HideInInspector] public float critDamageMult = 1;
+    public CriticalHit criticalHit;
+    public float critChanceMult = 1;
+    public float critDamageMult = 1;
 
     protected TileManager tileManager;
 
-    void Awake()
+    protected virtual void Awake()
     {
         hitLayersStart = hitLayers;
         tileManager = FindObjectOfType<TileManager>();
@@ -78,11 +79,11 @@ public class Bullet : MonoBehaviour
     {
         // Check with raycast
         Vector2 raycastDir = rb.velocity;
-        RaycastHit2D raycast = Physics2D.Raycast(transform.position, raycastDir, 
+        RaycastHit2D raycast = Physics2D.Raycast(transform.position, raycastDir,
                                                  raycastDir.magnitude * Time.fixedDeltaTime, hitLayers);
         if (raycast.collider)
         {
-            Hit(raycast.collider, raycast.point + raycastDir/32 * Time.fixedDeltaTime);
+            Hit(raycast.collider, raycast.point + raycastDir / 32 * Time.fixedDeltaTime);
         }
     }
 
@@ -94,12 +95,12 @@ public class Bullet : MonoBehaviour
         float critMult = 1;
         if (criticalHit != null)
             (isCritical, critMult) = criticalHit.RollForCrit(critChanceMult, critDamageMult);
-        
+
         float damageNew = damage;
         damageNew *= 1 + Random.Range(-damageVariance, damageVariance);
         damageNew *= critMult;
 
-        
+
         Vector2 hitDir = transform.right;
         EnemyBase enemy = otherCollider.GetComponent<EnemyBase>();
         float damageScale = 1;
@@ -110,7 +111,7 @@ public class Bullet : MonoBehaviour
         }
         // Structures Layer #12
         else if (otherCollider.gameObject.layer == 12)
-        { 
+        {
             ParticleManager.Instance.PlayBulletHitWall(point, hitDir);
 
             // If player projectile, do 1/3 damage
@@ -125,25 +126,47 @@ public class Bullet : MonoBehaviour
                 tileManager.ModifyHealthAt(point, -damageNew, damageScale, hitDir);
             }
         }
-
-        // Drones
-        DroneHealth droneHealth = otherCollider.GetComponent<DroneHealth>();
-        if (droneHealth != null)
+        else if (otherCollider.CompareTag("Player"))
         {
-            HitDrone(droneHealth, hitDir, point, damageNew);
+            PlayerHealth playerHealth = otherCollider.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                HitPlayer(playerHealth, hitDir, point, damageNew);
+            }
         }
+        else if (otherCollider.CompareTag("QCube"))
+        {
+            QCubeHealth qCubeHealth = otherCollider.GetComponent<QCubeHealth>();
+            if (qCubeHealth != null)
+            {
+                HitCube(qCubeHealth, hitDir, point, damageNew);
+            }
+        }
+        else
+        {
+            // Drones
+            DroneHealth droneHealth = otherCollider.GetComponent<DroneHealth>();
+            if (droneHealth != null)
+            {
+                HitDrone(droneHealth, hitDir, point, damageNew);
+            }
+            else
+                Debug.LogError("Bullet hit something with no Health: " + otherCollider.name);
+        }
+
+
 
         // Play bullet hit effect
         ParticleManager.Instance.PlayBulletHitEffect(gunType, point, hitDir);
         AudioManager.Instance.PlaySoundAt(hitSound, point);
-        
+
         // Return to pool
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 
     #endregion
 
-    #region Hit Enemy
+    #region Hit Types
 
     void HitEnemy(EnemyBase enemy, Vector2 hitDir, Vector2 point, float damageNew)
     {
@@ -154,7 +177,7 @@ public class Bullet : MonoBehaviour
 
         float damageScale = damageNew / damage;
         enemy.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
-        
+
         // Stat Counting
         if (this.gameObject.CompareTag("PlayerBullet"))
         {
@@ -172,12 +195,22 @@ public class Bullet : MonoBehaviour
             triggerObj.transform.position = point;
             triggerObj.GetComponent<AiTrigger>().origin = this.origin;
             triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
-        } 
+        }
     }
 
-    #endregion
+    void HitPlayer(PlayerHealth playerHealth, Vector2 hitDir, Vector2 point, float damageNew)
+    {
+        Debug.Log("Player hit by bullet for " + damageNew + " damage");
+        playerHealth.Knockback(hitDir, knockback);
+        ParticleManager.Instance.PlayBulletBlood(point, hitDir);
 
-    #region Hit Drone
+        float damageScale = damageNew / damage;
+        playerHealth.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
+
+        // Stat Counting
+        if (this.gameObject.layer == LayerMask.NameToLayer("EnemyProjectiles"))
+            StatsCounterPlayer.DamageToPlayer += damageNew;
+    }
 
     void HitDrone(Health health, Vector2 hitDir, Vector2 point, float damageNew)
     {
@@ -190,9 +223,9 @@ public class Bullet : MonoBehaviour
             damageNew *= 0.5f;
         float damageScale = damageNew / damage;
         health.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
-        
+
         // Stat Counting
-        
+
 
         // Create AI Trigger
         if (AiTrggerPrefab != null)
@@ -202,7 +235,28 @@ public class Bullet : MonoBehaviour
             triggerObj.transform.position = point;
             triggerObj.GetComponent<AiTrigger>().origin = this.origin;
             triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
-        } 
+        }
+    }
+
+    void HitCube(QCubeHealth qCubeHealth, Vector2 hitDir, Vector2 point, float damageNew)
+    {
+        qCubeHealth.Knockback(hitDir, knockback);
+        ParticleManager.Instance.PlayBulletHitWall(point, hitDir);
+
+        float damageScale = damageNew / damage;
+        qCubeHealth.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);
+
+        // Stat Counting
+
+        // Create AI Trigger
+        if (AiTrggerPrefab != null)
+        {
+            //Debug.Log("AiTrigger activated");
+            GameObject triggerObj = PoolManager.Instance.GetFromPool("Trigger_PlayerBulletHit");
+            triggerObj.transform.position = point;
+            triggerObj.GetComponent<AiTrigger>().origin = this.origin;
+            triggerObj.transform.localScale = new Vector3(AITriggerSize, AITriggerSize, 1);
+        }
     }
 
     #endregion

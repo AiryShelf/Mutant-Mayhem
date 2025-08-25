@@ -81,7 +81,7 @@ public class AnimationControllerEnemy : MonoBehaviour
         }
         else
         {
-            mySR.sortingLayerName = "Enemies";
+            mySR.sortingLayerName = "Enemy";
         }
     }
 }

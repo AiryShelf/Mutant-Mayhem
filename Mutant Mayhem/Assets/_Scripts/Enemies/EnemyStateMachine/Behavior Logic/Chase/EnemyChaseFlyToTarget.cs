@@ -23,7 +23,6 @@ public class EnemyChaseFlyToTarget : EnemyChaseSOBase
     Vector3 wavyDirection;
     float clampFactor;
     float totalRotationSpeed;
-    Vector3 localScaleStart;
 
     public override void Initialize(GameObject gameObject, EnemyBase enemy)
     {
@@ -57,7 +56,7 @@ public class EnemyChaseFlyToTarget : EnemyChaseSOBase
         // Move towards target
         time += Time.fixedDeltaTime;
 
-        moveDir = targetPos - transform.position;
+        moveDir = enemyBase.targetPos - (Vector2)transform.position;
         //if (Mathf.Abs(moveDir.x) < distToStopChase && Mathf.Abs(moveDir.y) < distToStopChase)
         //{
             //enemyBase.StateMachine.ChangeState(enemyBase.IdleState);

@@ -322,7 +322,7 @@ public static class GameTools
 
     #endregion
 
-    #region Others
+    #region Animation
 
     public static bool AnimatorHasParameter(Animator animator, string paramName)
     {
@@ -344,7 +344,27 @@ public static class GameTools
 
         material.mainTextureOffset = newOffset;
     }
-    
+
+    #endregion
+
+    #region Others
+
+    public static Vector2 GetPredictedPosition(Vector2 previousPos, float sampledTime, Vector2 targetPos, float leadTime)
+    {
+        float dt = Mathf.Max(sampledTime, 0.0001f);
+        Vector2 measuredVel = (targetPos - previousPos) / dt;      // units per second
+
+        // Predict where the target will be when we LAND, i.e., leadTime seconds later.
+        Vector2 predictedPos = targetPos + measuredVel * leadTime;
+
+        return predictedPos;
+    }
+
+    public static Vector2 GetPredictedPosition(Vector2 startPos, Vector2 velocity, float leadTime)
+    {
+        return startPos + (velocity * leadTime) / Time.fixedDeltaTime;
+    }
+
     public static List<Vector2> ComputeConvexHull(List<Vector2> points)
     {
         if (points.Count < 3)

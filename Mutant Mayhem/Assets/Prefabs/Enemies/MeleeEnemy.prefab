@@ -102,16 +102,17 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 4755520
-  meleeTile_DotProdRange: -1
   meleeCollider: {fileID: 2826357740213786751}
   scaleDuration: 0.1
   initialScale: {x: 0.3, y: 0.3, z: 1}
   maxScale: {x: 1, y: 1, z: 1}
   meleeAnimator: {fileID: 1471041603463321727}
-  meleeSprite: {fileID: 3418149694153841801}
   meleeSound: {fileID: 11400000, guid: 6a3e0d5445d7e404b87530c84e4e7443, type: 2}
   waitToAttack: 0
   isElevated: 0
+  enemyBase: {fileID: 0}
+  playerDamageDealt: 0
+  structureDamageDealt: 0
 --- !u!114 &7580828302623498820
 MonoBehaviour:
   m_ObjectHideFlags: 0

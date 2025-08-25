@@ -57,12 +57,14 @@ MonoBehaviour:
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
+  targetTransform: {fileID: 0}
+  targetPos: {x: 0, y: 0}
   moveSpeedBaseStart: 1
   moveSpeedBase: 1.35
   rotateSpeedBaseStart: 3
   rotateSpeedBase: 3
   startMass: 0
-  randomize: 1
+  isMutant: 0
   randSpeedRange: 0.1
   startLocalScale: {x: 0, y: 0, z: 0}
   minSize: 1
@@ -74,8 +76,12 @@ MonoBehaviour:
   CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
-  EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
+  EnemyShootSOBase: {fileID: 0}
   EnemyMeleeSOBase: {fileID: 0}
+  EnemyIdleSOBaseInstance: {fileID: 0}
+  EnemyChaseSOBaseInstance: {fileID: 0}
+  EnemyShootSOBaseInstance: {fileID: 0}
+  EnemyMeleeSOBaseInstance: {fileID: 0}
 --- !u!114 &7349244352346262760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,8 +288,8 @@ MonoBehaviour:
   m_Mesh: {fileID: 0}
   m_InstanceId: 160144
   m_LocalBounds:
-    m_Center: {x: 0.00024374202, y: -0.00013599545, z: 0}
-    m_Extent: {x: 0.03492998, y: 0.045548275, z: 0}
+    m_Center: {x: 0.000243742, y: -0.0001359954, z: 0}
+    m_Extent: {x: 0.03492998, y: 0.04554828, z: 0}
 --- !u!1001 &1675829156198210814
 PrefabInstance:
   m_ObjectHideFlags: 0

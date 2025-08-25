@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class EnemyShootSOBase : ScriptableObject
 {
+    public float distanceToStartShooting = 6f;
     [SerializeField] protected float rotateSpeedMultiplier = 1.5f;
+    [SerializeField] protected float minTimeBeforeExit = 2f;
     protected EnemyBase enemyBase;
     protected Transform transform;
     protected GameObject gameObject;
-
-    protected Transform playerTransform;
 
     public virtual void Initialize(GameObject gameObject, EnemyBase enemyBase)
     {
         this.gameObject = gameObject;
         transform = gameObject.transform;
         this.enemyBase = enemyBase;
-
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public virtual void DoEnterLogic() { }

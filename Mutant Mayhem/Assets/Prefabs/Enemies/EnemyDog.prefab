@@ -57,12 +57,14 @@ MonoBehaviour:
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
+  targetTransform: {fileID: 0}
+  targetPos: {x: 0, y: 0}
   moveSpeedBaseStart: 5
   moveSpeedBase: 5
   rotateSpeedBaseStart: 3
   rotateSpeedBase: 3
   startMass: 0
-  randomize: 1
+  isMutant: 0
   randSpeedRange: 0.1
   startLocalScale: {x: 0, y: 0, z: 0}
   minSize: 1
@@ -74,8 +76,12 @@ MonoBehaviour:
   CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
-  EnemyShootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
+  EnemyShootSOBase: {fileID: 0}
   EnemyMeleeSOBase: {fileID: 0}
+  EnemyIdleSOBaseInstance: {fileID: 0}
+  EnemyChaseSOBaseInstance: {fileID: 0}
+  EnemyShootSOBaseInstance: {fileID: 0}
+  EnemyMeleeSOBaseInstance: {fileID: 0}
 --- !u!114 &-3465499167211957796
 MonoBehaviour:
   m_ObjectHideFlags: 0

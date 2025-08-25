@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EnemyShootState : EnemyState
 {
-    
-
     public EnemyShootState(EnemyBase enemy, EnemyStateMachine enemyStateMachine) : base(enemy, enemyStateMachine)
     {
         
@@ -15,25 +13,25 @@ public class EnemyShootState : EnemyState
     {
         base.EnterState();
 
-        enemyBase.EnemyShootSOBaseInstance.DoEnterLogic();
+        enemyBase.EnemyShootSOBaseInstance?.DoEnterLogic();
     }
     public override void ExitState() 
     {
         base.ExitState();
 
-        enemyBase.EnemyShootSOBaseInstance.DoExitLogic();
+        enemyBase.EnemyShootSOBaseInstance?.DoExitLogic();
     }
     public override void FrameUpdate() 
     {
         base.FrameUpdate();
 
-        enemyBase.EnemyShootSOBaseInstance.DoFrameUpdateLogic();
+        enemyBase.EnemyShootSOBaseInstance?.DoFrameUpdateLogic();
     }
     public override void PhysicsUpdate() 
     {
         base.PhysicsUpdate();
 
-        enemyBase.EnemyShootSOBaseInstance.DoPhysicsUpdateLogic();
+        enemyBase.EnemyShootSOBaseInstance?.DoPhysicsUpdateLogic();
     }
     public override void AnimationTriggerEvent(EnemyBase.AnimationTriggerType triggerType) 
     {

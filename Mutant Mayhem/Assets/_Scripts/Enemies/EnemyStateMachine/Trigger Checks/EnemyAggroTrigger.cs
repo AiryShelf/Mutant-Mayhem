@@ -2,37 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// This object should be on AiTriggers layer
 public class EnemyAggroTrigger : MonoBehaviour
 {
-    public GameObject PlayerTarget { get; set; }
     public EnemyBase _enemyBase;
     [SerializeField] float waitTimeBetweenHits = 2f;
+    
     int triggerColliderID = -1;
     bool recentlyHit;
-
-    private void Awake()
-    {
-        PlayerTarget = GameObject.FindGameObjectWithTag("Player");
-    }
 
     void OnDisable()
     {
         StopAllCoroutines();
     }
 
-    private void OnTriggerEnter2D(Collider2D other) 
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (!gameObject.activeInHierarchy) 
+        if (!gameObject.activeInHierarchy)
             return;
-
-        // This object should be on AiTriggers layer
-
-        // Can raycast here for line-of-sight check?  Would require constant checking to
-        // 'see' the target again...
 
         // Return if already has a target
-        if (_enemyBase.EnemyChaseSOBaseInstance.targetTransform != null)
+        if (_enemyBase.targetTransform != null)
             return;
+
+        // Can raycast here for line-of-sight check?  Would require constant checking..
 
         if (other.CompareTag("PlayerBulletTrigger"))
         {
@@ -41,30 +34,30 @@ public class EnemyAggroTrigger : MonoBehaviour
                 recentlyHit = true;
                 _enemyBase.IsShotAggroed = true;
                 AiTrigger trigger = other.GetComponent<AiTrigger>();
-                _enemyBase.EnemyChaseSOBaseInstance.targetPos = trigger.origin.transform.position;
+                _enemyBase.targetPos = trigger.origin.transform.position;
                 StartCoroutine(WaitBetweenHits());
             }
         }
-        else if (other.CompareTag("PlayerTrigger"))
+        else if (other.CompareTag("TargetForEnemyTrigger"))
         {
             //Debug.Log("Aggro triggered");
             _enemyBase.SetAggroStatus(true);
-            _enemyBase.EnemyChaseSOBaseInstance.targetTransform = other.transform;
+            _enemyBase.targetTransform = other.transform;
             triggerColliderID = other.GetInstanceID();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other) 
+    void OnTriggerExit2D(Collider2D other)
     {
         //if (other.GetInstanceID() != triggerColliderID)
-            //return;
+        //return;
         // This object should be on AiTriggers layer
-        if (other.CompareTag("PlayerTrigger") && triggerColliderID == other.GetInstanceID())
+        if (other.CompareTag("TargetForEnemyTrigger") && triggerColliderID == other.GetInstanceID())
         {
             //Debug.Log("Aggro Un-triggered");
             _enemyBase.SetAggroStatus(false);
             triggerColliderID = -1;
-            _enemyBase.EnemyChaseSOBaseInstance.targetTransform = null;
+            _enemyBase.targetTransform = null;
         }
     }
 

@@ -12,25 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7bf3fc615e7e64bbe7c8e5b8a930dd, type: 3}
   m_Name: Chase-Jump Chase Target
   m_EditorClassIdentifier: 
+  canExit: 1
+  distanceToStartShooting: 0
+  chanceToStartShootingPerFrame: 0.01
   timeToStopChase: 3
   TimeToCheckDistance: 0.3
   rotateSpeedMultiplier: 1.5
   DistToStartSprint: 8
   SprintSpeedMultiplier: 2
   TimeToFullSprint: 1
-  TimeToStopSprint: 3
+  TotalSprintTime: 3
   isSprinting: 0
-  targetTransform: {fileID: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  moveSpeedMult: 1.2
-  distToStopChase: 0.2
   jumpChancePerFixedFrame: 0.01
-  distToNotJump: 1
+  jumpStartDelay: 0.5
+  freezeBeforeJump: 0.3
+  distToNotJump: 2
   jumpMaxDistance: 10
-  jumpStartDelay: 0.75
+  maxLeadDistance: 12
   jumpCurveHeight: 3
   jumpHeightScale: 1.5
   jumpDuration: 1
   jumpAccuracyRadius: 1
   jumpCooldown: 2
-  maxLeadDistance: 12
+  isInAir: 0
+  airMassMult: 0.8
+  airDrag: 5
+  airMaxSpeed: 8
+  moveSpeedMult: 1.2
+  distToStopChase: 0.2

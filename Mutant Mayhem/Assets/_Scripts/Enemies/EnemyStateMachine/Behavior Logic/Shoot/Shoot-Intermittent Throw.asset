@@ -10,10 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed9fad06ea0e20d4eb0b65511b524ea9, type: 3}
-  m_Name: Shoot-Straight-Single Projectile
+  m_Name: Shoot-Intermittent Throw
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 7625088445697106208, guid: edd73f34f40109a46a64eaf13b9aef78, type: 3}
-  _timeBetweenShots: 1
-  _timeTillExit: 3
-  _distanceToExit: 3
-  _bulletSpeed: 10
+  distanceToStartShooting: 6
+  rotateSpeedMultiplier: 1.5
+  minTimeBeforeExit: 1.5
+  thrownObjectPoolName: Frog_Spit
+  bulletSpeed: 10
+  curveHeight: 4
+  peakScale: 1.2
+  maxRange: 10
+  timeBetweenShotsMin: 0.5
+  timeBetweenShotsMax: 1
+  timeTillExitMin: 3
+  timeTillExitMax: 5

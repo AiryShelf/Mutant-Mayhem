@@ -20,7 +20,14 @@ public class EnemyIdleSOBase : ScriptableObject
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    public virtual void DoEnterLogic() { }
+    public virtual void DoEnterLogic()
+    {
+        if (enemyBase != null)
+        {
+            enemyBase.targetTransform = null;
+            enemyBase.IsAggroed = false;
+        }
+    }
     public virtual void DoExitLogic() { }
     public virtual void DoFrameUpdateLogic() { }
     public virtual void DoPhysicsUpdateLogic() 

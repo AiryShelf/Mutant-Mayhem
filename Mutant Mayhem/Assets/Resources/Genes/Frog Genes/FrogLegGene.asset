@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Leg_Frog
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 8
+  scale: 6
   leftLegCorpseSprites:
   - {fileID: 249690812, guid: cd7377e58836d43b1b2ca4bae45d6cad, type: 3}
   - {fileID: 1991628510, guid: cd7377e58836d43b1b2ca4bae45d6cad, type: 3}
@@ -27,7 +27,7 @@ MonoBehaviour:
   rightLegAnimatorController: {fileID: 9100000, guid: ccc7e31594c50f04eb4b7cc6e0bee356, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   chaseSOBase: {fileID: 11400000, guid: fa4bbe85f7f26934690e2713d5178ce1, type: 2}
-  shootSOBase: {fileID: 0}
+  shootSOBase: {fileID: 11400000, guid: ad51b2a075890b5488afd8f87f602255, type: 2}
   isFlying: 0
   moveSpeedBaseStart: 1
   rotateSpeedBaseStart: 3

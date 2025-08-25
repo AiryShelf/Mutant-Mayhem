@@ -10,20 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c029143f71e3b014f8780e1e56230593, type: 3}
-  m_Name: Chase-Direct Chase Fly to Player
+  m_Name: Chase-Direct Chase Fly to Target
   m_EditorClassIdentifier: 
-  timeToStopChase: 3
+  canExit: 1
+  distanceToStartShooting: 0
+  chanceToStartShootingPerFrame: 0.01
+  timeToStopChase: 2
   TimeToCheckDistance: 0.6
   rotateSpeedMultiplier: 1
   DistToStartSprint: 8
   SprintSpeedMultiplier: 2
   TimeToFullSprint: 1
-  TimeToStopSprint: 2
+  TotalSprintTime: 2
   isSprinting: 0
-  targetTransform: {fileID: 0}
-  targetPos: {x: 0, y: 0, z: 0}
+  jumpChancePerFixedFrame: 0.001
+  jumpStartDelay: 0.5
+  freezeBeforeJump: 0.2
+  distToNotJump: 1
+  jumpMaxDistance: 5
+  maxLeadDistance: 12
+  jumpCurveHeight: 2
+  jumpHeightScale: 1.5
+  jumpDuration: 1
+  jumpAccuracyRadius: 2
+  jumpCooldown: 2
+  isInAir: 0
+  airMassMult: 0.5
+  airDrag: 3
+  airMaxSpeed: 12
   moveSpeedMult: 1.2
-  distToStopChase: 0.1
   hitLayers:
     serializedVersion: 2
     m_Bits: 557120

@@ -11,6 +11,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public Rigidbody2D rb { get; set; }
     public Vector2 facingDirection { get; set; }
 
+    [Header("Exposed for Debug")]
+    public Transform targetTransform;
+    public Vector2 targetPos;
+
     [Header("Movement")]
     public float moveSpeedBaseStart;
     public float moveSpeedBase = 1f;
@@ -43,7 +47,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public EnemyIdleState IdleState { get; set; }
     public EnemyChaseState ChaseState { get; set; }
     public EnemyShootState ShootState { get; set; }
-    //public EnemyMeleeState MeleeState { get; set; }
 
     public bool IsAggroed { get; set; }
     public bool IsShotAggroed { get; set; }
@@ -60,6 +63,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     [SerializeField] private EnemyShootSOBase EnemyShootSOBase;
     [SerializeField] private EnemyMeleeSOBase EnemyMeleeSOBase;
 
+    // Is set during runtime, exposed only for debugging
     public EnemyIdleSOBase EnemyIdleSOBaseInstance;
     public EnemyChaseSOBase EnemyChaseSOBaseInstance;
     public EnemyShootSOBase EnemyShootSOBaseInstance;
@@ -141,14 +145,11 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
             EnemyChaseSOBaseInstance = Instantiate(EnemyChaseSOBase);
         if (EnemyShootSOBase != null)
             EnemyShootSOBaseInstance = Instantiate(EnemyShootSOBase);
-        //if (EnemyMeleeSOBase != null)
-            //EnemyMeleeSOBaseInstance = Instantiate(EnemyMeleeSOBase);
 
         StateMachine = new EnemyStateMachine();
         IdleState = new EnemyIdleState(this, StateMachine);
         ChaseState = new EnemyChaseState(this, StateMachine);
         ShootState = new EnemyShootState(this, StateMachine);
-        //MeleeState = new EnemyMeleeState(this, StateMachine);
 
         StateMachine.Initialize(IdleState);
     }
@@ -294,7 +295,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     public void Knockback(Vector2 dir, float knockback)
     {
-        health.Knockback(dir, knockback);
+        if (EnemyChaseSOBaseInstance != null && EnemyChaseSOBaseInstance.isInAir)
+            EnemyChaseSOBaseInstance.ApplyAirImpulse(dir * knockback);
+        else
+            health.Knockback(dir, knockback);
     }
 
     public virtual void Die()

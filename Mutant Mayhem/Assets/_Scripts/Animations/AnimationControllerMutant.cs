@@ -80,9 +80,9 @@ public class AnimationControllerMutant : AnimationControllerEnemy
         }
         else
         {
-            bodySR.sortingLayerName = "Enemies";
-            leftLegSR.sortingLayerName = "Enemies";
-            rightLegSR.sortingLayerName = "Enemies";
+            bodySR.sortingLayerName = "Enemy";
+            leftLegSR.sortingLayerName = "Enemy";
+            rightLegSR.sortingLayerName = "Enemy";
         }
     }
 }

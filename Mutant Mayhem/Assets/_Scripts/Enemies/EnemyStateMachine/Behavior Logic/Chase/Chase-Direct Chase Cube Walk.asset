@@ -12,11 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e360838e687491142bf392acc7cb5319, type: 3}
   m_Name: Chase-Direct Chase Cube Walk
   m_EditorClassIdentifier: 
-  rotateSpeedMultiplier: 1
+  canExit: 1
+  distanceToStartShooting: 0
+  chanceToStartShootingPerFrame: 0.01
+  timeToStopChase: 3
   TimeToCheckDistance: 1
+  rotateSpeedMultiplier: 1
   DistToStartSprint: 0
   SprintSpeedMultiplier: 1
   TimeToFullSprint: 1
-  TimeToStopSprint: 3
+  TotalSprintTime: 3
   isSprinting: 0
+  jumpChancePerFixedFrame: 0.001
+  jumpStartDelay: 0.5
+  freezeBeforeJump: 0.2
+  distToNotJump: 1
+  jumpMaxDistance: 5
+  maxLeadDistance: 12
+  jumpCurveHeight: 2
+  jumpHeightScale: 1.5
+  jumpDuration: 1
+  jumpAccuracyRadius: 2
+  jumpCooldown: 2
+  isInAir: 0
+  airMassMult: 0.5
+  airDrag: 3
+  airMaxSpeed: 12
   moveSpeedMultiplier: 1.2

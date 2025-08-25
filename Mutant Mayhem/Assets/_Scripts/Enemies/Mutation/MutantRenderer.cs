@@ -133,12 +133,4 @@ public class MutantRenderer : MonoBehaviour
             renderer.color = new Color(red, green, blue, color.a);
         }
     }
-
-    public void SetSortingLayer(string layerName)
-    {
-        bodySR.sortingLayerName = layerName;
-        headSR.sortingLayerName = layerName;
-        leftLegSR.sortingLayerName = layerName;
-        rightLegSR.sortingLayerName = layerName;
-    }
 }

@@ -12,12 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3217b8c674ee914085e4f3c987a4aea, type: 3}
   m_Name: Chase-Run Away
   m_EditorClassIdentifier: 
-  rotateSpeed: 5
-  _sprintFactor: 1
+  canExit: 1
+  distanceToStartShooting: 0
+  chanceToStartShootingPerFrame: 0.01
+  timeToStopChase: 3
   TimeToCheckDistance: 0.3
+  rotateSpeedMultiplier: 1.5
   DistToStartSprint: 8
   SprintSpeedMultiplier: 2
   TimeToFullSprint: 1
-  TimeToStopSprint: 3
+  TotalSprintTime: 3
   isSprinting: 0
+  jumpChancePerFixedFrame: 0.001
+  jumpStartDelay: 0.75
+  freezeBeforeJump: 0.2
+  distToNotJump: 1
+  jumpMaxDistance: 5
+  maxLeadDistance: 12
+  jumpCurveHeight: 2
+  jumpHeightScale: 1.5
+  jumpDuration: 1
+  jumpAccuracyRadius: 2
+  jumpCooldown: 2
+  isInAir: 0
+  airMassMult: 0.5
+  airDrag: 3
+  airMaxSpeed: 12
   runAwaySpeedMultiplier: 1
