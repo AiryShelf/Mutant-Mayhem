@@ -83,7 +83,7 @@ public class EnemyMutant : EnemyBase
         Genome g = individual.genome;
 
         moveSpeedBaseStart = g.legGene.moveSpeedBaseStart;
-        rotateSpeedBaseStart = g.legGene.rotateSpeedBaseStart;
+        rotateSpeedBase = g.legGene.rotateSpeedBaseStart;
         startMass = g.bodyGene.startMass;
         health.startMaxHealth = g.bodyGene.startHealth;
     }

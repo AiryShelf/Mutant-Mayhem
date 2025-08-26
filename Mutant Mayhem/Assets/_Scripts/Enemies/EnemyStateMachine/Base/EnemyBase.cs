@@ -19,7 +19,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public float moveSpeedBaseStart;
     public float moveSpeedBase = 1f;
     float slowFactor = 1;
-    public float rotateSpeedBaseStart = 3f;
     public float rotateSpeedBase = 3f;
     public float startMass; // For debug, don't set
 

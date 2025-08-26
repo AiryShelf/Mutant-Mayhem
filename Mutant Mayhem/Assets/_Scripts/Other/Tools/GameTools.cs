@@ -349,6 +349,56 @@ public static class GameTools
 
     #region Others
 
+    // Path: P(t) = Lerp(start, end, t) + (0, curveHeight*(t - t^2)), t ∈ [0,1]
+    // Using Simpson's rule (even # of intervals) for good accuracy/perf.
+    public static float EstimateParabolaArcLength(Vector2 start, Vector2 end, float curveHeight)
+    {
+        float dx = end.x - start.x;
+        float dy = end.y - start.y;
+        float h  = curveHeight;
+
+        // Handle straight-line case quickly
+        if (Mathf.Abs(h) < 1e-8f)
+            return Mathf.Sqrt(dx * dx + dy * dy);
+
+        // We integrate sqrt( (α t + β)^2 + γ^2 ) from t=0..1
+        // where α = -2h, β = dy + h, γ = |dx|
+        double alpha = -2.0 * h;
+        double beta  =  dy + h;
+        double gamma =  System.Math.Abs(dx);
+
+        // Antiderivative:
+        // F(t) = [ ( (α t + β) * sqrt((α t + β)^2 + γ^2) ) + γ^2 * asinh( (α t + β)/γ ) ] / (2α)
+        // We’ll implement asinh(x) = ln( x + sqrt(x^2 + 1) ) to avoid Math.Asinh dependency.
+        static double Asinh(double x)
+        {
+            return System.Math.Log(x + System.Math.Sqrt(x * x + 1.0));
+        }
+
+        double F(double t)
+        {
+            double u = alpha * t + beta;
+            double root = System.Math.Sqrt(u * u + gamma * gamma);
+            double term1 = u * root;
+            // Guard γ ~ 0 to avoid division by zero (pure vertical case)
+            double term2;
+            if (gamma < 1e-12)
+            {
+                // limit γ->0 of γ^2 * asinh(u/γ) = 0, but the whole expression reduces to (u*|u|)/(2α)
+                // since sqrt(u^2 + γ^2) -> |u|
+                term2 = 0.0;
+            }
+            else
+            {
+                term2 = (gamma * gamma) * Asinh(u / gamma);
+            }
+            return (term1 + term2) / (2.0 * alpha);
+        }
+
+        double len = F(1.0) - F(0.0);
+        return (float)System.Math.Abs(len);
+    }
+
     public static Vector2 GetPredictedPosition(Vector2 previousPos, float sampledTime, Vector2 targetPos, float leadTime)
     {
         float dt = Mathf.Max(sampledTime, 0.0001f);

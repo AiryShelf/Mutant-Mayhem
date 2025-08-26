@@ -11,18 +11,14 @@ public class EnemyThrownObject : Bullet
         base.Awake();
         startScale = transform.localScale;
     }
+    
+    
 
     /// <summary>
     /// Throws this object along a smooth parabola from startPos to endPos.
-    /// Travel time is computed from distance / bulletSpeed, then marched
+    /// Travel time is computed from *arc length* / bulletSpeed, then marched
     /// in FixedUpdate-sized steps so we land exactly on endPos.
     /// </summary>
-    /// <param name="startPos">World start position</param>
-    /// <param name="endPos">World end position</param>
-    /// <param name="bulletSpeed">Units per second (must be > 0)</param>
-    /// <param name="curveHeight">Peak arc height added to the mid-point</param>
-    /// <param name="peakScaleMult">Scale multiplier at the arc peak (t≈0.5)</param>
-    /// <param name="maxRange">Maximum distance the object can be thrown</param>
     public IEnumerator ThrowTowardsTarget(
         Vector3 startPos,
         Vector3 endPos,
@@ -37,12 +33,27 @@ public class EnemyThrownObject : Bullet
             PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
             yield break;
         }
-        
-        float distance = Vector2.Distance(new Vector2(startPos.x, startPos.y),
-                                                 new Vector2(endPos.x, endPos.y));
-        distance = Mathf.Min(distance, maxRange);
 
-        float travelDuration = distance / Mathf.Max(0.0001f, bulletSpeed);
+        // CHANGE: optionally clamp endPos by maxRange along the start->end direction (previously only clamped duration).
+        // This keeps both the path and time consistent when a max range is enforced.
+        Vector2 start2 = new Vector2(startPos.x, startPos.y);
+        Vector2 end2   = new Vector2(endPos.x,  endPos.y);
+        Vector2 toEnd  = end2 - start2;
+        float straightDistSqr = toEnd.sqrMagnitude;
+        if (straightDistSqr > maxRange * maxRange)
+        {
+            float invMag = 1f / Mathf.Sqrt(straightDistSqr);
+            Vector2 dir  = toEnd * invMag;
+
+            end2   = start2 + dir * maxRange;
+            endPos = new Vector3(end2.x, end2.y, endPos.z);
+        }
+
+        // CHANGE: compute arc length of the *curved* path, not the straight chord
+        float arcLength = GameTools.EstimateParabolaArcLength(start2, end2, curveHeight);
+
+        // CHANGE: duration from arc length
+        float travelDuration = arcLength / Mathf.Max(0.0001f, bulletSpeed);
 
         float dt = Time.fixedDeltaTime;
         int steps = Mathf.Max(1, Mathf.CeilToInt(travelDuration / dt));
@@ -50,7 +61,7 @@ public class EnemyThrownObject : Bullet
 
         float z = transform.position.z;
 
-        // --- NEW: track previous position for rotation ---
+        // track previous position for rotation
         Vector3 prevPos = startPos;
         Vector2 speed = Vector2.one;
 
@@ -65,17 +76,17 @@ public class EnemyThrownObject : Bullet
             Vector3 currentPos = new Vector3(x, y, z);
             rb.MovePosition(currentPos);
 
-            // --- NEW: rotate to face velocity ---
+            // face velocity
             Vector3 dir = currentPos - prevPos;
-            if (dir.sqrMagnitude > 0.0001f) // avoid zero-length
+            if (dir.sqrMagnitude > 0.0001f)
                 transform.right = dir.normalized;
 
             speed = dir / dt;
             prevPos = currentPos;
 
-            // Scale size in bell curve
+            // bell-curve scale (unchanged)
             float bell = 4f * t * (1f - t);
-            float scale = Mathf.Lerp(1, peakScaleMult, bell);
+            float scale = Mathf.Lerp(1f, peakScaleMult, bell);
             transform.localScale = startScale * scale;
 
             yield return new WaitForFixedUpdate();

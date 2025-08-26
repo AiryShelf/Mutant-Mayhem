@@ -59,8 +59,10 @@ public class EnemyShootIntermittentThrow : EnemyShootSOBase
 
         enemyBase.targetPos = enemyBase.targetTransform != null ? (Vector2)enemyBase.targetTransform.position : enemyBase.targetPos;
 
+        float pathLength = GameTools.EstimateParabolaArcLength(enemyBase.transform.position, enemyBase.targetPos, curveHeight);
+        float leadTime = pathLength / bulletSpeed;
         Vector2 predictedPos = GameTools.GetPredictedPosition(previousPos,
-                                                enemyBase.targetPos - previousPos, 0.5f);
+                                                enemyBase.targetPos - previousPos, leadTime);
         Vector2 dir = (predictedPos - (Vector2)enemyBase.transform.position).normalized;
         enemyBase.ChangeFacingDirection(dir, rotateSpeedMultiplier);
 

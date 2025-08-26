@@ -33,11 +33,15 @@ public class Bullet : MonoBehaviour
     public float critDamageMult = 1;
 
     protected TileManager tileManager;
+    Collider2D myCollider;
 
     protected virtual void Awake()
     {
         hitLayersStart = hitLayers;
         tileManager = FindObjectOfType<TileManager>();
+        myCollider = GetComponent<Collider2D>();
+        if (myCollider == null)
+            Debug.LogError("No collider found on bullet prefab: " + gameObject.name);
     }
 
     protected virtual void OnDisable()
@@ -77,6 +81,14 @@ public class Bullet : MonoBehaviour
 
     protected virtual void CheckCollisions()
     {
+        // Check collider
+        Collider2D other = Physics2D.OverlapBox(myCollider.bounds.center, myCollider.bounds.size, transform.eulerAngles.z, hitLayers);
+        if (other)
+        {
+            Hit(other, transform.position);
+            return;
+        }
+
         // Check with raycast
         Vector2 raycastDir = rb.velocity;
         RaycastHit2D raycast = Physics2D.Raycast(transform.position, raycastDir,
@@ -151,7 +163,7 @@ public class Bullet : MonoBehaviour
                 HitDrone(droneHealth, hitDir, point, damageNew);
             }
             else
-                Debug.LogError("Bullet hit something with no Health: " + otherCollider.name);
+                Debug.LogError("Bullet hit something with no Health component: " + otherCollider.name);
         }
 
 
