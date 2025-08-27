@@ -95,23 +95,24 @@ public class DefaultGeneticOps
         float delta = PlanetManager.Instance.currentPlanet.mutationIntensity
                     + (WaveControllerRandom.Instance.currentWaveIndex
                     * PlanetManager.Instance.currentPlanet.addMutationIntensityPerWave);
-        Debug.Log("[GeneticOps] Mutate delta: " + delta);
+        float deltaDown = -delta / 2;
+        Debug.Log("[GeneticOps] Mutate scale delta up " + delta + ", delta down " + deltaDown);
 
         if (Random.value < mutationChance)
         {
-            genome.bodyGene.scale += Random.Range(-delta, delta);
+            genome.bodyGene.scale += Random.Range(deltaDown, delta);
             genome.RandomizePartColor(genome.bodyGene, genome.bodyGene.color, delta);
             Debug.Log("Mutated bodyScale: " + genome.bodyGene.scale);
         }
         if (Random.value < mutationChance)
         {
-            genome.headGene.scale += Random.Range(-delta, delta);
+            genome.headGene.scale += Random.Range(deltaDown, delta);
             genome.RandomizePartColor(genome.headGene, genome.headGene.color, delta);
             Debug.Log("Mutated headScale: " + genome.headGene.scale);
         }
         if (Random.value < mutationChance)
         {
-            genome.legGene.scale += Random.Range(-delta, delta);
+            genome.legGene.scale += Random.Range(deltaDown, delta);
             genome.RandomizePartColor(genome.legGene, genome.legGene.color, delta);
             Debug.Log("Mutated legScale: " + genome.legGene.scale);
         }

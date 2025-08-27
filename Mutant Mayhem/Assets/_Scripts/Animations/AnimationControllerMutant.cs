@@ -31,28 +31,34 @@ public class AnimationControllerMutant : AnimationControllerEnemy
         {
             float speed = myRb.velocity.magnitude;
 
-            if (speed > baseSpeed * switchToRunBuffer)
+            if (GameTools.AnimatorHasParameter(leftLegAnimator, "isRunning"))
             {
-                leftLegAnimator.SetBool("isRunning", true);
-                rightLegAnimator.SetBool("isRunning", true);
-            }
-            else
-            {
-                leftLegAnimator.SetBool("isRunning", false);
-                rightLegAnimator.SetBool("isRunning", false);
+                if (speed > baseSpeed * switchToRunBuffer)
+                {
+                    leftLegAnimator.SetBool("isRunning", true);
+                    rightLegAnimator.SetBool("isRunning", true);
+                }
+                else
+                {
+                    leftLegAnimator.SetBool("isRunning", false);
+                    rightLegAnimator.SetBool("isRunning", false);
+                }
             }
 
-            if (leftLegAnimator.GetBool("isSitting") || leftLegAnimator.GetBool("isJumping"))
+            if (GameTools.AnimatorHasParameter(leftLegAnimator, "isJumping"))
             {
-                leftLegAnimator.speed = 1;
-                rightLegAnimator.speed = 1;
-            }
-            else
-            {
-                float animSpeed = speed * animSpeedFactor;
-                animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
-                leftLegAnimator.speed = animSpeed;
-                rightLegAnimator.speed = animSpeed;
+                if (leftLegAnimator.GetBool("isSitting") || leftLegAnimator.GetBool("isJumping"))
+                {
+                    leftLegAnimator.speed = 1;
+                    rightLegAnimator.speed = 1;
+                }
+                else
+                {
+                    float animSpeed = speed * animSpeedFactor;
+                    animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
+                    leftLegAnimator.speed = animSpeed;
+                    rightLegAnimator.speed = animSpeed;
+                }
             }
         }
     }

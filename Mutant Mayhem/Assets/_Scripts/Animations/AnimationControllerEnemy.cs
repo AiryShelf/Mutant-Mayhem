@@ -39,24 +39,30 @@ public class AnimationControllerEnemy : MonoBehaviour
         {
             float speed = myRb.velocity.magnitude;
 
-            if (speed > baseSpeed * switchToRunBuffer)
+            if (GameTools.AnimatorHasParameter(myAnimator, "isRunning"))
             {
-                myAnimator.SetBool("isRunning", true);
-            }
-            else
-            {
-                myAnimator.SetBool("isRunning", false);
+                if (speed > baseSpeed * switchToRunBuffer)
+                {
+                    myAnimator.SetBool("isRunning", true);
+                }
+                else
+                {
+                    myAnimator.SetBool("isRunning", false);
+                }
             }
 
-            if (myAnimator.GetBool("isSitting") || myAnimator.GetBool("isJumping"))
+            if (GameTools.AnimatorHasParameter(myAnimator, "isJumping"))
             {
-                myAnimator.speed = 1;
-            }
-            else
-            {
-                float animSpeed = speed * animSpeedFactor;
-                animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
-                myAnimator.speed = animSpeed;
+                if (myAnimator.GetBool("isSitting") || myAnimator.GetBool("isJumping"))
+                {
+                    myAnimator.speed = 1;
+                }
+                else
+                {
+                    float animSpeed = speed * animSpeedFactor;
+                    animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
+                    myAnimator.speed = animSpeed;
+                }
             }
 
         }

@@ -53,5 +53,5 @@ public class PlanetSO : ScriptableObject
     public float mutationIntensity = 0.1f; // Range of randomization for scale
     public float addMutationIntensityPerWave = 0.01f;
     public float mutationIntensityMax = 0.5f;
-    public float totalSpawnFactor = 0.5f;
+    public float totalSpawnFactor = 0.5f; // Mult for number of genetic individuals
 }

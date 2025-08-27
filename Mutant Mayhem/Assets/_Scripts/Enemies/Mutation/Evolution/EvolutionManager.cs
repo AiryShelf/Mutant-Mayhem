@@ -131,7 +131,7 @@ public class EvolutionManager : MonoBehaviour
 
         for (int i = 0; i < totalToSpawn; i++)
         {
-            int index = (_lastSpawnCycleIndex + i) % individuals.Count;
+            int index = (_lastSpawnCycleIndex + i + 1) % individuals.Count;
 
             var individual = individuals[index];
             var enemy = PoolManager.Instance.GetFromPool("Mutant");
