@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0c7af58d229964785b10e9049c42b768
+guid: 1406eb7e77d4b45099ce57d5fffc8bc8
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -106,68 +106,81 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dog Head Corpses_0
+      name: Dog Leg Left Corpses_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 19
-        height: 22
+        width: 40
+        height: 15
       alignment: 9
-      pivot: {x: 0.3157895, y: 0.5}
+      pivot: {x: 0.45, y: 0.3333333}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a4f945b1a5e024600b5a3f7308ede91a
-      internalID: -1576369688
+      spriteID: 7d707844c52264d488247b7d39f5c76f
+      internalID: 1108041972
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog Head Corpses_1
+      name: Dog Leg Left Corpses_1
       rect:
         serializedVersion: 2
-        x: 19
+        x: 40
         y: 0
-        width: 19
-        height: 22
+        width: 40
+        height: 15
       alignment: 9
-      pivot: {x: 0.3157895, y: 0.5}
+      pivot: {x: 0.45, y: 0.3333333}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46b1aaab876e043c0b879507a1d45f57
-      internalID: -508697018
+      spriteID: 0b4d19fb9c5ca4789b7ac9b41938473f
+      internalID: 1391180989
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog Head Corpses_2
+      name: Dog Leg Left Corpses_2
       rect:
         serializedVersion: 2
-        x: 38
+        x: 80
         y: 0
-        width: 19
-        height: 22
+        width: 40
+        height: 15
       alignment: 9
-      pivot: {x: 0.3157895, y: 0.5}
+      pivot: {x: 0.45, y: 0.3333333}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cbb5e45353d7f404c8d50ed401458d87
-      internalID: 741272261
+      spriteID: c844456cabd2b47d8af3da7799f9d84f
+      internalID: -726276457
       vertices: []
       indices: 
       edges: []
@@ -183,9 +196,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dog Head Corpses_0: -1576369688
-      Dog Head Corpses_1: -508697018
-      Dog Head Corpses_2: 741272261
+      Dog Leg Left Corpses_0: 1108041972
+      Dog Leg Left Corpses_1: 1391180989
+      Dog Leg Left Corpses_2: -726276457
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

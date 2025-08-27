@@ -38,7 +38,8 @@ public class EnemyMutant : EnemyBase
         AssignIndividual(ind);
 
         LegGeneSO legGene = ind.genome.legGene;
-        ApplyBehaviourSet(legGene.idleSOBase, legGene.chaseSOBase, legGene.shootSOBase);
+        HeadGeneSO headGene = ind.genome.headGene;
+        ApplyBehaviourSet(legGene.idleSOBase, legGene.chaseSOBase, headGene.shootSOBase);
         RestartStateMachine();
 
         ApplyGenomeToEnemyBase();

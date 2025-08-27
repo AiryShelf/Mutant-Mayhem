@@ -61,7 +61,6 @@ MonoBehaviour:
   targetPos: {x: 0, y: 0}
   moveSpeedBaseStart: 5
   moveSpeedBase: 5
-  rotateSpeedBaseStart: 3
   rotateSpeedBase: 3
   startMass: 0
   isMutant: 0
@@ -103,7 +102,14 @@ MonoBehaviour:
   textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   hasDied: 0
-  corpsePoolName: Dog1_Corpse
+  corpsePoolName: Basic_Corpse
+  corpseSpritesForEnemy:
+  - {fileID: -76738502, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
+  - {fileID: 1391046010, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
+  - {fileID: 337060656, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
+  - {fileID: -1386016734, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
+  - {fileID: -541390898, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
+  - {fileID: 2124268010, guid: 34564ee4d10749f418ea6e54c8f75ad5, type: 3}
   healthToCreditsDivisor: 1.5
 --- !u!114 &8299610102731463758
 MonoBehaviour:

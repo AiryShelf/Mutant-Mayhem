@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyCorpseController : CorpseController
+public class BasicCorpseController : CorpseController
 {
-    [Header("Enemy Corpse Settings")]
-    [SerializeField] Sprite[] corpseSprites;
+    [Header("Set at runtime by EnemyHealth or DroneHealth")]
+    public Sprite[] corpseSprites;
 
     SpriteRenderer mySr;
 
@@ -15,10 +15,10 @@ public class EnemyCorpseController : CorpseController
         mySr = GetComponent<SpriteRenderer>();
     }
 
-    void OnEnable()
+    public void SetSpriteAndColor(Color color)
     {
         // Select random corpseSprite
-        int randIndex = Random.Range(0, corpseSprites.Length);
+        int randIndex = Random.Range(0, corpseSprites.Length - 1);
         mySr.sprite = corpseSprites[randIndex];
 
         // Random flip 
@@ -29,7 +29,6 @@ public class EnemyCorpseController : CorpseController
                                     mySr.transform.localScale.z);
 
         // Reduce alpha and darken
-        Color color = mySr.color;
         Color.RGBToHSV(color, out float h, out float s, out float v);
         v *= 0.9f;
         Color newColor = Color.HSVToRGB(h, s, v);

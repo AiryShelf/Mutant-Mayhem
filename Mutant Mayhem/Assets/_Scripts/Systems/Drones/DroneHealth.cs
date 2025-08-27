@@ -5,6 +5,7 @@ using UnityEngine;
 public class DroneHealth : Health
 {
     [SerializeField] string corpsePoolName;
+    public Sprite[] corpseSpritesForDrone;
     Drone drone;
 
     protected override void Awake()
@@ -31,7 +32,7 @@ public class DroneHealth : Health
 
     public override void Die()
     {
-        SetCorpse(corpsePoolName);
+        SetBasicCorpse(corpsePoolName, drone.sr.color);
         hasDied = true;
         drone.Die();
     }

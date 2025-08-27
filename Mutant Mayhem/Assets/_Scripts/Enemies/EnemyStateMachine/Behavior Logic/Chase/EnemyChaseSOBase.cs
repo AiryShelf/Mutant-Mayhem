@@ -7,11 +7,8 @@ public class EnemyChaseSOBase : ScriptableObject
     protected EnemyBase enemyBase;
     protected Transform transform;
     protected GameObject gameObject;
-    public bool canExit = true;         // Used to lock in Chase state until actions complete, ie. jumping
-
-    [SerializeField] protected float distanceToStartShooting = 0f;
-    [Range(0, 0.1f)]
-    [SerializeField] protected float chanceToStartShootingPerFrame = 0.01f;
+    public bool canExit = true;             // Used to lock in Chase state until actions complete, ie. jumping
+    float distanceToStartShooting = 0f;     // Set by EnemyShootSOBase
 
     [Header("Chase Settings")]
     [SerializeField] protected float timeToStopChase = 3;           // Time to stop chasing after losing the target
@@ -32,7 +29,7 @@ public class EnemyChaseSOBase : ScriptableObject
 
     [Header("Jump Settings")] // Triggered by child classes
     [Range(0, .1f)]
-    [SerializeField] protected float jumpChancePerFixedFrame = 0.001f;
+    [SerializeField] protected float jumpChancePerFixedFrame = 0.01f;
     [SerializeField] float jumpStartDelay = 0.75f;      // Time to track target before Jump
     [SerializeField] float freezeBeforeJump = 0.2f;     // Time to freeze before jump
     [SerializeField] float distToNotJump = 1f;
@@ -58,6 +55,7 @@ public class EnemyChaseSOBase : ScriptableObject
     // Runtime state during jump
     protected Vector2 airVel;     // velocity of the additive offset (m/s)
     protected Vector2 airOffset;  // integrated offset added to the jump parabola
+    EnemyShootSOBase enemyShootSOBaseInstance;
 
     #region State Machine
 
@@ -70,6 +68,7 @@ public class EnemyChaseSOBase : ScriptableObject
 
     public virtual void DoEnterLogic()
     {
+        enemyShootSOBaseInstance = enemyBase.EnemyShootSOBaseInstance;
         isJumping = false;
         jumpCoroutineStarted = false;
         canExit = true;
@@ -145,7 +144,7 @@ public class EnemyChaseSOBase : ScriptableObject
         float squaredDist = (enemyBase.targetPos - (Vector2)transform.position).sqrMagnitude;
         if (squaredDist < distanceToStartShooting * distanceToStartShooting && canExit)
         {
-            if (Random.value < chanceToStartShootingPerFrame)
+            if (Random.value < enemyShootSOBaseInstance.chanceToStartShootingPerFrame)
             {
                 enemyBase.StateMachine.ChangeState(enemyBase.ShootState);
             }

@@ -35,6 +35,10 @@ public class MutantCorpseController : CorpseController
         rightLegSR.color = startColor;
     }
 
+    /// <summary>
+    /// Applies the given genome to the corpse prefab
+    /// </summary>
+    /// <param name="g"></param>
     public void ApplyGenome(Genome g)
     {
         // Set anchors

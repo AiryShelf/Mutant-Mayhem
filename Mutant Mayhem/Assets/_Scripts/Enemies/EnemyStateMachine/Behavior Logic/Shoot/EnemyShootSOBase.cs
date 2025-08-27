@@ -5,6 +5,8 @@ using UnityEngine;
 public class EnemyShootSOBase : ScriptableObject
 {
     public float distanceToStartShooting = 6f;
+    [Range(0, 0.1f)]
+    public float chanceToStartShootingPerFrame = 0.01f;
     [SerializeField] protected float rotateSpeedMultiplier = 1.5f;
     [SerializeField] protected float minTimeBeforeExit = 2f;
     protected EnemyBase enemyBase;

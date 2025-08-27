@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class EnemyHealth : Health
 {
-    [SerializeField] string corpsePoolName;
+    [SerializeField] string corpsePoolName; // Enemy or Mutant corpse
+    public Sprite[] corpseSpritesForEnemy; // Not for mutants
     [SerializeField] protected float healthToCreditsDivisor = 1;
-    EnemyBase enemyBase;
 
+    EnemyBase enemyBase;
     TileManager tileManager;
 
     protected override void Awake()
@@ -56,7 +57,12 @@ public class EnemyHealth : Health
         if (!string.IsNullOrEmpty(corpsePoolName))
         {
             hasDied = true;
-            SetCorpse(corpsePoolName);
+            if (enemyBase is EnemyMutant)
+                SetMutantCorpse(corpsePoolName);
+            else if (enemyBase is EnemyBase)
+                SetBasicCorpse(corpsePoolName, enemyBase.sr.color);
+            else
+                Debug.LogError("Tried to set enemy corpse but enemyBase is not of type EnemyMutant or EnemyBase.");
         }
 
         // Increment Drop Counter

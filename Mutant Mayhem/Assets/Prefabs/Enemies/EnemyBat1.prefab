@@ -60,7 +60,6 @@ MonoBehaviour:
   targetPos: {x: 0, y: 0}
   moveSpeedBaseStart: 5
   moveSpeedBase: 5
-  rotateSpeedBaseStart: 2
   rotateSpeedBase: 2
   startMass: 0
   isMutant: 0
@@ -102,7 +101,13 @@ MonoBehaviour:
   textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   hasDied: 0
-  corpsePoolName: Bat1_Corpse
+  corpsePoolName: Basic_Corpse
+  corpseSpritesForEnemy:
+  - {fileID: -1713076737, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: 1912503813, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: -2005939955, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: -1377585623, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  - {fileID: -1832778814, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
   healthToCreditsDivisor: 0.5
 --- !u!114 &8299610102731463758
 MonoBehaviour:

@@ -231,7 +231,7 @@ public class Bullet : MonoBehaviour
         //ParticleManager.Instance.PlayBulletBlood(point, hitDir);
         // Could add freeze effect
 
-        if (gameObject.CompareTag("PlayerProjectiles"))
+        if (gameObject.layer == LayerMask.NameToLayer("PlayerProjectiles"))
             damageNew *= 0.5f;
         float damageScale = damageNew / damage;
         health.ModifyHealth(-damageNew, damageScale, hitDir, gameObject);

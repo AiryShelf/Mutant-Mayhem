@@ -7,7 +7,6 @@ public class CorpseController : MonoBehaviour
     [SerializeField] protected float timeToStartFade;
     [SerializeField] protected float timeForFade;
 
-    [Header("Set During Runtime by Health")]
     public string corpsePoolName = "";
 
     protected Color startColor;

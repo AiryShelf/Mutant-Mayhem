@@ -12,7 +12,6 @@ public class LegGeneSO : GeneSOBase
     [Header("Behavior Settings")]
     public EnemyIdleSOBase idleSOBase;
     public EnemyChaseSOBase chaseSOBase;
-    public EnemyShootSOBase shootSOBase;
     public bool isFlying = false;
 
     [Header("Movement Settings")]

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cf84633e8db8f4388bdbb64195dcc2ab
+guid: 0fe6ee613649a9f4a96f92e0016d63e5
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -94,7 +94,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: iPhone
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -110,64 +110,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dog Leg Right Corpses_0
+      name: Frog Corpses_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 40
-        height: 15
+        height: 40
       alignment: 9
-      pivot: {x: 0.45, y: 0.6666667}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a3d3b8c630d024b82a1f8eb03ef47406
-      internalID: -767116560
+      spriteID: 9b4e7ed7cfa3b9f4a91eaa3ff317169d
+      internalID: -1503443092
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog Leg Right Corpses_1
+      name: Frog Corpses_1
       rect:
         serializedVersion: 2
         x: 40
         y: 0
         width: 40
-        height: 15
+        height: 40
       alignment: 9
-      pivot: {x: 0.45, y: 0.6666667}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6945f958ccc7d4c32b8b46fad1233773
-      internalID: 381289637
+      spriteID: a4604b7a2f60ed845891ed0a82b6a626
+      internalID: 1732256729
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog Leg Right Corpses_2
+      name: Frog Corpses_2
       rect:
         serializedVersion: 2
         x: 80
         y: 0
         width: 40
-        height: 15
+        height: 40
       alignment: 9
-      pivot: {x: 0.45, y: 0.6666667}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3438bb6ae34c1445783e2f0496806a4b
-      internalID: 664062067
+      spriteID: 2b1add14566384842a0bef1479512766
+      internalID: 741979802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Frog Corpses_3
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 0
+        width: 40
+        height: 40
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41095a1fe0ccbee4aaac7da2206dc41a
+      internalID: -1858372598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Frog Corpses_4
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 40
+        height: 40
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5e7b25e14ee8a243bf946bd79d1ba02
+      internalID: -807190177
       vertices: []
       indices: 
       edges: []
@@ -183,9 +225,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dog Leg Right Corpses_0: -767116560
-      Dog Leg Right Corpses_1: 381289637
-      Dog Leg Right Corpses_2: 664062067
+      Frog Corpses_0: -1503443092
+      Frog Corpses_1: 1732256729
+      Frog Corpses_2: 741979802
+      Frog Corpses_3: -1858372598
+      Frog Corpses_4: -807190177
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

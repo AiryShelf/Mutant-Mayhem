@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable, ITriggerCheckable
@@ -20,7 +21,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public float moveSpeedBase = 1f;
     float slowFactor = 1;
     public float rotateSpeedBase = 3f;
-    public float startMass; // For debug, don't set
+    /// <summary>
+    /// For debug, don't set in inspector
+    /// </summary>
+    public float startMass;
 
     [Header("Randomize")]
     public bool isMutant;

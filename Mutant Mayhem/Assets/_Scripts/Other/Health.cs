@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour
-{   
+{
     public float startMaxHealth;
     [SerializeField] protected float maxHealth = 100f;
     public float deathTorque = 20;
     public SoundSO painSound;
-    [SerializeField] float painSoundCooldown= 0.3f;
+    [SerializeField] float painSoundCooldown = 0.3f;
     [SerializeField] protected Color textFlyHealthGainColor;
     [SerializeField] protected Color textFlyHealthLossColor;
     [SerializeField] protected float textFlyAlphaMax = 0.8f;
@@ -20,7 +20,7 @@ public class Health : MonoBehaviour
     public bool hasDied;
 
     protected virtual void Awake()
-    {   
+    {
         myRb = GetComponent<Rigidbody2D>();
 
         maxHealth = startMaxHealth;
@@ -59,7 +59,7 @@ public class Health : MonoBehaviour
             health = maxHealth;
             healthChange = health - healthStart;
         }
-        
+
         if (healthChange < 0)
         {
             SendTextFly(textDir, textFlyHealthLossColor, textPulseScaleMax);
@@ -97,38 +97,64 @@ public class Health : MonoBehaviour
         textFly.transform.position = transform.position;
 
         float angle = Random.Range(-30f, 30f) * Mathf.Deg2Rad;
-            Vector2 dir = new Vector2(
-                textDir.x * Mathf.Cos(angle) - textDir.y * Mathf.Sin(angle),
-                textDir.x * Mathf.Sin(angle) + textDir.y * Mathf.Cos(angle)
-            ).normalized;
+        Vector2 dir = new Vector2(
+            textDir.x * Mathf.Cos(angle) - textDir.y * Mathf.Sin(angle),
+            textDir.x * Mathf.Sin(angle) + textDir.y * Mathf.Cos(angle)
+        ).normalized;
 
-            textFly.Initialize(Mathf.Abs(healthChange).ToString("#0"), color, 
-                               textFlyAlphaMax, dir, true, scaleMax);
+        textFly.Initialize(Mathf.Abs(healthChange).ToString("#0"), color,
+                           textFlyAlphaMax, dir, true, scaleMax);
     }
 
-    protected void SetCorpse(string poolName)
+    #region Corpse and Die
+
+    protected void SetBasicCorpse(string poolName, Color color)
     {
-        // Pass scale and color
+        // Pass scale and position
+        GameObject corpseObj = PoolManager.Instance.GetFromPool(poolName);
+        corpseObj.transform.position = transform.position;
+        corpseObj.transform.rotation = transform.rotation;
+        corpseObj.transform.localScale = transform.localScale * 0.9f; // Scale down a bit
+
+        var corpse = corpseObj.GetComponent<CorpseController>();
+        if (corpse != null)
+        {
+            // Pass list of possible corpse sprites.  This is for enemies, drones, and other simple corpses
+            if (corpse is BasicCorpseController basicCorpse)
+            {
+                if (this is EnemyHealth enemyHealth)
+                    basicCorpse.corpseSprites = enemyHealth.corpseSpritesForEnemy;
+                else if (this is DroneHealth droneHealth)
+                    basicCorpse.corpseSprites = droneHealth.corpseSpritesForDrone;
+                else
+                    Debug.LogError("Acceptable Health component not found on object, cannot set corpse sprites.");
+
+                basicCorpse.SetSpriteAndColor(color);
+            }
+
+            corpse.corpsePoolName = poolName;
+        }
+    }
+
+    protected void SetMutantCorpse(string poolName)
+    {
+        // Pass scale and position
         GameObject corpse = PoolManager.Instance.GetFromPool(poolName);
         corpse.transform.position = transform.position;
         corpse.transform.rotation = transform.rotation;
         corpse.transform.localScale = transform.localScale * 0.9f; // Scale down a bit
-        
-        var corpseController = corpse.GetComponent<CorpseController>();
-        if (corpseController != null)
-        {
-            if (corpseController is EnemyCorpseController enemyCorpse)
-            {
-                corpse.GetComponentInChildren<SpriteRenderer>().color = GetComponentInChildren<SpriteRenderer>().color;
-            }
-            else if (corpseController is MutantCorpseController mutationCorpse)
-            {
-                mutationCorpse.ApplyGenome(GetComponent<EnemyMutant>().individual.genome);
-            }
 
-            corpseController.corpsePoolName = poolName;
+        var mutantCorpse = corpse.GetComponent<MutantCorpseController>();
+        if (mutantCorpse != null)
+        {
+            // Apply genome to corpse
+            mutantCorpse.ApplyGenome(GetComponent<EnemyMutant>().individual.genome);
+
+            mutantCorpse.corpsePoolName = poolName;
         }
     }
 
     public virtual void Die() { }
+    
+    #endregion
 }

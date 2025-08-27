@@ -7,6 +7,7 @@ public class HeadGeneSO : GeneSOBase
     public Sprite sprite;
     public List<Sprite> corpseSprites;
     public List<Vector2> headColliderPoints;
+    public EnemyShootSOBase shootSOBase;
 
     [Header("Melee Settings")]
     public Vector2 meleeColliderOffset = new Vector2(0, 0);

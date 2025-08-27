@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f2e353841db3a4035a46910198cf4185
+guid: 2a04517e42ea74d9d8cf8e24327e06e3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -106,68 +106,81 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Crab1 Legs Right Corpses_0
+      name: Crab2 Body Corpses_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 29
-        height: 18
+        width: 24
+        height: 28
       alignment: 9
-      pivot: {x: 0.4827586, y: 0.7222222}
+      pivot: {x: 0.722222, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8c6f387404ea444679804c25be5ad452
-      internalID: 116276536
+      spriteID: ae3549a51a7d0487da2d93667df72a01
+      internalID: -1518484971
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crab1 Legs Right Corpses_1
+      name: Crab2 Body Corpses_1
       rect:
         serializedVersion: 2
-        x: 29
+        x: 24
         y: 0
-        width: 29
-        height: 18
+        width: 24
+        height: 28
       alignment: 9
-      pivot: {x: 0.4827586, y: 0.7222222}
+      pivot: {x: 0.722222, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1128074d143f14aae8086f087435ca25
-      internalID: 1200111421
+      spriteID: 1ec209ade856b493f95b842195eb6d59
+      internalID: 1391132257
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crab1 Legs Right Corpses_2
+      name: Crab2 Body Corpses_2
       rect:
         serializedVersion: 2
-        x: 58
+        x: 48
         y: 0
-        width: 29
-        height: 18
+        width: 24
+        height: 28
       alignment: 9
-      pivot: {x: 0.4827586, y: 0.7222222}
+      pivot: {x: 0.722222, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5a0854915a39e475090afc5a02f3b862
-      internalID: 696442292
+      spriteID: 4ee27819fa7e9424b927f8ada069796f
+      internalID: -1412255586
       vertices: []
       indices: 
       edges: []
@@ -183,9 +196,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Crab1 Legs Right Corpses_0: 116276536
-      Crab1 Legs Right Corpses_1: 1200111421
-      Crab1 Legs Right Corpses_2: 696442292
+      Crab2 Body Corpses_0: -1518484971
+      Crab2 Body Corpses_1: 1391132257
+      Crab2 Body Corpses_2: -1412255586
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

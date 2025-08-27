@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3aea58f3f24bd415d8bd92fa20b6ec57
+guid: 0c7af58d229964785b10e9049c42b768
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -106,68 +106,81 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bat Body Corpses_0
+      name: Dog Head Corpses_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 28
+        width: 19
         height: 22
       alignment: 9
-      pivot: {x: 0.75, y: 0.5}
+      pivot: {x: 0.3157895, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 723605343f9be4d7ab62033b626656c2
-      internalID: -1500553460
+      spriteID: a4f945b1a5e024600b5a3f7308ede91a
+      internalID: -1576369688
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bat Body Corpses_1
+      name: Dog Head Corpses_1
       rect:
         serializedVersion: 2
-        x: 28
+        x: 19
         y: 0
-        width: 28
+        width: 19
         height: 22
       alignment: 9
-      pivot: {x: 0.75, y: 0.5}
+      pivot: {x: 0.3157895, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 83d87345881cb40e3a12ccf232a9e83d
-      internalID: -500128076
+      spriteID: 46b1aaab876e043c0b879507a1d45f57
+      internalID: -508697018
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bat Body Corpses_2
+      name: Dog Head Corpses_2
       rect:
         serializedVersion: 2
-        x: 56
+        x: 38
         y: 0
-        width: 28
+        width: 19
         height: 22
       alignment: 9
-      pivot: {x: 0.75, y: 0.5}
+      pivot: {x: 0.3157895, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7967ea3604ac24e2faf15efc2d1a6ead
-      internalID: -1057357166
+      spriteID: cbb5e45353d7f404c8d50ed401458d87
+      internalID: 741272261
       vertices: []
       indices: 
       edges: []
@@ -183,9 +196,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Bat Body Corpses_0: -1500553460
-      Bat Body Corpses_1: -500128076
-      Bat Body Corpses_2: -1057357166
+      Dog Head Corpses_0: -1576369688
+      Dog Head Corpses_1: -508697018
+      Dog Head Corpses_2: 741272261
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

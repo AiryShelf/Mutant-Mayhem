@@ -59,8 +59,8 @@ MonoBehaviour:
   sr: {fileID: 1437740919546126437}
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
-  moveSpeedBaseStart: 1
-  moveSpeedBase: 1
+  moveSpeedBaseStart: 1.1
+  moveSpeedBase: 1.1
   rotateSpeedBase: 2
   startMass: 0
   isMutant: 0
@@ -102,7 +102,13 @@ MonoBehaviour:
   textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   hasDied: 0
-  corpsePoolName: Crab1_Corpse
+  corpsePoolName: Basic_Corpse
+  corpseSpritesForEnemy:
+  - {fileID: -1503443092, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
+  - {fileID: 1732256729, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
+  - {fileID: 741979802, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
+  - {fileID: -1858372598, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
+  - {fileID: -807190177, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
   healthToCreditsDivisor: 1.3
 --- !u!114 &8299610102731463758
 MonoBehaviour:
