@@ -116,21 +116,17 @@ public class Health : MonoBehaviour
         corpseObj.transform.rotation = transform.rotation;
         corpseObj.transform.localScale = transform.localScale * 0.9f; // Scale down a bit
 
-        var corpse = corpseObj.GetComponent<CorpseController>();
+        var corpse = corpseObj.GetComponent<BasicCorpseController>();
         if (corpse != null)
         {
-            // Pass list of possible corpse sprites.  This is for enemies, drones, and other simple corpses
-            if (corpse is BasicCorpseController basicCorpse)
-            {
-                if (this is EnemyHealth enemyHealth)
-                    basicCorpse.corpseSprites = enemyHealth.corpseSpritesForEnemy;
-                else if (this is DroneHealth droneHealth)
-                    basicCorpse.corpseSprites = droneHealth.corpseSpritesForDrone;
-                else
-                    Debug.LogError("Acceptable Health component not found on object, cannot set corpse sprites.");
+            if (this is EnemyHealth enemyHealth)
+                corpse.corpseSprites = enemyHealth.corpseSpritesForEnemy;
+            else if (this is DroneHealth droneHealth)
+                corpse.corpseSprites = droneHealth.corpseSpritesForDrone;
+            else
+                Debug.LogError("Acceptable Health component not found on object, cannot set corpse sprites.");
 
-                basicCorpse.SetSpriteAndColor(color);
-            }
+            corpse.SetSpriteAndColor(color);
 
             corpse.corpsePoolName = poolName;
         }

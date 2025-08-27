@@ -9,12 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8337055654658417259}
-  - component: {fileID: 9165742766147322123}
-  - component: {fileID: -3464740676881263840}
-  - component: {fileID: -1088399054778233193}
+  - component: {fileID: -5395847920468814160}
   - component: {fileID: 2148359155153488195}
   m_Layer: 11
-  m_Name: EnemyBat1Corpse
+  m_Name: BasicCorpse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,7 +33,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9165742766147322123
+--- !u!114 &-5395847920468814160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,73 +49,11 @@ MonoBehaviour:
   timeForFade: 20
   corpsePoolName: 
   corpseSprites:
-  - {fileID: -1713076737, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
-  - {fileID: 1912503813, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
-  - {fileID: -2005939955, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
-  - {fileID: -1377585623, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
-  - {fileID: -1832778814, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
---- !u!50 &-3464740676881263840
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3246120828009000940}
-  m_BodyType: 0
-  m_Simulated: 0
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.5
-  m_LinearDrag: 6
-  m_AngularDrag: 10
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!70 &-1088399054778233193
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3246120828009000940}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.08, y: 0.08}
-  m_Direction: 0
+  - {fileID: 1856040296, guid: e9e36b829459d484996eba83a503d069, type: 3}
+  - {fileID: -780611651, guid: e9e36b829459d484996eba83a503d069, type: 3}
+  - {fileID: 357672567, guid: e9e36b829459d484996eba83a503d069, type: 3}
+  - {fileID: -1898317301, guid: e9e36b829459d484996eba83a503d069, type: 3}
+  - {fileID: 585865615, guid: e9e36b829459d484996eba83a503d069, type: 3}
 --- !u!212 &2148359155153488195
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -159,7 +95,7 @@ SpriteRenderer:
   m_SortingLayerID: -1063702457
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1713076737, guid: 8bde1f8e2f2e6a34099f5c5a7df26dcf, type: 3}
+  m_Sprite: {fileID: 1856040296, guid: e9e36b829459d484996eba83a503d069, type: 3}
   m_Color: {r: 0.6392157, g: 0.6384834, b: 0.6384834, a: 0.8}
   m_FlipX: 0
   m_FlipY: 0

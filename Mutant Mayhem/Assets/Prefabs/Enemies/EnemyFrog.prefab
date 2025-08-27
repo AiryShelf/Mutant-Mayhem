@@ -71,7 +71,7 @@ MonoBehaviour:
   gaussMeanSize: 1.3
   gaussStdDev: 0.2
   <health>k__BackingField: {fileID: 7349244352346262760}
-  <unfreezeTime>k__BackingField: 0.5
+  <unfreezeTime>k__BackingField: 0.3
   CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   EnemyChaseSOBase: {fileID: 11400000, guid: fa4bbe85f7f26934690e2713d5178ce1, type: 2}
@@ -93,8 +93,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00796190f03ebc5459f70101a21ce7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMaxHealth: 30
-  maxHealth: 30
+  startMaxHealth: 60
+  maxHealth: 60
   deathTorque: 20
   painSound: {fileID: 11400000, guid: d9275a96bf51bad45881b1b0963795ab, type: 2}
   painSoundCooldown: 0.3
@@ -109,7 +109,7 @@ MonoBehaviour:
   - {fileID: 741979802, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
   - {fileID: -1858372598, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
   - {fileID: -807190177, guid: 0fe6ee613649a9f4a96f92e0016d63e5, type: 3}
-  healthToCreditsDivisor: 1.3
+  healthToCreditsDivisor: 1.5
 --- !u!114 &8299610102731463758
 MonoBehaviour:
   m_ObjectHideFlags: 0

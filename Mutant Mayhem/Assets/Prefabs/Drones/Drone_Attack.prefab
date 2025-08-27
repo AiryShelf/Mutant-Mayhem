@@ -104,7 +104,11 @@ MonoBehaviour:
   textFlyHealthLossColor: {r: 1, g: 0, b: 1, a: 0.5019608}
   textFlyAlphaMax: 0.8
   hasDied: 0
-  corpsePoolName: Drone_Attack_Corpse
+  corpsePoolName: Basic_Corpse
+  corpseSpritesForDrone:
+  - {fileID: -1858685964, guid: 885ece188bf2e44ab8cdbbdb07a1f240, type: 3}
+  - {fileID: -566171462, guid: 885ece188bf2e44ab8cdbbdb07a1f240, type: 3}
+  - {fileID: 1828267188, guid: 885ece188bf2e44ab8cdbbdb07a1f240, type: 3}
 --- !u!114 &-7526314183592093641
 MonoBehaviour:
   m_ObjectHideFlags: 0
