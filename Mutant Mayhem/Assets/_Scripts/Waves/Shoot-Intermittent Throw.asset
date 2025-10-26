@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Shoot-Intermittent Throw
   m_EditorClassIdentifier: 
   distanceToStartShooting: 6
-  chanceToStartShootingPerFrame: 0.01
+  chanceToStartShootingPerFrame: 0.0101
   rotateSpeedMultiplier: 1.5
-  minTimeBeforeExit: 1.5
-  thrownObjectPoolName: Frog_Spit
+  minTimeBeforeExit: 2
+  thrownObjectPoolName: 
   bulletSpeed: 10
-  curveHeight: 4
+  curveHeight: 2
   peakScale: 1.2
   maxRange: 10
-  timeBetweenShotsMin: 0.3
-  timeBetweenShotsMax: 0.75
+  timeBetweenShotsMin: 1
+  timeBetweenShotsMax: 2
   timeTillExitMin: 3
   timeTillExitMax: 5

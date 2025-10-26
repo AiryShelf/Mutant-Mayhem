@@ -8,6 +8,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -204,38 +205,47 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 1646522265
+    uuid:
+      value0: 3855553853
+      value1: 0
+      value2: 0
+      value3: 0
+    guid: -439413443
     name: RuleWall_Bottom_SingleEdge 1-sheet
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: RuleWall_Bottom_SingleEdge 1-sheet_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 0
         width: 32
         height: 32
       spriteId: 3403a1f91a54c47baae4fc6753423521
-    - name: RuleWall_Bottom_SingleEdge 1-sheet_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 0
         width: 32
         height: 32
       spriteId: 393eb2add1ae44cf487e58ef476f3a95
-    - name: RuleWall_Bottom_SingleEdge 1-sheet_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 0
         width: 32
         height: 32
       spriteId: 6747dfae119044dc6a0fb302e1998e83
-    - name: RuleWall_Bottom_SingleEdge 1-sheet_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 0
@@ -297,3 +307,4 @@ ScriptedImporter:
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 32, y: 32}
+  previousTextureSize: {x: 128, y: 128}
