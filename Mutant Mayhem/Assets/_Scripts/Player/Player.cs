@@ -169,6 +169,8 @@ public class Player : MonoBehaviour
         InputActionMap uiMap = inputAsset.FindActionMap("UI");
         pointAction = uiMap.FindAction("Point");
         clickAction = uiMap.FindAction("Click");
+
+        playerMap.Enable();
     }
 
     void OnEnable()
@@ -243,7 +245,7 @@ public class Player : MonoBehaviour
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
         sprintCoroutine = StartCoroutine(Sprint(true));
-        //Debug.Log("Sprint was triggered");
+        Debug.Log("Sprint was triggered");
     }
 
     public void SprintInput_Cancelled(InputAction.CallbackContext context)
