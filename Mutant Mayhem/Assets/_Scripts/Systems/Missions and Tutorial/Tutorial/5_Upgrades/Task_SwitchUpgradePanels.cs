@@ -7,14 +7,14 @@ using UnityEngine.InputSystem;
 
 public class Task_SwitchUpgradePanels : Task
 {
-    PanelSwitcher panelSwitcher;
+    UpgradePanelManager panelManager;
 
     void Start()
     {
-        panelSwitcher = FindObjectOfType<QCubeController>().panelSwitcher;
-        if (panelSwitcher == null)
+        panelManager = FindObjectOfType<QCubeController>().panelSwitcher;
+        if (panelManager == null)
         {
-            Debug.LogError("Objective could not find PanelSwitcher");
+            Debug.LogError("Switch Upgrade Panels - task is depricated");
             return;
         }
         UpdateProgressText();
@@ -25,11 +25,10 @@ public class Task_SwitchUpgradePanels : Task
         if (isComplete) 
             return;
 
-        if (panelSwitcher.currentPanelIndex != 0)
-        {
+        
             progress = 1;
             SetTaskComplete();
-        }
+        
 
         UpdateProgressText();
     }

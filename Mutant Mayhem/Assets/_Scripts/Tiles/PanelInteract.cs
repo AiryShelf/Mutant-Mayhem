@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PanelInteract : MonoBehaviour
 {
-    UiUpgradePanel uiUpgradePanel;
+    [SerializeField] StructureType structureTypeForPanelInteract;
     Transform openerTransform;
 
     public void OpenPanel(Transform panelOpener)
     {
-        uiUpgradePanel.gameObject.SetActive(true);
+        UpgradePanelManager.Instance.CloseAllPanels();
+        UpgradePanelManager.Instance.OpenPanel(structureTypeForPanelInteract, this);
         openerTransform = panelOpener;
 
         StartCoroutine(CheckForClose());
@@ -17,7 +18,7 @@ public class PanelInteract : MonoBehaviour
 
     public void ClosePanel()
     {
-        uiUpgradePanel.gameObject.SetActive(false);
+        UpgradePanelManager.Instance.ClosePanel(structureTypeForPanelInteract);
         StopAllCoroutines();
     }
 
@@ -30,7 +31,7 @@ public class PanelInteract : MonoBehaviour
                 ClosePanel();
                 yield break;
             }
-            yield return null;
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

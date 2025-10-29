@@ -9,7 +9,7 @@ public class Task_UnlockUpgradePanel : Task
     [Header("Optional")]
     [SerializeField] string OR_UpgPanel_techUnlockMessageName;
     QCubeController qCubeController;
-    PanelSwitcher panelSwitcher;
+    UpgradePanelManager panelSwitcher;
     UiUpgradePanel panelToUnlock;
     UiUpgradePanel OR_panelTounlock;
     bool useOR = false;
@@ -53,14 +53,14 @@ public class Task_UnlockUpgradePanel : Task
             return;
 
         
-        if (panelToUnlock.isUnlocked)
+        if (panelToUnlock.hasPower)
         {
             progress = 1;
             SetTaskComplete();
         }
         else if (useOR)
         {
-            if (OR_panelTounlock.isUnlocked)
+            if (OR_panelTounlock.hasPower)
             {
                 progress = 1;
                 SetTaskComplete();

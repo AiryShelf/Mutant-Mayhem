@@ -10,10 +10,19 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
     [SerializeField] SpriteRenderer radarDishSprite;
     [SerializeField] float radarDishRotateSpeed = 180f;
     [SerializeField] List<Light2D> lights;
-    [SerializeField] DroneContainer droneContainer;
+    public DroneContainer droneContainer;
 
-    Coroutine radarCoroutine;
     float healthRatio;
+
+    public void Start()
+    {
+        BuildingSystem.Instance.droneHangarsBuilt++;
+    }
+    
+    public void OnDestroy()
+    {
+        BuildingSystem.Instance.droneHangarsBuilt--;
+    }
 
     public void PowerOn()
     {
@@ -23,7 +32,7 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
 
         BuildingSystem.Instance.UnlockStructures(droneHangarSO, false);
         StopAllCoroutines();
-        radarCoroutine = StartCoroutine(RotateRadarDish());
+        StartCoroutine(RotateRadarDish());
         droneContainer.hasPower = true;
     }
 
@@ -52,4 +61,6 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
             yield return new WaitForFixedUpdate();
         }
     }
+
+    
 }

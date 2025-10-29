@@ -56,8 +56,8 @@ public class PauseMenuController : MonoBehaviour
     {
         if (player.IsDead) return;
 
-        if (qCubeController.isUpgradesOpen)
-            qCubeController.CloseUpgradeWindow();
+        if (UpgradePanelManager.Instance.isOpen)
+            UpgradePanelManager.Instance.CloseAllPanels();
         if (buildingSystem.isInBuildMode)
             buildingSystem.ToggleBuildMenu();
             
@@ -83,7 +83,7 @@ public class PauseMenuController : MonoBehaviour
 
         //Debug.Log("escape pressed");
         if (!player.IsDead && !buildingSystem.isInBuildMode 
-            && !qCubeController.isUpgradesOpen)
+            && !UpgradePanelManager.Instance.isOpen)
         {
             //Debug.Log("Pause passed checks");
             if (!isPauseMenuOpen)

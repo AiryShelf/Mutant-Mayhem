@@ -14,6 +14,11 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
     float healthRatio;
     int damageIndex;
 
+    void OnDestroy()
+    {
+        UpgradePanelManager.Instance.ClosePanel(StructureType.EngineeringBay);
+    }
+
     public void PowerOn()
     {
         Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);

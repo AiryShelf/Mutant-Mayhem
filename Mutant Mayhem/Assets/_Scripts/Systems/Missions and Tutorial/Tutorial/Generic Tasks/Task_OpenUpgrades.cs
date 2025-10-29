@@ -25,7 +25,7 @@ public class Task_OpenUpgrades : Task
         if (isComplete) 
             return;
 
-        if (qCubeController.isUpgradesOpen)
+        if (UpgradePanelManager.Instance.isOpen)
         {
             progress = 1;
             SetTaskComplete();

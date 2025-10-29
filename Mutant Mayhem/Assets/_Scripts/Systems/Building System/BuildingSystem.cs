@@ -15,6 +15,8 @@ public class BuildingSystem : MonoBehaviour
     public List<StructureSO> AllStructureSOs;
     [SerializeField] List<bool> unlockedStructuresStart;
     public StructureSO structureInHand;
+    public int droneHangarsBuilt = 0;
+
     public static event Action<float> OnPlayerCreditsChanged;
     public event Action<bool> OnBuildMenuOpen;
     private static float playerCredits;
@@ -76,6 +78,7 @@ public class BuildingSystem : MonoBehaviour
     Vector3Int lastHighlightedPos;
     public bool allHighlighted;
     public List<StructureSO> buildOnlyOneList;
+    
     
     bool inRange;
     Player player;
@@ -320,7 +323,7 @@ public class BuildingSystem : MonoBehaviour
 
         if (!isInBuildMode)
         {
-            qCubeController.CloseUpgradeWindow();
+            UpgradePanelManager.Instance.CloseAllPanels();
 
             if (InputManager.LastUsedDevice == Gamepad.current)
             {
@@ -502,7 +505,7 @@ public class BuildingSystem : MonoBehaviour
 
     public void UnlockStructures(StructureSO rootStructure, bool playEffect)
     {
-        QCubeController.Instance.UnlockUpgradePanel(rootStructure, playEffect);
+        UpgradePanelManager.Instance.PowerOnUpgradePanel(rootStructure, playEffect);
 
         foreach (var structure in rootStructure.structuresToUnlock)
         {
@@ -521,7 +524,7 @@ public class BuildingSystem : MonoBehaviour
 
     public void LockStructures(StructureSO rootStructure, bool playEffect)
     {
-        QCubeController.Instance.LockUpgradePanel(rootStructure, playEffect);
+        UpgradePanelManager.Instance.PowerOffUpgradePanel(rootStructure, playEffect);
 
         if (structureInHand.structureType == rootStructure.structureType)
         {

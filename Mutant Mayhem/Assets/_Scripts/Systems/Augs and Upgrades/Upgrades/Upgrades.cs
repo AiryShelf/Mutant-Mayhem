@@ -544,7 +544,7 @@ public class BuyConstructionDroneUpgrade : Upgrade
     public override bool Apply(PlayerStats playerStats)
     {
         
-        return DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, playerStats.structureStats.cubeController.droneHangar);
+        return DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, playerStats.structureStats.currentDroneContainer);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -572,7 +572,7 @@ public class BuyAttackDroneUpgrade : Upgrade
 
     public override bool Apply(PlayerStats playerStats)
     {
-        return DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, playerStats.structureStats.cubeController.droneHangar);
+        return DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, playerStats.structureStats.currentDroneContainer);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)

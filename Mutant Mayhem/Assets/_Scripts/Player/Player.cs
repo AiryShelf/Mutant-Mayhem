@@ -66,6 +66,7 @@ public class StructureStats
     public float armour = 0;
     public int maxTurrets = 0;
     public float pulseDefenceForce = 0;
+    public DroneContainer currentDroneContainer = null;
 }
 
 public class Player : MonoBehaviour
@@ -101,7 +102,8 @@ public class Player : MonoBehaviour
     public MeleeControllerPlayer meleeController;  
     [SerializeField] ToolbarSelector toolbarSelector; 
     [SerializeField] float throwAccuracyLoss = 6f;
-
+    [SerializeField] CameraController cameraController;
+    [SerializeField] DroneContainer droneHangar;
     [SerializeField] float experimentRotationConstant; 
     
     [Header("Dynamic Vars, Don't set here")]
@@ -144,6 +146,16 @@ public class Player : MonoBehaviour
     int previousGunIndex;
 
     InputAction sprintAction;
+    InputActionMap playerActionMap;
+    InputAction interactAction;
+    InputAction fireAction;
+    InputAction throwAction;
+    InputAction toolbarAction;
+    InputActionMap uIActionMap;
+    InputAction escapeAction;
+    bool wasRepairing = false;
+    bool isUpgradesOpen = false;
+    PanelInteract currentPanelInteract;
 
     void Awake()
     {
@@ -166,6 +178,13 @@ public class Player : MonoBehaviour
         // Inputs
         InputActionMap playerMap = inputAsset.FindActionMap("Player");
         sprintAction = playerMap.FindAction("Sprint");
+        interactAction = playerMap.FindAction("Interact");
+        fireAction = playerMap.FindAction("Fire");
+        throwAction = playerMap.FindAction("Throw");
+        toolbarAction = playerMap.FindAction("Toolbar");
+
+        uIActionMap = inputAsset.FindActionMap("UI");
+        escapeAction = uIActionMap.FindAction("Escape");
 
         playerMap.Enable();
     }
@@ -174,12 +193,14 @@ public class Player : MonoBehaviour
     {
         sprintAction.performed += SprintInput_Performed;
         sprintAction.canceled += SprintInput_Cancelled;
+        escapeAction.performed += OnEscapePressed;
     }
 
     void OnDisable()
     {
         sprintAction.performed -= SprintInput_Performed;
         sprintAction.canceled -= SprintInput_Cancelled;
+        escapeAction.performed -= OnEscapePressed;
 
         TimeControl.Instance.UnsubscribePlayerTimeControl(this);
     }
@@ -232,6 +253,99 @@ public class Player : MonoBehaviour
 
     #region Inputs
 
+    public void OnInteract()
+    {
+        if (!isUpgradesOpen)
+        {
+            OpenUpgradeWindow();
+        }
+        else
+        {
+            CloseUpgradeWindow();
+        }
+    }
+
+    IEnumerator OpenUpgradeWindow()
+    {
+        yield return new WaitForFixedUpdate();
+
+        PanelInteract panel = TileManager.Instance.GetClosestPanelInteractUnderCircle(transform.position, interactRadius);
+        currentPanelInteract = panel;
+        if (panel != null)
+            panel.OpenPanel(transform);
+        
+        wasRepairing = stats.playerShooter.isRepairing;
+        stats.playerShooter.isRepairing = false;
+
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            CursorManager.Instance.SetCustomCursorVisible(false);
+
+        InputManager.SetJoystickMouseControl(true);
+        CursorManager.Instance.inMenu = true;
+        cameraController.ZoomAndFocus(transform, 0, 0.25f, 0.35f, true, false);
+        cameraController.SetTouchscreenOffset(false);
+        droneHangar.ShowRangeCircle(true);
+
+        animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
+        fireAction.Disable();
+        throwAction.Disable();
+        if (InputManager.LastUsedDevice == Gamepad.current)
+            toolbarAction.Disable();
+        isUpgradesOpen = true;
+    }
+
+    public void CloseUpgradeWindow()
+    {
+        if (currentPanelInteract != null)
+        {
+            currentPanelInteract.ClosePanel();
+            currentPanelInteract = null;
+        }
+
+        if (stats.playerShooter.currentGunIndex == 4) // Repair Gun
+            stats.playerShooter.isRepairing = true;
+        else
+            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+
+        CursorManager.Instance.inMenu = false;
+        if (!stats.playerShooter.isBuilding && !stats.playerShooter.isRepairing)
+        {
+            cameraController.ZoomAndFocus(transform, 0, 1, 1f, false, false);
+            cameraController.SetTouchscreenOffset(true);
+        }
+        else
+            BuildingSystem.Instance.LockCameraToPlayer(true);
+
+        CursorManager.Instance.SetCustomCursorVisible(true);
+        droneHangar.ShowRangeCircle(false);
+
+        //Debug.Log("CloseUpgradeWindow ran");
+        fireAction.Enable();
+        throwAction.Enable();
+        toolbarAction.Enable();
+        isUpgradesOpen = false;
+
+        StopAllCoroutines();
+    }
+    
+    void OnEscapePressed(InputAction.CallbackContext context)
+    {
+        if (PanelManager.NumPanelsOpen > 0)
+            return;
+
+        if (UpgradePanelManager.Instance.isOpen)
+        {
+            StartCoroutine(WaitToCheckForPause());
+        }
+    }
+
+    IEnumerator WaitToCheckForPause()
+    {
+        yield return new WaitForSecondsRealtime(0.05f);
+
+        CloseUpgradeWindow();
+    }
+
     public void SprintInput_Performed(InputAction.CallbackContext context)
     {
         if (sprintCoroutine != null)
@@ -246,11 +360,6 @@ public class Player : MonoBehaviour
             StopCoroutine(sprintCoroutine);
         sprintCoroutine = StartCoroutine(Sprint(false));
         //Debug.Log("Sprint was cancelled");
-    }
-
-    public void OnInteract()
-    {
-        TileManager.Instance.GetClosestUiUpgradePanelUnderCircle(transform.position, interactRadius);
     }
 
     void OnToolbar()

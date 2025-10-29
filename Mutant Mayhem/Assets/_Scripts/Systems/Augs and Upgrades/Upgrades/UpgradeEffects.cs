@@ -55,9 +55,9 @@ public class UpgradeEffects : MonoBehaviour
         PlayerUpgradeEffectAt(player.transform.position);
     }
 
-    public void PlayUnlockEffect()
+    public void PlayUnlockEffect(Vector2 pos)
     {
-        uiButtonUpgAppliedFX.transform.position = QCubeController.Instance.transform.position;
+        uiButtonUpgAppliedFX.transform.position = pos;
         uiButtonUpgAppliedFX.Play();
     }
 

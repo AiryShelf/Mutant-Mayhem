@@ -559,7 +559,7 @@ public class TileManager : MonoBehaviour
     /// cell rectangles intersect the circle centered at centerWorldPos with radius.
     /// This returns individual CELLS (may include multiple cells belonging to the same structure root).
     /// </summary>
-    public List<Vector3Int> GetCellsUnderCircle(Vector2 centerWorldPos, float radius)
+    public List<Vector3Int> GetOccupiedCellsUnderCircle(Vector2 centerWorldPos, float radius)
     {
         List<Vector3Int> cells = new List<Vector3Int>();
 
@@ -596,9 +596,9 @@ public class TileManager : MonoBehaviour
     ///  2) Tilemap-based structures by testing which cells intersect the circle.
     /// Returns null if none found.
     /// </summary>
-    public UiUpgradePanel GetClosestUiUpgradePanelUnderCircle(Vector2 centerWorldPos, float radius)
+    public PanelInteract GetClosestPanelInteractUnderCircle(Vector2 centerWorldPos, float radius)
     {
-        UiUpgradePanel closestPanel = null;
+        PanelInteract closestPanel = null;
         float bestDistSq = float.PositiveInfinity;
 
         // --- 1) Check non-tilemap objects (e.g., QCube) via collider overlap ---
@@ -607,10 +607,10 @@ public class TileManager : MonoBehaviour
             var cols = Physics2D.OverlapCircleAll(centerWorldPos, radius, structureInteractLayerMask);
             for (int i = 0; i < cols.Length; i++)
             {
-                var panel = cols[i].GetComponent<UiUpgradePanel>();
+                var panel = cols[i].GetComponent<PanelInteract>();
                 if (panel == null) continue;
 
-                Vector2 p = (Vector2)panel.transform.position;
+                Vector2 p = panel.transform.position;
                 float dSq = (p - centerWorldPos).sqrMagnitude;
                 if (dSq < bestDistSq)
                 {
@@ -622,7 +622,7 @@ public class TileManager : MonoBehaviour
 
         // --- 2) Check tilemap-based structures under the circle ---
         HashSet<Vector3Int> seenRoots = new HashSet<Vector3Int>();
-        var cells = GetCellsUnderCircle(centerWorldPos, radius);
+        var cells = GetOccupiedCellsUnderCircle(centerWorldPos, radius);
         foreach (var cell in cells)
         {
             Vector3Int rootPos = _TileStatsDict[cell].rootGridPos;
@@ -631,11 +631,11 @@ public class TileManager : MonoBehaviour
 
             GameObject obj = StructureTilemap.GetInstantiatedObject(rootPos);
             if (obj == null)
-                continue; // must have an instantiated object to host a UiUpgradePanel
+                continue; // must have an instantiated object to host a PanelInteract
 
-            UiUpgradePanel panel = obj.GetComponent<UiUpgradePanel>();
+            PanelInteract panel = obj.GetComponent<PanelInteract>();
             if (panel == null)
-                panel = obj.GetComponentInChildren<UiUpgradePanel>(true);
+                panel = obj.GetComponentInChildren<PanelInteract>(true);
 
             if (panel != null)
             {
@@ -650,36 +650,6 @@ public class TileManager : MonoBehaviour
         }
 
         return closestPanel;
-    }
-
-    /// <summary>
-    /// Returns a unique list of root grid positions for tiles whose world-space
-    /// cell rectangles intersect a given circle (even partially).
-    /// Set requireInstantiatedObject = true to only include tiles that currently
-    /// have an instantiated GameObject via StructureTilemap.GetInstantiatedObject(rootPos).
-    /// </summary>
-    public List<Vector3Int> GetRootTilesUnderCircle(Vector2 centerWorldPos, float radius, bool requireInstantiatedObject = false)
-    {
-        List<Vector3Int> result = new List<Vector3Int>();
-        HashSet<Vector3Int> seen = new HashSet<Vector3Int>();
-
-        var cells = GetCellsUnderCircle(centerWorldPos, radius);
-        foreach (var cell in cells)
-        {
-            Vector3Int rootPos = _TileStatsDict[cell].rootGridPos;
-
-            if (requireInstantiatedObject)
-            {
-                var go = StructureTilemap.GetInstantiatedObject(rootPos);
-                if (go == null)
-                    continue;
-            }
-
-            if (seen.Add(rootPos))
-                result.Add(rootPos);
-        }
-
-        return result;
     }
 
     /// <summary>

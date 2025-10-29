@@ -5,5 +5,4 @@ using UnityEngine;
 public class UI_PanelBase : MonoBehaviour
 {
     public FadeCanvasGroupsWave fadeCanvasGroups;
-    public FadeCanvasGroupsWave backPanelFadeGroup;
 }

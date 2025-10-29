@@ -26,7 +26,7 @@ public class Task_CloseUpgrades : Task
         if (isComplete) 
             return;
 
-        if (qCubeController.isUpgradesOpen)
+        if (UpgradePanelManager.Instance.isOpen)
         {
             wasOpen = true;
         }

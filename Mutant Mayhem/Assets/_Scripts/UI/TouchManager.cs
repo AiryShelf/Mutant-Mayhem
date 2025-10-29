@@ -14,7 +14,7 @@ public class TouchManager : MonoBehaviour
     public VirtualJoystick moveJoystick;
     public VirtualJoystick aimJoystick;
     public RectTransform upgradePanelRect;
-    public PanelSwitcher upgradePanelSwitcher;
+    public UpgradePanelManager upgradePanelSwitcher;
     public UIBuildMenuController buildMenuController;
     public RectTransform buildPanelRect;
     public Player player;
@@ -317,19 +317,6 @@ public class TouchManager : MonoBehaviour
             case TouchPurpose.UI:
                 break;
             case TouchPurpose.UpgradePanel:
-                float dragDeltaX = position.x - data.lastScrollCheckPos.x;
-
-                if (Mathf.Abs(dragDeltaX) > dragThreshold)
-                {
-                    // If positive dragDeltaY => user is dragging finger up => "scroll down" in menu
-                    if (dragDeltaX < 0)
-                        upgradePanelSwitcher.SwipeRight();
-                    else
-                        upgradePanelSwitcher.SwipeLeft();
-
-                    // Reset lastScrollCheckPosY so we can do another incremental step
-                    data.lastScrollCheckPos = position;
-                }
                 break;
             case TouchPurpose.BuildMenu:
                 float dragDeltaY = position.y - data.lastScrollCheckPos.y;

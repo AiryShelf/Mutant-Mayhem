@@ -65,6 +65,7 @@ public enum StructureType
     DroneHangar,
     SolarPanels,
     RepairBay,
+    QuantumCube,
     None
 }
 
