@@ -35,13 +35,9 @@ public class EnemyChaseDirectToTarget : EnemyChaseSOBase
         base.DoPhysicsUpdateLogic();
 
         // Move towards target
-
         Vector2 moveDir = enemyBase.targetPos - (Vector2)transform.position;
-        if (Mathf.Abs(moveDir.x) < distToStopChase && Mathf.Abs(moveDir.y) < distToStopChase)
-        {
-            enemyBase.StateMachine.ChangeState(enemyBase.IdleState);
-        }
         moveDir = moveDir.normalized;
+
         enemyBase.ChangeFacingDirection(moveDir, rotateSpeedMultiplier);
         enemyBase.MoveEnemy(enemyBase.facingDirection * (moveSpeedMult * _sprintFactor));
         

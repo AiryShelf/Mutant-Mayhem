@@ -29,6 +29,7 @@ public class PlayerShooter : Shooter
     ToolbarSelector toolbarSelector;
     [HideInInspector] public PlayerStats playerStats;
     [HideInInspector] public Player player;
+    [SerializeField] protected PlayerGunRecoil gunRecoil;
 
     protected override void Awake() 
     {

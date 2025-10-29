@@ -965,6 +965,11 @@ public class TileManager : MonoBehaviour
             StatsCounterPlayer.SolarPanelsBuilt++;
             StatsCounterPlayer.SolarPanelsPlaced--;
         }
+        else if (structureType == StructureType.MicroReactor)
+        {
+            StatsCounterPlayer.MicroReactorsBuilt++;
+            StatsCounterPlayer.MicroReactorsPlaced--;
+        }
         else if (structureType == StructureType.EngineeringBay)
         {
             StatsCounterPlayer.EngineeringBaysBuilt++;
@@ -990,7 +995,7 @@ public class TileManager : MonoBehaviour
             StatsCounterPlayer.RepairBayBuilt++;
             StatsCounterPlayer.RepairBayPlaced--;
         }
-        else if (structureType == StructureType.DroneBay)
+        else if (structureType == StructureType.DroneHangar)
         {
             StatsCounterPlayer.DroneBayBuilt++;
             StatsCounterPlayer.DroneBayPlaced--;
@@ -1020,6 +1025,10 @@ public class TileManager : MonoBehaviour
         {
             StatsCounterPlayer.SolarPanelsPlaced--;
         }
+        else if (structureType == StructureType.MicroReactor)
+        {
+            StatsCounterPlayer.MicroReactorsPlaced--;
+        }
         else if (structureType == StructureType.EngineeringBay)
         {
             StatsCounterPlayer.EngineeringBaysPlaced--;
@@ -1040,7 +1049,7 @@ public class TileManager : MonoBehaviour
         {
             StatsCounterPlayer.RepairBayPlaced--;
         }
-        else if (structureType == StructureType.DroneBay)
+        else if (structureType == StructureType.DroneHangar)
         {
             StatsCounterPlayer.DroneBayPlaced--;
         }

@@ -17,7 +17,6 @@ public class PowerConsumer : MonoBehaviour
     void Start()
     {
         AddConsumer();
-        //noPowerIcon.transform.rotation = Quaternion.identity;
     }
 
     void OnDestroy()
@@ -28,7 +27,6 @@ public class PowerConsumer : MonoBehaviour
     public void AddConsumer()
     {
         PowerManager.Instance.AddPowerConsumer(this);
-        StartCoroutine(RotateIcon());
     }
 
     public void RemoveConsumer()
@@ -36,18 +34,6 @@ public class PowerConsumer : MonoBehaviour
         StopAllCoroutines();
         if (PowerManager.Instance != null)
             PowerManager.Instance.RemovePowerConsumer(this);
-    }
-
-    void FixedUpdate()
-    {
-        noPowerIcon.transform.rotation = Quaternion.identity;
-    }
-
-    IEnumerator RotateIcon()
-    {
-        yield return new WaitForFixedUpdate();
-
-        
     }
 
     public virtual void PowerOn() 

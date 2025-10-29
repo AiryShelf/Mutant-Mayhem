@@ -618,6 +618,8 @@ public class BuildingSystem : MonoBehaviour
         }
         else if (structureType == StructureType.SolarPanels)
             StatsCounterPlayer.SolarPanelsPlaced++;
+        else if (structureType == StructureType.MicroReactor)
+            StatsCounterPlayer.MicroReactorsPlaced++;
         else if (structureType == StructureType.EngineeringBay)
             StatsCounterPlayer.EngineeringBaysPlaced++;
         else if (structureType == StructureType.PhotonicsBay)
@@ -628,7 +630,7 @@ public class BuildingSystem : MonoBehaviour
             StatsCounterPlayer.ExplosivesBayPlaced++;
         else if (structureType == StructureType.RepairBay)
             StatsCounterPlayer.RepairBayPlaced++;
-        else if (structureType == StructureType.DroneBay)
+        else if (structureType == StructureType.DroneHangar)
             StatsCounterPlayer.DroneBayPlaced++;
         else
             Debug.LogError("BuildingSystem: Untracked structure type for stats: " + structureType);

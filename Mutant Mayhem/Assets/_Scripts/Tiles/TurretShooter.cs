@@ -5,32 +5,29 @@ using UnityEngine;
 public class TurretShooter : Shooter
 {
     [HideInInspector] public Player player;
+    [SerializeField] float recoilDistance = 0.1f;
+    Vector3 startingLocalPos;
 
     protected override void Start()
     {
         turretShooter = this;
         base.Start();
+        startingLocalPos = transform.localPosition;
     }
 
     protected override void Fire()
     {
-        // Use bullet ammo
-        /*
-        if (currentGunSO.gunType == GunType.Bullet)
-        {
-            if (player.stats.playerShooter.gunsAmmo[1] <= 0)
-            {
-                isReloading = true;
-                return;
-            }
-
-            player.stats.playerShooter.gunsAmmo[1]--;
-        }
-        */      
-        
         base.Fire();
 
         StatsCounterPlayer.ShotsFiredByTurrets++;
+        StartCoroutine(RecoilEffect());
+    }
+    
+    IEnumerator RecoilEffect()
+    {
+        transform.localPosition -= muzzleTrans.right * recoilDistance;
+        yield return new WaitForSeconds(0.05f);
+        transform.localPosition = startingLocalPos;
     }
 
     protected override void Reload()

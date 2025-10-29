@@ -142,7 +142,7 @@ public class EnemyMutant : EnemyBase
 
     void SetHealthSettings(Genome g)
     {
-        health.SetMaxHealth(g.bodyGene.startHealth * g.bodyGene.scale);
+        health.SetMaxHealth(g.bodyGene.startHealth * g.bodyGene.scale * 1.5f);
         health.SetHealth(health.GetMaxHealth());
         health.painSound = g.bodyGene.painSound;
         unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);

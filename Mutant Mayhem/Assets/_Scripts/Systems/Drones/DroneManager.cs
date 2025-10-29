@@ -37,14 +37,14 @@ public class DroneManager : MonoBehaviour
         }
     }  
 
-    public bool SpawnDroneInHangar(DroneType droneType, DroneHangar droneHangar)
+    public bool SpawnDroneInHangar(DroneType droneType, DroneContainer droneContainer)
     {
         string poolName = "";
         TurretGunSO droneGun = null;
         switch (droneType)
         {
             case DroneType.Builder:
-                if (droneHangar.GetDroneCount(DroneType.Builder) >= droneHangar.maxConstructionDrones)
+                if (droneContainer.GetDroneCount(DroneType.Builder) >= droneContainer.maxDrones)
                 {
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
@@ -53,7 +53,7 @@ public class DroneManager : MonoBehaviour
                 droneGun = droneGunList[0];
                 break;
             case DroneType.Attacker:
-                if (droneHangar.GetDroneCount(DroneType.Attacker) >= droneHangar.maxAttackDrones)
+                if (droneContainer.GetDroneCount(DroneType.Attacker) >= droneContainer.maxDrones)
                 {
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
@@ -69,7 +69,7 @@ public class DroneManager : MonoBehaviour
         {
             newDrone.powerConsumer.AddConsumer();
             newDrone.Initialize(droneGun);
-            droneHangar.AddDrone(newDrone);
+            droneContainer.AddDrone(newDrone);
             allActiveDrones.Add(newDrone);
 
             if (newDrone is AttackDrone)

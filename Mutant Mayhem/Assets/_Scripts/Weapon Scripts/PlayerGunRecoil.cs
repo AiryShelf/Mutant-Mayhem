@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.IK;
 
-public class GunRecoil : MonoBehaviour
+public class PlayerGunRecoil : MonoBehaviour
 {
     public Transform gunLimbTargets;
     public Transform leftHandTarget;

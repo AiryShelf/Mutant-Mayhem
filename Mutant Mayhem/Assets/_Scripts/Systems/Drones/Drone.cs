@@ -25,7 +25,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
     [SerializeField] float flyingAlpha = 0.5f;
     [SerializeField] float jobHeightMinScale = 0.6f;
 
-    public DroneHangar myHangar;
+    public DroneContainer myHangar;
     public bool isDocked = false;
     public bool hasPower = true;
     public bool isFlying = false;

@@ -12,7 +12,7 @@ public class EnemyChaseFlyToTarget : EnemyChaseSOBase
 
     [Header("Flight Variation:")]
     [SerializeField] float sineAmplitude = 3;
-    [SerializeField] float diveDistance = 4f; // Increases rotation speed
+    [SerializeField] float distToStartDive = 4f; // Increases rotation speed
     [SerializeField] float diveScaleDivisor = 1.7f;
 
     float time;
@@ -55,29 +55,19 @@ public class EnemyChaseFlyToTarget : EnemyChaseSOBase
 
         // Move towards target
         time += Time.fixedDeltaTime;
-
         moveDir = enemyBase.targetPos - (Vector2)transform.position;
-        //if (Mathf.Abs(moveDir.x) < distToStopChase && Mathf.Abs(moveDir.y) < distToStopChase)
-        //{
-            //enemyBase.StateMachine.ChangeState(enemyBase.IdleState);
-        //}
-
         sineVal = SineCalculator.sine_Freq2_Val;
-        //sineVal = Mathf.Sin(Time.time * sineFrequency);
+
         perpendicular = new Vector3(-moveDir.y, moveDir.x, 0f);
         combinedDirection = moveDir + perpendicular * sineAmplitude * sineVal;
         wavyDirection = combinedDirection != Vector3.zero ? combinedDirection.normalized : Vector3.zero;
-        clampFactor = Mathf.Clamp(diveDistance - moveDir.sqrMagnitude / diveDistance, 1, diveDistance);
+        clampFactor = Mathf.Clamp(distToStartDive - moveDir.sqrMagnitude / distToStartDive, 1, distToStartDive);
 
         enemyBase.transform.localScale = localScaleStart / Mathf.Clamp(clampFactor / diveScaleDivisor, 1, diveScaleDivisor); 
         totalRotationSpeed = rotateSpeedMultiplier * clampFactor;
-        //Vector3 perpendicular = new Vector3(-moveDir.y, moveDir.x, 0f);
-        //Vector3 wavyDirection = (moveDir + perpendicular * sineAmplitude * Mathf.Sin(Time.time * sineFrequency)).normalized;
 
         enemyBase.ChangeFacingDirection(wavyDirection, totalRotationSpeed);
-        //enemyBase.ChangeFacingDirection(wavyDirection, rotateSpeedMultiplier * Mathf.Clamp((8 - moveDir.magnitude), 1, 8));
         enemyBase.MoveEnemy(enemyBase.facingDirection * (moveSpeedMult * _sprintFactor));
-        
     }
 
     public override void DoAnimationTriggerEventLogic(EnemyBase.AnimationTriggerType triggerType) 

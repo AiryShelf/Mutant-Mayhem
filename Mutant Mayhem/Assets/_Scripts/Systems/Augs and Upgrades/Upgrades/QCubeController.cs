@@ -47,7 +47,7 @@ public class QCubeController : MonoBehaviour
     public bool isUpgradesOpen;
     [SerializeField] BuildingSystem buildingSystem;
     [SerializeField] Player player;
-    public DroneHangar droneHangar;
+    public DroneContainer droneHangar;
 
     bool wasRepairing = false;
     InputActionMap playerActionMap;

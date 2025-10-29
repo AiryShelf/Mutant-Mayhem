@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
 
 public class Shooter : MonoBehaviour
 {
@@ -13,7 +12,6 @@ public class Shooter : MonoBehaviour
     [SerializeField] protected Transform casingEjectorTrans;
     [SerializeField] protected Transform clipEjectorTrans;
     [SerializeField] protected LayerMask elevatedHitLayers;
-    [SerializeField] protected GunRecoil gunRecoil;
     public List<int> gunsAmmoInClips = new List<int>();
 
     [Header("Optional")]
@@ -95,15 +93,15 @@ public class Shooter : MonoBehaviour
             return;
         }
 
-        if (!hasTarget)
-            return;
-
         // Start reloading after firing a certain number of shots
         if (ShouldReload())
         {
             isReloading = true;
             return;
         }
+        
+        if (!hasTarget)
+            return;
 
         fireTimer -= Time.deltaTime;
         if (fireTimer <= 0 && gunsAmmoInClips[currentGunIndex] > 0)

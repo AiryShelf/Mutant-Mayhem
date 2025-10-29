@@ -62,7 +62,7 @@ public enum StructureType
     PhotonicsBay,
     BallisticsBay,
     ExplosivesBay,
-    DroneBay,
+    DroneHangar,
     SolarPanels,
     RepairBay,
     None

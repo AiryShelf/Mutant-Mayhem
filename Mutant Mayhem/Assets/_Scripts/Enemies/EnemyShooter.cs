@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShooterEnemy : MonoBehaviour
+public class EnemyShooter : MonoBehaviour
 {
     public List<GunSO> gunList;
     public GunSO currentGun;

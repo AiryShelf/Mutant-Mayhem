@@ -42,6 +42,7 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int GatesBuilt;
     public static int WallsBuilt;
     public static int SolarPanelsBuilt;
+    public static int MicroReactorsBuilt;
     public static int TurretsBuilt;
     public static int EngineeringBaysBuilt;
     public static int PhotonicsBayBuilt;
@@ -55,6 +56,7 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int GatesPlaced;
     public static int TurretsPlaced;
     public static int SolarPanelsPlaced;
+    public static int MicroReactorsPlaced;
     public static int EngineeringBaysPlaced;
     public static int PhotonicsBayPlaced;
     public static int BallisticsBayPlaced;
@@ -223,7 +225,7 @@ public class StatsCounterPlayer : MonoBehaviour
                 return ExplosivesBayBuilt;
             case StructureType.RepairBay:
                 return RepairBayBuilt;
-            case StructureType.DroneBay:
+            case StructureType.DroneHangar:
                 return DroneBayBuilt;
             default:
                 Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
@@ -258,7 +260,7 @@ public class StatsCounterPlayer : MonoBehaviour
                 return ExplosivesBayPlaced;
             case StructureType.RepairBay:
                 return RepairBayPlaced;
-            case StructureType.DroneBay:
+            case StructureType.DroneHangar:
                 return DroneBayPlaced;
             default:
                 Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +

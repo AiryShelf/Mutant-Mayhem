@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class DroneHangar : MonoBehaviour
+public class DroneContainer : MonoBehaviour
 {
     public RangeCircle droneRangeCircle;
     public List<Drone> controlledDrones;
     public List<Drone> dockedDrones;
-    public int maxConstructionDrones;
-    public int maxAttackDrones;
+    public int maxDrones;
     [SerializeField] float launchDelay = 0.5f;
     public float detectionRadius = 6f;
     [SerializeField] int repairAmountPerSec = 10;
+    public bool hasPower = true;
 
     [SerializeField] Collider2D detectionCollider;
 
@@ -142,7 +141,40 @@ public class DroneHangar : MonoBehaviour
 
     #endregion
 
-#region Jobs
+    #region Jobs
+
+    IEnumerator LookForJobs()
+    {
+        while (true)
+        {
+            if (hasPower)
+            {
+                DroneJob job = null;
+                Drone droneToAssign = null;
+            
+                foreach (Drone dockedDrone in dockedDrones)
+                {
+                    if (dockedDrone.currentJob.jobType != DroneJobType.None || !dockedDrone.hasPower)
+                        continue;
+
+                    job = GetDroneJob(dockedDrone.droneType);
+
+                    if (job.jobType == DroneJobType.None)
+                        continue;
+
+                    droneToAssign = dockedDrone;
+                    break;
+                }
+                if (droneToAssign != null)
+                {
+                    LaunchDrone(droneToAssign);
+                    droneToAssign.SetJob(job);
+                }
+            }
+
+            yield return new WaitForSeconds(launchDelay);
+        }
+    }
 
     public DroneJob GetDroneJob(DroneType droneType)
     {
@@ -154,7 +186,7 @@ public class DroneHangar : MonoBehaviour
                 DroneJob job = ConstructionManager.Instance.GetBuildJob();
                 if (job == null)
                     job = ConstructionManager.Instance.GetRepairJob();
-                
+
                 if (job != null)
                     newJob = job;
                 break;
@@ -172,14 +204,14 @@ public class DroneHangar : MonoBehaviour
         DroneAttackJob job = new DroneAttackJob(DroneJobType.None, null, Vector3.zero);
         int leastDronesAssigned = int.MaxValue;
 
+        CleanUpAttackJobs();
+
         for (int i = 0; i < attackJobs.Count; i++)
         {
-            CleanUpAttackJobs();
-
             int dronesAssigned = attackJobs[i].Value;
 
             if (attackJobs[i].Key.targetTrans == null)
-                return job;
+                continue;
 
             // Select the job with the fewest drones assigned
             if (dronesAssigned < leastDronesAssigned)
@@ -197,16 +229,15 @@ public class DroneHangar : MonoBehaviour
 
     void CleanUpAttackJobs()
     {
-        List<KeyValuePair<DroneAttackJob, int>> jobsToRemove = new List<KeyValuePair<DroneAttackJob, int>>();
-
-        foreach (var kvp in attackJobs)
+        for (int i = attackJobs.Count - 1; i >= 0; i--)
         {
-            if (!kvp.Key.targetTrans.gameObject.activeInHierarchy)
-                jobsToRemove.Add(kvp);
+            var key = attackJobs[i].Key;
+            // Remove if the job itself is null, the target is gone, or the target is inactive
+            if (key == null || key.targetTrans == null || !key.targetTrans.gameObject.activeInHierarchy)
+            {
+                attackJobs.RemoveAt(i);
+            }
         }
-
-        foreach (var kvp in jobsToRemove)
-            attackJobs.Remove(kvp);
     }
 
     void IncrementAssignedDrones_Attack(DroneJob job, int value)
@@ -263,34 +294,6 @@ public class DroneHangar : MonoBehaviour
             {
                 drone.SetJobDone();
             }
-        }
-    }
-
-    IEnumerator LookForJobs()
-    {
-        while (true)
-        {
-            DroneJob job = null;
-            Drone freeDrone = null;
-            foreach (Drone dockedDrone in dockedDrones)
-            {
-                if (dockedDrone.currentJob.jobType != DroneJobType.None || !dockedDrone.hasPower)
-                    continue;
-
-                job = GetDroneJob(dockedDrone.droneType);
-
-                if (job.jobType == DroneJobType.None)
-                    continue;
-
-                freeDrone = dockedDrone;
-                break;
-            }
-            if (freeDrone != null)
-            {
-                LaunchDrone(freeDrone);
-                freeDrone.SetJob(job);
-            }
-            yield return new WaitForSeconds(launchDelay);
         }
     }
 }

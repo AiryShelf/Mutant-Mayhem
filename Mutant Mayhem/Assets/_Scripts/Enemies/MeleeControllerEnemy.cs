@@ -234,10 +234,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         if (collider.gameObject.layer == 12)
             return 3;
         if (collider.CompareTag("Drone"))
-        {
-            Debug.Log("Enemy found Drone Priority 4");
             return 4;
-        }
 
         return int.MaxValue;
     }
