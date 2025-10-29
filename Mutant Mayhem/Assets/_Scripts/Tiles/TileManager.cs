@@ -25,6 +25,7 @@ public class TileManager : MonoBehaviour
     public Player player;
     public static Tilemap StructureTilemap;
     public Grid StructureGrid;
+    [SerializeField] LayerMask structureInteractLayerMask;
 
     public static Tilemap BlueprintTilemap;
     public static Tilemap AnimatedTilemap;
@@ -511,13 +512,13 @@ public class TileManager : MonoBehaviour
     }
 
     public void RefreshSurroundingTiles(Vector3Int gridPos)
-{
-    // Refresh the tile itself
-    AnimatedTilemap.RefreshTile(gridPos);
-
-    // Refresh its neighbors
-    Vector3Int[] directions = new Vector3Int[]
     {
+        // Refresh the tile itself
+        AnimatedTilemap.RefreshTile(gridPos);
+
+        // Refresh its neighbors
+        Vector3Int[] directions = new Vector3Int[]
+        {
         Vector3Int.zero,
         Vector3Int.up,
         Vector3Int.down,
@@ -527,31 +528,180 @@ public class TileManager : MonoBehaviour
         Vector3Int.up + Vector3Int.right,
         Vector3Int.down + Vector3Int.left,
         Vector3Int.down + Vector3Int.right
-    };
+        };
 
-    bool neighborExists = false;
+        bool neighborExists = false;
 
-    foreach (Vector3Int direction in directions)
-    {
-        Vector3Int neighborPos = gridPos + direction;
-        if (AnimatedTilemap.HasTile(neighborPos))
+        foreach (Vector3Int direction in directions)
         {
-            neighborExists = true;
-            AnimatedTilemap.RefreshTile(neighborPos);
+            Vector3Int neighborPos = gridPos + direction;
+            if (AnimatedTilemap.HasTile(neighborPos))
+            {
+                neighborExists = true;
+                AnimatedTilemap.RefreshTile(neighborPos);
+            }
+        }
+
+        // Fallback for solo tiles: Ensure it updates even without neighbors
+        if (!neighborExists)
+        {
+            Debug.Log($"Solo tile refresh triggered at {gridPos}");
+            AnimatedTilemap.RefreshTile(gridPos);
         }
     }
-
-    // Fallback for solo tiles: Ensure it updates even without neighbors
-    if (!neighborExists)
-    {
-        Debug.Log($"Solo tile refresh triggered at {gridPos}");
-        AnimatedTilemap.RefreshTile(gridPos);
-    }
-}
 
     #endregion
 
     #region Checks and Getters
+
+    /// <summary>
+    /// Returns all grid cells (keys known to _TileStatsDict) whose world-space
+    /// cell rectangles intersect the circle centered at centerWorldPos with radius.
+    /// This returns individual CELLS (may include multiple cells belonging to the same structure root).
+    /// </summary>
+    public List<Vector3Int> GetCellsUnderCircle(Vector2 centerWorldPos, float radius)
+    {
+        List<Vector3Int> cells = new List<Vector3Int>();
+
+        // Compute a bounding box in grid space to limit checks
+        Vector2 worldMin = centerWorldPos - new Vector2(radius, radius);
+        Vector2 worldMax = centerWorldPos + new Vector2(radius, radius);
+
+        Vector3Int minCell = StructureTilemap.WorldToCell(worldMin);
+        Vector3Int maxCell = StructureTilemap.WorldToCell(worldMax);
+
+        for (int x = minCell.x - 1; x <= maxCell.x + 1; x++)
+        {
+            for (int y = minCell.y - 1; y <= maxCell.y + 1; y++)
+            {
+                Vector3Int cell = new Vector3Int(x, y, 0);
+
+                if (!_TileStatsDict.ContainsKey(cell))
+                    continue;
+
+                if (!CircleIntersectsCell(centerWorldPos, radius, cell))
+                    continue;
+
+                cells.Add(cell);
+            }
+        }
+
+        return cells;
+    }
+
+    /// <summary>
+    /// Finds the single closest UiUpgradePanel within a circle centered at centerWorldPos with radius.
+    /// This checks BOTH:
+    ///  1) Regular scene objects via Physics2D.OverlapCircleAll (e.g., QCube), and
+    ///  2) Tilemap-based structures by testing which cells intersect the circle.
+    /// Returns null if none found.
+    /// </summary>
+    public UiUpgradePanel GetClosestUiUpgradePanelUnderCircle(Vector2 centerWorldPos, float radius)
+    {
+        UiUpgradePanel closestPanel = null;
+        float bestDistSq = float.PositiveInfinity;
+
+        // --- 1) Check non-tilemap objects (e.g., QCube) via collider overlap ---
+        if (structureInteractLayerMask.value != 0)
+        {
+            var cols = Physics2D.OverlapCircleAll(centerWorldPos, radius, structureInteractLayerMask);
+            for (int i = 0; i < cols.Length; i++)
+            {
+                var panel = cols[i].GetComponent<UiUpgradePanel>();
+                if (panel == null) continue;
+
+                Vector2 p = (Vector2)panel.transform.position;
+                float dSq = (p - centerWorldPos).sqrMagnitude;
+                if (dSq < bestDistSq)
+                {
+                    bestDistSq = dSq;
+                    closestPanel = panel;
+                }
+            }
+        }
+
+        // --- 2) Check tilemap-based structures under the circle ---
+        HashSet<Vector3Int> seenRoots = new HashSet<Vector3Int>();
+        var cells = GetCellsUnderCircle(centerWorldPos, radius);
+        foreach (var cell in cells)
+        {
+            Vector3Int rootPos = _TileStatsDict[cell].rootGridPos;
+            if (!seenRoots.Add(rootPos))
+                continue;
+
+            GameObject obj = StructureTilemap.GetInstantiatedObject(rootPos);
+            if (obj == null)
+                continue; // must have an instantiated object to host a UiUpgradePanel
+
+            UiUpgradePanel panel = obj.GetComponent<UiUpgradePanel>();
+            if (panel == null)
+                panel = obj.GetComponentInChildren<UiUpgradePanel>(true);
+
+            if (panel != null)
+            {
+                Vector2 p = (Vector2)panel.transform.position;
+                float dSq = (p - centerWorldPos).sqrMagnitude;
+                if (dSq < bestDistSq)
+                {
+                    bestDistSq = dSq;
+                    closestPanel = panel;
+                }
+            }
+        }
+
+        return closestPanel;
+    }
+
+    /// <summary>
+    /// Returns a unique list of root grid positions for tiles whose world-space
+    /// cell rectangles intersect a given circle (even partially).
+    /// Set requireInstantiatedObject = true to only include tiles that currently
+    /// have an instantiated GameObject via StructureTilemap.GetInstantiatedObject(rootPos).
+    /// </summary>
+    public List<Vector3Int> GetRootTilesUnderCircle(Vector2 centerWorldPos, float radius, bool requireInstantiatedObject = false)
+    {
+        List<Vector3Int> result = new List<Vector3Int>();
+        HashSet<Vector3Int> seen = new HashSet<Vector3Int>();
+
+        var cells = GetCellsUnderCircle(centerWorldPos, radius);
+        foreach (var cell in cells)
+        {
+            Vector3Int rootPos = _TileStatsDict[cell].rootGridPos;
+
+            if (requireInstantiatedObject)
+            {
+                var go = StructureTilemap.GetInstantiatedObject(rootPos);
+                if (go == null)
+                    continue;
+            }
+
+            if (seen.Add(rootPos))
+                result.Add(rootPos);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Helper: accurate circle vs. axis-aligned cell-rectangle intersection test in world space.
+    /// Returns true if the tile cell at 'cell' intersects the circle centered at 'centerWorldPos' with 'radius'.
+    /// </summary>
+    private bool CircleIntersectsCell(Vector2 centerWorldPos, float radius, Vector3Int cell)
+    {
+        // Get the world-space AABB for this grid cell
+        Vector2 cellWorldMin = (Vector2)StructureTilemap.CellToWorld(cell);
+        Vector2 cellSize = (Vector2)StructureTilemap.cellSize;
+        Vector2 cellWorldMax = cellWorldMin + cellSize;
+
+        // Clamp circle center to the rectangle to find the closest point
+        float closestX = Mathf.Clamp(centerWorldPos.x, cellWorldMin.x, cellWorldMax.x);
+        float closestY = Mathf.Clamp(centerWorldPos.y, cellWorldMin.y, cellWorldMax.y);
+
+        float dx = centerWorldPos.x - closestX;
+        float dy = centerWorldPos.y - closestY;
+
+        return (dx * dx + dy * dy) <= radius * radius;
+    }
 
     public float GetRepairCostAt(Vector2 worldPos, float repairAmount)
     {

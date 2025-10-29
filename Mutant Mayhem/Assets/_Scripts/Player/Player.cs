@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -88,6 +89,7 @@ public class Player : MonoBehaviour
     [SerializeField] SoundSO walkMetalSound;
 
     [Header("Other")]
+    [SerializeField] float interactRadius = 0.9f;
     public List<GraphicRaycaster> graphicRaycasters;
     public InputActionAsset inputAsset;
     [SerializeField] GameObject grenadePrefab;
@@ -142,8 +144,6 @@ public class Player : MonoBehaviour
     int previousGunIndex;
 
     InputAction sprintAction;
-    InputAction pointAction;
-    InputAction clickAction;
 
     void Awake()
     {
@@ -166,9 +166,6 @@ public class Player : MonoBehaviour
         // Inputs
         InputActionMap playerMap = inputAsset.FindActionMap("Player");
         sprintAction = playerMap.FindAction("Sprint");
-        InputActionMap uiMap = inputAsset.FindActionMap("UI");
-        pointAction = uiMap.FindAction("Point");
-        clickAction = uiMap.FindAction("Click");
 
         playerMap.Enable();
     }
@@ -177,16 +174,13 @@ public class Player : MonoBehaviour
     {
         sprintAction.performed += SprintInput_Performed;
         sprintAction.canceled += SprintInput_Cancelled;
-        //pointAction.performed += OnPoint_Performed;
-        //clickAction.performed += OnClick_Performed;
     }
 
     void OnDisable()
     {
         sprintAction.performed -= SprintInput_Performed;
         sprintAction.canceled -= SprintInput_Cancelled;
-        //pointAction.performed -= OnPoint_Performed;
-        //clickAction.performed -= OnClick_Performed;
+
         TimeControl.Instance.UnsubscribePlayerTimeControl(this);
     }
 
@@ -210,8 +204,6 @@ public class Player : MonoBehaviour
             playerShooter.isShooting = false; 
         }
     }
-
-    
 
     void KillAllEnemies()
     {
@@ -254,6 +246,11 @@ public class Player : MonoBehaviour
             StopCoroutine(sprintCoroutine);
         sprintCoroutine = StartCoroutine(Sprint(false));
         //Debug.Log("Sprint was cancelled");
+    }
+
+    public void OnInteract()
+    {
+        TileManager.Instance.GetClosestUiUpgradePanelUnderCircle(transform.position, interactRadius);
     }
 
     void OnToolbar()

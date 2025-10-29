@@ -51,7 +51,7 @@ public class QCubeController : MonoBehaviour
 
     bool wasRepairing = false;
     InputActionMap playerActionMap;
-    InputAction qCubeAction;
+    InputAction interactAction;
     InputAction fireAction;
     InputAction throwAction;
     InputAction toolbarAction;
@@ -72,7 +72,7 @@ public class QCubeController : MonoBehaviour
 
         IsCubeDestroyed = false;
         playerActionMap = player.inputAsset.FindActionMap("Player");
-        qCubeAction = playerActionMap.FindAction("QCube");
+        interactAction = playerActionMap.FindAction("Interact");
         fireAction = playerActionMap.FindAction("Fire");
         throwAction = playerActionMap.FindAction("Throw");
         toolbarAction = playerActionMap.FindAction("Toolbar");
@@ -83,13 +83,13 @@ public class QCubeController : MonoBehaviour
 
     void OnEnable()
     {  
-        qCubeAction.performed += OnQCubeInteract;
+        interactAction.performed += OnQCubeInteract;
         escapeAction.started += OnEscapePressed;
     }
 
     void OnDisable()
     {
-        qCubeAction.performed -= OnQCubeInteract;
+        interactAction.performed -= OnQCubeInteract;
         escapeAction.started -= OnEscapePressed;
     }
 

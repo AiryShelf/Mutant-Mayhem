@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class DroneHangar : MonoBehaviour, IPowerConsumer
+public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
 {
     [SerializeField] StructureSO droneHangarSO;
     [SerializeField] SpriteRenderer spriteLightSprite;
@@ -13,6 +13,7 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer
     [SerializeField] DroneContainer droneContainer;
 
     Coroutine radarCoroutine;
+    float healthRatio;
 
     public void PowerOn()
     {
@@ -35,6 +36,11 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer
         BuildingSystem.Instance.LockStructures(droneHangarSO, false);
         StopAllCoroutines();
         droneContainer.hasPower = false;
+    }
+
+    public void UpdateHealthRatio(float healthRatio)
+    {
+        this.healthRatio = healthRatio;
     }
 
     IEnumerator RotateRadarDish()

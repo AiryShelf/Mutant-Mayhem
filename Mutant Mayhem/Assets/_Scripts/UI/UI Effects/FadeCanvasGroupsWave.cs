@@ -98,14 +98,6 @@ public class FadeCanvasGroupsWave : MonoBehaviour
         }
     }
 
-    public void ToggleTrigger()
-    {
-        if (!isTriggered)
-            isTriggered = true;
-        else
-            isTriggered = false;
-    }
-
     IEnumerator FadeMainIn()
     {
         if (fadeOut != null)
