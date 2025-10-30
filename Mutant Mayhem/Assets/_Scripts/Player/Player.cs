@@ -103,7 +103,6 @@ public class Player : MonoBehaviour
     [SerializeField] ToolbarSelector toolbarSelector; 
     [SerializeField] float throwAccuracyLoss = 6f;
     [SerializeField] CameraController cameraController;
-    [SerializeField] DroneContainer droneHangar;
     [SerializeField] float experimentRotationConstant; 
     
     [Header("Dynamic Vars, Don't set here")]
@@ -257,7 +256,13 @@ public class Player : MonoBehaviour
     {
         if (!isUpgradesOpen)
         {
-            OpenUpgradeWindow();
+            PanelInteract panel = TileManager.Instance.GetClosestPanelInteractUnderCircle(transform.position, interactRadius);
+            currentPanelInteract = panel;
+            if (panel != null)
+            {
+                panel.OpenPanel(transform);
+                StartCoroutine(OpenUpgradeWindow());
+            }
         }
         else
         {
@@ -269,10 +274,7 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
 
-        PanelInteract panel = TileManager.Instance.GetClosestPanelInteractUnderCircle(transform.position, interactRadius);
-        currentPanelInteract = panel;
-        if (panel != null)
-            panel.OpenPanel(transform);
+        
         
         wasRepairing = stats.playerShooter.isRepairing;
         stats.playerShooter.isRepairing = false;
@@ -284,7 +286,6 @@ public class Player : MonoBehaviour
         CursorManager.Instance.inMenu = true;
         cameraController.ZoomAndFocus(transform, 0, 0.25f, 0.35f, true, false);
         cameraController.SetTouchscreenOffset(false);
-        droneHangar.ShowRangeCircle(true);
 
         animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
         fireAction.Disable();
@@ -317,7 +318,6 @@ public class Player : MonoBehaviour
             BuildingSystem.Instance.LockCameraToPlayer(true);
 
         CursorManager.Instance.SetCustomCursorVisible(true);
-        droneHangar.ShowRangeCircle(false);
 
         //Debug.Log("CloseUpgradeWindow ran");
         fireAction.Enable();

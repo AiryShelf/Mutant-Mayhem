@@ -649,6 +649,7 @@ public class TileManager : MonoBehaviour
             }
         }
 
+        Debug.Log($"GetClosestPanelInteractUnderCircle found: {closestPanel} at distance squared: {bestDistSq}");
         return closestPanel;
     }
 

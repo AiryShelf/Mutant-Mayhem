@@ -24,9 +24,9 @@ public class UiUpgradePanel : UI_PanelBase
     [SerializeField] List<GameObject> UIUpgradePrefabs;
     public GridLayoutGroup buttonsGrid;
     public GridLayoutGroup textGrid;
-    CanvasGroup mainPanelCanvasGroup;
-    CanvasGroup upgradesCanvasGroup;
-    CanvasGroup noPowerCanvasGroup;
+    [SerializeField] CanvasGroup mainPanelCanvasGroup;
+    [SerializeField] CanvasGroup upgradesCanvasGroup;
+    [SerializeField] CanvasGroup noPowerCanvasGroup;
     public bool hasPower = false;
 
     [Header("Unlockables (Optional)")]
@@ -51,7 +51,11 @@ public class UiUpgradePanel : UI_PanelBase
         for (int i = textGrid.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(textGrid.transform.GetChild(i).gameObject);
-        } 
+        }
+
+        noPowerCanvasGroup.alpha = 0;
+        noPowerCanvasGroup.blocksRaycasts = false;
+        noPowerCanvasGroup.interactable = false;
     }
 
     void Start()
@@ -111,9 +115,7 @@ public class UiUpgradePanel : UI_PanelBase
         if (upgradeFamily == UpgradeFamily.GunStats)
             player.playerShooter.UnlockGun(playerGunIndex);
 
-        // Show upgrades panel
-        upgradesCanvasGroup.GetComponent<CanvasGroup>().alpha = 1;
-        noPowerCanvasGroup.GetComponent<CanvasGroup>().alpha = 0;
+        ShowUpgradesPanel();
 
         if (playEffect)
         {
@@ -130,9 +132,7 @@ public class UiUpgradePanel : UI_PanelBase
         if (upgradeFamily == UpgradeFamily.GunStats && playEffect)
             player.playerShooter.LockGun(playerGunIndex);
 
-        // Show no power panel
-        upgradesCanvasGroup.GetComponent<CanvasGroup>().alpha = 0;
-        noPowerCanvasGroup.GetComponent<CanvasGroup>().alpha = 1;
+        ShowNoPowerPanel();
 
         if (playEffect)
             MessagePanel.PulseMessage(techUnlockMessageName + " locked!", Color.red);
@@ -158,5 +158,27 @@ public class UiUpgradePanel : UI_PanelBase
             panelInteract.StopAllCoroutines();
             panelInteract = null;
         }
+    }
+
+    void ShowUpgradesPanel()
+    {
+        upgradesCanvasGroup.alpha = 1;
+        upgradesCanvasGroup.blocksRaycasts = true;
+        upgradesCanvasGroup.interactable = true;
+
+        noPowerCanvasGroup.alpha = 0;
+        noPowerCanvasGroup.blocksRaycasts = false;
+        noPowerCanvasGroup.interactable = false;
+    }
+
+    void ShowNoPowerPanel()
+    {
+        upgradesCanvasGroup.alpha = 0;
+        upgradesCanvasGroup.blocksRaycasts = false;
+        upgradesCanvasGroup.interactable = false;
+
+        noPowerCanvasGroup.alpha = 1;
+        noPowerCanvasGroup.blocksRaycasts = true;
+        noPowerCanvasGroup.interactable = true;
     }
 }
