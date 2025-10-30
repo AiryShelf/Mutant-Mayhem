@@ -152,8 +152,6 @@ public class UpgradeManager : MonoBehaviour
         // Set max levels
         // PlayerStats
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MoveSpeed] = 50;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.StrafeSpeed] = 50;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.SprintFactor] = 20;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.PlayerReloadSpeed] = 10;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.WeaponHandling] = 20;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.MeleeDamage] = 150;
@@ -162,8 +160,7 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.StaminaRegen] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthMax] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthRegen] = 100;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.CriticalHitChance] = 100;
-        playerStatsUpgMaxLevels[PlayerStatsUpgrade.CriticalHitDamage] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.CriticalHit] = 100;
 
         // Structures
         structureStatsUpgMaxLevels[StructureStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
@@ -239,9 +236,7 @@ public class UpgradeManager : MonoBehaviour
 
         #region Upg Costs
         // PlayerStats
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MoveSpeed] = 100;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.StrafeSpeed] = 100;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.SprintFactor] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MoveSpeed] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 300;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.WeaponHandling] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 250;
@@ -250,8 +245,7 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaRegen] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthMax] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitChance] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHitDamage] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHit] = 250;
 
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
@@ -336,10 +330,6 @@ public class UpgradeManager : MonoBehaviour
             // PlayerStats
             case PlayerStatsUpgrade.MoveSpeed:
                 return new MoveSpeedUpgrade();
-            case PlayerStatsUpgrade.StrafeSpeed:
-                return new StrafeSpeedUpgrade();
-            case PlayerStatsUpgrade.SprintFactor:
-                return new SprintFactorUpgrade();
             case PlayerStatsUpgrade.PlayerReloadSpeed:
                 return new PlayerReloadSpeedUpgrade();
             case PlayerStatsUpgrade.MeleeDamage:
@@ -356,10 +346,8 @@ public class UpgradeManager : MonoBehaviour
                 return new HealthRegenUpgrade();
             case PlayerStatsUpgrade.WeaponHandling:
                 return new WeaponHandlingUpgrade();
-            case PlayerStatsUpgrade.CriticalHitChance:
-                return new CriticalHitChanceUpgrade();
-            case PlayerStatsUpgrade.CriticalHitDamage:
-                return new CriticalHitDamageUpgrade();
+            case PlayerStatsUpgrade.CriticalHit:
+                return new CriticalHitUpgrade();
 
             default:
                 return null;

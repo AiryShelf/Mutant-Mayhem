@@ -16,12 +16,6 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.MoveSpeed:
                 stat = player.stats.moveSpeed.ToString("#0.0");
                 return stat;
-            case PlayerStatsUpgrade.StrafeSpeed:
-                stat = player.stats.strafeSpeed.ToString("#0.0");
-                return stat;
-            case PlayerStatsUpgrade.SprintFactor:
-                stat = player.stats.sprintFactor.ToString("#0.00");
-                return stat;
             case PlayerStatsUpgrade.PlayerReloadSpeed:
                 stat = player.stats.reloadFactor.ToString("#0.0");
                 return stat;
@@ -46,10 +40,7 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.HealthRegen:
                 stat = player.stats.playerHealthScript.healthRegenPerSec.ToString("#0.00");
                 return stat;
-            case PlayerStatsUpgrade.CriticalHitChance:
-                stat = player.stats.criticalHitChanceMult.ToString("#0.00");
-                return stat;
-            case PlayerStatsUpgrade.CriticalHitDamage:
+            case PlayerStatsUpgrade.CriticalHit:
                 stat = player.stats.criticalHitDamageMult.ToString("#0.00");
                 return stat;
         }
@@ -170,12 +161,6 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.MoveSpeed:
                 amount = "+" + MoveSpeedUpgrade.GetUpgAmount().ToString("#0.00");
                 return amount;
-            case PlayerStatsUpgrade.StrafeSpeed:
-                amount = "+" + StrafeSpeedUpgrade.UpgAmount.ToString("#0.00");
-                return amount;
-            case PlayerStatsUpgrade.SprintFactor:
-                amount = "+" + SprintFactorUpgrade.UpgAmount.ToString("#0.00");
-                return amount;
             case PlayerStatsUpgrade.PlayerReloadSpeed:
                 amount = "+" + PlayerReloadSpeedUpgrade.UpgAmount.ToString("#0.0");
                 return amount;
@@ -200,11 +185,8 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.HealthRegen:
                 amount = "+" + HealthRegenUpgrade.UpgAmount.ToString("#0.0");
                 return amount;
-            case PlayerStatsUpgrade.CriticalHitChance:
-                amount = "+" + CriticalHitChanceUpgrade.UpgAmount.ToString("#0.00");
-                return amount;
-            case PlayerStatsUpgrade.CriticalHitDamage:
-                amount = "+" + CriticalHitDamageUpgrade.UpgAmount.ToString("#0.00");
+            case PlayerStatsUpgrade.CriticalHit:
+                amount = "+" + CriticalHitUpgrade.UpgAmount.ToString("#0.00");
                 return amount;
         }
 

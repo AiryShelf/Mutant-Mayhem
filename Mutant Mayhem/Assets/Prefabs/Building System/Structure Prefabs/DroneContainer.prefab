@@ -49,11 +49,11 @@ MonoBehaviour:
   droneRangeCircle: {fileID: 6962445346651528811}
   controlledDrones: []
   dockedDrones: []
-  maxConstructionDrones: 8
-  maxAttackDrones: 4
+  maxDrones: 4
   launchDelay: 0.5
   detectionRadius: 12
   repairAmountPerSec: 10
+  hasPower: 1
   detectionCollider: {fileID: 1856495315866651960}
 --- !u!58 &1856495315866651960
 CircleCollider2D:

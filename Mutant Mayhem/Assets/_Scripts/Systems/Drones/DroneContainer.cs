@@ -20,7 +20,6 @@ public class DroneContainer : MonoBehaviour
 
     void Start()
     {
-        SpawnStartDrones();
         StartCoroutine(LookForJobs());
         StartCoroutine(RepairDrones());
     }
@@ -106,6 +105,11 @@ public class DroneContainer : MonoBehaviour
                 IncrementAssignedDrones_Attack(drone.currentJob, -1);
                 break;
         }
+    }
+
+    public int GetTotalDroneCount()
+    {
+        return controlledDrones.Count;
     }
 
     public int GetDroneCount(DroneType droneType)

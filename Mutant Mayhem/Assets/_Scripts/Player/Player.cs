@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
     InputActionMap uIActionMap;
     InputAction escapeAction;
     bool wasRepairing = false;
-    bool isUpgradesOpen = false;
+    bool isInteracting = false;
     PanelInteract currentPanelInteract;
 
     void Awake()
@@ -185,6 +185,7 @@ public class Player : MonoBehaviour
         uIActionMap = inputAsset.FindActionMap("UI");
         escapeAction = uIActionMap.FindAction("Escape");
 
+        uIActionMap.Enable();
         playerMap.Enable();
     }
 
@@ -254,27 +255,63 @@ public class Player : MonoBehaviour
 
     public void OnInteract()
     {
-        if (!isUpgradesOpen)
+        // Close build menu
+        if (BuildingSystem.Instance.isInBuildMode)
+            BuildingSystem.Instance.ToggleBuildMenu();
+
+        // Check for panels and open the closest one
+        if (!isInteracting)
         {
-            PanelInteract panel = TileManager.Instance.GetClosestPanelInteractUnderCircle(transform.position, interactRadius);
+            GameObject obj;
+            PanelInteract panel;
+            (obj, panel) = TileManager.Instance.GetClosestObjectAndPanelUnderCircle(transform.position, interactRadius);
             currentPanelInteract = panel;
             if (panel != null)
             {
-                panel.OpenPanel(transform);
-                StartCoroutine(OpenUpgradeWindow());
+                panel.OpenPanel(this);
+                EnterInteractMode();
+                stats.structureStats.currentDroneContainer = obj.GetComponentInChildren<DroneContainer>();
             }
         }
         else
         {
-            CloseUpgradeWindow();
+            CloseInteractPanel();
+            ExitInteractMode();
         }
     }
 
-    IEnumerator OpenUpgradeWindow()
+    public void OnEscapePressed(InputAction.CallbackContext context)
     {
-        yield return new WaitForFixedUpdate();
+        Debug.Log("OnEscapePressed called");
+        if (isInteracting)
+        {
+            CloseInteractPanel();
+            ExitInteractMode();
+        }
 
-        
+        if (PanelManager.NumPanelsOpen > 0)
+            return;
+
+        if (UpgradePanelManager.Instance.isOpen)
+        {
+            StartCoroutine(WaitToCheckForPause());
+        }
+    }
+
+    void CloseInteractPanel()
+    {
+        if (currentPanelInteract != null)
+        {
+            currentPanelInteract.ClosePanel();
+            currentPanelInteract = null;
+        }
+        else
+            Debug.LogError("Player: Tried to close upgrade panel but currentPanelInteract was null!");
+    }
+
+    void EnterInteractMode()
+    {
+        //yield return new WaitForFixedUpdate();
         
         wasRepairing = stats.playerShooter.isRepairing;
         stats.playerShooter.isRepairing = false;
@@ -292,17 +329,12 @@ public class Player : MonoBehaviour
         throwAction.Disable();
         if (InputManager.LastUsedDevice == Gamepad.current)
             toolbarAction.Disable();
-        isUpgradesOpen = true;
+
+        isInteracting = true;
     }
 
-    public void CloseUpgradeWindow()
+    public void ExitInteractMode()
     {
-        if (currentPanelInteract != null)
-        {
-            currentPanelInteract.ClosePanel();
-            currentPanelInteract = null;
-        }
-
         if (stats.playerShooter.currentGunIndex == 4) // Repair Gun
             stats.playerShooter.isRepairing = true;
         else
@@ -323,27 +355,14 @@ public class Player : MonoBehaviour
         fireAction.Enable();
         throwAction.Enable();
         toolbarAction.Enable();
-        isUpgradesOpen = false;
-
-        StopAllCoroutines();
-    }
-    
-    void OnEscapePressed(InputAction.CallbackContext context)
-    {
-        if (PanelManager.NumPanelsOpen > 0)
-            return;
-
-        if (UpgradePanelManager.Instance.isOpen)
-        {
-            StartCoroutine(WaitToCheckForPause());
-        }
+        isInteracting = false;
     }
 
     IEnumerator WaitToCheckForPause()
     {
         yield return new WaitForSecondsRealtime(0.05f);
 
-        CloseUpgradeWindow();
+        ExitInteractMode();
     }
 
     public void SprintInput_Performed(InputAction.CallbackContext context)

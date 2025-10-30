@@ -44,7 +44,7 @@ public class DroneManager : MonoBehaviour
         switch (droneType)
         {
             case DroneType.Builder:
-                if (droneContainer.GetDroneCount(DroneType.Builder) >= droneContainer.maxDrones)
+                if (droneContainer.GetTotalDroneCount() >= droneContainer.maxDrones)
                 {
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
@@ -53,7 +53,7 @@ public class DroneManager : MonoBehaviour
                 droneGun = droneGunList[0];
                 break;
             case DroneType.Attacker:
-                if (droneContainer.GetDroneCount(DroneType.Attacker) >= droneContainer.maxDrones)
+                if (droneContainer.GetTotalDroneCount() >= droneContainer.maxDrones)
                 {
                     MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
                     return false;

@@ -596,8 +596,9 @@ public class TileManager : MonoBehaviour
     ///  2) Tilemap-based structures by testing which cells intersect the circle.
     /// Returns null if none found.
     /// </summary>
-    public PanelInteract GetClosestPanelInteractUnderCircle(Vector2 centerWorldPos, float radius)
+    public (GameObject, PanelInteract) GetClosestObjectAndPanelUnderCircle(Vector2 centerWorldPos, float radius)
     {
+        GameObject closestObject = null;
         PanelInteract closestPanel = null;
         float bestDistSq = float.PositiveInfinity;
 
@@ -615,6 +616,7 @@ public class TileManager : MonoBehaviour
                 if (dSq < bestDistSq)
                 {
                     bestDistSq = dSq;
+                    closestObject = panel.gameObject;
                     closestPanel = panel;
                 }
             }
@@ -644,13 +646,18 @@ public class TileManager : MonoBehaviour
                 if (dSq < bestDistSq)
                 {
                     bestDistSq = dSq;
+                    closestObject = obj;
                     closestPanel = panel;
                 }
             }
         }
 
-        Debug.Log($"GetClosestPanelInteractUnderCircle found: {closestPanel} at distance squared: {bestDistSq}");
-        return closestPanel;
+        if (closestPanel != null)
+            Debug.Log($"GetClosestPanelInteractUnderCircle found: {closestPanel} at distance squared: {bestDistSq}");
+        else
+            Debug.Log("GetClosestPanelInteractUnderCircle found no panel");
+        
+        return (closestObject, closestPanel);
     }
 
     /// <summary>

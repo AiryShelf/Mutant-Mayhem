@@ -22,8 +22,11 @@ public class UiUpgradePanel : UI_PanelBase
 {
     public StructureType structureToBuildForUnlock;
     [SerializeField] List<GameObject> UIUpgradePrefabs;
+    [SerializeField] List<GameObject> UIUpgradePrefabs2;
     public GridLayoutGroup buttonsGrid;
     public GridLayoutGroup textGrid;
+    public GridLayoutGroup buttonsGrid2;
+    public GridLayoutGroup textGrid2;
     [SerializeField] CanvasGroup mainPanelCanvasGroup;
     [SerializeField] CanvasGroup upgradesCanvasGroup;
     [SerializeField] CanvasGroup noPowerCanvasGroup;
@@ -43,6 +46,10 @@ public class UiUpgradePanel : UI_PanelBase
     {
         player = FindObjectOfType<Player>();
 
+        noPowerCanvasGroup.alpha = 0;
+        noPowerCanvasGroup.blocksRaycasts = false;
+        noPowerCanvasGroup.interactable = false;
+
         // Clear editor objects in layout groups
         for (int i = buttonsGrid.transform.childCount - 1; i >= 0; i--)
         {
@@ -53,33 +60,53 @@ public class UiUpgradePanel : UI_PanelBase
             Destroy(textGrid.transform.GetChild(i).gameObject);
         }
 
-        noPowerCanvasGroup.alpha = 0;
-        noPowerCanvasGroup.blocksRaycasts = false;
-        noPowerCanvasGroup.interactable = false;
+        if (buttonsGrid2 == null || textGrid2 == null)
+            return;
+        for (int i = buttonsGrid2.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(buttonsGrid2.transform.GetChild(i).gameObject);
+        }
+        for (int i = textGrid2.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(textGrid2.transform.GetChild(i).gameObject);
+        } 
     }
 
     void Start()
     {
         // Initialize upgrade lists into UI
-        foreach (GameObject upgrade in UIUpgradePrefabs)
+        PopulateUpgrades(UIUpgradePrefabs, buttonsGrid, textGrid);
+        PopulateUpgrades(UIUpgradePrefabs2, buttonsGrid2, textGrid2);
+
+        InitializeFadeGroups();
+    }
+
+    /// <summary>
+    /// Populates upgrade buttons and corresponding text objects for a given set of prefabs and target layout groups.
+    /// </summary>
+    /// <param name="upgradePrefabs">List of UI upgrade prefab GameObjects to instantiate.</param>
+    /// <param name="buttonsGroup">Target GridLayoutGroup for the buttons.</param>
+    /// <param name="textGroup">Target GridLayoutGroup for the text objects.</param>
+    void PopulateUpgrades(List<GameObject> upgradePrefabs, GridLayoutGroup buttonsGroup, GridLayoutGroup textGroup)
+    {
+        if (upgradePrefabs == null || buttonsGroup == null || textGroup == null)
+            return;
+            
+        foreach (GameObject upgrade in upgradePrefabs)
         {
             // Create button, get text prefab
-            GameObject buttonPrefab = Instantiate(upgrade, buttonsGrid.transform);
+            GameObject buttonPrefab = Instantiate(upgrade, buttonsGroup.transform);
             UIUpgrade uIUpgrade = buttonPrefab.GetComponent<UIUpgrade>();
             GameObject textPrefab = uIUpgrade.upgradeTextPrefab;
 
             // Create text obj and give text instance to uIUpgrade
-            GameObject txtObj = Instantiate(textPrefab, textGrid.transform);
+            GameObject txtObj = Instantiate(textPrefab, textGroup.transform);
             SetTextReference(uIUpgrade, txtObj);
-
-            //uIUpgrade.Initialize();
 
             // Add to fade canvas groups
             fadeCanvasGroups.individualElements.Add(buttonPrefab.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(txtObj.GetComponent<CanvasGroup>());
         }
-
-        InitializeFadeGroups();
     }
 
     void InitializeFadeGroups()
@@ -141,15 +168,18 @@ public class UiUpgradePanel : UI_PanelBase
     public void OpenPanel(PanelInteract interactSource)
     {
         fadeCanvasGroups.isTriggered = true;
+        mainPanelCanvasGroup.alpha = 1;
         mainPanelCanvasGroup.blocksRaycasts = true;
         mainPanelCanvasGroup.interactable = true;
 
         panelInteract = interactSource;
+        Debug.Log("UiUpgradePanel: Opened panel for " + structureToBuildForUnlock);
     }
 
     public void ClosePanel()
     {
         fadeCanvasGroups.isTriggered = false;
+        mainPanelCanvasGroup.alpha = 0;
         mainPanelCanvasGroup.blocksRaycasts = false;
         mainPanelCanvasGroup.interactable = false;
 
@@ -158,6 +188,7 @@ public class UiUpgradePanel : UI_PanelBase
             panelInteract.StopAllCoroutines();
             panelInteract = null;
         }
+        Debug.Log("UiUpgradePanel: Closed panel for " + structureToBuildForUnlock);
     }
 
     void ShowUpgradesPanel()

@@ -324,6 +324,7 @@ public class BuildingSystem : MonoBehaviour
         if (!isInBuildMode)
         {
             UpgradePanelManager.Instance.CloseAllPanels();
+            player.ExitInteractMode();
 
             if (InputManager.LastUsedDevice == Gamepad.current)
             {

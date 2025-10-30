@@ -5,19 +5,26 @@ using UnityEngine;
 public class PanelInteract : MonoBehaviour
 {
     [SerializeField] StructureType structureTypeForPanelInteract;
-    Transform openerTransform;
+    Player playerWhoOpened;
+    float sqDistToPlayerWhoOpened = 0;
 
-    public void OpenPanel(Transform panelOpener)
+    public void OpenPanel(Player panelOpener)
     {
         UpgradePanelManager.Instance.CloseAllPanels();
         UpgradePanelManager.Instance.OpenPanel(structureTypeForPanelInteract, this);
-        openerTransform = panelOpener;
+        playerWhoOpened = panelOpener;
+        sqDistToPlayerWhoOpened = Vector3.SqrMagnitude(playerWhoOpened.transform.position - transform.position);
 
         StartCoroutine(CheckForClose());
     }
 
     public void ClosePanel()
     {
+        if (playerWhoOpened != null)
+        {
+            playerWhoOpened.ExitInteractMode();
+            playerWhoOpened = null;
+        }
         UpgradePanelManager.Instance.ClosePanel(structureTypeForPanelInteract);
         StopAllCoroutines();
     }
@@ -26,7 +33,7 @@ public class PanelInteract : MonoBehaviour
     {
         while (true)
         {
-            if (Vector3.SqrMagnitude(openerTransform.position - transform.position) > 1f)
+            if (playerWhoOpened == null || Vector3.SqrMagnitude(playerWhoOpened.transform.position - transform.position) > sqDistToPlayerWhoOpened + 2f)
             {
                 ClosePanel();
                 yield break;

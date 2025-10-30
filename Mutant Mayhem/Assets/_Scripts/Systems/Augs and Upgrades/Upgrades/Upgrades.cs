@@ -12,8 +12,8 @@ public enum UpgradeFamily
 public enum PlayerStatsUpgrade
 {
     MoveSpeed,
-    StrafeSpeed,
-    SprintFactor,
+    StrafeSpeed_Deprecated,
+    SprintFactor_Deprecated,
     PlayerReloadSpeed,
     WeaponHandling,
     MeleeDamage,
@@ -22,8 +22,8 @@ public enum PlayerStatsUpgrade
     StaminaRegen,
     HealthMax,
     HealthRegen,
-    CriticalHitChance,
-    CriticalHitDamage
+    CriticalHitChance_Deprecated,
+    CriticalHit
 }
 
 public enum StructureStatsUpgrade
@@ -111,6 +111,8 @@ public class MoveSpeedUpgrade : Upgrade
     public MoveSpeedUpgrade() : base(PlayerStatsUpgrade.MoveSpeed) { }
 
     public static float UpgAmount = 0.2f;
+    public static float StrafeUpgAmount = 0.17f;
+    public static float SprintUpgAmount = 0.01f;
 
     public static float GetUpgAmount()
     {
@@ -121,37 +123,9 @@ public class MoveSpeedUpgrade : Upgrade
     {
         playerStats.moveSpeed += UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
         playerStats.lookSpeed += 0.1f;
-        playerStats.player.RefreshMoveForces();
-    }
-}
+        playerStats.strafeSpeed += StrafeUpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
+        playerStats.sprintFactor += SprintUpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
 
-public class StrafeSpeedUpgrade : Upgrade
-{
-    public StrafeSpeedUpgrade() : base(PlayerStatsUpgrade.StrafeSpeed) { }
-
-    public static float UpgAmount = 0.17f;
-
-    public static float GetUpgAmount()
-    {
-        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
-    }
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.strafeSpeed += UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.PlayerMoveSpeed];
-        playerStats.player.RefreshMoveForces();
-    }
-}
-
-public class SprintFactorUpgrade : Upgrade
-{
-    public SprintFactorUpgrade() : base(PlayerStatsUpgrade.SprintFactor) { }
-
-    public static float UpgAmount = 0.015f;
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
-        playerStats.sprintFactor += UpgAmount;
         playerStats.player.RefreshMoveForces();
     }
 }
@@ -338,37 +312,16 @@ public class HealthRegenUpgrade : Upgrade
     }
 }
 
-public class CriticalHitChanceUpgrade : Upgrade
+
+public class CriticalHitUpgrade : Upgrade
 {
-    public CriticalHitChanceUpgrade() : base(PlayerStatsUpgrade.CriticalHitChance) { }
+    public CriticalHitUpgrade() : base(PlayerStatsUpgrade.CriticalHit) { }
 
     public static float UpgAmount = 0.02f;
 
     public override void Apply(PlayerStats playerStats, int level)
     {
         playerStats.criticalHitChanceMult += UpgAmount;
-    }
-
-    public override int CalculateCost(Player player, int baseCost, int level)
-    {
-        // Double the cost each level
-        int newCost = baseCost;
-        for (int i = 1; i < level; i++)
-        {
-            newCost = Mathf.CeilToInt(newCost * 1.35f);
-        }
-        return newCost;
-    }
-}
-
-public class CriticalHitDamageUpgrade : Upgrade
-{
-    public CriticalHitDamageUpgrade() : base(PlayerStatsUpgrade.CriticalHitDamage) { }
-
-    public static float UpgAmount = 0.02f;
-
-    public override void Apply(PlayerStats playerStats, int level)
-    {
         playerStats.criticalHitDamageMult += UpgAmount;
     }
 
