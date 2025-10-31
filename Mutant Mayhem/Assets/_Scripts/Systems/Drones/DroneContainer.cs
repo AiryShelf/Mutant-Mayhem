@@ -16,7 +16,7 @@ public class DroneContainer : MonoBehaviour
     [SerializeField] Collider2D detectionCollider;
 
     // Tracks num assigned drones
-    [SerializeField] List<KeyValuePair<DroneAttackJob, int>> attackJobs = new List<KeyValuePair<DroneAttackJob, int>>(); 
+    [SerializeField] List<KeyValuePair<DroneAttackJob, int>> attackJobs = new List<KeyValuePair<DroneAttackJob, int>>();
 
     void Start()
     {
@@ -63,7 +63,7 @@ public class DroneContainer : MonoBehaviour
             Debug.LogError("DroneHangar: Tried to Add a null Drone to the hangar");
             return;
         }
-        
+
         drone.transform.position = transform.position;
         controlledDrones.Add(drone);
         LandDrone(drone);
@@ -132,7 +132,7 @@ public class DroneContainer : MonoBehaviour
             yield return new WaitForSeconds(1);
 
             // Heal one drone at a time
-            foreach(var drone in dockedDrones)
+            foreach (var drone in dockedDrones)
             {
                 if (drone.droneHealth.GetHealth() < drone.droneHealth.GetMaxHealth())
                 {
@@ -155,7 +155,7 @@ public class DroneContainer : MonoBehaviour
             {
                 DroneJob job = null;
                 Drone droneToAssign = null;
-            
+
                 foreach (Drone dockedDrone in dockedDrones)
                 {
                     if (dockedDrone.currentJob.jobType != DroneJobType.None || !dockedDrone.hasPower)
@@ -274,7 +274,7 @@ public class DroneContainer : MonoBehaviour
             return;
 
         List<KeyValuePair<DroneAttackJob, int>> pairsToRemove = new List<KeyValuePair<DroneAttackJob, int>>();
-    
+
         foreach (var kvp in attackJobs)
         {
             if (otherCollider.transform == kvp.Key.targetTrans)

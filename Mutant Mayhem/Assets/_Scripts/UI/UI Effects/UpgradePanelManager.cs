@@ -27,6 +27,10 @@ public class UpgradePanelManager : MonoBehaviour
         {
             if (panel.structureToBuildForUnlock == structureType)
             {
+                if (panelInteract is PanelInteract_DroneHangar droneHangarInteract)
+                {
+                    (panel as UiUpgradePanel_DroneHangar).OpenPanel(droneHangarInteract, droneHangarInteract.droneContainer);
+                }
                 panel.OpenPanel(panelInteract);
                 isOpen = true;
             }

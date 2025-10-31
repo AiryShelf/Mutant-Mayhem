@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,28 +20,28 @@ public enum UpgradePanelType
 public class UiUpgradePanel : UI_PanelBase
 {
     public StructureType structureToBuildForUnlock;
-    [SerializeField] List<GameObject> UIUpgradePrefabs;
-    [SerializeField] List<GameObject> UIUpgradePrefabs2;
+    [SerializeField] protected List<GameObject> UIUpgradePrefabs;
+    [SerializeField] protected List<GameObject> UIUpgradePrefabs2;
     public GridLayoutGroup buttonsGrid;
     public GridLayoutGroup textGrid;
     public GridLayoutGroup buttonsGrid2;
     public GridLayoutGroup textGrid2;
-    [SerializeField] CanvasGroup mainPanelCanvasGroup;
-    [SerializeField] CanvasGroup upgradesCanvasGroup;
-    [SerializeField] CanvasGroup noPowerCanvasGroup;
+    [SerializeField] protected CanvasGroup mainPanelCanvasGroup;
+    [SerializeField] protected CanvasGroup upgradesCanvasGroup;
+    [SerializeField] protected CanvasGroup noPowerCanvasGroup;
     public bool hasPower = false;
 
     [Header("Unlockables (Optional)")]
     public string techUnlockMessageName;
 
     [Header("Unlock Gun")]
-    [SerializeField] UpgradeFamily upgradeFamily;
-    [SerializeField] int playerGunIndex;
+    [SerializeField] protected UpgradeFamily upgradeFamily;
+    [SerializeField] protected int playerGunIndex;
 
-    Player player;
-    PanelInteract panelInteract;
+    protected Player player;
+    protected PanelInteract panelInteract;
 
-    void Awake()
+    protected virtual void Awake()
     {
         player = FindObjectOfType<Player>();
 
@@ -72,7 +71,7 @@ public class UiUpgradePanel : UI_PanelBase
         } 
     }
 
-    void Start()
+    protected virtual void Start()
     {
         // Initialize upgrade lists into UI
         PopulateUpgrades(UIUpgradePrefabs, buttonsGrid, textGrid);
@@ -87,7 +86,7 @@ public class UiUpgradePanel : UI_PanelBase
     /// <param name="upgradePrefabs">List of UI upgrade prefab GameObjects to instantiate.</param>
     /// <param name="buttonsGroup">Target GridLayoutGroup for the buttons.</param>
     /// <param name="textGroup">Target GridLayoutGroup for the text objects.</param>
-    void PopulateUpgrades(List<GameObject> upgradePrefabs, GridLayoutGroup buttonsGroup, GridLayoutGroup textGroup)
+    protected virtual void PopulateUpgrades(List<GameObject> upgradePrefabs, GridLayoutGroup buttonsGroup, GridLayoutGroup textGroup)
     {
         if (upgradePrefabs == null || buttonsGroup == null || textGroup == null)
             return;
@@ -109,19 +108,19 @@ public class UiUpgradePanel : UI_PanelBase
         }
     }
 
-    void InitializeFadeGroups()
+    protected virtual void InitializeFadeGroups()
     {
         RefreshUpgradesText(BuildingSystem.PlayerCredits);
         fadeCanvasGroups.InitializeToFadedOut();
     }
 
-    void SetTextReference(UIUpgrade upg, GameObject obj)
+    protected virtual void SetTextReference(UIUpgrade upg, GameObject obj)
     {
         upg.upgradeText = obj.GetComponent<TextMeshProUGUI>();
         upg.Initialize();
     }
 
-    public void RefreshUpgradesText(float playerCredits)
+    public virtual void RefreshUpgradesText(float playerCredits)
     {
         Debug.Log("Refreshing upgradesText with playerCredits: " + playerCredits);
         foreach (Transform child in buttonsGrid.transform)
@@ -134,7 +133,7 @@ public class UiUpgradePanel : UI_PanelBase
         }
     }
 
-    public void OnPowerOn(bool playEffect)
+    public virtual void OnPowerOn(bool playEffect)
     {
         hasPower = true;
 
@@ -146,12 +145,14 @@ public class UiUpgradePanel : UI_PanelBase
 
         if (playEffect)
         {
-            MessagePanel.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
+            if (!string.IsNullOrEmpty(techUnlockMessageName))
+                MessagePanel.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
+
             UpgradeManager.Instance.upgradeEffects.PlayUnlockEffect(transform.position);
         }      
     }
 
-    public void OnPowerOff(bool playEffect)
+    public virtual void OnPowerOff(bool playEffect)
     {
         hasPower = false;
 
@@ -161,11 +162,11 @@ public class UiUpgradePanel : UI_PanelBase
 
         ShowNoPowerPanel();
 
-        if (playEffect)
+        if (playEffect && !string.IsNullOrEmpty(techUnlockMessageName))
             MessagePanel.PulseMessage(techUnlockMessageName + " locked!", Color.red);
     }
 
-    public void OpenPanel(PanelInteract interactSource)
+    public virtual void OpenPanel(PanelInteract interactSource)
     {
         fadeCanvasGroups.isTriggered = true;
         mainPanelCanvasGroup.alpha = 1;
@@ -176,7 +177,7 @@ public class UiUpgradePanel : UI_PanelBase
         Debug.Log("UiUpgradePanel: Opened panel for " + structureToBuildForUnlock);
     }
 
-    public void ClosePanel()
+    public virtual void ClosePanel()
     {
         fadeCanvasGroups.isTriggered = false;
         mainPanelCanvasGroup.alpha = 0;
@@ -191,7 +192,7 @@ public class UiUpgradePanel : UI_PanelBase
         Debug.Log("UiUpgradePanel: Closed panel for " + structureToBuildForUnlock);
     }
 
-    void ShowUpgradesPanel()
+    protected virtual void ShowUpgradesPanel()
     {
         upgradesCanvasGroup.alpha = 1;
         upgradesCanvasGroup.blocksRaycasts = true;
@@ -202,7 +203,7 @@ public class UiUpgradePanel : UI_PanelBase
         noPowerCanvasGroup.interactable = false;
     }
 
-    void ShowNoPowerPanel()
+    protected virtual void ShowNoPowerPanel()
     {
         upgradesCanvasGroup.alpha = 0;
         upgradesCanvasGroup.blocksRaycasts = false;

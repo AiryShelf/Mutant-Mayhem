@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PanelInteract : MonoBehaviour
 {
-    [SerializeField] StructureType structureTypeForPanelInteract;
-    Player playerWhoOpened;
-    float sqDistToPlayerWhoOpened = 0;
+    public StructureType structureTypeForPanelInteract;
+    protected Player playerWhoOpened;
+    protected float sqDistToPlayerWhoOpened = 0;
 
-    public void OpenPanel(Player panelOpener)
+    public virtual void OpenPanel(Player panelOpener)
     {
         UpgradePanelManager.Instance.CloseAllPanels();
         UpgradePanelManager.Instance.OpenPanel(structureTypeForPanelInteract, this);
@@ -18,7 +18,7 @@ public class PanelInteract : MonoBehaviour
         StartCoroutine(CheckForClose());
     }
 
-    public void ClosePanel()
+    public virtual void ClosePanel()
     {
         if (playerWhoOpened != null)
         {
@@ -29,7 +29,7 @@ public class PanelInteract : MonoBehaviour
         StopAllCoroutines();
     }
 
-    IEnumerator CheckForClose()
+    protected IEnumerator CheckForClose()
     {
         while (true)
         {

@@ -288,7 +288,7 @@ RectTransform:
   m_GameObject: {fileID: 6775621342609686482}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.93749976, y: 2.1874998, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2209550987251486326}
@@ -297,8 +297,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -1.3}
-  m_SizeDelta: {x: 48, y: 8}
+  m_AnchoredPosition: {x: 0, y: 0.27219963}
+  m_SizeDelta: {x: 48, y: 12.5558}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9061848364237830102
 MonoBehaviour:
@@ -375,6 +375,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3199253385874726057}
+  - component: {fileID: 617800131851799879}
   m_Layer: 0
   m_Name: Drone Info Icon
   m_TagString: Untagged
@@ -403,3 +404,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &617800131851799879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142099385399328250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6621512ed0e294c4c9581b684282d69b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  constructionDroneSprite: {fileID: 864930502, guid: 5158b7806fce947898aa2ec2c04da0fa, type: 3}
+  attackDroneSprite: {fileID: 1065483855, guid: 5860793b7967f4dcfaeb0acb5eedb5eb, type: 3}
+  droneIconImage: {fileID: 4320171305577177127}
+  droneHealthSlider: {fileID: 9061848364237830102}

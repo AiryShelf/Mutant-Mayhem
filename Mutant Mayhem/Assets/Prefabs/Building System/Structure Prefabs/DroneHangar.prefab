@@ -144,7 +144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5746837718582024832}
-  - component: {fileID: 503211872303039865}
+  - component: {fileID: 4259729579253803531}
   m_Layer: 0
   m_Name: PanelInteract
   m_TagString: Untagged
@@ -167,7 +167,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 382680437704054648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &503211872303039865
+--- !u!114 &4259729579253803531
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,10 +176,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1848867239944633681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: effb0064c68624c538e537093857c9a5, type: 3}
+  m_Script: {fileID: 11500000, guid: a2e9958cd30e14fe384cb2242a8cd631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   structureTypeForPanelInteract: 28
+  droneContainer: {fileID: 1481001888821365509}
 --- !u!1 &6032300958366406844
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,9 +444,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1387485545
-  m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingLayerID: 463552943
+  m_SortingLayer: 7
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e239d40c288c542af9f8071d1d01cb8c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
