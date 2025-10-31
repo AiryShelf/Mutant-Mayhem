@@ -116,40 +116,6 @@ public class HUDStatsPanel : MonoBehaviour
         UpdateQCubeStatsUI(qCubeHealth.GetHealth());
 
         Screen.SetResolution(Screen.width, Screen.height, Screen.fullScreen);
-
-        /*
-        var rt = creditsText.GetComponent<RectTransform>();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
-        var parentRT = creditsText.transform.parent.GetComponent<RectTransform>();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(parentRT);
-        var grandparentRT = creditsText.transform.parent.parent.GetComponent<RectTransform>();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(grandparentRT);
-
-        yield return new WaitForEndOfFrame(); 
-
-        
-
-        Canvas.ForceUpdateCanvases();
-        yield return new WaitForEndOfFrame(); 
-        creditsText.ForceMeshUpdate(true, true);
-        yield return new WaitForEndOfFrame(); 
-        Canvas.ForceUpdateCanvases();
-        yield return new WaitForEndOfFrame(); 
-
-        creditsText.gameObject.SetActive(false);
-        yield return new WaitForEndOfFrame(); 
-        creditsText.gameObject.SetActive(true);
-        yield return new WaitForEndOfFrame(); 
-        
-        Screen.SetResolution(Screen.width / 2, Screen.height / 2, Screen.fullScreen);
-        yield return new WaitForFixedUpdate(); 
-        yield return new WaitForFixedUpdate(); 
-        yield return new WaitForFixedUpdate(); 
-        yield return new WaitForFixedUpdate(); 
-        yield return new WaitForFixedUpdate(); 
-        yield return new WaitForFixedUpdate();
-        Screen.SetResolution(Screen.width * 2, Screen.height * 2, Screen.fullScreen);
-        */
     }
 
     void UpdateStaminaStats()

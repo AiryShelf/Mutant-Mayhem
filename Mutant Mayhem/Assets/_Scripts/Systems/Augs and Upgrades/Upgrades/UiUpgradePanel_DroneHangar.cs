@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class UiUpgradePanel_DroneHangar : UiUpgradePanel
 {
+    [Header("Drone Hangar")]
     [SerializeField] GameObject dockedLayoutObject;
     [SerializeField] GameObject launchedLayoutObject;
     [SerializeField] string droneInfoIconPoolName = "Drone_Info_Icon";
     List<DroneInfoIcon> activeDroneInfoIcons = new List<DroneInfoIcon>();
 
-    [Header("Drone Hangar")]
     DroneContainer droneContainer;
     Coroutine updateDroneInfoCoroutine;
 

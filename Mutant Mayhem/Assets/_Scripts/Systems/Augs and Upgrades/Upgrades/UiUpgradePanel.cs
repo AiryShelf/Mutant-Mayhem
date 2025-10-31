@@ -20,14 +20,14 @@ public enum UpgradePanelType
 public class UiUpgradePanel : UI_PanelBase
 {
     public StructureType structureToBuildForUnlock;
-    [SerializeField] protected List<GameObject> UIUpgradePrefabs;
-    [SerializeField] protected List<GameObject> UIUpgradePrefabs2;
+    [SerializeField] protected List<GameObject> UIUpgradePrefabs = new List<GameObject>();
+    [SerializeField] protected List<GameObject> UIUpgradePrefabs2 = new List<GameObject>();
     public GridLayoutGroup buttonsGrid;
     public GridLayoutGroup textGrid;
     public GridLayoutGroup buttonsGrid2;
     public GridLayoutGroup textGrid2;
     [SerializeField] protected CanvasGroup mainPanelCanvasGroup;
-    [SerializeField] protected CanvasGroup upgradesCanvasGroup;
+    [SerializeField] protected CanvasGroup poweredCanvasGroup;
     [SerializeField] protected CanvasGroup noPowerCanvasGroup;
     public bool hasPower = false;
 
@@ -74,6 +74,13 @@ public class UiUpgradePanel : UI_PanelBase
     protected virtual void Start()
     {
         // Initialize upgrade lists into UI
+        StartCoroutine(DelayInitializeFadeGroups());
+    }
+
+    IEnumerator DelayInitializeFadeGroups()
+    {
+        yield return new WaitForSeconds(0.5f);
+
         PopulateUpgrades(UIUpgradePrefabs, buttonsGrid, textGrid);
         PopulateUpgrades(UIUpgradePrefabs2, buttonsGrid2, textGrid2);
 
@@ -88,7 +95,7 @@ public class UiUpgradePanel : UI_PanelBase
     /// <param name="textGroup">Target GridLayoutGroup for the text objects.</param>
     protected virtual void PopulateUpgrades(List<GameObject> upgradePrefabs, GridLayoutGroup buttonsGroup, GridLayoutGroup textGroup)
     {
-        if (upgradePrefabs == null || buttonsGroup == null || textGroup == null)
+        if (upgradePrefabs.Count < 1 || buttonsGroup == null || textGroup == null)
             return;
             
         foreach (GameObject upgrade in upgradePrefabs)
@@ -108,7 +115,7 @@ public class UiUpgradePanel : UI_PanelBase
         }
     }
 
-    protected virtual void InitializeFadeGroups()
+    void InitializeFadeGroups()
     {
         RefreshUpgradesText(BuildingSystem.PlayerCredits);
         fadeCanvasGroups.InitializeToFadedOut();
@@ -194,9 +201,9 @@ public class UiUpgradePanel : UI_PanelBase
 
     protected virtual void ShowUpgradesPanel()
     {
-        upgradesCanvasGroup.alpha = 1;
-        upgradesCanvasGroup.blocksRaycasts = true;
-        upgradesCanvasGroup.interactable = true;
+        poweredCanvasGroup.alpha = 1;
+        poweredCanvasGroup.blocksRaycasts = true;
+        poweredCanvasGroup.interactable = true;
 
         noPowerCanvasGroup.alpha = 0;
         noPowerCanvasGroup.blocksRaycasts = false;
@@ -205,9 +212,9 @@ public class UiUpgradePanel : UI_PanelBase
 
     protected virtual void ShowNoPowerPanel()
     {
-        upgradesCanvasGroup.alpha = 0;
-        upgradesCanvasGroup.blocksRaycasts = false;
-        upgradesCanvasGroup.interactable = false;
+        poweredCanvasGroup.alpha = 0;
+        poweredCanvasGroup.blocksRaycasts = false;
+        poweredCanvasGroup.interactable = false;
 
         noPowerCanvasGroup.alpha = 1;
         noPowerCanvasGroup.blocksRaycasts = true;

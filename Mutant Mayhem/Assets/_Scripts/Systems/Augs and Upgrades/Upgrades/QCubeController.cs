@@ -10,7 +10,7 @@ public class QCubeController : MonoBehaviour
 {
     public static QCubeController Instance;
 
-    
+    public QCubeHealth cubeHealth;    
 
     [Header("Death")]
     [SerializeField] TextMeshProUGUI deathTitleText;
