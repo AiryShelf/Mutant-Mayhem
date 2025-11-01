@@ -11,7 +11,6 @@ public enum CursorRangeType { Radius, Bounds }
 public class CursorManager : MonoBehaviour
 {
     public static CursorManager Instance { get; private set; }
-    public static int cursorSpeedFactorDefault = 800;
 
     [SerializeField] InputActionAsset inputActionAsset;
     public Transform customCursorWorld;
@@ -39,13 +38,23 @@ public class CursorManager : MonoBehaviour
     public VirtualJoystick aimJoystick;
     public bool usingCustomCursor = false;
     public bool inMenu;
+
+    // Speed
+    public int cursorSpeedSpeedBackup = 1500; // Default set by PlayerProfile
+    public float joystickCursorSpeed = 1500;
     public float cursorSpeedMin = 200;
-    public float cursorSpeedMax = 1600;
-    public float cursorSpeedFactor = 800;
+    public float cursorSpeedMax = 4800;
     public float joystickDeadzone = 0.05f;
     [SerializeField] float cursorSpeedCurveMagnitude = 3;
+    
+    // Acceleration
+    public int cursorAccelSpeedBackup = 3000; // Default set by PlayerProfile
+    public float cursorAcceleration = 3000f;
+    public float cursorAccelMin = 1000f;
+    public float cursorAccelMax = 12000f;
+
+    [Header("Other")]
     Vector2 cursorVelocity = Vector2.zero;
-    public float cursorAcceleration = 1000f;
     public GameObject currentHoveredObject = null;
     [SerializeField] GraphicRaycaster persistentCanvasGR;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters = new List<GraphicRaycaster>();
@@ -284,7 +293,7 @@ public class CursorManager : MonoBehaviour
         //Debug.Log($"Curved Magnitude: {curvedMagnitude}");
         //Debug.Log($"Cursor Speed Factor: {cursorSpeedFactor}");
 
-        float targetSpeed = cursorSpeedFactor * curvedMagnitude * joystickInputMagnitude;
+        float targetSpeed = joystickCursorSpeed * curvedMagnitude * joystickInputMagnitude;
         Vector2 direction = (joystickInputMagnitude > 0f) ? joystickInput.normalized : Vector2.zero;
 
         return (joystickInputMagnitude, direction, targetSpeed);

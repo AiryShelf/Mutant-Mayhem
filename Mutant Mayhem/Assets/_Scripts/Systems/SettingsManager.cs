@@ -32,6 +32,7 @@ public class SettingsManager : MonoBehaviour
 
     bool isSpacebarEnabled = true;
     float joystickCursorSpeed;
+    float joystickAccelSpeed;
     bool isVirtualAimJoystickVisible = false;
 
     WaveControllerRandom waveController;  
@@ -76,7 +77,8 @@ public class SettingsManager : MonoBehaviour
             useStandardWASD = true;
             isSpacebarEnabled = true;
             useFastJoystickAim = false;
-            joystickCursorSpeed = CursorManager.cursorSpeedFactorDefault;
+            joystickCursorSpeed = CursorManager.Instance.cursorSpeedSpeedBackup;
+            joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedBackup;
             isVirtualAimJoystickVisible = false;
             return;
         }
@@ -88,11 +90,13 @@ public class SettingsManager : MonoBehaviour
         useFastJoystickAim = currentProfile.isFastJoystickAimEnabled;
         if (currentProfile.joystickCursorSpeed < CursorManager.Instance.cursorSpeedMin)
         {
-            currentProfile.joystickCursorSpeed = CursorManager.cursorSpeedFactorDefault;
+            currentProfile.joystickCursorSpeed = CursorManager.Instance.cursorSpeedSpeedBackup;
+            currentProfile.joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedBackup;
             Debug.LogWarning($"Profile: {currentProfile} had an abnormally slow cursor speed, resetting to default");
             ProfileManager.Instance.SaveCurrentProfile();
         }
         joystickCursorSpeed = currentProfile.joystickCursorSpeed;
+        joystickAccelSpeed = currentProfile.joystickAccelSpeed;
         isVirtualAimJoystickVisible = !currentProfile.virtualAimJoystickDisabled;
         Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}, VirtualAimJoystickVisible = {isVirtualAimJoystickVisible}");
 
@@ -185,7 +189,8 @@ public class SettingsManager : MonoBehaviour
 
     void ApplyControlSettings()
     {
-        CursorManager.Instance.cursorSpeedFactor = joystickCursorSpeed;
+        CursorManager.Instance.joystickCursorSpeed = joystickCursorSpeed;
+        CursorManager.Instance.cursorAcceleration = joystickAccelSpeed;
         TouchManager.Instance.SetVirtualAimJoystickVisible(isVirtualAimJoystickVisible);
 
         player = FindObjectOfType<Player>();

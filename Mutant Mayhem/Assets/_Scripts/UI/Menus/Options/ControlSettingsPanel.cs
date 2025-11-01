@@ -10,6 +10,7 @@ public class ControlSettingsPanel : MonoBehaviour
     [SerializeField] TMP_Dropdown movementTypeDropdown;
     [SerializeField] Toggle fastJoystickAimToggle;
     [SerializeField] Slider joystickCursorSpeedSlider;
+    [SerializeField] Slider cursorAccelerationSlider;
     [SerializeField] Toggle spacebarToggle;
 
     void OnEnable()
@@ -18,6 +19,7 @@ public class ControlSettingsPanel : MonoBehaviour
         movementTypeDropdown.onValueChanged.AddListener(MoveTypeValueChanged);
         fastJoystickAimToggle.onValueChanged.AddListener(FastJoystickAimToggle);
         joystickCursorSpeedSlider.onValueChanged.AddListener(JoystickCursorSpeedChanged);
+        cursorAccelerationSlider.onValueChanged.AddListener(CursorAccelerationChanged);
         spacebarToggle.onValueChanged.AddListener(ToggleSpacebar);
 
         //Initialize();
@@ -29,6 +31,7 @@ public class ControlSettingsPanel : MonoBehaviour
         movementTypeDropdown.onValueChanged.RemoveListener(MoveTypeValueChanged);
         fastJoystickAimToggle.onValueChanged.RemoveListener(FastJoystickAimToggle);
         joystickCursorSpeedSlider.onValueChanged.RemoveListener(JoystickCursorSpeedChanged);
+        cursorAccelerationSlider.onValueChanged.RemoveListener(CursorAccelerationChanged);
         spacebarToggle.onValueChanged.RemoveListener(ToggleSpacebar);
     }
 
@@ -54,6 +57,13 @@ public class ControlSettingsPanel : MonoBehaviour
                 profile.joystickCursorSpeed
             );
             joystickCursorSpeedSlider.SetValueWithoutNotify(sliderValue);
+
+            float accelSliderValue = Mathf.InverseLerp(
+                CursorManager.Instance.cursorAccelMin,
+                CursorManager.Instance.cursorAccelMax,
+                profile.joystickAccelSpeed
+            );
+            cursorAccelerationSlider.SetValueWithoutNotify(accelSliderValue);
         }
         else
         {
@@ -61,6 +71,7 @@ public class ControlSettingsPanel : MonoBehaviour
             spacebarToggle.SetIsOnWithoutNotify(true);
             fastJoystickAimToggle.SetIsOnWithoutNotify(false);
             joystickCursorSpeedSlider.SetValueWithoutNotify(0.5f);
+            cursorAccelerationSlider.SetValueWithoutNotify(0.5f);
         }
     }
 
@@ -106,7 +117,7 @@ public class ControlSettingsPanel : MonoBehaviour
 
     void JoystickCursorSpeedChanged(float sliderValue)
     {
-        float value = CursorManager.Instance.cursorSpeedFactor;
+        float value = CursorManager.Instance.joystickCursorSpeed;
         if (ProfileManager.Instance.currentProfile != null)
         {
             value = Mathf.Lerp(CursorManager.Instance.cursorSpeedMin, CursorManager.Instance.cursorSpeedMax, sliderValue);
@@ -116,6 +127,20 @@ public class ControlSettingsPanel : MonoBehaviour
 
         SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         Debug.Log("Joystick Cursor Speed set to " + value);
+    }
+
+    void CursorAccelerationChanged(float sliderValue)
+    {
+        float value = CursorManager.Instance.cursorAcceleration;
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            value = Mathf.Lerp(CursorManager.Instance.cursorAccelMin, CursorManager.Instance.cursorAccelMax, sliderValue);
+            ProfileManager.Instance.currentProfile.joystickAccelSpeed = value;
+            ProfileManager.Instance.SaveCurrentProfile();
+        }
+
+        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        Debug.Log("Cursor Acceleration set to " + value);
     }
 
     void FastJoystickAimToggle(bool isOn)

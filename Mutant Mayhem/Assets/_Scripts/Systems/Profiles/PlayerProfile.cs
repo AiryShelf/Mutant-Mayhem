@@ -20,6 +20,7 @@ public class PlayerProfile
     public bool isSpacebarEnabled;
     public bool isFastJoystickAimEnabled;
     public float joystickCursorSpeed;
+    public float joystickAccelSpeed;
     public bool virtualAimJoystickDisabled;
 
     public PlayerProfile(string profileName, DifficultyLevel difficulty)
@@ -34,7 +35,8 @@ public class PlayerProfile
         isStandardWASD = true;
         isSpacebarEnabled = true;
         isFastJoystickAimEnabled = false;
-        joystickCursorSpeed = 800;
+        joystickCursorSpeed = 1500f;
+        joystickAccelSpeed = 3000;
         virtualAimJoystickDisabled = true;
     }
 }
