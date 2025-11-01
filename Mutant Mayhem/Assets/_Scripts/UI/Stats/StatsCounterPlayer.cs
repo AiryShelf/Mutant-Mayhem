@@ -62,7 +62,7 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int BallisticsBayPlaced;
     public static int ExplosivesBayPlaced;
     public static int RepairBayPlaced;
-    public static int DroneBayPlaced;
+    public static int DroneHangarPlaced;
 
     static Dictionary<string, float> MiscStats = new Dictionary<string, float>();
     static Dictionary<string, float> ProjectilesStats = new Dictionary<string, float>();
@@ -261,7 +261,7 @@ public class StatsCounterPlayer : MonoBehaviour
             case StructureType.RepairBay:
                 return RepairBayPlaced;
             case StructureType.DroneHangar:
-                return DroneBayPlaced;
+                return DroneHangarPlaced;
             default:
                 Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
                                  ". Returning 0.  You may need to add this type to the switch statement.");

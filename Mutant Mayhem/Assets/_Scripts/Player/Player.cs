@@ -272,6 +272,10 @@ public class Player : MonoBehaviour
                 EnterInteractMode();
                 stats.structureStats.currentDroneContainer = obj.GetComponentInChildren<DroneContainer>();
             }
+            else
+            {
+                MessagePanel.PulseMessage("No interactable object nearby!  Get closer!", Color.yellow);
+            }
         }
         else
         {

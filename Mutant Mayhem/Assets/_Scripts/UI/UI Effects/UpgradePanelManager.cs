@@ -7,6 +7,7 @@ public class UpgradePanelManager : MonoBehaviour
     public static UpgradePanelManager Instance;
     public UiUpgradePanel[] panels;
     public bool isOpen { get; private set; }
+    public UiUpgradePanel currentPanel = null;
 
     void Awake()
     {
@@ -28,11 +29,12 @@ public class UpgradePanelManager : MonoBehaviour
             if (panel.structureToBuildForUnlock == structureType)
             {
                 if (panelInteract is PanelInteract_DroneHangar droneHangarInteract)
-                {
                     (panel as UiUpgradePanel_DroneHangar).OpenPanel(droneHangarInteract, droneHangarInteract.droneContainer);
-                }
-                panel.OpenPanel(panelInteract);
+                else
+                    panel.OpenPanel(panelInteract);
+
                 isOpen = true;
+                currentPanel = panel;
             }
             else
             {
@@ -50,6 +52,7 @@ public class UpgradePanelManager : MonoBehaviour
         {
             if (panel.structureToBuildForUnlock == structureType)
             {
+                currentPanel = null;
                 panel.ClosePanel();
                 isOpen = false;
                 return;
@@ -62,6 +65,7 @@ public class UpgradePanelManager : MonoBehaviour
     public void CloseAllPanels()
     {
         isOpen = false;
+        currentPanel = null;
 
         foreach (UiUpgradePanel panel in panels)
         {

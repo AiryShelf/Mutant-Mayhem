@@ -635,7 +635,7 @@ public class BuildingSystem : MonoBehaviour
         else if (structureType == StructureType.RepairBay)
             StatsCounterPlayer.RepairBayPlaced++;
         else if (structureType == StructureType.DroneHangar)
-            StatsCounterPlayer.DroneBayPlaced++;
+            StatsCounterPlayer.DroneHangarPlaced++;
         else
             Debug.LogError("BuildingSystem: Untracked structure type for stats: " + structureType);
     }

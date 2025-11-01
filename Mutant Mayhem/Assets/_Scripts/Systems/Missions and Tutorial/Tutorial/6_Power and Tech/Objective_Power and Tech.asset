@@ -13,18 +13,21 @@ MonoBehaviour:
   m_Name: Objective_Power and Tech
   m_EditorClassIdentifier: 
   objectiveTitle: Power and Tech
-  objectiveDescription: 'Place 4 solar panels next to eachother, and notice the adjacency
-    bonus
+  objectiveDescription: 'Place 4 solar panels next to each other, ideally in a square
+    shape, and notice the adjacency bonuses from the connectors.  You can also join
+    different types of power producers
 
 
-    In the Upgrade panels of the Cube, you can see what is required to
-    unlock Laser tech
+    Certain buildings, like the Photonics
+    Bay, are interactable.  Press ''Interact'' near them to access their panels
 
-    Build the Photonics Bay to unlock Laser Tech'
+
+    Build
+    the Photonics Bay and access it''s panel to proceed'
   taskPrefabs:
   - {fileID: 936962933341166503, guid: c4755fc95afde4a7daba83fc24af0a59, type: 3}
-  - {fileID: 936962933341166503, guid: 5bfd2225bb89e194697fbce7027fcb6c, type: 3}
-  - {fileID: 936962933341166503, guid: fbf1787500f41b4448af3c4ef0fae5ea, type: 3}
+  - {fileID: 936962933341166503, guid: 5f2e178f59bdc40dd9616e7f459e39c4, type: 3}
+  - {fileID: 936962933341166503, guid: 67e65770b0d78406daa3d6efb3e05e0b, type: 3}
   - {fileID: 936962933341166503, guid: d93fde62135e44f2aac131df7854f560, type: 3}
   - {fileID: 936962933341166503, guid: b907c54a176124e0c9c9e1573853986b, type: 3}
   startConversation:

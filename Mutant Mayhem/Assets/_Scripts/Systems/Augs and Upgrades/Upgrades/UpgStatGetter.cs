@@ -111,7 +111,7 @@ public static class UpgStatGetter
         switch (gunStatsUpgrade)
         {
             case GunStatsUpgrade.GunDamage:
-                Debug.Log("Getting Gun Damage for gun index: " + gunIndex);
+                //Debug.Log("Getting Gun Damage for gun index: " + gunIndex);
                 stat = Mathf.Abs(player.stats.playerShooter.gunList[gunIndex].damage).ToString("#0.00");
                 return stat;
             case GunStatsUpgrade.GunKnockback:

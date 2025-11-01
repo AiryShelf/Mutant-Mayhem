@@ -1126,7 +1126,7 @@ public class TileManager : MonoBehaviour
         else if (structureType == StructureType.DroneHangar)
         {
             StatsCounterPlayer.DroneBayBuilt++;
-            StatsCounterPlayer.DroneBayPlaced--;
+            StatsCounterPlayer.DroneHangarPlaced--;
         }
         else
             Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
@@ -1179,7 +1179,7 @@ public class TileManager : MonoBehaviour
         }
         else if (structureType == StructureType.DroneHangar)
         {
-            StatsCounterPlayer.DroneBayPlaced--;
+            StatsCounterPlayer.DroneHangarPlaced--;
         }
     }
 
