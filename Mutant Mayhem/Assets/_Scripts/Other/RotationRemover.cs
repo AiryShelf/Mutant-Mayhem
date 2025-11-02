@@ -4,14 +4,8 @@ using UnityEngine;
 
 public class RotationRemover : MonoBehaviour
 {
-    void Start()
+    void FixedUpdate()
     {
-        StartCoroutine(WaitToRemoveRotation());
-    }
-    
-    IEnumerator WaitToRemoveRotation()
-    {
-        yield return new WaitForFixedUpdate();
         transform.rotation = Quaternion.identity;
     }
 }
