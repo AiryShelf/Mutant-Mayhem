@@ -20,7 +20,6 @@ public class AnimationControllerMutant : AnimationControllerEnemy
 
         if (myMutant != null)
         {
-            baseSpeed = myMutant.moveSpeedBase;
             myRb = myMutant.GetRigidbody();
         }
     }
@@ -29,11 +28,11 @@ public class AnimationControllerMutant : AnimationControllerEnemy
     {
         if (myMutant != null)
         {
-            float speed = myRb.velocity.magnitude;
+            float sqrSpeed = myRb.velocity.sqrMagnitude;
 
             if (GameTools.AnimatorHasParameter(leftLegAnimator, "isRunning"))
             {
-                if (speed > baseSpeed * switchToRunBuffer)
+                if (sqrSpeed > switchToRunBuffer * switchToRunBuffer)
                 {
                     leftLegAnimator.SetBool("isRunning", true);
                     rightLegAnimator.SetBool("isRunning", true);
@@ -45,19 +44,17 @@ public class AnimationControllerMutant : AnimationControllerEnemy
                 }
             }
 
+            float animSpeed = Mathf.Sqrt(sqrSpeed) * animSpeedFactor;
+            animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
+            leftLegAnimator.speed = animSpeed;
+            rightLegAnimator.speed = animSpeed;
+
             if (GameTools.AnimatorHasParameter(leftLegAnimator, "isJumping"))
             {
                 if (leftLegAnimator.GetBool("isSitting") || leftLegAnimator.GetBool("isJumping"))
                 {
                     leftLegAnimator.speed = 1;
                     rightLegAnimator.speed = 1;
-                }
-                else
-                {
-                    float animSpeed = speed * animSpeedFactor;
-                    animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
-                    leftLegAnimator.speed = animSpeed;
-                    rightLegAnimator.speed = animSpeed;
                 }
             }
         }

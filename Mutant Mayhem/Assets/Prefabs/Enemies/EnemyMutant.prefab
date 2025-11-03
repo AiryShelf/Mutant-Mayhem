@@ -471,6 +471,8 @@ MonoBehaviour:
   animControllerEnemy: {fileID: 5833339104486537906}
   meleeController: {fileID: 6872051605903006424}
   sr: {fileID: 0}
+  meleeDamageMaster: 1
+  knockbackMaster: 1
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
   moveSpeedBaseStart: 5
@@ -556,7 +558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animSpeedFactor: 0.7
-  switchToRunBuffer: 0.4
+  switchToRunBuffer: 5
   maxAnimSpeed: 3
   myAnimator: {fileID: 0}
   bodySR: {fileID: 2421378551077471280}

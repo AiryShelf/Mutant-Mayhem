@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MeleeControllerEnemy : MonoBehaviour
 {
-    public float meleeDamage = 20f;
-    public float meleeDamageStart;
+    public float meleeDamage = 20f; // Set by EnemyBase or Mutant
+    public float meleeDamageStart; // Set by EnemyBase or Mutant
     [Range(0, 1)]
     [SerializeField] float damageVariance = 0.15f;
     public float knockback = 10f;

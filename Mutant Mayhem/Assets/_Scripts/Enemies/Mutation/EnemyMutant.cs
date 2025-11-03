@@ -66,7 +66,7 @@ public class EnemyMutant : EnemyBase
         base.Die();
     }
 
-    public override void RandomizeColor()
+    public override void RandomizeEnemyBaseColor()
     {
         mutantRenderer.RandomizeColor(randColorRange);
     }
@@ -100,12 +100,13 @@ public class EnemyMutant : EnemyBase
         Genome g = individual.genome;
 
         SetHealthSettings(g);
-        rb.mass = startMass * g.bodyGene.scale * g.headGene.massModFactor;
+        float areaScale = g.bodyGene.scale * g.headGene.scale;
+        rb.mass = startMass * areaScale * g.headGene.massModFactor;
 
         SetCombinedPolygonCollider(g);
         SetMeleeSettings(g);
 
-        moveSpeedBase *= Mathf.Clamp(g.legGene.scale, 1, float.MaxValue);
+        moveSpeedBase *= Mathf.Clamp(g.legGene.scale * g.legGene.scale, 1, float.MaxValue);
         //Debug.Log($"EnemyMutant - MoveSpeedBase: {moveSpeedBase}, Mass: {rb.mass}");
 
        // Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");
@@ -142,7 +143,8 @@ public class EnemyMutant : EnemyBase
 
     void SetHealthSettings(Genome g)
     {
-        health.SetMaxHealth(g.bodyGene.startHealth * g.bodyGene.scale * 3.14f);
+        float areaScale = g.bodyGene.scale * g.headGene.scale;
+        health.SetMaxHealth(g.bodyGene.startHealth * areaScale);
         health.SetHealth(health.GetMaxHealth());
         health.painSound = g.bodyGene.painSound;
         unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
@@ -150,41 +152,42 @@ public class EnemyMutant : EnemyBase
 
     void SetMeleeSettings(Genome g)
     {
+        float areaScale = g.bodyGene.scale * g.headGene.scale;
         meleeController.meleeSound = g.headGene.meleeSound;
         meleeCollider.offset = g.headGene.meleeColliderOffset;
         meleeCollider.size = g.headGene.meleeColliderSize;
 
-        meleeController.meleeDamage = g.headGene.meleeDamage * g.headGene.scale;
-        meleeController.attackDelay = g.headGene.attackDelay;
-        meleeController.knockback = g.headGene.knockback * g.headGene.scale;
+        meleeController.meleeDamage = g.headGene.meleeDamage * areaScale;
+        meleeController.attackDelay = g.headGene.attackDelay * waveController.attackDelayMult;
+        meleeController.knockback = g.headGene.knockback * rb.mass;
         meleeController.selfKnockback = g.headGene.selfKnockback * rb.mass;
     }
 
     void ApplyFitness()
     {
         // Apply fitness based on variant
-        if (individual != null)
+        if (individual == null)
         {
-            float fitness;
-            if (individual.variant == MutantVariant.Fighter)
-            {
-                fitness = meleeController.playerDamageDealt
-                          + meleeController.structureDamageDealt / 2;
-                individual.AddFitness(fitness);
-            }
-            else
-            {
-                fitness = health.GetMaxHealth()
-                          + meleeController.structureDamageDealt;
-                individual.AddFitness(fitness);
-            }
-
-            //Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
+            Debug.LogError("Individual is null on Die.");
+            return;
+        }
+        
+        float fitness;
+        if (individual.variant == MutantVariant.Fighter)
+        {
+            fitness = meleeController.playerDamageDealt
+                        + meleeController.structureDamageDealt / 2;
+            if (fitness <= 0)
+                fitness = health.GetMaxHealth() * healthFitnessMultiplier;
+            individual.AddFitness(fitness);
         }
         else
         {
-            Debug.LogError("Individual is null on Die.");
+            fitness = health.GetMaxHealth() + meleeController.structureDamageDealt;
+            individual.AddFitness(fitness);
         }
+
+        //Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
     }
     
     #endregion

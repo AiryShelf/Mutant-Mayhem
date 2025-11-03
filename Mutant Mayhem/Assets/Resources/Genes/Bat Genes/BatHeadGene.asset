@@ -25,11 +25,12 @@ MonoBehaviour:
   - {x: 0.08000028, y: 0.03000006}
   - {x: 0.03999927, y: 0.03000045}
   - {x: 0.03999999, y: -0.03000001}
+  shootSOBase: {fileID: 0}
   meleeColliderOffset: {x: 0.025, y: 0}
   meleeColliderSize: {x: 0.04051865, y: 0.07015181}
-  meleeDamage: 1.33
+  meleeDamage: 0.4
   attackDelay: 0.5
-  knockback: 10
+  knockback: 1
   selfKnockback: 0
   massModFactor: 0.9
   meleeSound: {fileID: 11400000, guid: 68646e8190ac7a54996b2482ce003ce7, type: 2}

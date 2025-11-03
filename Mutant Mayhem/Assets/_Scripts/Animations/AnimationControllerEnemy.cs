@@ -13,7 +13,6 @@ public class AnimationControllerEnemy : MonoBehaviour
     SpriteRenderer mySR;
     EnemyBase enemyBase;
     protected Rigidbody2D myRb;
-    protected float baseSpeed;
 
     protected virtual void Start()
     {
@@ -23,7 +22,6 @@ public class AnimationControllerEnemy : MonoBehaviour
 
         if (enemyBase != null)
         {
-            baseSpeed = enemyBase.moveSpeedBase;
             myRb = enemyBase.GetComponent<Rigidbody2D>();
         }
     }
@@ -37,11 +35,11 @@ public class AnimationControllerEnemy : MonoBehaviour
     {
         if (enemyBase != null)
         {
-            float speed = myRb.velocity.magnitude;
+            float sprSpeed = myRb.velocity.sqrMagnitude;
 
             if (GameTools.AnimatorHasParameter(myAnimator, "isRunning"))
             {
-                if (speed > baseSpeed * switchToRunBuffer)
+                if (sprSpeed > switchToRunBuffer * switchToRunBuffer)
                 {
                     myAnimator.SetBool("isRunning", true);
                 }
@@ -51,20 +49,17 @@ public class AnimationControllerEnemy : MonoBehaviour
                 }
             }
 
+            float animSpeed = Mathf.Sqrt(sprSpeed) * animSpeedFactor;
+            animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
+            myAnimator.speed = animSpeed;
+
             if (GameTools.AnimatorHasParameter(myAnimator, "isJumping"))
             {
                 if (myAnimator.GetBool("isSitting") || myAnimator.GetBool("isJumping"))
                 {
                     myAnimator.speed = 1;
                 }
-                else
-                {
-                    float animSpeed = speed * animSpeedFactor;
-                    animSpeed = Mathf.Clamp(animSpeed, 0, maxAnimSpeed);
-                    myAnimator.speed = animSpeed;
-                }
             }
-
         }
     }
 

@@ -12,6 +12,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public Rigidbody2D rb { get; set; }
     public Vector2 facingDirection { get; set; }
 
+    [Header("EnemyBase ONLY Melee Stat Setters")]
+    public float meleeDamageMaster = 1f;
+    public float knockbackMaster = 1f;
+
     [Header("Exposed for Debug")]
     public Transform targetTransform;
     public Vector2 targetPos;
@@ -21,10 +25,9 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public float moveSpeedBase = 1f;
     float slowFactor = 1;
     public float rotateSpeedBase = 3f;
-    /// <summary>
-    /// For debug, don't set in inspector
-    /// </summary>
-    public float startMass;
+    protected float startMass;
+    float startAnimSpeedFactor;
+    float startSwitchToRunBuffer;
 
     [Header("Randomize")]
     public bool isMutant;
@@ -88,6 +91,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         startLocalScale = transform.localScale;
         moveSpeedBaseStart = moveSpeedBase;
 
+        meleeController.meleeDamageStart = meleeDamageMaster;
+        meleeController.meleeDamage = meleeDamageMaster;
+        meleeController.knockbackStart = knockbackMaster;
+        meleeController.knockback = knockbackMaster;
+
+        startAnimSpeedFactor = animControllerEnemy.animSpeedFactor;
+        startSwitchToRunBuffer = animControllerEnemy.switchToRunBuffer;
+
         InitializeStateMachine();
     }
 
@@ -134,8 +145,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
         if (!isMutant)
         {
-            RandomizeStats();
-            RandomizeColor();
+            RandomizeEnemyBaseStats();
+            RandomizeEnemyBaseColor();
         }
     }
 
@@ -219,7 +230,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     #region Randomize
 
-    void RandomizeStats()
+    void RandomizeEnemyBaseStats()
     {
         //Debug.Log($"Randomize stats started with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
         
@@ -229,28 +240,30 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         // Randomize size, apply multipliers
         GaussianRandom _gaussianRandom = new GaussianRandom();
         float randomSizeFactor = (float)_gaussianRandom.NextDouble(gaussMeanSize, gaussStdDev);
-        randomSizeFactor *= waveController.sizeMultiplier;
+        randomSizeFactor *= waveController.sizeMultiplier * PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize];
         randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
         transform.localScale *= randomSizeFactor;
+        Debug.Log($"EnemyBase - Randomized Size Factor: {randomSizeFactor}, New Local Scale: {transform.localScale}");
+        float areaScale = transform.localScale.x * transform.localScale.y;
 
-        // Set these stats by random size factor (negates planet property size multiplier from health)
-        moveSpeedBase *= randomSizeFactor * waveController.speedMultiplier;
-        health.SetMaxHealth(randomSizeFactor * 3.14f / PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize] *
-                            health.startMaxHealth * waveController.healthMultiplier);
+        // Set these stats by areaScale to keep health and damage proportional to size
+        moveSpeedBase *= areaScale * waveController.speedMultiplier;
+        health.SetMaxHealth(areaScale * health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
 
         //Debug.Log("RandomSizeFactor: " + randomSizeFactor + ", waveController.damageMultiplier: " + waveController.damageMultiplier);
-        meleeController.meleeDamage *= randomSizeFactor * waveController.damageMultiplier;
+        meleeController.meleeDamage *= areaScale * waveController.damageMultiplier;
         meleeController.attackDelay = meleeController.attackDelayStart * waveController.attackDelayMult;
-        meleeController.knockback *= randomSizeFactor;
+        meleeController.knockback *= areaScale;
         //meleeController.selfKnockback *= randomSizeFactor; no good?
-        rb.mass = startMass * randomSizeFactor;
-        animControllerEnemy.animSpeedFactor /= randomSizeFactor;
+        rb.mass = startMass * areaScale;
+        animControllerEnemy.animSpeedFactor *= 8 / transform.localScale.x; // inversely scale anim speed with size
+        animControllerEnemy.switchToRunBuffer *= 8 / transform.localScale.x;
 
         //Debug.Log($"Randomize stats finished with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
     }
 
-    public virtual void RandomizeColor()
+    public virtual void RandomizeEnemyBaseColor()
     {
         // Randomize color, allowing it to change more drastically over time
         float red = sr.color.r;
@@ -343,6 +356,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         }
     }
 
+    // These are used by RazorWire to slow enemies
     public void ApplySlowFactor(float factor)
     {
         slowFactor = Mathf.Clamp(slowFactor - factor, 0.3f, 1);

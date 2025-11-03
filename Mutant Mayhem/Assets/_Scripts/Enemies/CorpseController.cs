@@ -13,6 +13,7 @@ public class CorpseController : MonoBehaviour
 
     void Start()
     {
+        startColor = GetComponent<SpriteRenderer>().color;
         if (InputManager.IsMobile())
         {
             timeToStartFade /= 2;

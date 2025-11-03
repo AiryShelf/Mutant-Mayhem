@@ -57,12 +57,13 @@ MonoBehaviour:
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
+  meleeDamageMaster: 0.1
+  knockbackMaster: 1
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
-  moveSpeedBaseStart: 5
-  moveSpeedBase: 5
+  moveSpeedBaseStart: 4
+  moveSpeedBase: 4
   rotateSpeedBase: 3
-  startMass: 0
   isMutant: 0
   randSpeedRange: 0.1
   startLocalScale: {x: 0, y: 0, z: 0}
@@ -74,7 +75,7 @@ MonoBehaviour:
   <unfreezeTime>k__BackingField: 0.25
   CurrentStateDebug: 
   EnemyIdleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
-  EnemyChaseSOBase: {fileID: 11400000, guid: ace8186cceb1b56468eafb7cee129a49, type: 2}
+  EnemyChaseSOBase: {fileID: 11400000, guid: f8a12921224cd45e9b9edc255333ef16, type: 2}
   EnemyShootSOBase: {fileID: 0}
   EnemyMeleeSOBase: {fileID: 0}
   EnemyIdleSOBaseInstance: {fileID: 0}
@@ -93,8 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00796190f03ebc5459f70101a21ce7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMaxHealth: 60
-  maxHealth: 60
+  startMaxHealth: 1
+  maxHealth: 1
   deathTorque: 20
   painSound: {fileID: 11400000, guid: 7bf8998c624df904b95402985e56da6c, type: 2}
   painSoundCooldown: 0.3
@@ -123,9 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 0.7
-  switchToRunBuffer: 0.4
-  maxAnimSpeed: 3
+  animSpeedFactor: 0.25
+  switchToRunBuffer: 7
+  maxAnimSpeed: 10
   myAnimator: {fileID: 0}
 --- !u!50 &3574965776305570190
 Rigidbody2D:

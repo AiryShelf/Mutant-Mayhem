@@ -48,8 +48,9 @@ public class MutantRenderer : MonoBehaviour
         animationControllerMutant.rightLegAnimator.runtimeAnimatorController = legGeneBase.rightLegAnimatorController;
         rightLegSR.color = g.legGene.color;
 
-        animationControllerMutant.animSpeedFactor = legGeneBase.animSpeedFactor;
-        animationControllerMutant.switchToRunBuffer = legGeneBase.switchToRunBuffer;
+        // Scale anim speeds with leg size with inverse relation, with a base of 8 scale
+        animationControllerMutant.animSpeedFactor = legGeneBase.animSpeedFactor * (8 / g.legGene.scale);
+        animationControllerMutant.switchToRunBuffer = legGeneBase.switchToRunBuffer * (8 / g.legGene.scale);
         animationControllerMutant.maxAnimSpeed = legGeneBase.maxAnimSpeed;
 
         // Apply scales

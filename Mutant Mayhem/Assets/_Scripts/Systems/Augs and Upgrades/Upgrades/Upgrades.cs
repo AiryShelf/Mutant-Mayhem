@@ -214,15 +214,16 @@ public class KnockbackUpgrade : Upgrade
 {
     public KnockbackUpgrade() : base(PlayerStatsUpgrade.MeleeKnockback) { }
 
+    public static float UpgAmount = 2.5f;
+
     public static float GetUpgAmount(UpgradeManager upgradeManager)
     {
-        float upgAmount = 0.5f;
-        return upgAmount;
+        return UpgAmount;
     }
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.knockback += 0.5f;
+        playerStats.knockback += UpgAmount;
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)

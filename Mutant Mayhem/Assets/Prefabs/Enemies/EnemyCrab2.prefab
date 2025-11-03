@@ -57,12 +57,13 @@ MonoBehaviour:
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
+  meleeDamageMaster: 0.1
+  knockbackMaster: 1
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
-  moveSpeedBaseStart: 3.3
-  moveSpeedBase: 3.3
+  moveSpeedBaseStart: 2.8
+  moveSpeedBase: 2.8
   rotateSpeedBase: 2.8
-  startMass: 0
   isMutant: 0
   randSpeedRange: 0.1
   startLocalScale: {x: 0, y: 0, z: 0}
@@ -93,8 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00796190f03ebc5459f70101a21ce7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMaxHealth: 90
-  maxHealth: 90
+  startMaxHealth: 2.25
+  maxHealth: 2.25
   deathTorque: 30
   painSound: {fileID: 11400000, guid: dc0429e7a6c0fba48956d18ff1936bda, type: 2}
   painSoundCooldown: 0.3
@@ -122,9 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 1
+  animSpeedFactor: 0.1
   switchToRunBuffer: 1.6
-  maxAnimSpeed: 10
+  maxAnimSpeed: 1
   myAnimator: {fileID: 0}
 --- !u!58 &8431538982880265398
 CircleCollider2D:
@@ -291,7 +292,7 @@ MonoBehaviour:
   - {x: 0.01524747, y: -0.045341525, z: 0}
   m_ShapePathHash: -346284597
   m_Mesh: {fileID: 0}
-  m_InstanceId: 160206
+  m_InstanceId: 452154
   m_LocalBounds:
     m_Center: {x: 0.00025871396, y: 0.0000718385, z: 0}
     m_Extent: {x: 0.035007473, y: 0.045518838, z: 0}

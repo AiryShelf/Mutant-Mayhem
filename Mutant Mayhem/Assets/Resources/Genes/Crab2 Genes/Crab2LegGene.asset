@@ -27,11 +27,10 @@ MonoBehaviour:
   rightLegAnimatorController: {fileID: 9100000, guid: b7d0d9f0db74640b3b808ffb6e4b27c3, type: 2}
   idleSOBase: {fileID: 11400000, guid: 7f4eec57802cf39499c4ed663cce43b7, type: 2}
   chaseSOBase: {fileID: 11400000, guid: e800cd9523d9f6344b43d6463422dd23, type: 2}
-  shootSOBase: {fileID: 0}
   isFlying: 0
-  moveSpeedBaseStart: 0.7
+  moveSpeedBaseStart: 0.8
   rotateSpeedBaseStart: 1
-  animSpeedFactor: 1
-  switchToRunBuffer: 1.6
+  animSpeedFactor: 1.5
+  switchToRunBuffer: 5
   maxAnimSpeed: 10
   bodyCastsShadows: 1

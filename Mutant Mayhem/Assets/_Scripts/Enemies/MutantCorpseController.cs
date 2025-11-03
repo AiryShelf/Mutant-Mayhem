@@ -10,29 +10,24 @@ public class MutantCorpseController : CorpseController
     public SpriteRenderer leftLegSR;
     public SpriteRenderer rightLegSR;
 
+    List<SpriteRenderer> allSpriteRenderers = new List<SpriteRenderer>();
+
+    void Awake()
+    {
+        allSpriteRenderers.Add(bodySR);
+        allSpriteRenderers.Add(headSR);
+        allSpriteRenderers.Add(leftLegSR);
+        allSpriteRenderers.Add(rightLegSR);
+    }
+
     void OnEnable()
     {
-        SpriteRenderer[] spriteRenderers = new SpriteRenderer[] { bodySR, headSR, leftLegSR, rightLegSR };
-        foreach (SpriteRenderer sr in spriteRenderers)
-        { 
-            var color = sr.color;
-            Color.RGBToHSV(color, out float h, out float s, out float v);
-            v *= 0.9f;
-            Color newColor = Color.HSVToRGB(h, s, v);
-            newColor.a = 0.9f;
-            sr.color = newColor;
-        }
-
         StartCoroutine(WaitToFade());
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        bodySR.color = startColor;
-        headSR.color = startColor;
-        leftLegSR.color = startColor;
-        rightLegSR.color = startColor;
     }
 
     /// <summary>
@@ -48,6 +43,8 @@ public class MutantCorpseController : CorpseController
 
         // Set sprites and colors
         bodySR.sprite = g.bodyGene.corpseSprites[Random.Range(0, g.bodyGene.corpseSprites.Count)];
+        Color workingColor = g.bodyGene.color;
+        workingColor.a = 0.8f;
         bodySR.color = g.bodyGene.color;
         headSR.sprite = g.headGene.corpseSprites[Random.Range(0, g.headGene.corpseSprites.Count)];
         headSR.color = g.headGene.color;
@@ -61,6 +58,8 @@ public class MutantCorpseController : CorpseController
         headSR.transform.localScale = Vector3.one * g.headGene.scale;
         leftLegSR.transform.localScale = Vector3.one * g.legGene.scale;
         rightLegSR.transform.localScale = Vector3.one * g.legGene.scale;
+
+        SetAlphaAndDarkenAllSprites(0.9f, 0.9f);
     }
 
     protected override IEnumerator FadeOut()
@@ -75,15 +74,33 @@ public class MutantCorpseController : CorpseController
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / timeForFade;
             float newAlpha = Mathf.Lerp(startAlpha, 0f, t);
-
-            bodySR.color = new Color(bodySR.color.r, bodySR.color.g, bodySR.color.b, newAlpha);
-            headSR.color = new Color(headSR.color.r, headSR.color.g, headSR.color.b, newAlpha);
-            leftLegSR.color = new Color(leftLegSR.color.r, leftLegSR.color.g, leftLegSR.color.b, newAlpha);
-            rightLegSR.color = new Color(rightLegSR.color.r, rightLegSR.color.g, rightLegSR.color.b, newAlpha);
+            foreach (SpriteRenderer sr in allSpriteRenderers)
+            {
+                Color color = sr.color;
+                color.a = newAlpha;
+                sr.color = color;
+            }
 
             yield return null;
         }
 
         PoolManager.Instance.ReturnToPool(corpsePoolName, gameObject);
+    }
+
+    void SetAlphaAndDarkenAllSprites(float alpha = 0.9f, float darkenFactor = 0.9f)
+    {
+        foreach (SpriteRenderer sr in allSpriteRenderers)
+        {
+            var color = sr.color;
+            color.a = alpha;
+            sr.color = color;
+
+            Color.RGBToHSV(color, out float h, out float s, out float v);
+            v *= darkenFactor;
+            Color newColor = Color.HSVToRGB(h, s, v);
+            newColor.a = alpha;
+            sr.color = newColor;
+        }
+        
     }
 }

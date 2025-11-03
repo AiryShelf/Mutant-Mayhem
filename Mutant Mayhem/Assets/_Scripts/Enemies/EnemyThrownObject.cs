@@ -5,14 +5,16 @@ using UnityEngine;
 public class EnemyThrownObject : Bullet
 {
     Vector2 startScale;
+    float startDamage;
 
     protected override void Awake()
     {
         base.Awake();
         startScale = transform.localScale;
+        startDamage = damage;
     }
-    
-    
+
+
 
     /// <summary>
     /// Throws this object along a smooth parabola from startPos to endPos.
@@ -30,22 +32,22 @@ public class EnemyThrownObject : Bullet
         if (bulletSpeed <= 0f)
         {
             transform.position = endPos;
-            PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+            ReturnToPool();
             yield break;
         }
 
         // CHANGE: optionally clamp endPos by maxRange along the start->end direction (previously only clamped duration).
         // This keeps both the path and time consistent when a max range is enforced.
         Vector2 start2 = new Vector2(startPos.x, startPos.y);
-        Vector2 end2   = new Vector2(endPos.x,  endPos.y);
-        Vector2 toEnd  = end2 - start2;
+        Vector2 end2 = new Vector2(endPos.x, endPos.y);
+        Vector2 toEnd = end2 - start2;
         float straightDistSqr = toEnd.sqrMagnitude;
         if (straightDistSqr > maxRange * maxRange)
         {
             float invMag = 1f / Mathf.Sqrt(straightDistSqr);
-            Vector2 dir  = toEnd * invMag;
+            Vector2 dir = toEnd * invMag;
 
-            end2   = start2 + dir * maxRange;
+            end2 = start2 + dir * maxRange;
             endPos = new Vector3(end2.x, end2.y, endPos.z);
         }
 
@@ -96,6 +98,12 @@ public class EnemyThrownObject : Bullet
         rb.velocity = speed;
         transform.localScale = startScale;
 
+        ReturnToPool();
+    }
+    
+    void ReturnToPool()
+    {
+        damage = startDamage;
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 }

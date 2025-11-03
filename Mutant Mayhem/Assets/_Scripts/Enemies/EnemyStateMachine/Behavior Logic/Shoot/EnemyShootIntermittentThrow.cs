@@ -70,11 +70,7 @@ public class EnemyShootIntermittentThrow : EnemyShootSOBase
         if (shotTimer > timeBetweenShots)
         {
             shotTimer = 0f;
-
-            EnemyThrownObject thrownObject = PoolManager.Instance.GetFromPool(thrownObjectPoolName).GetComponent<EnemyThrownObject>();
-            thrownObject.transform.position = enemyBase.meleeController.transform.position;
-            thrownObject.StartCoroutine(thrownObject.ThrowTowardsTarget(enemyBase.transform.position, predictedPos,
-                                                                        bulletSpeed, curveHeight, peakScale, maxRange));
+            ThrowObject(predictedPos);
         }
 
         if (enemyBase.targetTransform != null)
@@ -108,6 +104,33 @@ public class EnemyShootIntermittentThrow : EnemyShootSOBase
         }
 
         enemyBase.StateMachine.ChangeState(enemyBase.ChaseState);
+    }
+
+    void ThrowObject(Vector2 predictedPos)
+    {
+        EnemyThrownObject thrownObject = PoolManager.Instance.GetFromPool(thrownObjectPoolName).GetComponent<EnemyThrownObject>();
+        if (thrownObject == null)
+        {
+            Debug.LogError("Thrown object pool returned null or non-EnemyThrownObject.");
+            return;
+        }
+
+        // Apply damage based on Mutant or EnemyBase
+        if (enemyMutant != null)
+        {
+            // Modify thrown object based on mutant genome
+            Genome g = enemyMutant.individual.genome;
+            thrownObject.damage *= g.headGene.scale * g.bodyGene.scale;
+            // Debug.Log($"Mutant throwing object with damage: {thrownObject.damage}");
+        }
+        else
+        {
+            thrownObject.damage *= enemyBase.transform.localScale.x * enemyBase.transform.localScale.y;
+        }
+
+        thrownObject.transform.position = enemyBase.meleeController.transform.position;
+        thrownObject.StartCoroutine(thrownObject.ThrowTowardsTarget(enemyBase.transform.position, predictedPos,
+                                                                    bulletSpeed, curveHeight, peakScale, maxRange));
     }
 }
 

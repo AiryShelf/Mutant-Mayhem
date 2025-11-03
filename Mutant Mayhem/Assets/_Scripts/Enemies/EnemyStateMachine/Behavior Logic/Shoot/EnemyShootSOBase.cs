@@ -12,12 +12,22 @@ public class EnemyShootSOBase : ScriptableObject
     protected EnemyBase enemyBase;
     protected Transform transform;
     protected GameObject gameObject;
+    protected EnemyMutant enemyMutant = null;
 
     public virtual void Initialize(GameObject gameObject, EnemyBase enemyBase)
     {
         this.gameObject = gameObject;
         transform = gameObject.transform;
+        
         this.enemyBase = enemyBase;
+        if (enemyBase is EnemyMutant)
+        {
+            enemyMutant = enemyBase as EnemyMutant;
+        }
+        else
+        {
+            enemyMutant = null;
+        }
     }
 
     public virtual void DoEnterLogic() { }
