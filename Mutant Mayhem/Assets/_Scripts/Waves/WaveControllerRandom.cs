@@ -148,7 +148,7 @@ public class WaveControllerRandom : MonoBehaviour
 
             if (countdown <= 10)
             {
-                MessagePanel.PulseMessage(Mathf.CeilToInt(countdown) + " seconds to the next night!", Color.red);
+                MessageBanner.PulseMessage(Mathf.CeilToInt(countdown) + " seconds to the next night!", Color.red);
             }
 
         }
@@ -163,7 +163,7 @@ public class WaveControllerRandom : MonoBehaviour
 
     IEnumerator StartWave()
     {
-        MessagePanel.PulseMessage("Night " + (currentWaveIndex + 1) + " started!", Color.red);
+        MessageBanner.PulseMessage("Night " + (currentWaveIndex + 1) + " started!", Color.red);
 
         daylight.StartCoroutine(daylight.PlaySunsetEffect());
         isNight = true;
@@ -208,7 +208,7 @@ public class WaveControllerRandom : MonoBehaviour
         OnWaveEnded?.Invoke(currentWaveIndex);
 
         isNight = false;
-        MessagePanel.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
+        MessageBanner.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
 

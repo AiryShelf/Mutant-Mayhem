@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 1963490882, guid: 88dd90e5ba0258645bd48e0d1621a5a0, type: 3}
   tileName: Gate
-  description: "An automatic gate that opens only for you.  \n\nKind of flimsy"
+  description: An automatic gate that opens only for you
   tileCost: 100
   maxHealth: 1500
   health: 1500
@@ -30,6 +30,5 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 0
   powerNeighborBonus: 0
-  panelToUnlock: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0

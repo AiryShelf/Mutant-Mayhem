@@ -106,9 +106,9 @@ public class EnemyMutant : EnemyBase
         SetMeleeSettings(g);
 
         moveSpeedBase *= Mathf.Clamp(g.legGene.scale, 1, float.MaxValue);
-        Debug.Log($"MoveSpeedBase: {moveSpeedBase}, Mass: {rb.mass}");
+        //Debug.Log($"EnemyMutant - MoveSpeedBase: {moveSpeedBase}, Mass: {rb.mass}");
 
-        Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");
+       // Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");
     }
 
     void ApplyGenomeToEnemyRenderer()
@@ -142,7 +142,7 @@ public class EnemyMutant : EnemyBase
 
     void SetHealthSettings(Genome g)
     {
-        health.SetMaxHealth(g.bodyGene.startHealth * g.bodyGene.scale * 1.5f);
+        health.SetMaxHealth(g.bodyGene.startHealth * g.bodyGene.scale * 3.14f);
         health.SetHealth(health.GetMaxHealth());
         health.painSound = g.bodyGene.painSound;
         unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
@@ -179,7 +179,7 @@ public class EnemyMutant : EnemyBase
                 individual.AddFitness(fitness);
             }
 
-            Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
+            //Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
         }
         else
         {

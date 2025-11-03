@@ -15,7 +15,28 @@ MonoBehaviour:
   m_DefaultSprite: {fileID: 21300000, guid: d922216d47a3a4ba79ece57abf87b544, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 2
-  m_TilingRules: []
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 0}
+    m_GameObject: {fileID: 6032300958366406844, guid: 987145c4407514126847b577828a5e8a, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions:
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    m_RuleTransform: 0
   structureSO: {fileID: 11400000, guid: 7761c2d55efd5454590c61b3bfe61f38, type: 2}
   damagedTiles:
   - {fileID: 11400000, guid: 9a3706679a4da492f8e9b4d002ae9635, type: 2}

@@ -253,7 +253,7 @@ public class UIAugPanel : MonoBehaviour
         if (augManager.currentResearchPoints - selectedUiAugmentation.totalCost < 0)
         {
             Debug.Log("Not enough RP to remove selected Aug");
-            MessagePanel.PulseMessage("Can't remove Aug.  Not enough RP available!", Color.red);
+            MessageBanner.PulseMessage("Can't remove Aug.  Not enough RP available!", Color.red);
             return;
         }
 
@@ -276,7 +276,7 @@ public class UIAugPanel : MonoBehaviour
             else
             {
                 Debug.Log("Could not remove MaxAugs.  Too many Aug levels selected");
-                MessagePanel.PulseMessage("Can't remove Max Augs.  Remove levels from other Augs first", Color.red);
+                MessageBanner.PulseMessage("Can't remove Max Augs.  Remove levels from other Augs first", Color.red);
                 return;
             }
         }
@@ -308,14 +308,14 @@ public class UIAugPanel : MonoBehaviour
         if (level >= aug.maxLvl)
         {
             Debug.Log("Max Aug lvl already reached");
-            MessagePanel.PulseMessage("Max Aug level already reached!", Color.red);
+            MessageBanner.PulseMessage("Max Aug level already reached!", Color.red);
             return;
         }
 
         if (level >= 0 && currentLvlCount >= augManager.maxAugs && !(aug is Aug_MaxAugs))
         {
             Debug.Log("Max Aug levels already selected");
-            MessagePanel.PulseMessage("Max Aug levels already selected!", Color.red);
+            MessageBanner.PulseMessage("Max Aug levels already selected!", Color.red);
             return;
         }
 
@@ -323,7 +323,7 @@ public class UIAugPanel : MonoBehaviour
         if (augManager.currentResearchPoints < nextLevelCost)
         {
             Debug.Log("Not enough research points");
-            MessagePanel.PulseMessage("Not enough research points!", Color.red);
+            MessageBanner.PulseMessage("Not enough research points!", Color.red);
             return;
         }
 
@@ -379,14 +379,14 @@ public class UIAugPanel : MonoBehaviour
         if (level <= aug.minLvl)
         {
             Debug.Log("Min Aug lvl already reached");
-            MessagePanel.PulseMessage(aug.augmentationName + " is maxed out!", Color.red);
+            MessageBanner.PulseMessage(aug.augmentationName + " is maxed out!", Color.red);
             return;
         }
         
         if (level <= 0 && currentLvlCount + 1 > augManager.maxAugs && !(aug is Aug_MaxAugs))
         {
             Debug.Log("Max Aug levels already selected");
-            MessagePanel.PulseMessage("Max Aug levels already selected!", Color.red);
+            MessageBanner.PulseMessage("Max Aug levels already selected!", Color.red);
             return;
         }
 
@@ -407,7 +407,7 @@ public class UIAugPanel : MonoBehaviour
             else
             {
                 Debug.Log("Can't lower MaxAugs without going over the level limit");
-                MessagePanel.PulseMessage("Can't lower " + _maxAugs.augmentationName + ".  Remove levels from other Augs first", Color.red);
+                MessageBanner.PulseMessage("Can't lower " + _maxAugs.augmentationName + ".  Remove levels from other Augs first", Color.red);
                 return;
             }
         }

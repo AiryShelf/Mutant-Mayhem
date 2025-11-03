@@ -13,14 +13,17 @@ public class RepairBay : MonoBehaviour, IPowerConsumer, ITileObject
 
     float healthRatio;
     int damageIndex;
+    bool isPowerOn = false;
+
+    void OnDestroy()
+    {
+        UpgradePanelManager.Instance.ClosePanel(StructureType.RepairBay);
+    }
 
     public void PowerOn()
     {
-        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
-        rootPos = TileManager.Instance.GridToRootPos(rootPos);
-
-        damageIndex = Mathf.FloorToInt(powerOnDamageTiles.Count * healthRatio);
-        TileManager.AnimatedTilemap.SetTile(rootPos, powerOnDamageTiles[damageIndex]);
+        isPowerOn = true;
+        UpdateHealthRatio(healthRatio);
 
         SwitchLights(true);
         BuildingSystem.Instance.UnlockStructures(repairBaySO, false);
@@ -28,11 +31,8 @@ public class RepairBay : MonoBehaviour, IPowerConsumer, ITileObject
 
     public void PowerOff()
     {
-        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
-        rootPos = TileManager.Instance.GridToRootPos(rootPos);
-
-        damageIndex = Mathf.FloorToInt(powerOffDamageTiles.Count * healthRatio);
-        TileManager.AnimatedTilemap.SetTile(rootPos, powerOffDamageTiles[damageIndex]);
+        isPowerOn = false;
+        UpdateHealthRatio(healthRatio);
 
         SwitchLights(false);
         BuildingSystem.Instance.LockStructures(repairBaySO, false);
@@ -41,6 +41,16 @@ public class RepairBay : MonoBehaviour, IPowerConsumer, ITileObject
     public void UpdateHealthRatio(float healthRatio)
     {
         this.healthRatio = healthRatio;
+
+        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
+        rootPos = TileManager.Instance.GridToRootPos(rootPos);
+
+        damageIndex = Mathf.FloorToInt(powerOffDamageTiles.Count * healthRatio);
+
+        if (isPowerOn)
+            TileManager.AnimatedTilemap.SetTile(rootPos, powerOnDamageTiles[damageIndex]);
+        else
+            TileManager.AnimatedTilemap.SetTile(rootPos, powerOffDamageTiles[damageIndex]);
     }
 
     void SwitchLights(bool on)

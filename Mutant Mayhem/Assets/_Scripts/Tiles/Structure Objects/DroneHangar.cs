@@ -22,10 +22,20 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
     public void OnDestroy()
     {
         BuildingSystem.Instance.droneHangarsBuilt--;
+        if (UpgradePanelManager.Instance != null)
+        {
+            // Close upgrade panel if it's open for this hangar
+            if (UpgradePanelManager.Instance.currentPanel is UiUpgradePanel_DroneHangar dronePanel &&
+                dronePanel.droneContainer == this.droneContainer)
+            {
+                UpgradePanelManager.Instance.ClosePanel(StructureType.DroneHangar);
+            }
+        }
     }
 
     public void PowerOn()
     {
+        Debug.Log("Drone Hangar Power On");
         spriteLightSprite.enabled = true;
         foreach (var light in lights)
             light.gameObject.SetActive(true);
@@ -38,6 +48,7 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
 
     public void PowerOff()
     {
+        Debug.Log("Drone Hangar Power Off");
         spriteLightSprite.enabled = false;
         foreach (var light in lights)
             light.gameObject.SetActive(false);

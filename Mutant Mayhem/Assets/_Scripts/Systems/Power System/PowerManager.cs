@@ -165,7 +165,7 @@ public class PowerManager : MonoBehaviour
         yield return null;
 
         if (powerConsumed > powerTotal)
-            MessagePanel.PulseMessage("WARNING: Power Outages!", Color.red);
+            MessageBanner.PulseMessage("WARNING: Power<sprite=1> Outages!", Color.red);
 
         // Cut consumers until power is balanced
         while (powerConsumed > powerTotal && currentConsumers.Count > 0)

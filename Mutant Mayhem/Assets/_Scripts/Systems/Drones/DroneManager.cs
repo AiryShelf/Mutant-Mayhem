@@ -46,7 +46,7 @@ public class DroneManager : MonoBehaviour
             case DroneType.Builder:
                 if (droneContainer.GetTotalDroneCount() >= droneContainer.maxDrones)
                 {
-                    MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
+                    MessageBanner.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
                 }
                 poolName = "Drone_Construction";
@@ -55,7 +55,7 @@ public class DroneManager : MonoBehaviour
             case DroneType.Attacker:
                 if (droneContainer.GetTotalDroneCount() >= droneContainer.maxDrones)
                 {
-                    MessagePanel.PulseMessage("Drone Hangar is full", Color.red);
+                    MessageBanner.PulseMessage("Drone Hangar is full", Color.red);
                     return false;
                 }
                 poolName = "Drone_Attack";

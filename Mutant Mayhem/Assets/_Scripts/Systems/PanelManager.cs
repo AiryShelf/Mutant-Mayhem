@@ -4,6 +4,19 @@ using Pathfinding;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum UpgradePanelType
+{
+    None,
+    Consumables,
+    Exosuit,
+    Lasers,
+    Bullets,
+    Structures,
+    Repair,
+    Explosives,
+    Drones,
+}
+
 public class PanelManager : MonoBehaviour
 {
     public static PanelManager Instance { get; private set; }

@@ -95,7 +95,7 @@ public class RepairBullet : Bullet
                 }
                 else
                 {
-                    MessagePanel.PulseMessage("Not enough Credits to repair!", Color.red);
+                    MessageBanner.PulseMessage("Not enough Credits to repair!", Color.red);
                     PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
                     yield break;
                 }

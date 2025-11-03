@@ -206,7 +206,7 @@ public class PlayerShooter : Shooter
             }
         }
 
-        Debug.Log("PlayerShooter: CurrentGunSO: " + currentGunSO); 
+        Debug.Log("Switched to gun index: " + i + ": " + currentGunSO);
     }
 
     #endregion
@@ -228,14 +228,14 @@ public class PlayerShooter : Shooter
             {
                 if (reloadNotificationTimer < 0)
                 {
-                    reloadNotificationTimer = MessagePanel.TimeToDisplay * 1.1f;
+                    reloadNotificationTimer = MessageBanner.TimeToDisplay * 1.1f;
                     if (gunsAmmo[currentGunIndex] > 0)
                     {
-                        MessagePanel.PulseMessage("Clip is empty!  Press 'R' to reload!", Color.yellow);
+                        MessageBanner.PulseMessage("Clip is empty!  Press 'R' to reload!", Color.yellow);
                         //animControllerPlayer.ReloadTrigger();
                     }
                     else
-                        MessagePanel.PulseMessage("Out of ammo!  Buy more at the Cube!", Color.red);
+                        MessageBanner.PulseMessage("Out of ammo!  Buy more at the Cube!", Color.red);
                 }
             }
             

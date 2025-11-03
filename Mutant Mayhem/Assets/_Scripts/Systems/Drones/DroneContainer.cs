@@ -31,19 +31,6 @@ public class DroneContainer : MonoBehaviour
 
     #region Drones
 
-    void SpawnStartDrones()
-    {
-        Player player = FindObjectOfType<Player>();
-        for (int i = 0; i < player.stats.numStartBuilderDrones; i++)
-        {
-            DroneManager.Instance.SpawnDroneInHangar(DroneType.Builder, this);
-        }
-        for (int i = 0; i < player.stats.numStartAttackDrones; i++)
-        {
-            DroneManager.Instance.SpawnDroneInHangar(DroneType.Attacker, this);
-        }
-    }
-
     void LaunchDrone(Drone drone)
     {
         Debug.Log("Drone Launch attempted");

@@ -485,7 +485,7 @@ public class AnimationControllerPlayer : MonoBehaviour
     public void ThrowInput_Performed(InputAction.CallbackContext context)
     {  
         if (meleeAnimPlaying)
-            MessagePanel.PulseMessage("Can't throw grenades while melee attacking!", Color.yellow);
+            MessageBanner.PulseMessage("Can't throw grenades while melee attacking!", Color.yellow);
         else if (player.stats.grenadeAmmo > 0)
         {
             if (playerShooter.isBuilding)
@@ -501,7 +501,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             }
         }
         else
-            MessagePanel.PulseMessage("No more grenades!  But some at the Cube!", Color.red);
+            MessageBanner.PulseMessage("No more grenades!  But some at the Cube!", Color.red);
     }
 
     public void ThrowInput_Cancelled(InputAction.CallbackContext context)
@@ -519,13 +519,13 @@ public class AnimationControllerPlayer : MonoBehaviour
     {
         if (index == playerShooter.currentGunIndex)
         {
-            MessagePanel.PulseMessage("Weapon already selected!", Color.yellow);
+            MessageBanner.PulseMessage("Weapon already selected!", Color.yellow);
             return false;
         }
 
         if (playerShooter.gunList[index] == null)
         {
-            MessagePanel.PulseMessage("Weapon not unlocked!", Color.yellow);
+            MessageBanner.PulseMessage("Weapon not unlocked!", Color.yellow);
             return false;
         }
 
@@ -534,10 +534,10 @@ public class AnimationControllerPlayer : MonoBehaviour
             // Repair Gun
             if (index == 9)
             {
-                MessagePanel.PulseMessage("Repair Gun not unlocked!  Unlock Repair Tech at the Q-Cube", Color.yellow);
+                MessageBanner.PulseMessage("Repair Gun not unlocked!  Unlock Repair Tech at the Q-Cube", Color.yellow);
                 return false;
             }
-            MessagePanel.PulseMessage("Weapon not unlocked!", Color.yellow);
+            MessageBanner.PulseMessage("Weapon not unlocked!", Color.yellow);
             return false;
         }
 

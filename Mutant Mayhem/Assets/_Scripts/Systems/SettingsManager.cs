@@ -110,7 +110,7 @@ public class SettingsManager : MonoBehaviour
         ApplyMovementSettings();
         ApplyControlSettings();
 
-        Debug.Log("Settings Manager finished applying settings");
+        //Debug.Log("Settings Manager finished applying settings");
     }
 
     #region Difficulty
@@ -134,7 +134,7 @@ public class SettingsManager : MonoBehaviour
                 BatchSpawnMult = 0.7f;
                 CreditsMult = 2f;
                 BuildingSystem.PlayerCredits = 1000;
-                MessagePanel.PulseMessage($"You received $1000 to help you through easy mode", Color.cyan);
+                MessageBanner.PulseMessage($"You received $1000 to help you through easy mode", Color.cyan);
                 break;
 
             case DifficultyLevel.Normal:
@@ -196,7 +196,7 @@ public class SettingsManager : MonoBehaviour
         player = FindObjectOfType<Player>();
         if (player == null)
         {
-            Debug.Log("Player not found by by SettingManager while applying control settings");
+            //Debug.Log("Player not found by by SettingManager while applying control settings");
             return;
         }
 
@@ -210,7 +210,7 @@ public class SettingsManager : MonoBehaviour
                 if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
                 {
                     throwAction.RemoveBindingOverride(i);
-                    Debug.Log("Spacebar enabled");
+                    //Debug.Log("Spacebar enabled");
                 }
             }
         }
@@ -222,7 +222,7 @@ public class SettingsManager : MonoBehaviour
                 if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
                 {
                     throwAction.ApplyBindingOverride(i, new InputBinding { overridePath = "" });
-                    Debug.Log("Spacebar disabled");
+                    //Debug.Log("Spacebar disabled");
                 }
             }
         }

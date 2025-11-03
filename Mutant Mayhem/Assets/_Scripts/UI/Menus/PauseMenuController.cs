@@ -38,7 +38,6 @@ public class PauseMenuController : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("Pause Menu Enabled");
         escapeAction.started += EscapePressed;
     }
 

@@ -43,19 +43,19 @@ public class ConstructionManager : MonoBehaviour
         {
             if (kvp.Key.jobPosition == buildJob.jobPosition)
             {
-                Debug.LogWarning($"ContructionManager: Tired to add a BuildJob that already exists at {buildJob.jobPosition}!");
+                //Debug.LogWarning($"ContructionManager: Tired to add a BuildJob that already exists at {buildJob.jobPosition}!");
                 return;
             }
         }
 
         buildJobs.Add(new KeyValuePair<DroneBuildJob, int>(buildJob, 0));
-        Debug.Log($"ConstructionManager: Added buildJob at: {buildJob.jobPosition}");
+        //Debug.Log($"ConstructionManager: Added buildJob at: {buildJob.jobPosition}");
     }
 
     public void AddRepairJob(DroneJob repairJob)
     {
         repairJobs[repairJob.jobPosition] = (repairJob, 0);
-        Debug.Log($"ConstructionManager: Added repairJob at: {repairJob.jobPosition}");
+        //Debug.Log($"ConstructionManager: Added repairJob at: {repairJob.jobPosition}");
     }
 
     /*
@@ -303,7 +303,7 @@ public class ConstructionManager : MonoBehaviour
         }
         else
         {
-            MessagePanel.PulseMessage("Not enough Credits to repair!", Color.red);
+            MessageBanner.PulseMessage("Not enough Credits to repair!", Color.red);
             // NEED LOGIG HERE for keeping the job but sending drones home....
             return false;
         }

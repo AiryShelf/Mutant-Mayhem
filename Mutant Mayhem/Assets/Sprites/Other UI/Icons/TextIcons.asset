@@ -93,18 +93,30 @@ MonoBehaviour:
     m_Scale: 1
     m_Name: Text Icons_1
     m_HashCode: -1850824725
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 2
+    m_Scale: 1.2
+    m_Name: Text Icons_2
+    m_HashCode: -1850824728
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 3
+    m_Scale: 1.2
+    m_Name: Text Icons_3
+    m_HashCode: -1850824727
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
-      m_Width: 64
+      m_Width: 32
       m_Height: 64
-      m_HorizontalBearingX: -32
+      m_HorizontalBearingX: 0
       m_HorizontalBearingY: 32
       m_HorizontalAdvance: 32
     m_GlyphRect:
-      m_X: -33
+      m_X: 0
       m_Y: -20
-      m_Width: 64
+      m_Width: 32
       m_Height: 64
     m_Scale: 2
     m_AtlasIndex: 0
@@ -112,15 +124,47 @@ MonoBehaviour:
     sprite: {fileID: -1109779428, guid: ced5cf6310a53411592ce953203d62a7, type: 3}
   - m_Index: 1
     m_Metrics:
-      m_Width: 64
+      m_Width: 32
       m_Height: 64
-      m_HorizontalBearingX: -32
+      m_HorizontalBearingX: 0
       m_HorizontalBearingY: 32
       m_HorizontalAdvance: 32
     m_GlyphRect:
-      m_X: 27
+      m_X: 32
       m_Y: -20
-      m_Width: 64
+      m_Width: 32
+      m_Height: 64
+    m_Scale: 2
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {fileID: -1494324309, guid: ced5cf6310a53411592ce953203d62a7, type: 3}
+  - m_Index: 2
+    m_Metrics:
+      m_Width: 32
+      m_Height: 64
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 32
+      m_HorizontalAdvance: 32
+    m_GlyphRect:
+      m_X: 64
+      m_Y: -18
+      m_Width: 32
+      m_Height: 64
+    m_Scale: 2
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {fileID: -1494324309, guid: ced5cf6310a53411592ce953203d62a7, type: 3}
+  - m_Index: 3
+    m_Metrics:
+      m_Width: 32
+      m_Height: 64
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 32
+      m_HorizontalAdvance: 32
+    m_GlyphRect:
+      m_X: 96
+      m_Y: -18
+      m_Width: 32
       m_Height: 64
     m_Scale: 2
     m_AtlasIndex: 0

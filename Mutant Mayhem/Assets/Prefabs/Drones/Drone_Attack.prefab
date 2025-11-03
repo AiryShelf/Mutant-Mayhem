@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -8186209936180108193}
   - component: {fileID: 4250599866353163505}
   - component: {fileID: -7526314183592093641}
+  - component: {fileID: 5144146645074190708}
   - component: {fileID: 3379014345932164951}
   - component: {fileID: 7531098424993310505}
   - component: {fileID: 8271507474314208127}
@@ -130,7 +131,6 @@ MonoBehaviour:
   elevatedHitLayers:
     serializedVersion: 2
     m_Bits: 2097280
-  gunRecoil: {fileID: 0}
   gunsAmmoInClips: 05000000
   reloadImageSr: {fileID: 4719699108774705788}
   accuracyHoningSpeed: 4
@@ -143,6 +143,19 @@ MonoBehaviour:
   hasTarget: 0
   gunSights: {fileID: 0}
   currentAccuracy: 0
+--- !u!114 &5144146645074190708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6082351659805797165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  supplyConsumptionAmount: 5
 --- !u!212 &3379014345932164951
 SpriteRenderer:
   m_ObjectHideFlags: 0

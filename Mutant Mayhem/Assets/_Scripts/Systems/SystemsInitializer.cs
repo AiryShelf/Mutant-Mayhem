@@ -14,8 +14,6 @@ public class SystemsInitializer : MonoBehaviour
         TouchManager.Instance.player = player;
         TouchManager.Instance.buildMenuController = player.stats.structureStats.buildingSystem.buildMenuController;
         TouchManager.Instance.buildPanelRect = TouchManager.Instance.buildMenuController.transform as RectTransform;
-        TouchManager.Instance.upgradePanelSwitcher = player.stats.structureStats.cubeController.panelSwitcher;
-        TouchManager.Instance.upgradePanelRect = player.stats.structureStats.cubeController.backPanel;
         CursorManager.Instance.Initialize();
         CursorManager.Instance.inMenu = false;
         CursorManager.Instance.MoveCustomCursorWorldToUi(transform.position);

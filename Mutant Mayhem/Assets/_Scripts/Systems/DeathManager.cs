@@ -98,6 +98,7 @@ public class DeathManager : MonoBehaviour
     {
         if (destroyed && !isTriggered)
         {
+            UpgradePanelManager.Instance.CloseAllPanels();
             worldCustomCursor.useUiTrans = false;
             worldCustomCursor.worldTrans = player.transform;
             ApplyDeathPoints();
@@ -110,6 +111,7 @@ public class DeathManager : MonoBehaviour
     {
         if (destroyed && !isTriggered)
         {
+            UpgradePanelManager.Instance.CloseAllPanels();
             worldCustomCursor.useUiTrans = false;
             worldCustomCursor.worldTrans = qCube.transform;
             player.IsDead = true;
@@ -185,7 +187,7 @@ public class DeathManager : MonoBehaviour
         */
 
         adjustedPointsPerWave = currentPlanet.pointsPerWave;
-        Debug.Log("RP per wave set to " + adjustedPointsPerWave + " for planet " + currentPlanet);
+        //Debug.Log("RP per wave set to " + adjustedPointsPerWave + " for planet " + currentPlanet);
     }
 
     void ApplyDeathPoints()

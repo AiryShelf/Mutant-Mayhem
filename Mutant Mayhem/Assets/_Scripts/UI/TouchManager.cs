@@ -13,8 +13,6 @@ public class TouchManager : MonoBehaviour
     
     public VirtualJoystick moveJoystick;
     public VirtualJoystick aimJoystick;
-    public RectTransform upgradePanelRect;
-    public UpgradePanelManager upgradePanelSwitcher;
     public UIBuildMenuController buildMenuController;
     public RectTransform buildPanelRect;
     public Player player;
@@ -183,11 +181,6 @@ public class TouchManager : MonoBehaviour
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
             }
-            else if (IsInRegion(position, upgradePanelRect))
-            {
-                // Upgrade Panel
-                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UpgradePanel, position);
-            }
             else if (player != null && IsInRegion(position, buildPanelRect))   
             {
                 // Build menu
@@ -315,8 +308,6 @@ public class TouchManager : MonoBehaviour
                     //player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
                 break;
             case TouchPurpose.UI:
-                break;
-            case TouchPurpose.UpgradePanel:
                 break;
             case TouchPurpose.BuildMenu:
                 float dragDeltaY = position.y - data.lastScrollCheckPos.y;

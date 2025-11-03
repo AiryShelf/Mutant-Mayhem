@@ -13,6 +13,7 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
 
     float healthRatio;
     int damageIndex;
+    bool isPowerOn = false;
 
     void OnDestroy()
     {
@@ -21,11 +22,9 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
 
     public void PowerOn()
     {
-        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
-        rootPos = TileManager.Instance.GridToRootPos(rootPos);
-
-        damageIndex = Mathf.FloorToInt(powerOnDamageTiles.Count * healthRatio);
-        TileManager.AnimatedTilemap.SetTile(rootPos, powerOnDamageTiles[damageIndex]);
+        Debug.Log("Engineering Bay Power On");
+        isPowerOn = true;
+        UpdateHealthRatio(healthRatio);
 
         SwitchLights(true);
         BuildingSystem.Instance.UnlockStructures(engineeringBaySO, false);
@@ -33,11 +32,9 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
 
     public void PowerOff()
     {
-        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
-        rootPos = TileManager.Instance.GridToRootPos(rootPos);
-
-        damageIndex = Mathf.FloorToInt(powerOffDamageTiles.Count * healthRatio);
-        TileManager.AnimatedTilemap.SetTile(rootPos, powerOffDamageTiles[damageIndex]);
+        Debug.Log("Engineering Bay Power Off");
+        isPowerOn = false;
+        UpdateHealthRatio(healthRatio);
 
         SwitchLights(false);
         BuildingSystem.Instance.LockStructures(engineeringBaySO, false);
@@ -46,6 +43,16 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
     public void UpdateHealthRatio(float healthRatio)
     {
         this.healthRatio = healthRatio;
+
+        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
+        rootPos = TileManager.Instance.GridToRootPos(rootPos);
+
+        damageIndex = Mathf.FloorToInt(powerOffDamageTiles.Count * healthRatio);
+
+        if (isPowerOn)
+            TileManager.AnimatedTilemap.SetTile(rootPos, powerOnDamageTiles[damageIndex]);
+        else
+            TileManager.AnimatedTilemap.SetTile(rootPos, powerOffDamageTiles[damageIndex]);
     }
 
     void SwitchLights(bool on)

@@ -180,7 +180,7 @@ public class InputManager : MonoBehaviour
                 break;
         }
 
-        Debug.Log($"LastUsedDevice set to: {LastUsedDevice}");
+        //Debug.Log($"LastUsedDevice set to: {LastUsedDevice}");
     }
 
     public static bool IsMobile()

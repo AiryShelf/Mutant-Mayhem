@@ -10,7 +10,7 @@ public class UiUpgradePanel_DroneHangar : UiUpgradePanel
     [SerializeField] string droneInfoIconPoolName = "Drone_Info_Icon";
     List<DroneInfoIcon> activeDroneInfoIcons = new List<DroneInfoIcon>();
 
-    DroneContainer droneContainer;
+    public DroneContainer droneContainer { get; private set; }
     Coroutine updateDroneInfoCoroutine;
 
     public void OpenPanel(PanelInteract interactSource, DroneContainer newDroneContainer)

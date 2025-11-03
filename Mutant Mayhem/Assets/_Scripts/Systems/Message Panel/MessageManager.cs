@@ -91,7 +91,7 @@ public class MessageManager : MonoBehaviour
             if (waveDialogue.conversation != null &&
                 waveDialogue.waveIndex == waveIndex && waveDialogue.playOnWaveStart == playOnWaveStart)
             {
-                Debug.Log("MessageManager: Playing conversation for wave " + waveIndex);
+                //Debug.Log("MessageManager: Playing conversation for wave " + waveIndex);
                 PlayConversation(waveDialogue.conversation);
                 return;
             }
@@ -129,13 +129,13 @@ public class MessageManager : MonoBehaviour
             {
                 if (skipConversation)
                 {
-                    Debug.Log("MessageManager: Skipping conversation due to skipConversation flag.");
+                    //Debug.Log("MessageManager: Skipping conversation due to skipConversation flag.");
                     break;
                 }
 
                 if (message.touchscreenOnly && (InputManager.LastUsedDevice != Touchscreen.current))
                 {
-                    Debug.Log("MessageManager: Skipping touchscreen-only message for " + message.speakerName);
+                    //Debug.Log("MessageManager: Skipping touchscreen-only message for " + message.speakerName);
                     continue;
                 }
 
@@ -148,7 +148,7 @@ public class MessageManager : MonoBehaviour
 
     public void StopAllConversations()
     {
-        Debug.Log("MessageManager: Stopping all conversations.");
+        //Debug.Log("MessageManager: Stopping all conversations.");
         skipConversation = true;
         currentConversation = null;
         queuedConversations.Clear();
@@ -161,8 +161,8 @@ public class MessageManager : MonoBehaviour
 
     IEnumerator PlayMessage(MessageSO message)
     {
-        Debug.Log("MessageManager: Playing message for " + message.speakerName);
-        Debug.Log($"MessageManager: message voice clip: {message.voiceClip?.name}");
+        //Debug.Log("MessageManager: Playing message for " + message.speakerName);
+        //Debug.Log($"MessageManager: message voice clip: {message.voiceClip?.name}");
         skipMessage = false;
         yield return new WaitForSeconds(message.messageStartDelay);
 
@@ -230,7 +230,7 @@ public class MessageManager : MonoBehaviour
 
             if (!voiceSource.isPlaying)
             {
-                Debug.Log("MessageManager: VoiceSource " + voiceSource.name + " finished playing");
+                //Debug.Log("MessageManager: VoiceSource " + voiceSource.name + " finished playing");
                 break;
             }
 
@@ -273,7 +273,7 @@ public class MessageManager : MonoBehaviour
         if (voiceSource != null && voiceSource.isPlaying)
         {
             voiceSource.Pause();
-            Debug.Log("MessageManager: Paused message voice clip.");
+            //Debug.Log("MessageManager: Paused message voice clip.");
         }
         else
         {
@@ -295,7 +295,7 @@ public class MessageManager : MonoBehaviour
         if (voiceSource != null)
         {
             voiceSource.Play();
-            Debug.Log("MessageManager: Unpaused message voice clip.");
+            //Debug.Log("MessageManager: Unpaused message voice clip.");
         }
         else
         {

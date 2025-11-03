@@ -9,6 +9,11 @@ public class PhotonicsBay : MonoBehaviour, IPowerConsumer
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] List<Light2D> lights;
 
+    void OnDestroy()
+    {
+        UpgradePanelManager.Instance.ClosePanel(StructureType.PhotonicsBay);
+    }
+
     public void PowerOn()
     {
         spriteRenderer.enabled = true;

@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 162933518713735059}
-  - component: {fileID: 2052254401421779720}
   - component: {fileID: 1448709218999936095}
+  - component: {fileID: 2052254401421779720}
+  - component: {fileID: 6832709016249092821}
   - component: {fileID: 8929043040891403117}
   - component: {fileID: 2899888398758694323}
   m_Layer: 17
@@ -41,6 +42,29 @@ Transform:
   - {fileID: 5017693893054289296}
   m_Father: {fileID: 7326694791247844290}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1448709218999936095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315527272434052800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8db85efd627dd044198b098f243680c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 0
+  expansionDelay: 0.1
+  expansionDist: 0.5
+  randScanPauseMinTime: 0.5
+  randScanPauseMaxTime: 2
+  startShootAngle: 45
+  detectionCollider: {fileID: 2899888398758694323}
+  shooter: {fileID: 2052254401421779720}
+  pointLights: {fileID: 7255776501661178535}
+  flashLight: {fileID: 152619009085229095}
+  rangeCircle: {fileID: 4313239149629464908}
 --- !u!114 &2052254401421779720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +99,8 @@ MonoBehaviour:
   gunSights: {fileID: 0}
   currentAccuracy: 0
   player: {fileID: 0}
---- !u!114 &1448709218999936095
+  recoilDistance: 0.1
+--- !u!114 &6832709016249092821
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,20 +109,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2315527272434052800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db85efd627dd044198b098f243680c4, type: 3}
+  m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 0
-  expansionDelay: 0.1
-  expansionDist: 0.5
-  randScanPauseMinTime: 0.5
-  randScanPauseMaxTime: 2
-  startShootAngle: 45
-  detectionCollider: {fileID: 2899888398758694323}
-  shooter: {fileID: 2052254401421779720}
-  pointLights: {fileID: 7255776501661178535}
-  flashLight: {fileID: 152619009085229095}
-  rangeCircle: {fileID: 4313239149629464908}
+  supplyConsumptionAmount: 6
 --- !u!212 &8929043040891403117
 SpriteRenderer:
   m_ObjectHideFlags: 0

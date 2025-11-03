@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Tilemaps;
 
 public class QGate : MonoBehaviour, ITileObject, IPowerConsumer
 {
     [SerializeField] SpriteRenderer mySR;
     [SerializeField] List<Sprite> energyFieldDamageSprites;
+    [SerializeField] List<AnimatedTile> gateSidesDamageSprites;
     [SerializeField] Collider2D gateCollider;
     [SerializeField] List<Light2D> gateLights;
+    List<Color> gateLightStartColors;
 
     float healthRatio;
     bool hasPower = true;
@@ -44,18 +47,37 @@ public class QGate : MonoBehaviour, ITileObject, IPowerConsumer
 
     void UpdateTile()
     {
+        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
+        rootPos = TileManager.Instance.GridToRootPos(rootPos);
+
         int damageIndex = Mathf.FloorToInt(energyFieldDamageSprites.Count * healthRatio);
 
-        //Debug.Log("Damage Index: " + damageIndex);
         if (hasPower)
         {
+            mySR.enabled = true;
             mySR.sprite = energyFieldDamageSprites[damageIndex];
-            //TileManager.AnimatedTilemap.SetTile(myGridPos, lightsOn[damageIndex]);
+            TileManager.AnimatedTilemap.SetTile(rootPos, gateSidesDamageSprites[damageIndex]);
 
         }
         else
         {
-            //TileManager.AnimatedTilemap.SetTile(myGridPos, lightsOff[damageIndex]);
+            mySR.enabled = false;
+            TileManager.AnimatedTilemap.SetTile(rootPos, gateSidesDamageSprites[damageIndex]);
+        }
+
+        // Dim Lights with damage
+        for (int i = 0; i < gateLights.Count; i++)
+        {
+            if (gateLightStartColors == null)
+            {
+                gateLightStartColors = new List<Color>();
+                foreach (var light in gateLights)
+                {
+                    gateLightStartColors.Add(light.color);
+                }
+            }
+
+            gateLights[i].color = Color.Lerp(gateLightStartColors[i], Color.red, 1 - healthRatio);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PowerConsumer : MonoBehaviour
+public class PowerConsumer : MonoBehaviour, IPowerConsumer
 {
     public int powerConsumed = 1;
     public SpriteRenderer noPowerIcon;
@@ -14,19 +14,20 @@ public class PowerConsumer : MonoBehaviour
 
     Coroutine delayOnRoutine;
 
-    void Start()
+    void OnEnable()
     {
         AddConsumer();
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
         RemoveConsumer();
     }
 
     public void AddConsumer()
     {
-        PowerManager.Instance.AddPowerConsumer(this);
+        if (PowerManager.Instance != null)
+            PowerManager.Instance.AddPowerConsumer(this);
     }
 
     public void RemoveConsumer()

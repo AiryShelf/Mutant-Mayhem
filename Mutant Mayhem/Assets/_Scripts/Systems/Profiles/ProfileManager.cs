@@ -22,7 +22,7 @@ public class ProfileManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log($"ProfileManager Instance initialized to {Instance}");
+            //Debug.Log($"ProfileManager Instance initialized to {Instance}");
         }
         else
         {
@@ -144,7 +144,7 @@ public class ProfileManager : MonoBehaviour
                 Debug.Log($"Profile '{profileName}' set as the current profile.");
                 if (OnProfileIsSet != null)
                 {
-                    Debug.Log("Invoking OnProfileIsSet event.");
+                    //Debug.Log("Invoking OnProfileIsSet event.");
                     OnProfileIsSet?.Invoke(currentProfile);
                 }
                 return;

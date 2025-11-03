@@ -5,8 +5,9 @@ using UnityEngine;
 public class Explosion : MonoBehaviour
 {
     [SerializeField] SoundSO explosionSound;
-    
+
     [Header("Explosion Settings")]
+    [SerializeField] LayerMask layersToHit;
     [SerializeField] float force;
     [SerializeField] float radius;
     [SerializeField] float damage;
@@ -114,7 +115,7 @@ public class Explosion : MonoBehaviour
             Bounds tileBounds = new Bounds(tileCenter, tileSize);
 
             // Check for enemies or player within this tile
-            Collider2D[] entitiesInTile = Physics2D.OverlapBoxAll(tileCenter, tileSize, 0, LayerMask.GetMask("Enemies", "Player", "QCube", "Drones"));
+            Collider2D[] entitiesInTile = Physics2D.OverlapBoxAll(tileCenter, tileSize, 0, layersToHit);
 
             foreach (Collider2D entity in entitiesInTile)
             {

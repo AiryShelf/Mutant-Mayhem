@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 162933518713735059}
   - component: {fileID: 2052254401421779720}
   - component: {fileID: 1448709218999936095}
+  - component: {fileID: 1634172012235238253}
   - component: {fileID: 8929043040891403117}
   - component: {fileID: 2899888398758694323}
   m_Layer: 17
@@ -62,7 +63,6 @@ MonoBehaviour:
   elevatedHitLayers:
     serializedVersion: 2
     m_Bits: 2097280
-  gunRecoil: {fileID: 0}
   gunsAmmoInClips: 00000000
   reloadImageSr: {fileID: 8414084554444520552}
   accuracyHoningSpeed: 4
@@ -76,6 +76,7 @@ MonoBehaviour:
   gunSights: {fileID: 0}
   currentAccuracy: 0
   player: {fileID: 0}
+  recoilDistance: 0.1
 --- !u!114 &1448709218999936095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +100,19 @@ MonoBehaviour:
   pointLights: {fileID: 5914737574488686264}
   flashLight: {fileID: 796653529046729158}
   rangeCircle: {fileID: 5401991421329144974}
+--- !u!114 &1634172012235238253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315527272434052800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  supplyConsumptionAmount: 4
 --- !u!212 &8929043040891403117
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5658,7 +5672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: powerConsumed
-      value: 16
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Target

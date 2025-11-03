@@ -11,7 +11,6 @@ public enum TouchPurpose
     Melee,
     UI,
     BuildMenu,
-    UpgradePanel,
 }
 
 public class TouchData

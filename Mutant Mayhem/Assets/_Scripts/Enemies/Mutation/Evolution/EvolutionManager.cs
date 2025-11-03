@@ -13,7 +13,7 @@ public class EvolutionManager : MonoBehaviour
     [SerializeField] GameObject enemyPrefab;  // the MutantShell prefab
 
     [Tooltip("Difficulty adds to the allowed total scale of parts for each generation.")]
-    public float difficultyScaleTotal = 6;  // Increases with difficulty
+    public float difficultyScaleTotal = 6;  // Increases with difficulty and is the total sum of body+head+leg scales allowed
     public float difficultyScalePerWave = 0.2f;
     public int minLifetimesToEvolve = 10;
     public int minPopSizeToEvolve = 5;  // Minimum population population size for each variant

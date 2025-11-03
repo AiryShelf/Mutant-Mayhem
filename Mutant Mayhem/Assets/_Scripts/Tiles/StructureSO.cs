@@ -27,7 +27,8 @@ public class StructureSO : ScriptableObject
     [Header("Optional")]
     public int powerGenerated;
     public int powerNeighborBonus;
-    public UpgradePanelType panelToUnlock;
+    public int powerCost = 0;
+    public int supplyCost;
     public List<StructureSO> structuresToUnlock;
     public bool canBuildOnlyOne = false;
 }
@@ -66,6 +67,7 @@ public enum StructureType
     SolarPanels,
     RepairBay,
     QuantumCube,
+    SupplyDepot,
     None
 }
 

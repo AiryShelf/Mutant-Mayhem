@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 7531098424993310505}
   - component: {fileID: 8271507474314208127}
   - component: {fileID: 7494644282629353633}
+  - component: {fileID: 804871471150974449}
   m_Layer: 19
   m_Name: Drone_Construction
   m_TagString: Drone
@@ -162,7 +163,6 @@ MonoBehaviour:
   elevatedHitLayers:
     serializedVersion: 2
     m_Bits: 0
-  gunRecoil: {fileID: 0}
   gunsAmmoInClips: 0a000000
   reloadImageSr: {fileID: 0}
   accuracyHoningSpeed: 0
@@ -310,6 +310,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.3
+--- !u!114 &804871471150974449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6082351659805797165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  supplyConsumptionAmount: 3
 --- !u!1001 &372448218049705687
 PrefabInstance:
   m_ObjectHideFlags: 0

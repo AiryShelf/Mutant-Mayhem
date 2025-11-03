@@ -8,7 +8,6 @@ using TMPro;
 public class UIStructure : MonoBehaviour, ISelectHandler
 {
     public StructureSO structureSO;
-    [SerializeField] int powerCost = 0;
     [SerializeField] Button button;
     [SerializeField] Image image;
     public GameObject textPrefab;
@@ -131,14 +130,14 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         //Debug.Log("SetText ran in UiStructure");
 
         // Set text for locked/unlock
-        
+
         bool unlocked = BuildingSystem._UnlockedStructuresDict[structureSO.structureType];
         TextMeshProUGUI text = textInstance.GetComponent<TextMeshProUGUI>();
         if (unlocked)
             text.alpha = 1;
         else
             text.alpha = textLockedAlpha;
-        
+
         // Set structure info text
         if (structureSO.actionType != ActionType.Build)
         {
@@ -146,37 +145,65 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             return;
         }
 
+        CreateTextStrings(BuildingSystem.PlayerCredits);
+    }
+
+    void CreateTextStrings(float playerCredits)
+    {
+        // Create string for power cost/gain
         string powerString = "";
         string powerCostColorTag;
-        if (powerCost > 0)
+        if (structureSO.powerCost > 0)
         {
-            if (powerCost <= PowerManager.Instance.powerBalance)
+            if (structureSO.powerCost <= PowerManager.Instance.powerBalance)
+            {
                 powerCostColorTag = yellowColorTag;
+                powerString = $"{powerCostColorTag}<sprite=1>-{structureSO.powerCost}{endColorTag}, ";
+            }
             else
-                powerCostColorTag = redColorTag; 
-
-            powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}, ";
+            {
+                powerCostColorTag = redColorTag;
+                powerString = $"{powerCostColorTag}<sprite=0>-{structureSO.powerCost}{endColorTag}, ";
+            }
         }
-        else if (powerCost < 0)
+        else if (structureSO.powerCost < 0)
         {
             powerCostColorTag = greenColorTag;
-            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(powerCost)}{endColorTag}, ";
+            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(structureSO.powerCost)}{endColorTag}, ";
         }
-        
-        int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);
+
+        // Create string for supply cost/gain
+        string supplyString = "";
+        string supplyCostColorTag;
+        if (structureSO.supplyCost > 0)
+        {
+            if (structureSO.supplyCost <= SupplyManager.SupplyBalance)
+                supplyCostColorTag = yellowColorTag;
+            else
+                supplyCostColorTag = redColorTag;
+
+            supplyString = $"{supplyCostColorTag}<sprite=2>-{structureSO.supplyCost}{endColorTag}, ";
+        }
+        else if (structureSO.supplyCost < 0)
+        {
+            supplyCostColorTag = greenColorTag;
+            supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(structureSO.supplyCost)}{endColorTag}, ";
+        }
+
         // Set yellow or red depending on affordability
+        int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);
         if (playerCredits >= totalCost)
         {
-            textInstance.GetComponent<TextMeshProUGUI>().text = 
+            textInstance.GetComponent<TextMeshProUGUI>().text =
             structureSO.tileName + "\n" +
-            powerString + yellowColorTag + "$" + totalCost + "\n" +
+            powerString + supplyString + yellowColorTag + "$" + totalCost + "\n" +
             greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
         }
         else
         {
-            textInstance.GetComponent<TextMeshProUGUI>().text = 
+            textInstance.GetComponent<TextMeshProUGUI>().text =
             structureSO.tileName + "\n" +
-            powerString + redColorTag + "$" + totalCost + "\n" +
+            powerString + supplyString + redColorTag + "$" + totalCost + "\n" +
             greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
         }
     }

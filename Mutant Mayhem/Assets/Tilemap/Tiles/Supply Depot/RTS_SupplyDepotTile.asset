@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
+  m_Name: RTS_SupplyDepotTile
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 21300000, guid: fc31b4791a673c34dbc5c21a67fd3d94, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 21300000, guid: fc31b4791a673c34dbc5c21a67fd3d94, type: 3}
+    m_GameObject: {fileID: 6032300958366406844, guid: eca63309f70764e5d8f64a70a3700233, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 0
+    m_ColliderType: 0
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions:
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    m_RuleTransform: 0
+  structureSO: {fileID: 11400000, guid: 42cbc236ee2794102972d25ca63b75a7, type: 2}
+  damagedTiles:
+  - {fileID: 11400000, guid: 580679565092946cf9d38bdbbc5bb04b, type: 2}
+  - {fileID: 11400000, guid: 69e3c440727ce4db4bedffeef350648e, type: 2}
+  - {fileID: 11400000, guid: ac1818c2c39284c3e9539bbdc595460b, type: 2}
+  - {fileID: 11400000, guid: 949d7f8610aef4a77b8d43089a548067, type: 2}
+  destroyedTile: {fileID: 11400000, guid: 8be363e8de6344fd598365c497d9cf4a, type: 2}
+  buildUiTile: {fileID: 11400000, guid: d301b64ccbc34478fa7c2fe899ccbaf4, type: 2}

@@ -109,7 +109,7 @@ public class ProfileSelectionUI : MonoBehaviour
         foreach (PlayerProfile profile in ProfileManager.Instance.profiles)
         {
             profileNames.Add(profile.profileName);
-            Debug.Log("Added " + profile.profileName + " Profile to dropdown menu list");
+            //Debug.Log("Added " + profile.profileName + " Profile to dropdown menu list");
         }
 
         if (profileNames.Count > 0)
@@ -212,7 +212,7 @@ public class ProfileSelectionUI : MonoBehaviour
         chooseDifficultyDropdown.value = (int)DifficultyLevel.Normal;
         UpdateProfilePanel();
 
-        MessagePanel.PulseMessage("New profile created!", Color.green);
+        MessageBanner.PulseMessage("New profile created!", Color.green);
 
         // Refresh input field placehold in case of failed input entry
         inputFieldPlaceholder.text = originalInputFieldPlaceholderText;

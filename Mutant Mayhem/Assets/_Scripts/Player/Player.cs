@@ -32,7 +32,6 @@ public class PlayerStats
     [Header("Melee Stats")]
     public float meleeDamage = 60;
     public float knockback = 10;
-    public float meleeSpeedFactor = 1f;
 
     [Header("Shooting Stats")]
     public PlayerShooter playerShooter;
@@ -42,17 +41,12 @@ public class PlayerStats
     [Header("Accuracy Stats")]
     [Range(1, 0)]
     public float weaponHandling = 1f;
-    public float accuracy = 1f;
     public float sprintAccuracyLoss = 4f;
     public float accuracyHoningSpeed = 5f;
 
     [Header("Crit Hit Stats")]
     public float criticalHitChanceMult = 1f;
     public float criticalHitDamageMult = 1f;
-
-    [Header("Drone Stats")]
-    public int numStartBuilderDrones = 2;
-    public int numStartAttackDrones = 1;
 }
 
 [System.Serializable]
@@ -154,7 +148,6 @@ public class Player : MonoBehaviour
     InputAction escapeAction;
     bool wasRepairing = false;
     bool isInteracting = false;
-    PanelInteract currentPanelInteract;
 
     void Awake()
     {
@@ -257,24 +250,18 @@ public class Player : MonoBehaviour
     {
         // Close build menu
         if (BuildingSystem.Instance.isInBuildMode)
-            BuildingSystem.Instance.ToggleBuildMenu();
+            animControllerPlayer.ToggleBuildMode();
 
         // Check for panels and open the closest one
         if (!isInteracting)
         {
-            GameObject obj;
-            PanelInteract panel;
-            (obj, panel) = TileManager.Instance.GetClosestObjectAndPanelUnderCircle(transform.position, interactRadius);
-            currentPanelInteract = panel;
-            if (panel != null)
+            if (InteractController.Instance.OpenHighlightedPanel(this))
             {
-                panel.OpenPanel(this);
                 EnterInteractMode();
-                stats.structureStats.currentDroneContainer = obj.GetComponentInChildren<DroneContainer>();
             }
             else
             {
-                MessagePanel.PulseMessage("No interactable object nearby!  Get closer!", Color.yellow);
+                MessageBanner.PulseMessage("No interactable object nearby!  Get closer!", Color.yellow);
             }
         }
         else
@@ -304,13 +291,7 @@ public class Player : MonoBehaviour
 
     void CloseInteractPanel()
     {
-        if (currentPanelInteract != null)
-        {
-            currentPanelInteract.ClosePanel();
-            currentPanelInteract = null;
-        }
-        else
-            Debug.LogError("Player: Tried to close upgrade panel but currentPanelInteract was null!");
+        InteractController.Instance.CloseOpenedPanel();
     }
 
     void EnterInteractMode()
@@ -374,7 +355,7 @@ public class Player : MonoBehaviour
         if (sprintCoroutine != null)
             StopCoroutine(sprintCoroutine);
         sprintCoroutine = StartCoroutine(Sprint(true));
-        Debug.Log("Sprint was triggered");
+        //Debug.Log("Sprint was triggered");
     }
 
     public void SprintInput_Cancelled(InputAction.CallbackContext context)

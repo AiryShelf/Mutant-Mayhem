@@ -210,15 +210,15 @@ public class BuildingSystem : MonoBehaviour
             if (structureInHand.actionType == ActionType.Build)
                 //MessagePanel.Instance.DelayMessage("Area not clear for building", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
-                MessagePanel.Instance.DelayMessage("Unable to destroy", Color.yellow, 0.1f);
+                MessageBanner.Instance.DelayMessage("Unable to destroy", Color.yellow, 0.1f);
             StartCoroutine(DelayUIReselect());
         }
         else
         {
             if (structureInHand.actionType == ActionType.Build)
-                MessagePanel.Instance.DelayMessage("Too far away to build", Color.yellow, 0.1f);
+                MessageBanner.Instance.DelayMessage("Too far away to build", Color.yellow, 0.1f);
             if (structureInHand.actionType == ActionType.Destroy)
-                MessagePanel.Instance.DelayMessage("Too far away to destroy", Color.yellow, 0.1f);
+                MessageBanner.Instance.DelayMessage("Too far away to destroy", Color.yellow, 0.1f);
             StartCoroutine(DelayUIReselect());
         }
     }
@@ -563,7 +563,7 @@ public class BuildingSystem : MonoBehaviour
         {
             if (turretManager.currentNumTurrets + StatsCounterPlayer.TurretsPlaced >= player.stats.structureStats.maxTurrets)
             {
-                MessagePanel.Instance.DelayMessage("Turret limit reached.  Use Structure "+
+                MessageBanner.Instance.DelayMessage("Turret limit reached.  Use Structure "+
                                       "upgrades to increase the limit", Color.red, 0.1f);
                 return;
             }
@@ -572,15 +572,26 @@ public class BuildingSystem : MonoBehaviour
         // Check Credits
         if (PlayerCredits < structureInHand.tileCost * structureCostMult)
         {
-            MessagePanel.Instance.DelayMessage("Not enough Credits to build " + 
+            MessageBanner.Instance.DelayMessage("Not enough Credits to build " + 
                                   structureInHand.tileName + "!", Color.red, 0.1f);
             return;
         }
 
         if (buildOnlyOneList.Contains(structureInHand))
         {
-            MessagePanel.Instance.DelayMessage("You've already built one.  One is the max!", Color.red, 0.1f);
+            MessageBanner.Instance.DelayMessage("You've already built one.  One is the max!", Color.red, 0.1f);
             return;
+        }
+
+        // Check Supplies
+        if (structureInHand.supplyCost > 0)
+        {
+            if (SupplyManager.SupplyBalance - structureInHand.supplyCost < 0)
+            {
+                MessageBanner.Instance.DelayMessage("Not enough Supplies<sprite=2> to build " + 
+                                      structureInHand.tileName + "!  Build Supply Depots!", Color.red, 0.1f);
+                return;
+            }
         }
 
         // Add Tile
@@ -598,7 +609,7 @@ public class BuildingSystem : MonoBehaviour
                 buildOnlyOneList.Add(structureInHand);
         }
         else
-            MessagePanel.Instance.DelayMessage("Unable to build there.  It's blocked!", Color.red, 0.1f);
+            MessageBanner.Instance.DelayMessage("Unable to build there.  It's blocked!", Color.red, 0.1f);
     }
 
     void AddToStatCounter(StructureType structureType)
@@ -650,7 +661,7 @@ public class BuildingSystem : MonoBehaviour
         }
         else
         {
-            MessagePanel.PulseMessage("Tile not clear for removal", Color.yellow);
+            MessageBanner.PulseMessage("Tile not clear for removal", Color.yellow);
             Debug.Log("Tile removal unsuccesful");
         }
     }

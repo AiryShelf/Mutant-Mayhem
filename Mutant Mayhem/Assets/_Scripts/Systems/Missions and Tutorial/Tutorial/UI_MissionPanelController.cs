@@ -45,7 +45,7 @@ public class UI_MissionPanelController : MonoBehaviour
         foreach (Transform child in objectivesGrid)
         {
             _tasks.Add(child.GetComponent<Task>());
-            Debug.Log("Added task at start");
+            //Debug.Log("Added task at start");
         }
 
         AddMission(PlanetManager.Instance.currentPlanet.mission, false);
@@ -123,7 +123,7 @@ public class UI_MissionPanelController : MonoBehaviour
             {
                 _tasks.Add(task);
                 task.missionPanelController = this;
-                Debug.Log("Added a task");
+                //Debug.Log("Added a task");
                 
                 // Adjust panel size
                 RectTransform rect = obj.GetComponent<RectTransform>();
@@ -205,7 +205,7 @@ public class UI_MissionPanelController : MonoBehaviour
             backPanel.sizeDelta = new Vector2(backPanel.sizeDelta.x, newHeight);
 
             Destroy(task.gameObject);
-            Debug.Log("Removed a task");
+            //Debug.Log("Removed a task");
         }
 
         _tasks.Clear();

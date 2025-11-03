@@ -9,6 +9,11 @@ public class BallisticsBay : MonoBehaviour, IPowerConsumer
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] List<Light2D> lights;
 
+    void OnDestroy()
+    {
+        UpgradePanelManager.Instance.ClosePanel(StructureType.BallisticsBay);
+    }
+    
     public void PowerOn()
     {
         spriteRenderer.enabled = true;

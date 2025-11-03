@@ -235,8 +235,8 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
         // Set these stats by random size factor (negates planet property size multiplier from health)
         moveSpeedBase *= randomSizeFactor * waveController.speedMultiplier;
-        health.SetMaxHealth(randomSizeFactor / PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize] * 
-                            health.startMaxHealth * waveController.healthMultiplier * 1.5f);
+        health.SetMaxHealth(randomSizeFactor * 3.14f / PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize] *
+                            health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
 
         //Debug.Log("RandomSizeFactor: " + randomSizeFactor + ", waveController.damageMultiplier: " + waveController.damageMultiplier);

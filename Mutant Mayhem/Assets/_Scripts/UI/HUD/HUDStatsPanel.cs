@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.UIElements.Experimental;
+using Unity.VisualScripting;
 
 public class HUDStatsPanel : MonoBehaviour
 {
@@ -37,6 +38,10 @@ public class HUDStatsPanel : MonoBehaviour
     [SerializeField] Image powerImage;
     [SerializeField] TextMeshProUGUI powerText;
 
+    [Header("Supplies")]
+    [SerializeField] Image supplyImage;
+    [SerializeField] TextMeshProUGUI supplyText;
+
     Player player;
     PlayerStats playerStats;
     Health playerHealthScript;
@@ -55,6 +60,8 @@ public class HUDStatsPanel : MonoBehaviour
     Coroutine shakeEffect;
     Coroutine flashEffect;
     bool initialized = false;
+    Color powerIconColor;
+    Color supplyIconColor;
 
     void Awake()
     {
@@ -67,6 +74,13 @@ public class HUDStatsPanel : MonoBehaviour
         qCubeStartLocalPos = qCubeImage.transform.localPosition;
     }
 
+    void Start()
+    {
+        UpdatePowerText(PowerManager.Instance.powerBalance);
+        UpdateSupplyText(SupplyManager.SupplyBalance);
+        StartCoroutine(DelayStatsUpdate());
+    }
+
     void OnEnable()
     {
         BuildingSystem.OnPlayerCreditsChanged += UpdateCreditsText;
@@ -74,6 +88,7 @@ public class HUDStatsPanel : MonoBehaviour
         player.stats.playerHealthScript.OnPlayerHealthChanged += UpdateHealthStats;
         player.stats.playerHealthScript.OnPlayerMaxHealthChanged += UpdateHealthStats;
         PowerManager.Instance.OnPowerChanged += UpdatePowerText;
+        SupplyManager.OnSupplyBalanceChanged += UpdateSupplyText;
     }
 
     void OnDisable()
@@ -83,11 +98,7 @@ public class HUDStatsPanel : MonoBehaviour
         player.stats.playerHealthScript.OnPlayerHealthChanged -= UpdateHealthStats;
         player.stats.playerHealthScript.OnPlayerMaxHealthChanged -= UpdateHealthStats;
         PowerManager.Instance.OnPowerChanged -= UpdatePowerText;
-    }
-
-    void Start()
-    {
-        StartCoroutine(DelayStatsUpdate());
+        SupplyManager.OnSupplyBalanceChanged -= UpdateSupplyText;
     }
 
     void FixedUpdate()
@@ -98,11 +109,25 @@ public class HUDStatsPanel : MonoBehaviour
     void UpdatePowerText(int powerBalance)
     {
         if (powerBalance >= 0)
-            powerImage.color = Color.white;
-        else 
-            powerImage.color = Color.red;
+            powerIconColor = Color.white;
+        else
+            powerIconColor = Color.red;
 
+        powerImage.color = powerIconColor;
         powerText.text = powerBalance.ToString();
+        powerText.color = powerIconColor;
+    }
+    
+    void UpdateSupplyText(int supplyBalance)
+    {
+        if (supplyBalance >= 0)
+            supplyIconColor = Color.white;
+        else
+            supplyIconColor = Color.red;
+
+        supplyImage.color = supplyIconColor;
+        supplyText.text = supplyBalance.ToString();
+        supplyText.color = supplyIconColor;
     }
 
     IEnumerator DelayStatsUpdate()

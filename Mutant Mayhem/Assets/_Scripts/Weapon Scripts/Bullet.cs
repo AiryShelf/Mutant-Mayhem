@@ -212,7 +212,7 @@ public class Bullet : MonoBehaviour
 
     void HitPlayer(PlayerHealth playerHealth, Vector2 hitDir, Vector2 point, float damageNew)
     {
-        Debug.Log("Player hit by bullet for " + damageNew + " damage");
+        //Debug.Log("Player hit by bullet for " + damageNew + " damage");
         playerHealth.Knockback(hitDir, knockback);
         ParticleManager.Instance.PlayBulletBlood(point, hitDir);
 

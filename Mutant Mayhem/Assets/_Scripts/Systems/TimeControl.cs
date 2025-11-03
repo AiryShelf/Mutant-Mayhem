@@ -54,7 +54,7 @@ public class TimeControl : MonoBehaviour
             if (Time.timeScale > 0.1f)
                 Time.timeScale -= 0.1f;
         //Debug.Log("timeScale changed to: " + Time.timeScale.ToString("#0.0"));
-        MessagePanel.PulseMessage("Timescale changed to: " + 
+        MessageBanner.PulseMessage("Timescale changed to: " + 
                                   Time.timeScale.ToString("#0.0"), Color.red);
 
         previousTimeScale = Time.timeScale;

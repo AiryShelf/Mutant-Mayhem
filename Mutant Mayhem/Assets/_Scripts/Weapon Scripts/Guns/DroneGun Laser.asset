@@ -20,16 +20,15 @@ MonoBehaviour:
   animatorHasString: 
   reloadSounds: []
   selectedSound: {fileID: 0}
-  emptyClipPrefab: {fileID: 0}
+  emptyClipPoolName: 
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: eea213e6abd7839408143e3d97f642c2, type: 3}
   laserSight: {fileID: 0}
   muzzleLocalPos: {x: 1, y: 0}
-  bulletCasingPrefab: {fileID: 1136685630353648448, guid: 6e0dec1a382c9fc4cb40bc957c9ce5e5, type: 3}
   FXManagerCasingMethodName: PlayLaserCasing_Pistol
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
   recoilAmount: {x: 0, y: 0}
-  damage: 13
+  damage: 10
   damageVariance: 0.15
   damageUpgFactor: 0.1
   knockback: 0

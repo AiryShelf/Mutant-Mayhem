@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: -841662738, guid: 29a6365db7527495bb0bcf3000f2df65, type: 3}
   tileName: Solar Panels
-  description: 'An array of solar panels for generating power.  Very flimsy
+  description: 'An array of solar panels for generating power <sprite=1>
 
     Supplies
-    continuous power
+    continuous power <sprite=1>
 
-    Gains a bonus of 1 from each connected power source'
+    Gains a bonus of 1<sprite=1> from each connected
+    power source'
   tileCost: 250
   maxHealth: 300
   health: 300
@@ -37,6 +38,7 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 1
   powerNeighborBonus: 1
-  panelToUnlock: 0
+  powerCost: -2
+  supplyCost: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0

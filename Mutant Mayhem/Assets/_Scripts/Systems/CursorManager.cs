@@ -222,7 +222,7 @@ public class CursorManager : MonoBehaviour
             Gamepad.current != null && Gamepad.current.rightStickButton.wasPressedThisFrame)
         {
             InputManager.SetJoystickMouseControl(!InputManager.GetJoystickAsMouseState());
-            MessagePanel.PulseMessage("Aim mode switched! Cick right thumbstick to switch back", Color.yellow);
+            MessageBanner.PulseMessage("Aim mode switched! Cick right thumbstick to switch back", Color.yellow);
         }
 
         if (!InputManager.GetJoystickAsMouseState())

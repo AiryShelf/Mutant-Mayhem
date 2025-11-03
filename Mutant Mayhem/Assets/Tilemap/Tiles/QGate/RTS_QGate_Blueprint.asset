@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
+  m_Name: RTS_QGate_Blueprint
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: -1123146700, guid: 0cc13cf0c47c146968a3604457fad583, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 2
+  m_TilingRules: []
+  structureSO: {fileID: 11400000, guid: f08d517a9c8eb481b86af542df163c91, type: 2}
+  damagedTiles:
+  - {fileID: 11400000, guid: ebc348a72c37f465d90f01a94769b067, type: 2}
+  destroyedTile: {fileID: 11400000, guid: d3fc1f4b944014f579464747b9e7689c, type: 2}
+  buildUiTile: {fileID: 11400000, guid: 2a32ca41440d04b5589231cd0ceffdfc, type: 2}

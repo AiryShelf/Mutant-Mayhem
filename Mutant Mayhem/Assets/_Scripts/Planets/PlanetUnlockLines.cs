@@ -45,7 +45,7 @@ public class PlanetUnlockLines : MonoBehaviour
         List<UI_PlanetClickHandler> planetClickHandlers = 
             new List<UI_PlanetClickHandler>(solarSystem.GetComponentsInChildren<UI_PlanetClickHandler>());
 
-        Debug.Log($"Found {planetClickHandlers.Count} UI_PlanetClickHandler components.");
+        //Debug.Log($"Found {planetClickHandlers.Count} UI_PlanetClickHandler components.");
         return planetClickHandlers;
     }
 

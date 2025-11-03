@@ -41,7 +41,6 @@ public class QCubeController : MonoBehaviour
     public UiUpgradePanel dronesPanel;
    
     [Header("Interaction")]
-    public UpgradePanelManager panelSwitcher;
     public RectTransform backPanel;
 
     void Awake()

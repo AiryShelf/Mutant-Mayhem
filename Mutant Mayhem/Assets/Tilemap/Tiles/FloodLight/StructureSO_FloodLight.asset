@@ -15,7 +15,7 @@ MonoBehaviour:
   uiImage: {fileID: -1390190386, guid: caab436c8ddca4575b635bcff3e9ae48, type: 3}
   tileName: Flood Light
   description: 'A powerful directional flood light, keep it protected, there''s not
-    much to it.
+    much to it
 
 
     Shines over walls and enemies'
@@ -33,6 +33,7 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 0
   powerNeighborBonus: 0
-  panelToUnlock: 0
+  powerCost: 2
+  supplyCost: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0

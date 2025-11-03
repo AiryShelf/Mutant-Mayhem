@@ -21,7 +21,7 @@ public class UIUpgrade : MonoBehaviour
 
     [SerializeField] string UiName;
     [SerializeField] int powerCost;
-    [SerializeField] int productionCost;
+    [SerializeField] int supplyCost;
     [TextArea(3,10)]
     public string tooltipDescription;
     
@@ -84,10 +84,16 @@ public class UIUpgrade : MonoBehaviour
 
     // This allows the enum to be referenced via UI button OnClick
     public void InvokeOnClick(UIUpgrade myUpg)
-    {  
+    {
         if (!buttonImage.enabled)
         {
-            MessagePanel.PulseMessage("Upgrade/Consumable is locked!  Unlock the associated tech first", Color.yellow);
+            MessageBanner.PulseMessage("Upgrade/Consumable is locked!  Unlock the associated tech first", Color.yellow);
+            return;
+        }
+        
+        if (supplyCost > 0 && SupplyManager.SupplyBalance - supplyCost < 0)
+        {
+            MessageBanner.PulseMessage("Not enough Supplies<sprite=2>!  Build Supply Depots!", Color.red);
             return;
         }
 
@@ -235,23 +241,48 @@ public class UIUpgrade : MonoBehaviour
         else
             costColorTag = redColorTag;
 
+        // Create string for power cost/gain
         string powerString = "";
         string powerCostColorTag;
         if (powerCost > 0)
         {
             if (powerCost <= PowerManager.Instance.powerBalance)
+            {
                 powerCostColorTag = yellowColorTag;
+                powerString = $"{powerCostColorTag}<sprite=1>-{powerCost}{endColorTag}, ";
+            }
             else
-                powerCostColorTag = redColorTag; 
-
-            powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}, ";
+            {
+                powerCostColorTag = redColorTag;
+                powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}, ";
+            }
         }
         else if (powerCost < 0)
         {
             powerCostColorTag = greenColorTag;
-            powerString = $"{powerCostColorTag}<sprite=0>+{Mathf.Abs(powerCost)}{endColorTag}, ";
+            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(powerCost)}{endColorTag}, ";
         }
-
+        
+        string supplyString = "";
+        string supplyCostColorTag;
+        if (supplyCost > 0)
+        {
+            if (supplyCost <= SupplyManager.SupplyBalance)
+            {
+                supplyCostColorTag = yellowColorTag;
+                supplyString = $"{supplyCostColorTag}<sprite=2>-{supplyCost}{endColorTag}, ";
+            }
+            else
+            {
+                supplyCostColorTag = redColorTag;
+                supplyString = $"{supplyCostColorTag}<sprite=3>-{supplyCost}{endColorTag}, ";
+            }
+        }
+        else if (supplyCost < 0)
+        {
+            supplyCostColorTag = greenColorTag;
+            supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(supplyCost)}{endColorTag}, ";
+        }
         // Upgrade buttons text
         if (showLevelsText)
         {
@@ -271,7 +302,7 @@ public class UIUpgrade : MonoBehaviour
         {
             // No levels text
             upgradeText.text = $"{UiName}: {greenColorTag}{statValueString}{endColorTag} {cyanColorTag}{upgAmountString}{endColorTag}" +
-                                $"\n{powerString}{costColorTag} ${upgCost}{endColorTag}"; 
+                                $"\n{powerString} {supplyString} {costColorTag}${upgCost}{endColorTag}"; 
         }
 
         //Debug.Log("Upgrade UI text updated");

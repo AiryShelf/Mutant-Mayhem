@@ -58,7 +58,7 @@ public class PoolManager : MonoBehaviour
             CreatePool(poolNames[i], poolPrefabs[i], poolCounts[i]);
         }
 
-        Debug.Log("PoolManager Initialized");
+        //Debug.Log("PoolManager Initialized");
     }
 
     public void ResetAllPools()

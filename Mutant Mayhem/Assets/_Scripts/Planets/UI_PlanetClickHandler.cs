@@ -80,7 +80,7 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
 
         if (!unlocked)
         {
-            MessagePanel.PulseMessage("Planet is locked!  Conquer the previous planets first!", Color.red);
+            MessageBanner.PulseMessage("Planet is locked!  Conquer the previous planets first!", Color.red);
             return;
         }
 

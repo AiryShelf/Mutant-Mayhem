@@ -43,6 +43,9 @@ public class TileManager : MonoBehaviour
     BuildingSystem buildingSystem;
     TurretManager turretManager;
 
+    // Buffer for non-alloc physics queries
+    private readonly Collider2D[] _panelColsBuffer = new Collider2D[64];
+
     //[SerializeField] GameObject debugDotPrefab;
 
     // For debugging
@@ -113,7 +116,7 @@ public class TileManager : MonoBehaviour
         if (buildJob == null)
         {
             Debug.LogError("BuildingSystem: BuildJob creation failed");
-            MessagePanel.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
+            MessageBanner.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
             return false;
         }
 
@@ -121,7 +124,7 @@ public class TileManager : MonoBehaviour
         {
             if (buildingSystem.buildOnlyOneList.Contains(ruleTile.structureSO))
             {
-                MessagePanel.Instance.DelayMessage("You've already built one.  One is the max!", Color.red, 0.1f);
+                MessageBanner.Instance.DelayMessage("You've already built one.  One is the max!", Color.red, 0.1f);
                 return false;
             }
             else 
@@ -596,7 +599,7 @@ public class TileManager : MonoBehaviour
     ///  2) Tilemap-based structures by testing which cells intersect the circle.
     /// Returns null if none found.
     /// </summary>
-    public (GameObject, PanelInteract) GetClosestObjectAndPanelUnderCircle(Vector2 centerWorldPos, float radius)
+    public (GameObject, PanelInteract) GetClosestObjectAndPanelUnderCircle(Vector2 playerWorldPos, float radius)
     {
         GameObject closestObject = null;
         PanelInteract closestPanel = null;
@@ -605,58 +608,55 @@ public class TileManager : MonoBehaviour
         // --- 1) Check non-tilemap objects (e.g., QCube) via collider overlap ---
         if (structureInteractLayerMask.value != 0)
         {
-            var cols = Physics2D.OverlapCircleAll(centerWorldPos, radius, structureInteractLayerMask);
-            for (int i = 0; i < cols.Length; i++)
+            int hitCount = Physics2D.OverlapCircleNonAlloc(playerWorldPos, radius, _panelColsBuffer, structureInteractLayerMask);
+            for (int i = 0; i < hitCount; i++)
             {
-                var panel = cols[i].GetComponent<PanelInteract>();
+                var col = _panelColsBuffer[i];
+                var panel = col.GetComponentInChildren<PanelInteract>();
                 if (panel == null) continue;
 
-                Vector2 p = panel.transform.position;
-                float dSq = (p - centerWorldPos).sqrMagnitude;
+                Vector2 closestPoint = col.ClosestPoint(playerWorldPos);
+                float dSq = (closestPoint - playerWorldPos).sqrMagnitude;
                 if (dSq < bestDistSq)
                 {
                     bestDistSq = dSq;
-                    closestObject = panel.gameObject;
+                    closestObject = col.gameObject;
                     closestPanel = panel;
                 }
             }
         }
 
         // --- 2) Check tilemap-based structures under the circle ---
-        HashSet<Vector3Int> seenRoots = new HashSet<Vector3Int>();
-        var cells = GetOccupiedCellsUnderCircle(centerWorldPos, radius);
+        var cells = GetOccupiedCellsUnderCircle(playerWorldPos, radius);
+        float cellSize = StructureTilemap.cellSize.x / 2; // assuming square cells
         foreach (var cell in cells)
         {
             Vector3Int rootPos = _TileStatsDict[cell].rootGridPos;
-            if (!seenRoots.Add(rootPos))
-                continue;
+            //if (!seenRoots.Add(rootPos))
+            //    continue;
 
             GameObject obj = StructureTilemap.GetInstantiatedObject(rootPos);
             if (obj == null)
-                continue; // must have an instantiated object to host a PanelInteract
+                continue;
 
-            PanelInteract panel = obj.GetComponent<PanelInteract>();
+            PanelInteract panel = obj.GetComponentInChildren<PanelInteract>();
             if (panel == null)
                 panel = obj.GetComponentInChildren<PanelInteract>(true);
 
-            if (panel != null)
-            {
-                Vector2 p = (Vector2)panel.transform.position;
-                float dSq = (p - centerWorldPos).sqrMagnitude;
-                if (dSq < bestDistSq)
-                {
-                    bestDistSq = dSq;
-                    closestObject = obj;
-                    closestPanel = panel;
-                }
-            }
+            if (panel == null)
+                continue;
+
+            // If distance to cell is greater than best, skip
+            Vector2 cellWorldPos = GridCenterToWorld(cell);
+            float distSq = (cellWorldPos - playerWorldPos).sqrMagnitude;
+            if (distSq > bestDistSq)
+                continue;
+
+            bestDistSq = distSq;
+            closestObject = obj;
+            closestPanel = panel;
         }
 
-        if (closestPanel != null)
-            Debug.Log($"GetClosestPanelInteractUnderCircle found: {closestPanel} at distance squared: {bestDistSq}");
-        else
-            Debug.Log("GetClosestPanelInteractUnderCircle found no panel");
-        
         return (closestObject, closestPanel);
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PanelInteract : MonoBehaviour
 {
     public StructureType structureTypeForPanelInteract;
+    public InteractHighlighter interactHighlighter;
     protected Player playerWhoOpened;
     protected float sqDistToPlayerWhoOpened = 0;
 

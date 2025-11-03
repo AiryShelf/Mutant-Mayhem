@@ -4,18 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum UpgradePanelType
-{
-    None,
-    Consumables,
-    Exosuit,
-    Lasers,
-    Bullets,
-    Structures,
-    Repair,
-    Explosives,
-    Drones,
-}
+
 
 public class UiUpgradePanel : UI_PanelBase
 {
@@ -129,7 +118,7 @@ public class UiUpgradePanel : UI_PanelBase
 
     public virtual void RefreshUpgradesText(float playerCredits)
     {
-        Debug.Log("Refreshing upgradesText with playerCredits: " + playerCredits);
+        //Debug.Log("Refreshing upgradesText with playerCredits: " + playerCredits);
         foreach (Transform child in buttonsGrid.transform)
         {
             UIUpgrade upg = child.GetComponent<UIUpgrade>();
@@ -153,7 +142,7 @@ public class UiUpgradePanel : UI_PanelBase
         if (playEffect)
         {
             if (!string.IsNullOrEmpty(techUnlockMessageName))
-                MessagePanel.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
+                MessageBanner.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
 
             UpgradeManager.Instance.upgradeEffects.PlayUnlockEffect(transform.position);
         }      
@@ -170,7 +159,7 @@ public class UiUpgradePanel : UI_PanelBase
         ShowNoPowerPanel();
 
         if (playEffect && !string.IsNullOrEmpty(techUnlockMessageName))
-            MessagePanel.PulseMessage(techUnlockMessageName + " locked!", Color.red);
+            MessageBanner.PulseMessage(techUnlockMessageName + " locked!", Color.red);
     }
 
     public virtual void OpenPanel(PanelInteract interactSource)
@@ -181,7 +170,7 @@ public class UiUpgradePanel : UI_PanelBase
         mainPanelCanvasGroup.interactable = true;
 
         panelInteract = interactSource;
-        Debug.Log("UiUpgradePanel: Opened panel for " + structureToBuildForUnlock);
+        //Debug.Log("UiUpgradePanel: Opened panel for " + structureToBuildForUnlock);
     }
 
     public virtual void ClosePanel()
@@ -196,7 +185,7 @@ public class UiUpgradePanel : UI_PanelBase
             panelInteract.StopAllCoroutines();
             panelInteract = null;
         }
-        Debug.Log("UiUpgradePanel: Closed panel for " + structureToBuildForUnlock);
+        //Debug.Log("UiUpgradePanel: Closed panel for " + structureToBuildForUnlock);
     }
 
     protected virtual void ShowUpgradesPanel()

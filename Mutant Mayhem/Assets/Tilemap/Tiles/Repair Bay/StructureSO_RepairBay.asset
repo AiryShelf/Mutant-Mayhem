@@ -14,11 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: -1561074817, guid: a93be24f8fada4f69877d7da4589e7fe, type: 3}
   tileName: Repair Bay
-  description: 'Allows for repair upgrades and drone repair
-
-
-    Unlocks Repair
-    Tech upgrades and Drone Repair'
+  description: Interact with it to upgrade repair tech for Drones and Player
   tileCost: 2000
   maxHealth: 1600
   health: 1600
@@ -41,6 +37,7 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 0
   powerNeighborBonus: 0
-  panelToUnlock: 6
+  powerCost: 10
+  supplyCost: 4
   structuresToUnlock: []
   canBuildOnlyOne: 1

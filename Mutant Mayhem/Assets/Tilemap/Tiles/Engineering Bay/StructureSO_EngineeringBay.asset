@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 1934889526, guid: 31f5d60f150f54742b72632686f068fc, type: 3}
   tileName: Engineering Bay
-  description: 'Allows for more advanced structures including, Micro Reactor, Blast
-    Gate, Floodlight, and Land Mine
+  description: 'Interact with to to upgrade structure tech or increase your Turret
+    Slots
 
 
-    Unlocks Structure Tech upgrades and Turret
-    Slots'
+    Unlocks more advanced structures including, Micro Reactor, Blast
+    Gate, Floodlight, and Land Mine'
   tileCost: 2000
   maxHealth: 1600
   health: 1600
@@ -42,7 +42,8 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 0
   powerNeighborBonus: 0
-  panelToUnlock: 5
+  powerCost: 10
+  supplyCost: 2
   structuresToUnlock:
   - {fileID: 11400000, guid: 2eadd0f295ced3b43b781e342f830847, type: 2}
   - {fileID: 11400000, guid: 86a18e7a7abf84b6e9b6244b30711a5a, type: 2}

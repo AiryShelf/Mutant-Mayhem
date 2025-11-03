@@ -50,7 +50,7 @@ public class DeviceImageSwitcher : MonoBehaviour
 
     void OnLastUsedDeviceChanged(InputDevice device)
     {
-        Debug.Log("DeviceImageSwitcher: Responding to device changed event...");
+        //Debug.Log("DeviceImageSwitcher: Responding to device changed event...");
 
         if (InputManager.LastUsedDevice == Keyboard.current)
             imageToSwitch.sprite = keyboardSprite;

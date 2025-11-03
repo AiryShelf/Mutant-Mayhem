@@ -303,6 +303,7 @@ GameObject:
   - component: {fileID: 4533545857120631246}
   - component: {fileID: 3096168706463568029}
   - component: {fileID: 5601309822990652990}
+  - component: {fileID: 8534455248665809221}
   m_Layer: 0
   m_Name: MicroReactor
   m_TagString: Untagged
@@ -342,6 +343,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3686183f2b71641e49897ca27b1719f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageTiles:
+  - {fileID: 11400000, guid: 2543d43709704409e8b1cbebaa78fd2f, type: 2}
+  - {fileID: 11400000, guid: 37be5c2528f064fabb075d7f5c7befc6, type: 2}
+  - {fileID: 11400000, guid: 8df57e8dd44a04f1a9b0af5e10ff95ba, type: 2}
+  - {fileID: 11400000, guid: a7e599e881d7b4b0b890d5faa54f47be, type: 2}
+  reactorLights:
+  - {fileID: 5679456533262443491}
+  - {fileID: 2525444917872933446}
+  - {fileID: 4767774280578173095}
 --- !u!114 &5601309822990652990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,6 +371,19 @@ MonoBehaviour:
   myStructureType: 22
   myConnectorBase: {fileID: 7410814253407455890}
   occupiedCells: []
+--- !u!114 &8534455248665809221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4634583227703960095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  supplyConsumptionAmount: 1
 --- !u!1 &4738179561447342693
 GameObject:
   m_ObjectHideFlags: 0

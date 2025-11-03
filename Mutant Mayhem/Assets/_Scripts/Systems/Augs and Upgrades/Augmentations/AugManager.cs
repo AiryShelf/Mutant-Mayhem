@@ -66,7 +66,7 @@ public class AugManager : MonoBehaviour
 
     void ResetAugManager(PlayerProfile profile)
     {
-        Debug.Log("AugManager has been reset");
+        //Debug.Log("AugManager has been reset");
         selectedAugsWithLvls.Clear();
         selectedAugsTotalCosts.Clear();
         if (profile == null)

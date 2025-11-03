@@ -6,7 +6,7 @@ public class PanelInteract_DroneHangar : PanelInteract
 {
     public DroneContainer droneContainer;
 
-    public void OpenPanel(Player panelOpener, DroneContainer newDroneContainer)
+    public override void OpenPanel(Player panelOpener)
     {
         UpgradePanelManager.Instance.CloseAllPanels();
         UpgradePanelManager.Instance.OpenPanel(structureTypeForPanelInteract, this);
@@ -14,6 +14,6 @@ public class PanelInteract_DroneHangar : PanelInteract
         sqDistToPlayerWhoOpened = Vector3.SqrMagnitude(playerWhoOpened.transform.position - transform.position);
 
         StartCoroutine(CheckForClose());
-        droneContainer = newDroneContainer;
+        droneContainer = playerWhoOpened.stats.structureStats.currentDroneContainer;
     }
 }
