@@ -16,11 +16,13 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
 
     public void Start()
     {
+        DroneManager.Instance.droneHangars.Add(this);
         BuildingSystem.Instance.droneHangarsBuilt++;
     }
     
     public void OnDestroy()
     {
+        DroneManager.Instance.droneHangars.Remove(this);
         BuildingSystem.Instance.droneHangarsBuilt--;
         if (UpgradePanelManager.Instance != null)
         {

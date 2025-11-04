@@ -68,7 +68,7 @@ public class PowerConsumer : MonoBehaviour, IPowerConsumer
         delayOnRoutine = null;
         noPowerIcon.enabled = true;
         isOn = false;
-        if (onPowerOff != null)
-            onPowerOff.Invoke();
+        
+        onPowerOff?.Invoke();
     }
 }

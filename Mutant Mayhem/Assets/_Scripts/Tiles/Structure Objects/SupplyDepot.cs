@@ -6,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 public class SupplyDepot : MonoBehaviour, IPowerConsumer
 {
     [SerializeField] StructureSO supplyDepotSO;
+    [SerializeField] SupplyProducer supplyProducer;
     [SerializeField] SpriteRenderer spriteLightSprite;
     [SerializeField] List<Light2D> lights;
 
@@ -17,6 +18,7 @@ public class SupplyDepot : MonoBehaviour, IPowerConsumer
 
         BuildingSystem.Instance.UnlockStructures(supplyDepotSO, false);
         StopAllCoroutines();
+        supplyProducer.enabled = true;
     }
 
     public void PowerOff()
@@ -27,5 +29,6 @@ public class SupplyDepot : MonoBehaviour, IPowerConsumer
 
         BuildingSystem.Instance.LockStructures(supplyDepotSO, false);
         StopAllCoroutines();
+        supplyProducer.enabled = false;
     }
 }

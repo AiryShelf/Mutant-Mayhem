@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class DroneContainer : MonoBehaviour
 {
-    public RangeCircle droneRangeCircle;
     public List<Drone> controlledDrones;
     public List<Drone> dockedDrones;
     public int maxDrones;
     [SerializeField] float launchDelay = 0.5f;
-    public float detectionRadius = 6f;
     [SerializeField] int repairAmountPerSec = 10;
     public bool hasPower = true;
 
-    [SerializeField] Collider2D detectionCollider;
+    [SerializeField] CircleCollider2D detectionCollider;
 
     // Tracks num assigned drones
     [SerializeField] List<KeyValuePair<DroneAttackJob, int>> attackJobs = new List<KeyValuePair<DroneAttackJob, int>>();
@@ -24,9 +22,14 @@ public class DroneContainer : MonoBehaviour
         StartCoroutine(RepairDrones());
     }
 
+    void RefreshColliderRange()
+    {
+        detectionCollider.radius = DroneManager.Instance.droneHangarRange;
+    }
+
     public void ShowRangeCircle(bool show)
     {
-        droneRangeCircle.EnableCircle(show);
+        
     }
 
     #region Drones
@@ -140,6 +143,8 @@ public class DroneContainer : MonoBehaviour
         {
             if (hasPower)
             {
+                RefreshColliderRange();
+
                 DroneJob job = null;
                 Drone droneToAssign = null;
 

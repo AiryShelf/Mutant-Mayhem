@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class DroneManager : MonoBehaviour
 {
+    public static DroneManager Instance;
+
+    public int droneHangarRange = 12;
+
     public List<Drone> _droneListSource;
     public List<bool> unlockedDrones;
     public List<Drone> allActiveDrones;
@@ -14,7 +18,7 @@ public class DroneManager : MonoBehaviour
     [Header("Dynamic Vars:")]
     public List<TurretGunSO> droneGunList = new List<TurretGunSO>();
 
-    public static DroneManager Instance;
+    public List<DroneHangar> droneHangars = new List<DroneHangar>();
 
     void Awake()
     {
@@ -67,7 +71,7 @@ public class DroneManager : MonoBehaviour
         Drone newDrone = PoolManager.Instance.GetFromPool(poolName).GetComponent<Drone>();
         if (newDrone != null)
         {
-            newDrone.powerConsumer.AddConsumer();
+            //newDrone.powerConsumer.AddConsumer();
             newDrone.Initialize(droneGun);
             droneContainer.AddDrone(newDrone);
             allActiveDrones.Add(newDrone);
@@ -96,7 +100,7 @@ public class DroneManager : MonoBehaviour
                 break;
         }
 
-        drone.powerConsumer.RemoveConsumer();
+        //drone.powerConsumer.RemoveConsumer();
         PoolManager.Instance.ReturnToPool(drone.objectPoolName, drone.gameObject);
     }
 

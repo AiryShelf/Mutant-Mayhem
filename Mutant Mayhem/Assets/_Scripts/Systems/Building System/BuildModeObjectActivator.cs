@@ -40,7 +40,12 @@ public class BuildModeObjectActivator : MonoBehaviour
     {
         while (true)
         {
-            objectToToggle.SetActive(typesToMatch.Contains(BuildingSystem.Instance.structureInHand.structureType));
+            bool matched = typesToMatch.Contains(BuildingSystem.Instance.structureInHand.structureType);
+            objectToToggle.SetActive(matched);
+            if (matched)
+            {
+                Debug.Log($"BuildModeObjectActivator: {objectToToggle.name} activated.  (insert range association here, lol)");
+            }
             yield return new WaitForSecondsRealtime(0.1f);
         }
     }
