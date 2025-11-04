@@ -558,17 +558,6 @@ public class BuildingSystem : MonoBehaviour
 
     void Build(Vector3Int gridPos)
     {
-        // Check Turrets
-        if (structureInHand.isTurret)
-        {
-            if (turretManager.currentNumTurrets + StatsCounterPlayer.TurretsPlaced >= player.stats.structureStats.maxTurrets)
-            {
-                MessageBanner.Instance.DelayMessage("Turret limit reached.  Use Structure "+
-                                      "upgrades to increase the limit", Color.red, 0.1f);
-                return;
-            }
-        }
-
         // Check Credits
         if (PlayerCredits < structureInHand.tileCost * structureCostMult)
         {
@@ -588,8 +577,17 @@ public class BuildingSystem : MonoBehaviour
         {
             if (SupplyManager.SupplyBalance - structureInHand.supplyCost < 0)
             {
-                MessageBanner.Instance.DelayMessage("Not enough Supplies<sprite=2> to build " + 
+                MessageBanner.Instance.DelayMessage("Not enough Supplies<sprite=2> to build " +
                                       structureInHand.tileName + "!  Build Supply Depots!", Color.red, 0.1f);
+                return;
+            }
+        }
+        else if (structureInHand.supplyCost < 0)
+        {
+            // Check Supply Limit
+            if (SupplyManager.SupplyProduced + structureInHand.supplyCost > SupplyManager.SupplyLimit)
+            {
+                MessageBanner.Instance.DelayMessage("Supply Limit reached! Buy Supply Limit Upgrades at the Engineering Bay!", Color.red, 0.1f);
                 return;
             }
         }

@@ -58,7 +58,6 @@ public class StructureStats
     public TileManager tileManager;
     public float structureMaxHealthMult = 1;
     public float armour = 0;
-    public int maxTurrets = 0;
     public float pulseDefenceForce = 0;
     public DroneContainer currentDroneContainer = null;
 }

@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &268759953485690779
 RectTransform:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2ce0e6acaa4cf8642a48763d0d4208a4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fe55ddde89cb35b4b835f838dc817a9b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -287,9 +287,12 @@ MonoBehaviour:
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
   buttonImage: {fileID: 726323392028032656}
+  buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 1954388369396986002}
   unlocked: 1
   UiName: Turret Rotation
+  powerCost: 0
+  supplyCost: 0
   tooltipDescription: More powerful gyros and stabilizers allow for rapid rotation,
     while retaining tracking and accuracy.
   showLevelsText: 1

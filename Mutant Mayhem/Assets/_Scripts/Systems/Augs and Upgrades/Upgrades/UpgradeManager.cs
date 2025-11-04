@@ -165,9 +165,9 @@ public class UpgradeManager : MonoBehaviour
         // Structures
         structureStatsUpgMaxLevels[StructureStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.StructureMaxHealth] = int.MaxValue;
-        structureStatsUpgMaxLevels[StructureStatsUpgrade.MaxTurrets] = 20;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.TurretRotSpeed] = 20;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.TurretSensors] = 20;
+        structureStatsUpgMaxLevels[StructureStatsUpgrade.SupplyLimit] = 50;
 
         //Consumables
         consumablesUpgMaxLevels[ConsumablesUpgrade.PlayerHeal] = int.MaxValue;
@@ -250,9 +250,9 @@ public class UpgradeManager : MonoBehaviour
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.StructureMaxHealth] = 500;
-        structureStatsUpgBaseCosts[StructureStatsUpgrade.MaxTurrets] = 4000;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretRotSpeed] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretSensors] = 500;
+        structureStatsUpgBaseCosts[StructureStatsUpgrade.SupplyLimit] = 1000;
 
         // Consumables
         consumablesUpgBaseCosts[ConsumablesUpgrade.PlayerHeal] = 100;
@@ -270,7 +270,6 @@ public class UpgradeManager : MonoBehaviour
         laserUpgBaseCosts[GunStatsUpgrade.ChargeSpeed] = 200;
         laserUpgBaseCosts[GunStatsUpgrade.GunAccuracy] = 200;
         laserUpgBaseCosts[GunStatsUpgrade.GunRange] = 150;
-        laserUpgBaseCosts[GunStatsUpgrade.Recoil] = 100; // Deprecated
 
         bulletUpgBaseCosts[GunStatsUpgrade.GunDamage] = 250;
         bulletUpgBaseCosts[GunStatsUpgrade.GunKnockback] = 150;
@@ -279,7 +278,6 @@ public class UpgradeManager : MonoBehaviour
         bulletUpgBaseCosts[GunStatsUpgrade.ChargeSpeed] = 200;
         bulletUpgBaseCosts[GunStatsUpgrade.GunAccuracy] = 200;
         bulletUpgBaseCosts[GunStatsUpgrade.GunRange] = 150;
-        bulletUpgBaseCosts[GunStatsUpgrade.Recoil] = 100; // Deprecated
         bulletUpgBaseCosts[GunStatsUpgrade.TurretReloadSpeed] = 500;
 
         repairGunUpgBaseCosts[GunStatsUpgrade.GunDamage] = 500;
@@ -289,7 +287,6 @@ public class UpgradeManager : MonoBehaviour
         repairGunUpgBaseCosts[GunStatsUpgrade.ChargeSpeed] = 400;
         repairGunUpgBaseCosts[GunStatsUpgrade.GunAccuracy] = 400;
         repairGunUpgBaseCosts[GunStatsUpgrade.GunRange] = 300;
-        repairGunUpgBaseCosts[GunStatsUpgrade.Recoil] = 100; // Deprecated
         repairGunUpgBaseCosts[GunStatsUpgrade.TurretReloadSpeed] = 500;
 
         // Initialize currentCosts
@@ -363,12 +360,12 @@ public class UpgradeManager : MonoBehaviour
                 return new QCubeMaxHealthUpgrade();
             case StructureStatsUpgrade.StructureMaxHealth:
                 return new StructureMaxHealthUpgrade();
-            case StructureStatsUpgrade.MaxTurrets:
-                return new MaxTurretsUpgrade();
             case StructureStatsUpgrade.TurretRotSpeed:
                 return new TurretRotSpeedUpgrade();
             case StructureStatsUpgrade.TurretSensors:
                 return new TurretSensorsUpgrade();
+            case StructureStatsUpgrade.SupplyLimit:
+                return new SupplyLimitUpgrade();
 
             default:
                 return null;      

@@ -31,9 +31,10 @@ public enum StructureStatsUpgrade
     QCubeMaxHealth,
     StructureMaxHealth,
     Armour,
-    MaxTurrets,
+    MaxTurrets_Deprecated,
     TurretRotSpeed,
     TurretSensors,
+    SupplyLimit
 }
 
 public enum ConsumablesUpgrade
@@ -563,7 +564,7 @@ public class BuyAttackDroneUpgrade : Upgrade
 
 public class QCubeMaxHealthUpgrade : Upgrade
 {
-    public QCubeMaxHealthUpgrade() : base(StructureStatsUpgrade.MaxTurrets) { }
+    public QCubeMaxHealthUpgrade() : base(StructureStatsUpgrade.MaxTurrets_Deprecated) { }
 
     public static float UpgAmount = 200;
 
@@ -610,9 +611,10 @@ public class StructureMaxHealthUpgrade : Upgrade
     }
 }
 
+/*/ DEPRECATED
 public class MaxTurretsUpgrade : Upgrade
 {
-    public MaxTurretsUpgrade() : base(StructureStatsUpgrade.StructureMaxHealth) { }
+    public MaxTurretsUpgrade() : base(StructureStatsUpgrade.MaxTurrets_Deprecated) { }
 
     public static float UpgAmount = 1;
 
@@ -633,6 +635,7 @@ public class MaxTurretsUpgrade : Upgrade
         return newCost;
     }
 }
+*/
 
 public class TurretRotSpeedUpgrade : Upgrade
 {
@@ -687,6 +690,35 @@ public class TurretSensorsUpgrade : Upgrade
     }
 }
 
+public class SupplyLimitUpgrade : Upgrade
+{
+    public SupplyLimitUpgrade() : base(StructureStatsUpgrade.SupplyLimit) { }
+
+    public static int UpgAmount = 4;
+
+    public static float GetUpgAmount()
+    {
+        return UpgAmount;
+    }
+
+    public override void Apply(StructureStats structureStats, int level)
+    {
+        Debug.Log("SupplyLimitUpg applied");
+        SupplyManager.SupplyLimit += UpgAmount;
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // 1.5x the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
 #endregion
 
 #region GunStats Upgrades
@@ -701,12 +733,12 @@ public class GunDamageUpgrade : Upgrade
         switch (gunIndex)
         {
             case 0:
-                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor * 
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
                             (upgradeManager.laserUpgLevels[GunStatsUpgrade.GunDamage] + 2) *
                             PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
                 return upgAmount;
             case 1:
-                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor * 
+                upgAmount = player.playerShooter.gunList[gunIndex].damageUpgFactor *
                             (upgradeManager.bulletUpgLevels[GunStatsUpgrade.GunDamage] + 2) *
                             PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
                 return upgAmount;
@@ -716,7 +748,7 @@ public class GunDamageUpgrade : Upgrade
                             PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
                 return upgAmount;
             default:
-                return upgAmount; 
+                return upgAmount;
         }
     }
 

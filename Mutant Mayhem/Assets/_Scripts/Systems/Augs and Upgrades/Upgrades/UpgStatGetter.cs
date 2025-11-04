@@ -90,14 +90,14 @@ public static class UpgStatGetter
             case StructureStatsUpgrade.StructureMaxHealth:
                 stat = player.stats.structureStats.structureMaxHealthMult.ToString("#0.00");
                 return stat;
-            case StructureStatsUpgrade.MaxTurrets:
-                stat = player.stats.structureStats.maxTurrets.ToString("#0");
-                return stat;
             case StructureStatsUpgrade.TurretRotSpeed:
                 stat = TurretManager.Instance.turretGunList[0].rotationSpeed.ToString("#0");
                 return stat;
             case StructureStatsUpgrade.TurretSensors:
                 stat = TurretManager.Instance.turretGunList[0].detectRange.ToString("#0.0");
+                return stat;
+            case StructureStatsUpgrade.SupplyLimit:
+                stat = SupplyManager.SupplyLimit.ToString("#0");
                 return stat;
         }
 
@@ -237,14 +237,14 @@ public static class UpgStatGetter
             case StructureStatsUpgrade.StructureMaxHealth:
                 amount = "+" + StructureMaxHealthUpgrade.UpgAmount.ToString("#0.00");
                 return amount;
-            case StructureStatsUpgrade.MaxTurrets:
-                amount = "+" + MaxTurretsUpgrade.UpgAmount.ToString("#0");
-                return amount;
             case StructureStatsUpgrade.TurretRotSpeed:
                 amount = "+" + TurretRotSpeedUpgrade.UpgAmount.ToString("#0");
                 return amount;
             case StructureStatsUpgrade.TurretSensors:
                 amount = "+" + TurretSensorsUpgrade.GetUpgAmount().ToString("#0.0");
+                return amount;
+            case StructureStatsUpgrade.SupplyLimit:
+                amount = "+" + SupplyLimitUpgrade.UpgAmount.ToString("#0");
                 return amount;
         }
 
@@ -293,7 +293,7 @@ public static class UpgStatGetter
 
     #endregion
 
-    #region Upgrade Costs
+    #region Consumable Costs
 
     // Consumables
     public static int GetUpgCost(Player player, ConsumablesUpgrade consumablesUpgrade, UpgradeManager upgradeManager)

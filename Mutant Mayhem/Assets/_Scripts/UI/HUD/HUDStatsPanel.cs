@@ -8,6 +8,8 @@ using Unity.VisualScripting;
 
 public class HUDStatsPanel : MonoBehaviour
 {
+    public static HUDStatsPanel Instance { get; private set; }
+
     [SerializeField] float textFlyAlphaMax;
     [SerializeField] float textPulseScaleMax = 1.5f;
 
@@ -65,6 +67,16 @@ public class HUDStatsPanel : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         player = FindObjectOfType<Player>();
         playerStats = player.stats;
         playerHealthScript = player.GetComponent<Health>();
@@ -77,7 +89,7 @@ public class HUDStatsPanel : MonoBehaviour
     void Start()
     {
         UpdatePowerText(PowerManager.Instance.powerBalance);
-        UpdateSupplyText(SupplyManager.SupplyBalance);
+        UpdateSupplyBalance(SupplyManager.SupplyBalance);
         StartCoroutine(DelayStatsUpdate());
     }
 
@@ -88,7 +100,7 @@ public class HUDStatsPanel : MonoBehaviour
         player.stats.playerHealthScript.OnPlayerHealthChanged += UpdateHealthStats;
         player.stats.playerHealthScript.OnPlayerMaxHealthChanged += UpdateHealthStats;
         PowerManager.Instance.OnPowerChanged += UpdatePowerText;
-        SupplyManager.OnSupplyBalanceChanged += UpdateSupplyText;
+        SupplyManager.OnSupplyBalanceChanged += UpdateSupplyBalance;
     }
 
     void OnDisable()
@@ -98,7 +110,7 @@ public class HUDStatsPanel : MonoBehaviour
         player.stats.playerHealthScript.OnPlayerHealthChanged -= UpdateHealthStats;
         player.stats.playerHealthScript.OnPlayerMaxHealthChanged -= UpdateHealthStats;
         PowerManager.Instance.OnPowerChanged -= UpdatePowerText;
-        SupplyManager.OnSupplyBalanceChanged -= UpdateSupplyText;
+        SupplyManager.OnSupplyBalanceChanged -= UpdateSupplyBalance;
     }
 
     void FixedUpdate()
@@ -117,16 +129,22 @@ public class HUDStatsPanel : MonoBehaviour
         powerText.text = powerBalance.ToString();
         powerText.color = powerIconColor;
     }
-    
-    void UpdateSupplyText(int supplyBalance)
+
+    void UpdateSupplyBalance(int supplyBalance)
     {
+        Color textColor;
         if (supplyBalance >= 0)
+        {
+            textColor = Color.green;
             supplyIconColor = Color.white;
+        }
         else
+        {
             supplyIconColor = Color.red;
+        }
 
         supplyImage.color = supplyIconColor;
-        supplyText.text = supplyBalance.ToString();
+        supplyText.text = $"{SupplyManager.SupplyBalance}";
         supplyText.color = supplyIconColor;
     }
 

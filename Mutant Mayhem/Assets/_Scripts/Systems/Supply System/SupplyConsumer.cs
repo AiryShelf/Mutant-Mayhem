@@ -9,12 +9,12 @@ public class SupplyConsumer : MonoBehaviour
     void OnEnable()
     {
         //Debug.Log("Supply consumer enabled, consuming supply of " + supplyConsumptionAmount);
-        SupplyManager.SupplyBalance -= supplyConsumptionAmount;
+        SupplyManager.SupplyConsumption += supplyConsumptionAmount;
     }
 
     void OnDisable()
     {
         //Debug.Log("Supply consumer disabled, restoring supply of " + supplyConsumptionAmount);
-        SupplyManager.SupplyBalance += supplyConsumptionAmount;
+        SupplyManager.SupplyConsumption -= supplyConsumptionAmount;
     }
 }

@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: Chase-Chase Fly to Target
   m_EditorClassIdentifier: 
   canExit: 1
-  distanceToStartShooting: 0
-  chanceToStartShootingPerFrame: 0.01
   timeToStopChase: 2
   TimeToCheckDistance: 0.6
   rotateSpeedMultiplier: 1
@@ -43,5 +41,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 557120
   sineAmplitude: 2
-  diveDistance: 4
+  distToStartDive: 4
   diveScaleDivisor: 1.4

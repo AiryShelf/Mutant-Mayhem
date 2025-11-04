@@ -1,32 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UiUpgradePanel_QCube : UiUpgradePanel
+public class UiUpgradePanel_EngineeringBay : UiUpgradePanel
 {
-    [Header("QCube and Power")]
-    [SerializeField] Slider cubeHealthSlider;
+    [Header("Engineering Bay")]
+    [SerializeField] Image powerImage;
+    [SerializeField] TextMeshProUGUI powerText;
     [SerializeField] Image supplyImage;
     [SerializeField] TextMeshProUGUI supplyBalanceText;
     [SerializeField] TextMeshProUGUI supplyLimitText;
-    [SerializeField] Image powerImage;
-    [SerializeField] TextMeshProUGUI powerText;
 
     public override void OpenPanel(PanelInteract interactSource)
     {
         base.OpenPanel(interactSource);
-
         PowerManager.Instance.OnPowerChanged += UpdatePowerText;
-        QCubeController.Instance.cubeHealth.OnCubeHealthChanged += UpdateCubeHealth;
         SupplyManager.OnSupplyConsumptionChanged += UpdateSupplyConsumptionVsGeneration;
         SupplyManager.OnSupplyProductionChanged += UpdateSupplyConsumptionVsGeneration;
         SupplyManager.OnSupplyLimitChanged += UpdateSupplyLimit;
 
         UpdatePowerText(PowerManager.Instance.powerBalance);
-        UpdateCubeHealth(QCubeController.Instance.cubeHealth.GetHealth());
         UpdateSupplyConsumptionVsGeneration(SupplyManager.SupplyProduced - SupplyManager.SupplyConsumption);
         UpdateSupplyLimit(SupplyManager.SupplyLimit);
     }
@@ -34,14 +29,10 @@ public class UiUpgradePanel_QCube : UiUpgradePanel
     public override void ClosePanel()
     {
         base.ClosePanel();
-
         PowerManager.Instance.OnPowerChanged -= UpdatePowerText;
-        QCubeController.Instance.cubeHealth.OnCubeHealthChanged -= UpdateCubeHealth;
-    }
-
-    void UpdateCubeHealth(float newHealth)
-    {
-        cubeHealthSlider.value = newHealth / QCubeController.Instance.cubeHealth.GetMaxHealth();
+        SupplyManager.OnSupplyConsumptionChanged -= UpdateSupplyConsumptionVsGeneration;
+        SupplyManager.OnSupplyProductionChanged -= UpdateSupplyConsumptionVsGeneration;
+        SupplyManager.OnSupplyLimitChanged -= UpdateSupplyLimit;
     }
 
     void UpdatePowerText(int powerBalance)

@@ -8,13 +8,13 @@ public class SupplyProducer : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log($"Supply producer enabled, adding supply of {supplyAmount} from {gameObject.name}");
-        SupplyManager.SupplyBalance += supplyAmount;
+        //Debug.Log($"Supply producer enabled, adding supply of {supplyAmount} from {gameObject.name}");
+        SupplyManager.SupplyProduced += supplyAmount;
     }
 
     void OnDisable()
     {
-        Debug.Log($"Supply producer disabled, removing supply of {supplyAmount} from {gameObject.name}");
-        SupplyManager.SupplyBalance -= supplyAmount;
+        //Debug.Log($"Supply producer disabled, removing supply of {supplyAmount} from {gameObject.name}");
+        SupplyManager.SupplyProduced -= supplyAmount;
     }
 }

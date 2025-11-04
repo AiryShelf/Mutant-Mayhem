@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 2632907527962463670}
   - component: {fileID: 4563967152069619247}
   m_Layer: 0
-  m_Name: Wall
+  m_Name: Supplies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &268759953485690779
 RectTransform:
   m_ObjectHideFlags: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 350078324, guid: 33d25eff3d05d0541ad7e2b9fd6c93d5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7b8314183b7684b55b5b995fc05a588a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4386280276781559697
 RectTransform:
   m_ObjectHideFlags: 0
@@ -110,7 +110,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1960835165679064887
 CanvasRenderer:
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fe1203c2b50e3934cb7c4e645637aca0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2ce0e6acaa4cf8642a48763d0d4208a4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -167,7 +167,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1191629096228558897
 RectTransform:
   m_ObjectHideFlags: 0
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 236226679967019235}
   - component: {fileID: 7711098166412534391}
   m_Layer: 0
-  m_Name: UIUpg_MaxTurrets
+  m_Name: UIUpg_SupplyLimit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -283,17 +283,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeFamily: 1
   playerStatsUpgrade: 0
-  structureStatsUpgrade: 3
+  structureStatsUpgrade: 6
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
   buttonImage: {fileID: 726323392028032656}
   buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 1954388369396986002}
   unlocked: 1
-  UiName: Max Turrets
+  UiName: Supply Limit
   powerCost: 0
-  supplyCost: 0
-  tooltipDescription: Increases the maximum amount of turrets that can be supported.
+  supplyCost: -4
+  tooltipDescription: Increases the Supply Limit by 4
   showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
   playerGunIndex: 0
