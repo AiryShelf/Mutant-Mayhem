@@ -105,9 +105,13 @@ public class TileManager : MonoBehaviour
 
     public bool AddBlueprintAt(Vector3Int gridPos, RuleTileStructure ruleTile, int rotation)
     {
+        if (!buildingSystem.CheckSupplies(ruleTile.structureSO))
+            return false;
+
         StructureSO rotatedStructure = StructureRotator.RotateStructure(ruleTile.structureSO, rotation);
         if (!AddNewTileToDict(gridPos, rotatedStructure))
         {
+            MessageBanner.PulseMessage("Unable to build there.  It's blocked!", Color.red);
             Debug.LogWarning("Failed to add structure tiles to dict when placing blueprint");
             return false;
         }
@@ -146,12 +150,16 @@ public class TileManager : MonoBehaviour
         BlueprintTilemap.SetTransformMatrix(gridPos, matrix);
 
         StartCoroutine(RotateTileObject(BlueprintTilemap, gridPos, matrix));
+        AddToPlacedCounter(ruleTile.structureSO.structureType);
 
         return true;
     }
 
     public bool AddTileAt(Vector3Int rootPos, RuleTileStructure ruleTile)
     {
+        if (!buildingSystem.CheckSupplies(ruleTile.structureSO))
+            return false;
+
         _TileStatsDict[rootPos].isBlueprint = false;
         _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
         Matrix4x4 matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
@@ -159,7 +167,6 @@ public class TileManager : MonoBehaviour
         BlueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
         buildingSystem.UnlockStructures(ruleTile.structureSO, true);
-        AddToBuiltCounter(ruleTile.structureSO.structureType);
         
         //if (!AddNewTileToDict(gridPos, rotatedStructure))
         //{
@@ -203,6 +210,9 @@ public class TileManager : MonoBehaviour
         ClearParticlesAndDebris(rootPos);                
         shadowCaster2DTileMap.Generate();
         UpdateTileDamageSprite(rootPos);
+
+        RemoveFromPlacedCounter(ruleTile.structureSO.structureType);
+        AddToBuiltCounter(ruleTile.structureSO.structureType);
         
         return true;
     }
@@ -1065,121 +1075,153 @@ public class TileManager : MonoBehaviour
         Debug.Log("Particle box check: " + inBox);
         return inBox;
     }
-    
+
     void AddToBuiltCounter(StructureType structureType)
     {
         StatsCounterPlayer.StructuresBuilt++;
 
-        if (structureType == StructureType.OneByOneCorner ||
-            structureType == StructureType.OneByOneWall)
+        switch (structureType)
         {
-            StatsCounterPlayer.WallsBuilt++;
-            StatsCounterPlayer.WallsPlaced--;
+            case StructureType.OneByOneCorner:
+            case StructureType.OneByOneWall:
+                StatsCounterPlayer.WallsBuilt++;
+                break;
+            case StructureType.Gate:
+            case StructureType.BlastGate:
+                StatsCounterPlayer.GatesBuilt++;
+                break;
+            case StructureType.LaserTurret:
+            case StructureType.GunTurret:
+                StatsCounterPlayer.TurretsBuilt++;
+                break;
+            case StructureType.SolarPanels:
+                StatsCounterPlayer.SolarPanelsBuilt++;
+                break;
+            case StructureType.MicroReactor:
+                StatsCounterPlayer.MicroReactorsBuilt++;
+                break;
+            case StructureType.EngineeringBay:
+                StatsCounterPlayer.EngineeringBaysBuilt++;
+                break;
+            case StructureType.PhotonicsBay:
+                StatsCounterPlayer.PhotonicsBayBuilt++;
+                break;
+            case StructureType.BallisticsBay:
+                StatsCounterPlayer.BallisticsBayBuilt++;
+                break;
+            case StructureType.ExplosivesBay:
+                StatsCounterPlayer.ExplosivesBayBuilt++;
+                break;
+            case StructureType.RepairBay:
+                StatsCounterPlayer.RepairBayBuilt++;
+                break;
+            case StructureType.DroneHangar:
+                StatsCounterPlayer.DroneHangarsBuilt++;
+                break;
+            case StructureType.SupplyDepot:
+                StatsCounterPlayer.SupplyDepotsBuilt++;
+                break;
+            default:
+                Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
+                break;
         }
-        else if (structureType == StructureType.Gate ||
-                 structureType == StructureType.BlastGate)
+    }
+    
+    void AddToPlacedCounter(StructureType structureType)
+    {
+        switch (structureType)
         {
-            StatsCounterPlayer.GatesBuilt++;
-            StatsCounterPlayer.GatesPlaced--;
+            case StructureType.OneByOneCorner:
+            case StructureType.OneByOneWall:
+                StatsCounterPlayer.WallsPlaced++;
+                break;
+            case StructureType.Gate:
+            case StructureType.BlastGate:
+                StatsCounterPlayer.GatesPlaced++;
+                break;
+            case StructureType.LaserTurret:
+            case StructureType.GunTurret:
+                StatsCounterPlayer.TurretsPlaced++;
+                break;
+            case StructureType.SolarPanels:
+                StatsCounterPlayer.SolarPanelsPlaced++;
+                break;
+            case StructureType.MicroReactor:
+                StatsCounterPlayer.MicroReactorsPlaced++;
+                break;
+            case StructureType.EngineeringBay:
+                StatsCounterPlayer.EngineeringBaysPlaced++;
+                break;
+            case StructureType.PhotonicsBay:
+                StatsCounterPlayer.PhotonicsBayPlaced++;
+                break;
+            case StructureType.BallisticsBay:
+                StatsCounterPlayer.BallisticsBayPlaced++;
+                break;
+            case StructureType.ExplosivesBay:
+                StatsCounterPlayer.ExplosivesBayPlaced++;
+                break;
+            case StructureType.RepairBay:
+                StatsCounterPlayer.RepairBayPlaced++;
+                break;
+            case StructureType.DroneHangar:
+                StatsCounterPlayer.DroneHangarsPlaced++;
+                break;
+            case StructureType.SupplyDepot:
+                StatsCounterPlayer.SupplyDepotsPlaced++;
+                break;
+            default:
+                Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
+                break;
         }
-        else if (structureType == StructureType.LaserTurret ||
-                 structureType == StructureType.GunTurret)
-        {
-            StatsCounterPlayer.TurretsBuilt++;
-            StatsCounterPlayer.TurretsPlaced--;
-        }
-        else if (structureType == StructureType.SolarPanels)
-        {
-            StatsCounterPlayer.SolarPanelsBuilt++;
-            StatsCounterPlayer.SolarPanelsPlaced--;
-        }
-        else if (structureType == StructureType.MicroReactor)
-        {
-            StatsCounterPlayer.MicroReactorsBuilt++;
-            StatsCounterPlayer.MicroReactorsPlaced--;
-        }
-        else if (structureType == StructureType.EngineeringBay)
-        {
-            StatsCounterPlayer.EngineeringBaysBuilt++;
-            StatsCounterPlayer.EngineeringBaysPlaced--;
-        }
-        else if (structureType == StructureType.PhotonicsBay)
-        {
-            StatsCounterPlayer.PhotonicsBayBuilt++;
-            StatsCounterPlayer.PhotonicsBayPlaced--;
-        }
-        else if (structureType == StructureType.BallisticsBay)
-        {
-            StatsCounterPlayer.BallisticsBayBuilt++;
-            StatsCounterPlayer.BallisticsBayPlaced--;
-        }
-        else if (structureType == StructureType.ExplosivesBay)
-        {
-            StatsCounterPlayer.ExplosivesBayBuilt++;
-            StatsCounterPlayer.ExplosivesBayPlaced--;
-        }
-        else if (structureType == StructureType.RepairBay)
-        {
-            StatsCounterPlayer.RepairBayBuilt++;
-            StatsCounterPlayer.RepairBayPlaced--;
-        }
-        else if (structureType == StructureType.DroneHangar)
-        {
-            StatsCounterPlayer.DroneBayBuilt++;
-            StatsCounterPlayer.DroneHangarPlaced--;
-        }
-        else
-            Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
     }
 
     void RemoveFromPlacedCounter(StructureType structureType)
     {
-        if (structureType == StructureType.OneByOneCorner ||
-            structureType == StructureType.OneByOneWall)
+        switch (structureType)
         {
-            StatsCounterPlayer.WallsPlaced--;
-        }
-        else if (structureType == StructureType.Gate ||
-                 structureType == StructureType.BlastGate)
-        {
-            StatsCounterPlayer.GatesPlaced--;
-        }
-        else if (structureType == StructureType.LaserTurret ||
-                 structureType == StructureType.GunTurret)
-        {
-            StatsCounterPlayer.TurretsPlaced--;
-        }
-        else if (structureType == StructureType.SolarPanels)
-        {
-            StatsCounterPlayer.SolarPanelsPlaced--;
-        }
-        else if (structureType == StructureType.MicroReactor)
-        {
-            StatsCounterPlayer.MicroReactorsPlaced--;
-        }
-        else if (structureType == StructureType.EngineeringBay)
-        {
-            StatsCounterPlayer.EngineeringBaysPlaced--;
-        }
-        else if (structureType == StructureType.PhotonicsBay)
-        {
-            StatsCounterPlayer.PhotonicsBayPlaced--;
-        }
-        else if (structureType == StructureType.BallisticsBay)
-        {
-            StatsCounterPlayer.BallisticsBayPlaced--;
-        }
-        else if (structureType == StructureType.ExplosivesBay)
-        {
-            StatsCounterPlayer.ExplosivesBayPlaced--;
-        }
-        else if (structureType == StructureType.RepairBay)
-        {
-            StatsCounterPlayer.RepairBayPlaced--;
-        }
-        else if (structureType == StructureType.DroneHangar)
-        {
-            StatsCounterPlayer.DroneHangarPlaced--;
+            case StructureType.OneByOneCorner:
+            case StructureType.OneByOneWall:
+                StatsCounterPlayer.WallsPlaced--;
+                break;
+            case StructureType.Gate:
+            case StructureType.BlastGate:
+                StatsCounterPlayer.GatesPlaced--;
+                break;
+            case StructureType.LaserTurret:
+            case StructureType.GunTurret:
+                StatsCounterPlayer.TurretsPlaced--;
+                break;
+            case StructureType.SolarPanels:
+                StatsCounterPlayer.SolarPanelsPlaced--;
+                break;
+            case StructureType.MicroReactor:
+                StatsCounterPlayer.MicroReactorsPlaced--;
+                break;
+            case StructureType.EngineeringBay:
+                StatsCounterPlayer.EngineeringBaysPlaced--;
+                break;
+            case StructureType.PhotonicsBay:
+                StatsCounterPlayer.PhotonicsBayPlaced--;
+                break;
+            case StructureType.BallisticsBay:
+                StatsCounterPlayer.BallisticsBayPlaced--;
+                break;
+            case StructureType.ExplosivesBay:
+                StatsCounterPlayer.ExplosivesBayPlaced--;
+                break;
+            case StructureType.RepairBay:
+                StatsCounterPlayer.RepairBayPlaced--;
+                break;
+            case StructureType.DroneHangar:
+                StatsCounterPlayer.DroneHangarsPlaced--;
+                break;
+            case StructureType.SupplyDepot:
+                StatsCounterPlayer.SupplyDepotsPlaced--;
+                break;
+            default:
+                Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
+                break;
         }
     }
 

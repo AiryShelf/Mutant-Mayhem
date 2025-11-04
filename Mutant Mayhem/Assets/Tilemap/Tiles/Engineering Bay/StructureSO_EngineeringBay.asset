@@ -43,10 +43,11 @@ MonoBehaviour:
   powerGenerated: 0
   powerNeighborBonus: 0
   powerCost: 10
-  supplyCost: 2
+  supplyCost: 0
   structuresToUnlock:
   - {fileID: 11400000, guid: 2eadd0f295ced3b43b781e342f830847, type: 2}
   - {fileID: 11400000, guid: 86a18e7a7abf84b6e9b6244b30711a5a, type: 2}
   - {fileID: 11400000, guid: be57d7f42b2b34863bf9df509f6e6d1f, type: 2}
   - {fileID: 11400000, guid: a5868e627c1a479458a424fe31120e7c, type: 2}
   canBuildOnlyOne: 1
+  droneHangarRange: 12

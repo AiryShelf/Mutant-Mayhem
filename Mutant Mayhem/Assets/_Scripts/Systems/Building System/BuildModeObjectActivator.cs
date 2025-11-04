@@ -24,13 +24,20 @@ public class BuildModeObjectActivator : MonoBehaviour
     {
         if (open)
         {
+            //Debug.Log("BuildModeObjectActivator: Build Menu found opened for " + objectToToggle.name);
             if (typesToMatch.Count > 0)
+            {
                 StartCoroutine(CheckForMatch());
+            }
             else
+            {
                 objectToToggle.SetActive(true);
+                //Debug.Log($"BuildModeObjectActivator: No types to match, so {objectToToggle.name} activated by default.");
+            }
         }
         else
         {
+            //Debug.Log($"BuildModeObjectActivator: Build Menu found closed for {objectToToggle.name}, deactivating object.");
             StopAllCoroutines();
             objectToToggle.SetActive(false);
         }
@@ -38,14 +45,20 @@ public class BuildModeObjectActivator : MonoBehaviour
 
     IEnumerator CheckForMatch()
     {
+        //Debug.Log("BuildModeObjectActivator: Starting to check for structure type match for " + objectToToggle.name);
         while (true)
         {
             bool matched = typesToMatch.Contains(BuildingSystem.Instance.structureInHand.structureType);
             objectToToggle.SetActive(matched);
             if (matched)
             {
-                Debug.Log($"BuildModeObjectActivator: {objectToToggle.name} activated.  (insert range association here, lol)");
+                //Debug.Log($"BuildModeObjectActivator: {objectToToggle.name} activated.  (insert range association here, lol)");
             }
+            else
+            {
+                //Debug.Log($"BuildModeObjectActivator: Looked for {typesToMatch}, but found {BuildingSystem.Instance.structureInHand.structureType} structure in hand. {objectToToggle.name} deactivated.");
+            }   
+            
             yield return new WaitForSecondsRealtime(0.1f);
         }
     }

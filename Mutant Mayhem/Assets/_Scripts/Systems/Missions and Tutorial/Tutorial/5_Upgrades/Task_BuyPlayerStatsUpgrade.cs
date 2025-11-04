@@ -14,7 +14,7 @@ public class Task_BuyPlayerStatsUpgrade : Task
         upgradeManager = FindObjectOfType<UpgradeManager>();
         if (upgradeManager == null)
         {
-            Debug.LogError("BuyStaminaRegen Objective could not find the UpgradeManager");
+            Debug.LogError("Objective could not find the UpgradeManager");
             return;
         }
         UpdateProgressText();

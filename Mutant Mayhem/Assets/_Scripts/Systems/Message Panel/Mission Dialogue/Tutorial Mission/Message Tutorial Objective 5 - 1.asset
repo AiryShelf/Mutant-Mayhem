@@ -16,8 +16,9 @@ MonoBehaviour:
   speakerNameColor: {r: 0, g: 1, b: 0, a: 1}
   portraitAnimatorController: {fileID: 9100000, guid: 7af1ecc3765c141ad91d659fa60079c2, type: 2}
   backgroundAnimatorController: {fileID: 9100000, guid: e800c7dae2ada4d6f8204663fa6e964e, type: 2}
-  messageText: The Cube can also be used to upgrade your tech, buy ammo, heal, and
-    repair the Cube itself.  Access the cube while standing right next to it.
+  messageText: 'Interact with the Cube while standing right next to it.  Inside it''s
+    panel you can: heal, repair the Cube, and buy upgrades.'
   voiceClip: {fileID: 11400000, guid: d33f34ec9c20a4bda9f073bfae0e32fd, type: 2}
   messageStartDelay: 0.5
   messageEndDelay: 1
+  touchscreenOnly: 0

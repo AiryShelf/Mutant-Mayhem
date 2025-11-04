@@ -5,9 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class RangeCircle : MonoBehaviour
 {
-    public int segments = 50;
+    [SerializeField] int segments = 50;
     public float radius = 5f;
-    public float dotSize = 0.2f;
+    [SerializeField] float dotSize = 0.2f;
     [SerializeField] bool startOn = false;
     LineRenderer lineRenderer;
 
@@ -20,25 +20,15 @@ public class RangeCircle : MonoBehaviour
         EnableCircle(startOn);
     }
 
-    void OnEnable()
-    {
-        Debug.LogError("RangeCircle: OnEnable called");
-    }
-
-    void OnDisable()
-    {
-        Debug.LogError("RangeCircle: OnDisable called");
-    }
-
     public void EnableCircle(bool enable)
     {
-        Debug.Log($"RangeCircle: Setting Circle Enabled to {enable} for {gameObject.name}");
+        //Debug.Log($"RangeCircle: Setting Circle Enabled to {enable} for {gameObject.name}");
         lineRenderer.gameObject.SetActive(enable);
     }
 
     void CreateCircle()
     {
-        Debug.Log("RangeCircle: Creating Circle for " + gameObject.name);
+        //Debug.Log("RangeCircle: Creating Circle for " + gameObject.name);
         float angle = 360f / segments;
         Vector3[] points = new Vector3[segments + 1];
 

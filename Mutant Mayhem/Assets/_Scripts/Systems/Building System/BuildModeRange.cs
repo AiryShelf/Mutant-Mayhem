@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class BuildModeRange : MonoBehaviour
 {
-    public StructureSO myStructure;
-    public RangeCircle rangeCircle;
+    /*
+    [SerializeField] StructureSO myStructure;
+    [SerializeField] RangeCircle rangeCircle;
 
     void OnEnable()
     {
@@ -32,7 +33,10 @@ public class BuildModeRange : MonoBehaviour
             radius = DroneManager.Instance.droneHangarRange;
         }
         rangeCircle.radius = radius;
+        //Debug.Log("BuildModeRange: SetObjectRangeCircle called for " + gameObject.name);
 
         rangeCircle.EnableCircle(true);
+        
     }
+    */
 }

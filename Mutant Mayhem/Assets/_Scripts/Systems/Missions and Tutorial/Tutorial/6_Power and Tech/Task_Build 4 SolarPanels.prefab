@@ -84,9 +84,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6791506771164599335}
-  - component: {fileID: 8804794520774614326}
+  - component: {fileID: 2357201188957951676}
   m_Layer: 0
-  m_Name: Task_PowerTheGrid
+  m_Name: Task_Build 4 SolarPanels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,7 +104,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5340454992680724993}
+  - {fileID: 4718317569197733290}
   - {fileID: 8767821237099257048}
   - {fileID: 643149929826714628}
   - {fileID: 6620257963410737043}
@@ -115,7 +115,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8804794520774614326
+--- !u!114 &2357201188957951676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,16 +124,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 936962933341166503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2407d60e440c941558b8d82425238df4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7466766f32f592f469d36bac6e28e60f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskText: {fileID: 4860886653949300996}
+  taskText: {fileID: 5193382617690672815}
   progressText: {fileID: 3370169023408024958}
   checkmarkImage: {fileID: 5657859157811836529}
   isComplete: 0
   progress: 0
   missionPanelController: {fileID: 0}
-  minimumPowerBalance: 0
+  structureType: 29
+  numberToBuild: 4
 --- !u!1 &8264780875990421883
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +323,7 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5513061627727875475, guid: ed51d5c9ecd0b21439d75e76ea4c5c8c, type: 3}
   m_PrefabInstance: {fileID: 3832522194465050955}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &6207173458923380358
+--- !u!1001 &6720355868571697453
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -332,12 +333,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_text
-      value: Keep the Grid Powered<sprite=1>
+      value: Build 4 Solar Panels
       objectReference: {fileID: 0}
-    - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-      propertyPath: m_spriteAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: ff8c96d752f2f48d6838ce0c1d3d4876, type: 2}
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -414,36 +411,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-      propertyPath: gamepadText
-      value: Press 'Y'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-      propertyPath: keyboardText
-      value: Press 'Tab'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-      propertyPath: touchscreenText
-      value: Tap the Cube
-      objectReference: {fileID: 0}
-    - target: {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-      propertyPath: stringToReplace_BlankAll
-      value: Press 'Tab'
-      objectReference: {fileID: 0}
     - target: {fileID: 8840805616247617409, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Name
       value: Task Text
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2200824970305597989, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
---- !u!114 &4860886653949300996 stripped
+--- !u!224 &4718317569197733290 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
+  m_PrefabInstance: {fileID: 6720355868571697453}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5193382617690672815 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-  m_PrefabInstance: {fileID: 6207173458923380358}
+  m_PrefabInstance: {fileID: 6720355868571697453}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -451,8 +436,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &5340454992680724993 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
-  m_PrefabInstance: {fileID: 6207173458923380358}
-  m_PrefabAsset: {fileID: 0}

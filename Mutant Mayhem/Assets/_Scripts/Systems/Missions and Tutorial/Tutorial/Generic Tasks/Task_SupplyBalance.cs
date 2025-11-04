@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Task_PowerBalance : Task
+public class Task_SupplyBalance : Task
 {
     [Header("Task Settings")]
-    public int minimumPowerBalance = 0;
+    public int minimumSupplyBalance = 0;
 
     void Start()
     {
@@ -15,9 +15,9 @@ public class Task_PowerBalance : Task
 
     void CheckComplete()
     {
-        progress = PowerManager.Instance.powerBalance >= minimumPowerBalance ?
+        progress = SupplyManager.SupplyBalance >= minimumSupplyBalance ?
                    1 :
-                   (float)PowerManager.Instance.powerBalance / minimumPowerBalance;
+                   (float)SupplyManager.SupplyBalance / minimumSupplyBalance;
 
         if (progress >= 1)
             SetTaskComplete();

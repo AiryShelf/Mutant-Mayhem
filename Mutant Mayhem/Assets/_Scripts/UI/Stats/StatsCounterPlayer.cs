@@ -49,7 +49,8 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int BallisticsBayBuilt;
     public static int ExplosivesBayBuilt;
     public static int RepairBayBuilt;
-    public static int DroneBayBuilt;
+    public static int DroneHangarsBuilt;
+    public static int SupplyDepotsBuilt;
 
     public static int StructuresPlaced;
     public static int WallsPlaced;
@@ -62,7 +63,8 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int BallisticsBayPlaced;
     public static int ExplosivesBayPlaced;
     public static int RepairBayPlaced;
-    public static int DroneHangarPlaced;
+    public static int DroneHangarsPlaced;
+    public static int SupplyDepotsPlaced;
 
     static Dictionary<string, float> MiscStats = new Dictionary<string, float>();
     static Dictionary<string, float> ProjectilesStats = new Dictionary<string, float>();
@@ -226,7 +228,9 @@ public class StatsCounterPlayer : MonoBehaviour
             case StructureType.RepairBay:
                 return RepairBayBuilt;
             case StructureType.DroneHangar:
-                return DroneBayBuilt;
+                return DroneHangarsBuilt;
+            case StructureType.SupplyDepot:
+                return SupplyDepotsBuilt;
             default:
                 Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
                                  ". Returning 0.  You may need to add this type to the switch statement.");
@@ -261,7 +265,9 @@ public class StatsCounterPlayer : MonoBehaviour
             case StructureType.RepairBay:
                 return RepairBayPlaced;
             case StructureType.DroneHangar:
-                return DroneHangarPlaced;
+                return DroneHangarsPlaced;
+            case StructureType.SupplyDepot:
+                return SupplyDepotsPlaced;
             default:
                 Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
                                  ". Returning 0.  You may need to add this type to the switch statement.");

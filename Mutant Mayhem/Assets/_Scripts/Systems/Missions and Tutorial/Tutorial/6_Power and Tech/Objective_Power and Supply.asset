@@ -10,26 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ae421a5e734c6440b128cabf443e737, type: 3}
-  m_Name: Objective_Power and Tech
+  m_Name: Objective_Power and Supply
   m_EditorClassIdentifier: 
-  objectiveTitle: Power and Tech
+  objectiveTitle: Power, Supply, and Tech
   objectiveDescription: 'Place 4 solar panels next to each other, ideally in a square
     shape, and notice the adjacency bonuses from the connectors.  You can also join
-    different types of power producers
+    different types of power producers.  You''ll also need a Supply Depot
 
 
-    Certain buildings, like the Photonics
-    Bay, are interactable.  Press ''Interact'' near them to access their panels
+    Certain
+    buildings, like the Photonics Bay, are interactable.  Press ''Interact'' near
+    them to access their panels
 
 
-    Build
-    the Photonics Bay and access it''s panel to proceed'
+    Build the Photonics Bay and access it''s panel
+    to proceed'
   taskPrefabs:
   - {fileID: 936962933341166503, guid: c4755fc95afde4a7daba83fc24af0a59, type: 3}
+  - {fileID: 936962933341166503, guid: 4c621f512432f4ceb8c42256b08bcd50, type: 3}
   - {fileID: 936962933341166503, guid: 5f2e178f59bdc40dd9616e7f459e39c4, type: 3}
   - {fileID: 936962933341166503, guid: 67e65770b0d78406daa3d6efb3e05e0b, type: 3}
   - {fileID: 936962933341166503, guid: d93fde62135e44f2aac131df7854f560, type: 3}
   - {fileID: 936962933341166503, guid: b907c54a176124e0c9c9e1573853986b, type: 3}
+  - {fileID: 936962933341166503, guid: 6d480b64a9fff41d7b600398ade8904b, type: 3}
   startConversation:
     messages:
     - {fileID: 11400000, guid: a4ea9b47950744d7dabc31a6c34ac9aa, type: 2}

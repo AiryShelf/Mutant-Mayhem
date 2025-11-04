@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -572,81 +571,42 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
 
-        // Check Supplies
-        if (structureInHand.supplyCost > 0)
-        {
-            if (SupplyManager.SupplyBalance - structureInHand.supplyCost < 0)
-            {
-                MessageBanner.Instance.DelayMessage("Not enough Supplies<sprite=2> to build " +
-                                      structureInHand.tileName + "!  Build Supply Depots!", Color.red, 0.1f);
-                return;
-            }
-        }
-        else if (structureInHand.supplyCost < 0)
-        {
-            // Check Supply Limit
-            if (SupplyManager.SupplyProduced + structureInHand.supplyCost > SupplyManager.SupplyLimit)
-            {
-                MessageBanner.Instance.DelayMessage("Supply Limit reached! Buy Supply Limit Upgrades at the Engineering Bay!", Color.red, 0.1f);
-                return;
-            }
-        }
-
         // Add Tile
         if (tileManager.AddBlueprintAt(gridPos, structureInHand.blueprintTile, currentRotation))
         {
             PlayerCredits -= structureInHand.tileCost * structureCostMult;
             //RemoveBuildHighlight();
 
-            AddToStatCounter(structureInHand.structureType);
-
             if (structureInHand.canBuildOnlyOne)
+            {
                 buildMenuController.ScrollUp();
-
-            if (structureInHand.canBuildOnlyOne)
                 buildOnlyOneList.Add(structureInHand);
+            }
         }
-        else
-            MessageBanner.Instance.DelayMessage("Unable to build there.  It's blocked!", Color.red, 0.1f);
     }
 
-    void AddToStatCounter(StructureType structureType)
+    public bool CheckSupplies(StructureSO structure)
     {
-        StatsCounterPlayer.StructuresPlaced++;
+        if (structure.supplyCost > 0)
+        {
+            if (SupplyManager.SupplyBalance - structure.supplyCost < 0)
+            {
+                MessageBanner.Instance.DelayMessage("Not enough Supplies<sprite=2> to build " +
+                                      structure.tileName + "!  Build Supply Depots!", Color.red, 0.1f);
+                return false;
+            }
+        }
+        else if (structure.supplyCost < 0)
+        {
+            // Check Supply Limit
+            if (SupplyManager.SupplyProduced + structure.supplyCost > SupplyManager.SupplyLimit)
+            {
+                MessageBanner.Instance.DelayMessage("Supply<sprite=2> Limit reached!  Build more Supply Depots!", Color.red, 0.1f);
+                return false;
+            }
+        }
 
-        if (structureType == StructureType.OneByOneCorner ||
-            structureType == StructureType.OneByOneWall)
-        {
-            StatsCounterPlayer.WallsPlaced++;
-        }
-        else if (structureType == StructureType.Gate ||
-                 structureType == StructureType.BlastGate)
-        {
-            StatsCounterPlayer.GatesPlaced++;
-        }
-        else if (structureType == StructureType.LaserTurret ||
-                 structureType == StructureType.GunTurret)
-        {
-            StatsCounterPlayer.TurretsPlaced++;
-        }
-        else if (structureType == StructureType.SolarPanels)
-            StatsCounterPlayer.SolarPanelsPlaced++;
-        else if (structureType == StructureType.MicroReactor)
-            StatsCounterPlayer.MicroReactorsPlaced++;
-        else if (structureType == StructureType.EngineeringBay)
-            StatsCounterPlayer.EngineeringBaysPlaced++;
-        else if (structureType == StructureType.PhotonicsBay)
-            StatsCounterPlayer.PhotonicsBayPlaced++;
-        else if (structureType == StructureType.BallisticsBay)
-            StatsCounterPlayer.BallisticsBayPlaced++;
-        else if (structureType == StructureType.ExplosivesBay)
-            StatsCounterPlayer.ExplosivesBayPlaced++;
-        else if (structureType == StructureType.RepairBay)
-            StatsCounterPlayer.RepairBayPlaced++;
-        else if (structureType == StructureType.DroneHangar)
-            StatsCounterPlayer.DroneHangarPlaced++;
-        else
-            Debug.LogError("BuildingSystem: Untracked structure type for stats: " + structureType);
+        return true;
     }
 
     void RemoveTile(Vector3Int gridPos)

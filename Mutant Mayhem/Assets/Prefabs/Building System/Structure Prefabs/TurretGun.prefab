@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  supplyConsumptionAmount: 6
+  supplyConsumptionAmount: 8
 --- !u!212 &8929043040891403117
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -779,7 +779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: powerConsumed
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.size

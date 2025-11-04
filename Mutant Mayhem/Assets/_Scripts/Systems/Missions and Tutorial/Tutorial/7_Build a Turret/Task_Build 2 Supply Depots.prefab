@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 6791506771164599335}
   - component: {fileID: 2357201188957951676}
   m_Layer: 0
-  m_Name: Task_Build SolarPanels
+  m_Name: Task_Build 2 Supply Depots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,8 +133,8 @@ MonoBehaviour:
   isComplete: 0
   progress: 0
   missionPanelController: {fileID: 0}
-  structureType: 29
-  numberToBuild: 4
+  structureType: 32
+  numberToBuild: 2
 --- !u!1 &8264780875990421883
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,7 +333,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_text
-      value: Build 4+ Solar Panels
+      value: Build second Supply Depot
       objectReference: {fileID: 0}
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Pivot.x
