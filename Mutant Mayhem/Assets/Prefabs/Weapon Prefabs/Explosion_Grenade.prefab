@@ -604,7 +604,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 1000
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -4858,7 +4858,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8519372874985122560}
@@ -5434,7 +5434,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 1000
+    maxNumParticles: 50
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -9810,12 +9810,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionSound: {fileID: 11400000, guid: 955ca2be029e431489fd5c7311ccf85f, type: 2}
+  explodeOnStart: 1
   layersToHit:
     serializedVersion: 2
     m_Bits: 2658496
-  force: 15
+  force: 150
   radius: 4
-  damage: 300
+  damage: 400
   wind: {fileID: 0}
   windTime: 0.5
 --- !u!198 &1459399991134938693
@@ -10389,7 +10390,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 1000
+    maxNumParticles: 500
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -14624,6 +14625,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 8519372874985122560}
     m_Modifications:
     - target: {fileID: 2395199504903550000, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2395199504903550000, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 6
       objectReference: {fileID: 0}
@@ -14646,6 +14651,14 @@ PrefabInstance:
     - target: {fileID: 3832028796605642312, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
       propertyPath: m_Name
       value: Smoke
+      objectReference: {fileID: 0}
+    - target: {fileID: 4258743236674651463, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4258743236674651463, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4258743236674651463, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
       propertyPath: m_LocalPosition.x

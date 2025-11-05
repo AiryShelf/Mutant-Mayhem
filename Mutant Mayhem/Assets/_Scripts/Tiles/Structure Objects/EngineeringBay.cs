@@ -4,12 +4,24 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
-public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
+public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject, ITileObjectExplodable
 {
     [SerializeField] StructureSO engineeringBaySO;
     [SerializeField] List<AnimatedTile> powerOnDamageTiles;
     [SerializeField] List<AnimatedTile> powerOffDamageTiles;
     [SerializeField] List<Light2D> lights;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
+    
 
     float healthRatio;
     int damageIndex;
@@ -46,8 +58,10 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
 
         Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
         rootPos = TileManager.Instance.GridToRootPos(rootPos);
+        if (rootPos == Vector3Int.zero)
+            return;
 
-        damageIndex = Mathf.FloorToInt(powerOffDamageTiles.Count * healthRatio);
+        damageIndex = GetDamageIndex(healthRatio);
 
         if (isPowerOn)
             TileManager.AnimatedTilemap.SetTile(rootPos, powerOnDamageTiles[damageIndex]);
@@ -59,5 +73,26 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject
     {
         foreach (var light in lights)
             light.gameObject.SetActive(on);
+    }
+
+    int GetDamageIndex(float healthRatio)
+    {
+        int damageIndex;
+        int spriteCount = powerOnDamageTiles.Count;
+
+        // Reserve index 0 for full health
+        if (healthRatio >= 1f)
+        {
+            damageIndex = 0;
+        }
+        else
+        {
+            // Divide remaining indices (1 to spriteCount-1) across the 0–99% damage range
+            float normalized = 1f - healthRatio;
+            damageIndex = 1 + Mathf.FloorToInt(normalized * (spriteCount - 1));
+            damageIndex = Mathf.Clamp(damageIndex, 1, spriteCount - 1);
+        }
+
+        return damageIndex;
     }
 }

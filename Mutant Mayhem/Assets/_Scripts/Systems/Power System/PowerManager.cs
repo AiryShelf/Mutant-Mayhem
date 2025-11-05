@@ -105,8 +105,10 @@ public class PowerManager : MonoBehaviour
 
         if (cutPowerCoroutine != null)
             StopCoroutine(cutPowerCoroutine);
-        
+
         cutPowerCoroutine = StartCoroutine(CutConsumers());
+
+        consumer.PowerOn();
     }
 
     public void RemovePowerConsumer(PowerConsumer consumer)

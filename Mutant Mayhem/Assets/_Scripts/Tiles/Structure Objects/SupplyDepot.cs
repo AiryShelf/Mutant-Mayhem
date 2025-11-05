@@ -3,12 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class SupplyDepot : MonoBehaviour, IPowerConsumer
+public class SupplyDepot : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
 {
     [SerializeField] StructureSO supplyDepotSO;
     [SerializeField] SupplyProducer supplyProducer;
     [SerializeField] SpriteRenderer spriteLightSprite;
     [SerializeField] List<Light2D> lights;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
 
     public void PowerOn()
     {

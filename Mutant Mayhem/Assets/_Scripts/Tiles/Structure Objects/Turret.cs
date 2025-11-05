@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
-public class Turret : MonoBehaviour, IPowerConsumer
+public class Turret : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
 {
     public float rotationSpeed;
     public float expansionDelay;
@@ -17,6 +16,17 @@ public class Turret : MonoBehaviour, IPowerConsumer
     [SerializeField] GameObject flashLight;
     [SerializeField] RangeCircle rangeCircle;
 
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
+
     TurretGunSO myGun;
     Transform target;
     bool hasTarget;
@@ -26,11 +36,6 @@ public class Turret : MonoBehaviour, IPowerConsumer
 
     bool initialized = false;
     bool hasPower = true;
-
-    void Start()
-    {
-        //InitializeTurret();
-    }
 
     void FixedUpdate()
     {

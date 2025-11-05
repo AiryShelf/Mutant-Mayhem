@@ -3,9 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class Light : MonoBehaviour
+public class Light : MonoBehaviour, ITileObjectExplodable
 {
     [SerializeField] protected List<Light2D> lights;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
 
     protected virtual void Start()
     {

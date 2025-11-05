@@ -36,6 +36,8 @@ public class TileManager : MonoBehaviour
     [SerializeField] Color textFlyHealthGainColor;
     [SerializeField] float textFlyAlphaMax;
     [SerializeField] Color buildBlueprintTextColor = Color.cyan;
+    [SerializeField] string damagingBuildingExplosionPoolName;
+    [SerializeField] string aestheticBuildingExplosionPoolName;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -45,6 +47,8 @@ public class TileManager : MonoBehaviour
 
     // Buffer for non-alloc physics queries
     private readonly Collider2D[] _panelColsBuffer = new Collider2D[64];
+    // Buffer for non-alloc point queries at tile centers
+    private readonly Collider2D[] _tileColsBuffer = new Collider2D[16];
 
     //[SerializeField] GameObject debugDotPrefab;
 
@@ -231,9 +235,42 @@ public class TileManager : MonoBehaviour
             type == StructureType.LaserTurret ||
             type == StructureType.GunTurret)
         {
-            float randomRotationZ = Random.Range(0f, 360f);  
+            float randomRotationZ = Random.Range(0f, 360f);
             Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));
             destroyedTilemap.SetTransformMatrix(rootPos, rotationMatrix);
+        }
+
+        // Check instantiated object for ITileObjectExplodable
+        GameObject tileObject = StructureTilemap.GetInstantiatedObject(rootPos);
+        if (tileObject != null)
+        {
+            var explodable = tileObject.GetComponentInChildren<MonoBehaviour>();
+            if (explodable != null && explodable is ITileObjectExplodable tileObjectExplodable)
+            {
+                tileObjectExplodable.Explode();
+                Debug.Log("Explodable explosion triggered for " + type.ToString());
+            }
+        }
+
+        // Damaging explosion effect
+        if (type == StructureType.OneByOneWall ||
+            type == StructureType.OneByOneCorner)
+        {
+            if (!string.IsNullOrEmpty(damagingBuildingExplosionPoolName))
+            {
+                GameObject explosion = PoolManager.Instance.GetFromPool(damagingBuildingExplosionPoolName);
+                explosion.transform.position = GridCenterToWorld(rootPos);
+            }
+        }
+
+        // Aesthetic explosion effect for buildings that do not create it with their object already.
+        else if (type == StructureType.SolarPanels)
+        {
+            if (!string.IsNullOrEmpty(aestheticBuildingExplosionPoolName))
+            {
+                GameObject explosion = PoolManager.Instance.GetFromPool(aestheticBuildingExplosionPoolName);
+                explosion.transform.position = GridCenterToWorld(rootPos);
+            }
         }
     }
 
@@ -466,7 +503,7 @@ public class TileManager : MonoBehaviour
     void UpdateTileDamageSprite(Vector3Int rootPos)
     {
         if (_TileStatsDict[rootPos].isBlueprint) return;
-        
+
         if (_TileStatsDict[rootPos].health == 0)
         {
             StatsCounterPlayer.StructuresLost++;
@@ -475,12 +512,12 @@ public class TileManager : MonoBehaviour
             return;
         }
 
-        float healthRatio = 1 - (_TileStatsDict[rootPos].health / 
-                                 _TileStatsDict[rootPos].maxHealth);
+        float healthRatio = _TileStatsDict[rootPos].health /
+                                 _TileStatsDict[rootPos].maxHealth;
 
         Tilemap tilemap;
-        if (_TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "Wall" || 
-            _TileStatsDict[rootPos].ruleTileStructure .structureSO.tileName == "Wall Corner")
+        if (_TileStatsDict[rootPos].ruleTileStructure.structureSO.tileName == "Wall" ||
+            _TileStatsDict[rootPos].ruleTileStructure.structureSO.tileName == "Wall Corner")
             tilemap = damageTilemap;
         else
             tilemap = AnimatedTilemap;
@@ -488,8 +525,7 @@ public class TileManager : MonoBehaviour
         List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
         if (dTiles.Count > 1)
         {
-            int index = Mathf.FloorToInt(healthRatio * dTiles.Count);
-            index = Mathf.Clamp(index, 0, dTiles.Count - 1);
+            int index = GetDamageIndex(healthRatio, dTiles.Count);
 
             // Keep original rotation
             Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
@@ -503,25 +539,94 @@ public class TileManager : MonoBehaviour
             tilemap.SetTransformMatrix(rootPos, matrix);
             //StructureRotator.RotateTileAt(tilemap, rootPos, StructureRotator.GetRotationFromMatrix(matrix));
         }
-        else 
+        else
         {
-            // This handles doors and TileObjects
-            int layerMask = LayerMask.GetMask("PlayerOnly");
-            Collider2D[] cols = Physics2D.OverlapPointAll(new Vector2(rootPos.x + 0.5f, rootPos.y + 0.5f), layerMask);
-            foreach (Collider2D col in cols)
+            // CHANGED: use WORLD coordinates for the cell center, not raw grid coords
+            Vector2 centerWorld = GridCenterToWorld(rootPos);
+
+            // CHANGED: allocation-free overlap using ContactFilter2D + preallocated buffer
+            LayerMask playerOnlyMask = LayerMask.GetMask("PlayerOnly");
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.NoFilter();
+            filter.useLayerMask = playerOnlyMask != 0;
+            if (filter.useLayerMask) filter.SetLayerMask(playerOnlyMask);
+            filter.useTriggers = true; // allow trigger panels/objects
+            int hitCount = Physics2D.OverlapPoint(centerWorld, filter, _tileColsBuffer);
+
+            float ratio = _TileStatsDict[rootPos].health / _TileStatsDict[rootPos].maxHealth;
+            bool updated = false;
+
+            for (int i = 0; i < hitCount; i++)
             {
-                ITileObject tileObj = col.GetComponent<ITileObject>();
+                var col = _tileColsBuffer[i];
+
+                // Scan behaviours on this object
+                ITileObject found = null;
+                var behaviours = col.GetComponents<MonoBehaviour>();
+                for (int b = 0; b < behaviours.Length; b++)
+                {
+                    if (behaviours[b] is ITileObject it) { found = it; break; }
+                }
+
+                // If not found, scan children (including inactive)
+                if (found == null)
+                {
+                    behaviours = col.GetComponentsInChildren<MonoBehaviour>(true);
+                    for (int b = 0; b < behaviours.Length; b++)
+                    {
+                        if (behaviours[b] is ITileObject it) { found = it; break; }
+                    }
+                }
+
+                if (found != null)
+                {
+                    found.UpdateHealthRatio(ratio);
+                    updated = true;
+                }
+            }
+
+            // CHANGED: fallback — if no collider match was found (e.g., different layers), try the instantiated tile object
+            if (!updated)
+            {
+                GameObject tileObj = AnimatedTilemap.GetInstantiatedObject(rootPos);
+                if (tileObj == null)
+                    tileObj = StructureTilemap.GetInstantiatedObject(rootPos);
+
                 if (tileObj != null)
                 {
-                    //Debug.Log("TileObject found at: " + rootPos);
-                    tileObj.UpdateHealthRatio(GetTileHealthRatio(rootPos));
-                }
-                else
-                {
-                    //Debug.Log("TileObject not found");
+                    var behaviours = tileObj.GetComponentsInChildren<MonoBehaviour>(true);
+                    for (int b = 0; b < behaviours.Length; b++)
+                    {
+                        if (behaviours[b] is ITileObject it)
+                        {
+                            it.UpdateHealthRatio(ratio);
+                            updated = true;
+                            break;
+                        }
+                    }
                 }
             }
         }
+    }
+    
+    int GetDamageIndex(float healthRatio, int spriteCount)
+    {
+        int damageIndex;
+
+        // Reserve index 0 for full health
+        if (healthRatio >= 1f)
+        {
+            damageIndex = 0;
+        }
+        else
+        {
+            // Divide remaining indices (1 to spriteCount-1) across the 0–99% damage range
+            float normalized = 1f - healthRatio;
+            damageIndex = 1 + Mathf.FloorToInt(normalized * (spriteCount - 1));
+            damageIndex = Mathf.Clamp(damageIndex, 1, spriteCount - 1);
+        }
+
+        return damageIndex;
     }
 
     public void RefreshSurroundingTiles(Vector3Int gridPos)
@@ -734,6 +839,11 @@ public class TileManager : MonoBehaviour
 
     public Vector3Int GridToRootPos(Vector3Int gridPos)
     {
+        if (!_TileStatsDict.ContainsKey(gridPos))
+        {
+            Debug.LogError("TileManager: GridToRootPos called on non-existent gridPos: " + gridPos);
+            return Vector3Int.zero;
+        }
         return _TileStatsDict[gridPos].rootGridPos;
     }
 

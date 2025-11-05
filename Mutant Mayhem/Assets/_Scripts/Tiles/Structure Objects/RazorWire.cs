@@ -3,12 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class RazorWire : MonoBehaviour
+public class RazorWire : MonoBehaviour, ITileObjectExplodable
 {
     public float slowFactor = 0.3f;
     public float damageInterval = 1f;
     public float damageAmount = 7f;
     [SerializeField] float distBeforeDamage = 0.2f;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
+
     private Dictionary<Collider2D, Coroutine> enemyDamageCoroutines = new Dictionary<Collider2D, Coroutine>();
 
     void OnTriggerEnter2D(Collider2D other)

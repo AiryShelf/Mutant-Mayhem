@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
     [SerializeField] float interactRadius = 0.9f;
     public List<GraphicRaycaster> graphicRaycasters;
     public InputActionAsset inputAsset;
-    [SerializeField] GameObject grenadePrefab;
+    [SerializeField] string grenadePoolName;
     [SerializeField] Transform headImageTrans;
     [SerializeField] Transform playerMainTrans;
     [SerializeField] Transform muzzleTrans;
@@ -128,7 +128,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    Throw itemToThrow;
+    ThrowGrenade itemToThrow;
     [HideInInspector] public bool hasFirstThrowTarget;
     [HideInInspector] public Vector2 throwTarget;
     [HideInInspector] public bool useStandardWASD = true;
@@ -448,12 +448,26 @@ public class Player : MonoBehaviour
 
     public void OnThrowGrab()
     {
-        itemToThrow = Instantiate(grenadePrefab, transform.position, 
-                      Quaternion.identity, leftHandTrans).gameObject.GetComponent<Throw>();
+        GameObject obj = PoolManager.Instance.GetFromPool(grenadePoolName);
+        itemToThrow = obj.GetComponent<ThrowGrenade>();
+        if (itemToThrow == null)
+        {
+            Debug.LogError("Player: Pooled object is missing ThrowGrenade component!");
+            return;
+        }
+        itemToThrow.transform.parent = leftHandTrans;
+        itemToThrow.transform.localPosition = Vector3.zero;
+        itemToThrow.transform.localRotation = Quaternion.identity;
     }
 
     public void OnThrowFly()
     {
+        if (itemToThrow == null)
+        {
+            Debug.LogError("No grenade to throw!");
+            return;
+        }
+
         // Handles player input holding down the throw action
         if (hasFirstThrowTarget)
         {

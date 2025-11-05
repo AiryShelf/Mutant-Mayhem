@@ -47,7 +47,7 @@ public class InteractController : MonoBehaviour
             if (player != null)
             {
                 // ▸ Skip if player barely moved (cheap early-out).
-                if ((player.transform.position - _lastPlayerPos).sqrMagnitude > 0.001f)
+                if ((player.transform.position - _lastPlayerPos).sqrMagnitude > 0.0001f)
                 {
                     ScanAndHighlight((Vector2)player.transform.position);
                     _lastPlayerPos = player.transform.position;

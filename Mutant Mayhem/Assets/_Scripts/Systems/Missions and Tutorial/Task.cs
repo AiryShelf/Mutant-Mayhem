@@ -16,12 +16,25 @@ public class Task : MonoBehaviour
     public float progress = 0; // 0 to 1 value
     public UI_MissionPanelController missionPanelController;
 
+    Coroutine completeAfterDelayCoroutine;
+
     public void OnTaskComplete(InputAction.CallbackContext context)
     {
         //SetTaskComplete();
     }
 
     public void SetTaskComplete()
+    {
+        completeAfterDelayCoroutine = StartCoroutine(CompleteAfterDelay(0.5f));
+    }
+
+    IEnumerator CompleteAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SetComplete();
+    }
+
+    void SetComplete()
     {
         if (isComplete)
             return;

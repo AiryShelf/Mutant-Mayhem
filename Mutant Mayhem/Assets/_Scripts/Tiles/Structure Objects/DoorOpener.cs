@@ -4,12 +4,23 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
-public class DoorOpener : MonoBehaviour, ITileObject
+public class DoorOpener : MonoBehaviour, ITileObject, ITileObjectExplodable
 {
     [SerializeField] List<AnimatedTile> doorsOpen;
     [SerializeField] List<AnimatedTile> doorsClosed;
     [SerializeField] List<Light2D> doorPointLights;
     [SerializeField] bool usesPower;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
 
     Tilemap animatedTilemap;
     Vector3Int myGridPos;
@@ -49,6 +60,7 @@ public class DoorOpener : MonoBehaviour, ITileObject
     public void UpdateHealthRatio(float healthRatio)
     {
         this.healthRatio = healthRatio;
+        damageIndex = GetDamageIndex(healthRatio);
 
         UpdateDamage();
     }
@@ -80,8 +92,9 @@ public class DoorOpener : MonoBehaviour, ITileObject
 
     void UpdateDamage()
     {
-        damageIndex = Mathf.FloorToInt(doorsOpen.Count * healthRatio);
-
+        if (animatedTilemap == null)
+            return;
+            
         if (isOpen)
         {
             animatedTilemap.SetTile(myGridPos, doorsOpen[damageIndex]);
@@ -90,6 +103,27 @@ public class DoorOpener : MonoBehaviour, ITileObject
         {
             animatedTilemap.SetTile(myGridPos, doorsClosed[damageIndex]);
         }
+    }
+
+    int GetDamageIndex(float healthRatio)
+    {
+        int damageIndex;
+        int spriteCount = doorsOpen.Count;
+
+        // Reserve index 0 for full health
+        if (healthRatio >= 1f)
+        {
+            damageIndex = 0;
+        }
+        else
+        {
+            // Divide remaining indices (1 to spriteCount-1) across the 0–99% damage range
+            float normalized = 1f - healthRatio;
+            damageIndex = 1 + Mathf.FloorToInt(normalized * (spriteCount - 1));
+            damageIndex = Mathf.Clamp(damageIndex, 1, spriteCount - 1);
+        }
+
+        return damageIndex;
     }
 
     void UpdateLights()

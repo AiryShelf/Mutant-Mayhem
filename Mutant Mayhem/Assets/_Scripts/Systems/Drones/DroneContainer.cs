@@ -192,6 +192,7 @@ public class DroneContainer : MonoBehaviour
                 break;
         }
 
+        Debug.Log("DroneContainer: GetDroneJob returning job of type: " + newJob.jobType + " for drone type: " + droneType);
         return newJob;
     }
 

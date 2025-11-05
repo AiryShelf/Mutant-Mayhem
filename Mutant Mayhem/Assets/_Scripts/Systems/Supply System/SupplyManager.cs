@@ -112,6 +112,16 @@ public class SupplyManager : MonoBehaviour
         }
 
         SupplyBalance = SupplyProduced - excessSupply - SupplyConsumption;
+
+        if (excessSupply > 0)
+        {
+            SupplyLimitReachedMessage();
+        }
         //Debug.Log($"Supply production limited by {excessSupply} to not exceed limit of {SupplyLimit}");
+    }
+
+    static void SupplyLimitReachedMessage()
+    {
+        MessageBanner.PulseMessage("Supply limit reached! Upgrade it at the Engineering Bay", Color.red);
     }
 }

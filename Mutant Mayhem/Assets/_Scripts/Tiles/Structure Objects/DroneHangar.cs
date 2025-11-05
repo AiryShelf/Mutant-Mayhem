@@ -3,12 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
+public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
 {
     [SerializeField] StructureSO droneHangarSO;
     [SerializeField] SpriteRenderer spriteLightSprite;
     [SerializeField] SpriteRenderer radarDishSprite;
     [SerializeField] float radarDishRotateSpeed = 180f;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
+
     [SerializeField] List<Light2D> lights;
     public DroneContainer droneContainer;
 
@@ -37,7 +49,7 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
 
     public void PowerOn()
     {
-        Debug.Log("Drone Hangar Power On");
+        //Debug.Log("Drone Hangar Power On");
         spriteLightSprite.enabled = true;
         foreach (var light in lights)
             light.gameObject.SetActive(true);
@@ -50,7 +62,7 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
 
     public void PowerOff()
     {
-        Debug.Log("Drone Hangar Power Off");
+        //Debug.Log("Drone Hangar Power Off");
         spriteLightSprite.enabled = false;
         foreach (var light in lights)
             light.gameObject.SetActive(false);
@@ -60,20 +72,13 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObject
         droneContainer.hasPower = false;
     }
 
-    public void UpdateHealthRatio(float healthRatio)
-    {
-        this.healthRatio = healthRatio;
-    }
-
     IEnumerator RotateRadarDish()
     {
-        Debug.Log("Starting radar dish rotation");
+        //Debug.Log("Starting radar dish rotation");
         while (true)
         {
             radarDishSprite.transform.Rotate(Vector3.forward, radarDishRotateSpeed * Time.fixedDeltaTime);
             yield return new WaitForFixedUpdate();
         }
     }
-
-    
 }

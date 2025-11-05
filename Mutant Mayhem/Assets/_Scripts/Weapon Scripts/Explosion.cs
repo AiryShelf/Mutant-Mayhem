@@ -7,6 +7,7 @@ public class Explosion : MonoBehaviour
     [SerializeField] SoundSO explosionSound;
 
     [Header("Explosion Settings")]
+    [SerializeField] bool explodeOnStart = true;
     [SerializeField] LayerMask layersToHit;
     [SerializeField] float force;
     [SerializeField] float radius;
@@ -15,13 +16,11 @@ public class Explosion : MonoBehaviour
     [SerializeField] float windTime;
     
     List<Vector3Int> visibleTiles = new List<Vector3Int>();
-
     TileManager tileManager;
 
     void Start()
     {
         // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
-        AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
         tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)
@@ -29,6 +28,16 @@ public class Explosion : MonoBehaviour
             Debug.LogError("Explosion could not find TileManager in scene");
             return;
         }
+
+        if (explodeOnStart)
+        {
+            TriggerExplosion();
+        }
+    }
+
+    public void TriggerExplosion()
+    {
+        AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
         // Find grid tiles in range
         Vector2 explosionPos = transform.position;

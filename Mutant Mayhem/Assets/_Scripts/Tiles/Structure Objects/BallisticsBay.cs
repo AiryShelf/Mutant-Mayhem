@@ -1,13 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class BallisticsBay : MonoBehaviour, IPowerConsumer
+public class BallisticsBay : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
 {
     [SerializeField] StructureSO ballisticsBaySO;
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] List<Light2D> lights;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
 
     void OnDestroy()
     {

@@ -37,9 +37,19 @@ public class Drone : MonoBehaviour, IPowerConsumer
     protected Coroutine alignCoroutine;
     protected Coroutine jobHeightCoroutine;
     protected Coroutine jobCheckCoroutine;
-    public DroneHealth droneHealth; 
+    public DroneHealth droneHealth;
 
     public virtual void RefreshStats() { }
+
+    void OnEnable()
+    {
+        Debug.Log("Drone: OnEnable called");
+    }
+    
+    void OnDisable()
+    {
+        Debug.Log("Drone: OnDisable called");
+    }
 
     public virtual void Initialize(TurretGunSO droneGun)
     {
@@ -77,10 +87,12 @@ public class Drone : MonoBehaviour, IPowerConsumer
 
     public void PowerOff()
     {
+        CheckIfHangarDestroyed();
+
         hasPower = false;
         animator.SetBool("hasPower", false);
-        
-        if (isDocked) 
+
+        if (isDocked)
         {
             powerConsumer.noPowerIcon.enabled = false;
             return;
@@ -90,7 +102,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
         myHangar.RemoveDroneFromJob(this);
         SetJobDone();
         // Simulate losing power, going down
-        
+
 
         if (jobHeightCoroutine != null)
             StopCoroutine(jobHeightCoroutine);
@@ -99,6 +111,12 @@ public class Drone : MonoBehaviour, IPowerConsumer
 
         SetNewAction(LowerToGround);
     }
+    
+    void CheckIfHangarDestroyed()
+    {
+        if (myHangar == null)
+            Die();
+    }   
 
     #region Launch / Land
 
@@ -165,6 +183,8 @@ public class Drone : MonoBehaviour, IPowerConsumer
 
     IEnumerator LandInHangar()
     {
+        CheckIfHangarDestroyed();
+
         //Debug.Log("LAND IN HANGAR STARTED");
         yield return null;
         if (jobHeightCoroutine != null)
@@ -286,6 +306,8 @@ public class Drone : MonoBehaviour, IPowerConsumer
     IEnumerator FlyToHangar()
     {
         yield return null;
+
+        CheckIfHangarDestroyed();
 
         if (jobHeightCoroutine != null)
             StopCoroutine(jobHeightCoroutine);

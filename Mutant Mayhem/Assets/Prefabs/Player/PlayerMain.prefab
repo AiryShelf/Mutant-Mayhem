@@ -177,7 +177,7 @@ MonoBehaviour:
   - {x: -0.21528363, y: -0.14868794, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 353536
+  m_InstanceId: 336908
   m_LocalBounds:
     m_Center: {x: -0.07518342, y: 0.000651747, z: 0}
     m_Extent: {x: 0.26163375, y: 0.17178518, z: 0}
@@ -410,7 +410,6 @@ MonoBehaviour:
       tileManager: {fileID: 0}
       structureMaxHealthMult: 1
       armour: 0
-      maxTurrets: 1
       pulseDefenceForce: 0
       currentDroneContainer: {fileID: 0}
     player: {fileID: 1081961372366873552}
@@ -450,7 +449,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
-  grenadePrefab: {fileID: 5565937313816972427, guid: f3db4ccdc55e22e428c39a54719e3001, type: 3}
+  grenadePoolName: Grenade
   headImageTrans: {fileID: 970128586991505708}
   playerMainTrans: {fileID: 5837383932377381789}
   muzzleTrans: {fileID: 1945884029350484865}
@@ -548,7 +547,6 @@ MonoBehaviour:
       tileManager: {fileID: 0}
       structureMaxHealthMult: 1
       armour: 0
-      maxTurrets: 0
       pulseDefenceForce: 0
       currentDroneContainer: {fileID: 0}
     player: {fileID: 0}
@@ -594,7 +592,6 @@ MonoBehaviour:
       tileManager: {fileID: 0}
       structureMaxHealthMult: 1
       armour: 0
-      maxTurrets: 0
       pulseDefenceForce: 0
       currentDroneContainer: {fileID: 0}
     player: {fileID: 0}
@@ -710,7 +707,6 @@ MonoBehaviour:
       tileManager: {fileID: 0}
       structureMaxHealthMult: 1
       armour: 0
-      maxTurrets: 0
       pulseDefenceForce: 0
       currentDroneContainer: {fileID: 0}
     player: {fileID: 0}
@@ -836,7 +832,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 5
+  m_Mass: 50
   m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -7519,7 +7515,7 @@ MonoBehaviour:
   - {x: -0.21713921, y: -0.1723154, z: 0}
   m_ShapePathHash: 1677185479
   m_Mesh: {fileID: 0}
-  m_InstanceId: 353512
+  m_InstanceId: 336860
   m_LocalBounds:
     m_Center: {x: -0.076765835, y: -0.00025446713, z: 0}
     m_Extent: {x: 0.26141372, y: 0.17206094, z: 0}

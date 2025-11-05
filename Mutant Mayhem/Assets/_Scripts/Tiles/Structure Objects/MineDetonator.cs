@@ -7,7 +7,7 @@ public class MineDetonator : MonoBehaviour
 {
     [SerializeField] LayerMask playerLayerMask;
     [SerializeField] float playerSafetyRadius;
-    [SerializeField] GameObject explosionPrefab;
+    [SerializeField] string explosionPoolName;
 
     void OnTriggerStay2D(Collider2D collision)
     {
@@ -18,7 +18,8 @@ public class MineDetonator : MonoBehaviour
             return;
         }
 
-        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        GameObject obj = PoolManager.Instance.GetFromPool(explosionPoolName);
+        obj.transform.position = transform.position;
         TileManager.Instance.ModifyHealthAt(transform.position, -int.MaxValue, 0, Vector2.zero);
         Destroy(gameObject);
     }

@@ -3,8 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class ShootingPlatform : MonoBehaviour
+public class ShootingPlatform : MonoBehaviour, ITileObjectExplodable
 {
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
+    
     PlayerShooter playerShooter;
 
     void Start()

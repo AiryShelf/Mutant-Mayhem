@@ -3,11 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class PhotonicsBay : MonoBehaviour, IPowerConsumer
+public class PhotonicsBay : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
 {
     [SerializeField] StructureSO photonicsBaySO;
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] List<Light2D> lights;
+
+    public string explosionPoolName;
+
+    public void Explode()
+    {
+        if (!string.IsNullOrEmpty(explosionPoolName))
+        {
+            GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
+            explosion.transform.position = transform.position;
+        }
+    }
 
     void OnDestroy()
     {

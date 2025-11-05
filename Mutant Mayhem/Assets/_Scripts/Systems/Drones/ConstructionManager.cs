@@ -49,7 +49,7 @@ public class ConstructionManager : MonoBehaviour
         }
 
         buildJobs.Add(new KeyValuePair<DroneBuildJob, int>(buildJob, 0));
-        //Debug.Log($"ConstructionManager: Added buildJob at: {buildJob.jobPosition}");
+        Debug.Log($"ConstructionManager: Added buildJob at: {buildJob.jobPosition}");
     }
 
     public void AddRepairJob(DroneJob repairJob)
@@ -155,6 +155,7 @@ public class ConstructionManager : MonoBehaviour
             IncrementAssignedDrones(job, 1);
         }
 
+        Debug.Log("ConstructionManager: GetBuildJob job at: " + job?.jobPosition);
         return job;
     }
 

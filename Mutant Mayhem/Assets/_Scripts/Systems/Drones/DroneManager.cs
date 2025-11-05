@@ -8,8 +8,8 @@ public class DroneManager : MonoBehaviour
 
     public int droneHangarRange = 12;
 
-    public List<Drone> _droneListSource;
-    public List<bool> unlockedDrones;
+    //public List<Drone> _droneListSource;
+    //public List<bool> unlockedDrones;
     public List<Drone> allActiveDrones;
     public List<Drone> activeConstructionDrones;
     public List<Drone> activeAttackDrones;
