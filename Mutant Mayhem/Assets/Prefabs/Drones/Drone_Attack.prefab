@@ -58,7 +58,8 @@ MonoBehaviour:
   shooter: {fileID: -7526314183592093641}
   objectPoolName: Drone_Attack
   droneType: 1
-  moveSpeed: 10
+  moveSpeed: 9
+  currentAction: 
   currentJob:
     jobType: 0
     jobPosition: {x: 0, y: 0}
@@ -71,7 +72,7 @@ MonoBehaviour:
   hoverEffectVariationFactor: 0.5
   hoverEffectForceFactor: 0.7
   hoverScaleFactor: 0.15
-  rotationSpeed: 0.025
+  rotationSpeed: 0.015
   launchOrLandMinScale: 0.7
   launchOrLandScaleSpeed: 0.04
   flyingAlpha: 1
@@ -241,7 +242,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 15
   m_LinearDrag: 3
   m_AngularDrag: 2
   m_GravityScale: 0

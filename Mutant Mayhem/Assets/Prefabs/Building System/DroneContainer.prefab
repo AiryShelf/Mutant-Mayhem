@@ -46,13 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e98223ddb35c343a7b7c4046a4fd253e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  droneRangeCircle: {fileID: 6962445346651528811}
   controlledDrones: []
   dockedDrones: []
   maxDrones: 4
   launchDelay: 0.5
-  detectionRadius: 12
-  repairAmountPerSec: 10
+  repairAmountPerSec: 5
   hasPower: 1
   detectionCollider: {fileID: 1856495315866651960}
 --- !u!58 &1856495315866651960
@@ -191,17 +189,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
---- !u!114 &6962445346651528811 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4973286759459174877, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
-  m_PrefabInstance: {fileID: 2709824275225503670}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6cc3d39cd3a0c14d8a08f66bc85c240, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &8901023110852854225 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6781844405694670439, guid: ca1d012c68db24610bc8482a317a539a, type: 3}

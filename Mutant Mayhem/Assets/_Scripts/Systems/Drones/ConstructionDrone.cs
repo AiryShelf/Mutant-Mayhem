@@ -16,7 +16,7 @@ public class ConstructionDrone : Drone
         isFlying = false;
         if (currentJob is not DroneBuildJob)
         {
-            Debug.LogError("Drone: Tried to build when current job is not a DroneBuildJob");
+            Debug.LogError("Construction Drone: Tried to build when current job is not a DroneBuildJob");
             yield break;
         }
 
@@ -68,12 +68,13 @@ public class ConstructionDrone : Drone
         {
             if (currentJob == null)
             {
-                Debug.Log("Drone: CurrentJob found null");
+                Debug.Log("Construction Drone: CurrentJob found null");
                 SetJobDone();
                 yield break;
             }
             if (currentJob.jobType == DroneJobType.None)
             {
+                Debug.Log("Construction Drone: CurrentJob type is None");
                 SetJobDone();
                 yield break;
             }
@@ -82,14 +83,14 @@ public class ConstructionDrone : Drone
             {
                 if (!ConstructionManager.Instance.CheckIfBuildJobExists(buildJob))
                 {
-                    Debug.Log("Drone: Build job no longer exists");
+                    Debug.Log("Construction Drone: Build job no longer exists");
                     SetJobDone();
                     yield break;
                 }
             }
             else if (!ConstructionManager.Instance.CheckIfRepairJobExists(currentJob))
             {
-                Debug.Log("Drone: Repair job no longer exists");
+                Debug.Log("Construction Drone: Repair job no longer exists");
                 SetJobDone();
                 yield break;
             }

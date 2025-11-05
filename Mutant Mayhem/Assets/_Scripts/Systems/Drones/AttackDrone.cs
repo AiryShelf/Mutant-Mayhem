@@ -76,6 +76,7 @@ public class AttackDrone : Drone
             }
             if (currentJob.jobType == DroneJobType.None)
             {
+                Debug.Log("AttackDrone: CurrentJob type is None");
                 SetJobDone();
                 yield break;
             }

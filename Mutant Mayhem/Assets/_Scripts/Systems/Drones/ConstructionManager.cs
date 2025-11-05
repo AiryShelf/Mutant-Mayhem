@@ -195,6 +195,7 @@ public class ConstructionManager : MonoBehaviour
                 if (buildJobs[i].Key == job)
                 {
                     buildJobs[i] = new KeyValuePair<DroneBuildJob, int>(buildJob, buildJobs[i].Value + value);
+                    Debug.Log("ConstructionManager: Incremented assigned drones for build job at: " + job.jobPosition + " to " + buildJobs[i].Value);
                     break;
                 }
             }
@@ -202,7 +203,10 @@ public class ConstructionManager : MonoBehaviour
         else
         {
             if (repairJobs.ContainsKey(job.jobPosition))
+            {
                 repairJobs[job.jobPosition] = (job, repairJobs[job.jobPosition].count + value);
+                Debug.Log("ConstructionManager: Incremented assigned drones for repair job at: " + job.jobPosition + " to " + repairJobs[job.jobPosition].count);
+            }
         }
     }
 

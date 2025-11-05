@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class DroneContainer : MonoBehaviour
 {
-    public List<Drone> controlledDrones;
-    public List<Drone> dockedDrones;
+    public List<Drone> controlledDrones = new List<Drone>();
+    public List<Drone> dockedDrones = new List<Drone>();
     public int maxDrones;
     [SerializeField] float launchDelay = 0.5f;
     [SerializeField] int repairAmountPerSec = 10;
     public bool hasPower = true;
+    [SerializeField] int numberOfAttackJobs = 0;
 
     [SerializeField] CircleCollider2D detectionCollider;
 
@@ -22,14 +23,23 @@ public class DroneContainer : MonoBehaviour
         StartCoroutine(RepairDrones());
     }
 
+    void OnDestroy()
+    {
+        StopAllCoroutines();
+
+        List<Drone> dronesToRemove = new List<Drone>(controlledDrones);
+        foreach (Drone drone in dronesToRemove)
+        {
+            if (drone.isDocked)
+                drone.Die();
+            else
+                drone.droneHealth.Die();
+        }
+    }
+
     void RefreshColliderRange()
     {
         detectionCollider.radius = DroneManager.Instance.droneHangarRange;
-    }
-
-    public void ShowRangeCircle(bool show)
-    {
-        
     }
 
     #region Drones
@@ -69,6 +79,8 @@ public class DroneContainer : MonoBehaviour
         drone.sr.enabled = false;
         drone.lights.SetActive(false);
         //drone.SetNewAction(drone.LandInHangar);
+
+        Debug.Log("DroneContainer: Landed drone of type: " + drone.droneType + ". Job type set to None.");
     }
 
     public void RemoveDrone(Drone drone)
@@ -121,13 +133,17 @@ public class DroneContainer : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
 
-            // Heal one drone at a time
-            foreach (var drone in dockedDrones)
+            if (dockedDrones.Count > 0)
             {
-                if (drone.droneHealth.GetHealth() < drone.droneHealth.GetMaxHealth())
+                float repairPerDrone = repairAmountPerSec / dockedDrones.Count;
+                // Heal one drone at a time
+                foreach (var drone in dockedDrones)
                 {
-                    drone.droneHealth.ModifyHealth(repairAmountPerSec, 1, Vector2.zero, gameObject);
-                    break;
+                    if (drone.droneHealth.GetHealth() < drone.droneHealth.GetMaxHealth())
+                    {
+                        drone.droneHealth.ModifyHealth(repairPerDrone, 1, Vector2.zero, gameObject);
+                        break;
+                    }
                 }
             }
         }
@@ -141,7 +157,7 @@ public class DroneContainer : MonoBehaviour
     {
         while (true)
         {
-            if (hasPower)
+            if (hasPower && dockedDrones.Count > 0)
             {
                 RefreshColliderRange();
 
@@ -163,6 +179,7 @@ public class DroneContainer : MonoBehaviour
                 }
                 if (droneToAssign != null)
                 {
+                    Debug.Log("DroneContainer: Launching then assigning job of type: " + job.jobType + " to drone of type: " + droneToAssign.droneType);
                     LaunchDrone(droneToAssign);
                     droneToAssign.SetJob(job);
                 }
@@ -233,6 +250,7 @@ public class DroneContainer : MonoBehaviour
             if (key == null || key.targetTrans == null || !key.targetTrans.gameObject.activeInHierarchy)
             {
                 attackJobs.RemoveAt(i);
+                numberOfAttackJobs--;
             }
         }
     }
@@ -258,7 +276,10 @@ public class DroneContainer : MonoBehaviour
     void OnTriggerEnter2D(Collider2D otherCollider)
     {
         if (otherCollider.GetComponent<EnemyBase>() != null)
+        {
             attackJobs.Add(new KeyValuePair<DroneAttackJob, int>(new DroneAttackJob(DroneJobType.Attack, otherCollider.transform, otherCollider.transform.position), 0));
+            numberOfAttackJobs++;
+        }
     }
 
     void OnTriggerExit2D(Collider2D otherCollider)

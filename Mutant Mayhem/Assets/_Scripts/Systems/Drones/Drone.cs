@@ -9,6 +9,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
     public string objectPoolName = "";
     public DroneType droneType = DroneType.Builder;
     public float moveSpeed = 3;
+    public string currentAction = "";
     public DroneJob currentJob;
     public Rigidbody2D rb;
     public SpriteRenderer sr;
@@ -39,6 +40,8 @@ public class Drone : MonoBehaviour, IPowerConsumer
     protected Coroutine jobCheckCoroutine;
     public DroneHealth droneHealth;
 
+    bool initialized = false;
+
     public virtual void RefreshStats() { }
 
     void OnEnable()
@@ -65,6 +68,8 @@ public class Drone : MonoBehaviour, IPowerConsumer
 
         if (this is AttackDrone attackDrone)
             attackDrone.shooter.StartChargingGuns();
+
+        initialized = true;
     }
 
     public void PowerOn()
@@ -74,7 +79,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
         sr.sortingLayerName = "FireParticles";
         sr.sortingOrder = 0;
 
-        if (!isDocked)
+        if (initialized && !isDocked)
         {
             lights.SetActive(true);
 
@@ -229,6 +234,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
             myHangar.RemoveDrone(this);
 
         DroneManager.Instance.RemoveDrone(this);
+        initialized = false;
     }
 
     #endregion
@@ -245,9 +251,12 @@ public class Drone : MonoBehaviour, IPowerConsumer
         if (jobCheckCoroutine != null)
             StopCoroutine(jobCheckCoroutine);
         //if (jobHeightCoroutine != null)
-            //StopCoroutine(jobHeightCoroutine);
+        //StopCoroutine(jobHeightCoroutine);
 
         actionCoroutine = StartCoroutine(coroutineMethod());
+        
+        currentAction = coroutineMethod.Method.Name;
+        Debug.Log("Drone: Set new action to " + coroutineMethod.Method.Name);
     }
 
     IEnumerator MoveToJob()
@@ -287,7 +296,8 @@ public class Drone : MonoBehaviour, IPowerConsumer
     protected void MoveTowards(Vector2 target, float forceFactor)
     {
         Vector2 dir = target - (Vector2)rb.transform.position;
-        rb.AddForce(dir.normalized * moveSpeed * forceFactor);
+        float force = moveSpeed * forceFactor * rb.mass;
+        rb.AddForce(dir.normalized * force);
     }
 
     protected void RotateTowards(Vector2 target)
@@ -298,7 +308,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
 
         float angleDiff = Mathf.DeltaAngle(currentAngle, desiredAngle);
         angleDiff = Mathf.Clamp(angleDiff, -15, 15);
-        float torque = angleDiff * rotationSpeed;
+        float torque = angleDiff * rotationSpeed * rb.mass;
 
         rb.AddTorque(torque, ForceMode2D.Force);
     }
