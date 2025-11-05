@@ -150,6 +150,7 @@ public class EnemyMutant : EnemyBase
         unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
     }
 
+
     void SetMeleeSettings(Genome g)
     {
         float areaScale = g.bodyGene.scale * g.headGene.scale;

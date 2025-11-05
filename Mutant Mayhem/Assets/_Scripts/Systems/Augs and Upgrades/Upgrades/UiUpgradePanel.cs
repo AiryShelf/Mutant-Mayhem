@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
@@ -57,13 +58,18 @@ public class UiUpgradePanel : UI_PanelBase
         for (int i = textGrid2.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(textGrid2.transform.GetChild(i).gameObject);
-        } 
+        }
     }
 
     protected virtual void Start()
     {
         // Initialize upgrade lists into UI
         StartCoroutine(DelayInitializeFadeGroups());
+    }
+
+    public void TriggerClosePanel()
+    {
+        player.OnEscapePressed(new InputAction.CallbackContext());
     }
 
     IEnumerator DelayInitializeFadeGroups()

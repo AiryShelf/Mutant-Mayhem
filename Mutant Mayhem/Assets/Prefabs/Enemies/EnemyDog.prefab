@@ -57,13 +57,13 @@ MonoBehaviour:
   animControllerEnemy: {fileID: 8299610102731463758}
   meleeController: {fileID: 1577211972681514796}
   sr: {fileID: 1437740919546126437}
-  meleeDamageMaster: 0.1
-  knockbackMaster: 1
+  meleeDamageMaster: 0.15
+  knockbackMaster: 7
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
   moveSpeedBaseStart: 4
   moveSpeedBase: 4
-  rotateSpeedBase: 3
+  rotateSpeedBase: 4
   isMutant: 0
   randSpeedRange: 0.1
   startLocalScale: {x: 0, y: 0, z: 0}
@@ -291,7 +291,7 @@ MonoBehaviour:
   - {x: 0.08678463, y: -0.019966379, z: 0}
   m_ShapePathHash: -2108260162
   m_Mesh: {fileID: 0}
-  m_InstanceId: 160308
+  m_InstanceId: 249462
   m_LocalBounds:
     m_Center: {x: 0.0088474825, y: 0.0002141241, z: 0}
     m_Extent: {x: 0.08640965, y: 0.020342423, z: 0}
@@ -396,15 +396,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.x
-      value: 0.07368955
+      value: 0.08480791
       objectReference: {fileID: 0}
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Size.y
-      value: 0.06998694
+      value: 0.09620114
       objectReference: {fileID: 0}
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.x
-      value: -0.02
+      value: -0.025559183
       objectReference: {fileID: 0}
     - target: {fileID: 2826357740213786751, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: m_Offset.y

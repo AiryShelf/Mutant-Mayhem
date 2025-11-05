@@ -196,15 +196,13 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         {
             textInstance.GetComponent<TextMeshProUGUI>().text =
             structureSO.tileName + "\n" +
-            powerString + supplyString + yellowColorTag + "$" + totalCost + "\n" +
-            greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
+            powerString + supplyString + yellowColorTag + "$" + totalCost + endColorTag;
         }
         else
         {
             textInstance.GetComponent<TextMeshProUGUI>().text =
             structureSO.tileName + "\n" +
-            powerString + supplyString + redColorTag + "$" + totalCost + "\n" +
-            greenColorTag + Mathf.Round(structureSO.maxHealth * player.stats.structureStats.structureMaxHealthMult) + " HP" + endColorTag;
+            powerString + supplyString + redColorTag + "$" + totalCost + endColorTag;
         }
     }
 

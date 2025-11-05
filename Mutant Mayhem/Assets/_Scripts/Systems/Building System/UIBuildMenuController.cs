@@ -151,14 +151,21 @@ public class UIBuildMenuController : MonoBehaviour
             if (uiStructure == null)
                 continue;
             
-            if (uiStructure.structureSO.tileName == structure.tileName)
+            StructureSO uiStructureSO = uiStructure.structureSO;
+
+            if (uiStructureSO.tileName == structure.tileName)
             {
                 if (!uiStructure.TryToSelect(false))
                     return false;
-                    
+
                 currentIndex = uiStructureList.IndexOf(uiStructure);
-                infoPanelHeader.text = uiStructure.structureSO.tileName;
-                infoPanelDescription.text = uiStructure.structureSO.description;
+                string headerText = $"{uiStructureSO.tileName}    <color=#{ColorUtility.ToHtmlStringRGB(Color.green)}>{uiStructureSO.maxHealth}HP</color>";
+                if (uiStructureSO.maxHealth <= 0)
+                {
+                    headerText = uiStructureSO.tileName;
+                }
+                infoPanelHeader.text = headerText;
+                infoPanelDescription.text = uiStructureSO.description;
                 //Debug.Log("BuildMenu selection changed to " + uiStructure.name);
                 return true;
             }
