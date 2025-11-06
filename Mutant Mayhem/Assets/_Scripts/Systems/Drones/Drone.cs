@@ -2,25 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Drone : MonoBehaviour, IPowerConsumer
+public class Drone : MonoBehaviour
 {
     [SerializeField] Animator animator;
     public Shooter shooter;
     public string objectPoolName = "";
     public DroneType droneType = DroneType.Builder;
+    [SerializeField] SpriteRenderer noPowerSr;
     public float moveSpeed = 3;
+    public float moveSpeedStart { get; private set; }
+    public int energy = 0; 
+    public int energyMax = 100;
     public string currentAction = "";
     public DroneJob currentJob;
     public Rigidbody2D rb;
     public SpriteRenderer sr;
     public GameObject lights;
-    public PowerConsumer powerConsumer;
     [SerializeField] protected float minJobDist = 1f;
     [SerializeField] float hoverEffectTime = 1;
     [SerializeField] float hoverEffectVariationFactor = 0.2f;
     [SerializeField] float hoverEffectForceFactor = 0.2f;
     [SerializeField] float hoverScaleFactor = 0.05f;
-    [SerializeField] float rotationSpeed = 0.0025f;
+    public float rotationSpeed = 0.0025f;
+    public float rotationSpeedStart { get; private set; }
     [SerializeField] float launchOrLandMinScale = 0.3f;
     [SerializeField] float launchOrLandScaleSpeed = 0.05f;
     [SerializeField] float flyingAlpha = 0.5f;
@@ -42,20 +46,22 @@ public class Drone : MonoBehaviour, IPowerConsumer
 
     bool initialized = false;
 
-    public virtual void RefreshStats() { }
-
-    void OnEnable()
+    void Awake()
     {
-        Debug.Log("Drone: OnEnable called");
+        moveSpeedStart = moveSpeed;
+        rotationSpeedStart = rotationSpeed;
     }
-    
-    void OnDisable()
+
+    public virtual void RefreshStats()
     {
-        Debug.Log("Drone: OnDisable called");
+        moveSpeed = moveSpeedStart * DroneManager.Instance.droneSpeedMult;
+        rotationSpeed = rotationSpeedStart * DroneManager.Instance.droneRotationSpeedMult;
     }
 
     public virtual void Initialize(TurretGunSO droneGun)
     {
+        noPowerSr.enabled = false;
+        energy = energyMax * DroneManager.Instance.droneEnergyMult;
         droneHealth = GetComponent<DroneHealth>();
         if (droneHealth == null)
         {
@@ -75,6 +81,7 @@ public class Drone : MonoBehaviour, IPowerConsumer
     public void PowerOn()
     {
         hasPower = true;
+        noPowerSr.enabled = false;
         animator.SetBool("hasPower", true);
         sr.sortingLayerName = "FireParticles";
         sr.sortingOrder = 0;
@@ -95,20 +102,14 @@ public class Drone : MonoBehaviour, IPowerConsumer
         CheckIfHangarDestroyed();
 
         hasPower = false;
+        noPowerSr.enabled = true;
         animator.SetBool("hasPower", false);
-
-        if (isDocked)
-        {
-            powerConsumer.noPowerIcon.enabled = false;
-            return;
-        }
 
         lights.SetActive(false);
         myHangar.RemoveDroneFromJob(this);
         SetJobDone();
+
         // Simulate losing power, going down
-
-
         if (jobHeightCoroutine != null)
             StopCoroutine(jobHeightCoroutine);
         if (hoverCoroutine != null)
@@ -322,11 +323,15 @@ public class Drone : MonoBehaviour, IPowerConsumer
         if (jobHeightCoroutine != null)
             StopCoroutine(jobHeightCoroutine);
         jobHeightCoroutine = StartCoroutine(RaiseFromJob());
-        DroneJob newJob = myHangar.GetDroneJob(droneType);
-        if (newJob.jobType != DroneJobType.None)
+
+        if (hasPower && energy > 0)
         {
-            SetJob(newJob);
-            yield break;
+            DroneJob newJob = myHangar.GetDroneJob(droneType);
+            if (newJob.jobType != DroneJobType.None)
+            {
+                SetJob(newJob);
+                yield break;
+            }
         }
 
         Vector2 target = myHangar.transform.position;
@@ -342,15 +347,19 @@ public class Drone : MonoBehaviour, IPowerConsumer
             RotateTowards(target);
             yield return new WaitForFixedUpdate();
 
+            // Check for jobs
             checkTimer += Time.fixedDeltaTime;
             if (checkTimer >= 1)
             {
                 checkTimer = 0;
-                newJob = myHangar.GetDroneJob(droneType);
-                if (newJob.jobType != DroneJobType.None)
+                if (hasPower && energy > 0)
                 {
-                    SetJob(newJob);
-                    yield break;
+                    DroneJob newJob = myHangar.GetDroneJob(droneType);
+                    if (newJob.jobType != DroneJobType.None)
+                    {
+                        SetJob(newJob);
+                        yield break;
+                    }
                 }
             }
             if (Vector2.Distance(transform.position, target) < 1)
@@ -433,6 +442,10 @@ public class Drone : MonoBehaviour, IPowerConsumer
             currentJob = job;
             SetNewAction(FlyToHangar);
         }
+        else if (job.jobType == DroneJobType.Recharge)
+        {
+            // Do nothing, handled in DroneContainer
+        }
         else
         {
             jobDone = false;
@@ -473,6 +486,12 @@ public class Drone : MonoBehaviour, IPowerConsumer
     public void SetJobDone()
     {
         jobDone = true;
+        if (currentJob.jobType == DroneJobType.Recharge)
+        {
+            currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
+            return;
+        }
+
         currentJob = new DroneJob(DroneJobType.None, Vector3.zero);
         SetNewAction(FlyToHangar);
     }

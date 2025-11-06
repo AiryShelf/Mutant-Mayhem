@@ -8,6 +8,7 @@ public enum UpgradeFamily
     StructureStats,
     Consumables,
     GunStats,
+    DroneStats
 }
 public enum PlayerStatsUpgrade
 {
@@ -45,6 +46,8 @@ public enum ConsumablesUpgrade
     SMGBuyAmmo,
     BuyConstructionDrone,
     BuyAttackDrone,
+    SellConstructionDrone,
+    SellAttackDrone
 }
 
 public enum GunStatsUpgrade
@@ -60,12 +63,20 @@ public enum GunStatsUpgrade
     TurretReloadSpeed,
 }
 
+public enum DroneStatsUpgrade
+{
+    DroneSpeed,
+    DroneHealth,
+    DroneEnergy,
+    DroneHangarRange,
+    DroneHangarRepairSpeed,
+    DroneHangarRechargeSpeed
+}
+
 /* NOTES: 
     - After adjusting upgrade values, check UpgradeStatsGetter 
         especially if decimal place count changes
-
 */
-
 public abstract class Upgrade
 {
     public PlayerStatsUpgrade PlayerStatsUpgType { get; private set; }
@@ -95,13 +106,14 @@ public abstract class Upgrade
     public virtual void Apply(TileStats tileStats, int level) { }
     public virtual void Apply(GunSO gunSO, int level) { }
     public virtual bool Apply(PlayerStats playerStats) // Consumables
-    { 
-        return false; 
+    {
+        return false;
     }
+    public virtual void Apply(int level) { } // Drone Stats
 
-    public virtual int CalculateCost(Player player, int baseCost, int level) 
-    { 
-        return baseCost * level; 
+    public virtual int CalculateCost(Player player, int baseCost, int level)
+    {
+        return baseCost * level;
     }
 }
 
@@ -146,7 +158,7 @@ public class PlayerReloadSpeedUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -173,7 +185,7 @@ public class WeaponHandlingUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -201,7 +213,7 @@ public class MeleeDamageUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -229,7 +241,7 @@ public class KnockbackUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -264,7 +276,7 @@ public class StaminaRegenUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -305,7 +317,7 @@ public class HealthRegenUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -330,7 +342,7 @@ public class CriticalHitUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -534,7 +546,7 @@ public class BuyAttackDroneUpgrade : Upgrade
     public override int CalculateCost(Player player, int baseCost, int level)
     {
         int activeDrones = DroneManager.Instance.activeAttackDrones.Count;
-        
+
         // Increment cost
         int newDroneCount = activeDrones + 1;
         int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
@@ -555,6 +567,26 @@ public class BuyAttackDroneUpgrade : Upgrade
             newCost = Mathf.FloorToInt(newCost / 1.5f);
         //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
         return newCost;
+    }
+}
+
+public class SellConstructionDroneUpgrade : Upgrade
+{
+    public SellConstructionDroneUpgrade() : base(ConsumablesUpgrade.SellConstructionDrone) { }
+
+    public static int Amount = 1;
+
+    public override bool Apply(PlayerStats playerStats)
+    {
+        return DroneManager.Instance.SellDrone(DroneType.Builder, playerStats.structureStats.currentDroneContainer);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count), baseCost, int.MaxValue);
+        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
+            cost /= 2;
+        return -cost; // Negative cost for selling
     }
 }
 
@@ -601,7 +633,7 @@ public class StructureMaxHealthUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -610,32 +642,6 @@ public class StructureMaxHealthUpgrade : Upgrade
         return newCost;
     }
 }
-
-/*/ DEPRECATED
-public class MaxTurretsUpgrade : Upgrade
-{
-    public MaxTurretsUpgrade() : base(StructureStatsUpgrade.MaxTurrets_Deprecated) { }
-
-    public static float UpgAmount = 1;
-
-    public override void Apply(StructureStats structureStats, int level)
-    {
-        Debug.Log("MaxTurretsUpg applied");
-        structureStats.maxTurrets += (int)UpgAmount;
-    }
-
-    public override int CalculateCost(Player player, int baseCost, int level)
-    {
-        // Double the cost each level
-        int newCost = baseCost;
-        for (int i = 1; i < level; i++)
-        {
-            newCost = baseCost * level;
-        }
-        return newCost;
-    }
-}
-*/
 
 public class TurretRotSpeedUpgrade : Upgrade
 {
@@ -651,7 +657,7 @@ public class TurretRotSpeedUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -680,7 +686,7 @@ public class TurretSensorsUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -776,7 +782,7 @@ public class GunDamageUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -805,7 +811,7 @@ public class GunKnockbackUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -863,7 +869,7 @@ public class ClipSizeUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -978,7 +984,7 @@ public class RecoilUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -1008,7 +1014,167 @@ public class TurretReloadSpeedUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Double the cost each level
+        // Multiply the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
+#endregion
+
+#region DroneStats Upgrades
+
+public class DroneSpeedUpgrade : Upgrade
+{
+    public DroneSpeedUpgrade() : base(GunStatsUpgrade.GunRange) { }
+
+    public static float GetUpgAmount()
+    {
+        return DroneManager.Instance.droneSpeedUpgMult;
+    }
+
+    public override void Apply(int level)
+    {
+        DroneManager.Instance.UpgradeDroneSpeed(level);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Multiply the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
+public class DroneHealthUpgrade : Upgrade
+{
+    public DroneHealthUpgrade() : base(GunStatsUpgrade.GunRange) { }
+
+    public static float GetUpgAmount()
+    {
+        return DroneManager.Instance.droneHealthUpgMult;
+    }
+
+    public override void Apply(int level)
+    {
+        DroneManager.Instance.UpgradeDroneHealth(level);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Multiply the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
+public class DroneEnergyUpgrade : Upgrade
+{
+    public DroneEnergyUpgrade() : base(GunStatsUpgrade.GunRange) { }
+
+    public static float GetUpgAmount()
+    {
+        return DroneManager.Instance.droneEnergyUpgMult;
+    }
+
+    public override void Apply(int level)
+    {
+        DroneManager.Instance.UpgradeDroneEnergy(level);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Multiply the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
+public class DroneHangarRangeUpgrade : Upgrade
+{
+    public DroneHangarRangeUpgrade() : base(GunStatsUpgrade.GunRange) { }
+
+    public static float GetUpgAmount()
+    {
+        return DroneManager.Instance.droneHangarRangeUpgAmount;
+    }
+
+    public override void Apply(int level)
+    {
+        DroneManager.Instance.UpgradeDroneHangarRange(level);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Multiply the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
+public class DroneHangarRepairSpeedUpgrade : Upgrade
+{
+    public DroneHangarRepairSpeedUpgrade() : base(GunStatsUpgrade.GunRange) { }
+
+    public static float GetUpgAmount()
+    {
+        return DroneManager.Instance.droneHangarRepairSpeedUpgAmount;
+    }
+
+    public override void Apply(int level)
+    {
+        DroneManager.Instance.UpgradeDroneHangarRepairSpeed(level);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Multiply the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
+public class DroneHangarRechargeSpeedUpgrade : Upgrade
+{
+    public DroneHangarRechargeSpeedUpgrade() : base(GunStatsUpgrade.GunRange) { }
+
+    public static float GetUpgAmount()
+    {
+        return DroneManager.Instance.droneHangarRechargeSpeedUpgAmount;
+    }
+
+    public override void Apply(int level)
+    {
+        DroneManager.Instance.UpgradeDroneHangarRechargeSpeed(level);
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {

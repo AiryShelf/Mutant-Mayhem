@@ -18,9 +18,10 @@ public class AttackDrone : Drone
 
     public override void RefreshStats()
     {
+        base.RefreshStats();
         attackRange = shooter.currentGunSO.bulletLifeTime *
                       shooter.currentGunSO.bulletSpeed * 0.85f;
-        minJobDist = attackRange;
+        minJobDist = attackRange - 2f;
     }
 
     internal IEnumerator Attack()

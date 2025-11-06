@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
@@ -14,6 +13,8 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] List<GunStatsUpgrade> laserPistolUpgrades;
     [SerializeField] List<GunStatsUpgrade> SMGUpgrades;
     [SerializeField] List<GunStatsUpgrade> repairGunUpgrades;
+    [SerializeField] List<DroneStatsUpgrade> droneUpgrades;
+    
     [HideInInspector] public Player player;
     [HideInInspector] public PlayerShooter playerShooter;
 
@@ -22,6 +23,7 @@ public class UpgradeManager : MonoBehaviour
     public float structureStatsCostMult = 1;
     public float consumablesCostMult = 1;
     public float gunStatsCostMult = 1;
+    public float droneStatsCostMult = 1;
     public UpgradeEffects upgradeEffects;    
 
     #region Upgrade Dicts
@@ -87,6 +89,15 @@ public class UpgradeManager : MonoBehaviour
     public Dictionary<GunStatsUpgrade, int> repairGunUpgCurrCosts = 
         new Dictionary<GunStatsUpgrade, int>();
 
+    // Drone Stats
+    public Dictionary<DroneStatsUpgrade, int> droneStatsUpgMaxLevels = 
+        new Dictionary<DroneStatsUpgrade, int>();
+    public Dictionary<DroneStatsUpgrade, int> droneStatsUpgLevels = 
+        new Dictionary<DroneStatsUpgrade, int>();
+    private Dictionary<DroneStatsUpgrade, int> droneStatsUpgBaseCosts = 
+        new Dictionary<DroneStatsUpgrade, int>();
+    public Dictionary<DroneStatsUpgrade, int> droneStatsUpgCurrCosts = 
+        new Dictionary<DroneStatsUpgrade, int>();
 
     #endregion
 
@@ -112,6 +123,7 @@ public class UpgradeManager : MonoBehaviour
         structureStatsCostMult = 1;
         consumablesCostMult = 1;
         gunStatsCostMult = 1;
+        droneStatsCostMult = 1;
 
         // Reset references
         player = FindObjectOfType<Player>();
@@ -145,6 +157,10 @@ public class UpgradeManager : MonoBehaviour
         repairGunUpgLevels.Clear();
         repairGunUpgBaseCosts.Clear();
         repairGunUpgCurrCosts.Clear();
+        droneStatsUpgMaxLevels.Clear();
+        droneStatsUpgLevels.Clear();
+        droneStatsUpgBaseCosts.Clear();
+        droneStatsUpgCurrCosts.Clear();
 
         // Initialize
 
@@ -176,6 +192,8 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgMaxLevels[ConsumablesUpgrade.SMGBuyAmmo] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.BuyConstructionDrone] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.BuyAttackDrone] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.SellConstructionDrone] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.SellAttackDrone] = int.MaxValue;
 
         // GunStats
         laserUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
@@ -206,6 +224,14 @@ public class UpgradeManager : MonoBehaviour
         repairGunUpgMaxLevels[GunStatsUpgrade.GunRange] = 10;
         repairGunUpgMaxLevels[GunStatsUpgrade.Recoil] = 10; // Deprecated
 
+        // Drone Stats
+        droneStatsUpgMaxLevels[DroneStatsUpgrade.DroneSpeed] = 50;
+        droneStatsUpgMaxLevels[DroneStatsUpgrade.DroneHealth] = 100;
+        droneStatsUpgMaxLevels[DroneStatsUpgrade.DroneEnergy] = 100;
+        droneStatsUpgMaxLevels[DroneStatsUpgrade.DroneHangarRange] = 10;
+        droneStatsUpgMaxLevels[DroneStatsUpgrade.DroneHangarRepairSpeed] = 100;
+        droneStatsUpgMaxLevels[DroneStatsUpgrade.DroneHangarRechargeSpeed] = 100;
+
         // Initialize upgrade levels
         foreach(PlayerStatsUpgrade type in playerStatsUpgrades)
         {
@@ -227,9 +253,13 @@ public class UpgradeManager : MonoBehaviour
         {
             bulletUpgLevels[type] = 0;
         }
-        foreach(GunStatsUpgrade type in repairGunUpgrades)
+        foreach (GunStatsUpgrade type in repairGunUpgrades)
         {
             repairGunUpgLevels[type] = 0;
+        }
+        foreach (DroneStatsUpgrade type in droneUpgrades)
+        {
+            droneStatsUpgLevels[type] = 0;
         }
 
         #endregion Upg Levels
@@ -261,6 +291,8 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.SMGBuyAmmo] = 100;
         consumablesUpgBaseCosts[ConsumablesUpgrade.BuyConstructionDrone] = 500;
         consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 2000;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.SellConstructionDrone] = -400;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.SellAttackDrone] = -1600;
 
         // Gun Stats
         laserUpgBaseCosts[GunStatsUpgrade.GunDamage] = 250;
@@ -289,6 +321,13 @@ public class UpgradeManager : MonoBehaviour
         repairGunUpgBaseCosts[GunStatsUpgrade.GunRange] = 300;
         repairGunUpgBaseCosts[GunStatsUpgrade.TurretReloadSpeed] = 500;
 
+        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneSpeed] = 200;
+        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHealth] = 200;
+        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneEnergy] = 200;
+        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHangarRange] = 300;
+        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHangarRepairSpeed] = 300;
+        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHangarRechargeSpeed] = 300;
+
         // Initialize currentCosts
         foreach (KeyValuePair<PlayerStatsUpgrade, int> kvp in playerStatsUpgBaseCosts)
         {
@@ -309,11 +348,15 @@ public class UpgradeManager : MonoBehaviour
         foreach (KeyValuePair<GunStatsUpgrade, int> kvp in bulletUpgBaseCosts)
         {
             bulletUpgCurrCosts.Add(kvp.Key, kvp.Value);
-        } 
+        }
         foreach (KeyValuePair<GunStatsUpgrade, int> kvp in repairGunUpgBaseCosts)
         {
             repairGunUpgCurrCosts.Add(kvp.Key, kvp.Value);
-        } 
+        }
+        foreach (KeyValuePair<DroneStatsUpgrade, int> kvp in droneStatsUpgBaseCosts)
+        {
+            droneStatsUpgCurrCosts.Add(kvp.Key, kvp.Value);
+        }
     }
 
         #endregion Upg Costs
@@ -423,6 +466,29 @@ public class UpgradeManager : MonoBehaviour
                 return null;
         }
     }
+
+    Upgrade CreateUpgrade(DroneStatsUpgrade type)
+    {
+        switch (type)
+        {
+            // Drone Stats
+            case DroneStatsUpgrade.DroneSpeed:
+                return new DroneSpeedUpgrade();
+            case DroneStatsUpgrade.DroneHealth:
+                return new DroneHealthUpgrade();
+            case DroneStatsUpgrade.DroneEnergy:
+                return new DroneEnergyUpgrade();
+            case DroneStatsUpgrade.DroneHangarRange:
+                return new DroneHangarRangeUpgrade();
+            case DroneStatsUpgrade.DroneHangarRepairSpeed:
+                return new DroneHangarRepairSpeedUpgrade();
+            case DroneStatsUpgrade.DroneHangarRechargeSpeed:
+                return new DroneHangarRechargeSpeedUpgrade();
+
+            default:
+                return null;
+        }
+    }
         #endregion Create Upg
     
     #endregion Initialization
@@ -451,6 +517,12 @@ public class UpgradeManager : MonoBehaviour
     {
         Upgrade upgrade = CreateUpgrade(upgType);
         ApplyGunUpgrade(upgrade, upgType, gunIndex);
+    }
+
+    public void OnUpgradeButtonClicked(DroneStatsUpgrade upgType)
+    {
+        Upgrade upgrade = CreateUpgrade(upgType);
+        ApplyDroneUpgrade(upgrade, upgType);
     }
 
     // PlayerStats
@@ -610,7 +682,7 @@ public class UpgradeManager : MonoBehaviour
             gunUpgMaxLevels = repairGunUpgMaxLevels;
             gunUpgCurrCosts = repairGunUpgCurrCosts;
             gunUpgBaseCosts = repairGunUpgBaseCosts;
-        } 
+        }
         else
         {
             Debug.LogError("Unsupported gun type: " + gun.gunType);
@@ -636,13 +708,46 @@ public class UpgradeManager : MonoBehaviour
 
             if (upgType == GunStatsUpgrade.GunRange && gunIndex == 4) // Repair gun
                 BuildingSystem.Instance.UpdateRepairRangeCircle();
-            
-            gunUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
+
+            gunUpgCurrCosts[upgType] = upgrade.CalculateCost(player,
                                        gunUpgBaseCosts[upgType], gunUpgLevels[upgType] + 1);
 
             Debug.Log("Gun upgrade applied: " + upgType);
-            MessageBanner.PulseMessage(gun.uiName + " stat upgraded to level " + 
+            MessageBanner.PulseMessage(gun.uiName + " stat upgraded to level " +
                                      gunUpgLevels[upgType], Color.cyan);
+        }
+        else
+        {
+            Debug.Log("Not enough credits for: " + upgType);
+            MessageBanner.PulseMessage("Not enough Credits!", Color.red);
+        }
+    }
+    
+    void ApplyDroneUpgrade(Upgrade upgrade, DroneStatsUpgrade upgType)
+    {
+        // Check max level
+        if (droneStatsUpgLevels[upgType] >= droneStatsUpgMaxLevels[upgType])
+        {
+            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
+            return;
+        }
+
+        // Buy and apply
+        int cost = Mathf.FloorToInt(gunStatsCostMult * droneStatsUpgCurrCosts[upgType]);
+        if (BuildingSystem.PlayerCredits >= cost)
+        {
+            BuildingSystem.PlayerCredits -= cost;
+            droneStatsUpgLevels[upgType]++;
+
+            upgrade.Apply(droneStatsUpgLevels[upgType]);
+            upgradeEffects.PlayUpgradeButtonEffect();
+
+            droneStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player,
+                                       droneStatsUpgBaseCosts[upgType], droneStatsUpgLevels[upgType] + 1);
+
+            Debug.Log("Drone upgrade applied: " + upgType);
+            MessageBanner.PulseMessage("Drone stat upgraded to level " +
+                                     droneStatsUpgLevels[upgType], Color.cyan);
         }
         else
         {

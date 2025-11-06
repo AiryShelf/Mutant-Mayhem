@@ -148,6 +148,35 @@ public static class UpgStatGetter
         return stat;
     }
 
+    public static string GetStatValue(DroneStatsUpgrade droneStatsUpgrade)
+    {
+        string stat = "null";
+
+        switch (droneStatsUpgrade)
+        {
+            case DroneStatsUpgrade.DroneSpeed:
+                stat = DroneManager.Instance.droneSpeedMult.ToString("#0.0");
+                return stat;
+            case DroneStatsUpgrade.DroneHealth:
+                stat = DroneManager.Instance.droneHealthMult.ToString("#0.0");
+                return stat;
+            case DroneStatsUpgrade.DroneEnergy:
+                stat = DroneManager.Instance.droneEnergyMult.ToString("#0.0");
+                return stat;
+            case DroneStatsUpgrade.DroneHangarRange:
+                stat = DroneManager.Instance.droneHangarRange.ToString("#0");
+                return stat;
+            case DroneStatsUpgrade.DroneHangarRechargeSpeed:
+                stat = DroneManager.Instance.droneHangarRechargeSpeed.ToString("#0");
+                return stat;
+            case DroneStatsUpgrade.DroneHangarRepairSpeed:
+                stat = DroneManager.Instance.droneHangarRepairSpeed.ToString("#0");
+                return stat;
+        }
+
+        return stat;
+    }
+
     #endregion
 
     #region Upgrade Amounts
@@ -282,11 +311,40 @@ public static class UpgStatGetter
                 return amount;
             case GunStatsUpgrade.Recoil:
                 amount = "-" + Mathf.Abs(RecoilUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.0");
-                return amount;     
+                return amount;
             case GunStatsUpgrade.TurretReloadSpeed:
                 amount = "-" + Mathf.Abs(TurretReloadSpeedUpgrade.GetUpgAmount(player, gunIndex)).ToString("#0.00");
-                return amount;         
-        }   
+                return amount;
+        }
+
+        return amount;
+    }
+    
+    public static string GetUpgAmount(DroneStatsUpgrade droneStatsUpgrade)
+    {
+        string amount = "null";
+
+        switch (droneStatsUpgrade)
+        {
+            case DroneStatsUpgrade.DroneSpeed:
+                amount = "+" + DroneManager.Instance.droneSpeedUpgMult.ToString("#0.0");
+                return amount;
+            case DroneStatsUpgrade.DroneHealth:
+                amount = "+" + DroneManager.Instance.droneHealthUpgMult.ToString("#0.0");
+                return amount;
+            case DroneStatsUpgrade.DroneEnergy:
+                amount = "+" + DroneManager.Instance.droneEnergyUpgMult.ToString("#0.0");
+                return amount;
+            case DroneStatsUpgrade.DroneHangarRange:
+                amount = "+" + DroneManager.Instance.droneHangarRangeUpgAmount.ToString("#0");
+                return amount;
+            case DroneStatsUpgrade.DroneHangarRechargeSpeed:
+                amount = "+" + DroneManager.Instance.droneHangarRechargeSpeed.ToString("#0");
+                return amount;
+            case DroneStatsUpgrade.DroneHangarRepairSpeed:
+                amount = "+" + DroneManager.Instance.droneHangarRepairSpeed.ToString("#0");
+                return amount;
+        }
 
         return amount;
     }

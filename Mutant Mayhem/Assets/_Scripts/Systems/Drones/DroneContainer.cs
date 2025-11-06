@@ -8,7 +8,6 @@ public class DroneContainer : MonoBehaviour
     public List<Drone> dockedDrones = new List<Drone>();
     public int maxDrones;
     [SerializeField] float launchDelay = 0.5f;
-    [SerializeField] int repairAmountPerSec = 10;
     public bool hasPower = true;
     [SerializeField] int numberOfAttackJobs = 0;
 
@@ -21,6 +20,8 @@ public class DroneContainer : MonoBehaviour
     {
         StartCoroutine(LookForJobs());
         StartCoroutine(RepairDrones());
+        StartCoroutine(EnergyConsumptionAndRecharge());
+        DroneManager.Instance.droneContainers.Add(this);
     }
 
     void OnDestroy()
@@ -35,6 +36,61 @@ public class DroneContainer : MonoBehaviour
             else
                 drone.droneHealth.Die();
         }
+        DroneManager.Instance.droneContainers.Remove(this);
+    }
+
+    IEnumerator EnergyConsumptionAndRecharge()
+    {
+        Drone droneBeingRecharged = null;
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+
+            foreach (Drone drone in controlledDrones)
+            {
+                if (!drone.hasPower)
+                    continue;
+
+                // If docked, recharge energy of one drone at a time
+                if (drone.isDocked)
+                {
+                    if (droneBeingRecharged != null && drone != droneBeingRecharged)
+                        continue;
+
+                    drone.SetJob(new DroneJob(DroneJobType.Recharge, Vector2.zero));
+                    droneBeingRecharged = drone;
+                    drone.energy += DroneManager.Instance.droneHangarRechargeSpeed;
+                    if (drone.energy >= drone.energyMax)
+                    {
+                        drone.energy = drone.energyMax;
+                        drone.SetJobDone();
+                        droneBeingRecharged = null;
+                    }
+                }
+                else
+                {
+                    // Consume energy
+                    drone.energy -= 1;
+                    if (drone.energy <= 0)
+                    {
+                        drone.energy = 0;
+                        if (drone.currentJob.jobType != DroneJobType.None)
+                        {
+                            drone.SetJobDone();
+                        }
+
+                        if (drone.myHangar.hasPower)
+                        {
+                            drone.PowerOn();
+                        }
+                        else
+                        {
+                            drone.PowerOff();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void RefreshColliderRange()
@@ -43,6 +99,24 @@ public class DroneContainer : MonoBehaviour
     }
 
     #region Drones
+
+    public Drone GetDroneToSell(DroneType droneType)
+    {
+        if (controlledDrones.Count == 0)
+            return null;
+
+        // Can only sell docked drones
+        if (dockedDrones.Count > 0)
+        {
+            foreach (Drone drone in dockedDrones)
+            {
+                if (drone.droneType == droneType)
+                    return drone;
+            }
+        }
+
+        return null;
+    }
 
     void LaunchDrone(Drone drone)
     {
@@ -135,8 +209,8 @@ public class DroneContainer : MonoBehaviour
 
             if (dockedDrones.Count > 0)
             {
-                float repairPerDrone = repairAmountPerSec / dockedDrones.Count;
-                // Heal one drone at a time
+                float repairPerDrone = DroneManager.Instance.droneHangarRepairSpeed / dockedDrones.Count;
+                // Spread repair among docked drones
                 foreach (var drone in dockedDrones)
                 {
                     if (drone.droneHealth.GetHealth() < drone.droneHealth.GetMaxHealth())
@@ -166,7 +240,7 @@ public class DroneContainer : MonoBehaviour
 
                 foreach (Drone dockedDrone in dockedDrones)
                 {
-                    if (dockedDrone.currentJob.jobType != DroneJobType.None || !dockedDrone.hasPower)
+                    if (dockedDrone.currentJob.jobType != DroneJobType.None || !dockedDrone.hasPower || dockedDrone.energy <= 0)
                         continue;
 
                     job = GetDroneJob(dockedDrone.droneType);

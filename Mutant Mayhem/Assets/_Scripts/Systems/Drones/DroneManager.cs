@@ -6,10 +6,23 @@ public class DroneManager : MonoBehaviour
 {
     public static DroneManager Instance;
 
+    [Header("Base Stats and Upgrade Multipliers:")]
+    public int droneSpeedMult = 1;
+    public float droneSpeedUpgMult = 0.05f;
+    public int droneRotationSpeedMult = 1;
+    public float droneRotationSpeedUpgMult = 0.025f;
+    public int droneHealthMult = 1;
+    public float droneHealthUpgMult = 0.1f;
+    public int droneEnergyMult = 1;
+    public float droneEnergyUpgMult = 0.05f;
     public int droneHangarRange = 12;
+    public float droneHangarRangeUpgAmount = 1f;
+    public int droneHangarRepairSpeed = 5; // Repair per second spread between docked drones
+    public float droneHangarRepairSpeedUpgAmount = 1f;
+    public int droneHangarRechargeSpeed = 5; // Energy recharge per second on one drone at a time
+    public float droneHangarRechargeSpeedUpgAmount = 1f;
 
-    //public List<Drone> _droneListSource;
-    //public List<bool> unlockedDrones;
+    [Header("Drone Lists:")]
     public List<Drone> allActiveDrones;
     public List<Drone> activeConstructionDrones;
     public List<Drone> activeAttackDrones;
@@ -17,8 +30,7 @@ public class DroneManager : MonoBehaviour
     public List<TurretGunSO> _droneGunListSource = new List<TurretGunSO>();
     [Header("Dynamic Vars:")]
     public List<TurretGunSO> droneGunList = new List<TurretGunSO>();
-
-    public List<DroneHangar> droneHangars = new List<DroneHangar>();
+    public List<DroneContainer> droneContainers = new List<DroneContainer>();
 
     void Awake()
     {
@@ -170,6 +182,64 @@ public class DroneManager : MonoBehaviour
                 droneGun.reloadSpeed += droneGun.reloadSpeedUpgNegAmt;
                 break;
         }
+    }
+
+    public void UpgradeDroneSpeed(int level)
+    {
+        foreach(DroneContainer dc in droneContainers)
+        {
+            foreach(Drone d in dc.dockedDrones)
+            {
+                d.moveSpeed = d.moveSpeedStart * (1 + (droneSpeedUpgMult * level));
+                d.rotationSpeed = d.rotationSpeedStart * (1 + (droneRotationSpeedUpgMult * level));
+            }
+        }
+    }
+
+    public void UpgradeDroneHealth(int level)
+    {
+        foreach (DroneContainer dc in droneContainers)
+        {
+            foreach (Drone d in dc.dockedDrones)
+            {
+                float healthRatio = d.droneHealth.GetHealth() / d.droneHealth.GetMaxHealth();
+                d.droneHealth.SetMaxHealth(d.droneHealth.startMaxHealth * (1 + (droneHealthUpgMult * level)));
+                d.droneHealth.SetHealth(healthRatio * d.droneHealth.GetMaxHealth());
+            }
+        }
+    }
+
+    public void UpgradeDroneEnergy(int level)
+    {
+        droneEnergyMult += Mathf.RoundToInt(droneEnergyUpgMult);
+    }
+
+    public void UpgradeDroneHangarRange(int level)
+    {
+        droneHangarRange += Mathf.RoundToInt(droneHangarRangeUpgAmount);
+    }
+
+    public void UpgradeDroneHangarRepairSpeed(int level)
+    {
+        droneHangarRepairSpeed += Mathf.RoundToInt(droneHangarRepairSpeedUpgAmount);
+    }
+
+    public void UpgradeDroneHangarRechargeSpeed(int level)
+    {
+        droneHangarRechargeSpeed += Mathf.RoundToInt(droneHangarRechargeSpeedUpgAmount);
+    }
+
+    public bool SellDrone(DroneType droneType, DroneContainer droneContainer)
+    {
+        Drone droneToSell = droneContainer.GetDroneToSell(droneType);
+        if (droneToSell != null)
+        {
+            droneToSell.Die();
+            return true;
+        }
+
+        MessageBanner.PulseMessage("No drones of that type are docked!", Color.red);
+        return false;
     }
 
     #endregion

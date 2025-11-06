@@ -12,6 +12,7 @@ public class UIUpgrade : MonoBehaviour
     public StructureStatsUpgrade structureStatsUpgrade;
     public ConsumablesUpgrade consumablesUpgrade;
     public GunStatsUpgrade gunStatsUpgrade;
+    public DroneStatsUpgrade droneStatsUpgrade;
 
     public Image buttonImage;
     [SerializeField] Color buttonImageHoverColor;
@@ -166,7 +167,7 @@ public class UIUpgrade : MonoBehaviour
         int upgCost = 1;
         string upgAmountString = "";
         string statValueString = "";
-        
+
         // Check for families
         if (upgradeFamily == UpgradeFamily.Consumables)
         {
@@ -185,31 +186,31 @@ public class UIUpgrade : MonoBehaviour
             switch (playerGunIndex)
             {
                 case 0:
-                {
-                    upgLvl = upgradeManager.laserUpgLevels[gunStatsUpgrade];
-                    maxLvl = upgradeManager.laserUpgMaxLevels[gunStatsUpgrade];
-                    upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult * 
-                              upgradeManager.laserUpgCurrCosts[gunStatsUpgrade]);
-                    break;
-                }
+                    {
+                        upgLvl = upgradeManager.laserUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeManager.laserUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult *
+                                  upgradeManager.laserUpgCurrCosts[gunStatsUpgrade]);
+                        break;
+                    }
                 case 1:
-                {
-                    upgLvl = upgradeManager.bulletUpgLevels[gunStatsUpgrade];
-                    maxLvl = upgradeManager.bulletUpgMaxLevels[gunStatsUpgrade];
-                    upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult * 
-                              upgradeManager.bulletUpgCurrCosts[gunStatsUpgrade]);
-                    break;
-                }
+                    {
+                        upgLvl = upgradeManager.bulletUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeManager.bulletUpgMaxLevels[gunStatsUpgrade];
+                        upgCost = Mathf.FloorToInt(upgradeManager.gunStatsCostMult *
+                                  upgradeManager.bulletUpgCurrCosts[gunStatsUpgrade]);
+                        break;
+                    }
                 case 4:
-                {
-                    upgLvl = upgradeManager.repairGunUpgLevels[gunStatsUpgrade];
-                    maxLvl = upgradeManager.repairGunUpgMaxLevels[gunStatsUpgrade];
-                    // No cost mult for Repair gun, yet
-                    upgCost = upgradeManager.repairGunUpgCurrCosts[gunStatsUpgrade];
-                    break;
-                }
+                    {
+                        upgLvl = upgradeManager.repairGunUpgLevels[gunStatsUpgrade];
+                        maxLvl = upgradeManager.repairGunUpgMaxLevels[gunStatsUpgrade];
+                        // No cost mult for Repair gun, yet
+                        upgCost = upgradeManager.repairGunUpgCurrCosts[gunStatsUpgrade];
+                        break;
+                    }
             }
-            
+
             if (player.playerShooter.gunSights != null)
                 player.playerShooter.gunSights.RefreshSettings();
         }
@@ -218,7 +219,7 @@ public class UIUpgrade : MonoBehaviour
             // PlayerStats
             upgLvl = upgradeManager.playerStatsUpgLevels[playerStatsUpgrade];
             maxLvl = upgradeManager.playerStatsUpgMaxLevels[playerStatsUpgrade];
-            upgCost = Mathf.FloorToInt(upgradeManager.playerStatsCostMult * 
+            upgCost = Mathf.FloorToInt(upgradeManager.playerStatsCostMult *
                         upgradeManager.playerStatsUpgCurrCosts[playerStatsUpgrade]);
             statValueString = UpgStatGetter.GetStatValue(player, playerStatsUpgrade);
             upgAmountString = UpgStatGetter.GetUpgAmount(playerStatsUpgrade, upgradeManager);
@@ -228,10 +229,20 @@ public class UIUpgrade : MonoBehaviour
             // StructureStats
             upgLvl = upgradeManager.structureStatsUpgLevels[structureStatsUpgrade];
             maxLvl = upgradeManager.structureStatsUpgMaxLevels[structureStatsUpgrade];
-            upgCost = Mathf.FloorToInt(upgradeManager.structureStatsCostMult * 
+            upgCost = Mathf.FloorToInt(upgradeManager.structureStatsCostMult *
                         upgradeManager.structureStatsUpgCurrCosts[structureStatsUpgrade]);
             statValueString = UpgStatGetter.GetStatValue(upgradeManager.player, structureStatsUpgrade);
             upgAmountString = UpgStatGetter.GetUpgAmount(structureStatsUpgrade);
+        }
+        else if (upgradeFamily == UpgradeFamily.DroneStats)
+        {
+            // DroneStats
+            upgLvl = upgradeManager.droneStatsUpgLevels[droneStatsUpgrade];
+            maxLvl = upgradeManager.droneStatsUpgMaxLevels[droneStatsUpgrade];
+            upgCost = Mathf.FloorToInt(upgradeManager.droneStatsCostMult *
+                        upgradeManager.droneStatsUpgCurrCosts[droneStatsUpgrade]);
+            statValueString = UpgStatGetter.GetStatValue(droneStatsUpgrade);
+            upgAmountString = UpgStatGetter.GetUpgAmount(droneStatsUpgrade);
         }
         
         // Change cost text color depending on affordability
