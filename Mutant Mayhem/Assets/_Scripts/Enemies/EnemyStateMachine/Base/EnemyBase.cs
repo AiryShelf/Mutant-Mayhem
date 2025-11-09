@@ -255,7 +255,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         meleeController.meleeDamage *= areaScale * waveController.damageMultiplier;
         meleeController.attackDelay = meleeController.attackDelayStart * waveController.attackDelayMult;
         meleeController.knockback *= areaScale;
-        //meleeController.selfKnockback *= randomSizeFactor; no good?
+        meleeController.selfKnockback *= areaScale;
         rb.mass = startMass * areaScale;
         moveSpeedBase *= rb.mass * waveController.speedMultiplier;
         animControllerEnemy.animSpeedFactor *= 8 / transform.localScale.x; // inversely scale anim speed with size
@@ -312,14 +312,16 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     public void Knockback(Vector2 dir, float knockback)
     {
-        if (EnemyChaseSOBaseInstance != null && EnemyChaseSOBaseInstance.isInAir)
-            EnemyChaseSOBaseInstance.ApplyAirImpulse(dir * knockback);
+        if (EnemyChaseSOBaseInstance != null && EnemyChaseSOBaseInstance.isInAirJumping)
+            EnemyChaseSOBaseInstance.ApplyJumpAirImpulse(dir * knockback);
         else
             health.Knockback(dir, knockback);
     }
 
     public virtual void Die()
     {
+        // Exit state machine
+        StateMachine.ChangeState(IdleState);
         PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 

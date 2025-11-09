@@ -22,6 +22,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b21c583d2f34d49228dd989b7c86c45b, type: 2}
   terrainTile: {fileID: 11400000, guid: 35a53aa0304e2495a8f4e13616494163, type: 2}
   mission: {fileID: 11400000, guid: d844691a7e109ed4daf7993e3620fc80, type: 2}
+  planetDialogue: {fileID: 0}
   nightToSurvive: 20
   highRezPlanetPrefab: {fileID: 7682716504387378719, guid: 0e7ef414a44e84966bfebe6a96c0cf2f, type: 3}
   prerequisitePlanets:
@@ -48,8 +49,8 @@ MonoBehaviour:
   healthMultiplier: 1.75
   speedMultiplier: 1.75
   sizeMultiplier: 1
-  mutationChance: 0.1
-  addMutationChancePerWave: 0.02
+  mutationChance: 0.01
+  addMutationChancePerWave: 0.003
   mutationChanceMax: 0.3
   mutationIntensity: 0.1
   addMutationIntensityPerWave: 0.01

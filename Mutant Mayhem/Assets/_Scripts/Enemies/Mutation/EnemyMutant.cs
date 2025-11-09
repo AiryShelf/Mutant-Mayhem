@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class EnemyMutant : EnemyBase
 {
-    public MutantIndividual individual;
+    public GeneticIndividual individual;
 
     [Header("Mutation")]
     public MutantRenderer mutantRenderer;
     public Rigidbody2D mutantRb;
     public PolygonCollider2D bodyCollider;
     public BoxCollider2D meleeCollider;
-    public float healthFitnessMultiplier = 0.25f;
+    public float fighterHealthFitnessMultiplier = 0.1f; // Multiplier for fitness if fighter does no damage
 
     public override void Awake()
     {
@@ -27,7 +27,7 @@ public class EnemyMutant : EnemyBase
         InitializeStateMachine();
     }
 
-    public void InitializeMutant(MutantIndividual ind)
+    public void InitializeMutant(GeneticIndividual ind)
     {
         if (ind == null)
         {
@@ -49,7 +49,7 @@ public class EnemyMutant : EnemyBase
         ApplyGenomeToEnemyRenderer();
     }
 
-    public void AssignIndividual(MutantIndividual individual)
+    public void AssignIndividual(GeneticIndividual individual)
     {
         if (individual == null)
         {
@@ -107,7 +107,7 @@ public class EnemyMutant : EnemyBase
         SetMeleeSettings(g);
 
         // Set movement speed and a minimum based on mass
-        moveSpeedBase *= Mathf.Clamp(g.legGene.scale * g.legGene.scale, rb.mass * 1.6f, float.MaxValue);
+        moveSpeedBase *= rb.mass * waveController.speedMultiplier;
         //Debug.Log($"EnemyMutant - MoveSpeedBase: {moveSpeedBase}, Mass: {rb.mass}");
 
        // Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");
@@ -151,7 +151,6 @@ public class EnemyMutant : EnemyBase
         unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
     }
 
-
     void SetMeleeSettings(Genome g)
     {
         float areaScale = g.bodyGene.scale * g.headGene.scale;
@@ -175,21 +174,21 @@ public class EnemyMutant : EnemyBase
         }
         
         float fitness;
-        if (individual.variant == MutantVariant.Fighter)
+        if (individual.variant == PopulationVariantType.Fighter)
         {
             fitness = meleeController.playerDamageDealt
                         + meleeController.structureDamageDealt / 2;
             if (fitness <= 0)
-                fitness = health.GetMaxHealth() * healthFitnessMultiplier;
+                fitness = health.GetMaxHealth() * fighterHealthFitnessMultiplier;
             individual.AddFitness(fitness);
         }
         else
         {
-            fitness = health.GetMaxHealth() + meleeController.structureDamageDealt;
+            fitness = health.GetMaxHealth() / 2 + meleeController.structureDamageDealt;
             individual.AddFitness(fitness);
         }
 
-        //Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
+        Debug.Log($"Mutant {individual.variant} died with fitness: {fitness}");
     }
     
     #endregion

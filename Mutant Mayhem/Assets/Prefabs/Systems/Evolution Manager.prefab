@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8790059532489888509, guid: 0769dd32b958c4ff38dbf2924d8f18cb, type: 3}
-  populationPerVariant: 3
-  mutationRate: 0.2
   difficultyScaleTotal: 32
   difficultyScalePerWave: 0.2
-  _currentWave: 0
+  minLifetimesToEvolve: 2
+  minPopSizeToEvolve: 3
+  _currentSubwaveCount: 0
+  populationCount: 0

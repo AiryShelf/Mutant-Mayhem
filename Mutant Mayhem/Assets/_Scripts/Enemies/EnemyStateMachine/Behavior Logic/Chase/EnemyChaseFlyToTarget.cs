@@ -7,6 +7,7 @@ using UnityEngine;
                  menuName = "Enemy Logic/Chase Logic/Direct Chase Fly to Target")]
 public class EnemyChaseFlyToTarget : EnemyChaseSOBase
 {
+    [Header("Chase Fly To Target Settings:")]
     [SerializeField] private float moveSpeedMult = 1.2f;
     [SerializeField] LayerMask hitLayers;
 

@@ -47,14 +47,14 @@ public class EnemyChaseSOBase : ScriptableObject
     protected Vector2 localScaleStart;
 
     [Header("Airborne Knockback Settings")]
-    public bool isInAir = false;                        // True while in jump arc
+    public bool isInAirJumping = false;                        // True while in jump arc
     [SerializeField] float airMassMult = 0.5f;          // Multiplies mass while airborne
     [SerializeField] float airDrag = 3.0f;              // Higher = fades knockback faster
     [SerializeField] float airMaxSpeed = 12.0f;         // Safety cap on how fast the offset can move
 
     // Runtime state during jump
-    protected Vector2 airVel;     // velocity of the additive offset (m/s)
-    protected Vector2 airOffset;  // integrated offset added to the jump parabola
+    protected Vector2 jumpAirVel;     // velocity of the additive offset (m/s)
+    protected Vector2 jumpAirOffset;  // integrated offset added to the jump parabola
     EnemyShootSOBase enemyShootSOBaseInstance;
 
     #region State Machine
@@ -72,7 +72,7 @@ public class EnemyChaseSOBase : ScriptableObject
         isJumping = false;
         jumpCoroutineStarted = false;
         canExit = true;
-        isInAir = false;
+        isInAirJumping = false;
         
         if (enemyBase.EnemyShootSOBaseInstance != null)
             distanceToStartShooting = enemyBase.EnemyShootSOBaseInstance.distanceToStartShooting;
@@ -335,12 +335,12 @@ public class EnemyChaseSOBase : ScriptableObject
         yield return new WaitForSeconds(freezeBeforeJump);  // A quick grace-freeze before jump
 
         // Reset airborne knockback state
-        airVel = Vector2.zero;
-        airOffset = Vector2.zero;
+        jumpAirVel = Vector2.zero;
+        jumpAirOffset = Vector2.zero;
 
         // Perform the jump arc and scale effect
         canExit = false;
-        isInAir = true;
+        isInAirJumping = true;
         enemyBase.meleeController.isElevated = true;
         enemyBase.gameObject.layer = LayerMask.NameToLayer("FlyingEnemies");
         enemyBase.animControllerEnemy.SetSitAnimation(false);
@@ -362,24 +362,24 @@ public class EnemyChaseSOBase : ScriptableObject
 
             // Integrate airborne knockback offset
             // Linear drag towards zero velocity
-            if (airVel.sqrMagnitude > 0f)
+            if (jumpAirVel.sqrMagnitude > 0f)
             {
                 // move velocity toward zero by airDrag * dt (critically damp-ish)
-                float vMag = airVel.magnitude;
+                float vMag = jumpAirVel.magnitude;
                 float decel = airDrag * dt;
                 float newMag = Mathf.Max(0f, vMag - decel);
-                airVel = (vMag > 0f) ? airVel * (newMag / vMag) : Vector2.zero;
+                jumpAirVel = (vMag > 0f) ? jumpAirVel * (newMag / vMag) : Vector2.zero;
             }
 
             // Integrate offset
-            airOffset += airVel * dt;
+            jumpAirOffset += jumpAirVel * dt;
 
             // Safety clamp to avoid insane offsets
-            if (airOffset.sqrMagnitude > (jumpMaxDistance * jumpMaxDistance))
-                airOffset = airOffset.normalized * jumpMaxDistance;
+            if (jumpAirOffset.sqrMagnitude > (jumpMaxDistance * jumpMaxDistance))
+                jumpAirOffset = jumpAirOffset.normalized * jumpMaxDistance;
 
             // FINAL position = parabola + offset
-            Vector3 finalPos = basePos + (Vector3)airOffset;
+            Vector3 finalPos = basePos + (Vector3)jumpAirOffset;
             transform.position = finalPos;
 
             // Scale: 1.0 → jumpHeightScale at mid → 1.0
@@ -399,7 +399,7 @@ public class EnemyChaseSOBase : ScriptableObject
     void ResetJumpVariables()
     {
         canExit = true;
-        isInAir = false;
+        isInAirJumping = false;
         isJumping = false;
         jumpCoroutineStarted = false;
         jumpCoroutine = null;
@@ -409,16 +409,16 @@ public class EnemyChaseSOBase : ScriptableObject
         enemyBase.animControllerEnemy.SetSitAnimation(false);
     }
 
-    public void ApplyAirImpulse(Vector2 impulse)
+    public void ApplyJumpAirImpulse(Vector2 impulse)
     {
         // impulse is (force * deltaTime) or “instant” velocity change you choose
-        if (!isInAir) return; // let your ground knockback system handle ground
+        if (!isInAirJumping) return; // let your ground knockback system handle ground
 
         // Δv = impulse / mass
-        airVel += impulse / Mathf.Max(enemyBase.rb.mass * airMassMult, 0.0001f);
+        jumpAirVel += impulse / Mathf.Max(enemyBase.rb.mass * airMassMult, 0.0001f);
         // Optional: clamp instantaneous spike
-        if (airVel.sqrMagnitude > airMaxSpeed * airMaxSpeed)
-            airVel = airVel.normalized * airMaxSpeed;
+        if (jumpAirVel.sqrMagnitude > airMaxSpeed * airMaxSpeed)
+            jumpAirVel = jumpAirVel.normalized * airMaxSpeed;
     }
     
     #endregion

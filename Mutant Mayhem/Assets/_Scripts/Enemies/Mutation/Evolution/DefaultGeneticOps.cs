@@ -74,13 +74,14 @@ public class DefaultGeneticOps
 
         if (population.Count > 0)
         {
-            var allIndividuals = new List<MutantIndividual>();
+            var allIndividuals = new List<GeneticIndividual>();
             foreach (var list in population.Values)
                 allIndividuals.AddRange(list);
             Debug.Log("[Mutate] All individuals count: " + allIndividuals.Count);
 
             if (allIndividuals.Count > 0)
             {
+                // Mutate only one part per mutation call
                 bool partWasMutated = false;
                 genome.bodyGene = MutateGene(genome, g => g.bodyGene, allIndividuals, 
                                              ref partWasMutated, mutationChance, "body");
@@ -96,7 +97,7 @@ public class DefaultGeneticOps
                     + (WaveControllerRandom.Instance.currentWaveIndex
                     * PlanetManager.Instance.currentPlanet.addMutationIntensityPerWave);
         float deltaDown = -delta / 2;
-        Debug.Log("[GeneticOps] Mutate scale delta up " + delta + ", delta down " + deltaDown);
+        Debug.Log("[GeneticOps] Mutate scale between: delta up " + delta + ", delta down " + deltaDown);
 
         if (Random.value < mutationChance)
         {
@@ -146,9 +147,9 @@ public class DefaultGeneticOps
     private T RandomChoice<T>(T[] arr) => arr[Random.Range(0, arr.Length)];
     private T RandomChoice<T>(List<T> list) => list[Random.Range(0, list.Count)];
 
-    private T MutateGene<T>(Genome genome, System.Func<Genome, T> geneSelector, List<MutantIndividual> allIndividuals, ref bool mutatedPart, float mutationRate, string partName) where T : GeneSOBase
+    private T MutateGene<T>(Genome genome, System.Func<Genome, T> geneSelector, List<GeneticIndividual> allIndividuals, ref bool mutatedPart, float mutationChance, string partName) where T : GeneSOBase
     {
-        if (Random.value < mutationRate && !mutatedPart)
+        if (Random.value < mutationChance && !mutatedPart)
         {
             T currentGene = geneSelector(genome);
             T newGene = geneSelector(RandomChoice(allIndividuals).genome);
