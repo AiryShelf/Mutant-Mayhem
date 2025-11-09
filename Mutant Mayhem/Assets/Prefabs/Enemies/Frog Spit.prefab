@@ -143,9 +143,9 @@ MonoBehaviour:
   objectPoolName: Frog_Spit
   AiTrggerPrefab: {fileID: 0}
   AITriggerSize: 0
-  damage: 1
-  damageVariance: 2
-  knockback: 1
+  damage: 0.5
+  damageVarianceFactor: 0.1
+  knockback: 20
   destroyTime: 5
   velocity: {x: 0, y: 0}
   origin: {fileID: 0}

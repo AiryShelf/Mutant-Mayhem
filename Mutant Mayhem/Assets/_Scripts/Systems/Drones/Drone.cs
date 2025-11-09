@@ -444,6 +444,8 @@ public class Drone : MonoBehaviour
         }
         else if (job.jobType == DroneJobType.Recharge)
         {
+            jobDone = false;
+            currentJob = job;
             // Do nothing, handled in DroneContainer
         }
         else

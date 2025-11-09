@@ -73,6 +73,12 @@ public static class UpgStatGetter
             case ConsumablesUpgrade.BuyAttackDrone:
                 stat = DroneManager.Instance.activeAttackDrones.Count.ToString();
                 return stat;
+            case ConsumablesUpgrade.SellConstructionDrone:
+                stat = DroneManager.Instance.activeConstructionDrones.Count.ToString();
+                return stat;
+            case ConsumablesUpgrade.SellAttackDrone:
+                stat = DroneManager.Instance.activeAttackDrones.Count.ToString();
+                return stat;
         }
 
         return stat;
@@ -248,6 +254,12 @@ public static class UpgStatGetter
             case ConsumablesUpgrade.BuyAttackDrone:
                 amount = "+" + BuyAttackDroneUpgrade.Amount.ToString();
                 return amount;
+            case ConsumablesUpgrade.SellConstructionDrone:
+                amount = "-" + SellConstructionDroneUpgrade.Amount.ToString();
+                return amount;
+            case ConsumablesUpgrade.SellAttackDrone:
+                amount = "-" + SellAttackDroneUpgrade.Amount.ToString();
+                return amount;
         }
 
         return amount;
@@ -377,6 +389,12 @@ public static class UpgStatGetter
                 return cost;
             case ConsumablesUpgrade.BuyAttackDrone:
                 cost = BuyAttackDroneUpgrade.GetCost(player, upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+            case ConsumablesUpgrade.SellConstructionDrone:
+                cost = SellConstructionDroneUpgrade.GetCost(upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+            case ConsumablesUpgrade.SellAttackDrone:
+                cost = SellAttackDroneUpgrade.GetCost(upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
                 return cost;
         }
 

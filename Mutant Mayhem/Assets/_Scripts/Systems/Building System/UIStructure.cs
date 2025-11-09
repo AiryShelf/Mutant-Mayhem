@@ -158,18 +158,18 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             if (structureSO.powerCost <= PowerManager.Instance.powerBalance)
             {
                 powerCostColorTag = yellowColorTag;
-                powerString = $"{powerCostColorTag}<sprite=1>-{structureSO.powerCost}{endColorTag}, ";
+                powerString = $"{powerCostColorTag}<sprite=1>-{structureSO.powerCost}{endColorTag} ";
             }
             else
             {
                 powerCostColorTag = redColorTag;
-                powerString = $"{powerCostColorTag}<sprite=0>-{structureSO.powerCost}{endColorTag}, ";
+                powerString = $"{powerCostColorTag}<sprite=0>-{structureSO.powerCost}{endColorTag} ";
             }
         }
         else if (structureSO.powerCost < 0)
         {
             powerCostColorTag = greenColorTag;
-            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(structureSO.powerCost)}{endColorTag}, ";
+            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(structureSO.powerCost)}{endColorTag} ";
         }
 
         // Create string for supply cost/gain
@@ -182,12 +182,12 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             else
                 supplyCostColorTag = redColorTag;
 
-            supplyString = $"{supplyCostColorTag}<sprite=2>-{structureSO.supplyCost}{endColorTag}, ";
+            supplyString = $"{supplyCostColorTag}<sprite=2>-{structureSO.supplyCost}{endColorTag}";
         }
         else if (structureSO.supplyCost < 0)
         {
             supplyCostColorTag = greenColorTag;
-            supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(structureSO.supplyCost)}{endColorTag}, ";
+            supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(structureSO.supplyCost)}{endColorTag}";
         }
 
         // Set yellow or red depending on affordability
@@ -196,13 +196,13 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         {
             textInstance.GetComponent<TextMeshProUGUI>().text =
             structureSO.tileName + "\n" +
-            powerString + supplyString + yellowColorTag + "$" + totalCost + endColorTag;
+            yellowColorTag + "$" + totalCost + " " + endColorTag + powerString + supplyString;
         }
         else
         {
             textInstance.GetComponent<TextMeshProUGUI>().text =
             structureSO.tileName + "\n" +
-            powerString + supplyString + redColorTag + "$" + totalCost + endColorTag;
+            redColorTag + "$" + totalCost + " " + endColorTag + powerString + supplyString;
         }
     }
 

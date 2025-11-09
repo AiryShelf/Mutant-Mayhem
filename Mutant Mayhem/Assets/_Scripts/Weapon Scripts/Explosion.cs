@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Explosion : MonoBehaviour
 {
+    [SerializeField] string explosionObjectPoolName = "Explosion";
     [SerializeField] SoundSO explosionSound;
+    [SerializeField] Light2D explosionFlash;
 
     [Header("Explosion Settings")]
-    [SerializeField] bool explodeOnStart = true;
+    [SerializeField] float returnToPoolTime = 60f;
+    float flashIntensityStart = 0f;
+    [SerializeField] float flashFadeRate = 0.1f;
     [SerializeField] LayerMask layersToHit;
     [SerializeField] float force;
     [SerializeField] float radius;
@@ -17,11 +22,23 @@ public class Explosion : MonoBehaviour
     
     List<Vector3Int> visibleTiles = new List<Vector3Int>();
     TileManager tileManager;
+    bool initialized = false;
 
-    void Start()
+    void Awake()
     {
-        // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
+        if (explosionFlash != null)
+        {
+            flashIntensityStart = explosionFlash.intensity;
+        }
+    }
 
+    void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    public void Explode()
+    {
         tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)
         {
@@ -29,26 +46,46 @@ public class Explosion : MonoBehaviour
             return;
         }
 
-        if (explodeOnStart)
-        {
-            TriggerExplosion();
-        }
-    }
-
-    public void TriggerExplosion()
-    {
         AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
         // Find grid tiles in range
         Vector2 explosionPos = transform.position;
         List<Vector3Int> tilesToCheck = GetTilesInRadius(explosionPos, tileManager);
 
-        Explode(explosionPos, tilesToCheck, tileManager);
+        GetTiles(explosionPos, tilesToCheck, tileManager);
         ApplyDamageToEntitiesInTiles(explosionPos, visibleTiles);
+        StartCoroutine(ReturnToPoolAfterTime(returnToPoolTime));
     }
 
-    void Explode(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
+    IEnumerator ReturnToPoolAfterTime(float time)
     {
+        while (time > 0)
+        {
+            // Handle flash fade
+            if (explosionFlash != null)
+            {
+                explosionFlash.intensity = Mathf.Max(0, explosionFlash.intensity - flashFadeRate);
+                if (explosionFlash.intensity <= 0)
+                    explosionFlash.gameObject.SetActive(false);
+            }
+
+            time -= Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        if (explosionFlash != null)
+        {
+            explosionFlash.intensity = flashIntensityStart;
+            explosionFlash.gameObject.SetActive(true);
+        }
+        
+        PoolManager.Instance.ReturnToPool(explosionObjectPoolName, gameObject);
+    }
+
+    void GetTiles(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
+    {
+        // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
+
         List<Vector3Int> hitTiles = new List<Vector3Int>();
 
         // Check each tile in radius
@@ -275,4 +312,3 @@ public class Explosion : MonoBehaviour
         }
     }
 }
-    

@@ -106,7 +106,8 @@ public class EnemyMutant : EnemyBase
         SetCombinedPolygonCollider(g);
         SetMeleeSettings(g);
 
-        moveSpeedBase *= Mathf.Clamp(g.legGene.scale * g.legGene.scale, 1, float.MaxValue);
+        // Set movement speed and a minimum based on mass
+        moveSpeedBase *= Mathf.Clamp(g.legGene.scale * g.legGene.scale, rb.mass * 1.6f, float.MaxValue);
         //Debug.Log($"EnemyMutant - MoveSpeedBase: {moveSpeedBase}, Mass: {rb.mass}");
 
        // Debug.Log($"Applied genome scales - Body: {g.bodyGene.scale}, Head: {g.headGene.scale}, Legs: {g.legGene.scale}");

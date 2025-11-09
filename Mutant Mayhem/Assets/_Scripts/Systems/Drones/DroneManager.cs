@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 public class DroneManager : MonoBehaviour
 {
     public static DroneManager Instance;
+
+    public static Action<int> OnDroneCountChanged;
 
     [Header("Base Stats and Upgrade Multipliers:")]
     public int droneSpeedMult = 1;
@@ -92,6 +95,9 @@ public class DroneManager : MonoBehaviour
                 activeAttackDrones.Add(newDrone);
             else
                 activeConstructionDrones.Add(newDrone);
+
+            OnDroneCountChanged?.Invoke(allActiveDrones.Count);
+
             return true;
         }
 
@@ -111,6 +117,8 @@ public class DroneManager : MonoBehaviour
                 activeAttackDrones.Remove(drone);
                 break;
         }
+
+        OnDroneCountChanged?.Invoke(allActiveDrones.Count);
 
         //drone.powerConsumer.RemoveConsumer();
         PoolManager.Instance.ReturnToPool(drone.objectPoolName, drone.gameObject);
@@ -234,6 +242,7 @@ public class DroneManager : MonoBehaviour
         Drone droneToSell = droneContainer.GetDroneToSell(droneType);
         if (droneToSell != null)
         {
+            Debug.Log("Selling drone of type: " + droneType);
             droneToSell.Die();
             return true;
         }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SupplyManager : MonoBehaviour
@@ -96,6 +95,7 @@ public class SupplyManager : MonoBehaviour
         SupplyConsumption = 0;
     }
 
+    static int _previousExcessSupply = 0;
     // Called when Produced supply exceeds the limit
     static void LimitSupplyProduction()
     {
@@ -113,10 +113,12 @@ public class SupplyManager : MonoBehaviour
 
         SupplyBalance = SupplyProduced - excessSupply - SupplyConsumption;
 
-        if (excessSupply > 0)
+        if (excessSupply > 0 && excessSupply != _previousExcessSupply)
         {
             SupplyLimitReachedMessage();
         }
+
+        _previousExcessSupply = excessSupply;
         //Debug.Log($"Supply production limited by {excessSupply} to not exceed limit of {SupplyLimit}");
     }
 

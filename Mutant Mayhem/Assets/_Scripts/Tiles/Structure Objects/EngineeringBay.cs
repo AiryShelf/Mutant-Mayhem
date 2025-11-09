@@ -19,6 +19,9 @@ public class EngineeringBay : MonoBehaviour, IPowerConsumer, ITileObject, ITileO
         {
             GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
             explosion.transform.position = transform.position;
+            Explosion explosionComp = explosion.GetComponent<Explosion>();
+            if (explosionComp != null)
+                explosionComp.Explode();
         }
     }
     

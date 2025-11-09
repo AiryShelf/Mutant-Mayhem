@@ -252,7 +252,7 @@ public class Shooter : MonoBehaviour
         if (isElevated && bullet.bulletLight != null)
             bullet.bulletLight.shadowsEnabled = false;
         bullet.damage = damage;
-        bullet.damageVariance = currentGunSO.damageVariance;
+        bullet.damageVarianceFactor = currentGunSO.damageVariance;
         bullet.origin = this.transform;
         bullet.knockback = currentGunSO.knockback;
         bullet.destroyTime = currentGunSO.bulletLifeTime;

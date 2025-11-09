@@ -20,6 +20,10 @@ public class MineDetonator : MonoBehaviour
 
         GameObject obj = PoolManager.Instance.GetFromPool(explosionPoolName);
         obj.transform.position = transform.position;
+        Explosion explosion = obj.GetComponent<Explosion>();
+        if (explosion != null)
+            explosion.Explode();
+            
         TileManager.Instance.ModifyHealthAt(transform.position, -int.MaxValue, 0, Vector2.zero);
         Destroy(gameObject);
     }

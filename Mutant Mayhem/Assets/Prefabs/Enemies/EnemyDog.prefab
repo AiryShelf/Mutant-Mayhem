@@ -61,8 +61,8 @@ MonoBehaviour:
   knockbackMaster: 7
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
-  moveSpeedBaseStart: 4
-  moveSpeedBase: 4
+  moveSpeedBaseStart: 7
+  moveSpeedBase: 7
   rotateSpeedBase: 4
   isMutant: 0
   randSpeedRange: 0.1
@@ -124,8 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 0.25
-  switchToRunBuffer: 7
+  animSpeedFactor: 0.2
+  switchToRunBuffer: 5
   maxAnimSpeed: 10
   myAnimator: {fileID: 0}
 --- !u!50 &3574965776305570190

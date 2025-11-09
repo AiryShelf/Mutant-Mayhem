@@ -61,8 +61,8 @@ MonoBehaviour:
   knockbackMaster: 7
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
-  moveSpeedBaseStart: 1.1
-  moveSpeedBase: 1.1
+  moveSpeedBaseStart: 3.5
+  moveSpeedBase: 3.5
   rotateSpeedBase: 2
   isMutant: 0
   randSpeedRange: 0.1
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 0.2
+  animSpeedFactor: 0.18
   switchToRunBuffer: 1.6
   maxAnimSpeed: 3
   myAnimator: {fileID: 0}
@@ -174,7 +174,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.3
+  m_Mass: 0.5
   m_LinearDrag: 3
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -292,7 +292,7 @@ MonoBehaviour:
   - {x: -0.025125083, y: -0.045585968, z: 0}
   m_ShapePathHash: -232648934
   m_Mesh: {fileID: 0}
-  m_InstanceId: 104844
+  m_InstanceId: 253952
   m_LocalBounds:
     m_Center: {x: 0.00024374202, y: -0.00013599545, z: 0}
     m_Extent: {x: 0.03492998, y: 0.045548275, z: 0}
@@ -508,12 +508,16 @@ PrefabInstance:
       value: MeleeNew
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
+      propertyPath: knockback
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: meleeDamage
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: knockbackStart
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 7273215281728813120, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}
       propertyPath: attackDelayStart

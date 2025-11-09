@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour
 
     [Header("Set by GunSO for Player, and manually here for Enemies' projectiles")]
     public float damage = 10;
-    public float damageVariance;
+    public float damageVarianceFactor; // e.g., 0.1 = ±10% damage variance
     public float knockback = 1f;
     public float destroyTime;
     [HideInInspector] public Vector2 velocity;
@@ -109,9 +109,8 @@ public class Bullet : MonoBehaviour
             (isCritical, critMult) = criticalHit.RollForCrit(critChanceMult, critDamageMult);
 
         float damageNew = damage;
-        damageNew *= 1 + Random.Range(-damageVariance, damageVariance);
+        damageNew *= 1 + Random.Range(-damageVarianceFactor, damageVarianceFactor);
         damageNew *= critMult;
-
 
         Vector2 hitDir = transform.right;
         EnemyBase enemy = otherCollider.GetComponent<EnemyBase>();

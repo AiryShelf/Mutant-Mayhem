@@ -247,7 +247,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         float areaScale = transform.localScale.x * transform.localScale.y;
 
         // Set these stats by areaScale to keep health and damage proportional to size
-        moveSpeedBase *= areaScale * waveController.speedMultiplier;
+        
         health.SetMaxHealth(areaScale * health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
 
@@ -257,6 +257,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         meleeController.knockback *= areaScale;
         //meleeController.selfKnockback *= randomSizeFactor; no good?
         rb.mass = startMass * areaScale;
+        moveSpeedBase *= rb.mass * waveController.speedMultiplier;
         animControllerEnemy.animSpeedFactor *= 8 / transform.localScale.x; // inversely scale anim speed with size
         animControllerEnemy.switchToRunBuffer *= 8 / transform.localScale.x;
 
@@ -331,15 +332,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         //Debug.Log("checking isSprinting: " + EnemyChaseSOBaseInstance.isSprinting);
         if (!isHit)
         {
-            if (EnemyChaseSOBaseInstance.isSprinting)
-                rb.AddForce(moveSpeedBase * slowFactor * velocity); 
-            else 
-            {
-                Vector2 force = moveSpeedBase * slowFactor * velocity;
-                Vector2 acc = force / rb.mass;
-                Vector2 deltaV = acc * Time.fixedDeltaTime;
-                rb.velocity += deltaV;  
-            }
+            rb.AddForce(moveSpeedBase * slowFactor * velocity); 
         }  
     }
 

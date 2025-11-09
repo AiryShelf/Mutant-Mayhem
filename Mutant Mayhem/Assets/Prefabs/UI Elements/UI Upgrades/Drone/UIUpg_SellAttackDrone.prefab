@@ -56,16 +56,18 @@ MonoBehaviour:
   upgradeFamily: 2
   playerStatsUpgrade: 0
   structureStatsUpgrade: 0
-  consumablesUpgrade: 5
+  consumablesUpgrade: 7
   gunStatsUpgrade: 0
+  droneStatsUpgrade: 0
   buttonImage: {fileID: 1680538786241877614}
   buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 6087908181822164550}
   unlocked: 1
-  UiName: Buy Attack Drone
-  powerCost: 10
-  supplyCost: 5
-  tooltipDescription: Adds one Attack Drone to the hangar
+  UiName: Sell Attack Drone
+  powerCost: 0
+  supplyCost: -5
+  tooltipDescription: Sells one Attack Drone from the hangar.  Drone must be docked
+    to be sold
   showLevelsText: 0
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
   playerGunIndex: 0

@@ -54,9 +54,13 @@ public class DroneContainer : MonoBehaviour
                 // If docked, recharge energy of one drone at a time
                 if (drone.isDocked)
                 {
+                    // Only recharge one drone at a time
                     if (droneBeingRecharged != null && drone != droneBeingRecharged)
                         continue;
 
+                    if (drone.energy >= drone.energyMax)
+                        continue;
+                        
                     drone.SetJob(new DroneJob(DroneJobType.Recharge, Vector2.zero));
                     droneBeingRecharged = drone;
                     drone.energy += DroneManager.Instance.droneHangarRechargeSpeed;

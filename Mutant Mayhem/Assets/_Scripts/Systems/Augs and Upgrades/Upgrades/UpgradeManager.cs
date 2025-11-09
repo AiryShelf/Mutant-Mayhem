@@ -432,6 +432,10 @@ public class UpgradeManager : MonoBehaviour
                 return new BuyConstructionDroneUpgrade();
             case ConsumablesUpgrade.BuyAttackDrone:
                 return new BuyAttackDroneUpgrade();
+            case ConsumablesUpgrade.SellConstructionDrone:
+                return new SellConstructionDroneUpgrade();
+            case ConsumablesUpgrade.SellAttackDrone:
+                return new SellAttackDroneUpgrade();
 
             default:
                 return null;
@@ -640,6 +644,13 @@ public class UpgradeManager : MonoBehaviour
         }
         else
         {
+            if (upgType == ConsumablesUpgrade.SellAttackDrone ||
+                upgType == ConsumablesUpgrade.SellConstructionDrone)
+            {
+                //Debug.Log("No drones to sell for: " + upgType);
+                MessageBanner.PulseMessage("No docked drones to sell!", Color.yellow);
+                return;
+            }
             //Debug.Log(upgType + " already full");
             MessageBanner.PulseMessage("It's already full", Color.yellow);
             return;

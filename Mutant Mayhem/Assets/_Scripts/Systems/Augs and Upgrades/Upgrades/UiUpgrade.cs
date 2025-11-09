@@ -46,15 +46,18 @@ public class UIUpgrade : MonoBehaviour
     void OnEnable()
     {
         buttonImageStartColor = buttonImage.color;
-        BuildingSystem.OnPlayerCreditsChanged += UpdateTextDelay;
+        BuildingSystem.OnPlayerCreditsChanged += UpdateTextCredits;
+        DroneManager.OnDroneCountChanged += UpdateTextDrones;
+        
 
         if (initialized)
-            UpdateTextDelay(BuildingSystem.PlayerCredits);
+            UpdateTextCredits(BuildingSystem.PlayerCredits);
     }
 
     void OnDisable()
     {
-        BuildingSystem.OnPlayerCreditsChanged -= UpdateTextDelay;
+        BuildingSystem.OnPlayerCreditsChanged -= UpdateTextCredits;
+        DroneManager.OnDroneCountChanged -= UpdateTextDrones;
 
         StopAllCoroutines();
     }
@@ -113,6 +116,9 @@ public class UIUpgrade : MonoBehaviour
             case UpgradeFamily.GunStats:
                 upgradeManager.OnUpgradeButtonClicked(gunStatsUpgrade, playerGunIndex);
                 break;
+            case UpgradeFamily.DroneStats:
+                upgradeManager.OnUpgradeButtonClicked(droneStatsUpgrade);
+                break;
             default:
                 Debug.LogWarning("Unhandled upgrade family: " + upgradeFamily);
                 break;
@@ -121,10 +127,15 @@ public class UIUpgrade : MonoBehaviour
         UpdateText(BuildingSystem.PlayerCredits);
     }
 
-    void UpdateTextDelay(float playerCredits)
+    void UpdateTextCredits(float playerCredits)
     {
         StartCoroutine(UpdateTextDelayed(playerCredits));
     }
+
+    void UpdateTextDrones(int droneCount)
+    {
+        StartCoroutine(UpdateTextDelayed(BuildingSystem.PlayerCredits));
+    }   
 
     IEnumerator UpdateTextDelayed(float playerCredits)
     {
@@ -260,18 +271,18 @@ public class UIUpgrade : MonoBehaviour
             if (powerCost <= PowerManager.Instance.powerBalance)
             {
                 powerCostColorTag = yellowColorTag;
-                powerString = $"{powerCostColorTag}<sprite=1>-{powerCost}{endColorTag}, ";
+                powerString = $"{powerCostColorTag}<sprite=1>-{powerCost}{endColorTag}";
             }
             else
             {
                 powerCostColorTag = redColorTag;
-                powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}, ";
+                powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}";
             }
         }
         else if (powerCost < 0)
         {
             powerCostColorTag = greenColorTag;
-            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(powerCost)}{endColorTag}, ";
+            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(powerCost)}{endColorTag}";
         }
         
         string supplyString = "";
@@ -281,18 +292,18 @@ public class UIUpgrade : MonoBehaviour
             if (supplyCost <= SupplyManager.SupplyBalance)
             {
                 supplyCostColorTag = yellowColorTag;
-                supplyString = $"{supplyCostColorTag}<sprite=2>-{supplyCost}{endColorTag}, ";
+                supplyString = $"{supplyCostColorTag}<sprite=2>-{supplyCost}{endColorTag}";
             }
             else
             {
                 supplyCostColorTag = redColorTag;
-                supplyString = $"{supplyCostColorTag}<sprite=3>-{supplyCost}{endColorTag}, ";
+                supplyString = $"{supplyCostColorTag}<sprite=3>-{supplyCost}{endColorTag}";
             }
         }
         else if (supplyCost < 0)
         {
             supplyCostColorTag = greenColorTag;
-            supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(supplyCost)}{endColorTag}, ";
+            supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(supplyCost)}{endColorTag}";
         }
         // Upgrade buttons text
         if (showLevelsText)
@@ -306,14 +317,14 @@ public class UIUpgrade : MonoBehaviour
             else
             {
                 upgradeText.text = $"{UiName}: {greenColorTag}{statValueString}{endColorTag} {cyanColorTag}{upgAmountString}{endColorTag}" + 
-                                    $"\n{greenColorTag}Lvl {upgLvl + 1}: {powerString}{costColorTag}${upgCost}{endColorTag}";
+                                    $"\n{greenColorTag}Lvl {upgLvl + 1}: {costColorTag}${upgCost}{endColorTag} {powerString}";
             }
         }
         else
         {
             // No levels text
             upgradeText.text = $"{UiName}: {greenColorTag}{statValueString}{endColorTag} {cyanColorTag}{upgAmountString}{endColorTag}" +
-                                $"\n{powerString} {supplyString} {costColorTag}${upgCost}{endColorTag}"; 
+                                $"\n{costColorTag}${upgCost}{endColorTag} {powerString} {supplyString}"; 
         }
 
         //Debug.Log("Upgrade UI text updated");

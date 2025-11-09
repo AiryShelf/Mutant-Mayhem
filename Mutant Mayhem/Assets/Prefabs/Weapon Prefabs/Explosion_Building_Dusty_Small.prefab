@@ -9660,88 +9660,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!1 &7839149271953022661
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 293091140478597015}
-  - component: {fileID: 6772064585279367696}
-  m_Layer: 0
-  m_Name: ExplosionFlash
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &293091140478597015
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7839149271953022661}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8519372874985122560}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6772064585279367696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7839149271953022661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ComponentVersion: 1
-  m_LightType: 3
-  m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0
-  m_LightVolumeIntensity: 1
-  m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000473099c077918778bb1f0873f33c0f81af41a11b0ba2f4fbe91bfeef6959b3525d220d4f
-  m_LightCookieSprite: {fileID: 0}
-  m_DeprecatedPointLightCookieSprite: {fileID: 0}
-  m_LightOrder: 0
-  m_AlphaBlendOnOverlap: 0
-  m_OverlapOperation: 0
-  m_NormalMapDistance: 3
-  m_NormalMapQuality: 0
-  m_UseNormalMap: 0
-  m_ShadowIntensityEnabled: 1
-  m_ShadowIntensity: 0.75
-  m_ShadowVolumeIntensityEnabled: 0
-  m_ShadowVolumeIntensity: 0.75
-  m_LocalBounds:
-    m_Center: {x: 0, y: -0.00000011920929, z: 0}
-    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
-  m_PointLightInnerAngle: 360
-  m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 1.89
-  m_PointLightOuterRadius: 10
-  m_ShapeLightParametricSides: 5
-  m_ShapeLightParametricAngleOffset: 0
-  m_ShapeLightParametricRadius: 1
-  m_ShapeLightFalloffSize: 0.5
-  m_ShapeLightFalloffOffset: {x: 0, y: 0}
-  m_ShapePath:
-  - {x: -0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: 0.5, z: 0}
-  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1 &8052207307674837536
 GameObject:
   m_ObjectHideFlags: 0
@@ -9751,7 +9669,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8519372874985122560}
-  - component: {fileID: 1943693705239214136}
   - component: {fileID: 4590187497705636545}
   - component: {fileID: 1459399991134938693}
   - component: {fileID: 7599369406812756531}
@@ -9778,25 +9695,8 @@ Transform:
   - {fileID: 9157833705186571142}
   - {fileID: 3564132733565780048}
   - {fileID: 642320746932656689}
-  - {fileID: 293091140478597015}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1943693705239214136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8052207307674837536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01026eafb4879524d82ea4bd11269dea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  explosionFlash: {fileID: 6772064585279367696}
-  explosionFlashObject: {fileID: 7839149271953022661}
-  flashDisappearRate: 0.1
-  effectDestroyTime: 60
 --- !u!114 &4590187497705636545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9809,8 +9709,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92945588c68b314da407858b5df2d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionObjectPoolName: Explosion_Building_Dusty_Small
   explosionSound: {fileID: 11400000, guid: f10d92d68294d41b4b3d0910290d712c, type: 2}
-  explodeOnStart: 1
+  explosionFlash: {fileID: 0}
+  returnToPoolTime: 60
+  flashFadeRate: 0.1
   layersToHit:
     serializedVersion: 2
     m_Bits: 37056

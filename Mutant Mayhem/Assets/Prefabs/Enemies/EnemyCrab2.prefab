@@ -61,8 +61,8 @@ MonoBehaviour:
   knockbackMaster: 7
   targetTransform: {fileID: 0}
   targetPos: {x: 0, y: 0}
-  moveSpeedBaseStart: 2.8
-  moveSpeedBase: 2.8
+  moveSpeedBaseStart: 3
+  moveSpeedBase: 3
   rotateSpeedBase: 2.8
   isMutant: 0
   randSpeedRange: 0.1
@@ -123,9 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83b82204ac77424c8d0984b4a24a5c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animSpeedFactor: 0.2
+  animSpeedFactor: 0.5
   switchToRunBuffer: 1.6
-  maxAnimSpeed: 1
+  maxAnimSpeed: 5
   myAnimator: {fileID: 0}
 --- !u!58 &8431538982880265398
 CircleCollider2D:

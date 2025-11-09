@@ -9751,7 +9751,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8519372874985122560}
-  - component: {fileID: 1943693705239214136}
   - component: {fileID: 4590187497705636545}
   - component: {fileID: 1459399991134938693}
   - component: {fileID: 7599369406812756531}
@@ -9781,22 +9780,6 @@ Transform:
   - {fileID: 293091140478597015}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1943693705239214136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8052207307674837536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01026eafb4879524d82ea4bd11269dea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  explosionFlash: {fileID: 6772064585279367696}
-  explosionFlashObject: {fileID: 7839149271953022661}
-  flashDisappearRate: 0.1
-  effectDestroyTime: 60
 --- !u!114 &4590187497705636545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9809,12 +9792,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92945588c68b314da407858b5df2d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionObjectPoolName: Explosion_Building_Fiery
   explosionSound: {fileID: 11400000, guid: b86cc2b46d5c54dedab3cc048b8a1771, type: 2}
-  explodeOnStart: 1
+  explosionFlash: {fileID: 6772064585279367696}
+  returnToPoolTime: 60
+  flashFadeRate: 0.1
   layersToHit:
     serializedVersion: 2
     m_Bits: 2134208
-  force: 100
+  force: 200
   radius: 4
   damage: 200
   wind: {fileID: 0}

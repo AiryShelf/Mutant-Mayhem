@@ -56,16 +56,18 @@ MonoBehaviour:
   upgradeFamily: 2
   playerStatsUpgrade: 0
   structureStatsUpgrade: 0
-  consumablesUpgrade: 4
+  consumablesUpgrade: 6
   gunStatsUpgrade: 0
+  droneStatsUpgrade: 0
   buttonImage: {fileID: 1680538786241877614}
   buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 6087908181822164550}
   unlocked: 1
-  UiName: Buy Construction Drone
-  powerCost: 4
-  supplyCost: 3
-  tooltipDescription: Adds one Construction Drone to the hangar
+  UiName: Sell Construction Drone
+  powerCost: 0
+  supplyCost: -3
+  tooltipDescription: Sells one Construction Drone from the hangar.  Drone must be
+    docked to be sold
   showLevelsText: 0
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
   playerGunIndex: 0
