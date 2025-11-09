@@ -383,7 +383,6 @@ public class Player : MonoBehaviour
         else if (Keyboard.current.digit5Key.isPressed)
         {
             animControllerPlayer.SwitchGunsStart(4);
-            toolbarSelector.SwitchBoxes(4);
         }
         else if ((Keyboard.current != null && Keyboard.current.cKey.isPressed) || 
                  (Gamepad.current != null && Gamepad.current.dpad.up.isPressed))
@@ -391,13 +390,11 @@ public class Player : MonoBehaviour
             if (playerShooter.currentGunIndex != 4)
             {
                 animControllerPlayer.SwitchGunsStart(4);
-                toolbarSelector.SwitchBoxes(4);
             }
             else 
             {
                 // Switch back to previous weapon
                 animControllerPlayer.SwitchGunsStart(previousGunIndex);
-                toolbarSelector.SwitchBoxes(previousGunIndex);
             }
             return;
         }
@@ -407,7 +404,6 @@ public class Player : MonoBehaviour
             if (index != -1)
             {
                 animControllerPlayer.SwitchGunsStart(index);
-                toolbarSelector.SwitchBoxes(index);
             }
         }
         else if (Gamepad.current != null && Gamepad.current.dpad.right.isPressed)
@@ -416,7 +412,6 @@ public class Player : MonoBehaviour
             if (index != -1)
             {
                 animControllerPlayer.SwitchGunsStart(index);
-                toolbarSelector.SwitchBoxes(index);
             }
         }
     }
@@ -441,7 +436,6 @@ public class Player : MonoBehaviour
         if (playerShooter.currentGunIndex != gunIndex && 
             animControllerPlayer.SwitchGunsStart(gunIndex))
         {
-            toolbarSelector.SwitchBoxes(gunIndex); 
             previousGunIndex = gunIndex;
         }
     }

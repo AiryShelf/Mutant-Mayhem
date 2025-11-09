@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: Chase-Jump Chase Target
   m_EditorClassIdentifier: 
   canExit: 1
-  distanceToStartShooting: 0
-  chanceToStartShootingPerFrame: 0.01
   timeToStopChase: 3
   TimeToCheckDistance: 0.3
   rotateSpeedMultiplier: 1.5
@@ -34,8 +32,8 @@ MonoBehaviour:
   jumpDuration: 1
   jumpAccuracyRadius: 1
   jumpCooldown: 2
-  isInAir: 0
-  airMassMult: 0.8
+  isInAirJumping: 0
+  airMassMult: 0.7
   airDrag: 5
   airMaxSpeed: 8
   moveSpeedMult: 1.1

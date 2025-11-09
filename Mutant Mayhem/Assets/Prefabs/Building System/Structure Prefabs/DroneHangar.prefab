@@ -243,11 +243,11 @@ MonoBehaviour:
   spriteLightSprite: {fileID: 1043509837352918376}
   radarDishSprite: {fileID: 5915608070362659548}
   radarDishRotateSpeed: 140
+  explosionPoolName: Explosion_Building_Dusty_Large
   lights:
   - {fileID: 8420563218990105793}
   - {fileID: 7959460061468153531}
   droneContainer: {fileID: 1481001888821365509}
-  explosionPoolName: Explosion_Building_Dusty_Large
 --- !u!114 &2803994492535799180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,6 +480,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1856495315866651960, guid: 366df1b1bfeb947208b428c7aeb4ab29, type: 3}
+      propertyPath: m_Radius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856495315866651960, guid: 366df1b1bfeb947208b428c7aeb4ab29, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -582,7 +586,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: powerConsumed
-      value: 4
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.size

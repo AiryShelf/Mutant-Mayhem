@@ -321,10 +321,11 @@ public class UpgradeManager : MonoBehaviour
         repairGunUpgBaseCosts[GunStatsUpgrade.GunRange] = 300;
         repairGunUpgBaseCosts[GunStatsUpgrade.TurretReloadSpeed] = 500;
 
+        // Drone Stats
         droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneSpeed] = 200;
         droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHealth] = 200;
         droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneEnergy] = 200;
-        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHangarRange] = 300;
+        droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHangarRange] = 500;
         droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHangarRepairSpeed] = 300;
         droneStatsUpgBaseCosts[DroneStatsUpgrade.DroneHangarRechargeSpeed] = 300;
 

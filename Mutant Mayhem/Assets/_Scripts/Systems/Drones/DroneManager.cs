@@ -18,8 +18,8 @@ public class DroneManager : MonoBehaviour
     public float droneHealthUpgMult = 0.1f;
     public int droneEnergyMult = 1;
     public float droneEnergyUpgMult = 0.05f;
-    public int droneHangarRange = 12;
-    public float droneHangarRangeUpgAmount = 1f;
+    public float droneHangarRange = 10;
+    public float droneHangarRangeUpgAmount = 0.5f;
     public int droneHangarRepairSpeed = 5; // Repair per second spread between docked drones
     public float droneHangarRepairSpeedUpgAmount = 1f;
     public int droneHangarRechargeSpeed = 5; // Energy recharge per second on one drone at a time

@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
 public class PlayerShooter : Shooter
@@ -30,6 +28,8 @@ public class PlayerShooter : Shooter
     [HideInInspector] public PlayerStats playerStats;
     [HideInInspector] public Player player;
     [SerializeField] protected PlayerGunRecoil gunRecoil;
+
+    public System.Action<int> onPlayerGunSwitched;
 
     protected override void Awake() 
     {
@@ -207,6 +207,7 @@ public class PlayerShooter : Shooter
         }
 
         Debug.Log("Switched to gun index: " + i + ": " + currentGunSO);
+        onPlayerGunSwitched?.Invoke(i);
     }
 
     #endregion

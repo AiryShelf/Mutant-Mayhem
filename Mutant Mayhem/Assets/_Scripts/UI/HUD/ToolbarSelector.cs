@@ -21,6 +21,13 @@ public class ToolbarSelector : MonoBehaviour
         currentBox = boxImages[0];
         unselectedColor = currentBox.color;
         SwitchBoxes(0);
+
+        player.playerShooter.onPlayerGunSwitched += SwitchBoxes;
+    }
+
+    void OnDestroy()
+    {
+        player.playerShooter.onPlayerGunSwitched -= SwitchBoxes;
     }
 
     public void SwitchBoxes(int i)
