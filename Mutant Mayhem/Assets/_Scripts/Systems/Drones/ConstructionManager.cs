@@ -155,7 +155,36 @@ public class ConstructionManager : MonoBehaviour
             IncrementAssignedDrones(job, 1);
         }
 
-        Debug.Log("ConstructionManager: GetBuildJob job at: " + job?.jobPosition);
+        //Debug.Log("ConstructionManager: GetBuildJob job at: " + job?.jobPosition);
+        return job;
+    }
+
+    public DroneBuildJob GetNextBuildJob(DroneBuildJob currentJob)
+    {
+        DroneBuildJob job = null;
+        int leastDronesAssigned = int.MaxValue;
+        int currentJobIndex = buildJobs.FindIndex(kvp => kvp.Key == currentJob);
+
+        // get next job in list with wraparound
+        for (int offset = 1; offset <= buildJobs.Count; offset++)
+        {
+            int i = (currentJobIndex + offset) % buildJobs.Count;
+            int dronesAssigned = buildJobs[i].Value;
+            // Select the job with the fewest drones assigned
+            if (dronesAssigned < leastDronesAssigned &&
+                dronesAssigned < maxDronesPerJob)
+            {
+                job = buildJobs[i].Key;
+                leastDronesAssigned = dronesAssigned;
+            }
+        }
+
+        // Increment assigned drones
+        if (job != null)
+        {
+            IncrementAssignedDrones(job, 1);
+        }
+
         return job;
     }
 
@@ -267,9 +296,14 @@ public class ConstructionManager : MonoBehaviour
 
     #region Do Job
 
-    public bool BuildBlueprint(Vector2 pos, float buildAmount, Vector2 hitDir)
+    public enum BuildResult
     {
-        
+        Complete, Progress,
+        Blocked, NoSupplies
+    }
+
+    public BuildResult BuildBlueprint(Vector2 pos, float buildAmount, Vector2 hitDir)
+    {
         Vector3Int gridPos = tileManager.WorldToGrid(pos);
         if (!tileManager.CheckBlueprintCellsAreClear(gridPos))
         {
@@ -277,7 +311,7 @@ public class ConstructionManager : MonoBehaviour
             textFly.transform.position = pos;
             textFly.Initialize("Blocked!", Color.red, 
                                1, hitDir.normalized, true, 1.2f);
-            return false;
+            return BuildResult.Blocked;
         }
 
         StatsCounterPlayer.AmountRepairedByDrones += buildAmount;
@@ -285,10 +319,14 @@ public class ConstructionManager : MonoBehaviour
         if (tileManager.BuildBlueprintAt(pos, buildAmount, 1.2f, hitDir))
         {
             //RemoveBuildJob(buildJob);
-            return true;
+            return BuildResult.Complete;
         }
 
-        return false;
+        StructureSO structure = tileManager.GetStructureAt(pos);
+        if (!buildingSystem.CheckSupplies(structure))
+            return BuildResult.NoSupplies;
+        else
+            return BuildResult.Progress;
     }
 
     public bool RepairUntilComplete(Vector2 pos, float value, Vector2 hitDir)

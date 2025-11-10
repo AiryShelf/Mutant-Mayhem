@@ -399,10 +399,13 @@ public class TileManager : MonoBehaviour
 
         if (_TileStatsDict[rootPos].blueprintProgress >= _TileStatsDict[rootPos].ruleTileStructure.structureSO.blueprintBuildAmount)
         {
-            
             //StructureRotator.RotateTileAt(blueprintTilemap, rootPos, rotation);
+            if (!AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure))
+            {
+                Debug.LogWarning("TileManager: Failed to add tile at blueprint completion, likely no supplies");
+                return false;
+            }
             _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
-            AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
 
             ConstructionManager.Instance.RemoveBuildJob(GridCenterToWorld(rootPos));
             //ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));

@@ -78,7 +78,7 @@ public class UiUpgradePanel_DroneHangar : UiUpgradePanel
                 }
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
         }
     }
 }

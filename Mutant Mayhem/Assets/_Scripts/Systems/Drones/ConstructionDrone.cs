@@ -24,11 +24,23 @@ public class ConstructionDrone : Drone
         while (true)
         {
             Vector2 hitDir = jobPos - (Vector2)transform.position;
-            if (ConstructionManager.Instance.BuildBlueprint(jobPos, -shooter.currentGunSO.damage, hitDir))
+            switch (ConstructionManager.Instance.BuildBlueprint(jobPos, -shooter.currentGunSO.damage, hitDir))
             {
-                //SetJob(ConstructionManager.Instance.GetRepairJob());
-                SetJobDone();
-                yield break;
+                case ConstructionManager.BuildResult.Complete:
+                    SetJobDone();
+                    yield break;
+                case ConstructionManager.BuildResult.NoSupplies:
+                    //Debug.Log("Construction Drone: Stopping build, no supplies");
+                    myHangar.RemoveDroneFromJob(this);
+                    DroneBuildJob nextJob = myHangar.GetNextBuildJob(currentJob as DroneBuildJob);
+                    if (nextJob != null && nextJob != currentJob)
+                    {
+                        SetJob(nextJob);
+                        yield break;
+                    }
+                    break;
+                default:
+                    break;
             }
 
             yield return new WaitForSeconds(shooter.currentGunSO.shootSpeed);

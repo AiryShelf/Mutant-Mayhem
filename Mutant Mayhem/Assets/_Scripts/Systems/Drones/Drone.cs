@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,23 @@ public class Drone : MonoBehaviour
     public Shooter shooter;
     public string objectPoolName = "";
     public DroneType droneType = DroneType.Builder;
-    [SerializeField] SpriteRenderer noPowerSr;
+    public SpriteRenderer noPowerSr;
+    public GameObject radialEnergy;
     public float moveSpeed = 3;
-    public float moveSpeedStart { get; private set; }
-    public int energy = 0; 
+    float moveSpeedStart;
+    int _energy;
+    public int energy
+    {
+        get => _energy;
+        set
+        {
+            _energy = Mathf.Clamp(value, 0, energyMax);
+            onEnergyChanged?.Invoke(_energy);
+        }
+    }
     public int energyMax = 100;
+    int _energyStart;
+    public Action<int> onEnergyChanged;
     public string currentAction = "";
     public DroneJob currentJob;
     public Rigidbody2D rb;
@@ -48,6 +61,7 @@ public class Drone : MonoBehaviour
 
     void Awake()
     {
+        _energyStart = energyMax;
         moveSpeedStart = moveSpeed;
         rotationSpeedStart = rotationSpeed;
     }
@@ -56,12 +70,14 @@ public class Drone : MonoBehaviour
     {
         moveSpeed = moveSpeedStart * DroneManager.Instance.droneSpeedMult;
         rotationSpeed = rotationSpeedStart * DroneManager.Instance.droneRotationSpeedMult;
+        energyMax = Mathf.RoundToInt(_energyStart * DroneManager.Instance.droneEnergyMult);
     }
 
     public virtual void Initialize(TurretGunSO droneGun)
     {
         noPowerSr.enabled = false;
-        energy = energyMax * DroneManager.Instance.droneEnergyMult;
+        energy = energyMax;
+        radialEnergy.SetActive(false);
         droneHealth = GetComponent<DroneHealth>();
         if (droneHealth == null)
         {
@@ -70,12 +86,13 @@ public class Drone : MonoBehaviour
         }
         droneHealth.SetHealth(droneHealth.GetMaxHealth());
 
-        shooter.InitializeDrone(droneGun);
+        shooter.InitializeDroneShooter(droneGun);
 
         if (this is AttackDrone attackDrone)
             attackDrone.shooter.StartChargingGuns();
 
         initialized = true;
+        RefreshStats();
     }
 
     public void PowerOn()
@@ -106,7 +123,7 @@ public class Drone : MonoBehaviour
         animator.SetBool("hasPower", false);
 
         lights.SetActive(false);
-        myHangar.RemoveDroneFromJob(this);
+        //myHangar.RemoveDroneFromJob(this);
         SetJobDone();
 
         // Simulate losing power, going down
@@ -131,6 +148,7 @@ public class Drone : MonoBehaviour
         isDocked = false;
         rb.simulated = true;
         sr.enabled = true;
+        radialEnergy.SetActive(true);
         lights.SetActive(true);
 
         heightScale = heightScaleStart * launchOrLandMinScale;
@@ -397,13 +415,13 @@ public class Drone : MonoBehaviour
         while (true)
         {
             // pick how long we apply force in cycle
-            float directionDuration = Random.Range(
+            float directionDuration = UnityEngine.Random.Range(
                 hoverEffectTime * (1 - hoverEffectVariationFactor),
                 hoverEffectTime * (1 + hoverEffectVariationFactor)
             );
 
             // pick a random direction (unit circle normalized)
-            Vector2 randomDir = Random.insideUnitCircle.normalized;
+            Vector2 randomDir = UnityEngine.Random.insideUnitCircle.normalized;
 
             float timer = 0f;
             //float forceFactor = Random.Range(hoverEffectForceFactor * (1 - hoverEffectVariationFactor),
@@ -487,7 +505,9 @@ public class Drone : MonoBehaviour
 
     public void SetJobDone()
     {
+        myHangar.RemoveDroneFromJob(this);
         jobDone = true;
+        
         if (currentJob.jobType == DroneJobType.Recharge)
         {
             currentJob = new DroneJob(DroneJobType.None, Vector3.zero);

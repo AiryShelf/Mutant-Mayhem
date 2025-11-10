@@ -155,6 +155,7 @@ public class DroneContainer : MonoBehaviour
         dockedDrones.Add(drone);
         drone.rb.simulated = false;
         drone.sr.enabled = false;
+        drone.radialEnergy.SetActive(false);
         drone.lights.SetActive(false);
         //drone.SetNewAction(drone.LandInHangar);
 
@@ -173,7 +174,7 @@ public class DroneContainer : MonoBehaviour
 
     public void RemoveDroneFromJob(Drone drone)
     {
-        if (drone.currentJob == null)
+        if (drone.currentJob == null || drone.currentJob.jobType == DroneJobType.None)
             return;
 
         switch (drone.droneType)
@@ -289,6 +290,12 @@ public class DroneContainer : MonoBehaviour
 
         Debug.Log("DroneContainer: GetDroneJob returning job of type: " + newJob.jobType + " for drone type: " + droneType);
         return newJob;
+    }
+
+    public DroneBuildJob GetNextBuildJob(DroneBuildJob currentJob)
+    {
+        DroneBuildJob job = ConstructionManager.Instance.GetNextBuildJob(currentJob);
+        return job;
     }
 
     DroneAttackJob GetAttackJob()

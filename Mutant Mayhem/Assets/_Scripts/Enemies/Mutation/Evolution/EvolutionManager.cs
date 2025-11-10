@@ -245,8 +245,8 @@ public class EvolutionManager : MonoBehaviour
 
         if (matureIndividuals.Count < minPopSizeToEvolve)
         {
-            Debug.LogError($"EvolutionManager: Not enough mature individuals have lived {minLifetimesToEvolve} lifetimes " +
-                $"(Individual Count: {matureIndividuals.Count}, requires {minPopSizeToEvolve}) for population variant {variant} to evolve, skipping crossover.");
+            //Debug.Log($"EvolutionManager: Not enough mature individuals have lived {minLifetimesToEvolve} lifetimes " +
+                //$"(Individual Count: {matureIndividuals.Count}, requires {minPopSizeToEvolve}) for population variant {variant} to evolve, skipping crossover.");
             return;
         }
 

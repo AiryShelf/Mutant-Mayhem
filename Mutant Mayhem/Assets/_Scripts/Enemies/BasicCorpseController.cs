@@ -8,6 +8,8 @@ public class BasicCorpseController : CorpseController
     public Sprite[] corpseSprites;
     [Header("Corpse Settings")]
     [SerializeField] string corpseExplosionPoolName = "Explosion_Corpse_Red";
+    [Tooltip("Based roughly on internal pixel size of enemy sprites, ie. 320 for 32x32 sprites with scale 10")]
+    [SerializeField] float corpseSizeFactor = 480f; // Based on pixel size of corpse sprites
 
     SpriteRenderer mySr;
 
@@ -31,8 +33,8 @@ public class BasicCorpseController : CorpseController
 
         // Set explosion scale based on sprite pixel size and scale
         Vector2 newScale = new Vector2(
-            mySr.sprite.rect.width / 480f * scale,
-            mySr.sprite.rect.height / 480f * scale);
+            mySr.sprite.rect.width / corpseSizeFactor * scale,
+            mySr.sprite.rect.height / corpseSizeFactor * scale);
         explosion.transform.localScale = new Vector3(newScale.x, newScale.y, 1);
         explosion.transform.localScale *= corpseExplosionScaleFactor;
 

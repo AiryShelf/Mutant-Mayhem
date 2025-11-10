@@ -10,12 +10,6 @@ public class AttackDrone : Drone
     internal Transform targetTrans;
     float attackRange;
 
-    public override void Initialize(TurretGunSO droneGun)
-    {
-        base.Initialize(droneGun);
-        RefreshStats();
-    }
-
     public override void RefreshStats()
     {
         base.RefreshStats();

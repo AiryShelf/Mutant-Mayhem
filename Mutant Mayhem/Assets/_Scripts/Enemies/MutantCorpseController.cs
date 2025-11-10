@@ -5,6 +5,7 @@ using UnityEngine;
 public class MutantCorpseController : CorpseController
 {
     [Header("Mutant Corpse")]
+    [SerializeField] float corpseExplosionSizeFactor = 0.09f;
     public SpriteRenderer bodySR;
     public SpriteRenderer headSR;
     public SpriteRenderer leftLegSR;
@@ -39,7 +40,7 @@ public class MutantCorpseController : CorpseController
         // Call explosion
         GameObject explosion = PoolManager.Instance.GetFromPool(g.bodyGene.corpseExplosionPoolName);
         explosion.transform.position = transform.position;
-        explosion.transform.localScale = Vector3.one * g.bodyGene.scale * 0.09f;
+        explosion.transform.localScale = Vector3.one * g.bodyGene.scale * corpseExplosionSizeFactor;
 
         // Set anchors
         headSR.transform.localPosition = g.bodyGene.headAnchorOffset * g.headGene.scale;

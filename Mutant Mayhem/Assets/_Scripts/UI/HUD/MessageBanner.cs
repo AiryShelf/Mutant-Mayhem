@@ -13,8 +13,10 @@ public class MessageBanner : MonoBehaviour
     [SerializeField] float timeToDisplay = 6f;
     [SerializeField] float pulseTime = 0.5f;
     public static float TimeToDisplay;
+    [SerializeField] float timeBetweenDuplicates = 10f;
 
     Color startColor;
+    string previousMessage = "";
 
     void Awake()
     {
@@ -49,10 +51,22 @@ public class MessageBanner : MonoBehaviour
     void DisplayAndPulse(string message, Color pulseColor)
     {
         messageText.text = message;
+        if (message == previousMessage)
+        {
+            return;
+        }
+        previousMessage = message;
+        StartCoroutine(DuplicateCountdown());
 
         if (textPulser != null)
             textPulser.PulseTimedText(messageText, pulseColor, startColor, pulseTime, timeToDisplay);
-        else 
+        else
             Debug.LogError("Could not find textPulser to show message");
+    }
+    
+    IEnumerator DuplicateCountdown()
+    {
+        yield return new WaitForSecondsRealtime(timeBetweenDuplicates);
+        previousMessage = "";
     }
 }

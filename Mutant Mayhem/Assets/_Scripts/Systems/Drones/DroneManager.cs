@@ -10,20 +10,20 @@ public class DroneManager : MonoBehaviour
     public static Action<int> OnDroneCountChanged;
 
     [Header("Base Stats and Upgrade Multipliers:")]
-    public int droneSpeedMult = 1;
+    public float droneSpeedMult = 1;
     public float droneSpeedUpgMult = 0.05f;
-    public int droneRotationSpeedMult = 1;
+    public float droneRotationSpeedMult = 1;
     public float droneRotationSpeedUpgMult = 0.025f;
-    public int droneHealthMult = 1;
+    public float droneHealthMult = 1;
     public float droneHealthUpgMult = 0.1f;
-    public int droneEnergyMult = 1;
+    public float droneEnergyMult = 1;
     public float droneEnergyUpgMult = 0.05f;
     public float droneHangarRange = 10;
     public float droneHangarRangeUpgAmount = 0.5f;
     public int droneHangarRepairSpeed = 5; // Repair per second spread between docked drones
-    public float droneHangarRepairSpeedUpgAmount = 1f;
+    public int droneHangarRepairSpeedUpgAmount = 1;
     public int droneHangarRechargeSpeed = 5; // Energy recharge per second on one drone at a time
-    public float droneHangarRechargeSpeedUpgAmount = 1f;
+    public int droneHangarRechargeSpeedUpgAmount = 1;
 
     [Header("Drone Lists:")]
     public List<Drone> allActiveDrones;
@@ -194,32 +194,29 @@ public class DroneManager : MonoBehaviour
 
     public void UpgradeDroneSpeed(int level)
     {
-        foreach(DroneContainer dc in droneContainers)
+        droneSpeedMult += Mathf.RoundToInt(droneSpeedUpgMult);
+        foreach(Drone d in allActiveDrones)
         {
-            foreach(Drone d in dc.dockedDrones)
-            {
-                d.moveSpeed = d.moveSpeedStart * (1 + (droneSpeedUpgMult * level));
-                d.rotationSpeed = d.rotationSpeedStart * (1 + (droneRotationSpeedUpgMult * level));
-            }
+            d.RefreshStats();
         }
     }
 
     public void UpgradeDroneHealth(int level)
     {
-        foreach (DroneContainer dc in droneContainers)
+        droneHealthMult += Mathf.RoundToInt(droneHealthUpgMult);
+        foreach(Drone d in allActiveDrones)
         {
-            foreach (Drone d in dc.dockedDrones)
-            {
-                float healthRatio = d.droneHealth.GetHealth() / d.droneHealth.GetMaxHealth();
-                d.droneHealth.SetMaxHealth(d.droneHealth.startMaxHealth * (1 + (droneHealthUpgMult * level)));
-                d.droneHealth.SetHealth(healthRatio * d.droneHealth.GetMaxHealth());
-            }
+            d.RefreshStats();
         }
     }
 
     public void UpgradeDroneEnergy(int level)
     {
         droneEnergyMult += Mathf.RoundToInt(droneEnergyUpgMult);
+        foreach(Drone d in allActiveDrones)
+        {
+            d.RefreshStats();
+        }
     }
 
     public void UpgradeDroneHangarRange(int level)

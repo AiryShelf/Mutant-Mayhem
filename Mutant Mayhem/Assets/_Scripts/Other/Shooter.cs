@@ -119,7 +119,7 @@ public class Shooter : MonoBehaviour
             reloadImageSr.transform.rotation = Quaternion.identity;
     }
     
-    public void InitializeDrone(GunSO gun)
+    public void InitializeDroneShooter(GunSO gun)
     {
         gunList.Clear();
         gunList.Add(gun);
