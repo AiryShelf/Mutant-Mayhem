@@ -12,6 +12,7 @@ public class Health : MonoBehaviour
     [SerializeField] protected Color textFlyHealthGainColor;
     [SerializeField] protected Color textFlyHealthLossColor;
     [SerializeField] protected float textFlyAlphaMax = 0.8f;
+    [SerializeField] float corpseExplosionScaleFactor = 1f; // For explosive blood effect and diff size sprites
     float lastPainSoundTime;
 
     protected float health;
@@ -114,7 +115,7 @@ public class Health : MonoBehaviour
         GameObject corpseObj = PoolManager.Instance.GetFromPool(poolName);
         corpseObj.transform.position = transform.position;
         corpseObj.transform.rotation = transform.rotation;
-        corpseObj.transform.localScale = transform.localScale * 0.9f; // Scale down a bit
+        //corpseObj.transform.localScale = transform.localScale * 0.9f; // Scale down a bit
 
         var corpse = corpseObj.GetComponent<BasicCorpseController>();
         if (corpse != null)
@@ -126,7 +127,7 @@ public class Health : MonoBehaviour
             else
                 Debug.LogError("Acceptable Health component not found on object, cannot set corpse sprites.");
 
-            corpse.SetSpriteAndColor(color);
+            corpse.SetSpriteAndDie(color, transform.localScale.x, corpseExplosionScaleFactor);
 
             corpse.corpsePoolName = poolName;
         }
@@ -138,13 +139,12 @@ public class Health : MonoBehaviour
         GameObject corpse = PoolManager.Instance.GetFromPool(poolName);
         corpse.transform.position = transform.position;
         corpse.transform.rotation = transform.rotation;
-        corpse.transform.localScale = transform.localScale * 0.9f; // Scale down a bit
 
         var mutantCorpse = corpse.GetComponent<MutantCorpseController>();
         if (mutantCorpse != null)
         {
             // Apply genome to corpse
-            mutantCorpse.ApplyGenome(GetComponent<EnemyMutant>().individual.genome);
+            mutantCorpse.ApplyGenomeAndDie(GetComponent<EnemyMutant>().individual.genome);
 
             mutantCorpse.corpsePoolName = poolName;
         }

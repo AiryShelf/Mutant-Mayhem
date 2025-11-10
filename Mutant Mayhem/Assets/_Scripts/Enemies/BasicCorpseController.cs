@@ -6,6 +6,8 @@ public class BasicCorpseController : CorpseController
 {
     [Header("Set at runtime by EnemyHealth or DroneHealth")]
     public Sprite[] corpseSprites;
+    [Header("Corpse Settings")]
+    [SerializeField] string corpseExplosionPoolName = "Explosion_Corpse_Red";
 
     SpriteRenderer mySr;
 
@@ -15,8 +17,28 @@ public class BasicCorpseController : CorpseController
         mySr = GetComponent<SpriteRenderer>();
     }
 
-    public void SetSpriteAndColor(Color color)
+    protected override void OnDisable()
     {
+        base.OnDisable();
+        mySr.color = startColor;
+    }
+
+    public void SetSpriteAndDie(Color color, float scale, float corpseExplosionScaleFactor)
+    {
+        // Call explosion
+        GameObject explosion = PoolManager.Instance.GetFromPool(corpseExplosionPoolName);
+        explosion.transform.position = transform.position;
+
+        // Set explosion scale based on sprite pixel size and scale
+        Vector2 newScale = new Vector2(
+            mySr.sprite.rect.width / 480f * scale,
+            mySr.sprite.rect.height / 480f * scale);
+        explosion.transform.localScale = new Vector3(newScale.x, newScale.y, 1);
+        explosion.transform.localScale *= corpseExplosionScaleFactor;
+
+        // Set sprite scale
+        mySr.transform.localScale = Vector3.one * scale * 0.9f; // Scale down a bit
+
         // Select random corpseSprite
         int randIndex = Random.Range(0, corpseSprites.Length - 1);
         mySr.sprite = corpseSprites[randIndex];
@@ -36,12 +58,6 @@ public class BasicCorpseController : CorpseController
         mySr.color = newColor;
 
         StartCoroutine(WaitToFade());
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        mySr.color = startColor;
     }
 
     protected override IEnumerator FadeOut()

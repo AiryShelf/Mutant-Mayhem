@@ -6,6 +6,7 @@ public class BodyGeneSO : GeneSOBase
 {
     public Sprite sprite;
     public List<Sprite> corpseSprites;
+    public string corpseExplosionPoolName = "Explosion_Corpse_Red";
 
     [Header("Anchor Offsets")]
     public Vector2 headAnchorOffset = new Vector2(0, 0.9f);

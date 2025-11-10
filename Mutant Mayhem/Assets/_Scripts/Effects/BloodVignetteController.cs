@@ -16,6 +16,9 @@ public class BloodVignetteController : MonoBehaviour
     [Tooltip("Smooths resting alpha updates when health changes")]
     public float restingAlphaLerpSpeed = 6f;
 
+    [Tooltip("Health ratio at/below which resting alpha is 1.0")] 
+    [Range(0f, 0.5f)] public float fullAlphaBelowHealth = 0.10f; // full alpha when health below 10%
+
     [Header("Damage Pulse")]
 
     [Tooltip("Curve input: damageRatio (0..1), output: pulse intensity scaler")]
@@ -97,9 +100,18 @@ public class BloodVignetteController : MonoBehaviour
 
     void UpdateRestingAlpha(float currentHealth, float maxHealth)
     {
+        // Compute health ratio safely
         float healthRatio = Mathf.Clamp01(currentHealth / Mathf.Max(0.0001f, maxHealth));
-        // More alpha as health goes lower:
-        targetRestingAlpha = (1f - healthRatio) * maxRestingAlpha;
+
+        // Map so that alpha = 0 at full health (healthRatio=1)
+        // and alpha = 1 when healthRatio <= fullAlphaBelowHealth (default 0.10)
+        // Linear mapping: alpha01 = (1 - healthRatio) / (1 - threshold)
+        float denom = Mathf.Max(0.0001f, 1f - fullAlphaBelowHealth);
+        float alpha01 = Mathf.Clamp01((1f - healthRatio) / denom);
+
+        // If maxRestingAlpha is 1 (current default), this is simply alpha01.
+        // Keeping the multiplier preserves backward compatibility if you keep the slider.
+        targetRestingAlpha = alpha01 * maxRestingAlpha; // CHANGED
     }
 
     void PulseOnDamage(float damageRatio)

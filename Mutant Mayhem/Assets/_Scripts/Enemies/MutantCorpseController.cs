@@ -34,8 +34,13 @@ public class MutantCorpseController : CorpseController
     /// Applies the given genome to the corpse prefab
     /// </summary>
     /// <param name="g"></param>
-    public void ApplyGenome(Genome g)
+    public void ApplyGenomeAndDie(Genome g)
     {
+        // Call explosion
+        GameObject explosion = PoolManager.Instance.GetFromPool(g.bodyGene.corpseExplosionPoolName);
+        explosion.transform.position = transform.position;
+        explosion.transform.localScale = Vector3.one * g.bodyGene.scale * 0.09f;
+
         // Set anchors
         headSR.transform.localPosition = g.bodyGene.headAnchorOffset * g.headGene.scale;
         leftLegSR.transform.localPosition = g.bodyGene.leftLegAnchorOffset * g.legGene.scale;
@@ -54,10 +59,10 @@ public class MutantCorpseController : CorpseController
         rightLegSR.color = g.legGene.color;
 
         // Apply scales
-        bodySR.transform.localScale = Vector3.one * g.bodyGene.scale;
-        headSR.transform.localScale = Vector3.one * g.headGene.scale;
-        leftLegSR.transform.localScale = Vector3.one * g.legGene.scale;
-        rightLegSR.transform.localScale = Vector3.one * g.legGene.scale;
+        bodySR.transform.localScale = Vector3.one * g.bodyGene.scale * 0.9f; // Scale down a bit
+        headSR.transform.localScale = Vector3.one * g.headGene.scale * 0.9f;
+        leftLegSR.transform.localScale = Vector3.one * g.legGene.scale * 0.9f;
+        rightLegSR.transform.localScale = Vector3.one * g.legGene.scale * 0.9f;
 
         SetAlphaAndDarkenAllSprites(0.9f, 0.9f);
     }
