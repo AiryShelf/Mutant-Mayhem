@@ -36,6 +36,9 @@ public class TileManager : MonoBehaviour
     [SerializeField] Color textFlyHealthGainColor;
     [SerializeField] float textFlyAlphaMax;
     [SerializeField] Color buildBlueprintTextColor = Color.cyan;
+    [SerializeField] string buildingBuiltSmallExplosionPoolName;
+    [SerializeField] string buildingBuiltMediumExplosionPoolName;
+    [SerializeField] string buildingBuiltLargeExplosionPoolName;
     [SerializeField] string damagingBuildingExplosionPoolName;
     [SerializeField] string aestheticBuildingExplosionPoolName;
 
@@ -156,6 +159,8 @@ public class TileManager : MonoBehaviour
         StartCoroutine(RotateTileObject(BlueprintTilemap, gridPos, matrix));
         AddToPlacedCounter(ruleTile.structureSO.structureType);
 
+        PlayBuildExplosionEffect(gridPos, ruleTile);
+
         return true;
     }
 
@@ -217,6 +222,8 @@ public class TileManager : MonoBehaviour
 
         RemoveFromPlacedCounter(ruleTile.structureSO.structureType);
         AddToBuiltCounter(ruleTile.structureSO.structureType);
+
+        PlayBuildExplosionEffect(rootPos, ruleTile);
         
         return true;
     }
@@ -252,14 +259,15 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        // Damaging explosion effect
+        // Damaging explosion effect, others are handled by tile Objects
         if (type == StructureType.OneByOneWall ||
             type == StructureType.OneByOneCorner)
         {
             if (!string.IsNullOrEmpty(damagingBuildingExplosionPoolName))
             {
                 GameObject explosion = PoolManager.Instance.GetFromPool(damagingBuildingExplosionPoolName);
-                explosion.transform.position = GridCenterToWorld(rootPos);
+                explosion.transform.position = TileCellsCenterToWorld(rootPos);
+                explosion.GetComponent<Explosion>().Explode();
             }
         }
 
@@ -269,9 +277,104 @@ public class TileManager : MonoBehaviour
             if (!string.IsNullOrEmpty(aestheticBuildingExplosionPoolName))
             {
                 GameObject explosion = PoolManager.Instance.GetFromPool(aestheticBuildingExplosionPoolName);
-                explosion.transform.position = GridCenterToWorld(rootPos);
+                explosion.transform.position = TileCellsCenterToWorld(rootPos);
+                explosion.GetComponent<Explosion>().Explode();
             }
         }
+    }
+
+    Vector2 TileCellsCenterToWorld(Vector3Int rootPos)
+    {
+        if (!_TileStatsDict.ContainsKey(rootPos))
+        {
+            Debug.LogError($"TileCellsCenterToWorld: No tile at {rootPos}");
+            return GridCenterToWorld(rootPos);
+        }
+
+        // Get the structure's source (unrotated) cell offsets
+        List<Vector3Int> cellPositions = _TileStatsDict[rootPos].ruleTileStructure.structureSO.cellPositions;
+        if (cellPositions == null || cellPositions.Count == 0)
+        {
+            return GridCenterToWorld(rootPos);
+        }
+
+        // Determine which tilemap currently holds the transform for this tile
+        Tilemap tm = null;
+        if (AnimatedTilemap != null && AnimatedTilemap.GetTile(rootPos) != null)
+            tm = AnimatedTilemap;
+        else if (BlueprintTilemap != null && BlueprintTilemap.GetTile(rootPos) != null)
+            tm = BlueprintTilemap;
+        else
+            tm = StructureTilemap;
+
+        // Read rotation and rotate the source offsets back to world-facing orientation
+        int rotation = StructureRotator.GetRotationFromMatrix(tm.GetTransformMatrix(rootPos));
+        List<Vector3Int> rotatedOffsets = StructureRotator.RotateCellPositionsBack(cellPositions, rotation);
+
+        // Compute grid-space AABB over the absolute occupied cells
+        int minX = int.MaxValue, minY = int.MaxValue;
+        int maxX = int.MinValue, maxY = int.MinValue;
+
+        for (int i = 0; i < rotatedOffsets.Count; i++)
+        {
+            int gx = rootPos.x + rotatedOffsets[i].x;
+            int gy = rootPos.y + rotatedOffsets[i].y;
+            if (gx < minX) minX = gx;
+            if (gy < minY) minY = gy;
+            if (gx > maxX) maxX = gx;
+            if (gy > maxY) maxY = gy;
+        }
+
+        // Convert grid AABB to world AABB (CellToWorld gives bottom-left corner of a cell)
+        Vector2 worldMin = StructureTilemap.CellToWorld(new Vector3Int(minX, minY, 0));
+        Vector2 worldMax = StructureTilemap.CellToWorld(new Vector3Int(maxX, maxY, 0)) + (Vector3)StructureTilemap.cellSize;
+
+        // Center of the world-space box
+        Vector2 center = (worldMin + worldMax) * 0.5f;
+        return center;
+    }
+
+    public void GetStructureWorldAABB(Vector3Int rootPos, out Vector2 center, out Vector2 size)
+    {
+        center = GridCenterToWorld(rootPos);
+        size = StructureTilemap.cellSize;
+
+        if (!_TileStatsDict.ContainsKey(rootPos))
+            return;
+
+        List<Vector3Int> cellPositions = _TileStatsDict[rootPos].ruleTileStructure.structureSO.cellPositions;
+        if (cellPositions == null || cellPositions.Count == 0)
+            return;
+
+        Tilemap tm = null;
+        if (AnimatedTilemap != null && AnimatedTilemap.GetTile(rootPos) != null)
+            tm = AnimatedTilemap;
+        else if (BlueprintTilemap != null && BlueprintTilemap.GetTile(rootPos) != null)
+            tm = BlueprintTilemap;
+        else
+            tm = StructureTilemap;
+
+        int rotation = StructureRotator.GetRotationFromMatrix(tm.GetTransformMatrix(rootPos));
+        List<Vector3Int> rotatedOffsets = StructureRotator.RotateCellPositionsBack(cellPositions, rotation);
+
+        int minX = int.MaxValue, minY = int.MaxValue;
+        int maxX = int.MinValue, maxY = int.MinValue;
+
+        for (int i = 0; i < rotatedOffsets.Count; i++)
+        {
+            int gx = rootPos.x + rotatedOffsets[i].x;
+            int gy = rootPos.y + rotatedOffsets[i].y;
+            if (gx < minX) minX = gx;
+            if (gy < minY) minY = gy;
+            if (gx > maxX) maxX = gx;
+            if (gy > maxY) maxY = gy;
+        }
+
+        Vector2 worldMin = StructureTilemap.CellToWorld(new Vector3Int(minX, minY, 0));
+        Vector2 worldMax = StructureTilemap.CellToWorld(new Vector3Int(maxX, maxY, 0)) + (Vector3)StructureTilemap.cellSize;
+
+        center = (worldMin + worldMax) * 0.5f;
+        size = (worldMax - worldMin);
     }
 
     public void RemoveTileAt(Vector3Int gridPos)
@@ -370,6 +473,7 @@ public class TileManager : MonoBehaviour
 
         // Refund cost
         BuildingSystem.PlayerCredits += refund;
+        PlayBuildExplosionEffect(gridPos, _TileStatsDict[gridPos].ruleTileStructure);
         //Debug.Log("Refunded a tile");
     }
 
@@ -1065,7 +1169,7 @@ public class TileManager : MonoBehaviour
     bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure)
     {
         if (CheckGridIsClear(rootPos, structure, buildingSystem.layersForBuildClearCheck, true))
-        {                                                      
+        {
             // Add the tile's data to the dictionary at root location
             if (!_TileStatsDict.ContainsKey(rootPos))
             {
@@ -1074,8 +1178,8 @@ public class TileManager : MonoBehaviour
 
                 float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthMult;
                 // Add to TileStats
-                _TileStatsDict.Add(rootPos, new TileStats 
-                { 
+                _TileStatsDict.Add(rootPos, new TileStats
+                {
                     ruleTileStructure = structure.ruleTileStructure,
                     maxHealth = maxHP,
                     health = maxHP,
@@ -1118,6 +1222,39 @@ public class TileManager : MonoBehaviour
     #endregion
 
     #region Tools
+    
+    void PlayBuildExplosionEffect(Vector3Int rootPos, RuleTileStructure ruleTile)
+    {
+        // Check number of cells to determine placed 'explosion' effect size
+        int cellCount = ruleTile.structureSO.cellPositions.Count;
+        if (cellCount > 4)
+        {
+            if (!string.IsNullOrEmpty(buildingBuiltLargeExplosionPoolName))
+            {
+                GameObject explosion = PoolManager.Instance.GetFromPool(buildingBuiltLargeExplosionPoolName);
+                explosion.transform.position = TileCellsCenterToWorld(rootPos);
+                explosion.GetComponent<Explosion>().Explode();
+            }
+        }
+        else if (cellCount > 2)
+        {
+            if (!string.IsNullOrEmpty(buildingBuiltMediumExplosionPoolName))
+            {
+                GameObject explosion = PoolManager.Instance.GetFromPool(buildingBuiltMediumExplosionPoolName);
+                explosion.transform.position = TileCellsCenterToWorld(rootPos);
+                explosion.GetComponent<Explosion>().Explode();
+            }
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(buildingBuiltSmallExplosionPoolName))
+            {
+                GameObject explosion = PoolManager.Instance.GetFromPool(buildingBuiltSmallExplosionPoolName);
+                explosion.transform.position = TileCellsCenterToWorld(rootPos);
+                explosion.GetComponent<Explosion>().Explode();
+            }
+        }
+    }
 
     public IEnumerator RotateTileObject(Tilemap tilemap, Vector3Int gridPos, Matrix4x4 matrix)
     {

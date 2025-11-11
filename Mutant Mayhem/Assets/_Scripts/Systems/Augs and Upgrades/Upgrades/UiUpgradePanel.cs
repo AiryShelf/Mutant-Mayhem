@@ -159,8 +159,8 @@ public class UiUpgradePanel : UI_PanelBase
         hasPower = false;
 
         // Lock gun
-        if (upgradeFamily == UpgradeFamily.GunStats && playEffect)
-            player.playerShooter.LockGun(playerGunIndex);
+        //if (upgradeFamily == UpgradeFamily.GunStats && playEffect)
+            //player.playerShooter.LockGun(playerGunIndex);
 
         ShowNoPowerPanel();
 
@@ -174,6 +174,11 @@ public class UiUpgradePanel : UI_PanelBase
         mainPanelCanvasGroup.alpha = 1;
         mainPanelCanvasGroup.blocksRaycasts = true;
         mainPanelCanvasGroup.interactable = true;
+        
+        if (hasPower)
+            ShowUpgradesPanel();
+        else
+            ShowNoPowerPanel();
 
         panelInteract = interactSource;
         //Debug.Log("UiUpgradePanel: Opened panel for " + structureToBuildForUnlock);

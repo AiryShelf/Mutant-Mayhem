@@ -9673,7 +9673,7 @@ GameObject:
   - component: {fileID: 1459399991134938693}
   - component: {fileID: 7599369406812756531}
   m_Layer: 12
-  m_Name: Explosion_Building_Aesthetic
+  m_Name: Explosion_Building_Dusty_Small
   m_TagString: PlayerExplosion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9709,17 +9709,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92945588c68b314da407858b5df2d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionObjectPoolName: Explosion_Building_Aesthetic
+  explosionObjectPoolName: Explosion_Building_Dusty_Small
   explosionSound: {fileID: 11400000, guid: f10d92d68294d41b4b3d0910290d712c, type: 2}
   explosionFlash: {fileID: 0}
-  returnToPoolTime: 60
+  returnToPoolTime: 32
   flashFadeRate: 0.1
   layersToHit:
     serializedVersion: 2
-    m_Bits: 0
-  force: 0
-  radius: 0
-  damage: 0
+    m_Bits: 37056
+  force: 25
+  radius: 1.5
+  damage: 50
   wind: {fileID: 0}
   windTime: 0.5
 --- !u!198 &1459399991134938693
@@ -14557,15 +14557,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2395199504903550000, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.b
-      value: 0.26873446
+      value: 0.27058825
       objectReference: {fileID: 0}
     - target: {fileID: 2395199504903550000, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.g
-      value: 0.28434944
+      value: 0.28627452
       objectReference: {fileID: 0}
     - target: {fileID: 2395199504903550000, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.r
-      value: 0.31132078
+      value: 0.30980393
       objectReference: {fileID: 0}
     - target: {fileID: 3832028796605642312, guid: 0eb52b30f8781431bbb87739cce9fa4f, type: 3}
       propertyPath: m_Name

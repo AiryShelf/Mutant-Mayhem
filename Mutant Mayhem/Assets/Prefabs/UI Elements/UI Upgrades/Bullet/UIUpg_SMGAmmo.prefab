@@ -58,10 +58,14 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 3
   gunStatsUpgrade: 0
+  droneStatsUpgrade: 0
   buttonImage: {fileID: 5005630758284984388}
+  buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 6087908181822164550}
-  unlocked: 0
+  unlocked: 1
   UiName: SMG Ammo
+  powerCost: 0
+  supplyCost: 0
   tooltipDescription: 100 SMG rounds.  Refunds not applicable for deceased customers
   showLevelsText: 0
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
