@@ -18,9 +18,6 @@ public class DroneHangar : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
         {
             GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
             explosion.transform.position = transform.position;
-            Explosion explosionComp = explosion.GetComponent<Explosion>();
-            if (explosionComp != null)
-                explosionComp.Explode();
         }
     }
 

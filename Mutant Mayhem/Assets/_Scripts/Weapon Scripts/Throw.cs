@@ -58,9 +58,6 @@ public class ThrowGrenade : MonoBehaviour
 
         GameObject obj = PoolManager.Instance.GetFromPool(explosionObjectPoolName);
         obj.transform.position = end;
-        Explosion explosionComp = obj.GetComponent<Explosion>();
-        if (explosionComp != null)
-            explosionComp.Explode();
 
         yield return null;
 

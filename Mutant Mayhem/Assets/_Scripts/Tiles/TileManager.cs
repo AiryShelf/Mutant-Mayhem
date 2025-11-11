@@ -268,7 +268,6 @@ public class TileManager : MonoBehaviour
             {
                 GameObject explosion = PoolManager.Instance.GetFromPool(damagingBuildingExplosionPoolName);
                 explosion.transform.position = TileCellsCenterToWorld(rootPos);
-                explosion.GetComponent<Explosion>().Explode();
             }
         }
 
@@ -279,7 +278,6 @@ public class TileManager : MonoBehaviour
             {
                 GameObject explosion = PoolManager.Instance.GetFromPool(aestheticBuildingExplosionPoolName);
                 explosion.transform.position = TileCellsCenterToWorld(rootPos);
-                explosion.GetComponent<Explosion>().Explode();
             }
         }
     }
@@ -1234,7 +1232,6 @@ public class TileManager : MonoBehaviour
             {
                 GameObject explosion = PoolManager.Instance.GetFromPool(buildingBuiltLargeExplosionPoolName);
                 explosion.transform.position = TileCellsCenterToWorld(rootPos);
-                explosion.GetComponent<Explosion>().Explode();
             }
         }
         else if (cellCount > 2)
@@ -1243,7 +1240,6 @@ public class TileManager : MonoBehaviour
             {
                 GameObject explosion = PoolManager.Instance.GetFromPool(buildingBuiltMediumExplosionPoolName);
                 explosion.transform.position = TileCellsCenterToWorld(rootPos);
-                explosion.GetComponent<Explosion>().Explode();
             }
         }
         else
@@ -1252,7 +1248,6 @@ public class TileManager : MonoBehaviour
             {
                 GameObject explosion = PoolManager.Instance.GetFromPool(buildingBuiltSmallExplosionPoolName);
                 explosion.transform.position = TileCellsCenterToWorld(rootPos);
-                explosion.GetComponent<Explosion>().Explode();
             }
         }
     }

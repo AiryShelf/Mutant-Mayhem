@@ -19,7 +19,7 @@ public class WaveControllerRandom : MonoBehaviour
     [SerializeField] TextMeshProUGUI enemyCountText;
     [SerializeField] TextMeshProUGUI currentNightText;
     [SerializeField] TextMeshProUGUI nextWaveText;
-    public TextMeshProUGUI nextWaveButtonName; // Used to store and universally access a 'string' 
+    public TextMeshProUGUI nextWaveButtonName; 
 
     [Header("Wave Properties, mostly set by Planets")]
     public int creditsPerWave = 150; // Additive bonus (waveIndex*creditsPerWave)
@@ -141,16 +141,15 @@ public class WaveControllerRandom : MonoBehaviour
         countdown = timeBetweenWaves;
         while (countdown > 0)
         {
-            nextWaveText.text = $"Time until night {currentWaveIndex + 1}: " + countdown.ToString("#") + $"s.  {nextWaveButtonName.text} to skip";
+            nextWaveText.text = $"Night {currentWaveIndex + 1} starts in {countdown}s. {nextWaveButtonName.text} to skip";
 
             yield return new WaitForSeconds(1);
             countdown--;
 
             if (countdown <= 10)
             {
-                MessageBanner.PulseMessage(Mathf.CeilToInt(countdown) + " seconds to the next night!", Color.red);
+                MessageBanner.PulseMessage(Mathf.CeilToInt(countdown) + $" seconds until night {currentWaveIndex + 1}!", Color.red);
             }
-
         }
 
         StopAllCoroutines();

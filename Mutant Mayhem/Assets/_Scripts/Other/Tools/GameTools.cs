@@ -265,7 +265,7 @@ public static class GameTools
 
     public static IEnumerator FlashWorldText(TextMeshPro text, float flashTime, float flashSpeed, Color flashColor, Color startColor)
     {
-        if (text = null)
+        if (text == null)
         {
             Debug.LogError("GameTools: Text is null for FlashText()");
             yield break;
@@ -283,42 +283,48 @@ public static class GameTools
         text.color = startColor;
     }
 
-    public static IEnumerator PulseScaleEffect(Transform transform, float pulseDuration, Vector3 pulseScaleMin, Vector3 pulseScaleMax)
+public static IEnumerator PulseScaleEffect(Transform transform, float pulseDuration, Vector3 initialScale, Vector3 pulseScaleMax)
+{
+    if (transform == null)
+        yield break;
+
+    // [ADDED] Force a clean start so there is no first-frame dip
+    Vector3 scaleStart = transform.localScale; // keep original for optional restore
+    transform.localScale = initialScale;
+
+    // [ADDED] Two-phase pulse: up fast, then down smooth. Peak early for a snappy pop.
+    const float peakFraction = 0.5f; // 50% of duration spent scaling up
+    float elapsed = 0f;
+
+    while (elapsed < pulseDuration)
     {
-        float elapsedTime = 0f;
-        Vector3 scaleStart = transform.localScale;
+        float t = Mathf.Clamp01(elapsed / pulseDuration);
 
-        while (elapsedTime < pulseDuration)
+        Vector3 s;
+        if (t <= peakFraction)
         {
-            if (transform == null)
-                yield break;
-
-            float t = elapsedTime / pulseDuration;
-            float easedT;
-
-            // Different easing functions for expansion and contraction
-            if (t < 0.25f)
-            {
-                float expansionT = t * 4;
-                //easedT = 1 - Mathf.Pow(1 - expansionT, 3); // Fast In
-                easedT = expansionT;
-            }
-            else
-            {
-                float contractionT = (t - 0.25f) * (1 / 0.75f);
-                easedT = 1 - contractionT; // Slow out
-            }
-
-            Vector3 scale = Vector3.Lerp(pulseScaleMin, pulseScaleMax, easedT);
-            transform.localScale = scale;
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            // Up phase (0..peakFraction): ease-out cubic (quick pop)
+            float upT = t / Mathf.Max(0.0001f, peakFraction);
+            float easedUp = 1f - Mathf.Pow(1f - upT, 3f); // EaseOutCubic
+            s = Vector3.LerpUnclamped(initialScale, initialScale + pulseScaleMax, easedUp);
+        }
+        else
+        {
+            // Down phase (peakFraction..1): ease-in cubic back to initial (smooth settle)
+            float downT = (t - peakFraction) / Mathf.Max(0.0001f, 1f - peakFraction);
+            float easedDown = Mathf.Pow(downT, 3f); // EaseInCubic
+            s = Vector3.LerpUnclamped(initialScale + pulseScaleMax, initialScale, easedDown);
         }
 
-        if (transform)
-            transform.localScale = scaleStart;
+        transform.localScale = s;
+        elapsed += Time.deltaTime;
+        yield return null;
     }
+
+    // [UNCHANGED] Restore original scale after pulse finishes
+    if (transform)
+        transform.localScale = scaleStart;
+}
 
     #endregion
 

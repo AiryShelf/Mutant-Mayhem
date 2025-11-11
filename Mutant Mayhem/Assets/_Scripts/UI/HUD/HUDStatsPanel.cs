@@ -182,15 +182,26 @@ public class HUDStatsPanel : MonoBehaviour
 
     void UpdateCreditsText(float playerCredits)
     {
-        int creditsChange =  Mathf.FloorToInt(playerCredits - previousCredits);
+        int creditsChange = Mathf.FloorToInt(playerCredits - previousCredits);
         if (creditsChange == 0 && initialized)
             return;
 
+        //TextFlyCreditsChange(creditsChange);
+
+        int credits = (int)BuildingSystem.PlayerCredits;
+        creditsText.text = "Credits: " + credits.ToString("#0");
+        previousCredits = credits;
+
+        initialized = true;
+    }
+    
+    void TextFlyCreditsChange(int creditsChange)
+    {
         TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Credits").GetComponent<TextFly>();
         textFly.transform.SetParent(transform);
         Color textColor;
         textFly.transform.position = creditsText.transform.position;
-        
+
         if (creditsChange < 0)
         {
             textColor = textFlyCreditsLossColor;
@@ -205,12 +216,6 @@ public class HUDStatsPanel : MonoBehaviour
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
             textFly.Initialize("+" + creditsChange + " C", textColor, textFlyAlphaMax, dir, false, textPulseScaleMax);
         }
-
-        int credits = (int)BuildingSystem.PlayerCredits;
-        creditsText.text = "Credits: " + credits.ToString("#0");
-        previousCredits = credits;
-
-        initialized = true;
     }
 
     void UpdateQCubeStatsUI(float cubeHealth)

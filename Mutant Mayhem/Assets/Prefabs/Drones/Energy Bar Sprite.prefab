@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 463552943
   m_SortingLayer: 7
-  m_SortingOrder: 1
+  m_SortingOrder: 23
   m_Sprite: {fileID: 1996815937, guid: ac3e35c8bd877432ebf76b5e8113c48b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetRenderer: {fileID: 5211429562027566780}
+  drone: {fileID: 0}
   frames:
   - {fileID: 1996815937, guid: ac3e35c8bd877432ebf76b5e8113c48b, type: 3}
   - {fileID: -47671888, guid: ac3e35c8bd877432ebf76b5e8113c48b, type: 3}
@@ -117,4 +118,4 @@ MonoBehaviour:
   - {fileID: 487211042, guid: ac3e35c8bd877432ebf76b5e8113c48b, type: 3}
   - {fileID: 23127260, guid: ac3e35c8bd877432ebf76b5e8113c48b, type: 3}
   framesOrder: 1
-  currentEnergy01: 1
+  energyRatio: 1

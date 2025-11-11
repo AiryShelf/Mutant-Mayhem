@@ -32,5 +32,4 @@ public class PickupsReceiver : PickupsContainerBase
         textFly.transform.position = transform.position;
         textFly.GetComponent<TextFly>().Initialize("+ " + credits + " C", creditsColor, textFlyAlphaMax, flyDir, true, textPulseScaleMax);
     }
-
 }

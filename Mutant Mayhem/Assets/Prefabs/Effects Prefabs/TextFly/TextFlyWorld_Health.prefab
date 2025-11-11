@@ -29,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 4415535309081398380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -52,15 +52,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPoolName: TextFlyWorld_Health
-  moveSpeed: 0.8
-  moveSpeedVariation: 0.4
-  fadeDuration: 1
+  moveSpeed: 2
+  moveSpeedVariation: 0.7
+  fadeDuration: 0.75
   fadeAlphaStart: 1
   fadeAlphaEnd: 0
-  alphaMax: 0.5
-  popGain: 1.5
+  popGain: 0.5
   popExponent: 1.5
-  popMax: 24
+  popMax: 8
 --- !u!114 &-3813830168820926482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,11 +74,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectToScale: {fileID: 1806250300725050837}
   touchScreenOnly: 1
-  wideScale: 1.3
-  midWideScale: 1.3
-  default16x9Scale: 1.3
-  midNarrowScale: 1.1
-  narrowScale: 1.1
+  wideScale: 1.5
+  midWideScale: 1.5
+  default16x9Scale: 1.5
+  midNarrowScale: 1.2
+  narrowScale: 1.2
   useCustomPivot: 0
   cutomScalePivot: {x: 0.5, y: 0.5}
   widePositionOffest: {x: 0, y: 0}

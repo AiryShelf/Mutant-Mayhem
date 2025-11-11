@@ -32,12 +32,23 @@ public class Explosion : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        if (!initialized)
+        {
+            initialized = true;
+            return;
+        }
+        
+        Explode();
+    }
+
     void OnDisable()
     {
         StopAllCoroutines();
     }
 
-    public void Explode()
+    void Explode()
     {
         tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)
@@ -52,7 +63,7 @@ public class Explosion : MonoBehaviour
         Vector2 explosionPos = transform.position;
         List<Vector3Int> tilesToCheck = GetTilesInRadius(explosionPos, tileManager);
 
-        GetTiles(explosionPos, tilesToCheck, tileManager);
+        GetTilesAndHitStructures(explosionPos, tilesToCheck, tileManager);
         ApplyDamageToEntitiesInTiles(explosionPos, visibleTiles);
         StartCoroutine(ReturnToPoolAfterTime(returnToPoolTime));
     }
@@ -82,7 +93,7 @@ public class Explosion : MonoBehaviour
         PoolManager.Instance.ReturnToPool(explosionObjectPoolName, gameObject);
     }
 
-    void GetTiles(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
+    void GetTilesAndHitStructures(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
     {
         // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
 

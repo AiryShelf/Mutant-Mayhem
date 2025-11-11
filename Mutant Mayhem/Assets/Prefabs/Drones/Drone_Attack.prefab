@@ -39,7 +39,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645960220530561771}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 463552943
   m_SortingLayer: 7
-  m_SortingOrder: 10
+  m_SortingOrder: 24
   m_Sprite: {fileID: 21300000, guid: 280ea6463a12d4d61bb1aeead057e26a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -286,7 +286,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 463552943
   m_SortingLayer: 7
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Sprite: {fileID: 1065483855, guid: 5860793b7967f4dcfaeb0acb5eedb5eb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -453,7 +453,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 463552943
   m_SortingLayer: 7
-  m_SortingOrder: 20
+  m_SortingOrder: 25
   m_Sprite: {fileID: 21300000, guid: 4be94f9dfd6d8a1418f23ca79f197a30, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.7490196}
   m_FlipX: 0
@@ -507,6 +507,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3688259929015718581}
     m_Modifications:
+    - target: {fileID: 5211429562027566780, guid: 56f2c72a6122d49d6856803b47e0d2e2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 23
+      objectReference: {fileID: 0}
     - target: {fileID: 6875540689267459148, guid: 56f2c72a6122d49d6856803b47e0d2e2, type: 3}
       propertyPath: m_Name
       value: Energy Bar
