@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
     public float deathTorque = 20;
     public SoundSO painSound;
     [SerializeField] float painSoundCooldown = 0.3f;
+    [SerializeField] protected string textFlyPoolName = "TextFlyWorld_Health";
     [SerializeField] protected Color textFlyHealthGainColor;
     [SerializeField] protected Color textFlyHealthLossColor;
     [SerializeField] protected float textFlyAlphaMax = 0.8f;
@@ -94,7 +95,7 @@ public class Health : MonoBehaviour
 
     protected void SendTextFly(Vector2 textDir, Color color, float scaleMax)
     {
-        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+        TextFly textFly = PoolManager.Instance.GetFromPool(textFlyPoolName).GetComponent<TextFly>();
         textFly.transform.position = transform.position;
 
         float angle = Random.Range(-30f, 30f) * Mathf.Deg2Rad;

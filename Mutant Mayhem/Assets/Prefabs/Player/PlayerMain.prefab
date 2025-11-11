@@ -640,6 +640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   critHitData: {fileID: 11400000, guid: 75f40019fd50ce64ebd3fa6b2ffffedb, type: 2}
+  effectPoolName: Critical_Hit_FX
 --- !u!114 &8105019590960648118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,9 +658,11 @@ MonoBehaviour:
   deathTorque: 60
   painSound: {fileID: 11400000, guid: 25d601f8a9b80c34a9ad4369d683d6c3, type: 2}
   painSoundCooldown: 0.3
+  textFlyPoolName: TextFlyWorld_Health_Player
   textFlyHealthGainColor: {r: 0, g: 1, b: 0, a: 0.5019608}
   textFlyHealthLossColor: {r: 1, g: 0, b: 1, a: 0.5019608}
   textFlyAlphaMax: 0.8
+  corpseExplosionScaleFactor: 1
   hasDied: 0
   player: {fileID: 1081961372366873552}
   healthRegenPerSec: 0.5

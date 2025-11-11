@@ -32,6 +32,7 @@ public class TileManager : MonoBehaviour
     [SerializeField] Tilemap destroyedTilemap;
     [SerializeField] Tilemap damageTilemap;
     [SerializeField] List<ParticleSystem> particlesToClear;
+    [SerializeField] string textFlyWorldPlayerPoolName = "TextFlyWorld_Health_Player";
     [SerializeField] Color textFlyHealthLossColor;
     [SerializeField] Color textFlyHealthGainColor;
     [SerializeField] float textFlyAlphaMax;
@@ -516,7 +517,7 @@ public class TileManager : MonoBehaviour
             return true;
         }
 
-        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+        TextFly textFly = PoolManager.Instance.GetFromPool(textFlyWorldPlayerPoolName).GetComponent<TextFly>();
         textFly.transform.position = pos;
         textFly.Initialize(Mathf.Abs(amount).ToString("#0"), buildBlueprintTextColor, 
                            textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);
@@ -569,7 +570,7 @@ public class TileManager : MonoBehaviour
 
         if (!isException)
         {
-            TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Health").GetComponent<TextFly>();
+            TextFly textFly = PoolManager.Instance.GetFromPool(textFlyWorldPlayerPoolName).GetComponent<TextFly>();
             textFly.transform.position = point;
             textFly.Initialize(Mathf.Abs(healthDifference).ToString("#0"), color, 
                             textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);

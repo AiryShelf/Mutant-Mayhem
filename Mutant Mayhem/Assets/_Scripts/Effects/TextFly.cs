@@ -20,8 +20,9 @@ public class TextFly : MonoBehaviour
     [Tooltip("Exponent for pop amplification")]
     [SerializeField] float popExponent = 2f;  
     [Tooltip("Maximum scale for pop effect (0 = no cap)")]
-    [SerializeField] float popMax = 6f;       
+    [SerializeField] float popMax = 6f;
 
+    Vector3 initialScale;
     TextMeshPro tmpTextWorld;
     TextMeshProUGUI tmpTextUi;
     Color textColor;
@@ -31,6 +32,7 @@ public class TextFly : MonoBehaviour
 
     void Awake()
     {
+        initialScale = transform.localScale;
         moveSpeed += Random.Range(moveSpeed - moveSpeedVariation, moveSpeed + moveSpeedVariation);
     }
 
@@ -66,7 +68,8 @@ public class TextFly : MonoBehaviour
         float amplifiedScale = 1f + popGain * Mathf.Pow(delta, Mathf.Max(1f, popExponent));
         if (popMax > 0f) amplifiedScale = Mathf.Min(popMax, amplifiedScale);
         Vector3 scaleMax = new Vector3(amplifiedScale, amplifiedScale, amplifiedScale);
-        GameTools.StartCoroutine(GameTools.PulseEffect(transform, fadeDuration, Vector3.one, scaleMax));
+        
+        GameTools.StartCoroutine(GameTools.PulseScaleEffect(transform, fadeDuration, initialScale, scaleMax));
     }
 
     private IEnumerator FadeAndMove(float alphaMax)

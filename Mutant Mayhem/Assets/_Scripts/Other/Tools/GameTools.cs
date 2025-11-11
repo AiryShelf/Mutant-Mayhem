@@ -283,7 +283,7 @@ public static class GameTools
         text.color = startColor;
     }
 
-    public static IEnumerator PulseEffect(Transform transform, float pulseDuration, Vector3 pulseScaleMin, Vector3 pulseScaleMax)
+    public static IEnumerator PulseScaleEffect(Transform transform, float pulseDuration, Vector3 pulseScaleMin, Vector3 pulseScaleMax)
     {
         float elapsedTime = 0f;
         Vector3 scaleStart = transform.localScale;

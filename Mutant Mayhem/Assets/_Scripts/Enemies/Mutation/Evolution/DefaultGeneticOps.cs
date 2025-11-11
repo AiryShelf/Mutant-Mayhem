@@ -128,7 +128,7 @@ public class DefaultGeneticOps
     public void ClampAndNormalize(ref Genome genome, float maxTotal)
     {
         // Keep parts from getting too small
-        float minPerGene = (maxTotal / genome.numberOfGenes) * 0.5f;
+        float minPerGene = (maxTotal / genome.numberOfGenes) * 0.6f;
         genome.bodyGene.scale = Mathf.Max(genome.bodyGene.scale, minPerGene);
         genome.headGene.scale = Mathf.Max(genome.headGene.scale, minPerGene);
         genome.legGene.scale = Mathf.Max(genome.legGene.scale, minPerGene);
