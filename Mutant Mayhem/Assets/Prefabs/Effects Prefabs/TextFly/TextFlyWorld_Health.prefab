@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1806250300725050837}
-  - component: {fileID: -3813830168820926482}
   - component: {fileID: 1937699068751001237}
+  - component: {fileID: -3813830168820926482}
   - component: {fileID: 5779244356708379027}
   - component: {fileID: 5774182706776217420}
   m_Layer: 0
@@ -39,6 +39,28 @@ RectTransform:
   m_AnchoredPosition: {x: -95.74076, y: 24.1934}
   m_SizeDelta: {x: 6.1229, y: 0.7207}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1937699068751001237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4415535309081398380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db39d20457ed34346bca5e8f1a870988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectPoolName: TextFlyWorld_Health
+  moveSpeed: 1
+  moveSpeedVariation: 0.4
+  fadeDuration: 1
+  fadeAlphaStart: 1
+  fadeAlphaEnd: 0
+  alphaMax: 0.9
+  popGain: 2
+  popExponent: 1.5
+  popMax: 24
 --- !u!114 &-3813830168820926482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,27 +82,9 @@ MonoBehaviour:
   narrowScale: 1.2
   useCustomPivot: 0
   cutomScalePivot: {x: 0.5, y: 0.5}
+  widePositionOffest: {x: 0, y: 0}
   defaultWidePositionOffest: {x: 0, y: 0}
   narrowPositionOffset: {x: 0, y: 0}
---- !u!114 &1937699068751001237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4415535309081398380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db39d20457ed34346bca5e8f1a870988, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectPoolName: TextFlyWorld_Health
-  moveSpeed: 0.5
-  moveSpeedVariation: 0.4
-  fadeDuration: 1
-  fadeAlphaStart: 1
-  fadeAlphaEnd: 0
-  alphaMax: 0.75
 --- !u!23 &5779244356708379027
 MeshRenderer:
   m_ObjectHideFlags: 0

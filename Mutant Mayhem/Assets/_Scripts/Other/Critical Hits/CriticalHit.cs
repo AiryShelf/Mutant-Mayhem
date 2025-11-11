@@ -5,6 +5,7 @@ using UnityEngine;
 public class CriticalHit : MonoBehaviour
 {
     public CritHitData critHitData;
+    public string effectPoolName = "Critical_Hit_FX";
 
     public (bool, float) RollForCrit(float chanceMult, float damageMult)
     {

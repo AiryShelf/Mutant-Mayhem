@@ -21,8 +21,6 @@ public class HUDStatsPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI staminaValueText;
     [SerializeField] Color textFlyCreditsGainColor;
     [SerializeField] Color textFlyCreditsLossColor;
-    [SerializeField] Color textFlyHealthGainColor;
-    [SerializeField] Color textFlyHealthLossColor;
 
     [Header("QCube Stats")]
     [SerializeField] Image qCubeImage;
@@ -179,29 +177,6 @@ public class HUDStatsPanel : MonoBehaviour
         if (Mathf.Abs(healthChange) < 1)
             return;
 
-        // TextFly setup
-        TextFly textFly = PoolManager.Instance.GetFromPool("TextFlyUI_Health").GetComponent<TextFly>();
-        textFly.transform.SetParent(transform);
-        Color textColor;
-        Vector3 newPos = healthValueText.transform.position;
-        //RectTransform rectTrans = (RectTransform)transform;
-        newPos.x += 2;
-        textFly.transform.position = newPos;
-
-        if (healthChange < 0)
-        {
-            textColor = textFlyHealthLossColor;
-            float angle = Random.Range(-45f, -15f) * Mathf.Deg2Rad;
-            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
-            textFly.Initialize(healthChange + " HP", textColor, textFlyAlphaMax, dir, false, textPulseScaleMax);
-        }
-        else
-        {
-            textColor = textFlyHealthGainColor;
-            float angle = Random.Range(15, 45f) * Mathf.Deg2Rad;
-            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
-            textFly.Initialize("+" + healthChange + " HP", textColor, textFlyAlphaMax, dir, false, textPulseScaleMax);
-        }
         previousHealth = Mathf.CeilToInt(playerHealth);
     }
 

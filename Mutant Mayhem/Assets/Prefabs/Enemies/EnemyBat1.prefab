@@ -99,7 +99,7 @@ MonoBehaviour:
   painSound: {fileID: 11400000, guid: d9275a96bf51bad45881b1b0963795ab, type: 2}
   painSoundCooldown: 0.3
   textFlyHealthGainColor: {r: 0, g: 1, b: 0, a: 0.5019608}
-  textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
+  textFlyHealthLossColor: {r: 1, g: 1, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   corpseExplosionScaleFactor: 1.5
   hasDied: 0
@@ -571,6 +571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   critHitData: {fileID: 11400000, guid: 75f40019fd50ce64ebd3fa6b2ffffedb, type: 2}
+  effectPoolName: Critical_Hit_FX
 --- !u!4 &6455359244774574349 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2925875389884354145, guid: 8f68d7956960b4247b965e8b1e10ebfc, type: 3}

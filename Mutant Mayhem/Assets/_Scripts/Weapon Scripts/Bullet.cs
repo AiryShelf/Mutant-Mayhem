@@ -108,6 +108,13 @@ public class Bullet : MonoBehaviour
         if (criticalHit != null)
             (isCritical, critMult) = criticalHit.RollForCrit(critChanceMult, critDamageMult);
 
+        if (isCritical) 
+        {
+            GameObject obj = PoolManager.Instance.GetFromPool(criticalHit.effectPoolName);
+            obj.transform.position = point;
+            obj.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0f, 360f));
+        }
+
         float damageNew = damage;
         damageNew *= 1 + Random.Range(-damageVarianceFactor, damageVarianceFactor);
         damageNew *= critMult;

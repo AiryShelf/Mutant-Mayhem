@@ -90,6 +90,13 @@ public class MeleeControllerEnemy : MonoBehaviour
         if (criticalHit != null)
             (isCritical, critMult) = criticalHit.RollForCrit(1, 1);
 
+        if (isCritical)
+        {
+            GameObject obj = PoolManager.Instance.GetFromPool(criticalHit.effectPoolName);
+            obj.transform.position = meleeCollider.transform.position;
+            obj.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0f, 360f));
+        }
+
         float damage = meleeDamage;
         damage *= 1 + Random.Range(-damageVariance, damageVariance);
         damage *= critMult;

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using System.Collections;
+using UnityEditor.EditorTools;
 
 public class TextFly : MonoBehaviour
 {
@@ -12,6 +13,15 @@ public class TextFly : MonoBehaviour
     [SerializeField] float fadeAlphaStart = 1f;
     [SerializeField] float fadeAlphaEnd = 0f;
     public float alphaMax = 0.5f;
+
+    [Header("Text pop curve (around 1 stays ~1)")]
+    [Tooltip("How much to amplify the pop effect")]
+    [SerializeField] float popGain = 1f;
+    [Tooltip("Exponent for pop amplification")]
+    [SerializeField] float popExponent = 2f;  
+    [Tooltip("Maximum scale for pop effect (0 = no cap)")]
+    [SerializeField] float popMax = 6f;       
+
     TextMeshPro tmpTextWorld;
     TextMeshProUGUI tmpTextUi;
     Color textColor;
@@ -51,7 +61,11 @@ public class TextFly : MonoBehaviour
 
         StartCoroutine(FadeAndMove(alphaMax));
 
-        Vector3 scaleMax = new Vector3(pulseMaxScale, pulseMaxScale, pulseMaxScale);
+        // Nonlinear pop around 1: f(1)=1, f(s)=1 + gain*(s-1)^exp, capped by popMax
+        float delta = Mathf.Max(0f, pulseMaxScale - 1f);
+        float amplifiedScale = 1f + popGain * Mathf.Pow(delta, Mathf.Max(1f, popExponent));
+        if (popMax > 0f) amplifiedScale = Mathf.Min(popMax, amplifiedScale);
+        Vector3 scaleMax = new Vector3(amplifiedScale, amplifiedScale, amplifiedScale);
         GameTools.StartCoroutine(GameTools.PulseEffect(transform, fadeDuration, Vector3.one, scaleMax));
     }
 

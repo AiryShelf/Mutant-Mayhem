@@ -79,6 +79,13 @@ public class MeleeControllerPlayer : MonoBehaviour
         if (criticalHit != null)
             (isCritical, critMult) = criticalHit.RollForCrit(playerShooter.playerStats.criticalHitChanceMult / 2,
                                                              playerShooter.playerStats.criticalHitDamageMult);
+
+        if (isCritical)
+        {
+            GameObject obj = PoolManager.Instance.GetFromPool(criticalHit.effectPoolName);
+            obj.transform.position = point;
+            obj.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0f, 360f));
+        }   
         
         float damage = stats.meleeDamage;
         damage *= 1 + Random.Range(-damageVariance, damageVariance);
