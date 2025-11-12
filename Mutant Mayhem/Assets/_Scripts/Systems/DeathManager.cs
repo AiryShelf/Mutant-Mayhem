@@ -76,13 +76,13 @@ public class DeathManager : MonoBehaviour
     public void MainMenu()
     {
         GameTools.StartCoroutine(LerpSFXVolume(storedSFXVolume, deathSFXFadeTime));
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void BackToShip()
     {
         GameTools.StartCoroutine(LerpSFXVolume(storedSFXVolume, deathSFXFadeTime));
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     public void QuitGame()

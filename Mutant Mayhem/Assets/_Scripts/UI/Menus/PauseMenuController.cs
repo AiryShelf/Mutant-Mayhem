@@ -144,22 +144,16 @@ public class PauseMenuController : MonoBehaviour
         OpenPauseMenu(false);
     }
 
-    public void Restart()
+    public void BackToShip()
     {
         TimeControl.Instance.PauseGame(false);
         SceneManager.LoadScene(2);
     }
 
-    public void BackToShip()
-    {
-        TimeControl.Instance.PauseGame(false);
-        SceneManager.LoadScene(1);
-    }
-
     public void MainMenu()
     {
         TimeControl.Instance.PauseGame(false);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void GiveUp()

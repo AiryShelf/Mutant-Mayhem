@@ -3,12 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Analytics;
+public enum AnalyticsConsentStatus
+{
+    Unknown,
+    Granted,
+    Denied
+}
 
 public class Analytics : MonoBehaviour
 {
     public static Analytics Instance { get; private set; }
+    public static AnalyticsConsentStatus ConsentStatus = AnalyticsConsentStatus.Unknown;
+    public static string ConsentVersion = "0";
+    public static System.DateTime ConsentTimestamp;
+    public static bool AnalyticsEnabled = false;
+    public static bool AnalyticsInitialized = false;
 
-    private bool _analyticsInitialized = false;
+    [SerializeField] GameObject analyticsPermissionPanel;
 
     void Awake()
     {
@@ -21,23 +32,104 @@ public class Analytics : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        CheckConsentStatus();
+        if (ConsentStatus == AnalyticsConsentStatus.Unknown)
+            OpenPermissionPanel();
     }
 
-    async void Start()
+    void CheckConsentStatus()
     {
-        // Initialise Unity Services
+        // Load consent status from PlayerPrefs (Modified)
+        string statusString = PlayerPrefs.GetString("AnalyticsConsentStatus", "Unknown");
+        if (System.Enum.TryParse(statusString, out AnalyticsConsentStatus savedStatus))
+        {
+            ConsentStatus = savedStatus;
+        }
+        else
+        {
+            ConsentStatus = AnalyticsConsentStatus.Unknown;
+        }
+
+        ConsentVersion = PlayerPrefs.GetString("AnalyticsConsentVersion", "0");
+
+        long timestampTicks = PlayerPrefs.GetString("AnalyticsConsentTimestamp", "0") != "0" ? System.Convert.ToInt64(PlayerPrefs.GetString("AnalyticsConsentTimestamp", "0")) : 0;
+        if (timestampTicks > 0)
+        {
+            ConsentTimestamp = new System.DateTime(timestampTicks);
+        }
+        else
+        {
+            ConsentTimestamp = default(System.DateTime);
+        }
+
+        if (ConsentStatus == AnalyticsConsentStatus.Granted)
+        {
+            Initialize();
+            AnalyticsEnabled = true;
+        }
+    }
+    
+    void OpenPermissionPanel()
+    {
+        // Activate the permission panel (Modified)
+        if (analyticsPermissionPanel != null)
+        {
+            analyticsPermissionPanel.SetActive(true);
+        }
+    }
+
+    void SetConsentStatus(AnalyticsConsentStatus status)
+    {
+        ConsentStatus = status;
+        if (status == AnalyticsConsentStatus.Granted)
+        {
+            Initialize();
+            AnalyticsEnabled = true;
+        }
+        else if (status == AnalyticsConsentStatus.Denied)
+        {
+            AnalyticsEnabled = false;
+        }
+
+        // Save consent status, version, and timestamp to PlayerPrefs (Modified)
+        PlayerPrefs.SetString("AnalyticsConsentStatus", status.ToString());
+        PlayerPrefs.SetString("AnalyticsConsentVersion", ConsentVersion);
+        ConsentTimestamp = System.DateTime.UtcNow;
+        PlayerPrefs.SetString("AnalyticsConsentTimestamp", ConsentTimestamp.Ticks.ToString());
+        PlayerPrefs.Save();
+    }
+
+    public void GrantConsent()
+    {
+        // Grant consent and hide panel (Modified)
+        SetConsentStatus(AnalyticsConsentStatus.Granted);
+        if (analyticsPermissionPanel != null)
+        {
+            analyticsPermissionPanel.SetActive(false);
+        }
+    }
+
+    public void DenyConsent()
+    {
+        // Deny consent and hide panel (Modified)
+        SetConsentStatus(AnalyticsConsentStatus.Denied);
+        if (analyticsPermissionPanel != null)
+        {
+            analyticsPermissionPanel.SetActive(false);
+        }
+    }
+
+    async void Initialize()
+    {
         await UnityServices.InitializeAsync();
         Debug.Log("UnityServices initialised.");
-
-        // Optional: if you have user consent flow, ensure consent is granted before enabling analytics collection
-        // Example: EndUserConsent.SetConsentState(AnalyticsIntent.Analytics, ConsentStatus.Granted);
-
-        _analyticsInitialized = true;
+        AnalyticsInitialized = true;
     }
 
     public void TrackWaveReached(int wave)
     {
-        if (!_analyticsInitialized)
+        if (!AnalyticsInitialized)
         {
             Debug.LogWarning($"Attempted to track wave {wave} before analytics initialised.");
             return;

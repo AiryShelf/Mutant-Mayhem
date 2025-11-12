@@ -49,7 +49,7 @@ public class UIMothershipController : MonoBehaviour
     IEnumerator LaunchGameCoroutine()
     {
         // 1) Start loading your game scene asynchronously
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(2, LoadSceneMode.Single);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(3, LoadSceneMode.Single);
         
         // 2) Wait until scene load has finished
         while (!asyncLoad.isDone)
@@ -80,11 +80,11 @@ public class UIMothershipController : MonoBehaviour
     {
         augPanel.TrackRPCosts();
 
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
     public void OnReturnToMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }

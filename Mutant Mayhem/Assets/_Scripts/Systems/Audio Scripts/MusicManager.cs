@@ -68,16 +68,19 @@ public class MusicManager : MonoBehaviour
         switch (current.buildIndex)
         {
             case 0:
+                // Do nothing
+                break;
+            case 1:
                 SwitchScenePlaylists(mainMenuPlaylists);
                 TurnShuffleSongsOn();
             break;
 
-            case 1:
+            case 2:
                 SwitchScenePlaylists(mothershipPlaylists);
                 TurnShuffleSongsOn();
             break;
 
-            default:
+            case 3:
                 player = FindObjectOfType<Player>();
                 if (player != null)
                     UI_MusicPlayerPanel.Instance.player = player;
@@ -86,6 +89,11 @@ public class MusicManager : MonoBehaviour
                 
                 SwitchScenePlaylists(dayPlaylists);
                 TurnShuffleAllOn();
+                break;
+            default:
+                Debug.LogWarning("Music Manager: Scene does not have assigned playlists, defaulting to main menu playlists");
+                SwitchScenePlaylists(mainMenuPlaylists);
+                TurnShuffleSongsOn();
             break;
         }
 

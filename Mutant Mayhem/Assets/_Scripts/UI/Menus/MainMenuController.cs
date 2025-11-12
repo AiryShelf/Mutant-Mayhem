@@ -10,6 +10,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] CanvasGroup mainCanvasGroup;
     [SerializeField] CanvasGroup creditsCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave mainMenuFadeGroup;
+    [SerializeField] FadeCanvasGroupsWave musicPlayerFadeGroup;
     [SerializeField] OptionsPanel optionsPanel;
     [SerializeField] ControlSettingsPanel controlsPanel;
     [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
@@ -68,7 +69,7 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     public void OnStartTutorial()
@@ -87,6 +88,11 @@ public class MainMenuController : MonoBehaviour
     public void OnAnimTriggerMenu()
     {
         mainMenuFadeGroup.isTriggered = true;
+        if (musicPlayerFadeGroup == null)
+        {
+            musicPlayerFadeGroup = UI_MusicPlayerPanel.Instance.GetComponent<FadeCanvasGroupsWave>();
+        }
+        musicPlayerFadeGroup.isTriggered = true;
     }
 
     public void ToggleOptions()
