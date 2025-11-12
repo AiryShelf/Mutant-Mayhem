@@ -65,12 +65,19 @@ public class AnimationControllerEnemy : MonoBehaviour
 
     public virtual void SetSitAnimation(bool isSitting)
     {
-        myAnimator.SetBool("isSitting", isSitting);
+        // Check if animator has parameter
+        if (GameTools.AnimatorHasParameter(myAnimator, "isSitting"))
+        {
+            myAnimator.SetBool("isSitting", isSitting);
+        }
     }
 
     public virtual void SetJumpAnimation(bool isJumping)
     {
-        myAnimator.SetBool("isJumping", isJumping);
+        if (GameTools.AnimatorHasParameter(myAnimator, "isJumping"))
+        {
+            myAnimator.SetBool("isJumping", isJumping);
+        }
         SetSpriteLayerToFlying(isJumping);
     }
 

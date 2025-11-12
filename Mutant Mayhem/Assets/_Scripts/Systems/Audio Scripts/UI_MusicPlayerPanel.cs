@@ -18,6 +18,8 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
     [SerializeField] Sprite spr_muteSFXButton;
     [SerializeField] Sprite spr_mutedSFXButton;
     [SerializeField] Slider sfxVolumeSlider;
+    [SerializeField] float voiceVolumeOffset = 10f; // Voice is 10dB louder than SFX
+    [SerializeField] float voiceVolumeCap = 4;
     [SerializeField] Button muteMusicButton;
     Color muteMusicButtonStartColor;
     [SerializeField] Sprite spr_muteMusicButton;
@@ -64,6 +66,7 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
         UpdateShuffleButton();
         //UpdatePlayButton();
         UpdateVolumeSliders();
+
     }
 
     #region Controls
@@ -195,7 +198,8 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
         if (!sfxMuted)
         {
             mainMixer.SetFloat("sfxVolume", value);
-            mainMixer.SetFloat("voiceVolume", value + 3); // Voice is 3dB louder than SFX
+            float voiceVolume = Mathf.Min(value + voiceVolumeOffset, voiceVolumeCap);
+            mainMixer.SetFloat("voiceVolume", voiceVolume);
         }
     }
 

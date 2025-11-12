@@ -19,7 +19,7 @@ public class SupplyManager : MonoBehaviour
             if (_supplyLimit == value) return;
             _supplyLimit = value;
             OnSupplyLimitChanged?.Invoke(value);
-            Debug.Log($"Supply limit changed to {_supplyLimit}");
+            //Debug.Log($"Supply limit changed to {_supplyLimit}");
             LimitSupplyProduction();
         }
     }

@@ -79,7 +79,7 @@ public class MessageManager : MonoBehaviour
 
     void PlayWaveConversation(int waveIndex, bool playOnWaveStart)
     {
-        Debug.Log("MessageManager: Attempting to play wave conversation for wave " + waveIndex + ", playOnWaveStart = " + playOnWaveStart);
+        //Debug.Log("MessageManager: Attempting to play wave conversation for wave " + waveIndex + ", playOnWaveStart = " + playOnWaveStart);
         if (currentPlanetDialogue == null)
         {
             Debug.LogWarning("MessageManager: PlanetDialogueSO is null when trying to play wave conversation.");
@@ -218,7 +218,7 @@ public class MessageManager : MonoBehaviour
         {
             if (skipMessage)
             {
-                Debug.Log("MessageManager: Skipping message for " + message.speakerName);
+                //Debug.Log("MessageManager: Skipping message for " + message.speakerName);
                 break;
             }
 

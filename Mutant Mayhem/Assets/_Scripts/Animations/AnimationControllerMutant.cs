@@ -62,14 +62,21 @@ public class AnimationControllerMutant : AnimationControllerEnemy
 
     public override void SetSitAnimation(bool isSitting)
     {
-        leftLegAnimator.SetBool("isSitting", isSitting);
-        rightLegAnimator.SetBool("isSitting", isSitting);
+        if (GameTools.AnimatorHasParameter(leftLegAnimator, "isSitting"))
+        {
+            leftLegAnimator.SetBool("isSitting", isSitting);
+            rightLegAnimator.SetBool("isSitting", isSitting);
+        }
     }
 
     public override void SetJumpAnimation(bool isJumping)
     {
-        leftLegAnimator.SetBool("isJumping", isJumping);
-        rightLegAnimator.SetBool("isJumping", isJumping);
+        if (GameTools.AnimatorHasParameter(leftLegAnimator, "isJumping"))
+        {
+            leftLegAnimator.SetBool("isJumping", isJumping);
+            rightLegAnimator.SetBool("isJumping", isJumping);
+        }
+        
         SetSpriteLayerToFlying(isJumping);
     }
 

@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: Crab2Slash
   soundType: 1
-  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
   - {fileID: 8300000, guid: cd2761ad5a239a442b4355f95c01bcc2, type: 3}
   - {fileID: 8300000, guid: 46662899154bb79459cb5ff09ccca7f2, type: 3}
@@ -32,5 +31,5 @@ MonoBehaviour:
   pitch: 1
   pitchRandRange: 0.2
   spatialBlend: 1
-  minDistance: 10
-  maxDistance: 100
+  minDistance: 5
+  maxDistance: 400

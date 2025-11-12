@@ -67,17 +67,17 @@ public class DefaultGeneticOps
                              + (WaveControllerRandom.Instance.currentWaveIndex
                              * PlanetManager.Instance.currentPlanet.addMutationChancePerWave);
         mutationChance = Mathf.Clamp(mutationChance, 0f, PlanetManager.Instance.currentPlanet.mutationChanceMax);
-        Debug.Log("[Mutate] Mutation chance: " + mutationChance);
+        //Debug.Log("[Mutate] Mutation chance: " + mutationChance);
 
         var population = EvolutionManager.Instance.GetPopulation();
-        Debug.Log("[Mutate] Population variant count: " + population.Count);
+        //Debug.Log("[Mutate] Population variant count: " + population.Count);
 
         if (population.Count > 0)
         {
             var allIndividuals = new List<GeneticIndividual>();
             foreach (var list in population.Values)
                 allIndividuals.AddRange(list);
-            Debug.Log("[Mutate] All individuals count: " + allIndividuals.Count);
+            //Debug.Log("[Mutate] All individuals count: " + allIndividuals.Count);
 
             if (allIndividuals.Count > 0)
             {
@@ -97,25 +97,25 @@ public class DefaultGeneticOps
                     + (WaveControllerRandom.Instance.currentWaveIndex
                     * PlanetManager.Instance.currentPlanet.addMutationIntensityPerWave);
         float deltaDown = -delta / 2;
-        Debug.Log("[GeneticOps] Mutate scale between: delta up " + delta + ", delta down " + deltaDown);
+        //Debug.Log("[GeneticOps] Mutate scale between: delta up " + delta + ", delta down " + deltaDown);
 
         if (Random.value < mutationChance)
         {
             genome.bodyGene.scale += Random.Range(deltaDown, delta);
             genome.RandomizePartColor(genome.bodyGene, genome.bodyGene.color, delta);
-            Debug.Log("Mutated bodyScale: " + genome.bodyGene.scale);
+            //Debug.Log("Mutated bodyScale: " + genome.bodyGene.scale);
         }
         if (Random.value < mutationChance)
         {
             genome.headGene.scale += Random.Range(deltaDown, delta);
             genome.RandomizePartColor(genome.headGene, genome.headGene.color, delta);
-            Debug.Log("Mutated headScale: " + genome.headGene.scale);
+            //Debug.Log("Mutated headScale: " + genome.headGene.scale);
         }
         if (Random.value < mutationChance)
         {
             genome.legGene.scale += Random.Range(deltaDown, delta);
             genome.RandomizePartColor(genome.legGene, genome.legGene.color, delta);
-            Debug.Log("Mutated legScale: " + genome.legGene.scale);
+            //Debug.Log("Mutated legScale: " + genome.legGene.scale);
         }
 
         ClampAndNormalize(ref genome, difficultyScaleTotal);
@@ -156,7 +156,7 @@ public class DefaultGeneticOps
             Color newColor = Color.Lerp(currentGene.color, newGene.color, Random.Range(0f, 1f));
             newGene.color = newColor;
             newGene.scale = currentGene.scale;
-            Debug.Log($"[Mutate] Mutated {partName} gene {currentGene.id} to: {newGene.id}");
+            //Debug.Log($"[Mutate] Mutated {partName} gene {currentGene.id} to: {newGene.id}");
 
             mutatedPart = true;
             return newGene;

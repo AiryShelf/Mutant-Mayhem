@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: Grab2Growl
   soundType: 1
-  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
   - {fileID: 8300000, guid: 506f0a1319406db4eba016889af28697, type: 3}
   - {fileID: 8300000, guid: 3c98bf81a7d5ef749880fb2e98a3e4fb, type: 3}
@@ -39,5 +38,5 @@ MonoBehaviour:
   pitch: 1
   pitchRandRange: 0.2
   spatialBlend: 1
-  minDistance: 10
-  maxDistance: 100
+  minDistance: 5
+  maxDistance: 400

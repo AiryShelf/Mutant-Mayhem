@@ -34,7 +34,7 @@ public class EnemyShootIntermittentThrow : EnemyShootSOBase
     {
         base.DoEnterLogic();
 
-        Debug.Log("Entering Intermittent Throw State");
+        //Debug.Log("Entering Intermittent Throw State");
 
         waitToExitCoroutine = enemyBase.StartCoroutine(StateChangeCheck());
         // Shoot next physicsUpdate

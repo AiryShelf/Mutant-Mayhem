@@ -53,7 +53,7 @@ public class WaveSpawnerRandom : MonoBehaviour
                                     currentPlanet.maxIndexToSelectAtStart + 
                                     SettingsManager.Instance.WavesTillAddWaveBaseDifficultyAdjust;
         maxIndex = Mathf.Clamp(maxIndex, 0, waveBase.subWaves.Count - 1);
-        Debug.Log("MaxIndex for wave " + waveController.currentWaveIndex + " set to: " + maxIndex);
+        //Debug.Log("MaxIndex for wave " + waveController.currentWaveIndex + " set to: " + maxIndex);
     }
 
     public void StartWave()
@@ -128,8 +128,8 @@ public class WaveSpawnerRandom : MonoBehaviour
 
             prevSubwaveIndex = subWaveIndex;
         }
-        Debug.Log("Number of SubWaves for wave " + waveController.currentWaveIndex + 
-                  ": " + currentWave.subWaves.Count);
+        //Debug.Log("Number of SubWaves for wave " + waveController.currentWaveIndex + 
+        //          ": " + currentWave.subWaves.Count);
     }
 
     IEnumerator WaveTimer()
@@ -150,7 +150,7 @@ public class WaveSpawnerRandom : MonoBehaviour
 
         // Find max length of time, add 5 seconds
         int maxTime = _timesToTriggerSubwaves.Max() + 5;
-        Debug.Log("MaxTime for wave " + waveController.currentWaveIndex + ": " + maxTime);
+        //Debug.Log("MaxTime for wave " + waveController.currentWaveIndex + ": " + maxTime);
 
         while (waveSpawning)
         {
@@ -160,7 +160,7 @@ public class WaveSpawnerRandom : MonoBehaviour
                 currentSubWaveIndex = 
                     _timesToTriggerSubwaves.IndexOf(waveSeconds);
                 StartCoroutine(SpawnSubWave(currentSubWaveIndex));
-                Debug.Log($"Subwave {currentSubWaveIndex} started at {waveSeconds} seconds");
+                //Debug.Log($"Subwave {currentSubWaveIndex} started at {waveSeconds} seconds");
             }
             // If current wave seconds has constantWave to trigger
             if (_timesToTriggerConstantWaves.Contains(waveSeconds))
@@ -188,7 +188,7 @@ public class WaveSpawnerRandom : MonoBehaviour
 
                 // End the wave
                 waveComplete = true;
-                Debug.Log("Wave " + waveController.currentWaveIndex + " Complete");
+                //Debug.Log("Wave " + waveController.currentWaveIndex + " Complete");
             }
         }
     }
@@ -405,7 +405,7 @@ public class WaveSpawnerRandom : MonoBehaviour
         }
         else
         {
-            Debug.Log("Wave Spawner CheckGridIsClear failed");
+            //Debug.Log("Wave Spawner CheckGridIsClear failed");
             return false;
         }
     }

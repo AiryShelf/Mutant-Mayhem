@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3184887387907700395}
   - component: {fileID: 3837195195736545221}
   - component: {fileID: 2683046213330109091}
+  - component: {fileID: 5774189205446740819}
   m_Layer: 0
   m_Name: SettingsManager
   m_TagString: Untagged
@@ -57,7 +58,7 @@ MonoBehaviour:
     profileName: 
     researchPoints: 0
     completedPlanets: []
-    lastPlanetVisited: {fileID: 0}
+    lastPlanetVisited: 0
     playthroughs: 0
     maxWaveSurvived: 0
     difficultyLevel: 0
@@ -66,6 +67,7 @@ MonoBehaviour:
     isSpacebarEnabled: 0
     isFastJoystickAimEnabled: 0
     joystickCursorSpeed: 0
+    joystickAccelSpeed: 0
     virtualAimJoystickDisabled: 0
 --- !u!114 &6658943725255159057
 MonoBehaviour:
@@ -117,7 +119,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7478ab236b78b48c18b48d8de7fc5c8b, type: 2}
   - {fileID: 11400000, guid: 387b81dd0246744d1b7317072823d3e0, type: 2}
   - {fileID: 11400000, guid: 9ecded26d5e074d71a1f9e9a417dd1d8, type: 2}
-  tutorialPlanet: {fileID: 11400000, guid: e0d4b0b79361a47eaa546bd65d3a4f1c, type: 2}
 --- !u!114 &2494230285008560391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,6 +181,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a88717f5e0ffdf44f9c0065cd4a925f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5774189205446740819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4728742619335677830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d9677bb3f1bf40b597067d558c7cacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5853297479244973275

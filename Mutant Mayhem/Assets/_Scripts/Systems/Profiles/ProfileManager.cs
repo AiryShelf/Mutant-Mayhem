@@ -161,7 +161,7 @@ public class ProfileManager : MonoBehaviour
         ProfileDataWrapper wrapper = new ProfileDataWrapper(profiles);
         string json = JsonUtility.ToJson(wrapper, true);
         
-        Debug.Log($"Saving Profiles: {json}"); // Log the serialized data
+        //Debug.Log($"Saving Profiles: {json}"); // Log the serialized data
 
         File.WriteAllText(savePath, json);
         Debug.Log($"Profiles saved to {savePath}");

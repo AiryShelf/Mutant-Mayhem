@@ -49,6 +49,8 @@ public class ToolbarSelector : MonoBehaviour
         image.color = new Color(1,1,1,1);
         //Debug.Log("Toolbarselector played upgEffect");
         UpgradeManager.Instance.upgradeEffects.ToolbarUpgradeEffect((Vector2)image.transform.position);
+
+        StartCoroutine(PlayUnlockAnimation(image, new Vector2(0, 200), 5f, 3f));
     }
 
     public void LockBoxImage(int i)
@@ -57,5 +59,44 @@ public class ToolbarSelector : MonoBehaviour
         image.color = new Color(0, 0, 0, 0.4f);
         //Debug.Log("Toolbarselector played upgEffect");
         //UpgradeManager.Instance.upgradeEffects.ToolbarUpgradeEffect((Vector2)image.transform.position);
+    }
+
+    // Coroutine to animate an Image moving and scaling to a center position and back
+    public IEnumerator PlayUnlockAnimation(Image image, Vector2 centerPos, float scale, float duration)
+    {
+        RectTransform rectTransform = image.rectTransform;
+        Vector2 originalPos = rectTransform.anchoredPosition;
+        Vector3 originalScale = rectTransform.localScale;
+
+        float halfDuration = duration / 2f;
+        float timer = 0f;
+
+        // Move and scale to center position and target scale
+        while (timer < halfDuration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(timer / halfDuration));
+            rectTransform.anchoredPosition = Vector2.Lerp(originalPos, centerPos, t);
+            rectTransform.localScale = Vector3.Lerp(originalScale, Vector3.one * scale, t);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.15f);
+
+        timer = 0f;
+        float returnDuration = halfDuration * 0.75f;
+        // Move and scale back to original position and scale
+        while (timer < returnDuration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(timer / returnDuration));
+            rectTransform.anchoredPosition = Vector2.Lerp(centerPos, originalPos, t);
+            rectTransform.localScale = Vector3.Lerp(Vector3.one * scale, originalScale, t);
+            yield return null;
+        }
+
+        // Ensure final position and scale are reset exactly
+        rectTransform.anchoredPosition = originalPos;
+        rectTransform.localScale = originalScale;
     }
 }

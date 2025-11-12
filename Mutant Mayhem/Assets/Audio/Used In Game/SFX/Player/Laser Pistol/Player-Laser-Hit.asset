@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: PlayerLaserHit
   soundType: 1
-  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
   - {fileID: 8300000, guid: 117910d78aac5f54e8d897f9451b5c61, type: 3}
   - {fileID: 8300000, guid: 14a0e3dc144f49c41816a100285b45e9, type: 3}
@@ -24,5 +23,5 @@ MonoBehaviour:
   pitch: 1
   pitchRandRange: 0.2
   spatialBlend: 1
-  minDistance: 10
-  maxDistance: 100
+  minDistance: 5
+  maxDistance: 400

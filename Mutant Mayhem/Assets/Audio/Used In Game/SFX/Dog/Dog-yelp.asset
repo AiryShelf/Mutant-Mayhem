@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: DogYelp
   soundType: 1
-  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
   - {fileID: 8300000, guid: c4056704af976074b85c27a09fa40e85, type: 3}
   - {fileID: 8300000, guid: 326e26b3ea501874198701e73a32bd43, type: 3}
@@ -36,5 +35,5 @@ MonoBehaviour:
   pitch: 1
   pitchRandRange: 0.2
   spatialBlend: 1
-  minDistance: 10
-  maxDistance: 100
+  minDistance: 5
+  maxDistance: 400

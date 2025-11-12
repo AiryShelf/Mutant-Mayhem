@@ -206,7 +206,7 @@ public class PlayerShooter : Shooter
             }
         }
 
-        Debug.Log("Switched to gun index: " + i + ": " + currentGunSO);
+        //Debug.Log("Switched to gun index: " + i + ": " + currentGunSO);
         onPlayerGunSwitched?.Invoke(i);
     }
 

@@ -86,7 +86,7 @@ public class BloodVignetteController : MonoBehaviour
 
     void OnHealthChanged(float uselessNumber)
     {
-        Debug.Log("Blood Vignette Health Changed");
+        //Debug.Log("Blood Vignette Health Changed");
         float currentHealth = player.stats.playerHealthScript.GetHealth();
         float maxHealth = player.stats.playerHealthScript.GetMaxHealth();
 

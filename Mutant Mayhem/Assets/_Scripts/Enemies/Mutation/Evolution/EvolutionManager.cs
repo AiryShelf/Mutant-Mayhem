@@ -120,7 +120,7 @@ public class EvolutionManager : MonoBehaviour
     {
         if (populationCount == 0)
         {
-            Debug.LogWarning("EvolutionManager: Population is empty, cannot spawn wave.");
+            Debug.LogError("EvolutionManager: Population is empty, cannot spawn wave.");
             return;
         }
         
@@ -148,10 +148,10 @@ public class EvolutionManager : MonoBehaviour
             }
 
             enemyMutant.InitializeMutant(individual);
-            Debug.Log($"EvolutionManager: Spawned individual {index} of variant {individual.variant}." +
-            $"Lifetime count = {individual.lifetimeCount}, Fitness = {individual.fitnessCount}" +
-            $"\nGenome: Body {individual.genome.bodyGene.id}, Head {individual.genome.headGene.id}, Legs {individual.genome.legGene.id}" +
-            $"\nScale: Body {individual.genome.bodyGene.scale}, Head {individual.genome.headGene.scale}, Legs {individual.genome.legGene.scale}");
+            //Debug.Log($"EvolutionManager: Spawned individual {index} of variant {individual.variant}." +
+            //$"Lifetime count = {individual.lifetimeCount}, Fitness = {individual.fitnessCount}" +
+            //$"\nGenome: Body {individual.genome.bodyGene.id}, Head {individual.genome.headGene.id}, Legs {individual.genome.legGene.id}" +
+            //$"\nScale: Body {individual.genome.bodyGene.scale}, Head {individual.genome.headGene.scale}, Legs {individual.genome.legGene.scale}");
         }
 
         _lastSpawnCycleIndex = (_lastSpawnCycleIndex + totalToSpawn) % individuals.Count;
@@ -164,7 +164,7 @@ public class EvolutionManager : MonoBehaviour
             BuildGenerationZero();
         }
 
-        Debug.Log($"EvolutionManager: Ending subwave {_currentSubwaveCount} and attempting to evolve population of {populationCount}.");
+        //Debug.Log($"EvolutionManager: Ending subwave {_currentSubwaveCount} and attempting to evolve population of {populationCount}.");
 
         IncrementDifficultyScale();
         AddNewGenesForWave();
@@ -208,7 +208,7 @@ public class EvolutionManager : MonoBehaviour
     List<GeneticIndividual> GetStartingPopulation(PopulationVariantType variantType)
     {
         int maxIndex = _waveSpawner.maxIndex;
-        Debug.Log("EvolutionManager: Adding starting population of variant " + variantType + " at maxIndex " + maxIndex);
+        //Debug.Log("EvolutionManager: Adding starting population of variant " + variantType + " at maxIndex " + maxIndex);
 
         var startingPopulation = new List<GeneticIndividual>();
 
@@ -223,7 +223,7 @@ public class EvolutionManager : MonoBehaviour
         {
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
-                Debug.Log($"EvolutionManager: Adding genome to starting population of variant {variantType}: {g}, from index {i}");
+                //Debug.Log($"EvolutionManager: Adding genome to starting population of variant {variantType}: {g}, from index {i}");
                 var genome = g.ToGenome();
 
                 _ops.ClampAndNormalize(ref genome, difficultyScaleTotal);
@@ -233,7 +233,7 @@ public class EvolutionManager : MonoBehaviour
 
         _previousMaxIndex = maxIndex;
 
-        Debug.Log("EvolutionManager: Starting population build complete for variant " + variantType + ", with " + startingPopulation.Count + " individuals.");
+        //Debug.Log("EvolutionManager: Starting population build complete for variant " + variantType + ", with " + startingPopulation.Count + " individuals.");
         return startingPopulation;
     }
 
@@ -279,9 +279,9 @@ public class EvolutionManager : MonoBehaviour
 
         _population[variant] = nextGen;
 
-        Debug.Log("EvolutionManager: Crossover complete for variant " + variant +
-                  ". Variant population size after crossover: " + _population[variant].Count +
-                  $", Parents: {numParents}, New Children: {numChildren}, Old Children (Not part of crossover): {youngIndividuals.Count}");
+        //Debug.Log("EvolutionManager: Crossover complete for variant " + variant +
+        //          ". Variant population size after crossover: " + _population[variant].Count +
+        //          $", Parents: {numParents}, New Children: {numChildren}, Old Children (Not part of crossover): {youngIndividuals.Count}");
     }
 
     void AddNewGenesForWave()
@@ -289,7 +289,7 @@ public class EvolutionManager : MonoBehaviour
         int currentMaxIndex = _waveSpawner.maxIndex;
         if (currentMaxIndex <= _previousMaxIndex) return;
 
-        Debug.Log($"EvolutionManager: Adding new genes for wave {_currentSubwaveCount} with previousIndex {_previousMaxIndex} and maxIndex {currentMaxIndex}.");
+        //Debug.Log($"EvolutionManager: Adding new genes for wave {_currentSubwaveCount} with previousIndex {_previousMaxIndex} and maxIndex {currentMaxIndex}.");
 
         PlanetSO currentPlanet = PlanetManager.Instance.currentPlanet;
         if (currentPlanet == null) return;
@@ -300,7 +300,7 @@ public class EvolutionManager : MonoBehaviour
             // Add new genomes from the current wave
             foreach (var g in currentPlanet.waveSOBase.subWaves[i].genomeList)
             {
-                Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyGeneSO.id} {g.headGeneSO.id} {g.legGeneSO.id}");
+                //Debug.Log($"EvolutionManager: Adding new genome from subwave index {i}: {g} {g.bodyGeneSO.id} {g.headGeneSO.id} {g.legGeneSO.id}");
                 var genome = g.ToGenome();
 
                 // For each variant, add new individuals with gene scales randomized within population bounds
@@ -334,7 +334,7 @@ public class EvolutionManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log($"EvolutionManager: Population increased by {popIncreasePerVariant * _population.Count} for wave _{_currentSubwaveCount}");
+        //Debug.Log($"EvolutionManager: Population increased by {popIncreasePerVariant * _population.Count} for wave _{_currentSubwaveCount}");
         _previousMaxIndex = currentMaxIndex;
         populationCount = _population.Sum(kvp => kvp.Value.Count);
     }
@@ -350,7 +350,7 @@ public class EvolutionManager : MonoBehaviour
     public void IncrementDifficultyScale()
     {
         difficultyScaleTotal += difficultyScalePerWave;
-        Debug.Log($"Difficulty scale increased to {difficultyScaleTotal}");
+        //Debug.Log($"Difficulty scale increased to {difficultyScaleTotal}");
     }
     #endregion
 }

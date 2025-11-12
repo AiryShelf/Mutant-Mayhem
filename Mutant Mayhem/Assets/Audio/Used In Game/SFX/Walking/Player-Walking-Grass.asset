@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: PlayerWalkingGrass
   soundType: 1
-  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
   - {fileID: 8300000, guid: fdbdf7234083abf409be6805021a4d8d, type: 3}
   - {fileID: 8300000, guid: bbd616b52ba9adc4990dfdf8f6b18d0b, type: 3}
@@ -28,5 +27,5 @@ MonoBehaviour:
   pitch: 1
   pitchRandRange: 0.1
   spatialBlend: 0.8
-  minDistance: 15
-  maxDistance: 100
+  minDistance: 20
+  maxDistance: 400

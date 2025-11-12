@@ -33,14 +33,8 @@ public class Explosion : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    public void OnEnable()
     {
-        if (!initialized)
-        {
-            initialized = true;
-            return;
-        }
-        
         if (explodeOnEnable)
             StartCoroutine(Explode());
     }
@@ -79,7 +73,11 @@ public class Explosion : MonoBehaviour
     IEnumerator ReturnToPoolAfterTime(float time)
     {
         if (explosionFlash != null)
+        {
             explosionFlash.gameObject.SetActive(true);
+            explosionFlash.intensity = flashIntensityStart;
+        }
+
         while (time > 0)
         {
             // Handle flash fade
@@ -90,14 +88,8 @@ public class Explosion : MonoBehaviour
                     explosionFlash.gameObject.SetActive(false);
             }
 
-            time -= Time.deltaTime;
+            time -= Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
-        }
-
-        if (explosionFlash != null)
-        {
-            explosionFlash.intensity = flashIntensityStart;
-            explosionFlash.gameObject.SetActive(true);
         }
         
         PoolManager.Instance.ReturnToPool(explosionObjectPoolName, gameObject);

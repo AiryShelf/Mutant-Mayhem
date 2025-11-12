@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: DogBark
   soundType: 1
-  mixerGroup: {fileID: 754564541188246783, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   clips:
   - {fileID: 8300000, guid: 21c76e94ff7bcdd40856df2629b00bb7, type: 3}
   - {fileID: 8300000, guid: 293407a10d4ace441ae6d6e541b31fdb, type: 3}
@@ -63,5 +62,5 @@ MonoBehaviour:
   pitch: 1.2
   pitchRandRange: 0.2
   spatialBlend: 1
-  minDistance: 10
-  maxDistance: 100
+  minDistance: 5
+  maxDistance: 400

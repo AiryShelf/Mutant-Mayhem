@@ -243,7 +243,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         randomSizeFactor *= waveController.sizeMultiplier * PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize];
         randomSizeFactor = Mathf.Clamp(randomSizeFactor, minSize, float.MaxValue);
         transform.localScale *= randomSizeFactor;
-        Debug.Log($"EnemyBase - Randomized Size Factor: {randomSizeFactor}, New Local Scale: {transform.localScale}");
+        //Debug.Log($"EnemyBase - Randomized Size Factor: {randomSizeFactor}, New Local Scale: {transform.localScale}");
         float areaScale = transform.localScale.x * transform.localScale.y;
 
         // Set these stats by areaScale to keep health and damage proportional to size

@@ -105,7 +105,7 @@ public class WaveControllerRandom : MonoBehaviour
 
     void OnNextWaveInput(InputAction.CallbackContext context)
     {
-        Debug.Log("NextWave Input detected");
+        //Debug.Log("NextWave Input detected");
         if (nextWaveFadeGroup.isTriggered)
         {
             int healthGain = Mathf.FloorToInt(player.stats.playerHealthScript.healthRegenPerSec * countdown);
