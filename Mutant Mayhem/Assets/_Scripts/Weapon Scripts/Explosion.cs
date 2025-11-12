@@ -5,6 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Explosion : MonoBehaviour
 {
+    [SerializeField] bool explodeOnEnable = true;
     [SerializeField] string explosionObjectPoolName = "Explosion";
     [SerializeField] SoundSO explosionSound;
     [SerializeField] Light2D explosionFlash;
@@ -40,7 +41,8 @@ public class Explosion : MonoBehaviour
             return;
         }
         
-        Explode();
+        if (explodeOnEnable)
+            StartCoroutine(Explode());
     }
 
     void OnDisable()
@@ -48,16 +50,22 @@ public class Explosion : MonoBehaviour
         StopAllCoroutines();
     }
 
-    void Explode()
+    IEnumerator Explode()
     {
         tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)
         {
             Debug.LogError("Explosion could not find TileManager in scene");
-            return;
+            yield break;
         }
 
-        AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
+        yield return null;
+
+        if (explosionSound != null)
+            AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
+
+        if (radius == 0)
+            yield break;
 
         // Find grid tiles in range
         Vector2 explosionPos = transform.position;
@@ -70,6 +78,8 @@ public class Explosion : MonoBehaviour
 
     IEnumerator ReturnToPoolAfterTime(float time)
     {
+        if (explosionFlash != null)
+            explosionFlash.gameObject.SetActive(true);
         while (time > 0)
         {
             // Handle flash fade

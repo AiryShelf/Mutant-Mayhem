@@ -46,10 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92945588c68b314da407858b5df2d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explodeOnEnable: 1
   explosionObjectPoolName: Explosion_Corpse_Red
-  explosionSound: {fileID: 11400000, guid: f10d92d68294d41b4b3d0910290d712c, type: 2}
+  explosionSound: {fileID: 11400000, guid: 43f41beaa36f24cf2acff7882ffff057, type: 2}
   explosionFlash: {fileID: 0}
-  returnToPoolTime: 1
+  returnToPoolTime: 0.8
   flashFadeRate: 0.1
   layersToHit:
     serializedVersion: 2

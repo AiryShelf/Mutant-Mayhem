@@ -3358,6 +3358,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6293564672853078454, guid: 0b09870d9527de243bff11815399993e, type: 3}
+      propertyPath: dayPlaylists.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6293564672853078454, guid: 0b09870d9527de243bff11815399993e, type: 3}
+      propertyPath: nightPlaylists.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6293564672853078454, guid: 0b09870d9527de243bff11815399993e, type: 3}
+      propertyPath: dayPlaylists.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b429c832daf8af8479483dcadd4496f7, type: 2}
+    - target: {fileID: 6293564672853078454, guid: 0b09870d9527de243bff11815399993e, type: 3}
+      propertyPath: nightPlaylists.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b00c1aa9a3f8b804fb32fd9213b6b670, type: 2}
+    - target: {fileID: 6293564672853078454, guid: 0b09870d9527de243bff11815399993e, type: 3}
+      propertyPath: nightPlaylists.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: d27902129de53ff459a3d09e872ca499, type: 2}
+    - target: {fileID: 6293564672853078454, guid: 0b09870d9527de243bff11815399993e, type: 3}
+      propertyPath: nightPlaylists.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 22f6bd344bb52bc40ad93d7c83381955, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3941,6 +3965,10 @@ MonoBehaviour:
 
 
     FreeSound.org free assets:
+
+    Pouring Soup
+    in a Metal Pan - Quick,Short,Gross by Hitrison -- https://freesound.org/s/251410/
+    -- License: Attribution 4.0
 
     Custom_explosion_sound_part_3_fate_staynight_10172025
     by Artninja -- https://freesound.org/s/829778/ -- License: Attribution 4.0

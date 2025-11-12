@@ -166,6 +166,8 @@ public class WaveControllerRandom : MonoBehaviour
 
         daylight.StartCoroutine(daylight.PlaySunsetEffect());
         isNight = true;
+        MusicManager.Instance.SwitchScenePlaylists(MusicManager.Instance.nightPlaylists);
+        MusicManager.Instance.PlayNextSong(3f);
         IncrementWaveDifficulty();
 
         if (nextWaveTimer != null)
@@ -206,6 +208,8 @@ public class WaveControllerRandom : MonoBehaviour
 
         OnWaveEnded?.Invoke(currentWaveIndex);
 
+        MusicManager.Instance.SwitchScenePlaylists(MusicManager.Instance.dayPlaylists);
+        MusicManager.Instance.PlayNextSong(3f);
         isNight = false;
         MessageBanner.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;

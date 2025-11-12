@@ -15,6 +15,8 @@ public class MusicManager : MonoBehaviour
     public List<PlaylistSO> mainMenuPlaylists = new List<PlaylistSO>();
     public List<PlaylistSO> mothershipPlaylists = new List<PlaylistSO>();
     public List<PlaylistSO> gamePlaylists = new List<PlaylistSO>();
+    public List<PlaylistSO> dayPlaylists = new List<PlaylistSO>();
+    public List<PlaylistSO> nightPlaylists = new List<PlaylistSO>();
     public List<PlaylistSO> deathPlaylists = new List<PlaylistSO>();
 
     public List<PlaylistSO> currentScenePlaylists = new List<PlaylistSO>();
@@ -82,7 +84,7 @@ public class MusicManager : MonoBehaviour
                 else 
                     Debug.Log("MusicManager could not find player on game scene loaded");
                 
-                SwitchScenePlaylists(gamePlaylists);
+                SwitchScenePlaylists(dayPlaylists);
                 TurnShuffleAllOn();
             break;
         }
@@ -343,7 +345,7 @@ public class MusicManager : MonoBehaviour
         AddToHistory(firstSong);
     }
     
-    void PlayNextSong(float fadeTime)
+    public void PlayNextSong(float fadeTime)
     {
         // Play next in history
         historyIndex++;
@@ -411,7 +413,7 @@ public class MusicManager : MonoBehaviour
         PlayNextSong(crossFadeDuration);
     }
 
-    void SwitchPlaylist(int index)
+    public void SwitchPlaylist(int index)
     {
         currentPlaylist = currentScenePlaylists[index];
         currentPlaylistIndex = index;
@@ -422,7 +424,7 @@ public class MusicManager : MonoBehaviour
             currentPlaylist.ShufflePlaylist();
     }
 
-    void SwitchScenePlaylists(List<PlaylistSO> newList)
+    public void SwitchScenePlaylists(List<PlaylistSO> newList)
     {
         currentScenePlaylists.Clear();
         foreach (PlaylistSO list in newList)

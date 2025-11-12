@@ -90,7 +90,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vignetteImage: {fileID: 711910791637336607}
   maxRestingAlpha: 1
-  restingAlphaLerpSpeed: 6
+  restingAlphaLerpSpeed: 1
+  fullAlphaBelowHealth: 0.1
   pulseCurve:
     serializedVersion: 2
     m_Curve:
@@ -117,5 +118,5 @@ MonoBehaviour:
     m_RotationOrder: 4
   pulseRiseTime: 0.07
   minPulseFadeTime: 0.5
-  maxPulseFadeTime: 4
+  maxPulseFadeTime: 6
   maxCumulativeFadeTime: 8

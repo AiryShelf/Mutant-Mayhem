@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -145,6 +144,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3378141277723388513, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3378141277723388513, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3378141277723388513, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4366838514021329109, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
@@ -7934,18 +7941,8 @@ MonoBehaviour:
     Weapon Tech upgrades cost
     20% less
 
-    Structures and Structure Tech upgrades cost 20% more
-
-    Start
-    with 2 Attack Drones
-
-    Start with no turret slots'
-  neutralDescription: 'A balanced build
-
-    Start with 1 Attack Drone and 2 Construction
-    Drones
-
-    Start with no turret slots'
+    Structures and Structure Tech upgrades cost 20% more'
+  neutralDescription: A balanced build
   builderDescription: 'Exosuit upgrades cost 20% more
 
     Weapon Tech upgrades cost
@@ -7953,13 +7950,8 @@ MonoBehaviour:
 
     Structures and Structure Tech upgrades cost 20% less
 
-    Start
-    with 4 Construction Drones
-
-    Start with 1 turret slot
-
-    Repair twice as
-    fast'
+    Repair
+    twice as fast'
 --- !u!114 &1901434547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8697,6 +8689,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!224 &2065262342 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7998931929882539879, guid: e8baab5f56c1b1844a1ddb42f4b9203d, type: 3}

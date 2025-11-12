@@ -518,16 +518,12 @@ public class BuyConstructionDroneUpgrade : Upgrade
     public override int CalculateCost(Player player, int baseCost, int level)
     {
         int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count + 1), baseCost, int.MaxValue);
-        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
-            cost /= 2;
         return cost;
     }
 
     public static int GetCost(Player player, int baseCost)
     {
         int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count + 1), baseCost, int.MaxValue);
-        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
-            cost /= 2;
         return cost;
     }
 }
@@ -550,8 +546,6 @@ public class BuyAttackDroneUpgrade : Upgrade
         // Increment cost
         int newDroneCount = activeDrones + 1;
         int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
-        if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
-            newCost = Mathf.FloorToInt(newCost / 1.5f);
         //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
         return newCost;
     }
@@ -563,8 +557,6 @@ public class BuyAttackDroneUpgrade : Upgrade
         // Increment cost
         int newDroneCount = activeDrones + 1;
         int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
-        if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
-            newCost = Mathf.FloorToInt(newCost / 1.5f);
         //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
         return newCost;
     }
@@ -584,16 +576,12 @@ public class SellConstructionDroneUpgrade : Upgrade
     public override int CalculateCost(Player player, int baseCost, int level)
     {
         int cost = baseCost * DroneManager.Instance.activeConstructionDrones.Count;
-        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
-            cost /= 2;
         return cost;
     }
 
     public static int GetCost(int baseCost)
     {
         int cost = baseCost * DroneManager.Instance.activeConstructionDrones.Count;
-        if (ClassManager.Instance.selectedClass == PlayerClass.Builder)
-            cost /= 2;
         return cost;
     }
 }
@@ -613,16 +601,12 @@ public class SellAttackDroneUpgrade : Upgrade
     {
         // Decrement cost
         int cost = baseCost * DroneManager.Instance.activeAttackDrones.Count;
-        if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
-            cost = Mathf.FloorToInt(cost / 1.5f);
         return cost;
     }
 
     public static int GetCost(int baseCost)
     {
         int cost = baseCost * DroneManager.Instance.activeAttackDrones.Count;
-        if (ClassManager.Instance.selectedClass == PlayerClass.Fighter)
-            cost = Mathf.FloorToInt(cost / 1.5f);
         return cost;
     }
 }
