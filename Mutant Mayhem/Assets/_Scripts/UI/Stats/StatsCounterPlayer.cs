@@ -10,10 +10,13 @@ public class StatsCounterPlayer : MonoBehaviour
     public static float TotalPlayTime;
     public static int EnemiesKilledByPlayer;
     public static int EnemiesKilledByTurrets;
+    public static int EnemiesKilledByDrones;
     public static float TimeSprintingPlayer;
 
     [Header("Projectiles")]
     public static int ShotsFiredByPlayer;
+    public static int ShotsFiredPlayerLasers;
+    public static int ShotsFiredPlayerBullets;
     public static int ShotsHitByPlayer;
     public static int ShotsFiredByTurrets;
     public static int ShotsFiredByEnemies;

@@ -11,6 +11,7 @@ public class UIMothershipController : MonoBehaviour
     [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
     UIAugPanel augPanel;
+    LoadingPanel loadingPanel;
 
     void Start()
     {
@@ -48,6 +49,14 @@ public class UIMothershipController : MonoBehaviour
 
     IEnumerator LaunchGameCoroutine()
     {
+        if (loadingPanel == null)
+        {
+            loadingPanel = FindObjectOfType<LoadingPanel>();
+        }
+        loadingPanel.canvasGroup.alpha = 1f;
+
+        yield return null; // Wait one frame to ensure loading canvas groups update
+
         // 1) Start loading your game scene asynchronously
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(3, LoadSceneMode.Single);
         
@@ -80,7 +89,7 @@ public class UIMothershipController : MonoBehaviour
     {
         augPanel.TrackRPCosts();
 
-        SceneManager.LoadScene(3);
+        StartCoroutine(LaunchGameCoroutine());
     }
 
     public void OnReturnToMenu()

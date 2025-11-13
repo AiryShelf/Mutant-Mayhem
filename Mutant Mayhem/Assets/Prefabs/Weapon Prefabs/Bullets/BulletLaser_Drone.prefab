@@ -53,6 +53,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2097280
   gunType: 0
+  bulletLight: {fileID: 0}
   rb: {fileID: 2082839547474369568}
   shootSound: {fileID: 11400000, guid: 32cb16881e834644b84c3586a79f0fcb, type: 2}
   hitSound: {fileID: 11400000, guid: 6ffb3c9e7bd64ec4f978af323e6aea7a, type: 2}
@@ -60,7 +61,7 @@ MonoBehaviour:
   AiTrggerPrefab: {fileID: 0}
   AITriggerSize: 3
   damage: 20
-  damageVariance: 0
+  damageVarianceFactor: 0
   knockback: 0.5
   destroyTime: 0
   velocity: {x: 0, y: 0}

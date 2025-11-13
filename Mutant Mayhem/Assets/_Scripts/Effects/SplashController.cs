@@ -39,6 +39,7 @@ public class SplashController : MonoBehaviour
     IEnumerator FadeEffect()
     {
         // Fade in, hold for displayTime, fade out
+        
         float timer = 0f;
         // Fade in
         while (timer < fadeTime)

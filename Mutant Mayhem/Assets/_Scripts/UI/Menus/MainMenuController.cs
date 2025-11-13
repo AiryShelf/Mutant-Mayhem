@@ -24,6 +24,7 @@ public class MainMenuController : MonoBehaviour
     bool isOptionsOpen;
     bool isControlsOpen;
     bool isCreditsOpen;
+    LoadingPanel loadingPanel;
 
     void OnEnable() 
     {
@@ -69,7 +70,22 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(2);
+        if (Analytics.ConsentStatus == AnalyticsConsentStatus.Unknown)
+        {
+            Analytics.Instance.OpenPermissionPanel(
+                () => {
+                    Analytics.Instance.GrantConsent();
+                    SceneManager.LoadSceneAsync(2);
+                },
+                () => {
+                    Analytics.Instance.DenyConsent();
+                    SceneManager.LoadSceneAsync(2);
+                }
+            );
+            return;
+        }
+
+        SceneManager.LoadSceneAsync(2);
     }
 
     public void OnStartTutorial()
@@ -80,9 +96,46 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
+        if (Analytics.ConsentStatus == AnalyticsConsentStatus.Unknown)
+        {
+            Analytics.Instance.OpenPermissionPanel(
+                () => {
+                    Analytics.Instance.GrantConsent();
+                    StartTutorial();
+                },
+                () => {
+                    Analytics.Instance.DenyConsent();
+                    StartTutorial();
+                }
+            );
+            return;
+        }
+
+        StartTutorial();
+    }
+
+    public IEnumerator LoadSceneCoroutine(int sceneIndex)
+    {
+        if (loadingPanel == null)
+        {
+            loadingPanel = FindObjectOfType<LoadingPanel>();
+        }
+        loadingPanel.canvasGroup.alpha = 1f;
+        mainCanvasGroup.alpha = 0f;
+        creditsCanvasGroup.alpha = 0f;
+
+        // Wait one frame to ensure loading canvas groups update
+        // force update canvases
+        yield return null;
+
+        SceneManager.LoadSceneAsync(sceneIndex);
+    }
+
+    void StartTutorial()
+    {
         PlanetManager.Instance.SetTutorialPlanet();
         var hideGroups = new List<CanvasGroup> { mainCanvasGroup, creditsCanvasGroup };
-        VideoPlayerManager.Instance.PlayTutorialVideo(2, hideGroups); // Loads game level after video
+        VideoPlayerManager.Instance.PlayTutorialVideo(3, hideGroups); // Loads game level after video
     }
 
     public void OnAnimTriggerMenu()

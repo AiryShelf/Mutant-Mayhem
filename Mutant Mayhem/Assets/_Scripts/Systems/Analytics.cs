@@ -19,7 +19,7 @@ public class Analytics : MonoBehaviour
     public static bool AnalyticsEnabled = false;
     public static bool AnalyticsInitialized = false;
 
-    [SerializeField] GameObject analyticsPermissionPanel;
+    [SerializeField] PermissionPanel analyticsPermissionPanel;
 
     void Awake()
     {
@@ -34,8 +34,8 @@ public class Analytics : MonoBehaviour
         }
 
         CheckConsentStatus();
-        if (ConsentStatus == AnalyticsConsentStatus.Unknown)
-            OpenPermissionPanel();
+        //if (ConsentStatus == AnalyticsConsentStatus.Unknown)
+            //OpenPermissionPanel();
     }
 
     void CheckConsentStatus()
@@ -60,7 +60,7 @@ public class Analytics : MonoBehaviour
         }
         else
         {
-            ConsentTimestamp = default(System.DateTime);
+            ConsentTimestamp = System.DateTime.UtcNow;
         }
 
         if (ConsentStatus == AnalyticsConsentStatus.Granted)
@@ -68,14 +68,47 @@ public class Analytics : MonoBehaviour
             Initialize();
             AnalyticsEnabled = true;
         }
+
+        Debug.Log($"Loaded analytics consent status: {ConsentStatus}, version: {ConsentVersion}, timestamp: {ConsentTimestamp}");
+    }
+
+    public void ShowAnalyticsPermission(
+        UnityEngine.Events.UnityAction onYes,   // <-- These accept normal methods
+        UnityEngine.Events.UnityAction onNo     
+        )
+    {
+        analyticsPermissionPanel.gameObject.SetActive(true);
+
+        analyticsPermissionPanel.yesButton.onClick.RemoveAllListeners();
+        analyticsPermissionPanel.noButton.onClick.RemoveAllListeners();
+
+        // Adds the passed-in methods directly
+        analyticsPermissionPanel.yesButton.onClick.AddListener(onYes);
+        analyticsPermissionPanel.noButton.onClick.AddListener(onNo);
+
+        // auto-close panel
+        analyticsPermissionPanel.yesButton.onClick.AddListener(ClosePermissionPanel);
+        analyticsPermissionPanel.noButton.onClick.AddListener(ClosePermissionPanel);
     }
     
-    void OpenPermissionPanel()
+    public void OpenPermissionPanel(
+        UnityEngine.Events.UnityAction onYes,   // <-- These accept normal methods
+        UnityEngine.Events.UnityAction onNo 
+        )
     {
         // Activate the permission panel (Modified)
         if (analyticsPermissionPanel != null)
         {
-            analyticsPermissionPanel.SetActive(true);
+            ShowAnalyticsPermission(onYes, onNo);
+        }
+    }
+
+    void ClosePermissionPanel()
+    {
+        // Deactivate the permission panel (Modified)
+        if (analyticsPermissionPanel != null)
+        {
+            analyticsPermissionPanel.gameObject.SetActive(false);
         }
     }
 
@@ -106,7 +139,7 @@ public class Analytics : MonoBehaviour
         SetConsentStatus(AnalyticsConsentStatus.Granted);
         if (analyticsPermissionPanel != null)
         {
-            analyticsPermissionPanel.SetActive(false);
+            analyticsPermissionPanel.gameObject.SetActive(false);
         }
     }
 
@@ -116,7 +149,7 @@ public class Analytics : MonoBehaviour
         SetConsentStatus(AnalyticsConsentStatus.Denied);
         if (analyticsPermissionPanel != null)
         {
-            analyticsPermissionPanel.SetActive(false);
+            analyticsPermissionPanel.gameObject.SetActive(false);
         }
     }
 
@@ -127,11 +160,11 @@ public class Analytics : MonoBehaviour
         AnalyticsInitialized = true;
     }
 
-    public void TrackWaveReached(int wave)
+    public void TrackWaveCompleted(int wave)
     {
         if (!AnalyticsInitialized)
         {
-            Debug.LogWarning($"Attempted to track wave {wave} before analytics initialised.");
+            //Debug.LogWarning($"Attempted to track wave {wave} before analytics initialised.");
             return;
         }
 
@@ -145,12 +178,45 @@ public class Analytics : MonoBehaviour
         // Test your events in the Unity Analytics Debugger before deploying to production
         // See https://docs.unity.com/analytics/BestPractices.html for more info
         // See https://docs.unity.com/analytics/ImplementingAnalyticsEvents.html for more info
-        var evt = new CustomEvent("wave_reached");
+
+        var evt = new CustomEvent("wave_completed");
+        evt.Add("version", Application.version);
+        evt.Add("platform", Application.platform.ToString());
+
+        evt.Add("planet_id", SystemInfo.deviceUniqueIdentifier);
         evt.Add("wave_number", (long)wave);
-        evt.Add("timestamp", System.DateTime.UtcNow.ToString("o"));
-        evt.Add("time_in_game_seconds", (long)Time.time);
+        evt.Add("time_playing_seconds", (double)StatsCounterPlayer.TotalPlayTime);
+        evt.Add("player_bullet_shots", (long)StatsCounterPlayer.ShotsFiredPlayerBullets);
+        evt.Add("player_laser_shots", (long)StatsCounterPlayer.ShotsFiredPlayerLasers);
+        evt.Add("enemies_killed_by_player", (long)StatsCounterPlayer.EnemiesKilledByPlayer);
+        evt.Add("enemies_killed_by_turrets", (long)StatsCounterPlayer.EnemiesKilledByTurrets);
+        evt.Add("enemies_killed_by_drones", (long)StatsCounterPlayer.EnemiesKilledByDrones);
+        evt.Add("non_wall_structures_built", (long)StatsCounterPlayer.StructuresBuilt - StatsCounterPlayer.WallsBuilt);
+        evt.Add("walls_built", (long)StatsCounterPlayer.WallsBuilt);
 
         AnalyticsService.Instance.RecordEvent(evt);
-        Debug.Log($"Tracked wave_reached event: wave {wave}");
+        Debug.Log($"Tracked wave_completed event: wave {wave}");
+    }
+
+    public void TrackUpgradePurchased(string upgradeID, int cost)
+    {
+        if (!AnalyticsInitialized)
+        {
+            //Debug.LogWarning($"Attempted to track upgrade purchase before analytics initialised.");
+            return;
+        }
+
+        var evt = new CustomEvent("upgrade_purchased");
+        evt.Add("version", Application.version);
+        evt.Add("platform", Application.platform.ToString());
+
+        evt.Add("planet_id", SystemInfo.deviceUniqueIdentifier);
+        evt.Add("wave_number", (long)WaveControllerRandom.Instance.currentWaveIndex);
+        evt.Add("upgrade_id", upgradeID);
+        evt.Add("cost", (long)cost);
+        evt.Add("time_playing_seconds", (double)StatsCounterPlayer.TotalPlayTime);
+
+        AnalyticsService.Instance.RecordEvent(evt);
+        Debug.Log($"Tracked upgrade_purchased event: upgrade {upgradeID}, cost {cost}");
     }
 }

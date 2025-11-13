@@ -43,6 +43,8 @@ public class EnemyHealth : Health
                 // Structure layer 13
                 if (damageDealer.layer == 13)
                     StatsCounterPlayer.EnemiesKilledByTurrets++;
+                else if (damageDealer.CompareTag("DroneBullet"))
+                    StatsCounterPlayer.EnemiesKilledByDrones++;
                 else if (damageDealer.CompareTag("Player") || damageDealer.CompareTag("PlayerExplosion") || damageDealer.layer == 8)
                     StatsCounterPlayer.EnemiesKilledByPlayer++;
             }

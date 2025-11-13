@@ -19,6 +19,7 @@ public class VideoPlayerManager : MonoBehaviour
     InputAction pauseAction = null;
     InputAction buildAction = null;
     InputAction selectAction = null;
+    public MainMenuController mainMenuController;
 
     void OnSkipPerformed(InputAction.CallbackContext ctx)
     {
@@ -113,7 +114,14 @@ public class VideoPlayerManager : MonoBehaviour
         videoPlayer.Stop();
         rawImage.SetActive(false);
         UI_MusicPlayerPanel.Instance.ShowPanel(true);
-        SceneManager.LoadScene(sceneToLoad);
+        if (mainMenuController == null)
+        {
+            mainMenuController = FindObjectOfType<MainMenuController>();
+        }
+        if (mainMenuController != null)
+        {
+            mainMenuController.StartCoroutine(mainMenuController.LoadSceneCoroutine(sceneToLoad));
+        }
     }
 
     void VideoEnd(VideoPlayer vp)
@@ -121,7 +129,7 @@ public class VideoPlayerManager : MonoBehaviour
         StopVideo();
     }
 
-    System.Collections.IEnumerator PlayPreparedVideo()
+    IEnumerator PlayPreparedVideo()
     {
         videoPlayer.Prepare();
 
