@@ -11,6 +11,7 @@ public class MeleeControllerEnemy : MonoBehaviour
     public float knockback = 10f;
     public float knockbackStart;
     public float selfKnockback = 5f;
+    public float selfKnockbackStart;
     public float attackDelay = 1f;
     public float attackDelayStart = 1;
     [SerializeField] LayerMask hitLayers;
@@ -50,6 +51,10 @@ public class MeleeControllerEnemy : MonoBehaviour
         SetContactFilter(hitLayers);
         colliders = new List<Collider2D>(10);
 
+        selfKnockbackStart = selfKnockback;
+        knockbackStart = knockback;
+        meleeDamageStart = meleeDamage;
+        attackDelayStart = attackDelay;
         //transform.localScale = initialScale;
     }
 
@@ -79,6 +84,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         waitToAttack = false;
         meleeDamage = meleeDamageStart;
         knockback = knockbackStart;
+        selfKnockback = selfKnockbackStart;
         attackDelay = attackDelayStart;
         //meleeSprite.enabled = false;
     }

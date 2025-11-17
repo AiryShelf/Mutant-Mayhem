@@ -58,6 +58,8 @@ public class Explosion : MonoBehaviour
         if (explosionSound != null)
             AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
+        StartCoroutine(ReturnToPoolAfterTime(returnToPoolTime));
+
         if (radius == 0)
             yield break;
 
@@ -67,7 +69,6 @@ public class Explosion : MonoBehaviour
 
         GetTilesAndHitStructures(explosionPos, tilesToCheck, tileManager);
         ApplyDamageToEntitiesInTiles(explosionPos, visibleTiles);
-        StartCoroutine(ReturnToPoolAfterTime(returnToPoolTime));
     }
 
     IEnumerator ReturnToPoolAfterTime(float time)

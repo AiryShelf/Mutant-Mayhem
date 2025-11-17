@@ -20,7 +20,7 @@ public class CriticalHitEffect : MonoBehaviour
     {
         critLight.enabled = true;
         critLight.intensity = lightStartIntensity;
-        StartCoroutine(DisableAfterDuration());
+        StartCoroutine(ReturnToPoolAfterTime());
     }
 
     void OnDisable()
@@ -29,7 +29,7 @@ public class CriticalHitEffect : MonoBehaviour
         StopAllCoroutines();
     }
 
-    IEnumerator DisableAfterDuration()
+    IEnumerator ReturnToPoolAfterTime()
     {
         // Make intensity fade twice as fast as duration
         while (critLight.intensity > 0f)
@@ -37,6 +37,6 @@ public class CriticalHitEffect : MonoBehaviour
             critLight.intensity -= lightStartIntensity * Time.deltaTime / duration * 2f;
             yield return null;
         }
-        gameObject.SetActive(false);
+        PoolManager.Instance.ReturnToPool(poolName, this.gameObject);
     }
 }

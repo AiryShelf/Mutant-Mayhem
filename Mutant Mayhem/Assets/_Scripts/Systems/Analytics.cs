@@ -323,7 +323,7 @@ public class Analytics : MonoBehaviour
         evt.Add("player_class", ClassManager.Instance != null ? ClassManager.Instance.selectedClass.ToString() : "null");
         evt.Add("augmentations", AugmentationSnapshot);
         evt.Add("upgrades", UpgradeSnapshot);
-        evt.Add("player_credits", BuildingSystem.Instance != null ? BuildingSystem.PlayerCredits : -1);
+        evt.Add("player_credits", BuildingSystem.Instance != null ? (int)BuildingSystem.PlayerCredits : -1);
         evt.Add("research_points_total", ProfileManager.Instance != null ? ProfileManager.Instance.currentProfile.researchPoints : -1);
         evt.Add("research_points_unspent", AugManager.Instance != null ? AugManager.Instance.currentResearchPoints : -1);
         evt.Add("current_planet", PlanetManager.Instance != null ? PlanetManager.Instance.currentPlanet.bodyName : "null");
@@ -400,7 +400,7 @@ public class Analytics : MonoBehaviour
         evt.Add("player_class", ClassManager.Instance != null ? ClassManager.Instance.selectedClass.ToString() : "null");
         evt.Add("augmentations", AugmentationSnapshot);
         evt.Add("upgrades", UpgradeSnapshot);
-        evt.Add("player_credits", BuildingSystem.Instance != null ? BuildingSystem.PlayerCredits : -1);
+        evt.Add("player_credits", BuildingSystem.Instance != null ? (int)BuildingSystem.PlayerCredits : -1);
         evt.Add("research_points_total", ProfileManager.Instance != null ? ProfileManager.Instance.currentProfile.researchPoints : -1);
         evt.Add("research_points_unspent", AugManager.Instance != null ? AugManager.Instance.currentResearchPoints : -1);
         evt.Add("current_planet", PlanetManager.Instance != null ? PlanetManager.Instance.currentPlanet.bodyName : "null");

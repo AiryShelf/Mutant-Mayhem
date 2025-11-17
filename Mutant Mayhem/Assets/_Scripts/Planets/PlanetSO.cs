@@ -29,7 +29,7 @@ public class PlanetSO : ScriptableObject
     public float wavesTillAddIndex = 1;
     public int creditsPerWave = 150; // Additive bonus (waveIndex*creditsPerWave)
     public float timeBetweenWavesBase = 90; // Base amount of day-time
-    public int batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
+    public float batchMultiplierStart = 5; // Starting batch multiplier for each Subwave
     public float subwaveDelayMultStart = 1f; // Time between subwaves
     public int spawnRadiusBuffer = 16;
     public int batchMultGrowthTime = 2;

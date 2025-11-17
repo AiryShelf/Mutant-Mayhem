@@ -32,8 +32,8 @@ public class WaveControllerRandom : MonoBehaviour
     public int spawnRadiusBuffer = 16;
 
     [Header("Enemy Multipliers, mostly set by Planets")]
-    public int batchMultStart = 5; // Starting batch multiplier for each Subwave
-    public int batchMultiplier = 5; // Current batch multiplier
+    public float batchMultStart = 5; // Starting batch multiplier for each Subwave
+    public float batchMultiplier = 5; // Current batch multiplier
     public int batchMultGrowthTime; // Divisor for mult growth.  Value is the number of waves until mult is doubled
     public float damageMultStart = 1;
     public float damageMultiplier = 1;
@@ -267,11 +267,11 @@ public class WaveControllerRandom : MonoBehaviour
 
     void IncrementWaveDifficulty()
     {
-        batchMultiplier = Mathf.FloorToInt(batchMultStart + currentWaveIndex / batchMultGrowthTime *
+        batchMultiplier = batchMultStart + (currentWaveIndex / batchMultGrowthTime *
                           SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = damageMultStart + currentWaveIndex / damageMultGrowthTime *
+        damageMultiplier = damageMultStart + (currentWaveIndex / damageMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult *
-                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];
+                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage]);
         // Doubles the attack speed in 30 waves
         attackDelayMult = attackDelayStart - currentWaveIndex / attackDelayMultGrowthTime /
                            SettingsManager.Instance.WaveDifficultyMult;

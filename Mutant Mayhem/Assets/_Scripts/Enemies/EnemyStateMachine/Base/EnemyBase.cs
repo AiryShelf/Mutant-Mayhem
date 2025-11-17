@@ -252,14 +252,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         health.SetHealth(health.GetMaxHealth());
 
         //Debug.Log("RandomSizeFactor: " + randomSizeFactor + ", waveController.damageMultiplier: " + waveController.damageMultiplier);
-        meleeController.meleeDamage *= areaScale * waveController.damageMultiplier;
+        meleeController.meleeDamage = meleeController.meleeDamageStart * areaScale * waveController.damageMultiplier;
         meleeController.attackDelay = meleeController.attackDelayStart * waveController.attackDelayMult;
-        meleeController.knockback *= areaScale;
-        meleeController.selfKnockback *= areaScale;
+        meleeController.knockback = meleeController.knockbackStart * areaScale;
+        meleeController.selfKnockback = meleeController.selfKnockbackStart * areaScale;
         rb.mass = startMass * areaScale;
-        moveSpeedBase *= rb.mass * waveController.speedMultiplier;
-        animControllerEnemy.animSpeedFactor *= 8 / transform.localScale.x; // inversely scale anim speed with size
-        animControllerEnemy.switchToRunBuffer *= 8 / transform.localScale.x;
+        moveSpeedBase = moveSpeedBaseStart *rb.mass * waveController.speedMultiplier;
+        animControllerEnemy.animSpeedFactor = animControllerEnemy.animSpeedFactorStart * (8 / transform.localScale.x); // smaller enemies have faster animations
+        animControllerEnemy.switchToRunBuffer = animControllerEnemy.switchToRunBufferStart * (transform.localScale.x / 8); // smaller enemies switch to run at lower speeds
 
         //Debug.Log($"Randomize stats finished with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
     }

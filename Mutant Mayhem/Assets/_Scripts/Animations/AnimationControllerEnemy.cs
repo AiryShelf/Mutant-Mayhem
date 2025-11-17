@@ -6,13 +6,21 @@ using UnityEngine;
 public class AnimationControllerEnemy : MonoBehaviour
 {
     public float animSpeedFactor = 1f;
+    public float animSpeedFactorStart = 1f;
     public float switchToRunBuffer = 1.1f;
+    public float switchToRunBufferStart = 1.1f;
     public float maxAnimSpeed = 10;
 
     public Animator myAnimator;
     SpriteRenderer mySR;
     EnemyBase enemyBase;
     protected Rigidbody2D myRb;
+
+    void Awake()
+    {
+        animSpeedFactorStart = animSpeedFactor;
+        switchToRunBufferStart = switchToRunBuffer;
+    }
 
     protected virtual void Start()
     {
