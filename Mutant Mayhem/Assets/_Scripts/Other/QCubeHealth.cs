@@ -57,7 +57,7 @@ public class QCubeHealth : Health
         if (amount < 0)
         {
             PlayCubeDamageEffect();
-            StatsCounterPlayer.DamageToStructures -= healthChange;
+            StatsCounterPlayer.DamageToCube -= healthChange;
         }
         else
         {
@@ -66,6 +66,7 @@ public class QCubeHealth : Health
 
         if (health <= 0 && !hasDied)
         {
+            Analytics.Instance.TrackCubeDestroyed(damageDealer.name);
             Die();
             return;
         }
@@ -128,5 +129,6 @@ public class QCubeHealth : Health
     public override void Die()
     {
         QCubeController.IsCubeDestroyed = true;
+        hasDied = true;
     } 
 }

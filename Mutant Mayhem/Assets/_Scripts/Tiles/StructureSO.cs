@@ -31,9 +31,6 @@ public class StructureSO : ScriptableObject
     public int supplyCost;
     public List<StructureSO> structuresToUnlock;
     public bool canBuildOnlyOne = false;
-
-    [Header("If Drone Hangar")]
-    public int droneHangarRange = 12;
 }
 
 public enum StructureType

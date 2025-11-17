@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -266,9 +267,16 @@ public class PlayerShooter : Shooter
     {
         base.Fire();
         
-        // if not repair gun (index 4)
-        if (currentGunIndex != 4)
+        if (currentGunSO.gunType == GunType.Bullet)
+        {
             StatsCounterPlayer.ShotsFiredByPlayer++;
+            StatsCounterPlayer.ShotsFiredPlayerBullets++;
+        }
+        else if (currentGunSO.gunType == GunType.Laser)
+        {
+            StatsCounterPlayer.ShotsFiredByPlayer++;
+            StatsCounterPlayer.ShotsFiredPlayerLasers++;
+        }
 
         Kickback();
         bool oneHand = isMeleeing || !isAiming;

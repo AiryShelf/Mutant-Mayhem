@@ -29,6 +29,10 @@ public class Stamina : MonoBehaviour
     public void ModifyStamina(float amount)
     {
         stamina += amount;
+        if (stamina > stats.staminaMax)
+        {
+            stamina = stats.staminaMax;
+        }
     }
 
     public float GetStamina()

@@ -35,6 +35,8 @@ public class StatsCounterPlayer : MonoBehaviour
     public static float EnemyDamageByTurrets;
     public static float DamageToPlayer;
     public static float DamageToStructures;
+    public static float DamageToCube;
+    public static float DamageToDrones;
     public static float DamageToEnemies;
     public static float AmountRepairedByPlayer;
     public static float AmountRepairedByDrones;
@@ -68,6 +70,11 @@ public class StatsCounterPlayer : MonoBehaviour
     public static int RepairBayPlaced;
     public static int DroneHangarsPlaced;
     public static int SupplyDepotsPlaced;
+
+    [Header("Upgrades")]
+    public static int HealingUpgradesPurchased;
+    public static int CubeRepairUpgradesPurchased;
+    public static int AmmoUpgradesPurchased;
 
     static Dictionary<string, float> MiscStats = new Dictionary<string, float>();
     static Dictionary<string, float> ProjectilesStats = new Dictionary<string, float>();

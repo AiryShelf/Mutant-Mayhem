@@ -41,7 +41,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6032300958366406844}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 1387485545
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1018977997, guid: c1f8607ef04834812a4929f3b4e1f4a0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d922216d47a3a4ba79ece57abf87b544, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -199,6 +199,14 @@ PrefabInstance:
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5732784732721803427, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
+      propertyPath: rangeCircleType
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732784732721803427, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
+      propertyPath: rangeCircleToSet
+      value: 
+      objectReference: {fileID: 4379633947122306720}
+    - target: {fileID: 5732784732721803427, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
       propertyPath: typesToMatch.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -280,3 +288,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6781844405694670439, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
   m_PrefabInstance: {fileID: 8773922657243510653}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4379633947122306720 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4973286759459174877, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
+  m_PrefabInstance: {fileID: 8773922657243510653}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cc3d39cd3a0c14d8a08f66bc85c240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -11,6 +11,7 @@ public class AugManager : MonoBehaviour
     [SerializeField] int maxAugmentationsStart;
     public static Dictionary<AugmentationBaseSO, int> selectedAugsWithLvls = new Dictionary<AugmentationBaseSO, int>();
     public static Dictionary<AugmentationBaseSO, int> selectedAugsTotalCosts = new Dictionary<AugmentationBaseSO, int>();
+    public static string selectedAugsString = "";
 
     [Header("Dynamic vars, don't set here")]
     public int maxAugs;
@@ -132,6 +133,26 @@ public class AugManager : MonoBehaviour
                 selectedAugsWithLvls.Remove(aug);
                 //Debug.Log("Removed an aug from manager");
             }
+        }
+    }
+
+    void SetSelectedAugsString()
+    {
+        selectedAugsString = "";
+
+        // Build a stable, index-ordered augmentation string
+        for (int i = 0; i < availableAugmentations.Count; i++)
+        {
+            AugmentationBaseSO aug = availableAugmentations[i];
+
+            int lvl = 0; // default if not selected
+            if (selectedAugsWithLvls.ContainsKey(aug))
+                lvl = selectedAugsWithLvls[aug];
+
+            selectedAugsString += i.ToString() + ":" + lvl.ToString();
+
+            if (i < availableAugmentations.Count - 1)
+                selectedAugsString += "|";
         }
     }
 }

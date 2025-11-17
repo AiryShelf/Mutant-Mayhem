@@ -170,7 +170,7 @@ public static class UpgStatGetter
                 stat = DroneManager.Instance.droneEnergyMult.ToString("#0.0");
                 return stat;
             case DroneStatsUpgrade.DroneHangarRange:
-                stat = DroneManager.Instance.droneHangarRange.ToString("#0");
+                stat = DroneManager.Instance.droneHangarRange.ToString("#0.0");
                 return stat;
             case DroneStatsUpgrade.DroneHangarRechargeSpeed:
                 stat = DroneManager.Instance.droneHangarRechargeSpeed.ToString("#0");

@@ -9,22 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e9dbb17db4883441a9ea00445c3a621, type: 3}
-  m_Name: RTS_LaserTurret_Blueprint
+  m_Script: {fileID: 11500000, guid: 574d5639b1c224ed18e90b22086b8210, type: 3}
+  m_Name: RuleTile_Blueprint_DroneHangar
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: fe55ddde89cb35b4b835f838dc817a9b, type: 3}
+  m_DefaultSprite: {fileID: 0}
   m_DefaultGameObject: {fileID: 0}
-  m_DefaultColliderType: 2
+  m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
-    - {fileID: 21300000, guid: fe55ddde89cb35b4b835f838dc817a9b, type: 3}
-    m_GameObject: {fileID: 6401795959408794604, guid: 86cfd5d8bab724bfda0608eca0af2e35, type: 3}
+    - {fileID: 21300000, guid: d922216d47a3a4ba79ece57abf87b544, type: 3}
+    m_GameObject: {fileID: 6032300958366406844, guid: 987145c4407514126847b577828a5e8a, type: 3}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
     m_Output: 0
-    m_ColliderType: 0
+    m_ColliderType: 1
     m_RandomTransform: 0
     m_Neighbors: 
     m_NeighborPositions:
@@ -37,8 +37,3 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
     m_RuleTransform: 0
-  structureSO: {fileID: 11400000, guid: 0e27f3256cf034c41873cfc22ffe0a71, type: 2}
-  damagedTiles:
-  - {fileID: 11400000, guid: d6b54ef80d2ae446f893d11758d42020, type: 2}
-  destroyedTile: {fileID: 11400000, guid: 969495dd166dc4275a278d0ae97691f9, type: 2}
-  buildUiTile: {fileID: 11400000, guid: 6a67fcb9899b242109070acbefd182a8, type: 2}

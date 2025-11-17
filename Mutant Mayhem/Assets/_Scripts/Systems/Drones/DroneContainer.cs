@@ -228,6 +228,48 @@ public class DroneContainer : MonoBehaviour
         }
     }
 
+    public void RepairDockedDrones(float amount)
+    {
+        if (dockedDrones.Count > 0)
+        {
+            float repairPerDrone = amount / dockedDrones.Count;
+            // Spread repair among docked drones
+            foreach (var drone in dockedDrones)
+            {
+                if (drone.droneHealth.GetHealth() < drone.droneHealth.GetMaxHealth())
+                {
+                    drone.droneHealth.ModifyHealth(repairPerDrone, 1, Vector2.zero, gameObject);
+                }
+            }
+        }
+    }
+
+    public void RechargeDockedDronesEnergy(float amount)
+    {
+        if (dockedDrones.Count > 0)
+        {
+            // Recharge one drone at a time until the amount is used up
+            float remainingAmount = amount;
+            foreach (var drone in dockedDrones)
+            {
+                if (drone.energy < drone.energyMax)
+                {
+                    float energyNeeded = drone.energyMax - drone.energy;
+                    if (remainingAmount >= energyNeeded)
+                    {
+                        drone.energy = drone.energyMax;
+                        remainingAmount -= energyNeeded;
+                    }
+                    else
+                    {
+                        drone.energy += Mathf.RoundToInt(remainingAmount);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     #endregion
 
     #region Jobs
@@ -374,7 +416,9 @@ public class DroneContainer : MonoBehaviour
 
         List<KeyValuePair<DroneAttackJob, int>> pairsToRemove = new List<KeyValuePair<DroneAttackJob, int>>();
 
-        foreach (var kvp in attackJobs)
+        var jobsSnapshot = new List<KeyValuePair<DroneAttackJob, int>>(attackJobs);
+
+        foreach (var kvp in jobsSnapshot)
         {
             if (otherCollider.transform == kvp.Key.targetTrans)
             {

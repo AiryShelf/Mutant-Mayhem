@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Services.Analytics;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +12,7 @@ public class OptionsPanel : MonoBehaviour
     [SerializeField] TMP_Dropdown qualityDropdown;
     //[SerializeField] TMP_Dropdown resolutionDropdown;
     [SerializeField] Toggle vSyncToggle;
+    [SerializeField] Toggle analyticsToggle;
     [SerializeField] Toggle virtualAimStickToggle;
 
     QualityManager qualityManager;
@@ -19,8 +22,11 @@ public class OptionsPanel : MonoBehaviour
         // CHANGED: Use method groups matching UnityEvent signatures.
         qualityDropdown.onValueChanged.AddListener(QualityValueChanged);
         vSyncToggle.onValueChanged.AddListener(ToggleVSync);
+        analyticsToggle.onValueChanged.AddListener(ToggleAnalytics);
         virtualAimStickToggle.onValueChanged.AddListener(DisableVirtualAimJoystick);
         //resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
+
+        Analytics.OnConsentStatusChanged += HandleAnalyticsConsentChanged;
 
         //Initialize();
     }
@@ -30,8 +36,11 @@ public class OptionsPanel : MonoBehaviour
         // CHANGED: Remove listeners using the same method groups.
         qualityDropdown.onValueChanged.RemoveListener(QualityValueChanged);
         vSyncToggle.onValueChanged.RemoveListener(ToggleVSync);
+        analyticsToggle.onValueChanged.RemoveListener(ToggleAnalytics);
         virtualAimStickToggle.onValueChanged.RemoveListener(DisableVirtualAimJoystick);
         //resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChanged);
+
+        Analytics.OnConsentStatusChanged -= HandleAnalyticsConsentChanged;
     }
 
     void Start()
@@ -64,6 +73,13 @@ public class OptionsPanel : MonoBehaviour
 
         qualityDropdown.SetValueWithoutNotify(qualityLevel);
         vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
+        analyticsToggle.SetIsOnWithoutNotify(Analytics.ConsentStatus == AnalyticsConsentStatus.Granted);
+        
+        if (analyticsToggle != null)
+        {
+            bool analyticsOn = (Analytics.ConsentStatus == AnalyticsConsentStatus.Granted) && Analytics.AnalyticsEnabled;
+            analyticsToggle.SetIsOnWithoutNotify(analyticsOn);
+        }
         
         //PopulateResolutionDropdown();
     }
@@ -96,84 +112,56 @@ public class OptionsPanel : MonoBehaviour
     {
         qualityManager.SetVSync(isOn);
     }
-    /*
-    void PopulateResolutionDropdown() // CHANGED
+
+    void ToggleAnalytics(bool isOn)
     {
-        // Clear existing items
-        //resolutionDropdown.ClearOptions();
-
-        // This fetches all the resolutions supported by the device
-        Resolution[] allResolutions = Screen.resolutions;
-
-        // For demonstration, let's store only 4 or 5 resolution settings
-        // You can filter them however you like.
-        // e.g., a few from the smallest to largest
-        // Also, you might want to skip duplicates or certain aspect ratios.
-        validResolutions.Clear();
-
-        // Example approach: pick a handful of common aspect ratio / resolution combos
-        // Or you can just pick the first 5 or so from allResolutions.
-        // The below is purely an example—customize as you see fit.
-        foreach (Resolution res in allResolutions)
+        // User is trying to enable analytics
+        if (isOn)
         {
-            // Add basic filter to reduce duplicates:
-            // (Try storing only distinct widths & heights, skipping weird aspect ratios if desired.)
-            if ((res.width == 1280 && res.height == 720) ||
-                (res.width == 1600 && res.height == 900) ||
-                (res.width == 1920 && res.height == 1080) ||
-                (res.width == 2560 && res.height == 1440) ||
-                (res.width == 3840 && res.height == 2160))
+            // Otherwise, show the consent panel and let its callbacks handle consent.
+            if (Analytics.Instance != null)
             {
-                if (!validResolutions.Contains(res))
-                {
-                    validResolutions.Add(res);
-                }
+                Analytics.Instance.OpenPermissionPanel(
+                    Analytics.Instance.GrantConsent,
+                    Analytics.Instance.DenyConsent
+                );
             }
-        }
-
-        // If we didn't find anything in that filter, as a fallback just keep the first few
-        if (validResolutions.Count == 0)
-        {
-            int limit = Mathf.Min(5, allResolutions.Length);
-            for (int i = 0; i < limit; i++)
+            else
             {
-                validResolutions.Add(allResolutions[i]);
+                Debug.LogWarning("OptionsPanel: Analytics.Instance is null, cannot request analytics consent.");
+                analyticsToggle.SetIsOnWithoutNotify(false);
             }
-        }
-
-        // Build the list of option labels
-        List<string> options = new List<string>();
-        foreach (Resolution res in validResolutions)
-        {
-            options.Add(res.width + " x " + res.height);
-        }
-
-        //resolutionDropdown.AddOptions(options);
-
-        // Find the current resolution in our subset and set dropdown accordingly
-        Resolution current = Screen.currentResolution;
-        int currentIndex = validResolutions.FindIndex(r => r.width == current.width && r.height == current.height);
-        if (currentIndex >= 0)
-        {
-            //resolutionDropdown.SetValueWithoutNotify(currentIndex);
         }
         else
         {
-            //resolutionDropdown.SetValueWithoutNotify(0);
+            // User explicitly turned analytics off from the options menu.
+            if (Analytics.Instance != null)
+            {
+                Analytics.Instance.DenyConsent();
+            }
+            else
+            {
+                // Fallback if Analytics instance is missing.
+                Analytics.ConsentStatus = AnalyticsConsentStatus.Denied;
+                Analytics.AnalyticsEnabled = false;
+                Analytics.StopDataCollection();
+            }
         }
     }
 
-    // CHANGED: Add this method to handle resolution changes
-    void OnResolutionChanged(int index) // CHANGED
-    {
-        // If your game uses full screen, use Screen.SetResolution(width, height, fullscreen).
-        // For windowed, you can pass false for fullscreen:
-        Resolution chosenRes = validResolutions[index];
-
-        // FullScreenMode.ExclusiveFullScreen or FullScreenMode.FullScreenWindow can be set here if needed.
-        //Screen.SetResolution(chosenRes.width, chosenRes.height, true); 
-    }
-    */
-
     #endregion
+
+    void HandleAnalyticsConsentChanged(AnalyticsConsentStatus status)
+    {
+        if (analyticsToggle == null)
+            return;
+
+        bool analyticsOn = (status == AnalyticsConsentStatus.Granted) && Analytics.AnalyticsEnabled;
+        analyticsToggle.SetIsOnWithoutNotify(analyticsOn);
+
+        MessageBanner.PulseMessage(
+            $"Analytics consent changed to {status}. Analytics is now {(analyticsOn ? "enabled" : "disabled")}.",
+            analyticsOn ? Color.green : Color.red
+        );
+    }
 }

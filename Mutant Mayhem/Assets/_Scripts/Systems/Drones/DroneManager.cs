@@ -194,7 +194,7 @@ public class DroneManager : MonoBehaviour
 
     public void UpgradeDroneSpeed(int level)
     {
-        droneSpeedMult += Mathf.RoundToInt(droneSpeedUpgMult);
+        droneSpeedMult += droneSpeedUpgMult;
         foreach(Drone d in allActiveDrones)
         {
             d.RefreshStats();
@@ -203,7 +203,7 @@ public class DroneManager : MonoBehaviour
 
     public void UpgradeDroneHealth(int level)
     {
-        droneHealthMult += Mathf.RoundToInt(droneHealthUpgMult);
+        droneHealthMult += droneHealthUpgMult;
         foreach(Drone d in allActiveDrones)
         {
             d.RefreshStats();
@@ -212,7 +212,7 @@ public class DroneManager : MonoBehaviour
 
     public void UpgradeDroneEnergy(int level)
     {
-        droneEnergyMult += Mathf.RoundToInt(droneEnergyUpgMult);
+        droneEnergyMult += droneEnergyUpgMult;
         foreach(Drone d in allActiveDrones)
         {
             d.RefreshStats();
@@ -221,17 +221,17 @@ public class DroneManager : MonoBehaviour
 
     public void UpgradeDroneHangarRange(int level)
     {
-        droneHangarRange += Mathf.RoundToInt(droneHangarRangeUpgAmount);
+        droneHangarRange += droneHangarRangeUpgAmount;
     }
 
     public void UpgradeDroneHangarRepairSpeed(int level)
     {
-        droneHangarRepairSpeed += Mathf.RoundToInt(droneHangarRepairSpeedUpgAmount);
+        droneHangarRepairSpeed += droneHangarRepairSpeedUpgAmount;
     }
 
     public void UpgradeDroneHangarRechargeSpeed(int level)
     {
-        droneHangarRechargeSpeed += Mathf.RoundToInt(droneHangarRechargeSpeedUpgAmount);
+        droneHangarRechargeSpeed += droneHangarRechargeSpeedUpgAmount;
     }
 
     public bool SellDrone(DroneType droneType, DroneContainer droneContainer)

@@ -33,7 +33,7 @@ public class UpgradeManager : MonoBehaviour
         new Dictionary<PlayerStatsUpgrade, int>();
     public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgLevels = 
         new Dictionary<PlayerStatsUpgrade, int>();
-    private Dictionary<PlayerStatsUpgrade, int> playerStatsUpgBaseCosts = 
+    public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgBaseCosts = 
         new Dictionary<PlayerStatsUpgrade, int>();
     public Dictionary<PlayerStatsUpgrade, int> playerStatsUpgCurrCosts = 
         new Dictionary<PlayerStatsUpgrade, int>();
@@ -43,7 +43,7 @@ public class UpgradeManager : MonoBehaviour
         new Dictionary<StructureStatsUpgrade, int>();
     public Dictionary<StructureStatsUpgrade, int> structureStatsUpgLevels = 
         new Dictionary<StructureStatsUpgrade, int>();
-    private Dictionary<StructureStatsUpgrade, int> structureStatsUpgBaseCosts = 
+    public Dictionary<StructureStatsUpgrade, int> structureStatsUpgBaseCosts = 
         new Dictionary<StructureStatsUpgrade, int>();
     public Dictionary<StructureStatsUpgrade, int> structureStatsUpgCurrCosts = 
         new Dictionary<StructureStatsUpgrade, int>();
@@ -64,7 +64,7 @@ public class UpgradeManager : MonoBehaviour
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> laserUpgLevels = 
         new Dictionary<GunStatsUpgrade, int>();
-    private Dictionary<GunStatsUpgrade, int> laserUpgBaseCosts = 
+    public Dictionary<GunStatsUpgrade, int> laserUpgBaseCosts = 
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> laserUpgCurrCosts = 
         new Dictionary<GunStatsUpgrade, int>();
@@ -74,7 +74,7 @@ public class UpgradeManager : MonoBehaviour
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> bulletUpgLevels = 
         new Dictionary<GunStatsUpgrade, int>();
-    private Dictionary<GunStatsUpgrade, int> bulletUpgBaseCosts = 
+    public Dictionary<GunStatsUpgrade, int> bulletUpgBaseCosts = 
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> bulletUpgCurrCosts = 
         new Dictionary<GunStatsUpgrade, int>();
@@ -84,7 +84,7 @@ public class UpgradeManager : MonoBehaviour
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> repairGunUpgLevels = 
         new Dictionary<GunStatsUpgrade, int>();
-    private Dictionary<GunStatsUpgrade, int> repairGunUpgBaseCosts = 
+    public Dictionary<GunStatsUpgrade, int> repairGunUpgBaseCosts = 
         new Dictionary<GunStatsUpgrade, int>();
     public Dictionary<GunStatsUpgrade, int> repairGunUpgCurrCosts = 
         new Dictionary<GunStatsUpgrade, int>();
@@ -94,7 +94,7 @@ public class UpgradeManager : MonoBehaviour
         new Dictionary<DroneStatsUpgrade, int>();
     public Dictionary<DroneStatsUpgrade, int> droneStatsUpgLevels = 
         new Dictionary<DroneStatsUpgrade, int>();
-    private Dictionary<DroneStatsUpgrade, int> droneStatsUpgBaseCosts = 
+    public Dictionary<DroneStatsUpgrade, int> droneStatsUpgBaseCosts = 
         new Dictionary<DroneStatsUpgrade, int>();
     public Dictionary<DroneStatsUpgrade, int> droneStatsUpgCurrCosts = 
         new Dictionary<DroneStatsUpgrade, int>();

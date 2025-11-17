@@ -23,6 +23,11 @@ public class DroneHealth : Health
     {
         base.ModifyHealth(value, textPulseScaleMax, textDir, damageDealer);
 
+        if (value < 0)
+        {
+            StatsCounterPlayer.DamageToDrones += Mathf.Abs(value);
+        }
+
         if (health <= 0 && !hasDied)
         {
             Die();

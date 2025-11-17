@@ -130,6 +130,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: f7f471de7d5ec4115b5cbe070c586776, type: 2}
     - target: {fileID: 5732784732721803427, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
+      propertyPath: rangeCircleType
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5732784732721803427, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
+      propertyPath: rangeCircleToSet
+      value: 
+      objectReference: {fileID: 4313239149629464908}
+    - target: {fileID: 5732784732721803427, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
       propertyPath: typesToMatch.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -195,3 +203,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6781844405694670439, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
   m_PrefabInstance: {fileID: 9142058557293680785}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4313239149629464908 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4973286759459174877, guid: ca1d012c68db24610bc8482a317a539a, type: 3}
+  m_PrefabInstance: {fileID: 9142058557293680785}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cc3d39cd3a0c14d8a08f66bc85c240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

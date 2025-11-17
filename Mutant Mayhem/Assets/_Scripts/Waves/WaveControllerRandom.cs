@@ -106,10 +106,22 @@ public class WaveControllerRandom : MonoBehaviour
     void OnNextWaveInput(InputAction.CallbackContext context)
     {
         //Debug.Log("NextWave Input detected");
-        if (nextWaveFadeGroup.isTriggered)
+        if (!isNight)
         {
+            // Regen for remaining time
             int healthGain = Mathf.FloorToInt(player.stats.playerHealthScript.healthRegenPerSec * countdown);
             player.stats.playerHealthScript.ModifyHealth(healthGain, 1, Vector2.one, gameObject);
+            int staminaGain = Mathf.FloorToInt(player.stats.staminaRegen * countdown);
+            player.myStamina.ModifyStamina(staminaGain);
+
+            // Drone hangar regen for remaining time
+            foreach (DroneContainer dc in DroneManager.Instance.droneContainers)
+            {
+                int energyGain = Mathf.FloorToInt(DroneManager.Instance.droneHangarRechargeSpeed * countdown);
+                dc.RechargeDockedDronesEnergy(energyGain);
+                int repairGain = Mathf.FloorToInt(DroneManager.Instance.droneHangarRepairSpeed * countdown);
+                dc.RepairDockedDrones(repairGain); 
+            }
 
             StopAllCoroutines();
             StartCoroutine(StartWave());
@@ -214,6 +226,8 @@ public class WaveControllerRandom : MonoBehaviour
         MessageBanner.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
+
+        Analytics.Instance.TrackWaveCompleted(currentWaveIndex);
 
         waveSpawner.CalculateMaxIndex();
 

@@ -46,6 +46,9 @@ public class SystemsInitializer : MonoBehaviour
         ScreenScaleChecker.InvokeAspectRatioChanged();
         
         MessageManager.Instance.StartPlanetDialogue();
+
+        // Track session_start
+        Analytics.Instance.TrackSessionStart();
     }
 
     IEnumerator ForceCanvasUpdate()

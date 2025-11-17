@@ -495,6 +495,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7644239714876233493, guid: 366df1b1bfeb947208b428c7aeb4ab29, type: 3}
+      propertyPath: rangeCircleType
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 7644239714876233493, guid: 366df1b1bfeb947208b428c7aeb4ab29, type: 3}
+      propertyPath: rangeCircleToSet
+      value: 
+      objectReference: {fileID: 7416347055995065711}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -516,6 +524,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1422021613354308038, guid: 366df1b1bfeb947208b428c7aeb4ab29, type: 3}
   m_PrefabInstance: {fileID: 464921336064887556}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7416347055995065711 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6962445346651528811, guid: 366df1b1bfeb947208b428c7aeb4ab29, type: 3}
+  m_PrefabInstance: {fileID: 464921336064887556}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cc3d39cd3a0c14d8a08f66bc85c240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5146101777477338513
 PrefabInstance:
   m_ObjectHideFlags: 0

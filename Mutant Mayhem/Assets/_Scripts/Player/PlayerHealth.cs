@@ -31,6 +31,7 @@ public class PlayerHealth : Health
         
         if (health <= 0 && !player.IsDead)
         {
+            Analytics.Instance.TrackPlayerDeath(damageDealer.name);
             Die();
             return;
         }

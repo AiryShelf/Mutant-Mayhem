@@ -111,7 +111,7 @@ public class Player : MonoBehaviour
     Vector2 muzzleDirToMouse;
     float muzzleAngleToMouse;
     Rigidbody2D myRb;
-    Stamina myStamina;
+    public Stamina myStamina;
     public bool isSprinting;
     public PlayerShooter playerShooter;
     static bool _isDead; // Backing field

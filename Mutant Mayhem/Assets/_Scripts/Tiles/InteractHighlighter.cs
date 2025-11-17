@@ -26,7 +26,7 @@ public class InteractHighlighter : MonoBehaviour
 
     public void EnableGlow()
     {
-        Debug.Log("Enable Glow");
+        //Debug.Log("Enable Glow");
         if (fadeCoroutine != null)
             StopCoroutine(fadeCoroutine);
 

@@ -8,6 +8,8 @@ public class BuildModeObjectActivator : MonoBehaviour
 
     [Header("Optional:")]
     [SerializeField] List<StructureType> typesToMatch = new List<StructureType>();
+    [SerializeField] RangeCircle rangeCircleToSet;
+    [SerializeField] StructureType rangeCircleType;
 
     void Start()
     {
@@ -48,16 +50,38 @@ public class BuildModeObjectActivator : MonoBehaviour
         //Debug.Log("BuildModeObjectActivator: Starting to check for structure type match for " + objectToToggle.name);
         while (true)
         {
-            bool matched = typesToMatch.Contains(BuildingSystem.Instance.structureInHand.structureType);
+            bool matched = typesToMatch.Contains(BuildingSystem.Instance.structureInHand?.structureType ?? StructureType.SelectTool);
             objectToToggle.SetActive(matched);
             if (matched)
             {
-                //Debug.Log($"BuildModeObjectActivator: {objectToToggle.name} activated.  (insert range association here, lol)");
-            }
-            else
-            {
-                //Debug.Log($"BuildModeObjectActivator: Looked for {typesToMatch}, but found {BuildingSystem.Instance.structureInHand.structureType} structure in hand. {objectToToggle.name} deactivated.");
-            }   
+                switch (rangeCircleType)
+                {
+                    case StructureType.GunTurret:
+                        // Match the range to the turret gun's detect range by checking gunType in TurretGunSO list
+                        TurretGunSO turretGun = TurretManager.Instance.turretGunList.Find(g => g.gunType == GunType.Bullet);
+                        if (turretGun == null)
+                        {
+                            Debug.LogError("BuildModeObjectActivator: Could not find TurretGunSO with GunType.Bullet to set range circle");
+                            break;
+                        }
+                        rangeCircleToSet.radius = turretGun != null ? turretGun.detectRange : 2f;
+                        break;
+                    case StructureType.LaserTurret:
+                        TurretGunSO laserTurretGun = TurretManager.Instance.turretGunList.Find(g => g.gunType == GunType.Laser);
+                        if (laserTurretGun == null)
+                        {
+                            Debug.LogError("BuildModeObjectActivator: Could not find TurretGunSO with GunType.Laser to set range circle");
+                            break;
+                        }
+                        rangeCircleToSet.radius = laserTurretGun != null ? laserTurretGun.detectRange : 2f;
+                        break;
+                    case StructureType.DroneHangar:
+                        rangeCircleToSet.radius = DroneManager.Instance.droneHangarRange;
+                        break;
+                    default:
+                        break;
+                }
+            }  
             
             yield return new WaitForSecondsRealtime(0.1f);
         }
