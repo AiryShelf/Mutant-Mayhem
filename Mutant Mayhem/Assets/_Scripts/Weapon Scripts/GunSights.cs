@@ -17,6 +17,7 @@ public class GunSights : MonoBehaviour
     [SerializeField] float defaultDist = 5;
 
     public bool isElevated;
+    public float elevatedRangeMult = 1.3f;
     Player player;
     PlayerShooter playerShooter;
     float maxLength;
@@ -53,7 +54,12 @@ public class GunSights : MonoBehaviour
             baseLength = defaultDist;
         }
 
-        baseLength = Mathf.Clamp(baseLength, 0, maxLength);
+        if (isElevated)
+        {
+            baseLength *= elevatedRangeMult;
+        }
+
+        baseLength = Mathf.Clamp(baseLength, 0, maxLength * (isElevated ? elevatedRangeMult : 1f));
 
         var (centerLength, leftLength, rightLength) =
             !isElevated

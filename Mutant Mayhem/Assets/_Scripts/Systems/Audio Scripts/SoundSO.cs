@@ -14,7 +14,6 @@ public enum SoundType
 [CreateAssetMenu(fileName = "NewSound", menuName = "Audio/SoundSO")]
 public class SoundSO : ScriptableObject
 {
-    public string soundName;
     public SoundType soundType = SoundType.SFX;
 
     [Header("AudioSource Settings")]

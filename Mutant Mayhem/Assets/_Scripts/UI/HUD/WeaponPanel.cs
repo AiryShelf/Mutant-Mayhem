@@ -22,6 +22,14 @@ public class WeaponPanel : MonoBehaviour
     int ammoInClip;
     float currentAmmoFillAmount;
 
+    Color textColor;
+    Color textColorStart;
+
+    void Awake()
+    {
+        textColorStart = ammoCountText.color;
+    }
+
     void Update()
     {
         if (ammoCountText == null || currentGunImage == null)
@@ -32,7 +40,19 @@ public class WeaponPanel : MonoBehaviour
 
         ammoTotal = playerShooter.gunsAmmo[playerShooter.currentGunIndex];
         ammoInClip = playerShooter.gunsAmmoInClips[playerShooter.currentGunIndex];
-        
+
+        if (ammoInClip + ammoTotal <= 0)
+        {
+            textColor = Color.red;
+            currentGunImage.color = new Color(1, 0, 0, 0.7f);
+        }
+        else
+        {
+            textColor = textColorStart;
+            currentGunImage.color = new Color(1, 1, 1, 1f);
+        }
+
+        ammoCountText.color = textColor;        
         ammoCountText.text =  (ammoTotal + ammoInClip).ToString();
         ammoCountText.fontSize = fontSize;
 

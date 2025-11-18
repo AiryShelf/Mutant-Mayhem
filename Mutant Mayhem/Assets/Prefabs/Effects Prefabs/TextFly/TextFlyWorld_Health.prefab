@@ -53,14 +53,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectPoolName: TextFlyWorld_Health
   isWorldSpace: 1
-  moveSpeed: 2
+  moveSpeed: 1
   moveSpeedVariation: 0.7
-  fadeDuration: 0.75
+  fadeDuration: 0
+  fadeDurationMax: 3
   fadeAlphaStart: 1
   fadeAlphaEnd: 0
   popGain: 0.5
   popExponent: 1.5
   popMax: 8
+  popRatioDurationFactor: 1
+  speedBoostFactor: 2
 --- !u!114 &-3813830168820926482
 MonoBehaviour:
   m_ObjectHideFlags: 0

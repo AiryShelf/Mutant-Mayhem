@@ -288,12 +288,12 @@ public static IEnumerator PulseScaleEffect(Transform transform, float pulseDurat
     if (transform == null)
         yield break;
 
-    // [ADDED] Force a clean start so there is no first-frame dip
+    // Force a clean start so there is no first-frame dip
     Vector3 scaleStart = transform.localScale; // keep original for optional restore
     transform.localScale = initialScale;
 
-    // [ADDED] Two-phase pulse: up fast, then down smooth. Peak early for a snappy pop.
-    const float peakFraction = 0.5f; // 50% of duration spent scaling up
+    //Two-phase pulse: up fast, then down smooth. Peak early for a snappy pop.
+    const float peakFraction = 0.25f; // 25% of duration spent scaling up
     float elapsed = 0f;
 
     while (elapsed < pulseDuration)

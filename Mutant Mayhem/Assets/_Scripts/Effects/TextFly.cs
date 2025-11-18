@@ -10,6 +10,7 @@ public class TextFly : MonoBehaviour
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float moveSpeedVariation = 5f; 
     [SerializeField] float fadeDuration = 2f;
+    [SerializeField] float fadeDurationMax = 3f;
     [SerializeField] float fadeAlphaStart = 1f;
     [SerializeField] float fadeAlphaEnd = 0f;
 
@@ -20,6 +21,9 @@ public class TextFly : MonoBehaviour
     [SerializeField] float popExponent = 2f;  
     [Tooltip("Maximum scale for pop effect (0 = no cap)")]
     [SerializeField] float popMax = 6f;
+    [Tooltip("Ratio of pulseMaxScale to add to fadeDuration for total duration")]
+    [SerializeField] float popRatioDurationFactor = 0.5f; // Multiplies pulseMaxScale set in Initialize(), and adds to duration
+    [SerializeField] float speedBoostFactor; // Multiplies pulseMaxScale to add to movement speed
 
     Vector3 initialScale;
     TextMeshPro tmpTextWorld;
@@ -39,7 +43,7 @@ public class TextFly : MonoBehaviour
     void Awake()
     {
         initialScale = transform.localScale;
-        moveSpeed = Random.Range(Mathf.Max(0.01f, moveSpeed - moveSpeedVariation), moveSpeed + moveSpeedVariation); // [CHANGED] true centered random, clamped
+        moveSpeed = Random.Range(Mathf.Max(0.01f, moveSpeed - moveSpeedVariation), moveSpeed + moveSpeedVariation); // true centered random, clamped
 
         if (isWorldSpace)
         {
@@ -81,7 +85,9 @@ public class TextFly : MonoBehaviour
         this.isWorldSpace = isWorldSpace;
         flyDir = dir;
 
-        StartCoroutine(FadeAndMove(alphaMax));
+        float newDuration = Mathf.Min(fadeDuration + (pulseMaxScale * popRatioDurationFactor), fadeDurationMax);
+        
+        StartCoroutine(FadeAndMove(alphaMax, newDuration, pulseMaxScale * speedBoostFactor));
 
         // Nonlinear pop around 1: f(1)=1, f(s)=1 + gain*(s-1)^exp, capped by popMax
         float scale = Mathf.Max(0f, pulseMaxScale);
@@ -89,18 +95,18 @@ public class TextFly : MonoBehaviour
         if (popMax > 0f) amplifiedScale = Mathf.Min(popMax, amplifiedScale);
         Vector3 scaleMax = new Vector3(amplifiedScale, amplifiedScale, amplifiedScale);
         
-        pulseRoutine = GameTools.StartCoroutine(GameTools.PulseScaleEffect(transform, fadeDuration, initialScale, scaleMax));
+        pulseRoutine = GameTools.StartCoroutine(GameTools.PulseScaleEffect(transform, newDuration, initialScale, scaleMax));
     }
 
-    private IEnumerator FadeAndMove(float alphaMax)
+    private IEnumerator FadeAndMove(float alphaMax, float duration, float speedBoost)
     {
         elapsedTime = 0f;
 
-        while (elapsedTime < fadeDuration)
+        while (elapsedTime < duration)
         {
-            t = elapsedTime / fadeDuration;
+            t = elapsedTime / duration;
             easedT = 1f - Mathf.Pow(1f - t, 2f);
-            newPos = initialPosition + flyDir * moveSpeed * easedT;
+            newPos = initialPosition + flyDir * (moveSpeed + speedBoost) * easedT;
             alpha = Mathf.Lerp(fadeAlphaStart, fadeAlphaEnd, t);
             alpha = Mathf.Clamp(alpha, 0, alphaMax);
 

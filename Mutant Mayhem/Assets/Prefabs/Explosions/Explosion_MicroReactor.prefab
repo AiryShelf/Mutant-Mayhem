@@ -14626,7 +14626,7 @@ MonoBehaviour:
   explosionObjectPoolName: Explosion_MicroReactor
   explosionSound: {fileID: 11400000, guid: 667d53a46bd8c42ab850b27c949c7f6b, type: 2}
   explosionFlash: {fileID: 6772064585279367696}
-  returnToPoolTime: 32
+  returnToPoolTime: 60
   flashFadeRate: 0.1
   layersToHit:
     serializedVersion: 2
@@ -14636,6 +14636,12 @@ MonoBehaviour:
   damage: 200
   wind: {fileID: 0}
   windTime: 0.5
+  shakeCamera: 1
+  minShakeIntensity: 1.5
+  maxShakeIntensity: 13
+  minShakeDuration: 0.12
+  maxShakeDuration: 0.8
+  falloffDistance: 35
 --- !u!198 &1459399991134938693
 ParticleSystem:
   m_ObjectHideFlags: 0

@@ -7,6 +7,12 @@ public class PlayerHealth : Health
     [SerializeField] Player player;
     public float healthRegenPerSec = 0.5f;
     [SerializeField] float hitAccuracyLoss = 3f;
+
+    [Header("Camera Shake On Hit")]
+    [SerializeField] float minShakeIntensity = 0.1f;
+    [SerializeField] float maxShakeIntensity = 0.8f;
+    [SerializeField] float minShakeDuration = 0.08f;
+    [SerializeField] float maxShakeDuration = 0.25f;
     public event Action<float> OnPlayerHealthChanged;
     public event Action<float> OnPlayerMaxHealthChanged;
 
@@ -25,6 +31,18 @@ public class PlayerHealth : Health
         // Stats counting
         if (value < 0)
         {
+            // Screen shake based on damage ratio
+            float damageAmount = -value; // value is negative for damage
+            float damageRatio = Mathf.Clamp01(damageAmount / (health / 3f));
+
+            float shakeIntensity = Mathf.Lerp(minShakeIntensity, maxShakeIntensity, damageRatio);
+            float shakeDuration = Mathf.Lerp(minShakeDuration, maxShakeDuration, damageRatio);
+
+            if (CameraShake.Instance != null)
+            {
+                CameraShake.Instance.Shake(shakeIntensity, shakeDuration);
+            }
+
             StatsCounterPlayer.DamageToPlayer -= healthChange;
             player.playerShooter.currentAccuracy += hitAccuracyLoss * player.stats.weaponHandling;
         }

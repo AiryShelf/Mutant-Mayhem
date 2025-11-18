@@ -29,6 +29,7 @@ public class Shooter : MonoBehaviour
     public float TurretReloadTime = 2.0f; 
     public bool isReloading;
     public bool isElevated;
+    public float isElevatedDamageMult = 1f;
     public bool hasTarget;
     protected GameObject muzzleFlash;
     protected Light2D muzzleLight;
@@ -249,13 +250,20 @@ public class Shooter : MonoBehaviour
                 damage *= bulletDamageMult;
                 break;
         }
-        if (isElevated && bullet.bulletLight != null)
-            bullet.bulletLight.shadowsEnabled = false;
+
+        float range = currentGunSO.bulletLifeTime;
+        if (isElevated)
+        {
+            range *= isElevatedDamageMult;
+            damage *= isElevatedDamageMult;
+            if (bullet.bulletLight != null)
+                bullet.bulletLight.shadowsEnabled = false;
+        }
         bullet.damage = damage;
         bullet.damageVarianceFactor = currentGunSO.damageVariance;
         bullet.origin = this.transform;
         bullet.knockback = currentGunSO.knockback;
-        bullet.destroyTime = currentGunSO.bulletLifeTime;
+        bullet.destroyTime = range;
         bullet.objectPoolName = currentGunSO.bulletPoolName;
         bullet.criticalHit = criticalHit;
 

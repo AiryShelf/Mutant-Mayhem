@@ -9709,7 +9709,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92945588c68b314da407858b5df2d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explodeOnEnable: 0
   explosionObjectPoolName: Explosion_Building_Aesthetic
   explosionSound: {fileID: 11400000, guid: f10d92d68294d41b4b3d0910290d712c, type: 2}
   explosionFlash: {fileID: 0}
@@ -9723,6 +9722,12 @@ MonoBehaviour:
   damage: 0
   wind: {fileID: 0}
   windTime: 0.5
+  shakeCamera: 0
+  minShakeIntensity: 0.1
+  maxShakeIntensity: 0.8
+  minShakeDuration: 0.08
+  maxShakeDuration: 0.25
+  falloffDistance: 20
 --- !u!198 &1459399991134938693
 ParticleSystem:
   m_ObjectHideFlags: 0

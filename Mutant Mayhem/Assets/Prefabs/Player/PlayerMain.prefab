@@ -177,7 +177,7 @@ MonoBehaviour:
   - {x: -0.21528363, y: -0.14868794, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 336908
+  m_InstanceId: 413994
   m_LocalBounds:
     m_Center: {x: -0.07518342, y: 0.000651747, z: 0}
     m_Extent: {x: 0.26163375, y: 0.17178518, z: 0}
@@ -465,6 +465,7 @@ MonoBehaviour:
   aimDistance: 10
   aimMinDist: 5
   rawInput: {x: 0, y: 0}
+  myStamina: {fileID: 0}
   isSprinting: 0
   playerShooter: {fileID: 4212811694825721047}
   hasFirstThrowTarget: 0
@@ -524,6 +525,7 @@ MonoBehaviour:
   TurretReloadTime: 2
   isReloading: 0
   isElevated: 0
+  isElevatedDamageMult: 1.3
   hasTarget: 0
   gunSights: {fileID: 0}
   currentAccuracy: 0
@@ -531,7 +533,7 @@ MonoBehaviour:
   gunSR: {fileID: 3153391127943440466}
   flashlight1: {fileID: 2500059085168980692}
   bodyAnim: {fileID: 3219406156909584378}
-  gunsAmmo: 000000002c010000000000000000000000000000
+  gunsAmmo: 000000003c000000000000000000000000000000
   canShoot: 1
   isShooting: 0
   isAiming: 0
@@ -667,6 +669,10 @@ MonoBehaviour:
   player: {fileID: 1081961372366873552}
   healthRegenPerSec: 0.5
   hitAccuracyLoss: 3
+  minShakeIntensity: 1.5
+  maxShakeIntensity: 10.5
+  minShakeDuration: 0.12
+  maxShakeDuration: 0.55
 --- !u!114 &6475792247714544152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7518,7 +7524,7 @@ MonoBehaviour:
   - {x: -0.21713921, y: -0.1723154, z: 0}
   m_ShapePathHash: 1677185479
   m_Mesh: {fileID: 0}
-  m_InstanceId: 336860
+  m_InstanceId: 413946
   m_LocalBounds:
     m_Center: {x: -0.076765835, y: -0.00025446713, z: 0}
     m_Extent: {x: 0.26141372, y: 0.17206094, z: 0}

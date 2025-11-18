@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: 1de1500b19c3c6242811a79e9335176a, type: 3}
   tileName: Raised Platform
-  description: A tall wooden platform to shoot over walls
+  description: 'A tall wooden platform to shoot over walls
+
+
+    Standing on the
+    platform increases projectile damage by 1.5x'
   tileCost: 500
   maxHealth: 1000
   health: 1000
@@ -35,3 +39,9 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
+  powerGenerated: 0
+  powerNeighborBonus: 0
+  powerCost: 0
+  supplyCost: 0
+  structuresToUnlock: []
+  canBuildOnlyOne: 0

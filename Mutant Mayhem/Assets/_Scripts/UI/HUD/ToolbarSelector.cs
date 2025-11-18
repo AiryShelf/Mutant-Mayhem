@@ -14,6 +14,8 @@ public class ToolbarSelector : MonoBehaviour
     Color unselectedColor;
     [SerializeField] Color selectedColor;
 
+    List<Image> unlockedGunImages = new List<Image>();
+
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -64,6 +66,13 @@ public class ToolbarSelector : MonoBehaviour
     // Coroutine to animate an Image moving and scaling to a center position and back
     public IEnumerator PlayUnlockAnimation(Image image, Vector2 centerPos, float scale, float duration)
     {
+        if (image == null)
+            yield break;
+
+        if (unlockedGunImages.Contains(image))
+            yield break;
+
+        unlockedGunImages.Add(image);
         RectTransform rectTransform = image.rectTransform;
         Vector2 originalPos = rectTransform.anchoredPosition;
         Vector3 originalScale = rectTransform.localScale;

@@ -9795,7 +9795,7 @@ MonoBehaviour:
   explosionObjectPoolName: Explosion_Building_Dusty_Large
   explosionSound: {fileID: 11400000, guid: e447697b4d545493cac680573acfc81e, type: 2}
   explosionFlash: {fileID: 6772064585279367696}
-  returnToPoolTime: 32
+  returnToPoolTime: 60
   flashFadeRate: 0.1
   layersToHit:
     serializedVersion: 2
@@ -9805,6 +9805,12 @@ MonoBehaviour:
   damage: 200
   wind: {fileID: 0}
   windTime: 0.5
+  shakeCamera: 1
+  minShakeIntensity: 1.5
+  maxShakeIntensity: 13
+  minShakeDuration: 0.12
+  maxShakeDuration: 0.8
+  falloffDistance: 35
 --- !u!198 &1459399991134938693
 ParticleSystem:
   m_ObjectHideFlags: 0

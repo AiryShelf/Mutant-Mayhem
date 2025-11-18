@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ThrowGrenade : MonoBehaviour
 {
+    [SerializeField] string thrownObjectPoolName;
     [SerializeField] string explosionObjectPoolName;
     [SerializeField] float scaleFactor = 0.5f;
     [SerializeField] float height = 3f;
@@ -61,6 +62,6 @@ public class ThrowGrenade : MonoBehaviour
 
         yield return null;
 
-        Destroy(gameObject);
+        PoolManager.Instance.ReturnToPool(thrownObjectPoolName, gameObject);
     }
 }

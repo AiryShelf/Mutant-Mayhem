@@ -5,7 +5,6 @@ using UnityEngine.Rendering.Universal;
 
 public class Explosion : MonoBehaviour
 {
-    [SerializeField] bool explodeOnEnable = true;
     [SerializeField] string explosionObjectPoolName = "Explosion";
     [SerializeField] SoundSO explosionSound;
     [SerializeField] Light2D explosionFlash;
@@ -20,6 +19,14 @@ public class Explosion : MonoBehaviour
     [SerializeField] float damage;
     [SerializeField] WindZone wind;
     [SerializeField] float windTime;
+
+    [Header("Camera Shake")]
+    [SerializeField] bool shakeCamera = true;
+    [SerializeField] float minShakeIntensity = 0.1f;
+    [SerializeField] float maxShakeIntensity = 0.8f;
+    [SerializeField] float minShakeDuration = 0.08f;
+    [SerializeField] float maxShakeDuration = 0.25f;
+    [SerializeField] float falloffDistance = 20f;
     
     List<Vector3Int> visibleTiles = new List<Vector3Int>();
     TileManager tileManager;
@@ -33,10 +40,14 @@ public class Explosion : MonoBehaviour
         }
     }
 
-    public void OnEnable()
+    void OnEnable()
     {
-        if (explodeOnEnable)
-            StartCoroutine(Explode());
+        if (!initialized)
+        {
+            initialized = true;
+            return;
+        }
+        StartCoroutine(Explode());
     }
 
     void OnDisable()
@@ -59,6 +70,16 @@ public class Explosion : MonoBehaviour
             AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
         StartCoroutine(ReturnToPoolAfterTime(returnToPoolTime));
+
+        if (shakeCamera && CameraShake.Instance != null)
+        {
+            // Screen shake based on explosion distance to Camera.  Effect falls off over 20 units.
+            Vector2 cameraPos = Camera.main.transform.position;
+            float distToCamera = Vector2.Distance(transform.position, cameraPos);
+            float shakeIntensity = Mathf.Lerp(minShakeIntensity, maxShakeIntensity, 1 - Mathf.Clamp01(distToCamera / falloffDistance));
+            float shakeDuration = Mathf.Lerp(minShakeDuration, maxShakeDuration, 1 - Mathf.Clamp01(distToCamera / falloffDistance));
+            CameraShake.Instance.Shake(shakeIntensity, shakeDuration);
+        }
 
         if (radius == 0)
             yield break;
@@ -269,11 +290,6 @@ public class Explosion : MonoBehaviour
                 }
             }
         }
-    }
-
-    void ApplyEnemyDamage()
-    {
-        
     }
 
     List<Vector3Int> GetTilesInRadius(Vector2 pos, TileManager tileManager)
