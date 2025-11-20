@@ -9,7 +9,7 @@ public class RuleTileStructure : RuleTile
     [Header("Tile Settings")]
     public StructureSO structureSO;
     public List<AnimatedTile> damagedTiles;
-    public AnimatedTile destroyedTile;
+    public List<AnimatedTile> destroyedTiles;
     
     [Header("Optional")]
     public TileBase buildUiTile;

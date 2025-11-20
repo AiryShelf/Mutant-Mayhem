@@ -34,9 +34,6 @@ public class GunSights : MonoBehaviour
 
     void LateUpdate()
     {
-        if (repairGun)
-            isElevated = true;
-            
         float baseLength;
         
         if (repairGun)
@@ -61,8 +58,9 @@ public class GunSights : MonoBehaviour
 
         baseLength = Mathf.Clamp(baseLength, 0, maxLength * (isElevated ? elevatedRangeMult : 1f));
 
+        bool ignoreWalls = isElevated || repairGun;
         var (centerLength, leftLength, rightLength) =
-            !isElevated
+            !ignoreWalls
                 ? RaycastLines(baseLength)
                 : (baseLength, baseLength, baseLength);
 

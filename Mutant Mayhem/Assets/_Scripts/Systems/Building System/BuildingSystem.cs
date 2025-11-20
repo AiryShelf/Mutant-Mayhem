@@ -452,6 +452,7 @@ public class BuildingSystem : MonoBehaviour
     {
         repairRangeCircle.radius = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                                       player.stats.playerShooter.currentGunSO.bulletSpeed;
+        repairRangeCircle.radiusStart = repairRangeCircle.radius;
     }
 
     IEnumerator LockRepairCircleToMuzzle()

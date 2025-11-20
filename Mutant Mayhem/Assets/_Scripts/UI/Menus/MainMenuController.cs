@@ -70,15 +70,15 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
-        if (Analytics.ConsentStatus == AnalyticsConsentStatus.Unknown)
+        if (AnalyticsManager.ConsentStatus == AnalyticsConsentStatus.Unknown)
         {
-            Analytics.Instance.OpenPermissionPanel(
+            AnalyticsManager.Instance.OpenPermissionPanel(
                 () => {
-                    Analytics.Instance.GrantConsent();
+                    AnalyticsManager.Instance.GrantConsent();
                     SceneManager.LoadSceneAsync(2);
                 },
                 () => {
-                    Analytics.Instance.DenyConsent();
+                    AnalyticsManager.Instance.DenyConsent();
                     SceneManager.LoadSceneAsync(2);
                 }
             );
@@ -96,15 +96,15 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
-        if (Analytics.ConsentStatus == AnalyticsConsentStatus.Unknown)
+        if (AnalyticsManager.ConsentStatus == AnalyticsConsentStatus.Unknown)
         {
-            Analytics.Instance.OpenPermissionPanel(
+            AnalyticsManager.Instance.OpenPermissionPanel(
                 () => {
-                    Analytics.Instance.GrantConsent();
+                    AnalyticsManager.Instance.GrantConsent();
                     StartTutorial();
                 },
                 () => {
-                    Analytics.Instance.DenyConsent();
+                    AnalyticsManager.Instance.DenyConsent();
                     StartTutorial();
                 }
             );

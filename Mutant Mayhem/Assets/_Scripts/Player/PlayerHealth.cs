@@ -33,7 +33,7 @@ public class PlayerHealth : Health
         {
             // Screen shake based on damage ratio
             float damageAmount = -value; // value is negative for damage
-            float damageRatio = Mathf.Clamp01(damageAmount / (health / 3f));
+            float damageRatio = Mathf.Clamp01(damageAmount / (health / 4f));
 
             float shakeIntensity = Mathf.Lerp(minShakeIntensity, maxShakeIntensity, damageRatio);
             float shakeDuration = Mathf.Lerp(minShakeDuration, maxShakeDuration, damageRatio);
@@ -49,7 +49,7 @@ public class PlayerHealth : Health
         
         if (health <= 0 && !player.IsDead)
         {
-            Analytics.Instance.TrackPlayerDeath(damageDealer.name);
+            AnalyticsManager.Instance.TrackPlayerDeath(damageDealer.name);
             Die();
             return;
         }

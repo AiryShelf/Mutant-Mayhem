@@ -66,7 +66,7 @@ public class QCubeHealth : Health
 
         if (health <= 0 && !hasDied)
         {
-            Analytics.Instance.TrackCubeDestroyed(damageDealer.name);
+            AnalyticsManager.Instance.TrackCubeDestroyed(damageDealer.name);
             Die();
             return;
         }

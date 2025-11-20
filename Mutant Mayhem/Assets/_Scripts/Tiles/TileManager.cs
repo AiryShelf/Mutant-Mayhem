@@ -170,6 +170,8 @@ public class TileManager : MonoBehaviour
         if (!buildingSystem.CheckSupplies(ruleTile.structureSO))
             return false;
 
+        rootPos = GridToRootPos(rootPos);
+
         _TileStatsDict[rootPos].isBlueprint = false;
         _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
         Matrix4x4 matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
@@ -231,17 +233,15 @@ public class TileManager : MonoBehaviour
 
     public void SetRubbleTileAt(Vector3Int rootPos)
     {
+        // Match rotation matrix from animated tilemap
         Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
-        destroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTile);
+        // Get random destroyed tile
+        int randomIndex = Random.Range(0, _TileStatsDict[rootPos].ruleTileStructure.destroyedTiles.Count);
+        destroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTiles[randomIndex]);
         destroyedTilemap.SetTransformMatrix(rootPos, matrix);
 
-        StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
-        if (type == StructureType.OneByOneWall ||
-            type == StructureType.OneByOneCorner ||
-            type == StructureType.RazorWire ||
-            type == StructureType.Mine ||
-            type == StructureType.LaserTurret ||
-            type == StructureType.GunTurret)
+        // Random rotation for 1x1 tiles
+        if (_TileStatsDict[rootPos].ruleTileStructure.structureSO.cellPositions.Count == 1)
         {
             float randomRotationZ = Random.Range(0f, 360f);
             Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, randomRotationZ));
@@ -250,6 +250,7 @@ public class TileManager : MonoBehaviour
 
         // Check instantiated object for ITileObjectExplodable
         GameObject tileObject = StructureTilemap.GetInstantiatedObject(rootPos);
+        StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
         if (tileObject != null)
         {
             var explodable = tileObject.GetComponentInChildren<MonoBehaviour>();
@@ -270,7 +271,6 @@ public class TileManager : MonoBehaviour
                 explosion.transform.position = TileCellsCenterToWorld(rootPos);
             }
         }
-
         // Aesthetic explosion effect for buildings that do not create it with their object already.
         else if (type == StructureType.SolarPanels)
         {

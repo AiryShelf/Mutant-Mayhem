@@ -96,11 +96,12 @@ MonoBehaviour:
   TurretReloadTime: 2
   isReloading: 0
   isElevated: 1
+  isElevatedDamageMult: 1
   hasTarget: 0
   gunSights: {fileID: 0}
   currentAccuracy: 0
   player: {fileID: 0}
-  recoilDistance: 0.15
+  recoilDistance: 0.12
 --- !u!114 &6832709016249092821
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using Unity.Services.Core;
 using Unity.Services.Analytics;
 using System.Text;
 using System;
+
 public enum AnalyticsConsentStatus
 {
     Unknown,
@@ -12,9 +13,9 @@ public enum AnalyticsConsentStatus
     Denied
 }
 
-public class Analytics : MonoBehaviour
+public class AnalyticsManager : MonoBehaviour
 {
-    public static Analytics Instance { get; private set; }
+    public static AnalyticsManager Instance { get; private set; }
     public static AnalyticsConsentStatus ConsentStatus = AnalyticsConsentStatus.Unknown;
     public static string ConsentVersion = "0";
     public static DateTime ConsentTimestamp;

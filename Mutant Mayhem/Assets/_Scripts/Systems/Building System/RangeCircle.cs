@@ -7,12 +7,17 @@ public class RangeCircle : MonoBehaviour
 {
     [SerializeField] int segments = 50;
     public float radius = 5f;
+    public float radiusStart;
     [SerializeField] float dotSize = 0.2f;
     [SerializeField] bool startOn = false;
+    public bool isRepairRange = false;
     LineRenderer lineRenderer;
+    Player player;
 
     void Awake()
     {
+        player = FindObjectOfType<Player>();
+        radiusStart = radius;
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = segments + 1;
         lineRenderer.loop = true;
@@ -53,6 +58,14 @@ public class RangeCircle : MonoBehaviour
     void Update()
     {
         transform.rotation = Quaternion.identity;
+
+        if (isRepairRange && player != null)
+        {
+            if (player.stats.playerShooter.isElevated)
+                radius = radiusStart * 1.3f;
+            else
+                radius = radiusStart;
+        }
 
         // Delete this after tuning the circle
         float angle = 360f / segments;

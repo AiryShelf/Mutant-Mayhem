@@ -26,7 +26,7 @@ public class OptionsPanel : MonoBehaviour
         virtualAimStickToggle.onValueChanged.AddListener(DisableVirtualAimJoystick);
         //resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
 
-        Analytics.OnConsentStatusChanged += HandleAnalyticsConsentChanged;
+        AnalyticsManager.OnConsentStatusChanged += HandleAnalyticsConsentChanged;
 
         //Initialize();
     }
@@ -40,7 +40,7 @@ public class OptionsPanel : MonoBehaviour
         virtualAimStickToggle.onValueChanged.RemoveListener(DisableVirtualAimJoystick);
         //resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChanged);
 
-        Analytics.OnConsentStatusChanged -= HandleAnalyticsConsentChanged;
+        AnalyticsManager.OnConsentStatusChanged -= HandleAnalyticsConsentChanged;
     }
 
     void Start()
@@ -73,11 +73,11 @@ public class OptionsPanel : MonoBehaviour
 
         qualityDropdown.SetValueWithoutNotify(qualityLevel);
         vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
-        analyticsToggle.SetIsOnWithoutNotify(Analytics.ConsentStatus == AnalyticsConsentStatus.Granted);
+        analyticsToggle.SetIsOnWithoutNotify(AnalyticsManager.ConsentStatus == AnalyticsConsentStatus.Granted);
         
         if (analyticsToggle != null)
         {
-            bool analyticsOn = (Analytics.ConsentStatus == AnalyticsConsentStatus.Granted) && Analytics.AnalyticsEnabled;
+            bool analyticsOn = (AnalyticsManager.ConsentStatus == AnalyticsConsentStatus.Granted) && AnalyticsManager.AnalyticsEnabled;
             analyticsToggle.SetIsOnWithoutNotify(analyticsOn);
         }
         
@@ -119,11 +119,11 @@ public class OptionsPanel : MonoBehaviour
         if (isOn)
         {
             // Otherwise, show the consent panel and let its callbacks handle consent.
-            if (Analytics.Instance != null)
+            if (AnalyticsManager.Instance != null)
             {
-                Analytics.Instance.OpenPermissionPanel(
-                    Analytics.Instance.GrantConsent,
-                    Analytics.Instance.DenyConsent
+                AnalyticsManager.Instance.OpenPermissionPanel(
+                    AnalyticsManager.Instance.GrantConsent,
+                    AnalyticsManager.Instance.DenyConsent
                 );
             }
             else
@@ -135,16 +135,16 @@ public class OptionsPanel : MonoBehaviour
         else
         {
             // User explicitly turned analytics off from the options menu.
-            if (Analytics.Instance != null)
+            if (AnalyticsManager.Instance != null)
             {
-                Analytics.Instance.DenyConsent();
+                AnalyticsManager.Instance.DenyConsent();
             }
             else
             {
                 // Fallback if Analytics instance is missing.
-                Analytics.ConsentStatus = AnalyticsConsentStatus.Denied;
-                Analytics.AnalyticsEnabled = false;
-                Analytics.StopDataCollection();
+                AnalyticsManager.ConsentStatus = AnalyticsConsentStatus.Denied;
+                AnalyticsManager.AnalyticsEnabled = false;
+                AnalyticsManager.StopDataCollection();
             }
         }
     }
@@ -156,7 +156,7 @@ public class OptionsPanel : MonoBehaviour
         if (analyticsToggle == null)
             return;
 
-        bool analyticsOn = (status == AnalyticsConsentStatus.Granted) && Analytics.AnalyticsEnabled;
+        bool analyticsOn = (status == AnalyticsConsentStatus.Granted) && AnalyticsManager.AnalyticsEnabled;
         analyticsToggle.SetIsOnWithoutNotify(analyticsOn);
 
         MessageBanner.PulseMessage(

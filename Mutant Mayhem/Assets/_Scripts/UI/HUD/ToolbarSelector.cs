@@ -52,7 +52,7 @@ public class ToolbarSelector : MonoBehaviour
         //Debug.Log("Toolbarselector played upgEffect");
         UpgradeManager.Instance.upgradeEffects.ToolbarUpgradeEffect((Vector2)image.transform.position);
 
-        StartCoroutine(PlayUnlockAnimation(image, new Vector2(0, 200), 5f, 3f));
+        StartCoroutine(PlayUnlockAnimation(image, new Vector2(0, 200), 5f, 1.2f));
     }
 
     public void LockBoxImage(int i)
@@ -90,7 +90,7 @@ public class ToolbarSelector : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.5f);
 
         timer = 0f;
         float returnDuration = halfDuration * 0.75f;

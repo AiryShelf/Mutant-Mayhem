@@ -48,7 +48,7 @@ public class SystemsInitializer : MonoBehaviour
         MessageManager.Instance.StartPlanetDialogue();
 
         // Track session_start
-        Analytics.Instance.TrackSessionStart();
+        AnalyticsManager.Instance.TrackSessionStart();
     }
 
     IEnumerator ForceCanvasUpdate()

@@ -227,7 +227,7 @@ public class WaveControllerRandom : MonoBehaviour
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
 
-        Analytics.Instance.TrackWaveCompleted(currentWaveIndex);
+        AnalyticsManager.Instance.TrackWaveCompleted(currentWaveIndex);
 
         waveSpawner.CalculateMaxIndex();
 
