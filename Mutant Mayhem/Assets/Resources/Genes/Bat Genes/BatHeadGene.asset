@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Head_Bat
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 6
+  scale: 9
   sprite: {fileID: 21300000, guid: f62a08e0a6fcb4241b69d9b7cba422ad, type: 3}
   corpseSprites:
   - {fileID: -920502624, guid: 7db94183c81984ac5becf10f3d0f02d6, type: 3}
@@ -28,8 +28,8 @@ MonoBehaviour:
   shootSOBase: {fileID: 0}
   meleeColliderOffset: {x: 0.025, y: 0}
   meleeColliderSize: {x: 0.04051865, y: 0.07015181}
-  meleeDamage: 0.4
-  attackDelay: 0.5
+  meleeDamage: 0.28
+  attackDelay: 0.6
   knockback: 5
   selfKnockback: 0
   massModFactor: 0.9

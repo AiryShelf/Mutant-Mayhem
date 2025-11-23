@@ -517,14 +517,12 @@ public class BuyConstructionDroneUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count + 1), baseCost, int.MaxValue);
-        return cost;
+        return baseCost;
     }
 
     public static int GetCost(Player player, int baseCost)
     {
-        int cost = Mathf.Clamp(baseCost * (DroneManager.Instance.activeConstructionDrones.Count + 1), baseCost, int.MaxValue);
-        return cost;
+        return baseCost;
     }
 }
 
@@ -541,24 +539,13 @@ public class BuyAttackDroneUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        int activeDrones = DroneManager.Instance.activeAttackDrones.Count;
-
-        // Increment cost
-        int newDroneCount = activeDrones + 1;
-        int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
-        //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
-        return newCost;
+        return baseCost;
     }
 
     public static int GetCost(Player player, int baseCost)
     {
-        int activeDrones = DroneManager.Instance.activeAttackDrones.Count;
-
-        // Increment cost
-        int newDroneCount = activeDrones + 1;
-        int newCost = Mathf.FloorToInt(baseCost * newDroneCount);
-        //int newCost = Mathf.FloorToInt(baseCost * Mathf.Pow(2, newDroneCount));
-        return newCost;
+        // Deprecated increment cost
+        return baseCost;
     }
 }
 
@@ -575,13 +562,13 @@ public class SellConstructionDroneUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        int cost = baseCost * DroneManager.Instance.activeConstructionDrones.Count;
+        int cost = baseCost;
         return cost;
     }
 
     public static int GetCost(int baseCost)
     {
-        int cost = baseCost * DroneManager.Instance.activeConstructionDrones.Count;
+        int cost = baseCost;
         return cost;
     }
 }
@@ -599,15 +586,13 @@ public class SellAttackDroneUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // Decrement cost
-        int cost = baseCost * DroneManager.Instance.activeAttackDrones.Count;
-        return cost;
+        
+        return baseCost;
     }
 
     public static int GetCost(int baseCost)
     {
-        int cost = baseCost * DroneManager.Instance.activeAttackDrones.Count;
-        return cost;
+        return baseCost;
     }
 }
 

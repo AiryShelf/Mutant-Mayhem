@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class TooltipSystem : MonoBehaviour
 {
-    private static TooltipSystem current;
+    public static TooltipSystem Instance;
     public static bool fadedOut;
 
     public Tooltip tooltip;
+    public float tooltipDelay = 0.5f;
     public float fadeTime;
     public CanvasGroup tooltipCanvasGroup;
     Coroutine fadeIn;
@@ -15,23 +16,29 @@ public class TooltipSystem : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+
         tooltipCanvasGroup.alpha = 0;
-        current = this;
         fadedOut = true;
     }
 
     public static void Show(string content, string header = "")
     {
-        current.tooltip.SetText(content, header);
+        Instance.tooltip.SetText(content, header);
         //current.tooltip.gameObject.SetActive(true);
         //current.tooltipAnim.SetBool("isOn", true);
-        current.StartFadeIn();
+        Instance.StartFadeIn();
     }
 
     public static void Hide()
     {
-        if (current != null)
-            current.StartFadeOut();
+        if (Instance != null)
+            Instance.StartFadeOut();
     }
 
     void StartFadeIn()

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Body_Frog
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 6
+  scale: 9
   sprite: {fileID: 21300000, guid: 36cdd9a5dada32a45b15efb7c46de97d, type: 3}
   corpseSprites:
   - {fileID: -1882917605, guid: 3695b8c35db8c7d4495b7079e4ab2b3c, type: 3}
@@ -33,8 +33,8 @@ MonoBehaviour:
   - {x: -0.039998516, y: -0.039995585}
   - {x: 0.04999588, y: -0.040004674}
   - {x: 0.060001545, y: -0.030002292}
-  startMass: 0.75
-  startHealth: 5
+  startMass: 0.65
+  startHealth: 4.5
   freezeTime: 0.25
   painSound: {fileID: 11400000, guid: d9275a96bf51bad45881b1b0963795ab, type: 2}
   shadowShapePoints:

@@ -94,11 +94,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00796190f03ebc5459f70101a21ce7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMaxHealth: 1.5
-  maxHealth: 1.5
+  startMaxHealth: 1.75
+  maxHealth: 1.75
   deathTorque: 30
   painSound: {fileID: 11400000, guid: dc0429e7a6c0fba48956d18ff1936bda, type: 2}
   painSoundCooldown: 0.3
+  textFlyPoolName: TextFlyWorld_Health
   textFlyHealthGainColor: {r: 0, g: 1, b: 0, a: 0.5019608}
   textFlyHealthLossColor: {r: 1, g: 1, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
@@ -125,7 +126,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animSpeedFactor: 0.5
+  animSpeedFactorStart: 1
   switchToRunBuffer: 1.6
+  switchToRunBufferStart: 1.1
   maxAnimSpeed: 5
   myAnimator: {fileID: 0}
 --- !u!58 &8431538982880265398

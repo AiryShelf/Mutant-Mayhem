@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Head_Dog
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 9
+  scale: 13.5
   sprite: {fileID: 21300000, guid: 5c69c414df03844e2a6cd9cd32c686dc, type: 3}
   corpseSprites:
   - {fileID: -1576369688, guid: 0c7af58d229964785b10e9049c42b768, type: 3}
@@ -32,7 +32,7 @@ MonoBehaviour:
   shootSOBase: {fileID: 0}
   meleeColliderOffset: {x: 0.04, y: 0}
   meleeColliderSize: {x: 0.07, y: 0.07}
-  meleeDamage: 0.4
+  meleeDamage: 0.19
   attackDelay: 0.75
   knockback: 5
   selfKnockback: 2

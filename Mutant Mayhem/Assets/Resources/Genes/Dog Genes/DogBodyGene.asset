@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Body_Dog
   color: {r: 1, g: 1, b: 1, a: 1}
-  scale: 9
+  scale: 13.5
   sprite: {fileID: 21300000, guid: f8f6156dd9df443d285f45b189fe92a1, type: 3}
   corpseSprites:
   - {fileID: -1056670706, guid: 3634a04a2d7264823bd84482cc71fef8, type: 3}
   - {fileID: 483965896, guid: 3634a04a2d7264823bd84482cc71fef8, type: 3}
   - {fileID: -103501901, guid: 3634a04a2d7264823bd84482cc71fef8, type: 3}
+  corpseExplosionPoolName: Explosion_Corpse_Red
   headAnchorOffset: {x: 0.08, y: 0}
   leftLegAnchorOffset: {x: 0, y: 0.03}
   rightLegAnchorOffset: {x: 0, y: -0.03}
@@ -31,7 +32,7 @@ MonoBehaviour:
   - {x: 0.06000068, y: -0.0300005}
   - {x: 0.08000013, y: -0.020000154}
   startMass: 0.6
-  startHealth: 4
+  startHealth: 2
   freezeTime: 0.25
   painSound: {fileID: 11400000, guid: 7bf8998c624df904b95402985e56da6c, type: 2}
   shadowShapePoints:

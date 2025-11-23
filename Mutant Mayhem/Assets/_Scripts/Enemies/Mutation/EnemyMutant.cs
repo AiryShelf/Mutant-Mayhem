@@ -14,6 +14,10 @@ public class EnemyMutant : EnemyBase
     public BoxCollider2D meleeCollider;
     public float fighterHealthFitnessMultiplier = 0.1f; // Multiplier for fitness if fighter does no damage
 
+    [Header("Health Scaling")]
+    [Range(0f, 1f)]
+    public float headToBodyHealthRatio = 0.33f; // 0 = body-only, 1 = head-only
+
     public override void Awake()
     {
         waveController = FindObjectOfType<WaveControllerRandom>();
@@ -144,21 +148,41 @@ public class EnemyMutant : EnemyBase
 
     void SetHealthSettings(Genome g)
     {
-        float areaScale = g.bodyGene.scale * g.headGene.scale;
-        health.SetMaxHealth(g.bodyGene.startHealth * areaScale);
+        float bodyScale = g.bodyGene.scale;
+        float headScale = g.headGene.scale;
+
+        // 0 = body-only, 0.5 = equal, 1 = head-only
+        float headWeight = headToBodyHealthRatio;
+        float bodyWeight = 1f - headWeight;
+
+        // Blend the two scales
+        float effectiveScale = (bodyScale * bodyWeight) + (headScale * headWeight);
+
+        // Treat this like a “size” and square it to get an area-like factor
+        float bodyAreaScale = effectiveScale * effectiveScale;
+
+        // Match your regular enemy formula style
+        float baseHealth = health.startMaxHealth; // From g.bodyGene.startHealth in ApplyGenomeToEnemyBase
+        float waveMult = waveController.healthMultiplier;
+
+        health.SetMaxHealth(bodyAreaScale * baseHealth * waveMult);
         health.SetHealth(health.GetMaxHealth());
         health.painSound = g.bodyGene.painSound;
-        unfreezeTime = g.bodyGene.freezeTime / (g.bodyGene.scale / 6);
+
+        // Freeze time still based on body size only
+        float baseScaleForFreeze = 9f;
+        float sizeRatio = Mathf.Max(bodyScale / baseScaleForFreeze, 0.1f);
+        unfreezeTime = g.bodyGene.freezeTime / sizeRatio;
     }
 
     void SetMeleeSettings(Genome g)
     {
-        float areaScale = g.bodyGene.scale * g.headGene.scale;
+        float headAreaScale = g.headGene.scale * g.headGene.scale;
         meleeController.meleeSound = g.headGene.meleeSound;
         meleeCollider.offset = g.headGene.meleeColliderOffset;
         meleeCollider.size = g.headGene.meleeColliderSize;
 
-        meleeController.meleeDamage = g.headGene.meleeDamage * areaScale;
+        meleeController.meleeDamage = g.headGene.meleeDamage * headAreaScale;
         meleeController.attackDelay = g.headGene.attackDelay * waveController.attackDelayMult;
         meleeController.knockback = g.headGene.knockback * rb.mass;
         meleeController.selfKnockback = g.headGene.selfKnockback * rb.mass;

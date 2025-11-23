@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] float toolTipDelay = 0.3f;
     public string header;
     [Multiline()]
     public string content;
@@ -79,7 +77,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     IEnumerator DelayedCall()
     {
-        yield return new WaitForSecondsRealtime(toolTipDelay);
+        yield return new WaitForSecondsRealtime(TooltipSystem.Instance.tooltipDelay);
         TooltipSystem.Show(content, header);
     }
 
