@@ -277,7 +277,7 @@ public class WaveController : MonoBehaviour
         }
 
         return total;
-    }
+    } 
 
     void ApplyResearchPoints()
     {
