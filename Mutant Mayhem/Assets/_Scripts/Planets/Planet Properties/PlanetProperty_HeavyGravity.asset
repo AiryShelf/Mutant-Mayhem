@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   propertyName: Heavy Gravity
   statModifierEntries:
-  - modifierUiName: -10% Move Speed
+  - modifierUiName: -10% Player Speed
     isDebuff: 1
     statModifier: 0
     multiplier: 0.9
-  - modifierUiName: -15% Enemy Size
-    isDebuff: 1
+  - modifierUiName: -5% Enemy Size
+    isDebuff: 0
     statModifier: 14
-    multiplier: 0.85
+    multiplier: 0.95
   - modifierUiName: -30% Bullet Range
     isDebuff: 1
     statModifier: 8
@@ -34,7 +34,7 @@ MonoBehaviour:
     isDebuff: 1
     statModifier: 2
     multiplier: 1.25
-  - modifierUiName: -20% Repair Efficiency
+  - modifierUiName: -20% Repair Speed
     isDebuff: 1
     statModifier: 6
     multiplier: 0.8

@@ -64,7 +64,7 @@ public class DefaultGeneticOps
     public void Mutate(Genome genome, float difficultyScaleTotal)
     {
         float mutationChance = PlanetManager.Instance.currentPlanet.mutationChance
-                             + (WaveControllerRandom.Instance.currentWaveIndex
+                             + (WaveController.Instance.currentWaveIndex
                              * PlanetManager.Instance.currentPlanet.addMutationChancePerWave);
         mutationChance = Mathf.Clamp(mutationChance, 0f, PlanetManager.Instance.currentPlanet.mutationChanceMax);
         //Debug.Log("[Mutate] Mutation chance: " + mutationChance);
@@ -94,7 +94,7 @@ public class DefaultGeneticOps
 
         // 🔸 Mutate scales
         float delta = PlanetManager.Instance.currentPlanet.mutationIntensity
-                    + (WaveControllerRandom.Instance.currentWaveIndex
+                    + (WaveController.Instance.currentWaveIndex
                     * PlanetManager.Instance.currentPlanet.addMutationIntensityPerWave);
         float deltaDown = -delta / 2;
         //Debug.Log("[GeneticOps] Mutate scale between: delta up " + delta + ", delta down " + deltaDown);

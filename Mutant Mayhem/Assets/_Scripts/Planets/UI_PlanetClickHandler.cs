@@ -12,6 +12,7 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
     [SerializeField] GameObject highlightLockedPrefab;
     [SerializeField] GameObject selectedHighlightPrefab;
     [SerializeField] Transform parentTransform;
+    [SerializeField] GameObject planetCompletedIcon;
     GameObject highlightInstance;
     GameObject selectedHighlightInstance;
     UI_PlanetPanel planetPanel;
@@ -25,6 +26,7 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
         if (planetPanel == null)
             Debug.LogWarning("UI_PlanetClickHandler: Could not find PlanetPanel in scene");
 
+        // Set up highlight based on locked/unlocked status
         GameObject highlight;
         if (unlocked)
         {
@@ -37,6 +39,13 @@ public class UI_PlanetClickHandler : MonoBehaviour, IPointerClickHandler, IPoint
             selectableCircle.EnableCircle(false);
         }
 
+        // Show completed icon if planet is completed
+        if (planetCompletedIcon != null && ProfileManager.Instance.IsPlanetCompleted(planetSO))
+            planetCompletedIcon.SetActive(true);
+        else if (planetCompletedIcon != null)
+            planetCompletedIcon.SetActive(false);
+
+        // Instantiate highlight
         highlightInstance = Instantiate(highlight, transform.position, Quaternion.identity, parentTransform);
         highlightInstance.transform.localScale = Vector3.one; 
         highlightInstance.SetActive(false);

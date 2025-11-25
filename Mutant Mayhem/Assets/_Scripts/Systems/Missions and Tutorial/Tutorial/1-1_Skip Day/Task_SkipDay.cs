@@ -7,11 +7,11 @@ using UnityEngine.InputSystem;
 
 public class Task_SkipDay : Task
 {
-    WaveControllerRandom waveController;
+    WaveController waveController;
 
     void Start()
     {
-        waveController = FindObjectOfType<WaveControllerRandom>();
+        waveController = FindObjectOfType<WaveController>();
 
         UpdateProgressText();
     }

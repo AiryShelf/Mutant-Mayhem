@@ -6,11 +6,11 @@ public class Task_SurviveNight : Task
 {
     [Header("Survive Night")]
     [SerializeField] int nightToComplete;
-    WaveControllerRandom waveController;
+    WaveController waveController;
 
     void Start()
     {
-        waveController = FindObjectOfType<WaveControllerRandom>();
+        waveController = FindObjectOfType<WaveController>();
 
         UpdateProgressText();
     }

@@ -370,7 +370,7 @@ public class AnalyticsManager : MonoBehaviour
         string safeDeathCause = string.IsNullOrEmpty(deathCause) ? "no data" : deathCause;
         evt.Add("death_cause", safeDeathCause);
         AnalyticsService.Instance.RecordEvent(evt);
-        Debug.Log($"Tracked player_death event: cause {safeDeathCause}, wave {WaveControllerRandom.Instance.currentWaveIndex}");
+        Debug.Log($"Tracked player_death event: cause {safeDeathCause}, wave {WaveController.Instance.currentWaveIndex}");
     }
 
     public void TrackCubeDestroyed(string destructionCause)
@@ -390,7 +390,7 @@ public class AnalyticsManager : MonoBehaviour
         string safeDeathCause = string.IsNullOrEmpty(destructionCause) ? "no data" : destructionCause;
         evt.Add("destruction_cause", safeDeathCause);
         AnalyticsService.Instance.RecordEvent(evt);
-        Debug.Log($"Tracked cube_destroyed event: cause {safeDeathCause}, wave {WaveControllerRandom.Instance.currentWaveIndex}");
+        Debug.Log($"Tracked cube_destroyed event: cause {safeDeathCause}, wave {WaveController.Instance.currentWaveIndex}");
     }
 
     void AddEverythingToEvent(CustomEvent evt)
@@ -407,7 +407,7 @@ public class AnalyticsManager : MonoBehaviour
         evt.Add("current_planet", PlanetManager.Instance != null ? PlanetManager.Instance.currentPlanet.bodyName : "null");
         evt.Add("session_seconds_in_app", (int)Time.realtimeSinceStartup);
         evt.Add("session_seconds", (int)StatsCounterPlayer.TotalPlayTime);
-        evt.Add("night_number", WaveControllerRandom.Instance.currentWaveIndex);
+        evt.Add("night_number", WaveController.Instance.currentWaveIndex);
         evt.Add("total_damage_taken_player", (int)StatsCounterPlayer.DamageToPlayer);
         evt.Add("total_damage_taken_cube", (int)StatsCounterPlayer.DamageToCube);
         evt.Add("total_damage_taken_structures", (int)StatsCounterPlayer.DamageToStructures);

@@ -48,12 +48,12 @@ public class EvolutionManager : MonoBehaviour
 
     void Start()
     {
-        if (!WaveControllerRandom.Instance)
+        if (!WaveController.Instance)
         {
             Debug.LogWarning("EvolutionManager: WaveControllerRandom instance not found!");
             return;
         }
-        _waveSpawner = WaveControllerRandom.Instance.waveSpawner;
+        _waveSpawner = WaveController.Instance.waveSpawner;
     }
 
     void OnDestroy()

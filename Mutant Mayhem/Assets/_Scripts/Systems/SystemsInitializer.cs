@@ -41,7 +41,7 @@ public class SystemsInitializer : MonoBehaviour
         AugManager.Instance.ApplySelectedAugmentations();
         PlanetManager.Instance.ApplyPlanetProperties();
 
-        FindObjectOfType<WaveControllerRandom>().Initialize();
+        FindObjectOfType<WaveController>().Initialize();
 
         ScreenScaleChecker.InvokeAspectRatioChanged();
         

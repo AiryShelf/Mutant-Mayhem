@@ -14,13 +14,12 @@ public class EnemyMutant : EnemyBase
     public BoxCollider2D meleeCollider;
     public float fighterHealthFitnessMultiplier = 0.1f; // Multiplier for fitness if fighter does no damage
 
-    [Header("Health Scaling")]
-    [Range(0f, 1f)]
-    public float headToBodyHealthRatio = 0.33f; // 0 = body-only, 1 = head-only
-
     public override void Awake()
     {
-        waveController = FindObjectOfType<WaveControllerRandom>();
+        if (WaveController.Instance != null)
+        {
+            waveController = WaveController.Instance;
+        }
 
         rb = mutantRb;
 
@@ -37,6 +36,11 @@ public class EnemyMutant : EnemyBase
         {
             Debug.LogError("MutatedEnemy initialization failed: Individual is null.");
             return;
+        }
+
+        if (waveController == null)
+        {
+            waveController = WaveController.Instance;
         }
 
         AssignIndividual(ind);
@@ -135,8 +139,8 @@ public class EnemyMutant : EnemyBase
     void SetCombinedPolygonCollider(Genome g)
     {
         // Combines the head and body collider points
-        List<Vector2> headOrdered = g.headGene.headColliderPoints.Select(p => p * g.headGene.scale).ToList();
-        List<Vector2> bodyOrdered = g.bodyGene.bodyColliderPoints.Select(p => p * g.bodyGene.scale).ToList();
+        List<Vector2> headOrdered = g.headGene.headColliderPoints.Select(p => p * g.headGene.scale * WaveController.Instance.sizeMultiplier).ToList();
+        List<Vector2> bodyOrdered = g.bodyGene.bodyColliderPoints.Select(p => p * g.bodyGene.scale * WaveController.Instance.sizeMultiplier).ToList();
 
         List<Vector2> combinedPoints = new List<Vector2>();
         combinedPoints.AddRange(headOrdered);
@@ -148,30 +152,16 @@ public class EnemyMutant : EnemyBase
 
     void SetHealthSettings(Genome g)
     {
-        float bodyScale = g.bodyGene.scale;
-        float headScale = g.headGene.scale;
-
-        // 0 = body-only, 0.5 = equal, 1 = head-only
-        float headWeight = headToBodyHealthRatio;
-        float bodyWeight = 1f - headWeight;
-
-        // Blend the two scales
-        float effectiveScale = (bodyScale * bodyWeight) + (headScale * headWeight);
-
         // Treat this like a “size” and square it to get an area-like factor
-        float bodyAreaScale = effectiveScale * effectiveScale;
+        float bodyAreaScale = g.bodyGene.scale * g.bodyGene.scale;
 
-        // Match your regular enemy formula style
-        float baseHealth = health.startMaxHealth; // From g.bodyGene.startHealth in ApplyGenomeToEnemyBase
-        float waveMult = waveController.healthMultiplier;
-
-        health.SetMaxHealth(bodyAreaScale * baseHealth * waveMult);
+        health.SetMaxHealth(bodyAreaScale * health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
         health.painSound = g.bodyGene.painSound;
 
         // Freeze time still based on body size only
         float baseScaleForFreeze = 9f;
-        float sizeRatio = Mathf.Max(bodyScale / baseScaleForFreeze, 0.1f);
+        float sizeRatio = Mathf.Max(g.bodyGene.scale / baseScaleForFreeze, 0.1f);
         unfreezeTime = g.bodyGene.freezeTime / sizeRatio;
     }
 
@@ -182,7 +172,7 @@ public class EnemyMutant : EnemyBase
         meleeCollider.offset = g.headGene.meleeColliderOffset;
         meleeCollider.size = g.headGene.meleeColliderSize;
 
-        meleeController.meleeDamage = g.headGene.meleeDamage * headAreaScale;
+        meleeController.meleeDamage = g.headGene.meleeDamage * headAreaScale * waveController.damageMultiplier;
         meleeController.attackDelay = g.headGene.attackDelay * waveController.attackDelayMult;
         meleeController.knockback = g.headGene.knockback * rb.mass;
         meleeController.selfKnockback = g.headGene.selfKnockback * rb.mass;

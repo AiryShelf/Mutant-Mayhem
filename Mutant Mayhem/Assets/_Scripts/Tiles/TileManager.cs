@@ -54,6 +54,9 @@ public class TileManager : MonoBehaviour
     // Buffer for non-alloc point queries at tile centers
     private readonly Collider2D[] _tileColsBuffer = new Collider2D[16];
 
+    // Stores a persistent random rotation for damaged wall sprites (per root cell)
+    private readonly Dictionary<Vector3Int, float> _wallDamageRotation = new Dictionary<Vector3Int, float>();
+
     //[SerializeField] GameObject debugDotPrefab;
 
     // For debugging
@@ -93,6 +96,7 @@ public class TileManager : MonoBehaviour
         }
 
         player = FindObjectOfType<Player>();
+        playerOnlyMask = LayerMask.GetMask("PlayerOnly");
         buildingSystem = FindObjectOfType<BuildingSystem>();
         turretManager = FindObjectOfType<TurretManager>();
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
@@ -107,6 +111,7 @@ public class TileManager : MonoBehaviour
     void OnDisable()
     {
         _TileStatsDict.Clear();
+        _wallDamageRotation.Clear();
     }
 
     #region Alter Tiles
@@ -380,6 +385,9 @@ public class TileManager : MonoBehaviour
     {
         ConstructionManager.Instance.TileRemoved(GridCenterToWorld(gridPos));
         Vector3Int rootPos = GridToRootPos(gridPos);
+
+        // Remove any stored wall-damage rotation for this root
+        _wallDamageRotation.Remove(rootPos);
         
         // Find rotation matrix of tile at gridPos, convert source positions to rotation
         var blueprintTile = BlueprintTilemap.GetTile(rootPos);
@@ -606,11 +614,17 @@ public class TileManager : MonoBehaviour
 
     #region Update Tiles
 
+    Tilemap tempTilemap;
+    LayerMask playerOnlyMask;
+    List<AnimatedTile> dTilesTemp = new List<AnimatedTile>();
+    ContactFilter2D filterTemp = new ContactFilter2D();
+
     void UpdateTileDamageSprite(Vector3Int rootPos)
     {
         if (_TileStatsDict[rootPos].isBlueprint) return;
 
-        if (_TileStatsDict[rootPos].health == 0)
+        // Check for destroyed
+        if (_TileStatsDict[rootPos].health <= 0)
         {
             StatsCounterPlayer.StructuresLost++;
             SetRubbleTileAt(rootPos);
@@ -618,46 +632,64 @@ public class TileManager : MonoBehaviour
             return;
         }
 
+        var structureSO = _TileStatsDict[rootPos].ruleTileStructure.structureSO;
+        bool isWall = structureSO.tileName == "Wall";
+        bool isCorner = structureSO.tileName == "Wall Corner";
+
         float healthRatio = _TileStatsDict[rootPos].health /
                                  _TileStatsDict[rootPos].maxHealth;
 
-        Tilemap tilemap;
-        if (_TileStatsDict[rootPos].ruleTileStructure.structureSO.tileName == "Wall" ||
-            _TileStatsDict[rootPos].ruleTileStructure.structureSO.tileName == "Wall Corner")
-            tilemap = damageTilemap;
+        if (isWall || isCorner)
+            tempTilemap = damageTilemap;
         else
-            tilemap = AnimatedTilemap;
+            tempTilemap = AnimatedTilemap;
 
-        List<AnimatedTile> dTiles = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
-        if (dTiles.Count > 1)
+        dTilesTemp = _TileStatsDict[rootPos].ruleTileStructure.damagedTiles;
+        if (dTilesTemp.Count > 1)
         {
-            int index = GetDamageIndex(healthRatio, dTiles.Count);
+            int index = GetDamageIndex(healthRatio, dTilesTemp.Count);
 
-            // Keep original rotation
-            Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+            // Decide rotation for the damaged sprite.
+            // For regular walls (not corners), we use a persistent random rotation (0, 90, 180, 270).
+            Matrix4x4 matrix;
 
-            if (tilemap.GetTile(rootPos) != null)
+            if (isWall && !isCorner)
             {
-                tilemap.SetTile(rootPos, null);
+                if (!_wallDamageRotation.TryGetValue(rootPos, out float angle))
+                {
+                    // Pick one of 0, 90, 180, 270 at random the first time this wall is damaged
+                    int step = Random.Range(0, 4); // 0,1,2,3
+                    angle = step * 90f;
+                    _wallDamageRotation[rootPos] = angle;
+                }
+
+                matrix = Matrix4x4.Rotate(Quaternion.Euler(0f, 0f, angle));
+            }
+            else
+            {
+                // Keep original rotation for non-wall or corner tiles
+                matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
             }
 
-            tilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
-            tilemap.SetTransformMatrix(rootPos, matrix);
+            if (tempTilemap.GetTile(rootPos) != null)
+            {
+                tempTilemap.SetTile(rootPos, null);
+            }
+
+            tempTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.damagedTiles[index]);
+            tempTilemap.SetTransformMatrix(rootPos, matrix);
             //StructureRotator.RotateTileAt(tilemap, rootPos, StructureRotator.GetRotationFromMatrix(matrix));
         }
         else
         {
-            // CHANGED: use WORLD coordinates for the cell center, not raw grid coords
             Vector2 centerWorld = GridCenterToWorld(rootPos);
 
-            // CHANGED: allocation-free overlap using ContactFilter2D + preallocated buffer
-            LayerMask playerOnlyMask = LayerMask.GetMask("PlayerOnly");
-            ContactFilter2D filter = new ContactFilter2D();
-            filter.NoFilter();
-            filter.useLayerMask = playerOnlyMask != 0;
-            if (filter.useLayerMask) filter.SetLayerMask(playerOnlyMask);
-            filter.useTriggers = true; // allow trigger panels/objects
-            int hitCount = Physics2D.OverlapPoint(centerWorld, filter, _tileColsBuffer);
+            // allocation-free overlap using ContactFilter2D + preallocated buffer
+            filterTemp.NoFilter();
+            filterTemp.useLayerMask = playerOnlyMask != 0;
+            if (filterTemp.useLayerMask) filterTemp.SetLayerMask(playerOnlyMask);
+            filterTemp.useTriggers = true; // allow trigger panels/objects
+            int hitCount = Physics2D.OverlapPoint(centerWorld, filterTemp, _tileColsBuffer);
 
             float ratio = _TileStatsDict[rootPos].health / _TileStatsDict[rootPos].maxHealth;
             bool updated = false;

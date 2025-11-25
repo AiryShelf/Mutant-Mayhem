@@ -79,11 +79,11 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     #region Initialize / Reset
 
-    protected WaveControllerRandom waveController;
+    protected WaveController waveController;
 
     public virtual void Awake()
     {
-        waveController = FindObjectOfType<WaveControllerRandom>();
+        waveController = FindObjectOfType<WaveController>();
 
         rb = GetComponent<Rigidbody2D>();
 
@@ -257,7 +257,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         meleeController.knockback = meleeController.knockbackStart * areaScale;
         meleeController.selfKnockback = meleeController.selfKnockbackStart * areaScale;
         rb.mass = startMass * areaScale;
-        moveSpeedBase = moveSpeedBaseStart *rb.mass * waveController.speedMultiplier;
+        moveSpeedBase = moveSpeedBaseStart * rb.mass * waveController.speedMultiplier;
         animControllerEnemy.animSpeedFactor = animControllerEnemy.animSpeedFactorStart * (8 / transform.localScale.x); // smaller enemies have faster animations
         animControllerEnemy.switchToRunBuffer = animControllerEnemy.switchToRunBufferStart * (transform.localScale.x / 8); // smaller enemies switch to run at lower speeds
 

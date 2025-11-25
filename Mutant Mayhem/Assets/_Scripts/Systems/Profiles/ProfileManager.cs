@@ -308,6 +308,14 @@ public class ProfileManager : MonoBehaviour
         Debug.Log("Planet Completed: " + planetName);
     }
 
+    public bool IsPlanetCompleted(PlanetSO planet)
+    {
+        if (currentProfile.completedPlanets == null)
+            currentProfile.completedPlanets = new List<string>();
+
+        return currentProfile.completedPlanets.Contains(planet.bodyName);
+    }
+
     #endregion
 }
 

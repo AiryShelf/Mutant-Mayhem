@@ -8,9 +8,9 @@ public class ToolbarSelector : MonoBehaviour
 {
     [SerializeField] List<Image> boxImages;
     [SerializeField] List<Image> gunImages;
+    [SerializeField] List<Image> unlockGlowImages;
     Image currentBox;
     Player player;
-    Image startImage;
     Color unselectedColor;
     [SerializeField] Color selectedColor;
 
@@ -52,7 +52,8 @@ public class ToolbarSelector : MonoBehaviour
         //Debug.Log("Toolbarselector played upgEffect");
         UpgradeManager.Instance.upgradeEffects.ToolbarUpgradeEffect((Vector2)image.transform.position);
 
-        StartCoroutine(PlayUnlockAnimation(image, new Vector2(0, 200), 5f, 1.2f));
+        Image glow = unlockGlowImages[i];
+        StartCoroutine(PlayUnlockAnimation(glow, new Vector2(0, 100), 4f, 1.2f));
     }
 
     public void LockBoxImage(int i)
@@ -64,23 +65,26 @@ public class ToolbarSelector : MonoBehaviour
     }
 
     // Coroutine to animate an Image moving and scaling to a center position and back
-    public IEnumerator PlayUnlockAnimation(Image image, Vector2 centerPos, float scale, float duration)
+    public IEnumerator PlayUnlockAnimation(Image backGlowImage, Vector2 centerPos, float scale, float duration)
     {
-        if (image == null)
+        if (backGlowImage == null)
+        {
+            Debug.Log("BackGlowImage is null!");
+            yield break;
+        }
+
+        if (unlockedGunImages.Contains(backGlowImage))
             yield break;
 
-        if (unlockedGunImages.Contains(image))
-            yield break;
-
-        unlockedGunImages.Add(image);
-        RectTransform rectTransform = image.rectTransform;
+        backGlowImage.enabled = true;
+        unlockedGunImages.Add(backGlowImage);
+        RectTransform rectTransform = backGlowImage.rectTransform;
         Vector2 originalPos = rectTransform.anchoredPosition;
         Vector3 originalScale = rectTransform.localScale;
 
+        // Move and scale to center position
         float halfDuration = duration / 2f;
         float timer = 0f;
-
-        // Move and scale to center position and target scale
         while (timer < halfDuration)
         {
             timer += Time.deltaTime;
@@ -90,7 +94,7 @@ public class ToolbarSelector : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.6f);
 
         timer = 0f;
         float returnDuration = halfDuration * 0.75f;
@@ -107,5 +111,24 @@ public class ToolbarSelector : MonoBehaviour
         // Ensure final position and scale are reset exactly
         rectTransform.anchoredPosition = originalPos;
         rectTransform.localScale = originalScale;
+
+        StartCoroutine(FadeGlowEffect(backGlowImage, 5f));
+    }
+
+    IEnumerator FadeGlowEffect(Image glow, float delay)
+    {
+        float timer = 0f;
+        while (timer < delay)
+        {
+            // Fade the Image's alpha over time
+            timer += Time.deltaTime;
+            float t = Mathf.Clamp01(timer / delay);
+            Color color = glow.color;
+            color.a = Mathf.Lerp(1f, 0f, t);
+            glow.color = color;
+            yield return null;
+        }
+
+        glow.enabled = false;
     }
 }

@@ -11,6 +11,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] CanvasGroup creditsCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave mainMenuFadeGroup;
     [SerializeField] FadeCanvasGroupsWave musicPlayerFadeGroup;
+    [SerializeField] List<CanvasGroup> titleGroupsToHide;
     [SerializeField] OptionsPanel optionsPanel;
     [SerializeField] ControlSettingsPanel controlsPanel;
     [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
@@ -42,6 +43,11 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        foreach (var group in titleGroupsToHide)
+        {
+            group.alpha = 0f;
+        }
+        
         Application.targetFrameRate = 60;
         
         InputManager.SetJoystickMouseControl(true);
@@ -145,6 +151,12 @@ public class MainMenuController : MonoBehaviour
         {
             musicPlayerFadeGroup = UI_MusicPlayerPanel.Instance.GetComponent<FadeCanvasGroupsWave>();
         }
+
+        foreach (var group in titleGroupsToHide)
+        {
+            group.alpha = 1f;
+        }
+
         musicPlayerFadeGroup.isTriggered = true;
     }
 

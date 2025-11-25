@@ -5,13 +5,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class WaveControllerRandom : MonoBehaviour
+public class WaveController : MonoBehaviour
 {
-    public static WaveControllerRandom Instance = null;
+    public static WaveController Instance = null;
 
     public WaveSpawnerRandom waveSpawner;
     public static event Action<int> OnWaveStarted;
     public static event Action<int> OnWaveEnded;
+    [SerializeField] string textFlyPoolName = "TextFlyPool";
+    [SerializeField] float textFlyMaxScale = 2f;
 
     [Header("UI Wave Info")]
     public FadeCanvasGroupsWave nextWaveFadeGroup;
@@ -62,6 +64,8 @@ public class WaveControllerRandom : MonoBehaviour
     Daylight daylight;
     float countdown;
 
+    bool isPlanetCompletedOnStart = false;
+
     void Awake()
     {
         if (Instance) { Destroy(gameObject); return; }
@@ -93,6 +97,7 @@ public class WaveControllerRandom : MonoBehaviour
         if (nextWaveTimer != null)
             StopCoroutine(nextWaveTimer);
         nextWaveTimer = StartCoroutine(NextWaveTimer());
+        isPlanetCompletedOnStart = ProfileManager.Instance.IsPlanetCompleted(PlanetManager.Instance.currentPlanet);
     }
 
     #region Next Wave Input
@@ -220,10 +225,13 @@ public class WaveControllerRandom : MonoBehaviour
 
         OnWaveEnded?.Invoke(currentWaveIndex);
 
+        ApplyResearchPoints();
+
+        // Change music to day
         MusicManager.Instance.SwitchScenePlaylists(MusicManager.Instance.dayPlaylists);
         MusicManager.Instance.PlayNextSong(3f);
+
         isNight = false;
-        MessageBanner.PulseMessage("You survived night " + (currentWaveIndex + 1) + "!", Color.cyan);
         currentWaveIndex++;
         BuildingSystem.PlayerCredits += currentWaveIndex * creditsPerWave;
 
@@ -240,6 +248,53 @@ public class WaveControllerRandom : MonoBehaviour
         //Debug.Log("End Wave");
 
         daylight.StartCoroutine(daylight.PlaySunriseEffect());
+    }
+
+    public int GetResearchPointsForWave(int waveIndex)
+    {
+        PlanetSO p = PlanetManager.Instance.currentPlanet;
+        float points = p.pointsPerWave;
+        float growth = p.growthControlFactor;
+
+        // reward(i) = A * (1 + C * (2i))
+        float wavePts = points * (1f + growth * (2 * waveIndex + 1));
+        int pts = Mathf.CeilToInt(wavePts);
+
+        if (isPlanetCompletedOnStart)
+        {
+            pts = Mathf.CeilToInt(pts * 0.5f);
+        }
+
+        return pts;
+    }
+
+    public int GetResearchPointsTotal(int wavePassed)
+    {
+        int total = 0;
+        for (int wave = 0; wave <= wavePassed; wave++)
+        {
+            total += GetResearchPointsForWave(wave);
+        }
+
+        return total;
+    }
+
+    void ApplyResearchPoints()
+    {
+        // Apply research points for wave survived
+        int researchPointsGained = GetResearchPointsForWave(currentWaveIndex);
+        ProfileManager.Instance.currentProfile.researchPoints += researchPointsGained;
+        ProfileManager.Instance.SaveCurrentProfile();
+
+        // Set textFly
+        GameObject textFly = PoolManager.Instance.GetFromPool(textFlyPoolName);
+        TextFly textFlyComp = textFly.GetComponent<TextFly>();
+        Vector2 spawnPos = player.transform.position;
+        textFly.transform.position = spawnPos;
+        textFlyComp.Initialize($"+{researchPointsGained} RP", Color.cyan, 1, Vector2.up, true, textFlyMaxScale);
+
+        MessageBanner.PulseMessage($"You survived Night {currentWaveIndex + 1}! \nGained {researchPointsGained} research points!", Color.cyan);
+        Debug.Log($"Player gained {researchPointsGained} research points for waveIndex {currentWaveIndex}.");
     }
 
     #endregion
@@ -270,21 +325,17 @@ public class WaveControllerRandom : MonoBehaviour
         batchMultiplier = batchMultStart + (currentWaveIndex / batchMultGrowthTime *
                           SettingsManager.Instance.WaveDifficultyMult);
         damageMultiplier = damageMultStart + (currentWaveIndex / damageMultGrowthTime *
-                           SettingsManager.Instance.WaveDifficultyMult *
-                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage]);
+                           SettingsManager.Instance.WaveDifficultyMult);
         // Doubles the attack speed in 30 waves
         attackDelayMult = attackDelayStart - currentWaveIndex / attackDelayMultGrowthTime /
                            SettingsManager.Instance.WaveDifficultyMult;
         attackDelayMult = Mathf.Clamp(attackDelayMult, 0.2f, float.MaxValue);
         healthMultiplier = healthMultStart + currentWaveIndex / healthMultGrowthTime *
-                           SettingsManager.Instance.WaveDifficultyMult *
-                           PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyDamage];
+                           SettingsManager.Instance.WaveDifficultyMult;
         speedMultiplier = speedMultStart + currentWaveIndex / speedMultGrowthTime *
-                          SettingsManager.Instance.WaveDifficultyMult *
-                          PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemyMoveSpeed];
+                          SettingsManager.Instance.WaveDifficultyMult;
         sizeMultiplier = sizeMultStart + currentWaveIndex / sizeMultGrowthTime *
-                         SettingsManager.Instance.WaveDifficultyMult *
-                         PlanetManager.Instance.statMultipliers[PlanetStatModifier.EnemySize];
+                         SettingsManager.Instance.WaveDifficultyMult;
         subwaveDelayMult = Mathf.Clamp(subwaveDelayMultStart - currentWaveIndex / subwaveDelayMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);
     }

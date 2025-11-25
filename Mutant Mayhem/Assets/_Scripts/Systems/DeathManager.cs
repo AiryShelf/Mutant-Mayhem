@@ -28,16 +28,15 @@ public class DeathManager : MonoBehaviour
     [SerializeField] float deathSFXFadeAmount = -4f;
     [SerializeField] FollowScreenToWorld worldCustomCursor;
 
-    int adjustedPointsPerWave;
     bool isTriggered;
     float storedSFXVolume;
 
-    WaveControllerRandom waveController;
+    WaveController waveController;
     PlanetSO currentPlanet;
 
     void OnEnable()
     {
-        waveController = FindObjectOfType<WaveControllerRandom>();
+        waveController = FindObjectOfType<WaveController>();
         currentPlanet = PlanetManager.Instance.currentPlanet;
 
         Player.OnPlayerDestroyed += TransitionToPlayerDeath;
@@ -101,8 +100,8 @@ public class DeathManager : MonoBehaviour
             UpgradePanelManager.Instance.CloseAllPanels();
             worldCustomCursor.useUiTrans = false;
             worldCustomCursor.worldTrans = player.transform;
-            ApplyDeathPoints();
             TransitionToPanel();
+            ApplyDeathStats();
             RandomizeDeathMessages(playerDeathTitles, playerDeathSubtitles);
         }
     }
@@ -115,8 +114,8 @@ public class DeathManager : MonoBehaviour
             worldCustomCursor.useUiTrans = false;
             worldCustomCursor.worldTrans = qCube.transform;
             player.IsDead = true;
-            ApplyDeathPoints();
             TransitionToPanel();
+            ApplyDeathStats();        
             RandomizeDeathMessages(cubeDeathTitles, cubeDeathSubtitles);
         }
     }
@@ -169,57 +168,21 @@ public class DeathManager : MonoBehaviour
         }
     }
 
-    public void ApplyDifficultyToRPGain(DifficultyLevel difficultyLevel)
-    {
-        /*
-        switch (difficultyLevel)
-        {
-            case DifficultyLevel.Easy:
-                adjustedPointsPerWave = currentPlanet.pointsPerWave + currentPlanet.difficultyAdjustEasy;
-            break;
-            case DifficultyLevel.Normal:
-                adjustedPointsPerWave = currentPlanet.pointsPerWave;
-            break;
-            case DifficultyLevel.Hard:
-                adjustedPointsPerWave = currentPlanet.pointsPerWave + currentPlanet.difficultyAdjustHard;
-            break;
-        }
-        */
-
-        adjustedPointsPerWave = currentPlanet.pointsPerWave;
-        //Debug.Log("RP per wave set to " + adjustedPointsPerWave + " for planet " + currentPlanet);
-    }
-
-    void ApplyDeathPoints()
+    void ApplyDeathStats()
     {
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
         currentProfile.playthroughs++;
 
-        // Apply research points to profile
-        int points = GetResearchPointsGain();
-        currentProfile.researchPoints += points;
-        Debug.Log("DeathManager: Added " + points + " research points to current profile");
-
-        // Apply max wave survived to profile
-        if (currentProfile.maxWaveSurvived < waveController.currentWaveIndex)
+        // Apply night reached to profile
+        if (!currentProfile.planetsNightReached.ContainsKey(currentPlanet.bodyName))
         {
-            currentProfile.maxWaveSurvived = waveController.currentWaveIndex;
+            currentProfile.planetsNightReached.Add(currentPlanet.bodyName, 0);
         }
+        ProfileManager.Instance.currentProfile.planetsNightReached[currentPlanet.bodyName] = 
+            Mathf.Max(waveController.currentWaveIndex, 
+            WaveController.Instance.currentWaveIndex + 1);
 
         // Save changes to profile
         ProfileManager.Instance.SaveCurrentProfile();
-    }
-
-    public int GetResearchPointsGain()
-    {
-        if (waveController.currentWaveIndex < 1)
-        {
-            Debug.Log("Player died without passing Night 1");
-            return 0;
-        }
-
-        int pointsToGive = currentPlanet.basePoints + Mathf.CeilToInt(adjustedPointsPerWave * waveController.currentWaveIndex * 
-                                                        (1 + waveController.currentWaveIndex * currentPlanet.growthControlFactor));
-        return pointsToGive;
     }
 }

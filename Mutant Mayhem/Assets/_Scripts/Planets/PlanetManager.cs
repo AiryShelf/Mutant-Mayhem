@@ -192,7 +192,7 @@ public class PlanetManager : MonoBehaviour
 
     void ApplyToWaveController()
     {
-        WaveControllerRandom waveController = FindObjectOfType<WaveControllerRandom>();
+        WaveController waveController = FindObjectOfType<WaveController>();
         if (waveController == null)
         {
             Debug.LogError("PlanetManager: Could not find WaveController in scene");
@@ -211,7 +211,7 @@ public class PlanetManager : MonoBehaviour
         waveController.healthMultStart = currentPlanet.healthMultiplier * statMultipliers[PlanetStatModifier.EnemyHealth];
         waveController.speedMultStart = currentPlanet.speedMultiplier * statMultipliers[PlanetStatModifier.EnemyMoveSpeed];
         waveController.sizeMultStart = currentPlanet.sizeMultiplier * statMultipliers[PlanetStatModifier.EnemySize];
-        waveController.batchMultGrowthTime = currentPlanet.batchMultGrowthTime;
+        waveController.batchMultGrowthTime = currentPlanet.batchMultGrowthTime ;
         waveController.damageMultGrowthTime = currentPlanet.damageMultGrowthTime;
         waveController.attackDelayMultGrowthTime = currentPlanet.attackDelayMultGrowthTime;
         waveController.healthMultGrowthTime = currentPlanet.healthMultGrowthTime;

@@ -23,7 +23,7 @@ public class SettingsManager : MonoBehaviour
     public bool useFastJoystickAim = false;
 
     [Header("Difficulty Multipliers")]
-    public float WaveDifficultyMult = 1; // Multiplies enemy stats on spawning
+    public float WaveDifficultyMult = 1; // Multiplies wave difficulty
     public int WavesTillAddWaveBaseDifficultyAdjust = 0; // down harder, hard enemies appear sooner
     public float SubwaveListGrowthFactor = 0; // up harder, more waves added over time
     public float SubwaveDelayMult = 1; // Time between Subwaves
@@ -35,7 +35,7 @@ public class SettingsManager : MonoBehaviour
     float joystickAccelSpeed;
     bool isVirtualAimJoystickVisible = false;
 
-    WaveControllerRandom waveController;  
+    WaveController waveController;  
     Player player;
 
     void Awake()
@@ -117,7 +117,7 @@ public class SettingsManager : MonoBehaviour
 
     void ApplyDifficultySettings()
     {
-        waveController = FindObjectOfType<WaveControllerRandom>();
+        waveController = FindObjectOfType<WaveController>();
         if (waveController == null)
         {
             Debug.LogWarning("Wave Controller not found when applying difficulty settings");
@@ -159,7 +159,6 @@ public class SettingsManager : MonoBehaviour
         }
 
         DeathManager deathManager = FindObjectOfType<DeathManager>();
-        deathManager.ApplyDifficultyToRPGain(difficultyLevel);
 
         Debug.Log("Difficulty settings applied for " + difficultyLevel + " by Settings Manager");
     }

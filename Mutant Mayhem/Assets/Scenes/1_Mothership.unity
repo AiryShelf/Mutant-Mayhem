@@ -810,9 +810,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1267302627}
     m_Modifications:
+    - target: {fileID: 2398335130401001899, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
+      propertyPath: m_text
+      value: "1. None of these decisions are permanent!  You can pick a new setup
+        on the next round!\n\n2. You get to re-use your Research Points (RP) each
+        round.  They are never lost.\n\n3. Augmentations (Augs) can have positive
+        or negative levels:\n    - Positive levels cost RP \n    - Negative levels
+        give RP\n\n4. You have a maximum number of levels you can use, which can
+        be adjusted with Max Augs\n\n5. Experiment with different setups\n"
+      objectReference: {fileID: 0}
     - target: {fileID: 4410339385597614629, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_Name
       value: TutorialMothershipHelpPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7090691743950749884, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 32.60002
       objectReference: {fileID: 0}
     - target: {fileID: 7622835678119190333, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_Pivot.x
@@ -895,7 +908,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4307393142911440340, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9cde72852093a244b14538882d1fcdf, type: 3}

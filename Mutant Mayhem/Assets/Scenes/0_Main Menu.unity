@@ -642,6 +642,23 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9157019105111725558, guid: a6a272dadcd2b8a4b9bee049273d8c58, type: 3}
   m_PrefabInstance: {fileID: 251596998}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &256174925 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5401851901781577180, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+  m_PrefabInstance: {fileID: 1974667918714960961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &256174930
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256174925}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &288183437
 GameObject:
   m_ObjectHideFlags: 0
@@ -3326,6 +3343,7 @@ GameObject:
   - component: {fileID: 1439455703}
   - component: {fileID: 1439455702}
   - component: {fileID: 1439455701}
+  - component: {fileID: 1439455704}
   m_Layer: 0
   m_Name: Version Text
   m_TagString: Untagged
@@ -3461,6 +3479,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11f78fff5aed64fc8a1d6d866bb0b98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &1439455704
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439455699}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1525557139
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5394,6 +5424,9 @@ MonoBehaviour:
   creditsCanvasGroup: {fileID: 1932673080}
   mainMenuFadeGroup: {fileID: 2043969984}
   musicPlayerFadeGroup: {fileID: 608022922}
+  titleGroupsToHide:
+  - {fileID: 256174930}
+  - {fileID: 1439455704}
   optionsPanel: {fileID: 1746028326}
   controlsPanel: {fileID: 1180612270}
   profileFadeGroup: {fileID: 7021101283561356033}
@@ -6178,6 +6211,10 @@ PrefabInstance:
       propertyPath: individualElements.Array.data[6]
       value: 
       objectReference: {fileID: 1133504782}
+    - target: {fileID: 9049595490673980027, guid: cb716e7cbdeaac443b353b011f95a847, type: 3}
+      propertyPath: individualElements.Array.data[7]
+      value: 
+      objectReference: {fileID: 1133504782}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6695,6 +6732,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3470564897481815094, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       insertIndex: -1
       addedObject: {fileID: 608022922}
+    - targetCorrespondingSourceObject: {fileID: 5401851901781577180, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 256174930}
   m_SourcePrefab: {fileID: 100100000, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
 --- !u!114 &1974667918714960962 stripped
 MonoBehaviour:
@@ -6917,6 +6957,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1974667918714960974}
     m_Modifications:
+    - target: {fileID: 2666138227153814055, guid: f043b2ed87e534d39b29467fe83fed2a, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3634357309053998898, guid: f043b2ed87e534d39b29467fe83fed2a, type: 3}
       propertyPath: m_Name
       value: Loading Panel

@@ -43,10 +43,10 @@ public class MessageManager : MonoBehaviour
     {
         currentPlanetDialogue = PlanetManager.Instance.currentPlanet.planetDialogue;
 
-        WaveControllerRandom.OnWaveStarted -= OnWaveStarted;
-        WaveControllerRandom.OnWaveEnded -= OnWaveEnded;
-        WaveControllerRandom.OnWaveStarted += OnWaveStarted;
-        WaveControllerRandom.OnWaveEnded += OnWaveEnded;
+        WaveController.OnWaveStarted -= OnWaveStarted;
+        WaveController.OnWaveEnded -= OnWaveEnded;
+        WaveController.OnWaveStarted += OnWaveStarted;
+        WaveController.OnWaveEnded += OnWaveEnded;
 
         if (currentPlanetDialogue == null)
         {

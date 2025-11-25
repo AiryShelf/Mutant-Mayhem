@@ -55,14 +55,14 @@ public class MutantRenderer : MonoBehaviour
 
         // Apply scales
         //enemyBaseTransform.localScale = Vector3.one * g.bodyScale;  // Scale the whole enemy base
-        bodySR.transform.localScale = Vector3.one * g.bodyGene.scale;
-        headAnchor.localScale = Vector3.one * g.headGene.scale;
-        leftLegAnchor.localScale = Vector3.one * g.legGene.scale;
-        rightLegAnchor.localScale = Vector3.one * g.legGene.scale;
+        bodySR.transform.localScale = Vector3.one * g.bodyGene.scale * WaveController.Instance.sizeMultiplier;
+        headAnchor.localScale = Vector3.one * g.headGene.scale * WaveController.Instance.sizeMultiplier;
+        leftLegAnchor.localScale = Vector3.one * g.legGene.scale * WaveController.Instance.sizeMultiplier;
+        rightLegAnchor.localScale = Vector3.one * g.legGene.scale * WaveController.Instance.sizeMultiplier;
 
-        headAnchor.localPosition = bodyGeneBase.headAnchorOffset * g.bodyGene.scale;
-        leftLegAnchor.localPosition = bodyGeneBase.leftLegAnchorOffset * g.bodyGene.scale;
-        rightLegAnchor.localPosition = bodyGeneBase.rightLegAnchorOffset * g.bodyGene.scale;
+        headAnchor.localPosition = bodyGeneBase.headAnchorOffset * g.bodyGene.scale * WaveController.Instance.sizeMultiplier;
+        leftLegAnchor.localPosition = bodyGeneBase.leftLegAnchorOffset * g.bodyGene.scale * WaveController.Instance.sizeMultiplier;
+        rightLegAnchor.localPosition = bodyGeneBase.rightLegAnchorOffset * g.bodyGene.scale * WaveController.Instance.sizeMultiplier;
 
         if (!g.legGene.bodyCastsShadows)
         {

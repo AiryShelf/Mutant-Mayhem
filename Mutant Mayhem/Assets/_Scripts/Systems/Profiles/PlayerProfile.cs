@@ -9,9 +9,9 @@ public class PlayerProfile
     public string profileName;
     public int researchPoints;
     public List<string> completedPlanets = new List<string>();
+    public Dictionary<string, int> planetsNightReached = new Dictionary<string, int>();
     public int lastPlanetVisited;
     public int playthroughs;
-    public int maxWaveSurvived;
     public DifficultyLevel difficultyLevel;
 
     [Header("Options Settings")]
@@ -29,7 +29,6 @@ public class PlayerProfile
         researchPoints = 0;
         lastPlanetVisited = 1; // Default to Tsorbia
         playthroughs = 0;
-        maxWaveSurvived = 0;
         qualityLevel = -1;
         difficultyLevel = difficulty;
         isStandardWASD = true;

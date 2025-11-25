@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class WaveSpawnerRandom : MonoBehaviour
 {
-    public WaveControllerRandom waveController;
+    public WaveController waveController;
     [SerializeField] TileManager tileManager;
     [SerializeField] Tilemap structureTilemap;
     [SerializeField] LayerMask checkClearLayers;

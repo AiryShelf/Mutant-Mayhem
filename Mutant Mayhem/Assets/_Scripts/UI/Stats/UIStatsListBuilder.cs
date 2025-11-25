@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Pathfinding;
 
 public class UI_DeathStatsListBuilder : MonoBehaviour
 {
-    [SerializeField] WaveControllerRandom waveController;
+    [SerializeField] WaveController waveController;
     [SerializeField] DeathManager deathManager;
 
     [Header("Stats Info")]
@@ -31,9 +32,9 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
         survivedForText.text = "You survived for " + time;
         int nightsSurvived = waveController.currentWaveIndex;
         nightReachedText.text = "Nights Survived: " + nightsSurvived;
-        int previousRecord = ProfileManager.Instance.currentProfile.maxWaveSurvived;
+        int previousRecord = ProfileManager.Instance.currentProfile.planetsNightReached[PlanetManager.Instance.currentPlanet.bodyName];
         previousRecordText.text = "Previous Record: " + previousRecord;
-        int researchPointsGained = deathManager.GetResearchPointsGain();
+        int researchPointsGained = WaveController.Instance.GetResearchPointsTotal(WaveController.Instance.currentWaveIndex - 1);
         researchPointsGainedText.text = "Research Points Gained: " + researchPointsGained;
         int totalResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
         totalResearchPointsText.text = "Total Research Points: " + totalResearchPoints;
