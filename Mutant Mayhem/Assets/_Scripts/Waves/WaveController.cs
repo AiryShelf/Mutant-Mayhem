@@ -283,6 +283,7 @@ public class WaveController : MonoBehaviour
     {
         // Apply research points for wave survived
         int researchPointsGained = GetResearchPointsForWave(currentWaveIndex);
+        ProfileManager.Instance.currentProfile.totalNightsSurvived++;
         ProfileManager.Instance.currentProfile.researchPoints += researchPointsGained;
         ProfileManager.Instance.SaveCurrentProfile();
 
@@ -293,7 +294,10 @@ public class WaveController : MonoBehaviour
         textFly.transform.position = spawnPos;
         textFlyComp.Initialize($"+{researchPointsGained} RP", Color.cyan, 1, Vector2.up, true, textFlyMaxScale);
 
-        MessageBanner.PulseMessage($"You survived Night {currentWaveIndex + 1}! \nGained {researchPointsGained} research points!", Color.cyan);
+        string rpGainedCommas = researchPointsGained.ToString("N0");
+        string rpTotalCommas = ProfileManager.Instance.currentProfile.researchPoints.ToString("N0");
+        MessageBanner.PulseMessage($"You survived Night {currentWaveIndex + 1}! \n" +
+            $"Gained {rpGainedCommas} Research Points! You now have {rpTotalCommas} RP!", Color.cyan);
         Debug.Log($"Player gained {researchPointsGained} research points for waveIndex {currentWaveIndex}.");
     }
 

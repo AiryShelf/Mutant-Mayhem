@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -119,12 +120,8 @@ public class ProfileSelectionUI : MonoBehaviour
         deleteButton.interactable = true;
         noProfilesText.text = "";
         researchPointsValueText.text = ProfileManager.Instance.currentProfile.researchPoints.ToString();
-        int totalNightsReached = 0;
-        foreach (var nights in ProfileManager.Instance.currentProfile.planetsNightReached.Values)
-        {
-            totalNightsReached += nights;
-        }
-        maxWaveReachedValueText.text = totalNightsReached.ToString();
+        int totalNightsSurvived = ProfileManager.Instance.currentProfile.totalNightsSurvived;
+        maxWaveReachedValueText.text = totalNightsSurvived.ToString();
         clonesUsedValueText.text = ProfileManager.Instance.currentProfile.playthroughs.ToString();
 
         

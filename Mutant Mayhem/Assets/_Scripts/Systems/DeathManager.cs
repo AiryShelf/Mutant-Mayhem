@@ -174,13 +174,16 @@ public class DeathManager : MonoBehaviour
         currentProfile.playthroughs++;
 
         // Apply night reached to profile
-        if (!currentProfile.planetsNightReached.ContainsKey(currentPlanet.bodyName))
+        if (!currentProfile.planetsMaxIndexReached.ContainsKey(currentPlanet.bodyName))
         {
-            currentProfile.planetsNightReached.Add(currentPlanet.bodyName, 0);
+            currentProfile.planetsMaxIndexReached.Add(currentPlanet.bodyName, 0);
         }
-        ProfileManager.Instance.currentProfile.planetsNightReached[currentPlanet.bodyName] = 
-            Mathf.Max(waveController.currentWaveIndex, 
-            WaveController.Instance.currentWaveIndex + 1);
+        // Check to make sure we only update if this is a new record
+        if (waveController.currentWaveIndex > ProfileManager.Instance.currentProfile.planetsMaxIndexReached[currentPlanet.bodyName])
+        {
+            ProfileManager.Instance.currentProfile.planetsMaxIndexReached[currentPlanet.bodyName] = 
+                waveController.currentWaveIndex;
+        }
 
         // Save changes to profile
         ProfileManager.Instance.SaveCurrentProfile();

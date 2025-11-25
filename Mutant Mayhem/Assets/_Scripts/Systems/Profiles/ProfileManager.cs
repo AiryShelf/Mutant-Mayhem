@@ -108,6 +108,26 @@ public class ProfileManager : MonoBehaviour
             profiles = new List<PlayerProfile>();
             Debug.Log("No profile file found, started a new list.");
         }
+
+        // Make sure all loaded profiles have their new fields initialized
+        EnsureInitialized();
+    }
+
+    public void EnsureInitialized()
+    {
+        if (profiles == null)
+            return;
+
+        foreach (var profile in profiles)
+        {
+            if (profile == null)
+                continue;
+
+            if (profile.planetsMaxIndexReached == null)
+                profile.planetsMaxIndexReached = new Dictionary<string, int>();
+
+            // add future fields here too
+        }
     }
 
     // Set the current profile by profile name

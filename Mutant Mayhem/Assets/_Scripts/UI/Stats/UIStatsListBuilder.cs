@@ -30,11 +30,17 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
         // Set progress texts
         string time = GameTools.FormatTimeFromSeconds(Mathf.FloorToInt(StatsCounterPlayer.TotalPlayTime));
         survivedForText.text = "You survived for " + time;
-        int nightsSurvived = waveController.currentWaveIndex;
+        int nightsSurvived = waveController.currentWaveIndex - 1;
         nightReachedText.text = "Nights Survived: " + nightsSurvived;
-        int previousRecord = ProfileManager.Instance.currentProfile.planetsNightReached[PlanetManager.Instance.currentPlanet.bodyName];
-        previousRecordText.text = "Previous Record: " + previousRecord;
-        int researchPointsGained = WaveController.Instance.GetResearchPointsTotal(WaveController.Instance.currentWaveIndex - 1);
+        // Ensure planet night reached dictionary has entry
+        if (!ProfileManager.Instance.currentProfile.planetsMaxIndexReached.ContainsKey(PlanetManager.Instance.currentPlanet.bodyName))
+        {
+            ProfileManager.Instance.currentProfile.planetsMaxIndexReached[PlanetManager.Instance.currentPlanet.bodyName] = 
+                Mathf.Clamp(WaveController.Instance.currentWaveIndex, 0, int.MaxValue);
+        }
+        int previousIndex = ProfileManager.Instance.currentProfile.planetsMaxIndexReached[PlanetManager.Instance.currentPlanet.bodyName];
+        previousRecordText.text = "Previous Record: " + (previousIndex + 1);
+        int researchPointsGained = WaveController.Instance.GetResearchPointsTotal(nightsSurvived);
         researchPointsGainedText.text = "Research Points Gained: " + researchPointsGained;
         int totalResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
         totalResearchPointsText.text = "Total Research Points: " + totalResearchPoints;

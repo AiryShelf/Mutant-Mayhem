@@ -9,9 +9,10 @@ public class PlayerProfile
     public string profileName;
     public int researchPoints;
     public List<string> completedPlanets = new List<string>();
-    public Dictionary<string, int> planetsNightReached = new Dictionary<string, int>();
+    public Dictionary<string, int> planetsMaxIndexReached = new Dictionary<string, int>();
     public int lastPlanetVisited;
     public int playthroughs;
+    public int totalNightsSurvived;
     public DifficultyLevel difficultyLevel;
 
     [Header("Options Settings")]

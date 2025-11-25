@@ -158,7 +158,7 @@ public class SettingsManager : MonoBehaviour
                 break;
         }
 
-        DeathManager deathManager = FindObjectOfType<DeathManager>();
+        //DeathManager deathManager = FindObjectOfType<DeathManager>();
 
         Debug.Log("Difficulty settings applied for " + difficultyLevel + " by Settings Manager");
     }
