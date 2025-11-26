@@ -106,14 +106,15 @@ public class ProfileManager : MonoBehaviour
         else
         {
             profiles = new List<PlayerProfile>();
-            Debug.Log("No profile file found, started a new list.");
+            Debug.Log("No profiles file found, started a new list.");
         }
 
         // Make sure all loaded profiles have their new fields initialized
-        EnsureInitialized();
+        EnsureUpToDate();
     }
 
-    public void EnsureInitialized()
+    // Ensure all profiles have any new fields initialized
+    public void EnsureUpToDate()
     {
         if (profiles == null)
             return;
@@ -123,10 +124,13 @@ public class ProfileManager : MonoBehaviour
             if (profile == null)
                 continue;
 
-            if (profile.planetsMaxIndexReached == null)
-                profile.planetsMaxIndexReached = new Dictionary<string, int>();
+            bool upToDate = profile.IsProfileUpToDate();
 
-            // add future fields here too
+            if (!upToDate)
+            {
+                Debug.Log($"ProfileManager: Initialized new fields for profile {profile.profileName}");
+                SaveCurrentProfile();
+            }
         }
     }
 
@@ -321,6 +325,7 @@ public class ProfileManager : MonoBehaviour
         else
         {
             currentProfile.completedPlanets.Add(planetName);
+            currentProfile.maxAugLevels++;
             Debug.Log($"ProfileManager: Planet {planetName} not found in Profile!  Added and set to completed!");
         }
 

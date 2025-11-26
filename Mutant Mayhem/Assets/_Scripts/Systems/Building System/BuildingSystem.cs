@@ -575,7 +575,7 @@ public class BuildingSystem : MonoBehaviour
         // Add Tile
         if (tileManager.AddBlueprintAt(gridPos, structureInHand.blueprintTile, currentRotation))
         {
-            PlayerCredits -= structureInHand.tileCost * structureCostMult;
+            PlayerCredits -= Mathf.FloorToInt(structureInHand.tileCost * structureCostMult);
             //RemoveBuildHighlight();
 
             if (structureInHand.canBuildOnlyOne)

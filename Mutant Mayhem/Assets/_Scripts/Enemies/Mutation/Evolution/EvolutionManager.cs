@@ -127,7 +127,7 @@ public class EvolutionManager : MonoBehaviour
         var kvp = _population.ElementAt(_currentSubwaveCount % _population.Count);
         var individuals = kvp.Value;
 
-        int totalToSpawn = Mathf.CeilToInt(individuals.Count * PlanetManager.Instance.currentPlanet.totalSpawnFactor);
+        int totalToSpawn = Mathf.CeilToInt(individuals.Count * PlanetManager.Instance.currentPlanet.subwaveSpawnFactor);
 
         for (int i = 0; i < totalToSpawn; i++)
         {

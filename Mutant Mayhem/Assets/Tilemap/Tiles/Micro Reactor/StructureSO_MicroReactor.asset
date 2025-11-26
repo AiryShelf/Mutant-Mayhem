@@ -17,9 +17,13 @@ MonoBehaviour:
   description: 'A modular micro-reactor or generating power <sprite=1>
 
 
-    Gains
-    a bonus of 2<sprite=1> from each connected power source'
-  tileCost: 2000
+    Supplies
+    continuous power <sprite=1>
+
+
+    Gains a bonus of 3<sprite=1> from each connected
+    power source'
+  tileCost: 2500
   maxHealth: 500
   health: 500
   blueprintBuildAmount: 1000
@@ -31,9 +35,9 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
-  powerGenerated: 10
-  powerNeighborBonus: 2
-  powerCost: -10
+  powerGenerated: 12
+  powerNeighborBonus: 3
+  powerCost: -12
   supplyCost: 1
   structuresToUnlock: []
   canBuildOnlyOne: 0

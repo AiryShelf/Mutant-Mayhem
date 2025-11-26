@@ -27,6 +27,7 @@ MonoBehaviour:
   highRezPlanetPrefab: {fileID: 3093592181185446272, guid: 89d1dc71c4d5748b9b06d9f3e5dd6bb1, type: 3}
   prerequisitePlanets:
   - {fileID: 11400000, guid: eaa58cf9c0d504131a622a2025c0c2f9, type: 2}
+  isTutorialPlanet: 0
   basePoints: 200
   pointsPerWave: 28
   growthControlFactor: 0.28
@@ -35,24 +36,23 @@ MonoBehaviour:
   wavesTillAddIndex: 2
   creditsPerWave: 350
   timeBetweenWavesBase: 100
-  batchMultiplierStart: 6
-  subwaveDelayMultStart: 0.7
+  batchMultiplierStart: 3.6
+  subwaveDelayMultStart: 0.9
   spawnRadiusBuffer: 40
   batchMultGrowthTime: 5
-  damageMultGrowthTime: 5
+  damageMultGrowthTime: 6
   attackDelayMultGrowthTime: 60
   healthMultGrowthTime: 20
   speedMultGrowthTime: 20
-  sizeMultGrowthTime: 40
+  sizeMultGrowthTime: 28
   subwaveDelayMultGrowthTime: 40
-  damageMultiplier: 1.6
-  healthMultiplier: 1.6
-  speedMultiplier: 1.6
-  sizeMultiplier: 1
+  damageMultiplier: 1
+  healthMultiplier: 1
+  speedMultiplier: 1
+  sizeMultiplier: 1.6
   mutationChance: 0.01
   addMutationChancePerWave: 0.003
   mutationChanceMax: 0.3
   mutationIntensity: 0.1
   addMutationIntensityPerWave: 0.01
-  mutationIntensityMax: 0.5
-  totalSpawnFactor: 0.6
+  subwaveSpawnFactor: 0.3

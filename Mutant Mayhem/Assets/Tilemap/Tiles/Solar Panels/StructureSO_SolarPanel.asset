@@ -21,7 +21,7 @@ MonoBehaviour:
 
     Gains a bonus of 1<sprite=1> from each connected
     power source'
-  tileCost: 250
+  tileCost: 400
   maxHealth: 300
   health: 300
   blueprintBuildAmount: 500
@@ -36,10 +36,9 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
-  powerGenerated: 2
+  powerGenerated: 4
   powerNeighborBonus: 1
-  powerCost: -2
+  powerCost: -4
   supplyCost: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0
-  droneHangarRange: 12

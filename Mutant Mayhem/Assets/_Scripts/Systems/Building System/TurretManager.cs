@@ -176,7 +176,7 @@ public class TurretManager : MonoBehaviour
         // Upgrade Masterlist of turretGuns
         foreach (TurretGunSO turretGun in turretGunList)
         {
-            UpgradeTurretStructure(turretGun, upgType);
+            UpgradeTurretStructure(turretGun);
         }
 
         // Apply upgrade to existing turrets
@@ -192,7 +192,7 @@ public class TurretManager : MonoBehaviour
             }
             
             foreach (TurretGunSO turretGun in turret.shooter.gunList)
-                UpgradeTurretStructure(turretGun, upgType);
+                UpgradeTurretStructure(turretGun);
 
             turret.UpdateStructure();
             
@@ -200,22 +200,15 @@ public class TurretManager : MonoBehaviour
         }
     }
 
-    void UpgradeTurretStructure(TurretGunSO turretGun, StructureStatsUpgrade upgType)
+    void UpgradeTurretStructure(TurretGunSO turretGun)
     {
-        switch (upgType)
-        {
-            case StructureStatsUpgrade.TurretRotSpeed:
-                turretGun.rotationSpeed += turretGun.rotSpeedUpgAmt;
-                //Debug.Log("Upgraded turret rotation stat");
-                break;
-            case StructureStatsUpgrade.TurretSensors:
-                turretGun.detectRange += turretGun.detectRangeUpgAmt * 
-                                         PlanetManager.Instance.statMultipliers[PlanetStatModifier.TurretSensors];
-                turretGun.expansionDelay += turretGun.expansionDelayUpgNegAmt * 
-                                            PlanetManager.Instance.statMultipliers[PlanetStatModifier.TurretSensors];
-                //Debug.Log("Upgraded turret sensors stat");
-                break;
-        }
+        turretGun.rotationSpeed += turretGun.rotSpeedUpgAmt;
+        //Debug.Log("Upgraded turret rotation stat");
+        turretGun.detectRange += turretGun.detectRangeUpgAmt * 
+                                 PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+        turretGun.expansionDelay += turretGun.expansionDelayUpgNegAmt * 
+                                    PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+        //Debug.Log("Upgraded turret sensors stat");
     }
 
     #endregion

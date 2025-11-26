@@ -30,6 +30,7 @@ public class PickupsReceiver : PickupsContainerBase
         float angle = Random.Range(0f, Mathf.PI * 2);
         Vector2 flyDir = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));
         textFly.transform.position = transform.position;
-        textFly.GetComponent<TextFly>().Initialize("+ " + credits + " C", creditsColor, textFlyAlphaMax, flyDir, true, textPulseScaleMax);
+        string creditsCommas = credits.ToString("N0");
+        textFly.GetComponent<TextFly>().Initialize("+ " + creditsCommas + " C", creditsColor, textFlyAlphaMax, flyDir, true, textPulseScaleMax);
     }
 }

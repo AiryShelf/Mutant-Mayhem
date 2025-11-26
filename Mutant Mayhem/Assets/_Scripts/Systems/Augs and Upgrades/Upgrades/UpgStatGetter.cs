@@ -96,10 +96,7 @@ public static class UpgStatGetter
             case StructureStatsUpgrade.StructureMaxHealth:
                 stat = player.stats.structureStats.structureMaxHealthMult.ToString("#0.00");
                 return stat;
-            case StructureStatsUpgrade.TurretRotSpeed:
-                stat = TurretManager.Instance.turretGunList[0].rotationSpeed.ToString("#0");
-                return stat;
-            case StructureStatsUpgrade.TurretSensors:
+            case StructureStatsUpgrade.TurretTracking:
                 stat = TurretManager.Instance.turretGunList[0].detectRange.ToString("#0.0");
                 return stat;
             case StructureStatsUpgrade.SupplyLimit:
@@ -278,11 +275,8 @@ public static class UpgStatGetter
             case StructureStatsUpgrade.StructureMaxHealth:
                 amount = "+" + StructureMaxHealthUpgrade.UpgAmount.ToString("#0.00");
                 return amount;
-            case StructureStatsUpgrade.TurretRotSpeed:
-                amount = "+" + TurretRotSpeedUpgrade.UpgAmount.ToString("#0");
-                return amount;
-            case StructureStatsUpgrade.TurretSensors:
-                amount = "+" + TurretSensorsUpgrade.GetUpgAmount().ToString("#0.0");
+            case StructureStatsUpgrade.TurretTracking:
+                amount = "+" + TurretTrackingUpgrade.GetUpgAmount().ToString("#0.0");
                 return amount;
             case StructureStatsUpgrade.SupplyLimit:
                 amount = "+" + SupplyLimitUpgrade.UpgAmount.ToString("#0");

@@ -18,6 +18,7 @@ public class PlanetSO : ScriptableObject
     public List<PlanetSO> prerequisitePlanets;
 
     [Header("Research Points:")]
+    public bool isTutorialPlanet = false;
     public int basePoints = 0;
     public int pointsPerWave = 20;
     public float growthControlFactor = 0.05f;
@@ -52,6 +53,5 @@ public class PlanetSO : ScriptableObject
     public float mutationChanceMax = 0.3f;
     public float mutationIntensity = 0.1f; // Range of randomization for scale
     public float addMutationIntensityPerWave = 0.01f;
-    public float mutationIntensityMax = 0.5f;
-    public float totalSpawnFactor = 0.5f; // Mult for number of genetic individuals
+    public float subwaveSpawnFactor = 0.5f; // Mult for number to spawn each subwave
 }

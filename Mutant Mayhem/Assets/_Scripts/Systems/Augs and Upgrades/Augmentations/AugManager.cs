@@ -8,7 +8,6 @@ public class AugManager : MonoBehaviour
     public static AugManager Instance { get; private set; }
 
     public List<AugmentationBaseSO> availableAugmentations;
-    [SerializeField] int maxAugmentationsStart;
     public static Dictionary<AugmentationBaseSO, int> selectedAugsWithLvls = new Dictionary<AugmentationBaseSO, int>();
     public static Dictionary<AugmentationBaseSO, int> selectedAugsTotalCosts = new Dictionary<AugmentationBaseSO, int>();
     public static string selectedAugsString = "";
@@ -62,7 +61,6 @@ public class AugManager : MonoBehaviour
         //currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
         grenadeAmmoMult = 1;
         grenadeCostMult = 1;
-        
     }
 
     void ResetAugManager(PlayerProfile profile)
@@ -73,11 +71,11 @@ public class AugManager : MonoBehaviour
         if (profile == null)
             return;
 
-        maxAugs = maxAugmentationsStart;
+        maxAugs = profile.maxAugLevels;
         currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
     }
 
-    public void RefreshCurrentRP()
+    public void RefreshStats()
     {
         currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
 
@@ -85,6 +83,8 @@ public class AugManager : MonoBehaviour
         {
             currentResearchPoints += kvp.Value;
         }
+
+        maxAugs = ProfileManager.Instance.currentProfile.maxAugLevels;
     }
 
     public void ApplySelectedAugmentations()

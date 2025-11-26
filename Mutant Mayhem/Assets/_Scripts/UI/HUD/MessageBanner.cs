@@ -44,11 +44,19 @@ public class MessageBanner : MonoBehaviour
     public static void PulseMessage(string message, Color pulseColor)
     {
         if (Instance != null)
-            Instance.DisplayAndPulse(message, pulseColor);
+            Instance.DisplayAndPulse(message, pulseColor, Instance.timeToDisplay);
+    }
+
+    public static void PulseMessageLong(string message, Color pulseColor)
+    {
+        if (Instance != null)
+        {
+            Instance.DisplayAndPulse(message, pulseColor, Instance.timeToDisplay * 1.5f);
+        }
     }
 
 
-    void DisplayAndPulse(string message, Color pulseColor)
+    void DisplayAndPulse(string message, Color pulseColor, float displayTime)
     {
         messageText.text = message;
         if (message == previousMessage)
@@ -59,7 +67,7 @@ public class MessageBanner : MonoBehaviour
         StartCoroutine(DuplicateCountdown());
 
         if (textPulser != null)
-            textPulser.PulseTimedText(messageText, pulseColor, startColor, pulseTime, timeToDisplay);
+            textPulser.PulseTimedText(messageText, pulseColor, startColor, pulseTime, displayTime);
         else
             Debug.LogError("Could not find textPulser to show message");
     }

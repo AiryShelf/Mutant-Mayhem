@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 7, y: 7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6455359244774574349}
@@ -94,11 +94,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00796190f03ebc5459f70101a21ce7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMaxHealth: 1
-  maxHealth: 1
+  startMaxHealth: 1.5
+  maxHealth: 1.5
   deathTorque: 20
   painSound: {fileID: 11400000, guid: 7bf8998c624df904b95402985e56da6c, type: 2}
   painSoundCooldown: 0.3
+  textFlyPoolName: TextFlyWorld_Health
   textFlyHealthGainColor: {r: 0, g: 1, b: 0, a: 0.5019608}
   textFlyHealthLossColor: {r: 1, g: 1, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
@@ -126,7 +127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animSpeedFactor: 0.2
+  animSpeedFactorStart: 1
   switchToRunBuffer: 5
+  switchToRunBufferStart: 1.1
   maxAnimSpeed: 10
   myAnimator: {fileID: 0}
 --- !u!50 &3574965776305570190

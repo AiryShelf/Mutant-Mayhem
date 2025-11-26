@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// This is the side panel that shows selected class and augs in pause and death screens
 public class UI_AugInfoPanel : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI classText;

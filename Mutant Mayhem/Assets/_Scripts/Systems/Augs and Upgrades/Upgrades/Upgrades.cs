@@ -33,8 +33,8 @@ public enum StructureStatsUpgrade
     StructureMaxHealth,
     Armour,
     MaxTurrets_Deprecated,
-    TurretRotSpeed,
-    TurretSensors,
+    TurretRotSpeed_Deprecated,
+    TurretTracking,
     SupplyLimit
 }
 
@@ -649,39 +649,15 @@ public class StructureMaxHealthUpgrade : Upgrade
     }
 }
 
-public class TurretRotSpeedUpgrade : Upgrade
+public class TurretTrackingUpgrade : Upgrade
 {
-    public TurretRotSpeedUpgrade() : base(StructureStatsUpgrade.TurretRotSpeed) { }
-
-    public static float UpgAmount = 4;
-
-    public override void Apply(StructureStats structureStats, int level)
-    {
-        Debug.Log("TurretRotSpeedUpg applied");
-        TurretManager.Instance.UpgradeTurretStructures(base.StructureUpgType);
-    }
-
-    public override int CalculateCost(Player player, int baseCost, int level)
-    {
-        // Multiply the cost each level
-        int newCost = baseCost;
-        for (int i = 1; i < level; i++)
-        {
-            newCost = Mathf.CeilToInt(newCost * 1.5f);;
-        }
-        return newCost;
-    }
-}
-
-public class TurretSensorsUpgrade : Upgrade
-{
-    public TurretSensorsUpgrade() : base(StructureStatsUpgrade.TurretSensors) { }
+    public TurretTrackingUpgrade() : base(StructureStatsUpgrade.TurretTracking) { }
 
     public static float UpgAmount = 0.5f;
 
     public static float GetUpgAmount()
     {
-        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.TurretSensors];
+        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
     }
 
     public override void Apply(StructureStats structureStats, int level)

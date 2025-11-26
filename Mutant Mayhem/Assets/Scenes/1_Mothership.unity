@@ -282,6 +282,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9145718512779279473, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -817,7 +821,8 @@ PrefabInstance:
         round.  They are never lost.\n\n3. Augmentations (Augs) can have positive
         or negative levels:\n    - Positive levels cost RP \n    - Negative levels
         give RP\n\n4. You have a maximum number of levels you can use, which can
-        be adjusted with Max Augs\n\n5. Experiment with different setups\n"
+        be adjusted with Max Augs\n\n5. Gain 1 Max Aug Level for each planet you
+        conquer!\n\n6. Experiment with different setups\n"
       objectReference: {fileID: 0}
     - target: {fileID: 4410339385597614629, guid: f9cde72852093a244b14538882d1fcdf, type: 3}
       propertyPath: m_Name
@@ -3565,6 +3570,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 503956193}
     m_Modifications:
+    - target: {fileID: 1561730231034288975, guid: ca6e8542055594805935dc1da49f9525, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2783327091094258832, guid: ca6e8542055594805935dc1da49f9525, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.44
@@ -3643,6 +3652,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5075804361715011753, guid: ca6e8542055594805935dc1da49f9525, type: 3}
       propertyPath: unlocked
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993338710177175650, guid: ca6e8542055594805935dc1da49f9525, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993338710177175650, guid: ca6e8542055594805935dc1da49f9525, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993338710177175650, guid: ca6e8542055594805935dc1da49f9525, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993338710177175650, guid: ca6e8542055594805935dc1da49f9525, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9019925247547298173, guid: ca6e8542055594805935dc1da49f9525, type: 3}
@@ -9409,6 +9434,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Planet BarrenMoon 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8745217491624875776, guid: 7b9f7994484fc4a2e8aa3b357403def3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8745217491624875776, guid: 7b9f7994484fc4a2e8aa3b357403def3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9425,6 +9458,18 @@ PrefabInstance:
     - target: {fileID: 2764024321802469039, guid: 97d024dd5b4ca45a4b7dd816e5d013d7, type: 3}
       propertyPath: m_Name
       value: Planet Swampy
+      objectReference: {fileID: 0}
+    - target: {fileID: 3862105460166129584, guid: 97d024dd5b4ca45a4b7dd816e5d013d7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3862105460166129584, guid: 97d024dd5b4ca45a4b7dd816e5d013d7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5682027731919352989, guid: 97d024dd5b4ca45a4b7dd816e5d013d7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7425134693970168450, guid: 97d024dd5b4ca45a4b7dd816e5d013d7, type: 3}
       propertyPath: solarSystem
@@ -9483,9 +9528,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 503956193}
     m_Modifications:
+    - target: {fileID: 2484260742692457634, guid: d7c7ba6ded99e46aea7bb7bd30ad8784, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484260742692457634, guid: d7c7ba6ded99e46aea7bb7bd30ad8784, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484260742692457634, guid: d7c7ba6ded99e46aea7bb7bd30ad8784, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484260742692457634, guid: d7c7ba6ded99e46aea7bb7bd30ad8784, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3583423802647692733, guid: d7c7ba6ded99e46aea7bb7bd30ad8784, type: 3}
       propertyPath: m_Name
       value: Planet Arid
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429934728733069199, guid: d7c7ba6ded99e46aea7bb7bd30ad8784, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7653739960867590224, guid: d7c7ba6ded99e46aea7bb7bd30ad8784, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9588,6 +9653,18 @@ PrefabInstance:
       propertyPath: solarSystem
       value: 
       objectReference: {fileID: 503956193}
+    - target: {fileID: 4154093976103443031, guid: 9f851a2aaa5ec4311800fd8c7d72d7cf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4820017205809289594, guid: 9f851a2aaa5ec4311800fd8c7d72d7cf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4820017205809289594, guid: 9f851a2aaa5ec4311800fd8c7d72d7cf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5847670205162426469, guid: 9f851a2aaa5ec4311800fd8c7d72d7cf, type: 3}
       propertyPath: m_Name
       value: Planet Tundra
@@ -9681,6 +9758,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Planet Methane
       objectReference: {fileID: 0}
+    - target: {fileID: 6587575866039676275, guid: 50454a57d19c24af7b20d634d18e94b3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6587575866039676275, guid: 50454a57d19c24af7b20d634d18e94b3, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9694,6 +9779,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 503956193}
     m_Modifications:
+    - target: {fileID: 376215031801491279, guid: 68876f7281f234dcb8564d8ea6ad90d7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 376215031801491279, guid: 68876f7281f234dcb8564d8ea6ad90d7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 1656102666502121040, guid: 68876f7281f234dcb8564d8ea6ad90d7, type: 3}
       propertyPath: m_Name
       value: Planet BarrenMoon 3
@@ -10039,6 +10132,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Planet BarrenMoon 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4120117182143334559, guid: ce953b41f19324d62bdcaedc8e6d436d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4120117182143334559, guid: ce953b41f19324d62bdcaedc8e6d436d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 7763656419851253165, guid: ce953b41f19324d62bdcaedc8e6d436d, type: 3}
       propertyPath: solarSystem
       value: 
@@ -10096,6 +10197,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 503956193}
     m_Modifications:
+    - target: {fileID: 3215929361947638159, guid: f90e3cf1070a1446e9093c9fa5a5c7d2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215929361947638159, guid: f90e3cf1070a1446e9093c9fa5a5c7d2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 4567349013123969168, guid: f90e3cf1070a1446e9093c9fa5a5c7d2, type: 3}
       propertyPath: m_Name
       value: Planet BarrenMoon 4
@@ -10201,6 +10310,14 @@ PrefabInstance:
       propertyPath: solarSystem
       value: 
       objectReference: {fileID: 503956193}
+    - target: {fileID: 5416181881975590632, guid: 89555ca7170484c05b219a86f2de2d54, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416181881975590632, guid: 89555ca7170484c05b219a86f2de2d54, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 6406680207806220279, guid: 89555ca7170484c05b219a86f2de2d54, type: 3}
       propertyPath: m_Name
       value: Planet Jungle
@@ -10250,6 +10367,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Planet Dusty
       objectReference: {fileID: 0}
+    - target: {fileID: 1850765717482640320, guid: fb81a20b6f87c4b0d9c37708ab53c2b7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1850765717482640320, guid: fb81a20b6f87c4b0d9c37708ab53c2b7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5421394158366437106, guid: fb81a20b6f87c4b0d9c37708ab53c2b7, type: 3}
       propertyPath: solarSystem
       value: 
@@ -10292,6 +10417,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5900115285433536306, guid: fb81a20b6f87c4b0d9c37708ab53c2b7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7128450505507000557, guid: fb81a20b6f87c4b0d9c37708ab53c2b7, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -10898,6 +11027,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Planet Martian
       objectReference: {fileID: 0}
+    - target: {fileID: 3790969835559738299, guid: 1eb45edbf8db0448ab58897a7e9bab3f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3790969835559738299, guid: 1eb45edbf8db0448ab58897a7e9bab3f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 7354288189500778121, guid: 1eb45edbf8db0448ab58897a7e9bab3f, type: 3}
       propertyPath: solarSystem
       value: 
@@ -11003,6 +11140,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5352442555131545386, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5352442555131545386, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6450437972399738421, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
       propertyPath: m_Name
       value: Planet Pink Gas Giant
@@ -11011,7 +11156,8 @@ PrefabInstance:
     - {fileID: 7122821306681610209, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
     - {fileID: 7704159882612168643, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
     - {fileID: 1789097811963673112, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3532467316723287047, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ade7a245ea3c4e80b1aecbf20774051, type: 3}
@@ -11352,6 +11498,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 503956193}
     m_Modifications:
+    - target: {fileID: 356593387136724605, guid: 640adba9ffc31412e8ded31ae265d7b7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 356593387136724605, guid: 640adba9ffc31412e8ded31ae265d7b7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 1671366277103789922, guid: 640adba9ffc31412e8ded31ae265d7b7, type: 3}
       propertyPath: m_Name
       value: Planet Snowy
@@ -11400,6 +11554,10 @@ PrefabInstance:
       propertyPath: solarSystem
       value: 
       objectReference: {fileID: 503956193}
+    - target: {fileID: 9201053745758956880, guid: 640adba9ffc31412e8ded31ae265d7b7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11865,6 +12023,14 @@ PrefabInstance:
       propertyPath: solarSystem
       value: 
       objectReference: {fileID: 503956193}
+    - target: {fileID: 4755487987509659898, guid: ab86c4d981f0946ff8ec5963eb007b5c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4755487987509659898, guid: ab86c4d981f0946ff8ec5963eb007b5c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 5926136968621162981, guid: ab86c4d981f0946ff8ec5963eb007b5c, type: 3}
       propertyPath: m_Name
       value: Planet Sandy

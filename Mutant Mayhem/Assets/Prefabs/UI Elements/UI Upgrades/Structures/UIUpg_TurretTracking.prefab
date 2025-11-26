@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 236226679967019235}
   - component: {fileID: 7711098166412534391}
   m_Layer: 0
-  m_Name: UIUpg_TurretSensors
+  m_Name: UIUpg_TurretTracking
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -286,15 +286,16 @@ MonoBehaviour:
   structureStatsUpgrade: 5
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
+  droneStatsUpgrade: 0
   buttonImage: {fileID: 726323392028032656}
   buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 1954388369396986002}
   unlocked: 1
-  UiName: Turret Sensors
+  UiName: Turret Tracking
   powerCost: 0
   supplyCost: 0
-  tooltipDescription: Improvements to sensors and tacking algorithms allow turrets
-    to find targets faster and at greater distances
+  tooltipDescription: Improvements to servos, sensors and tacking algorithms allow
+    turrets to find and follow targets faster and at greater distances
   showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
   playerGunIndex: 0
@@ -361,7 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a9b72b3090b65408cd83094b1f246d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolTipDelay: 0.5
   header: 
   content: 
 --- !u!1001 &2353019738414428722

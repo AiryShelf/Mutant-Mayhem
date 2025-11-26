@@ -23,13 +23,14 @@ MonoBehaviour:
   nightToSurvive: 10
   highRezPlanetPrefab: {fileID: 9019925247547298173, guid: 8806b83f4eaf140598f4d9a0ca271f8a, type: 3}
   prerequisitePlanets: []
+  isTutorialPlanet: 1
   basePoints: 0
   pointsPerWave: 0
   growthControlFactor: 0
   waveSOBase: {fileID: 11400000, guid: bde7b66a9753e4d61a8080db9d623770, type: 2}
   maxIndexToSelectAtStart: 2
   wavesTillAddIndex: 3
-  creditsPerWave: 550
+  creditsPerWave: 600
   timeBetweenWavesBase: 1000
   batchMultiplierStart: 2
   subwaveDelayMultStart: 1.2
@@ -50,5 +51,4 @@ MonoBehaviour:
   mutationChanceMax: 0.3
   mutationIntensity: 0.1
   addMutationIntensityPerWave: 0.01
-  mutationIntensityMax: 0.5
-  totalSpawnFactor: 0.2
+  subwaveSpawnFactor: 0

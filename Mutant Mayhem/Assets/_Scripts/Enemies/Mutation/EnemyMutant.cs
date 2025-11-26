@@ -130,6 +130,7 @@ public class EnemyMutant : EnemyBase
         }
 
         mutantRenderer.ApplyGenome(individual.genome);
+        mutantRenderer.RandomizeColor(randColorRange);
     }
 
     #endregion

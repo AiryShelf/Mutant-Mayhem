@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyThrownObject : Bullet
 {
     Vector2 startScale;
-    float startDamage;
+    public float startDamage;
 
     protected override void Awake()
     {
@@ -13,8 +13,6 @@ public class EnemyThrownObject : Bullet
         startScale = transform.localScale;
         startDamage = damage;
     }
-
-
 
     /// <summary>
     /// Throws this object along a smooth parabola from startPos to endPos.

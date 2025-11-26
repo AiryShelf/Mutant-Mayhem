@@ -9,7 +9,12 @@ public class MicroReactor : MonoBehaviour, ITileObject, ITileObjectExplodable
 {
     // Could add effect for insufficient power
     [SerializeField] List<AnimatedTile> damageTiles;
-    [SerializeField] Light2D[] reactorLights;
+    [SerializeField] Light2D reactorGlowLight;
+    [SerializeField] Light2D[] circleLights;
+    [SerializeField] SpriteRenderer[] circleSprites;
+    [SerializeField] float lightIntensityMultiplier = 4f; // How much brighter lights get toward 0 health
+    [SerializeField] float glowLightRadiusMultiplier = 3f;
+    
 
     public string explosionPoolName;
 
@@ -21,36 +26,74 @@ public class MicroReactor : MonoBehaviour, ITileObject, ITileObjectExplodable
             explosion.transform.position = transform.position;
         }
     }
-    int[] lightStartIntensities;
     Color[] lightStartColors;
+    Color[] glowStartColor;
+    float[] lightStartIntensities;
+    float[] glowStartIntensity;
+    float[] glowLightStartRadius;
+    Color[] circleStartColors;
 
     public void UpdateHealthRatio(float healthRatio)
     {
-        Debug.Log("MicroReactor: Updating health ratio to " + healthRatio);
-
-        // Dim lights for damage
-        for (int i = 0; i < reactorLights.Length; i++)
+        //Debug.Log("MicroReactor: Updating health ratio to " + healthRatio);
+        // Store start colors and intensities
+        if (lightStartColors == null)
         {
-            if (lightStartIntensities == null)
+            lightStartColors = new Color[circleLights.Length];
+            for (int j = 0; j < circleLights.Length; j++)
             {
-                lightStartIntensities = new int[reactorLights.Length];
-                for (int j = 0; j < reactorLights.Length; j++)
-                {
-                    lightStartIntensities[j] = Mathf.FloorToInt(reactorLights[j].intensity);
-                }
+                lightStartColors[j] = circleLights[j].color;
             }
-
-            if (lightStartColors == null)
+        }
+        if (glowStartColor == null)
+        {
+            glowStartColor = new Color[1];
+            glowStartColor[0] = reactorGlowLight.color;
+        }
+        if (lightStartIntensities == null)  
+        {
+            lightStartIntensities = new float[circleLights.Length];
+            for (int j = 0; j < circleLights.Length; j++)
             {
-                lightStartColors = new Color[reactorLights.Length];
-                for (int j = 0; j < reactorLights.Length; j++)
-                {
-                    lightStartColors[j] = reactorLights[j].color;
-                }
+                lightStartIntensities[j] = circleLights[j].intensity;
             }
+        }
+        if (glowStartIntensity == null)
+        {
+            glowStartIntensity = new float[1];
+            glowStartIntensity[0] = reactorGlowLight.intensity;
+        }
+        if (glowLightStartRadius == null)
+        {
+            glowLightStartRadius = new float[1];
+            glowLightStartRadius[0] = reactorGlowLight.pointLightOuterRadius;
+        }
+        if (circleStartColors == null)
+        {
+            circleStartColors = new Color[circleSprites.Length];
+            for (int i = 0; i < circleSprites.Length; i++)
+            {
+                circleStartColors[i] = circleSprites[i].color;
+            }
+        }
 
-            reactorLights[i].intensity = lightStartIntensities[i] * healthRatio;
-            reactorLights[i].color = Color.Lerp(lightStartColors[i], Color.red, 1 - healthRatio);
+        // Change lights for damage
+        for (int i = 0; i < circleLights.Length; i++)
+        {
+            circleLights[i].color = Color.Lerp(lightStartColors[i], Color.red, 1 - healthRatio);
+            // Make lights brighter when damaged
+            circleLights[i].intensity = Mathf.Lerp(lightStartIntensities[i], lightStartIntensities[i] * lightIntensityMultiplier, 1 - healthRatio);
+        }
+
+        // Change glow light for damage, make light larger
+        reactorGlowLight.color = Color.Lerp(glowStartColor[0], Color.red, 1 - healthRatio);
+        reactorGlowLight.intensity = Mathf.Lerp(glowStartIntensity[0], glowStartIntensity[0] * lightIntensityMultiplier, 1 - healthRatio);
+        reactorGlowLight.pointLightOuterRadius = Mathf.Lerp(glowLightStartRadius[0], glowLightStartRadius[0] * glowLightRadiusMultiplier, 1 - healthRatio);
+
+        // Change circle sprites for damage
+        for (int i = 0; i < circleSprites.Length; i++)
+        {
+            circleSprites[i].color = Color.Lerp(circleStartColors[i], Color.red, 1 - healthRatio);
         }
 
         int damageIndex = GetDamageIndex(healthRatio);

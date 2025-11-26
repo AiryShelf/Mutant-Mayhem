@@ -56,6 +56,13 @@ public class DroneManager : MonoBehaviour
         }
     }  
 
+    void Start()
+    {
+        // Apply planet stat modifiers
+        droneHangarRange *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+        droneHangarRangeUpgAmount *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+    }
+
     public bool SpawnDroneInHangar(DroneType droneType, DroneContainer droneContainer)
     {
         string poolName = "";

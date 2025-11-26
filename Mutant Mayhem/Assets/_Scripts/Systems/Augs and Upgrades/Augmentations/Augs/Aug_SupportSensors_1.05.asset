@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d7bd2ddb7a071c488b7f358a26ff17e, type: 3}
-  m_Name: Aug_TurretTracking_1.1
+  m_Name: Aug_SupportSensors_1.05
   m_EditorClassIdentifier: 
-  augmentationName: Turret Tracking
+  augmentationName: Support Sensors
   uiImage: {fileID: 21300000, guid: 062db96bd1f1a314ba1d4d6f668e6e04, type: 3}
-  cost: 100
-  lvlCostIncrement: 25
-  lvlCostIncrementMult: 1.5
-  refund: 25
-  lvlRefundIncrement: 15
-  lvlRefundIncrementMult: 1.5
+  cost: 150
+  lvlCostIncrement: 50
+  lvlCostIncrementPower: 1
+  refund: 40
+  lvlRefundIncrement: 20
+  lvlRefundIncrementPower: 1
   maxLvl: 10
   minLvl: -10
-  family: 2
-  type: 0
   lvlMultIncrement: 0.05

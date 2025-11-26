@@ -181,8 +181,7 @@ public class UpgradeManager : MonoBehaviour
         // Structures
         structureStatsUpgMaxLevels[StructureStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.StructureMaxHealth] = int.MaxValue;
-        structureStatsUpgMaxLevels[StructureStatsUpgrade.TurretRotSpeed] = 20;
-        structureStatsUpgMaxLevels[StructureStatsUpgrade.TurretSensors] = 20;
+        structureStatsUpgMaxLevels[StructureStatsUpgrade.TurretTracking] = 20;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.SupplyLimit] = 50;
 
         //Consumables
@@ -280,8 +279,7 @@ public class UpgradeManager : MonoBehaviour
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.StructureMaxHealth] = 500;
-        structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretRotSpeed] = 500;
-        structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretSensors] = 500;
+        structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretTracking] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.SupplyLimit] = 1000;
 
         // Consumables
@@ -404,10 +402,8 @@ public class UpgradeManager : MonoBehaviour
                 return new QCubeMaxHealthUpgrade();
             case StructureStatsUpgrade.StructureMaxHealth:
                 return new StructureMaxHealthUpgrade();
-            case StructureStatsUpgrade.TurretRotSpeed:
-                return new TurretRotSpeedUpgrade();
-            case StructureStatsUpgrade.TurretSensors:
-                return new TurretSensorsUpgrade();
+            case StructureStatsUpgrade.TurretTracking:
+                return new TurretTrackingUpgrade();
             case StructureStatsUpgrade.SupplyLimit:
                 return new SupplyLimitUpgrade();
 

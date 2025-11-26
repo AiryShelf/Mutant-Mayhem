@@ -241,7 +241,7 @@ public class AnalyticsManager : MonoBehaviour
         CollectionInitialized = false;
     }
 
-    public void TrackWaveCompleted(int wave)
+    public void TrackNightCompleted(int night)
     {
         if (!CollectionInitialized)
         {
@@ -330,7 +330,7 @@ public class AnalyticsManager : MonoBehaviour
         evt.Add("current_planet", PlanetManager.Instance != null ? PlanetManager.Instance.currentPlanet.bodyName : "null");
         evt.Add("session_seconds_in_app", (int)Time.realtimeSinceStartup);
         evt.Add("session_seconds", (int)StatsCounterPlayer.TotalPlayTime);
-        evt.Add("night_number", wave);
+        evt.Add("night_number", night);
         evt.Add("wave_damage_taken_player", waveDamageTaken);
         evt.Add("wave_damage_taken_cube", waveDamageToCube);
         evt.Add("wave_damage_taken_structures", waveDamageToStructures);
@@ -350,7 +350,7 @@ public class AnalyticsManager : MonoBehaviour
         evt.Add("drone_count_attack", DroneManager.Instance != null ? DroneManager.Instance.activeAttackDrones.Count : 0);
         evt.Add("drone_count_construction", DroneManager.Instance != null ? DroneManager.Instance.activeConstructionDrones.Count : 0);
         AnalyticsService.Instance.RecordEvent(evt);
-        Debug.Log($"Tracked wave_completed event: wave {wave}");
+        Debug.Log($"Tracked wave_completed event: wave {night}");
     }
 
     public void TrackPlayerDeath(string deathCause)
@@ -391,6 +391,23 @@ public class AnalyticsManager : MonoBehaviour
         evt.Add("destruction_cause", safeDeathCause);
         AnalyticsService.Instance.RecordEvent(evt);
         Debug.Log($"Tracked cube_destroyed event: cause {safeDeathCause}, wave {WaveController.Instance.currentWaveIndex}");
+    }
+
+    public void TrackSessionhQuit()
+    {
+        if (!CollectionInitialized)
+        {
+            //Debug.LogWarning($"Attempted to track playthrough quit before analytics initialised.");
+            return;
+        }
+
+        BuildAugmentationSnapshot();
+        BuildUpgradeSnapshot();
+
+        var evt = new CustomEvent("session_quit");
+        AddEverythingToEvent(evt);
+        AnalyticsService.Instance.RecordEvent(evt);
+        Debug.Log($"Tracked session_quit event at wave {WaveController.Instance.currentWaveIndex}");
     }
 
     void AddEverythingToEvent(CustomEvent evt)

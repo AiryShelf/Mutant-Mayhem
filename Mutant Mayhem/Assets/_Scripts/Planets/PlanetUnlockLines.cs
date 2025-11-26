@@ -8,6 +8,9 @@ public class PlanetUnlockLines : MonoBehaviour
     [SerializeField] Transform solarSystem;
     [SerializeField] GameObject lineRendererPrefab;
     [SerializeField] float zOffset = -3f;
+    [SerializeField] Color completeColor = new Color(0f, 1f, 0f, 1f);
+    [SerializeField] Color incompleteColor = new Color(1f, 0f, 0f, 1f);
+
     UI_PlanetClickHandler myClickHandler;
     List<Vector3> prerequisitePositions = new List<Vector3>();
     List<bool>prerequisitesComplete = new List<bool>();
@@ -98,11 +101,11 @@ public class PlanetUnlockLines : MonoBehaviour
 
             if (prerequisitesComplete[i])
             {
-                block.SetColor("_BaseColor", new Color(0f, 1f, 1f, 1f));
+                block.SetColor("_BaseColor", completeColor);
             }
             else
             {
-                block.SetColor("_BaseColor", new Color(1f, 0f, 0f, 1f));
+                block.SetColor("_BaseColor", incompleteColor);
             }
 
             renderer.SetPropertyBlock(block);

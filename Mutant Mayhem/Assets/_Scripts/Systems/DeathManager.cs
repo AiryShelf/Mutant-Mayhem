@@ -170,6 +170,9 @@ public class DeathManager : MonoBehaviour
 
     void ApplyDeathStats()
     {
+        if (currentPlanet.isTutorialPlanet)
+            return;
+            
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
         currentProfile.playthroughs++;
 

@@ -88,9 +88,9 @@ public class Turret : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
         }
 
         // Initialize turret structure
-        myGun.rotationSpeed += UpgradeManager.Instance.structureStatsUpgLevels[StructureStatsUpgrade.TurretRotSpeed] 
+        myGun.rotationSpeed += UpgradeManager.Instance.structureStatsUpgLevels[StructureStatsUpgrade.TurretTracking] 
                                    * myGun.rotSpeedUpgAmt;
-        myGun.detectRange += UpgradeManager.Instance.structureStatsUpgLevels[StructureStatsUpgrade.TurretSensors] 
+        myGun.detectRange += UpgradeManager.Instance.structureStatsUpgLevels[StructureStatsUpgrade.TurretTracking] 
                                  * myGun.detectRangeUpgAmt;
 
         // Initialize detection collider

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +12,6 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] ControlSettingsPanel controlsPanel;
 
     Player player;
-    QCubeController qCubeController;
     BuildingSystem buildingSystem;
     InputActionMap playerActionMap;
     InputActionMap uIActionMap;
@@ -25,7 +25,6 @@ public class PauseMenuController : MonoBehaviour
     void Awake()
     {
         player = FindObjectOfType<Player>();
-        qCubeController = FindObjectOfType<QCubeController>();
         buildingSystem = FindObjectOfType<BuildingSystem>();
 
         playerActionMap = player.inputAsset.FindActionMap("Player");
@@ -168,7 +167,9 @@ public class PauseMenuController : MonoBehaviour
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #endif
-            Application.Quit();
+
+        AnalyticsManager.Instance.TrackSessionhQuit();
+        Application.Quit();
     }
 
     public void ToggleOptionsMenu()

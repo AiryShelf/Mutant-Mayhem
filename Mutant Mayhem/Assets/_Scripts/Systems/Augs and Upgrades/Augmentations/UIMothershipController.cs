@@ -20,7 +20,7 @@ public class UIMothershipController : MonoBehaviour
         CursorManager.Instance.inMenu = true;
         TouchManager.Instance.SetVirtualJoysticksActive(false);
         AugManager.Instance.Initialize();
-        AugManager.Instance.RefreshCurrentRP();
+        AugManager.Instance.RefreshStats();
 
         //InputController.SetLastUsedDevice(null);
         InputManager.SetJoystickMouseControl(true);

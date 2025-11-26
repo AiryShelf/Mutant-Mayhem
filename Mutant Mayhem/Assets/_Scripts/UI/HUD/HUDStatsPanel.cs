@@ -189,7 +189,7 @@ public class HUDStatsPanel : MonoBehaviour
         //TextFlyCreditsChange(creditsChange);
 
         int credits = (int)BuildingSystem.PlayerCredits;
-        creditsText.text = "Credits: " + credits.ToString("#0");
+        creditsText.text = "Credits: " + credits.ToString("N0");
         previousCredits = credits;
 
         initialized = true;

@@ -14,6 +14,7 @@ public class PlayerProfile
     public int playthroughs;
     public int totalNightsSurvived;
     public DifficultyLevel difficultyLevel;
+    public int maxAugLevels;
 
     [Header("Options Settings")]
     public int qualityLevel;
@@ -32,11 +33,35 @@ public class PlayerProfile
         playthroughs = 0;
         qualityLevel = -1;
         difficultyLevel = difficulty;
+        maxAugLevels = 12;
         isStandardWASD = true;
         isSpacebarEnabled = true;
         isFastJoystickAimEnabled = false;
         joystickCursorSpeed = 1500f;
         joystickAccelSpeed = 3000;
         virtualAimJoystickDisabled = true;
+    }
+
+    public bool IsProfileUpToDate()
+    {
+        bool isUpToDate = true;
+        if (planetsMaxIndexReached == null)
+        {
+            planetsMaxIndexReached = new Dictionary<string, int>();
+            isUpToDate = false;
+        }
+
+        if (maxAugLevels == 0)
+        {
+            // Check planets completed to set maxAugLevels accordingly
+            int augLevels = 12; // Base aug levels
+            if (completedPlanets != null)
+            {
+                augLevels += completedPlanets.Count;
+            }
+            maxAugLevels = augLevels;
+            isUpToDate = false;
+        }
+        return isUpToDate;
     }
 }
