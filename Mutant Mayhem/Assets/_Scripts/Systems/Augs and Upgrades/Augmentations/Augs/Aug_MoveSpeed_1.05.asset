@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8262f386813da5a43be51cf95aee6303, type: 3}
-  m_Name: Aug_MoveSpeed_1.1
+  m_Name: Aug_MoveSpeed_1.05
   m_EditorClassIdentifier: 
   augmentationName: Movement Speed
   uiImage: {fileID: 1160600240, guid: b2575fe84843531439e39dc1be326ae3, type: 3}
   cost: 100
   lvlCostIncrement: 0
-  lvlCostIncrementMult: 1
+  lvlCostIncrementPower: 1
   refund: 50
   lvlRefundIncrement: 25
-  lvlRefundIncrementMult: 1.5
+  lvlRefundIncrementPower: 1
   maxLvl: 10
   minLvl: -9
-  family: 1
-  type: 0
   speedMult: 1
-  lvlMultIncrement: 0.1
+  lvlMultIncrement: 0.05

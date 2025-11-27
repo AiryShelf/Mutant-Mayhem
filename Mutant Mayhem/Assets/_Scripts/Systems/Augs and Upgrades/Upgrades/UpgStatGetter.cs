@@ -64,8 +64,7 @@ public static class UpgStatGetter
                 stat = player.stats.grenadeAmmo.ToString("#0");
                 return stat;
             case ConsumablesUpgrade.SMGBuyAmmo:
-                stat = (player.stats.playerShooter.gunsAmmo[1] +
-                        player.stats.playerShooter.gunsAmmoInClips[1]).ToString("#0");
+                stat = player.stats.playerShooter.gunsAmmo[1].ToString("#0");
                 return stat;
             case ConsumablesUpgrade.BuyConstructionDrone:
                 stat = DroneManager.Instance.activeConstructionDrones.Count.ToString();
