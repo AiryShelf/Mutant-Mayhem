@@ -32,13 +32,19 @@ public class UI_DeathStatsListBuilder : MonoBehaviour
         survivedForText.text = "You survived for " + time;
         int nightsSurvived = Mathf.Clamp(waveController.currentWaveIndex, 0, int.MaxValue);
         nightReachedText.text = "Nights Survived: " + nightsSurvived;
-        // If no record for this planet, set to 0
-        if (!ProfileManager.Instance.currentProfile.planetsMaxIndexReached.ContainsKey(PlanetManager.Instance.currentPlanet.bodyName))
+        // Use profile helpers to get previous record for this planet
+        var profile = ProfileManager.Instance.currentProfile;
+        if (profile == null)
         {
-            ProfileManager.Instance.currentProfile.planetsMaxIndexReached[PlanetManager.Instance.currentPlanet.bodyName] = 0;
+            Debug.LogError("UI_DeathStatsListBuilder: currentProfile is null, cannot read planet max index.");
+            previousRecordText.text = "Previous Record: -";
         }
-        int previousIndex = ProfileManager.Instance.currentProfile.planetsMaxIndexReached[PlanetManager.Instance.currentPlanet.bodyName];
-        previousRecordText.text = "Previous Record: " + previousIndex;
+        else
+        {
+            string planetKey = PlanetManager.Instance.currentPlanet.bodyName;
+            int previousIndex = profile.GetPlanetMaxIndex(planetKey);
+            previousRecordText.text = "Previous Record: " + previousIndex;
+        }
         int researchPointsGained = WaveController.Instance.GetResearchPointsTotal(nightsSurvived);
         researchPointsGainedText.text = "Research Points Gained: " + researchPointsGained;
         int totalResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;

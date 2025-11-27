@@ -30,7 +30,7 @@ public class DroneManager : MonoBehaviour
     public List<Drone> activeConstructionDrones;
     public List<Drone> activeAttackDrones;
 
-    public List<TurretGunSO> _droneGunListSource = new List<TurretGunSO>();
+    [SerializeField] List<TurretGunSO> _droneGunListSource = new List<TurretGunSO>();
     [Header("Dynamic Vars:")]
     public List<TurretGunSO> droneGunList = new List<TurretGunSO>();
     public List<DroneContainer> droneContainers = new List<DroneContainer>();
@@ -59,8 +59,8 @@ public class DroneManager : MonoBehaviour
     void Start()
     {
         // Apply planet stat modifiers
-        droneHangarRange *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
-        droneHangarRangeUpgAmount *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+        droneHangarRange *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
+        droneHangarRangeUpgAmount *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
     }
 
     public bool SpawnDroneInHangar(DroneType droneType, DroneContainer droneContainer)

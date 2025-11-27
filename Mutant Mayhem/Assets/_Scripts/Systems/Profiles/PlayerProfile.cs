@@ -9,7 +9,9 @@ public class PlayerProfile
     public string profileName;
     public int researchPoints;
     public List<string> completedPlanets = new List<string>();
-    public Dictionary<string, int> planetsMaxIndexReached = new Dictionary<string, int>();
+    public List<PlanetIndexEntry> planetIndexReachedList = new List<PlanetIndexEntry>();
+    [System.NonSerialized]
+    public Dictionary<string, int> planetsMaxIndexReached;
     public int lastPlanetVisited;
     public int playthroughs;
     public int totalNightsSurvived;
@@ -44,24 +46,77 @@ public class PlayerProfile
 
     public bool IsProfileUpToDate()
     {
-        bool isUpToDate = true;
-        if (planetsMaxIndexReached == null)
-        {
-            planetsMaxIndexReached = new Dictionary<string, int>();
-            isUpToDate = false;
-        }
+        // Ensure list exists
+        if (planetIndexReachedList == null)
+            planetIndexReachedList = new List<PlanetIndexEntry>();
+
+        bool upgraded = false;
 
         if (maxAugLevels == 0)
         {
-            // Check planets completed to set maxAugLevels accordingly
-            int augLevels = 12; // Base aug levels
+            int augLevels = 12;
             if (completedPlanets != null)
-            {
                 augLevels += completedPlanets.Count;
-            }
+
             maxAugLevels = augLevels;
-            isUpToDate = false;
+            upgraded = true;
         }
-        return isUpToDate;
+
+        return !upgraded;
+    }
+
+    [System.Serializable]
+    public class PlanetIndexEntry
+    {
+        public string planetName;
+        public int maxIndexReached;
+    }
+
+    public void EnsurePlanetIndexLookup()
+    {
+        if (planetsMaxIndexReached != null)
+            return;
+
+        planetsMaxIndexReached = new Dictionary<string, int>();
+
+        if (planetIndexReachedList == null)
+            planetIndexReachedList = new List<PlanetIndexEntry>();
+
+        foreach (var entry in planetIndexReachedList)
+        {
+            if (!string.IsNullOrEmpty(entry.planetName))
+                planetsMaxIndexReached[entry.planetName] = entry.maxIndexReached;
+        }
+    }
+
+    public int GetPlanetMaxIndex(string planetName)
+    {
+        EnsurePlanetIndexLookup();
+        return planetsMaxIndexReached.TryGetValue(planetName, out int value) ? value : 0;
+    }
+
+    public void SetPlanetMaxIndex(string planetName, int index)
+    {
+        EnsurePlanetIndexLookup();
+
+        if (planetsMaxIndexReached.TryGetValue(planetName, out int existing) && existing >= index)
+            return;
+
+        planetsMaxIndexReached[planetName] = index;
+
+        // Keep list in sync for serialization
+        var entry = planetIndexReachedList.Find(e => e.planetName == planetName);
+        if (entry != null)
+        {
+            entry.maxIndexReached = index;
+        }
+        else
+        {
+            planetIndexReachedList.Add(new PlanetIndexEntry
+            {
+                planetName = planetName,
+                maxIndexReached = index
+            });
+        }
     }
 }

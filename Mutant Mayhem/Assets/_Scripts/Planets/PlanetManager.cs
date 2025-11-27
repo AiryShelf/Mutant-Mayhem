@@ -172,19 +172,19 @@ public class PlanetManager : MonoBehaviour
                 case GunType.Laser:
                     gun.damage *= statMultipliers[PlanetStatModifier.LaserDamage];
                     gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.LaserRange];
-                    gun.detectRange *= statMultipliers[PlanetStatModifier.SupportSensors];
-                    gun.expansionDelay *= statMultipliers[PlanetStatModifier.SupportSensors];
+                    gun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                    gun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
                     break;
                 case GunType.Bullet:
                     gun.damage *= statMultipliers[PlanetStatModifier.BulletDamage];
                     gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.BulletRange];
-                    gun.detectRange *= statMultipliers[PlanetStatModifier.SupportSensors];
-                    gun.expansionDelay *= statMultipliers[PlanetStatModifier.SupportSensors];
+                    gun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                    gun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
                     break;
                 case GunType.RepairGun:
                     gun.damage *= statMultipliers[PlanetStatModifier.RepairGunDamage];
-                    gun.detectRange *= statMultipliers[PlanetStatModifier.SupportSensors];
-                    gun.expansionDelay *= statMultipliers[PlanetStatModifier.SupportSensors];
+                    gun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                    gun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
                     break;
             }
         }

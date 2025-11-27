@@ -172,23 +172,22 @@ public class DeathManager : MonoBehaviour
     {
         if (currentPlanet.isTutorialPlanet)
             return;
-            
+
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
         currentProfile.playthroughs++;
 
-        // Apply night reached to profile
-        if (!currentProfile.planetsMaxIndexReached.ContainsKey(currentPlanet.bodyName))
+        // Ensure dictionary is built from the serialized list
+        currentProfile.EnsurePlanetIndexLookup();
+
+        string planetKey = currentPlanet.bodyName;
+        int previousMax = currentProfile.GetPlanetMaxIndex(planetKey);
+
+        // Only update if this is a new record
+        if (waveController.currentWaveIndex > previousMax)
         {
-            currentProfile.planetsMaxIndexReached.Add(currentPlanet.bodyName, 0);
-        }
-        // Check to make sure we only update if this is a new record
-        if (waveController.currentWaveIndex > ProfileManager.Instance.currentProfile.planetsMaxIndexReached[currentPlanet.bodyName])
-        {
-            ProfileManager.Instance.currentProfile.planetsMaxIndexReached[currentPlanet.bodyName] = 
-                waveController.currentWaveIndex;
+            currentProfile.SetPlanetMaxIndex(planetKey, waveController.currentWaveIndex);
         }
 
-        // Save changes to profile
         ProfileManager.Instance.SaveCurrentProfile();
     }
 }

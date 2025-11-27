@@ -119,6 +119,8 @@ public class ProfileManager : MonoBehaviour
         if (profiles == null)
             return;
 
+        bool anyUpdated = false;
+
         foreach (var profile in profiles)
         {
             if (profile == null)
@@ -129,8 +131,13 @@ public class ProfileManager : MonoBehaviour
             if (!upToDate)
             {
                 Debug.Log($"ProfileManager: Initialized new fields for profile {profile.profileName}");
-                SaveCurrentProfile();
+                anyUpdated = true;
             }
+        }
+
+        if (anyUpdated)
+        {
+            SaveAllProfiles();
         }
     }
 

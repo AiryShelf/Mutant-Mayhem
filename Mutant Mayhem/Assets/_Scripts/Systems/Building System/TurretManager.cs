@@ -205,9 +205,9 @@ public class TurretManager : MonoBehaviour
         turretGun.rotationSpeed += turretGun.rotSpeedUpgAmt;
         //Debug.Log("Upgraded turret rotation stat");
         turretGun.detectRange += turretGun.detectRangeUpgAmt * 
-                                 PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+                                 PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
         turretGun.expansionDelay += turretGun.expansionDelayUpgNegAmt * 
-                                    PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+                                    PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
         //Debug.Log("Upgraded turret sensors stat");
     }
 

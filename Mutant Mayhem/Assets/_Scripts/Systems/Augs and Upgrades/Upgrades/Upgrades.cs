@@ -657,7 +657,7 @@ public class TurretTrackingUpgrade : Upgrade
 
     public static float GetUpgAmount()
     {
-        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.SupportSensors];
+        return UpgAmount * PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
     }
 
     public override void Apply(StructureStats structureStats, int level)
@@ -797,7 +797,7 @@ public class GunKnockbackUpgrade : Upgrade
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
-            newCost = Mathf.CeilToInt(newCost * 1.8f);
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
         }
         return newCost;
     }

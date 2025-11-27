@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: 3562009c838b94c0cab8cbd6eb27e87f, type: 3}
   tileName: Ballistics Bay
-  description: 'Interact with it to upgrade bullet tech
+  description: 'Interact with it to upgrade bullet tech and buy bullets
 
 
-    Adds the SMG to your
-    toobar
+    Adds
+    the SMG to your toobar
 
 
-    Unlocks and Gun Turrets in the build menu'
+    Unlocks Gun Turrets in the build menu'
   tileCost: 2000
   maxHealth: 1600
   health: 1600
@@ -49,4 +49,3 @@ MonoBehaviour:
   structuresToUnlock:
   - {fileID: 11400000, guid: 8f9fabdf0d76de84bb552cd55fc0d75d, type: 2}
   canBuildOnlyOne: 1
-  droneHangarRange: 12

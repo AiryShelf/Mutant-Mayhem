@@ -15,7 +15,7 @@ public enum PlanetStatModifier
     BulletRange,
     ThrowRange,
     CreditsMult,
-    SupportSensors,
+    SensorsRange,
     EnemyDamage,
     EnemyHealth,
     EnemySize,

@@ -269,10 +269,14 @@ public class WaveController : MonoBehaviour
         return pts;
     }
 
-    public int GetResearchPointsTotal(int wavePassed)
+    public int GetResearchPointsTotal(int nightsSurvived)
     {
+        nightsSurvived--; // Adjust since nightsSurvived is 1-based
+        if (nightsSurvived < 0)
+            return 0;
+
         int total = 0;
-        for (int wave = 0; wave <= wavePassed; wave++)
+        for (int wave = 0; wave <= nightsSurvived; wave++)
         {
             total += GetResearchPointsForWave(wave);
         }
@@ -282,12 +286,6 @@ public class WaveController : MonoBehaviour
 
     void ApplyResearchPoints()
     {
-        if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
-        {
-            MessageBanner.PulseMessage($"You survived Night {currentWaveIndex + 1}!", Color.cyan);
-            return;
-        }
-
         // Apply research points for wave survived
         int researchPointsGained = GetResearchPointsForWave(currentWaveIndex);
         ProfileManager.Instance.currentProfile.totalNightsSurvived++;
@@ -301,12 +299,20 @@ public class WaveController : MonoBehaviour
         textFly.transform.SetParent(gameplayCanvas.transform, false);
         RectTransform rectTransform = textFly.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = Vector2.zero;
-        textFlyComp.Initialize($"+{researchPointsGained} RP", Color.cyan, 1, Vector2.up, false, textFlyMaxScale);
 
+        // Set textFly and MessageBanner text
         string rpGainedCommas = researchPointsGained.ToString("N0");
         string rpTotalCommas = ProfileManager.Instance.currentProfile.researchPoints.ToString("N0");
+        if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
+        {
+            textFlyComp.Initialize($"Survived Night {currentWaveIndex + 1}!", Color.cyan, 1, Vector2.up, false, textFlyMaxScale);
+            MessageBanner.PulseMessageLong($"You survived Night {currentWaveIndex + 1}!", Color.cyan);
+            return;
+        }
+        textFlyComp.Initialize($"Survived Night {currentWaveIndex + 1}! +{researchPointsGained} RP", Color.cyan, 1, Vector2.up, false, textFlyMaxScale);
         MessageBanner.PulseMessageLong($"You survived Night {currentWaveIndex + 1}! \n" +
             $"Gained {rpGainedCommas} Research Points! You now have {rpTotalCommas} RP!", Color.cyan);
+
         Debug.Log($"Player gained {researchPointsGained} research points for waveIndex {currentWaveIndex}.");
     }
 

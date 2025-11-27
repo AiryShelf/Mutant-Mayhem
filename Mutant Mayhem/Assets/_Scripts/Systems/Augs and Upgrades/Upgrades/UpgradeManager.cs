@@ -620,6 +620,7 @@ public class UpgradeManager : MonoBehaviour
             return;
         }
 
+        /*  // Class discount deprecated
         if ((ClassManager.Instance.selectedClass == PlayerClass.Fighter && 
             upgType == ConsumablesUpgrade.BuyAttackDrone) ||
             (ClassManager.Instance.selectedClass == PlayerClass.Builder && 
@@ -627,7 +628,8 @@ public class UpgradeManager : MonoBehaviour
             {
                 cost /= 2;
             }
-        
+        */
+
         if (upgrade.Apply(player.stats))
         {
             BuildingSystem.PlayerCredits -= cost;

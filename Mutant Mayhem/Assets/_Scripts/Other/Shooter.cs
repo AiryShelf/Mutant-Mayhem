@@ -182,8 +182,8 @@ public class Shooter : MonoBehaviour
                     
                     if (turretGun != null)
                     {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SupportSensors];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SupportSensors];
+                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
                     }
                     break;
                 case GunType.Bullet:
@@ -192,8 +192,8 @@ public class Shooter : MonoBehaviour
 
                     if (turretGun != null)
                     {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SupportSensors];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SupportSensors];
+                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
                     }
                     break;
                 case GunType.RepairGun:
@@ -201,8 +201,8 @@ public class Shooter : MonoBehaviour
 
                     if (turretGun != null)
                     {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SupportSensors];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SupportSensors];
+                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
                     }
                     break;
             }
