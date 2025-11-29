@@ -218,7 +218,7 @@ public class CursorManager : MonoBehaviour
 
     public void CustomCursorControl()
     {
-        if (SettingsManager.Instance.useFastJoystickAim && !inMenu && 
+        if (SettingsManager.Instance.useInstantJoystickAim && !inMenu && 
             Gamepad.current != null && Gamepad.current.rightStickButton.wasPressedThisFrame)
         {
             InputManager.SetJoystickMouseControl(!InputManager.GetJoystickAsMouseState());

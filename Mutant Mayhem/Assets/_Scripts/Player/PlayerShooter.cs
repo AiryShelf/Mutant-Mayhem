@@ -202,7 +202,7 @@ public class PlayerShooter : Shooter
                 playerStats.structureStats.buildingSystem.repairRangeCircle.EnableCircle(false);
                 playerStats.structureStats.buildingSystem.LockCameraToPlayer(false);
                 //BuildingSystem.Instance.buildRangeCircle.radius = BuildingSystem.buildRange;
-                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
                 CursorManager.Instance.inMenu = false;
             }
         }

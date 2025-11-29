@@ -322,7 +322,7 @@ public class Player : MonoBehaviour
         if (stats.playerShooter.currentGunIndex == 4) // Repair Gun
             stats.playerShooter.isRepairing = true;
         else
-            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
 
         CursorManager.Instance.inMenu = false;
         if (!stats.playerShooter.isBuilding && !stats.playerShooter.isRepairing)
@@ -510,7 +510,7 @@ public class Player : MonoBehaviour
             //lastAimDir = Vector3.zero;
         }
         else if ((TouchManager.Instance.GetVirtualJoysticksActive() || InputManager.LastUsedDevice == Gamepad.current) && 
-                 SettingsManager.Instance.useFastJoystickAim && joystickInputMagnitude > joystickDeadzone)
+                 SettingsManager.Instance.useInstantJoystickAim && joystickInputMagnitude > joystickDeadzone)
         {
             //Debug.Log("Player: Joysticks are active, using fastJoystickAim");
             // Instant Joystick Aim
@@ -519,7 +519,7 @@ public class Player : MonoBehaviour
         }
         else if (InputManager.GetJoystickAsMouseState() && 
                  CursorManager.Instance.usingCustomCursor && 
-                 !SettingsManager.Instance.useFastJoystickAim)
+                 !SettingsManager.Instance.useInstantJoystickAim)
         {
             //Debug.Log("Player: Joysticks are actice, not using fastJoystickAim, aiming to lastAimDir");
             // Use custom cursor position directly for aiming

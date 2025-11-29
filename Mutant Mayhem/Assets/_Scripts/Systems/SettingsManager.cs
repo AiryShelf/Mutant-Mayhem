@@ -20,7 +20,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Movement Settings")]
     public bool useStandardWASD = true;
-    public bool useFastJoystickAim = false;
+    public bool useInstantJoystickAim = false;
 
     [Header("Difficulty Multipliers")]
     public float WaveDifficultyMult = 1; // Multiplies wave difficulty
@@ -30,9 +30,10 @@ public class SettingsManager : MonoBehaviour
     public float BatchSpawnMult = 1; // Multiplies number of enemies per batch in each Subwave
     public float CreditsMult = 1;
 
-    bool isSpacebarEnabled = true;
-    float joystickCursorSpeed;
-    float joystickAccelSpeed;
+    [Header("Dynamic, dont't set here")]
+   // bool spacebarThrowsGrenades = true;
+    public float joystickCursorSpeed;
+    public float joystickAccelSpeed;
     bool isVirtualAimJoystickVisible = false;
 
     WaveController waveController;  
@@ -75,8 +76,8 @@ public class SettingsManager : MonoBehaviour
             Debug.LogError("No profile found to load settings.");
             difficultyLevel = startingDifficulty;
             useStandardWASD = true;
-            isSpacebarEnabled = true;
-            useFastJoystickAim = false;
+            //spacebarThrowsGrenades = true;
+            useInstantJoystickAim = false;
             joystickCursorSpeed = CursorManager.Instance.cursorSpeedSpeedBackup;
             joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedBackup;
             isVirtualAimJoystickVisible = false;
@@ -86,8 +87,8 @@ public class SettingsManager : MonoBehaviour
 
         difficultyLevel = currentProfile.difficultyLevel;
         useStandardWASD = currentProfile.isStandardWASD;
-        isSpacebarEnabled = currentProfile.isSpacebarEnabled;
-        useFastJoystickAim = currentProfile.isFastJoystickAimEnabled;
+        //spacebarThrowsGrenades = currentProfile.isSpacebarEnabled;
+        useInstantJoystickAim = currentProfile.isFastJoystickAimEnabled;
         if (currentProfile.joystickCursorSpeed < CursorManager.Instance.cursorSpeedMin)
         {
             currentProfile.joystickCursorSpeed = CursorManager.Instance.cursorSpeedSpeedBackup;
@@ -98,7 +99,7 @@ public class SettingsManager : MonoBehaviour
         joystickCursorSpeed = currentProfile.joystickCursorSpeed;
         joystickAccelSpeed = currentProfile.joystickAccelSpeed;
         isVirtualAimJoystickVisible = !currentProfile.virtualAimJoystickDisabled;
-        Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {isSpacebarEnabled}, VirtualAimJoystickVisible = {isVirtualAimJoystickVisible}");
+        //Debug.Log($"Settings loaded: WASD = {useStandardWASD}, Difficulty = {difficultyLevel}, Spacebar = {spacebarThrowsGrenades}, VirtualAimJoystickVisible = {isVirtualAimJoystickVisible}");
 
         ApplyMovementSettings();
         ApplyControlSettings();
@@ -173,8 +174,8 @@ public class SettingsManager : MonoBehaviour
         if (player != null)
         {
             player.useStandardWASD = useStandardWASD;
-            player.useFastJoystickAim = useFastJoystickAim;
-            Debug.Log("Movement Type updated. Standard movement: " + useStandardWASD + ", Fast Joystick Aim: " + useFastJoystickAim);
+            player.useFastJoystickAim = useInstantJoystickAim;
+            Debug.Log("Movement Type updated. Standard movement: " + useStandardWASD + ", Fast Joystick Aim: " + useInstantJoystickAim);
         }
         else
         {
@@ -192,6 +193,7 @@ public class SettingsManager : MonoBehaviour
         CursorManager.Instance.cursorAcceleration = joystickAccelSpeed;
         TouchManager.Instance.SetVirtualAimJoystickVisible(isVirtualAimJoystickVisible);
 
+        /*
         player = FindObjectOfType<Player>();
         if (player == null)
         {
@@ -201,7 +203,7 @@ public class SettingsManager : MonoBehaviour
 
         InputAction throwAction = player.inputAsset.FindActionMap("Player").FindAction("Throw");
 
-        if (isSpacebarEnabled)
+        if (spacebarThrowsGrenades)
         {
             // Enable the spacebar
             for (int i = 0; i < throwAction.bindings.Count; i++)
@@ -225,6 +227,7 @@ public class SettingsManager : MonoBehaviour
                 }
             }
         }
+        */
     }
 
     #endregion

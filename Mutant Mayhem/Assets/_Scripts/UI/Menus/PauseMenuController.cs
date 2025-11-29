@@ -122,7 +122,7 @@ public class PauseMenuController : MonoBehaviour
             if (wasRepairing)
                 player.stats.playerShooter.isRepairing = true;
             else
-                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
             
             MessageManager.Instance.UnPauseMessage();
             
@@ -143,33 +143,12 @@ public class PauseMenuController : MonoBehaviour
         OpenPauseMenu(false);
     }
 
-    public void BackToShip()
-    {
-        TimeControl.Instance.PauseGame(false);
-        SceneManager.LoadScene(2);
-    }
-
-    public void MainMenu()
-    {
-        TimeControl.Instance.PauseGame(false);
-        SceneManager.LoadScene(1);
-    }
-
     public void GiveUp()
     {
+        AnalyticsManager.Instance.TrackSessionQuit();
         OpenPauseMenu(false);
         player.IsDead = true;
-    }
-
-    public void QuitGame()
-    {
-        //  If the editor is running, stop.  Else if compiled, quit.
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-
-        AnalyticsManager.Instance.TrackSessionhQuit();
-        Application.Quit();
+        
     }
 
     public void ToggleOptionsMenu()

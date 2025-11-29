@@ -317,7 +317,7 @@ public class AnalyticsManager : MonoBehaviour
         int waveStructuresLost = structuresLostNow - PrevStructuresLost;
         PrevStructuresLost = structuresLostNow;
 
-        var evt = new CustomEvent("wave_completed");
+        var evt = new CustomEvent("wave_completed"); 
         evt.Add("install_id", GetInstallId());
         evt.Add("input_used", InputManager.Instance != null ? InputManager.LastUsedDevice.ToString() : "null");
         evt.Add("difficulty", SettingsManager.Instance != null ? SettingsManager.Instance.difficultyLevel.ToString() : "null");
@@ -349,6 +349,9 @@ public class AnalyticsManager : MonoBehaviour
         evt.Add("wave_structures_lost", waveStructuresLost);
         evt.Add("drone_count_attack", DroneManager.Instance != null ? DroneManager.Instance.activeAttackDrones.Count : 0);
         evt.Add("drone_count_construction", DroneManager.Instance != null ? DroneManager.Instance.activeConstructionDrones.Count : 0);
+        AddFpsToEvent(evt);
+        AddSettingsToEvent(evt);
+
         AnalyticsService.Instance.RecordEvent(evt);
         Debug.Log($"Tracked wave_completed event: wave {night}");
     }
@@ -365,7 +368,7 @@ public class AnalyticsManager : MonoBehaviour
         BuildUpgradeSnapshot();
 
         var evt = new CustomEvent("player_death");
-        AddEverythingToEvent(evt); 
+        AddEverythingToEvent(evt);
 
         string safeDeathCause = string.IsNullOrEmpty(deathCause) ? "no data" : deathCause;
         evt.Add("death_cause", safeDeathCause);
@@ -393,7 +396,7 @@ public class AnalyticsManager : MonoBehaviour
         Debug.Log($"Tracked cube_destroyed event: cause {safeDeathCause}, wave {WaveController.Instance.currentWaveIndex}");
     }
 
-    public void TrackSessionhQuit()
+    public void TrackSessionQuit()
     {
         if (!CollectionInitialized)
         {
@@ -406,8 +409,36 @@ public class AnalyticsManager : MonoBehaviour
 
         var evt = new CustomEvent("session_quit");
         AddEverythingToEvent(evt);
+
         AnalyticsService.Instance.RecordEvent(evt);
         Debug.Log($"Tracked session_quit event at wave {WaveController.Instance.currentWaveIndex}");
+    }
+
+    public void TrackSessionStart()
+    {
+        if (!CollectionInitialized)
+        {
+            //Debug.LogWarning($"Attempted to track session start before analytics initialised.");
+            return;
+        }
+
+        BuildAugmentationSnapshot();
+
+        var evt = new CustomEvent("session_start");
+        evt.Add("install_id", GetInstallId());
+        evt.Add("input_used", InputManager.Instance != null ? InputManager.LastUsedDevice.ToString() : "null");
+        evt.Add("difficulty", SettingsManager.Instance != null ? SettingsManager.Instance.difficultyLevel.ToString() : "null");
+        evt.Add("player_class", ClassManager.Instance != null ? ClassManager.Instance.selectedClass.ToString() : "null");
+        evt.Add("augmentations", AugManager.selectedAugsString);
+        evt.Add("research_points_total", ProfileManager.Instance != null ? ProfileManager.Instance.currentProfile.researchPoints : -1);
+        evt.Add("research_points_unspent", AugManager.Instance != null ? AugManager.Instance.currentResearchPoints : -1);
+        evt.Add("current_planet", PlanetManager.Instance != null ? PlanetManager.Instance.currentPlanet.bodyName : "null");
+        evt.Add("session_seconds_in_app", (int)Time.realtimeSinceStartup);
+        evt.Add("session_seconds", (int)StatsCounterPlayer.TotalPlayTime);
+        AddSettingsToEvent(evt);
+
+        AnalyticsService.Instance.RecordEvent(evt);
+        Debug.Log($"Tracked session_start event.");
     }
 
     void AddEverythingToEvent(CustomEvent evt)
@@ -443,31 +474,33 @@ public class AnalyticsManager : MonoBehaviour
         evt.Add("total_structures_lost", StatsCounterPlayer.StructuresLost);
         evt.Add("drone_count_attack", DroneManager.Instance != null ? DroneManager.Instance.activeAttackDrones.Count : -1);
         evt.Add("drone_count_construction", DroneManager.Instance != null ? DroneManager.Instance.activeConstructionDrones.Count : -1);
+        
+        AddFpsToEvent(evt);
+        AddSettingsToEvent(evt);
     }
 
-    public void TrackSessionStart()
+    void AddFpsToEvent(CustomEvent evt)
     {
-        if (!CollectionInitialized)
+        if (FpsCounter.Instance != null)
         {
-            //Debug.LogWarning($"Attempted to track session start before analytics initialised.");
-            return;
+            var fps = FpsCounter.Instance.GetSnapshot();
+            evt.Add("fps_current_avg", fps.avgFPS);
+            evt.Add("fps_min", fps.minFPS);
+            evt.Add("fps_frames_under_20", fps.framesUnder20);
+            evt.Add("fps_frames_under_40", fps.framesUnder40);
+            evt.Add("fps_frames_under_60", fps.framesUnder60);
         }
+    }
 
-        BuildAugmentationSnapshot();
-
-        var evt = new CustomEvent("session_start");
-        evt.Add("install_id", GetInstallId());
-        evt.Add("input_used", InputManager.Instance != null ? InputManager.LastUsedDevice.ToString() : "null");
-        evt.Add("difficulty", SettingsManager.Instance != null ? SettingsManager.Instance.difficultyLevel.ToString() : "null");
-        evt.Add("player_class", ClassManager.Instance != null ? ClassManager.Instance.selectedClass.ToString() : "null");
-        evt.Add("augmentations", AugManager.selectedAugsString);
-        evt.Add("research_points_total", ProfileManager.Instance != null ? ProfileManager.Instance.currentProfile.researchPoints : -1);
-        evt.Add("research_points_unspent", AugManager.Instance != null ? AugManager.Instance.currentResearchPoints : -1);
-        evt.Add("current_planet", PlanetManager.Instance != null ? PlanetManager.Instance.currentPlanet.bodyName : "null");
-        evt.Add("session_seconds_in_app", (int)Time.realtimeSinceStartup);
-        evt.Add("session_seconds", (int)StatsCounterPlayer.TotalPlayTime);
-        AnalyticsService.Instance.RecordEvent(evt);
-        Debug.Log($"Tracked session_start event.");
+    void AddSettingsToEvent(CustomEvent evt)
+    {
+        if (SettingsManager.Instance != null)
+        {
+            evt.Add("setting_use_instant_joystick_aim", SettingsManager.Instance.useInstantJoystickAim);
+            evt.Add("setting_use_standard_wasd", SettingsManager.Instance.useStandardWASD);
+            evt.Add("setting_joystick_cursor_speed", SettingsManager.Instance.joystickCursorSpeed);
+            evt.Add("setting_joystick_accel_speed", SettingsManager.Instance.joystickAccelSpeed);
+        }
     }
 
     #endregion

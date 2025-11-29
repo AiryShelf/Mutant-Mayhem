@@ -364,7 +364,7 @@ public class BuildingSystem : MonoBehaviour
                 SetRepairRangeCircle();
             else
             {
-                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+                InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
                 //Debug.Log("Joystick turned off from BuildingSystem");
             }
 
@@ -444,7 +444,7 @@ public class BuildingSystem : MonoBehaviour
         else
         {
             buildRangeCircle.transform.position = player.transform.position;
-            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+            InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
         }
     }
 

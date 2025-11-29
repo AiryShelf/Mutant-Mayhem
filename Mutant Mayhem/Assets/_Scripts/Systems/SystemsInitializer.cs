@@ -20,7 +20,7 @@ public class SystemsInitializer : MonoBehaviour
         CursorManager.Instance.SetGraphicRaycasters(player.graphicRaycasters);
         if (InputManager.LastUsedDevice == Touchscreen.current)
             TouchManager.Instance.SetVirtualJoysticksActive(true);
-        InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useFastJoystickAim);
+        InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
         LinkVirtualJoysticks(player);
         player.aimDistance = CursorManager.Instance.aimDistance;
         player.aimMinDist = CursorManager.Instance.aimMinDistance;
@@ -48,6 +48,7 @@ public class SystemsInitializer : MonoBehaviour
         MessageManager.Instance.StartPlanetDialogue();
 
         // Track session_start
+        FpsCounter.Instance?.ResetSnapshot();
         AnalyticsManager.Instance.TrackSessionStart();
     }
 
