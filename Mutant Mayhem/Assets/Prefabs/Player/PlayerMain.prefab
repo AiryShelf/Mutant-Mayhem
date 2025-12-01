@@ -177,7 +177,7 @@ MonoBehaviour:
   - {x: -0.21528363, y: -0.14868794, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 413994
+  m_InstanceId: 262792
   m_LocalBounds:
     m_Center: {x: -0.07518342, y: 0.000651747, z: 0}
     m_Extent: {x: 0.26163375, y: 0.17178518, z: 0}
@@ -449,7 +449,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
-  grenadePoolName: Grenade
+  grenadePoolName: Player_Grenade
   headImageTrans: {fileID: 970128586991505708}
   playerMainTrans: {fileID: 5837383932377381789}
   muzzleTrans: {fileID: 1945884029350484865}
@@ -505,7 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gunListSource:
   - {fileID: 11400000, guid: 3adccb70f4cc41b45a52a2a5190bb330, type: 2}
-  - {fileID: 11400000, guid: 109a1b56cc99ceb49b1ac4a5942357a8, type: 2}
+  - {fileID: 11400000, guid: d84bdc65bdb724aaabf99cf28aa44dcc, type: 2}
   - {fileID: 11400000, guid: 833e73ec199af8b4687f542f1c8bb0a7, type: 2}
   - {fileID: 11400000, guid: 833e73ec199af8b4687f542f1c8bb0a7, type: 2}
   - {fileID: 11400000, guid: db11accbfe214be459958ee3e3e28240, type: 2}
@@ -516,7 +516,7 @@ MonoBehaviour:
   elevatedHitLayers:
     serializedVersion: 2
     m_Bits: 2097280
-  gunsAmmoInClips: 0a0000001e000000000000000000000000000000
+  gunsAmmoInClips: 0a0000000a000000000000000000000000000000
   reloadImageSr: {fileID: 0}
   accuracyHoningSpeed: 3
   gunList: []
@@ -530,10 +530,14 @@ MonoBehaviour:
   gunSights: {fileID: 0}
   currentAccuracy: 0
   gunsUnlocked: 0100000001
+  _nextLevelGunListSource:
+  - {fileID: 11400000, guid: b21483fb450a2418fb9a495d86876d04, type: 2}
+  - {fileID: 11400000, guid: 109a1b56cc99ceb49b1ac4a5942357a8, type: 2}
+  nextLevelGunList: []
   gunSR: {fileID: 3153391127943440466}
   flashlight1: {fileID: 2500059085168980692}
   bodyAnim: {fileID: 3219406156909584378}
-  gunsAmmo: 000000003c000000000000000000000000000000
+  gunsAmmo: 0000000014000000000000000000000000000000
   canShoot: 1
   isShooting: 0
   isAiming: 0
@@ -662,7 +666,7 @@ MonoBehaviour:
   painSoundCooldown: 0.3
   textFlyPoolName: TextFlyWorld_Health_Player
   textFlyHealthGainColor: {r: 0, g: 1, b: 0, a: 0.5019608}
-  textFlyHealthLossColor: {r: 1, g: 0, b: 1, a: 0.5019608}
+  textFlyHealthLossColor: {r: 1, g: 0, b: 0, a: 0.5019608}
   textFlyAlphaMax: 0.8
   corpseExplosionScaleFactor: 1
   hasDied: 0
@@ -1861,8 +1865,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segments: 50
   radius: 6
+  radiusStart: 0
   dotSize: 8
   startOn: 0
+  isRepairRange: 1
 --- !u!120 &8111755476465288849
 LineRenderer:
   serializedVersion: 2
@@ -2063,8 +2069,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segments: 50
   radius: 6
+  radiusStart: 0
   dotSize: 8
   startOn: 0
+  isRepairRange: 0
 --- !u!120 &1045197353815095862
 LineRenderer:
   serializedVersion: 2
@@ -7524,7 +7532,7 @@ MonoBehaviour:
   - {x: -0.21713921, y: -0.1723154, z: 0}
   m_ShapePathHash: 1677185479
   m_Mesh: {fileID: 0}
-  m_InstanceId: 413946
+  m_InstanceId: 262744
   m_LocalBounds:
     m_Center: {x: -0.076765835, y: -0.00025446713, z: 0}
     m_Extent: {x: 0.26141372, y: 0.17206094, z: 0}

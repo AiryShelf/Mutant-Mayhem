@@ -7,6 +7,7 @@ using UnityEngine.Rendering.Universal;
 public class PlayerShooter : Shooter
 {
     public List<bool> gunsUnlocked;
+    
     [SerializeField] SpriteRenderer gunSR;
     public Light2D flashlight1;
     [SerializeField] Animator bodyAnim;
@@ -22,6 +23,7 @@ public class PlayerShooter : Shooter
     public bool isRepairing;
     public bool isSwitchingGuns;
     public bool isMeleeing;
+    bool wasShooting;
     
     bool droppedGun;
     Rigidbody2D myRb;
@@ -43,7 +45,7 @@ public class PlayerShooter : Shooter
 
     protected override void Start()
     {
-        CopyGunList();
+        CopyGunLists();
         StartChargingGuns();
         SwitchGuns(0);
     }
@@ -211,6 +213,14 @@ public class PlayerShooter : Shooter
         onPlayerGunSwitched?.Invoke(i);
     }
 
+    public void UpgradeGun(int gunIndex)
+    {
+        gunList[gunIndex] = Instantiate(_nextLevelGunListSource[gunIndex]);
+        toolbarSelector.ResetBoxImage(gunIndex, gunList[gunIndex]);
+        if (currentGunIndex == gunIndex)
+            SwitchGuns(gunIndex);
+    }
+
     #endregion
 
     #region Shooting
@@ -237,7 +247,7 @@ public class PlayerShooter : Shooter
                         //animControllerPlayer.ReloadTrigger();
                     }
                     else
-                        MessageBanner.PulseMessage("Out of ammo!  Buy more at the Cube!", Color.red);
+                        MessageBanner.PulseMessage("Out of ammo!  Buy more at at tech building!", Color.red);
                 }
             }
             
@@ -249,18 +259,47 @@ public class PlayerShooter : Shooter
             return;
         }
 
-        if (isShooting && shootingCoroutine == null && !waitToShoot && 
-            isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
+        // Automatic vs Semi-Automatic handling
+        if (currentGunSO.isAutomatic)
         {
-            shootingCoroutine = StartCoroutine(ShootContinuously());
-            StartCoroutine(WaitToShoot());
-            waitToShoot = true;
+            // FULL-AUTO: hold trigger to keep firing
+            if (isShooting && shootingCoroutine == null && !waitToShoot &&
+                isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
+            {
+                shootingCoroutine = StartCoroutine(ShootContinuously());
+                StartCoroutine(WaitToShoot());
+                waitToShoot = true;
+            }
+            else if (!isShooting && shootingCoroutine != null)
+            {
+                // Stop auto-fire when trigger released
+                StopCoroutine(shootingCoroutine);
+                shootingCoroutine = null;
+            }
         }
-        else if (shootingCoroutine != null)
+        else
         {
-            StopCoroutine(shootingCoroutine);
-            shootingCoroutine = null;
+            // SEMI-AUTO: fire once per trigger pull
+            bool justPressed = isShooting && !wasShooting;
+
+            if (justPressed && !waitToShoot &&
+                isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
+            {
+                Fire();
+                StartCoroutine(WaitToShoot());
+                waitToShoot = true;
+            }
+
+            // Ensure no leftover coroutine from previous automatic gun
+            if (shootingCoroutine != null)
+            {
+                StopCoroutine(shootingCoroutine);
+                shootingCoroutine = null;
+            }
         }
+
+        // Track previous shooting state for semi-auto edge detection
+        wasShooting = isShooting;
     }
 
     protected override void Fire()

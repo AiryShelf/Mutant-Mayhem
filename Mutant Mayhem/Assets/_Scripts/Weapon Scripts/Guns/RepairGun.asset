@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: RepairGun
   m_EditorClassIdentifier: 
   gunType: 10
+  isAutomatic: 1
   bulletPoolName: BulletRepair
   uiName: Repair Gun
+  uiDescription: 
   sprite: {fileID: 21300000, guid: 2eb6dc60541c920449efa7ffcd7d740b, type: 3}
   uiSprite: {fileID: 21300000, guid: 33ba324b557c3494c96f3ba3bfee6981, type: 3}
   animatorHasString: hasPistol
@@ -23,7 +25,7 @@ MonoBehaviour:
   emptyClipPoolName: 
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: b0032bb18fd08ba4bbadc3c8ac1ec991, type: 3}
   laserSight: {fileID: 2462978180868395494, guid: 2103369fd556cec4084b6fc80a2c606f, type: 3}
-  muzzleLocalPos: {x: -0.052, y: -0.02}
+  muzzleLocalPos: {x: 0, y: -0.02}
   FXManagerCasingMethodName: PlayRepairCasing_Gun
   casingLocalPos: {x: 0.31, y: 0}
   muzzleFlashTime: 0.05

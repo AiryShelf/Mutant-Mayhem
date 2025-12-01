@@ -10,25 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a973bc44d767914408079356d9c621eb, type: 3}
-  m_Name: LaserPistol
+  m_Name: LaserRifle
   m_EditorClassIdentifier: 
   gunType: 0
-  isAutomatic: 0
+  isAutomatic: 1
   bulletPoolName: BulletLaser_Pistol
-  uiName: Laser Pistol
-  uiDescription: 'Gets a bit drippy...  I''m sure it''s fine
+  uiName: Laser Rifle
+  uiDescription: 'An automatic laser rifle.  Spits photons like no tomorrow
 
 
-    Press 1 to select'
-  sprite: {fileID: 21300000, guid: ea72f50661ead4b43ba21d0106f94813, type: 3}
-  uiSprite: {fileID: 21300000, guid: 4a3275a517110794da0275231cfee2e9, type: 3}
-  animatorHasString: hasPistol
+    Press
+    1 to select'
+  sprite: {fileID: 21300000, guid: e20c76df9a31c47198f805b099573d6c, type: 3}
+  uiSprite: {fileID: 21300000, guid: a25c327e8ba3a42e68f797db4653ebb1, type: 3}
+  animatorHasString: hasRifle
   reloadSounds: []
   selectedSound: {fileID: 11400000, guid: 650f8700c7f89b1478a0a9b7376652e6, type: 2}
   emptyClipPoolName: 
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: eea213e6abd7839408143e3d97f642c2, type: 3}
   laserSight: {fileID: 2462978180868395494, guid: 3f40e17835f1b42489fd08a045ee279c, type: 3}
-  muzzleLocalPos: {x: 0.1, y: -0.03}
+  muzzleLocalPos: {x: 0.95, y: -0.03}
   FXManagerCasingMethodName: PlayLaserCasing_Pistol
   casingLocalPos: {x: 0.31, y: 0}
   muzzleFlashTime: 0.06
@@ -38,12 +39,12 @@ MonoBehaviour:
   damageUpgFactor: 0.2
   knockback: 0
   knockbackUpgAmt: 0.1
-  clipSize: 20
+  clipSize: 30
   clipSizeUpgAmt: 5
-  chargeDelay: 0.583
-  chargeSpeedUpgNegAmt: -0.0292
-  shootSpeed: 0
-  shootSpeedUpgNegAmt: 0
+  chargeDelay: 0.2915
+  chargeSpeedUpgNegAmt: -0.0146
+  shootSpeed: 0.12
+  shootSpeedUpgNegAmt: -0.006
   accuracy: 8
   accuracyUpgNegAmt: -0.35
   firingAccuracyLoss: 2

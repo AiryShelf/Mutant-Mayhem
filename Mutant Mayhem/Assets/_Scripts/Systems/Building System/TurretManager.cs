@@ -94,16 +94,7 @@ public class TurretManager : MonoBehaviour
         {
             GameObject obj = kvp.Value;
             Shooter shooter = obj.GetComponentInChildren<Shooter>();
-            foreach (GunSO gun in shooter.gunList)
-            {
-                if (gun.gunType != gunType)
-                {
-                    break;
-                }
-
-                if (gun is TurretGunSO turretGun)
-                    UpgradeTurretGun(turretGun, upgType, level);                
-            }
+            
             // Refresh stats in shooter
             shooter.SwitchGuns(shooter.currentGunIndex);
             

@@ -14,8 +14,11 @@ public enum GunType
 public class GunSO : ScriptableObject
 {
     public GunType gunType;
+    public bool isAutomatic;
     public string bulletPoolName;
     public string uiName;
+    [Multiline()]
+    public string uiDescription;
 
     [Header("For Player")]
     public Sprite sprite;

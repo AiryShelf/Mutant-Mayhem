@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
 {
+    public int TurretManagerGunIndex;
     public float rotationSpeed;
     public float expansionDelay;
     [SerializeField] float expansionDist = 0.5f;
@@ -64,25 +65,27 @@ public class Turret : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
 
         TurretShooter turretShooter = (TurretShooter)shooter;
         turretShooter.player = player;
-        myGun = (TurretGunSO)shooter.gunList[0];
+        myGun = TurretManager.Instance.turretGunList[TurretManagerGunIndex];
+        turretShooter.gunList[0] = myGun;
+        turretShooter.SwitchGuns(0);
         
         // Initialize gun
-        foreach (TurretGunSO turretGun in TurretManager.Instance.turretGunList)
+        foreach (TurretGunSO managerGun in TurretManager.Instance.turretGunList)
         {
-            if (turretGun.uiName == shooter.gunList[0].uiName)
+            if (managerGun == myGun)
             {
-                myGun.damage = turretGun.damage;
-                myGun.knockback = turretGun.knockback;
-                myGun.clipSize = turretGun.clipSize;
-                myGun.chargeDelay = turretGun.chargeDelay;
-                myGun.shootSpeed = turretGun.shootSpeed;
-                myGun.accuracy = turretGun.accuracy;
-                myGun.bulletSpeed = turretGun.bulletSpeed;
-                myGun.bulletLifeTime = turretGun.bulletLifeTime;
-                myGun.rotationSpeed = turretGun.rotationSpeed;
-                myGun.detectRange = turretGun.detectRange;
-                myGun.expansionDelay = turretGun.expansionDelay;
-                myGun.reloadSpeed = turretGun.reloadSpeed;
+                myGun.damage = managerGun.damage;
+                myGun.knockback = managerGun.knockback;
+                myGun.clipSize = managerGun.clipSize;
+                myGun.chargeDelay = managerGun.chargeDelay;
+                myGun.shootSpeed = managerGun.shootSpeed;
+                myGun.accuracy = managerGun.accuracy;
+                myGun.bulletSpeed = managerGun.bulletSpeed;
+                myGun.bulletLifeTime = managerGun.bulletLifeTime;
+                myGun.rotationSpeed = managerGun.rotationSpeed;
+                myGun.detectRange = managerGun.detectRange;
+                myGun.expansionDelay = managerGun.expansionDelay;
+                myGun.reloadSpeed = managerGun.reloadSpeed;
                 break;
             }
         }

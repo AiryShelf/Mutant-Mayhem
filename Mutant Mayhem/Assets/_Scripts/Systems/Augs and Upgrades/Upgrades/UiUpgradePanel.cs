@@ -21,9 +21,6 @@ public class UiUpgradePanel : UI_PanelBase
     [SerializeField] protected CanvasGroup noPowerCanvasGroup;
     public bool hasPower = false;
 
-    [Header("Unlockables (Optional)")]
-    public string techUnlockMessageName;
-
     [Header("Unlock Gun")]
     [SerializeField] protected UpgradeFamily upgradeFamily;
     [SerializeField] protected int playerGunIndex;
@@ -147,9 +144,6 @@ public class UiUpgradePanel : UI_PanelBase
 
         if (playEffect)
         {
-            if (!string.IsNullOrEmpty(techUnlockMessageName))
-                MessageBanner.PulseMessage(techUnlockMessageName + " unlocked!", Color.green);
-
             UpgradeManager.Instance.upgradeEffects.PlayUnlockEffect(transform.position);
         }      
     }
@@ -163,9 +157,6 @@ public class UiUpgradePanel : UI_PanelBase
             //player.playerShooter.LockGun(playerGunIndex);
 
         ShowNoPowerPanel();
-
-        if (playEffect && !string.IsNullOrEmpty(techUnlockMessageName))
-            MessageBanner.PulseMessage(techUnlockMessageName + " locked!", Color.red);
     }
 
     public virtual void OpenPanel(PanelInteract interactSource)

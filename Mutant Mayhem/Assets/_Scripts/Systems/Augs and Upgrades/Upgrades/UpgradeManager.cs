@@ -193,6 +193,8 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgMaxLevels[ConsumablesUpgrade.BuyAttackDrone] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.SellConstructionDrone] = int.MaxValue;
         consumablesUpgMaxLevels[ConsumablesUpgrade.SellAttackDrone] = int.MaxValue;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.BuyBulletRifle] = 1;
+        consumablesUpgMaxLevels[ConsumablesUpgrade.BuyLaserRifle] = 1;
 
         // GunStats
         laserUpgMaxLevels[GunStatsUpgrade.GunDamage] = 100;
@@ -291,6 +293,8 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 2000;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SellConstructionDrone] = -400;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SellAttackDrone] = -1600;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyBulletRifle] = 10000;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyLaserRifle] = 8000;
 
         // Gun Stats
         laserUpgBaseCosts[GunStatsUpgrade.GunDamage] = 250;
@@ -433,6 +437,10 @@ public class UpgradeManager : MonoBehaviour
                 return new SellConstructionDroneUpgrade();
             case ConsumablesUpgrade.SellAttackDrone:
                 return new SellAttackDroneUpgrade();
+            case ConsumablesUpgrade.BuyBulletRifle:
+                return new BuyBulletRifleUpgrade();
+            case ConsumablesUpgrade.BuyLaserRifle:
+                return new BuyLaserRifleUpgrade();
 
             default:
                 return null;
@@ -666,6 +674,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         GunSO gun = playerShooter.gunList[gunIndex];
+        GunSO nextLevelGun = playerShooter.nextLevelGunList[gunIndex];
         Dictionary<GunStatsUpgrade, int> gunUpgLevels;
         Dictionary<GunStatsUpgrade, int> gunUpgMaxLevels;
         Dictionary<GunStatsUpgrade, int> gunUpgCurrCosts;
@@ -714,6 +723,7 @@ public class UpgradeManager : MonoBehaviour
             gunUpgLevels[upgType]++;
 
             upgrade.Apply(gun, gunUpgLevels[upgType]);
+            upgrade.Apply(nextLevelGun, gunUpgLevels[upgType]);
             upgradeEffects.PlayUpgradeButtonEffect();
 
             if (upgType == GunStatsUpgrade.GunRange && gunIndex == 4) // Repair gun

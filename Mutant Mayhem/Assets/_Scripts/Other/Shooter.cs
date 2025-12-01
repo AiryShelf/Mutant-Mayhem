@@ -6,6 +6,8 @@ using UnityEngine.Rendering.Universal;
 public class Shooter : MonoBehaviour
 {
     public List<GunSO> _gunListSource;
+    [SerializeField] protected List<GunSO> _nextLevelGunListSource;
+    public List<GunSO> nextLevelGunList = new List<GunSO>();
     
     [SerializeField] protected Transform gunTrans;
     public Transform muzzleTrans;
@@ -138,7 +140,7 @@ public class Shooter : MonoBehaviour
 
     public void Initialize()
     {
-        CopyGunList();
+        CopyGunLists();
         ApplyPlanetProperties();
 
         // Initialize first gun
@@ -153,9 +155,10 @@ public class Shooter : MonoBehaviour
 
     #region Initialize
 
-    protected void CopyGunList()
+    protected void CopyGunLists()
     {
         gunList.Clear();
+        nextLevelGunList.Clear();
 
         // Make a working copy of the gun list
         foreach (GunSO gun in _gunListSource)
@@ -164,6 +167,15 @@ public class Shooter : MonoBehaviour
             {
                 GunSO g = Instantiate(gun);
                 gunList.Add(g);
+            }
+        }
+
+        foreach (GunSO gun in _nextLevelGunListSource)
+        {
+            if (gun != null)
+            {
+                GunSO g = Instantiate(gun);
+                nextLevelGunList.Add(g);
             }
         }
     }

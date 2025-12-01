@@ -19,7 +19,6 @@ public class OptionsPanel : MonoBehaviour
 
     void OnEnable()
     {
-        // CHANGED: Use method groups matching UnityEvent signatures.
         qualityDropdown.onValueChanged.AddListener(QualityValueChanged);
         vSyncToggle.onValueChanged.AddListener(ToggleVSync);
         analyticsToggle.onValueChanged.AddListener(ToggleAnalytics);

@@ -78,6 +78,12 @@ public static class UpgStatGetter
             case ConsumablesUpgrade.SellAttackDrone:
                 stat = DroneManager.Instance.activeAttackDrones.Count.ToString();
                 return stat;
+            case ConsumablesUpgrade.BuyBulletRifle:
+                stat = UpgradeManager.Instance.consumablesUpgLevels[ConsumablesUpgrade.BuyBulletRifle].ToString();
+                return stat;
+            case ConsumablesUpgrade.BuyLaserRifle:
+                stat = UpgradeManager.Instance.consumablesUpgLevels[ConsumablesUpgrade.BuyLaserRifle].ToString();
+                return stat;
         }
 
         return stat;
@@ -256,6 +262,12 @@ public static class UpgStatGetter
             case ConsumablesUpgrade.SellAttackDrone:
                 amount = "-" + SellAttackDroneUpgrade.Amount.ToString();
                 return amount;
+            case ConsumablesUpgrade.BuyBulletRifle:
+                amount = "+" + 1.ToString();
+                return amount;
+            case ConsumablesUpgrade.BuyLaserRifle:
+                amount = "+" + 1.ToString();
+                return amount;
         }
 
         return amount;
@@ -388,6 +400,12 @@ public static class UpgStatGetter
                 return cost;
             case ConsumablesUpgrade.SellAttackDrone:
                 cost = SellAttackDroneUpgrade.GetCost(upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+            case ConsumablesUpgrade.BuyBulletRifle:
+                cost = BuyBulletRifleUpgrade.GetCost(upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
+                return cost;
+            case ConsumablesUpgrade.BuyLaserRifle:
+                cost = BuyLaserRifleUpgrade.GetCost(upgradeManager.consumablesUpgBaseCosts[consumablesUpgrade]);
                 return cost;
         }
 

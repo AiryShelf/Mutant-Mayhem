@@ -25,6 +25,7 @@ public class ToolbarSelector : MonoBehaviour
         SwitchBoxes(0);
 
         player.playerShooter.onPlayerGunSwitched += SwitchBoxes;
+        UpdateTootips();
     }
 
     void OnDestroy()
@@ -54,6 +55,30 @@ public class ToolbarSelector : MonoBehaviour
 
         Image glow = unlockGlowImages[i];
         StartCoroutine(PlayUnlockAnimation(glow, new Vector2(0, 100), 4f, 1.2f));
+    }
+
+    public void ResetBoxImage(int i, GunSO newGun)
+    {
+        gunImages[i].sprite = newGun.uiSprite;
+        gunImages[i].color = new Color(1, 1, 1, 1);
+        UpdateTootips();
+    }
+
+    void UpdateTootips()
+    {
+        for (int i = 0; i < boxImages.Count; i++)
+        {
+            TooltipTrigger trigger = boxImages[i].GetComponent<TooltipTrigger>();
+            if (trigger != null)
+            {
+                GunSO gun = player.playerShooter.gunList[i];
+                if (gun != null)
+                {
+                    trigger.header = gun.uiName;
+                    trigger.content = gun.uiDescription;
+                }
+            }
+        }
     }
 
     public void LockBoxImage(int i)

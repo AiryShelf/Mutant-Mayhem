@@ -162,13 +162,13 @@ public class ParticleManager : MonoBehaviour
         if (QualityManager.CurrentQualityLevel == QualityLevel.VeryLow) return;
         
         SetPositionAndRotation(bulletBlood, hitPos, hitDir);
-        //bulletBlood.Emit(6);
+        bulletBlood.Emit(6);
         SetPositionAndRotation(bloodSpray, hitPos, hitDir);
         bloodSpray.Emit(20);
         SetPositionAndRotation(bulletBloodFling, hitPos, hitDir);
-        //bulletBloodFling.Emit(7);
+        bulletBloodFling.Emit(7);
         SetPositionAndRotation(bulletBloodEntry, hitPos, hitDir);
-        //bulletBloodEntry.Emit(4);
+        bulletBloodEntry.Emit(4);
     }
 
     #endregion
@@ -288,7 +288,7 @@ public class ParticleManager : MonoBehaviour
 
         //Debug.Log("MeleeBlood played");
         SetPositionAndRotation(meleeBlood, hitPos, hitDir);
-        //meleeBlood.Emit(11);
+        meleeBlood.Emit(11);
         SetPositionAndRotation(bloodSpray, hitPos, hitDir);
         bloodSpray.Emit(20);
     }

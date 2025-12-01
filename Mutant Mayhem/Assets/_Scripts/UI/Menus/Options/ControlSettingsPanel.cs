@@ -11,7 +11,7 @@ public class ControlSettingsPanel : MonoBehaviour
     [SerializeField] Toggle fastJoystickAimToggle;
     [SerializeField] Slider joystickCursorSpeedSlider;
     [SerializeField] Slider cursorAccelerationSlider;
-    [SerializeField] Toggle spacebarToggle;
+    //[SerializeField] Toggle spacebarToggle;
 
     void OnEnable()
     {
@@ -20,7 +20,7 @@ public class ControlSettingsPanel : MonoBehaviour
         fastJoystickAimToggle.onValueChanged.AddListener(FastJoystickAimToggle);
         joystickCursorSpeedSlider.onValueChanged.AddListener(JoystickCursorSpeedChanged);
         cursorAccelerationSlider.onValueChanged.AddListener(CursorAccelerationChanged);
-        spacebarToggle.onValueChanged.AddListener(ToggleSpacebar);
+        //spacebarToggle.onValueChanged.AddListener(ToggleSpacebar);
 
         //Initialize();
     }
@@ -32,7 +32,7 @@ public class ControlSettingsPanel : MonoBehaviour
         fastJoystickAimToggle.onValueChanged.RemoveListener(FastJoystickAimToggle);
         joystickCursorSpeedSlider.onValueChanged.RemoveListener(JoystickCursorSpeedChanged);
         cursorAccelerationSlider.onValueChanged.RemoveListener(CursorAccelerationChanged);
-        spacebarToggle.onValueChanged.RemoveListener(ToggleSpacebar);
+        //spacebarToggle.onValueChanged.RemoveListener(ToggleSpacebar);
     }
 
     void Start()
@@ -48,7 +48,7 @@ public class ControlSettingsPanel : MonoBehaviour
             PlayerProfile profile = ProfileManager.Instance.currentProfile;
 
             movementTypeDropdown.SetValueWithoutNotify(profile.isStandardWASD ? 1 : 0);
-            spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
+            //spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
             fastJoystickAimToggle.SetIsOnWithoutNotify(profile.isFastJoystickAimEnabled);
 
             float sliderValue = Mathf.InverseLerp(
@@ -68,7 +68,7 @@ public class ControlSettingsPanel : MonoBehaviour
         else
         {
             movementTypeDropdown.SetValueWithoutNotify(1); // Default to standard WASD
-            spacebarToggle.SetIsOnWithoutNotify(true);
+            //spacebarToggle.SetIsOnWithoutNotify(true);
             fastJoystickAimToggle.SetIsOnWithoutNotify(false);
             joystickCursorSpeedSlider.SetValueWithoutNotify(0.5f);
             cursorAccelerationSlider.SetValueWithoutNotify(0.5f);

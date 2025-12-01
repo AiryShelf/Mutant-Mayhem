@@ -1241,8 +1241,7 @@ public class TileManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("nextPos was already taken in dict when " +
-                                "adding extra tiles to large tile");
+                    Debug.Log("nextPos was already taken in dict when adding extra tiles to large tile");
                     return false;
                 }
             }
@@ -1297,7 +1296,7 @@ public class TileManager : MonoBehaviour
         if (tileObj != null)
         {
             tileObj.transform.rotation = Quaternion.Euler(0, 0, angleDegrees);
-            Debug.Log("TileObj rotation set to: " + angleDegrees);
+            //Debug.Log("TileObj rotation set to: " + angleDegrees);
         }
         else 
         {

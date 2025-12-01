@@ -47,7 +47,9 @@ public enum ConsumablesUpgrade
     BuyConstructionDrone,
     BuyAttackDrone,
     SellConstructionDrone,
-    SellAttackDrone
+    SellAttackDrone,
+    BuyBulletRifle,
+    BuyLaserRifle
 }
 
 public enum GunStatsUpgrade
@@ -595,6 +597,39 @@ public class SellAttackDroneUpgrade : Upgrade
         return baseCost;
     }
 }
+
+public class BuyBulletRifleUpgrade : Upgrade
+{
+    public BuyBulletRifleUpgrade() : base(ConsumablesUpgrade.BuyBulletRifle) { }
+
+    public override bool Apply(PlayerStats playerStats)
+    {
+        playerStats.playerShooter.UpgradeGun(1); // Bullets are index 1
+        return true;
+    }
+
+    public static int GetCost(int baseCost)
+    {
+        return baseCost;
+    }
+}
+
+public class BuyLaserRifleUpgrade : Upgrade
+{
+    public BuyLaserRifleUpgrade() : base(ConsumablesUpgrade.BuyLaserRifle) { }
+
+    public override bool Apply(PlayerStats playerStats)
+    {
+        playerStats.playerShooter.UpgradeGun(0); // Lasers are index 0
+        return true;
+    }
+
+    public static int GetCost(int baseCost)
+    {
+        return baseCost;
+    }
+}
+
 
 #endregion
 
