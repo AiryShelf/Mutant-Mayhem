@@ -108,6 +108,12 @@ public class PowerManager : MonoBehaviour
 
         cutPowerCoroutine = StartCoroutine(CutConsumers());
 
+        StartCoroutine(DelayPowerOn(consumer));
+    }
+
+    IEnumerator DelayPowerOn(PowerConsumer consumer)
+    {
+        yield return new WaitForFixedUpdate();
         consumer.PowerOn();
     }
 

@@ -578,10 +578,12 @@ public class BuildingSystem : MonoBehaviour
             PlayerCredits -= Mathf.FloorToInt(structureInHand.tileCost * structureCostMult);
             //RemoveBuildHighlight();
 
+            // Move the Build Menu selection since buildOnlyOne structures are removed from the list
             if (structureInHand.canBuildOnlyOne)
             {
-                buildMenuController.ScrollUp();
                 buildOnlyOneList.Add(structureInHand);
+                buildMenuController.ScrollUp();
+                buildMenuController.SelectHighlightedStructure();
             }
         }
     }

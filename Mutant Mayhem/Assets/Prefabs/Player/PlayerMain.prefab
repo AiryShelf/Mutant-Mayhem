@@ -509,6 +509,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 833e73ec199af8b4687f542f1c8bb0a7, type: 2}
   - {fileID: 11400000, guid: 833e73ec199af8b4687f542f1c8bb0a7, type: 2}
   - {fileID: 11400000, guid: db11accbfe214be459958ee3e3e28240, type: 2}
+  _nextLevelGunListSource:
+  - {fileID: 11400000, guid: b21483fb450a2418fb9a495d86876d04, type: 2}
+  - {fileID: 11400000, guid: 109a1b56cc99ceb49b1ac4a5942357a8, type: 2}
+  nextLevelGunList: []
   gunTrans: {fileID: 4030318758649317174}
   muzzleTrans: {fileID: 1945884029350484865}
   casingEjectorTrans: {fileID: 3041975172848583705}
@@ -516,7 +520,7 @@ MonoBehaviour:
   elevatedHitLayers:
     serializedVersion: 2
     m_Bits: 2097280
-  gunsAmmoInClips: 0a0000000a000000000000000000000000000000
+  gunsAmmoInClips: 0a0000000c000000000000000000000000000000
   reloadImageSr: {fileID: 0}
   accuracyHoningSpeed: 3
   gunList: []
@@ -530,14 +534,10 @@ MonoBehaviour:
   gunSights: {fileID: 0}
   currentAccuracy: 0
   gunsUnlocked: 0100000001
-  _nextLevelGunListSource:
-  - {fileID: 11400000, guid: b21483fb450a2418fb9a495d86876d04, type: 2}
-  - {fileID: 11400000, guid: 109a1b56cc99ceb49b1ac4a5942357a8, type: 2}
-  nextLevelGunList: []
   gunSR: {fileID: 3153391127943440466}
   flashlight1: {fileID: 2500059085168980692}
   bodyAnim: {fileID: 3219406156909584378}
-  gunsAmmo: 0000000014000000000000000000000000000000
+  gunsAmmo: 0000000018000000000000000000000000000000
   canShoot: 1
   isShooting: 0
   isAiming: 0

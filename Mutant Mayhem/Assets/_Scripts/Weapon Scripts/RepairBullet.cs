@@ -51,20 +51,21 @@ public class RepairBullet : Bullet
         Vector3 startPosition = transform.position;
         Vector2 hitDir = (target - (Vector2)startPosition).normalized;
 
-        float distanceTravelled = 0;
-        while (distanceTravelled < travelDistance)
+        // Wait until the bullet has traveled the required distance
+        float distanceTravelledSqr = 0;
+        while (distanceTravelledSqr < travelDistance * travelDistance)
         {
-            distanceTravelled = Vector3.Distance(startPosition, transform.position);
+            distanceTravelledSqr = Vector3.SqrMagnitude(startPosition - transform.position);
             yield return new WaitForEndOfFrame();
         }
 
         // Lock to target pos to avoid missses
         transform.position = target;
 
-        
+        // Build bluprint or repair structure at target
         if (!tileManager.CheckTileFullHealth(transform.position))
         {
-            // Build blueprint
+            // Build bluprint
             bool isBlueprint = false;
             if (tileManager.IsTileBlueprint(target))
             {
@@ -83,7 +84,7 @@ public class RepairBullet : Bullet
                 tileManager.BuildBlueprintAt(target, -damage, 1.3f, hitDir);
             }
             
-            // Repair, but not Razor Wire
+            // Or, repair, but not Razor Wire
             bool isRepairable = tileManager.GetStructureAt(target).structureType != StructureType.RazorWire;
             if (!isBlueprint && isRepairable)
             {
@@ -101,6 +102,7 @@ public class RepairBullet : Bullet
                 }
             }
 
+            // Play effects and sound
             if (isRepairable || isBlueprint) 
             {
                 ParticleManager.Instance.PlayRepairEffect(target, transform.right);

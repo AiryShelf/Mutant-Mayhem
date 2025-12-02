@@ -215,10 +215,16 @@ public class PlayerShooter : Shooter
 
     public void UpgradeGun(int gunIndex)
     {
+        // Remove old gun animator bool the determines if holding pistol or rifle
+        if (currentGunIndex == gunIndex)
+            bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
+
         gunList[gunIndex] = Instantiate(_nextLevelGunListSource[gunIndex]);
         toolbarSelector.ResetBoxImage(gunIndex, gunList[gunIndex]);
+
+        // Reapply animator bool for new gun
         if (currentGunIndex == gunIndex)
-            SwitchGuns(gunIndex);
+            player.animControllerPlayer.SwitchGunsStart(gunIndex, false);
     }
 
     #endregion

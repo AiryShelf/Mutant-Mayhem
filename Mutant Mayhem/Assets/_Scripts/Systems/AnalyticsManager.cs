@@ -496,7 +496,7 @@ public class AnalyticsManager : MonoBehaviour
     {
         if (SettingsManager.Instance != null)
         {
-            evt.Add("setting_use_instant_joystick_aim", SettingsManager.Instance.useInstantJoystickAim);
+            evt.Add("setting_use_fast_joystick_aim", SettingsManager.Instance.useInstantJoystickAim);
             evt.Add("setting_use_standard_wasd", SettingsManager.Instance.useStandardWASD);
             evt.Add("setting_joystick_cursor_speed", SettingsManager.Instance.joystickCursorSpeed);
             evt.Add("setting_joystick_accel_speed", SettingsManager.Instance.joystickAccelSpeed);

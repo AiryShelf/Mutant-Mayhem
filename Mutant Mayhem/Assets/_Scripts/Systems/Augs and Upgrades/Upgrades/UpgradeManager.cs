@@ -293,7 +293,7 @@ public class UpgradeManager : MonoBehaviour
         consumablesUpgBaseCosts[ConsumablesUpgrade.BuyAttackDrone] = 2000;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SellConstructionDrone] = -400;
         consumablesUpgBaseCosts[ConsumablesUpgrade.SellAttackDrone] = -1600;
-        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyBulletRifle] = 10000;
+        consumablesUpgBaseCosts[ConsumablesUpgrade.BuyBulletRifle] = 12000;
         consumablesUpgBaseCosts[ConsumablesUpgrade.BuyLaserRifle] = 8000;
 
         // Gun Stats

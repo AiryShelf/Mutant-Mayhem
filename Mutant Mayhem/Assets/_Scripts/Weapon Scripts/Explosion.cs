@@ -57,11 +57,14 @@ public class Explosion : MonoBehaviour
 
     IEnumerator Explode()
     {
-        tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)
         {
-            Debug.LogError("Explosion could not find TileManager in scene");
-            yield break;
+            tileManager = TileManager.Instance;
+            if (tileManager == null)
+            {
+                Debug.LogError("Explosion could not find TileManager, Instance is null");
+                yield break;
+            }
         }
 
         yield return null;
@@ -179,10 +182,11 @@ public class Explosion : MonoBehaviour
             Vector2 tileCenter = tileManager.GridCenterToWorld(tilePos);
             Vector3 worldPos = tileManager.GridToWorld(tilePos);
 
+            var structure = tileManager.GetStructureAt(worldPos);
             // Hit structures with no collider, such as Razor Wire
             if (!tileManager.IsTileBlueprint(worldPos) &&
                 !tileManager.CheckGridIsClear(tilePos, LayerMask.GetMask("Structures"), true) &&
-                tileManager.GetStructureAt(worldPos).structureType != StructureType.Mine)
+                structure?.structureType != StructureType.Mine)
             {
                 
                 float distToPoint = Vector2.Distance(explosionPos, worldPos);

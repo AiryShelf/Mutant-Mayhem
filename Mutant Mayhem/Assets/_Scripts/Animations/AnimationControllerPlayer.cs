@@ -20,6 +20,7 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     bool isBuilding;
     bool isMeleeing;
+    bool isMeleeInput;
     bool isFireInput;
     bool isThrowInput;
     bool hasMeleeStamina;
@@ -63,21 +64,8 @@ public class AnimationControllerPlayer : MonoBehaviour
         escapeAction = uIActionMap.FindAction("Escape"); 
 
         // Reset
-        //SceneManager.sceneLoaded -= OnSceneLoaded;
-            
-
-        //SceneManager.sceneLoaded += OnSceneLoaded;
-        // Lambda expression seperates the input parameters 
-        // on left from the lambda body on the right.
-        // It allows to subscribe methods which contain parameters.
-        // moveAction.performed += ctx => IsMoveInput(true);
-
-        // AAAnnd then I found out I couldn't get the lambda abstract
-        // method to go away so switch to named methods
         buildAction.performed += BuildInput_Toggle;
-        //buildAction.canceled += BuildInput_Toggle;
         moveAction.performed += MoveInput_Performed;
-        // moveAction.canceled += ctx => 
         meleeAction.performed += MeleeInput_Performed;
         meleeAction.canceled += MeleeInput_Cancelled;
         fireAction.performed += FireInput_Performed;
@@ -96,9 +84,7 @@ public class AnimationControllerPlayer : MonoBehaviour
         //SceneManager.sceneLoaded -= OnSceneLoaded;
 
         buildAction.performed -= BuildInput_Toggle;
-        //buildAction.canceled -= BuildInput_Toggle;
         moveAction.performed -= MoveInput_Performed;
-        //moveAction.canceled -= Move;
         meleeAction.performed -= MeleeInput_Performed;
         meleeAction.canceled -= MeleeInput_Cancelled;
         fireAction.performed -= FireInput_Performed;
@@ -108,14 +94,6 @@ public class AnimationControllerPlayer : MonoBehaviour
         reloadAction.performed -= IsReloadInput;
 
         escapeAction.started -= OnEscapePressed;
-    }
-
-    void Update()
-    {
-        // Inserted below
-        //AnimatorStateInfo bodyState = bodyAnim.GetCurrentAnimatorStateInfo(0);
-        //float bodyNormalizedTime = bodyState.normalizedTime;
-        //feetAnim.Play("Idle_Walk_Run BLEND TREE", 0, bodyNormalizedTime);
     }
 
     void FixedUpdate()
@@ -157,15 +135,19 @@ public class AnimationControllerPlayer : MonoBehaviour
         isBuilding = bodyAnim.GetBool("isBuilding");
         // Might need check for reload animations, SMG got stuck again.
         
+        // Melee checks
         if (!hasMeleeStamina) 
         {
             bodyAnim.SetBool("isMeleeing", false);
             isMeleeing = false;
         }
-        else
+        else if (hasMeleeStamina && isMeleeInput)
         {
-            isMeleeing = bodyAnim.GetBool("isMeleeing");
+            bodyAnim.SetBool("isMeleeing", true);
+            isMeleeing = true;
         }
+        else
+            isMeleeing = bodyAnim.GetBool("isMeleeing");
 
         if (isBuilding)
         {
@@ -251,25 +233,6 @@ public class AnimationControllerPlayer : MonoBehaviour
         {
             bodyAnim.speed = animSpeedFactor * Time.fixedDeltaTime
                              * player.stats.reloadFactor;
-        }
-
-        // Apply melee attack speed upgrade multiplier, might not use this
-        /*
-        if (state.IsTag("Melee"))
-        {
-            bodyAnim.speed = animSpeedFactor * Time.deltaTime
-                             * player.stats.meleeSpeedFactor;
-        }
-        */
-
-        // Set extra gun collider for walls
-        if ((!isMotion && !bodyAnim.GetBool("isAiming")) || isBuilding)
-        {
-            //player.gunCollider.enabled = false;
-        }
-        else
-        {
-            //player.gunCollider.enabled = true;
         }
     }
 
@@ -445,6 +408,7 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void MeleeInput_Performed(InputAction.CallbackContext context)
     {
+        isMeleeInput = true;
         if (hasMeleeStamina && !throwAnimPlaying)
         {
             if (playerShooter.isBuilding)
@@ -460,6 +424,7 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void MeleeInput_Cancelled(InputAction.CallbackContext context)
     {
+        isMeleeInput = false;
         bodyAnim.SetBool("isMeleeing", false);
         bodyAnim.SetBool("isAiming", true);
         if (waitToLowerWeaponCoroutine == null)
@@ -513,9 +478,9 @@ public class AnimationControllerPlayer : MonoBehaviour
         }       
     }
 
-    public bool SwitchGunsStart(int index)
+    public bool SwitchGunsStart(int index, bool fromToolbar = true)
     {
-        if (index == playerShooter.currentGunIndex)
+        if (fromToolbar && index == playerShooter.currentGunIndex)
         {
             MessageBanner.PulseMessage("Weapon already selected!", Color.yellow);
             return false;

@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: DroneGun RepairGun
   m_EditorClassIdentifier: 
   gunType: 10
+  isAutomatic: 0
   bulletPoolName: BulletRepair_Drone
   uiName: Drone Repair Gun
+  uiDescription: 
   sprite: {fileID: 0}
   uiSprite: {fileID: 0}
   animatorHasString: 
@@ -29,7 +31,7 @@ MonoBehaviour:
   muzzleFlashTime: 0.05
   recoilAmount: {x: 0, y: 0}
   damage: -25
-  damageVariance: 0.1
+  damageVariance: 0
   damageUpgFactor: -2.5
   knockback: 0
   knockbackUpgAmt: 0

@@ -164,7 +164,15 @@ public class WaveController : MonoBehaviour
             yield return new WaitForSeconds(1);
             countdown--;
 
-            if (countdown <= 10)
+            if (countdown == 15)
+            {
+                MessageBanner.PulseMessage(Mathf.CeilToInt(countdown) + $" seconds until night {currentWaveIndex + 1}!", Color.red);
+            }
+            else if (countdown == 10)
+            {
+                MessageBanner.PulseMessage(Mathf.CeilToInt(countdown) + $" seconds until night {currentWaveIndex + 1}!", Color.red);
+            }
+            else if (countdown == 5)
             {
                 MessageBanner.PulseMessage(Mathf.CeilToInt(countdown) + $" seconds until night {currentWaveIndex + 1}!", Color.red);
             }

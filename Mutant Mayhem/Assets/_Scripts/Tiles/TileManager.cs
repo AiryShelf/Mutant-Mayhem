@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class TileStats
 {   
@@ -73,7 +74,7 @@ public class TileManager : MonoBehaviour
         {
             if (_shadowCaster2DTileMap == null)
             {
-                _shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
+                _shadowCaster2DTileMap = ShadowCaster2DTileMap.Instance;
                 if (_shadowCaster2DTileMap == null)
                 {
                     Debug.LogError("ShadowCaster2DTileMap is not found in the scene.");
@@ -97,15 +98,12 @@ public class TileManager : MonoBehaviour
 
         player = FindObjectOfType<Player>();
         playerOnlyMask = LayerMask.GetMask("PlayerOnly");
-        buildingSystem = FindObjectOfType<BuildingSystem>();
-        turretManager = FindObjectOfType<TurretManager>();
+        buildingSystem = BuildingSystem.Instance;
+        turretManager = TurretManager.Instance;
         StructureTilemap = GameObject.Find("StructureTilemap").GetComponent<Tilemap>();
         AnimatedTilemap = GameObject.Find("AnimatedTilemap").GetComponent<Tilemap>();
         BlueprintTilemap = GameObject.Find("BlueprintTilemap").GetComponent<Tilemap>();
         destroyedTilemap = GameObject.Find("DestroyedTilemap").GetComponent<Tilemap>();
-        //if (!ReadTilemapToDict())
-            //Debug.LogError("Error when trying to read the starting tilemap to dict");
-        //shadowCaster2DTileMap = FindObjectOfType<ShadowCaster2DTileMap>();
     }
 
     void OnDisable()
@@ -685,10 +683,10 @@ public class TileManager : MonoBehaviour
             Vector2 centerWorld = GridCenterToWorld(rootPos);
 
             // allocation-free overlap using ContactFilter2D + preallocated buffer
+            // We want to detect any ITileObject at this cell, regardless of layer.
             filterTemp.NoFilter();
-            filterTemp.useLayerMask = playerOnlyMask != 0;
-            if (filterTemp.useLayerMask) filterTemp.SetLayerMask(playerOnlyMask);
-            filterTemp.useTriggers = true; // allow trigger panels/objects
+            filterTemp.useLayerMask = false;     // no layer restriction
+            filterTemp.useTriggers = true;       // allow trigger panels/objects
             int hitCount = Physics2D.OverlapPoint(centerWorld, filterTemp, _tileColsBuffer);
 
             float ratio = _TileStatsDict[rootPos].health / _TileStatsDict[rootPos].maxHealth;
@@ -699,26 +697,36 @@ public class TileManager : MonoBehaviour
                 var col = _tileColsBuffer[i];
 
                 // Scan behaviours on this object
-                ITileObject found = null;
+                ITileObject objFound = null;
                 var behaviours = col.GetComponents<MonoBehaviour>();
                 for (int b = 0; b < behaviours.Length; b++)
                 {
-                    if (behaviours[b] is ITileObject it) { found = it; break; }
+                    if (behaviours[b] is ITileObject it) { objFound = it; break; }
                 }
 
                 // If not found, scan children (including inactive)
-                if (found == null)
+                if (objFound == null)
                 {
                     behaviours = col.GetComponentsInChildren<MonoBehaviour>(true);
                     for (int b = 0; b < behaviours.Length; b++)
                     {
-                        if (behaviours[b] is ITileObject it) { found = it; break; }
+                        if (behaviours[b] is ITileObject it) { objFound = it; break; }
                     }
                 }
 
-                if (found != null)
+                // Scan parent objects as well
+                if (objFound == null)
                 {
-                    found.UpdateHealthRatio(ratio);
+                    behaviours = col.GetComponentsInParent<MonoBehaviour>(true);
+                    for (int b = 0; b < behaviours.Length; b++)
+                    {
+                        if (behaviours[b] is ITileObject it) { objFound = it; break; }
+                    }
+                }
+
+                if (objFound != null)
+                {
+                    objFound.UpdateHealthRatio(ratio);
                     updated = true;
                 }
             }

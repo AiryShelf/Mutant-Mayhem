@@ -175,6 +175,14 @@ public class UIBuildMenuController : MonoBehaviour
         return false;
     }
 
+    public void SelectHighlightedStructure()
+    {
+        if (currentIndex < 0 || currentIndex >= uiStructureList.Count)
+            return;
+
+        uiStructureList[currentIndex].TryToSelect(true);
+    }
+
     #endregion
 
     #region Scroll

@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: TurretGun SMG
   m_EditorClassIdentifier: 
   gunType: 1
+  isAutomatic: 0
   bulletPoolName: BulletGun_Turret
   uiName: Gun Turret
+  uiDescription: 
   sprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   uiSprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   animatorHasString: 
@@ -28,7 +30,7 @@ MonoBehaviour:
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
   recoilAmount: {x: 0, y: 0}
-  damage: 31
+  damage: 32
   damageVariance: 0.15
   damageUpgFactor: 0.2
   knockback: 30

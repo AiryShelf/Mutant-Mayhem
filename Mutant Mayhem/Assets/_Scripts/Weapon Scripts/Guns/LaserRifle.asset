@@ -19,8 +19,11 @@ MonoBehaviour:
   uiDescription: 'An automatic laser rifle.  Spits photons like no tomorrow
 
 
-    Press
-    1 to select'
+    Charges
+    twice as fast as the Laser Pistol
+
+
+    Press ''1'' to select'
   sprite: {fileID: 21300000, guid: e20c76df9a31c47198f805b099573d6c, type: 3}
   uiSprite: {fileID: 21300000, guid: a25c327e8ba3a42e68f797db4653ebb1, type: 3}
   animatorHasString: hasRifle
@@ -34,22 +37,22 @@ MonoBehaviour:
   casingLocalPos: {x: 0.31, y: 0}
   muzzleFlashTime: 0.06
   recoilAmount: {x: -0.15, y: 0}
-  damage: 23
-  damageVariance: 0.2
+  damage: 27.6
+  damageVariance: 0.15
   damageUpgFactor: 0.2
   knockback: 0
   knockbackUpgAmt: 0.1
-  clipSize: 30
-  clipSizeUpgAmt: 5
+  clipSize: 32
+  clipSizeUpgAmt: 3
   chargeDelay: 0.2915
   chargeSpeedUpgNegAmt: -0.0146
   shootSpeed: 0.12
   shootSpeedUpgNegAmt: -0.006
   accuracy: 8
   accuracyUpgNegAmt: -0.35
-  firingAccuracyLoss: 2
+  firingAccuracyLoss: 1.5
   bulletSpeed: 80
-  bulletLifeTime: 0.17
+  bulletLifeTime: 0.22
   bulletRangeUpgAmt: 0.02
   kickback: 0
   kickbackUpgNegAmt: 0

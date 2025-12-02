@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: DroneGun Laser
   m_EditorClassIdentifier: 
   gunType: 0
+  isAutomatic: 0
   bulletPoolName: BulletLaser_Drone
   uiName: Drone Laser
+  uiDescription: 
   sprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   uiSprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   animatorHasString: 
@@ -33,8 +35,8 @@ MonoBehaviour:
   damageUpgFactor: 0.1
   knockback: 0
   knockbackUpgAmt: 0.05
-  clipSize: 20
-  clipSizeUpgAmt: 5
+  clipSize: 16
+  clipSizeUpgAmt: 2
   chargeDelay: 0.888
   chargeSpeedUpgNegAmt: -0.04
   shootSpeed: 0.5

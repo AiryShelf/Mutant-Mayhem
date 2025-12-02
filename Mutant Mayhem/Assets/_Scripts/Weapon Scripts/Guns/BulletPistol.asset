@@ -15,12 +15,12 @@ MonoBehaviour:
   gunType: 1
   isAutomatic: 0
   bulletPoolName: BulletGun_SMG
-  uiName: Pistol
+  uiName: Old-Era Pistol
   uiDescription: 'An old-era pistol.  Nothing more reliable than solid mass and momentun
 
 
     Press
-    2 to select'
+    ''2'' to select and ''R'' to reload'
   sprite: {fileID: 21300000, guid: ff4f6bacc3c796945b57caaee5f56a72, type: 3}
   uiSprite: {fileID: 21300000, guid: 45a424897cab14d9cbb9c0ffa177d2e2, type: 3}
   animatorHasString: hasPistol
@@ -35,16 +35,16 @@ MonoBehaviour:
   laserSight: {fileID: 2462978180868395494, guid: 41b102ce7ec0f7146812cbad1b3d0901, type: 3}
   muzzleLocalPos: {x: 0.1, y: -0.03}
   FXManagerCasingMethodName: PlayBulletCasingFly_SMG
-  casingLocalPos: {x: 0, y: 0}
+  casingLocalPos: {x: 0, y: -0.05}
   muzzleFlashTime: 0.04
   recoilAmount: {x: -0.25, y: 0}
-  damage: 35
+  damage: 32
   damageVariance: 0.15
   damageUpgFactor: 0.2
   knockback: 30
   knockbackUpgAmt: 3
-  clipSize: 10
-  clipSizeUpgAmt: 2
+  clipSize: 12
+  clipSizeUpgAmt: 1
   chargeDelay: 0
   chargeSpeedUpgNegAmt: 0
   shootSpeed: 0

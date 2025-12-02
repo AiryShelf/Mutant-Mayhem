@@ -9,6 +9,8 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(CompositeCollider2D))]
 public class ShadowCaster2DTileMap : MonoBehaviour
 {
+    public static ShadowCaster2DTileMap Instance;
+
     [Space]
     [SerializeField]
     private bool selfShadows = true;
@@ -28,17 +30,12 @@ public class ShadowCaster2DTileMap : MonoBehaviour
                                     .GetType("UnityEngine.Rendering.Universal.ShadowUtility")
                                     .GetMethod("GenerateShadowMesh", BindingFlags.Public | BindingFlags.Static);
     
-    void Start()
+    void Awake()
     {
-        //tilemapCollider = GetComponent<TilemapCollider2D>();
-        //tilemapCompCollider = GetComponent<CompositeCollider2D>();
-    }
-
-    void Update()
-    {
-        // For debugging
-        //if (Keyboard.current.gKey.isPressed)
-            //Generate();
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
     
     public void Generate()

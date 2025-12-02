@@ -237,8 +237,16 @@ public class MessageManager : MonoBehaviour
             yield return null;
         }
 
-        if (!skipMessage)
-            yield return new WaitForSeconds(message.messageEndDelay);
+        // Allow StopMessage to interrupt the tail delay after the voice clip has finished.
+        if (!skipMessage && message.messageEndDelay > 0f)
+        {
+            float elapsed = 0f;
+            while (elapsed < message.messageEndDelay && !skipMessage)
+            {
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
 
         // Stop playing
         messagePanel.SetActive(false);

@@ -6,9 +6,13 @@ using UnityEngine.Tilemaps;
 
 public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExplodable
 {
-    [SerializeField] SpriteRenderer mySR;
+    [SerializeField] SpriteRenderer fieldSr;
+    [SerializeField] SpriteRenderer waveSr;
     [SerializeField] List<Sprite> energyFieldDamageSprites;
-    [SerializeField] List<AnimatedTile> gateSidesDamageSprites;
+    [SerializeField] List<Sprite> energyFieldWaveSprites;
+    [SerializeField] float srAlphaMin = 0.4f;
+    [SerializeField] float srAlphaMax = 0.8f;
+    [SerializeField] List<AnimatedTile> gateSidesDamageTiles;
     [SerializeField] Collider2D gateCollider;
     [SerializeField] List<Light2D> gateLights;
 
@@ -22,15 +26,15 @@ public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExpl
             explosion.transform.position = transform.position;
         }
     }
-
-    List<Color> gateLightStartColors;
-    float healthRatio;
+    
+    float healthRatio = 1f;
     bool hasPower = true;
 
     public void PowerOn() 
     {
         hasPower = true;
-        mySR.enabled = true;
+        fieldSr.enabled = true;
+        waveSr.enabled = true;
         gateCollider.enabled = true;
         foreach (var light in gateLights)
             light.enabled = true;
@@ -41,7 +45,8 @@ public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExpl
     public void PowerOff() 
     {
         hasPower = false;
-        mySR.enabled = false;
+        fieldSr.enabled = false;
+        waveSr.enabled = false;
         gateCollider.enabled = false;
         foreach (var light in gateLights)
             light.enabled = false;
@@ -58,6 +63,7 @@ public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExpl
 
     void UpdateTile()
     {
+        Debug.Log("QGate UpdateTile called with healthRatio: " + healthRatio + " and hasPower: " + hasPower + " at position: " + transform.position);
         Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
         rootPos = TileManager.Instance.GridToRootPos(rootPos);
 
@@ -65,37 +71,29 @@ public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExpl
 
         if (hasPower)
         {
-            mySR.enabled = true;
-            mySR.sprite = energyFieldDamageSprites[damageIndex];
-            TileManager.AnimatedTilemap.SetTile(rootPos, gateSidesDamageSprites[damageIndex]);
-
+            fieldSr.enabled = true;
+            fieldSr.sprite = energyFieldDamageSprites[damageIndex];
+            waveSr.sprite = energyFieldWaveSprites[damageIndex];
+            TileManager.AnimatedTilemap.SetTile(rootPos, gateSidesDamageTiles[damageIndex]);
         }
         else
         {
-            mySR.enabled = false;
-            TileManager.AnimatedTilemap.SetTile(rootPos, gateSidesDamageSprites[damageIndex]);
+            fieldSr.enabled = false;
+            TileManager.AnimatedTilemap.SetTile(rootPos, gateSidesDamageTiles[damageIndex]);
         }
 
-        // Dim Lights with damage
-        for (int i = 0; i < gateLights.Count; i++)
-        {
-            if (gateLightStartColors == null)
-            {
-                gateLightStartColors = new List<Color>();
-                foreach (var light in gateLights)
-                {
-                    gateLightStartColors.Add(light.color);
-                }
-            }
-
-            gateLights[i].color = Color.Lerp(gateLightStartColors[i], Color.red, 1 - healthRatio);
-        }
+        // Reduce field sr alpha with damage
+        Color srColor = fieldSr.color;
+        float ratio = Mathf.InverseLerp(srAlphaMin, srAlphaMax, healthRatio);
+        Debug.Log("QGate fieldSr alpha ratio: " + ratio);
+        srColor.a = ratio;
+        fieldSr.color = srColor;
     }
 
     int GetDamageIndex(float healthRatio)
     {
         int damageIndex;
-        int spriteCount = gateSidesDamageSprites.Count;
+        int spriteCount = gateSidesDamageTiles.Count;
 
         // Reserve index 0 for full health
         if (healthRatio >= 1f)

@@ -20,7 +20,7 @@ MonoBehaviour:
 
 
     Press
-    2 to select'
+    ''2'' to select or ''R'' to reload'
   sprite: {fileID: 21300000, guid: cd66e9e5790dfb04e89fb3ebed3f14e2, type: 3}
   uiSprite: {fileID: 21300000, guid: 17f52ab199adf4c6c80115623b26c6b0, type: 3}
   animatorHasString: hasRifle
@@ -35,15 +35,15 @@ MonoBehaviour:
   laserSight: {fileID: 2462978180868395494, guid: 41b102ce7ec0f7146812cbad1b3d0901, type: 3}
   muzzleLocalPos: {x: 0.022, y: 0}
   FXManagerCasingMethodName: PlayBulletCasingFly_SMG
-  casingLocalPos: {x: 0, y: 0}
+  casingLocalPos: {x: 0, y: -0.05}
   muzzleFlashTime: 0.04
   recoilAmount: {x: -0.25, y: 0}
-  damage: 35
+  damage: 38
   damageVariance: 0.15
   damageUpgFactor: 0.2
   knockback: 30
   knockbackUpgAmt: 3
-  clipSize: 30
+  clipSize: 24
   clipSizeUpgAmt: 5
   chargeDelay: 0
   chargeSpeedUpgNegAmt: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
   accuracyUpgNegAmt: -0.5
   firingAccuracyLoss: 3
   bulletSpeed: 60
-  bulletLifeTime: 0.25
+  bulletLifeTime: 0.325
   bulletRangeUpgAmt: 0.03
   kickback: 0
   kickbackUpgNegAmt: 0

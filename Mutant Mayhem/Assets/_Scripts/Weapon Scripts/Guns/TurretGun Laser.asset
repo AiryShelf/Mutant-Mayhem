@@ -13,29 +13,30 @@ MonoBehaviour:
   m_Name: TurretGun Laser
   m_EditorClassIdentifier: 
   gunType: 0
+  isAutomatic: 0
   bulletPoolName: BulletLaser_Turret
   uiName: Laser Turret
+  uiDescription: 
   sprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   uiSprite: {fileID: -1011736998, guid: 953217e38a60b834d84e19bb3d46ebee, type: 3}
   animatorHasString: 
   reloadSounds: []
   selectedSound: {fileID: 0}
-  emptyClipPrefab: {fileID: 0}
+  emptyClipPoolName: 
   muzzleFlashPrefab: {fileID: 2692051205214700430, guid: 0d4bfc2b79ed044ffa8273de4a373d08, type: 3}
   laserSight: {fileID: 0}
   muzzleLocalPos: {x: 1, y: 0}
-  bulletCasingPrefab: {fileID: 1136685630353648448, guid: 6e0dec1a382c9fc4cb40bc957c9ce5e5, type: 3}
   FXManagerCasingMethodName: PlayLaserCasing_Pistol
   casingLocalPos: {x: 0, y: 0}
   muzzleFlashTime: 0.04
   recoilAmount: {x: 0, y: 0}
-  damage: 23
+  damage: 27.6
   damageVariance: 0.15
   damageUpgFactor: 0.2
   knockback: 0
   knockbackUpgAmt: 0.1
-  clipSize: 20
-  clipSizeUpgAmt: 5
+  clipSize: 16
+  clipSizeUpgAmt: 2
   chargeDelay: 0.888
   chargeSpeedUpgNegAmt: -0.04
   shootSpeed: 0.4
