@@ -29,6 +29,7 @@ public class Explosion : MonoBehaviour
     [SerializeField] float falloffDistance = 20f;
     
     List<Vector3Int> visibleTiles = new List<Vector3Int>();
+    HashSet<Vector3Int> structureHitTiles = new HashSet<Vector3Int>();
     TileManager tileManager;
     bool initialized = false;
 
@@ -69,6 +70,9 @@ public class Explosion : MonoBehaviour
 
         yield return null;
 
+        visibleTiles.Clear();
+        structureHitTiles.Clear();
+
         if (explosionSound != null)
             AudioManager.Instance.PlaySoundAt(explosionSound, transform.position);
 
@@ -95,36 +99,11 @@ public class Explosion : MonoBehaviour
         ApplyDamageToEntitiesInTiles(explosionPos, visibleTiles);
     }
 
-    IEnumerator ReturnToPoolAfterTime(float time)
-    {
-        if (explosionFlash != null)
-        {
-            explosionFlash.gameObject.SetActive(true);
-            explosionFlash.intensity = flashIntensityStart;
-        }
-
-        while (time > 0)
-        {
-            // Handle flash fade
-            if (explosionFlash != null)
-            {
-                explosionFlash.intensity = Mathf.Max(0, explosionFlash.intensity - flashFadeRate);
-                if (explosionFlash.intensity <= 0)
-                    explosionFlash.gameObject.SetActive(false);
-            }
-
-            time -= Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
-        }
-        
-        PoolManager.Instance.ReturnToPool(explosionObjectPoolName, gameObject);
-    }
+    #region Hit Structures
 
     void GetTilesAndHitStructures(Vector2 explosionPos, List<Vector3Int> tilesToCheck, TileManager tileManager)
     {
         // CAN ADD WINDZONE COROUTINE TO CAUSE PRESSURE EFFECT
-
-        List<Vector3Int> hitTiles = new List<Vector3Int>();
 
         // Check each tile in radius
         foreach (Vector3Int tilePos in tilesToCheck)
@@ -147,7 +126,7 @@ public class Explosion : MonoBehaviour
                 if (tileManager.ContainsTileKey(gridPos))
                 {
                     // Apply half damage to the structure if tile hasn’t been hit yet
-                    if (!hitTiles.Contains(gridPos))
+                    if (!structureHitTiles.Contains(gridPos))
                     {
                         Debug.Log("Explosion tried to hit a tile");
                         float distToPoint = Vector2.Distance(explosionPos, worldPos);
@@ -158,7 +137,7 @@ public class Explosion : MonoBehaviour
                         //StatsCounterPlayer.TotalDamageByPlayerExplosions += totalDamage;
 
                         // Add the tile to the list of hit tiles
-                        hitTiles.Add(gridPos);
+                        structureHitTiles.Add(gridPos);
                         visibleTiles.Add(gridPos);
                     }
                 }
@@ -169,6 +148,10 @@ public class Explosion : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
+    #region Hit Entities
 
     void ApplyDamageToEntitiesInTiles(Vector2 explosionPos, List<Vector3Int> visibleTiles)
     {
@@ -184,7 +167,8 @@ public class Explosion : MonoBehaviour
 
             var structure = tileManager.GetStructureAt(worldPos);
             // Hit structures with no collider, such as Razor Wire
-            if (!tileManager.IsTileBlueprint(worldPos) &&
+            if (!structureHitTiles.Contains(tilePos) &&
+                !tileManager.IsTileBlueprint(worldPos) &&
                 !tileManager.CheckGridIsClear(tilePos, LayerMask.GetMask("Structures"), true) &&
                 structure?.structureType != StructureType.Mine)
             {
@@ -296,6 +280,10 @@ public class Explosion : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Utility
+
     List<Vector3Int> GetTilesInRadius(Vector2 pos, TileManager tileManager)
     {
         List<Vector3Int> tilesInRadius = new List<Vector3Int>();
@@ -319,6 +307,31 @@ public class Explosion : MonoBehaviour
         }
 
         return tilesInRadius;
+    }
+
+    IEnumerator ReturnToPoolAfterTime(float time)
+    {
+        if (explosionFlash != null)
+        {
+            explosionFlash.gameObject.SetActive(true);
+            explosionFlash.intensity = flashIntensityStart;
+        }
+
+        while (time > 0)
+        {
+            // Handle flash fade
+            if (explosionFlash != null)
+            {
+                explosionFlash.intensity = Mathf.Max(0, explosionFlash.intensity - flashFadeRate);
+                if (explosionFlash.intensity <= 0)
+                    explosionFlash.gameObject.SetActive(false);
+            }
+
+            time -= Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        
+        PoolManager.Instance.ReturnToPool(explosionObjectPoolName, gameObject);
     }
 
     void OnDrawGizmos()
@@ -345,4 +358,6 @@ public class Explosion : MonoBehaviour
             Gizmos.DrawWireCube(tileCenter, tileSize);
         }
     }
+
+    #endregion
 }

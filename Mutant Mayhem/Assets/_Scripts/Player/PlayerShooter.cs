@@ -15,6 +15,8 @@ public class PlayerShooter : Shooter
     Coroutine shootingCoroutine;
     bool waitToShoot;
     float reloadNotificationTimer = 0;
+    [SerializeField] float queuedShotWindow = 0.2f;
+    float queuedShotTimer = 0f;
 
     public bool canShoot = true;
     public bool isShooting;
@@ -250,13 +252,12 @@ public class PlayerShooter : Shooter
                     if (gunsAmmo[currentGunIndex] > 0)
                     {
                         MessageBanner.PulseMessage("Clip is empty!  Press 'R' to reload!", Color.yellow);
-                        //animControllerPlayer.ReloadTrigger();
                     }
                     else
                         MessageBanner.PulseMessage("Out of ammo!  Buy more at at tech building!", Color.red);
                 }
             }
-            
+
             if (shootingCoroutine != null)
             {
                 StopCoroutine(shootingCoroutine);
@@ -265,16 +266,43 @@ public class PlayerShooter : Shooter
             return;
         }
 
-        // Automatic vs Semi-Automatic handling
+        // Edge detection for trigger pull
+        bool triggerPulledThisFrame = isShooting && !wasShooting;
+
+        // Decrement queued shot timer
+        if (queuedShotTimer > 0f)
+        {
+            queuedShotTimer -= Time.deltaTime;
+            if (queuedShotTimer < 0f)
+                queuedShotTimer = 0f;
+        }
+
+        // Core conditions that must be true to actually fire
+        bool coreReady = !waitToShoot &&
+                        isAiming &&
+                        !isBuilding &&
+                        !isReloading &&
+                        !isSwitchingGuns;
+
         if (currentGunSO.isAutomatic)
         {
-            // FULL-AUTO: hold trigger to keep firing
-            if (isShooting && shootingCoroutine == null && !waitToShoot &&
-                isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
+            // Queue a shot if trigger pulled while not ready
+            if (triggerPulledThisFrame && !coreReady)
+            {
+                queuedShotTimer = queuedShotWindow;
+            }
+
+            // Start auto-fire either on direct press or from a queued shot
+            bool wantToStartAuto =
+                (isShooting && shootingCoroutine == null) ||
+                (queuedShotTimer > 0f && shootingCoroutine == null);
+
+            if (wantToStartAuto && coreReady)
             {
                 shootingCoroutine = StartCoroutine(ShootContinuously());
                 StartCoroutine(WaitToShoot());
                 waitToShoot = true;
+                queuedShotTimer = 0f;
             }
             else if (!isShooting && shootingCoroutine != null)
             {
@@ -285,15 +313,25 @@ public class PlayerShooter : Shooter
         }
         else
         {
-            // SEMI-AUTO: fire once per trigger pull
-            bool justPressed = isShooting && !wasShooting;
+            // SEMI-AUTO
 
-            if (justPressed && !waitToShoot &&
-                isAiming && !isBuilding && !isReloading && !isSwitchingGuns)
+            // Queue shot if trigger pulled while not ready
+            if (triggerPulledThisFrame && !coreReady)
+            {
+                queuedShotTimer = queuedShotWindow;
+            }
+
+            // Fire either on direct press or as soon as the queue finds us ready
+            bool shouldFireNow =
+                (triggerPulledThisFrame && coreReady) ||
+                (queuedShotTimer > 0f && coreReady);
+
+            if (shouldFireNow)
             {
                 Fire();
                 StartCoroutine(WaitToShoot());
                 waitToShoot = true;
+                queuedShotTimer = 0f;
             }
 
             // Ensure no leftover coroutine from previous automatic gun
@@ -304,7 +342,7 @@ public class PlayerShooter : Shooter
             }
         }
 
-        // Track previous shooting state for semi-auto edge detection
+        // Track previous shooting state for edge detection
         wasShooting = isShooting;
     }
 

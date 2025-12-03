@@ -344,10 +344,18 @@ public class BuildingSystem : MonoBehaviour
             buildMenuController.ToggleBuildMenu();
             
             //Debug.Log("Opened Build Panel");
-            if (_UnlockedStructuresDict.ContainsKey(structureInHand.structureType) && _UnlockedStructuresDict[structureInHand.structureType])
+            // When entering build mode, use the last structure the player had selected,
+            // as long as it's unlocked. Otherwise, fall back to the Destroy Tool.
+            if (lastStructureInHand != null &&
+                _UnlockedStructuresDict.TryGetValue(lastStructureInHand.structureType, out bool unlocked) &&
+                unlocked)
+            {
                 structureInHand = lastStructureInHand;
-            else 
-                structureInHand = AllStructureSOs[2]; // Set to Destroy Tool
+            }
+            else
+            {
+                structureInHand = AllStructureSOs[2]; // Destroy Tool as a safe fallback
+            }
             
             StartCoroutine(DelayMenuSelection()); // So that FadeCanvasGroupsWave can turn the elements on
         }

@@ -23,7 +23,8 @@ public class MicroReactor : MonoBehaviour, ITileObject, ITileObjectExplodable
         if (!string.IsNullOrEmpty(explosionPoolName))
         {
             GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
-            explosion.transform.position = transform.position;
+            Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
+            explosion.transform.position = TileManager.Instance.TileCellsCenterToWorld(rootPos);
         }
     }
     Color[] lightStartColors;

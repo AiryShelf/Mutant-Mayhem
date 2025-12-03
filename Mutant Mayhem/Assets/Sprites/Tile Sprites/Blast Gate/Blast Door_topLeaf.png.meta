@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5eec08ffc42c0d54d8e59d592b9817de
+guid: a02d89324693f4727ac1d4e6181bbf49
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 30
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -106,24 +106,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BlastDoor_0
+      name: Blast Door_topLeaf_0
       rect:
         serializedVersion: 2
         x: 0
@@ -131,36 +118,20 @@ TextureImporter:
         width: 32
         height: 64
       alignment: 9
-      pivot: {x: 0.5, y: 0.75}
+      pivot: {x: 0.5, y: 0.734}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape:
-      - - {x: 8, y: 22}
-        - {x: 8, y: 3}
-        - {x: -8, y: 3}
-        - {x: -8, y: 22}
-        - {x: -11, y: 25}
-        - {x: -11, y: 32}
-        - {x: 11, y: 32}
-        - {x: 11, y: 25}
-      - - {x: -11, y: -32}
-        - {x: -11, y: -25}
-        - {x: -8, y: -22}
-        - {x: -8, y: -3}
-        - {x: 8, y: -3}
-        - {x: 8, y: -22}
-        - {x: 11, y: -25}
-        - {x: 11, y: -32}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5315e9594efa79841b5aa3911442c8e3
-      internalID: 637016609
+      spriteID: acce9efe7c9f14faf8c8158870844349
+      internalID: -1026431631
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BlastDoor_1
+      name: Blast Door_topLeaf_1
       rect:
         serializedVersion: 2
         x: 32
@@ -168,24 +139,56 @@ TextureImporter:
         width: 32
         height: 64
       alignment: 9
-      pivot: {x: 0.5, y: 0.75}
+      pivot: {x: 0.5, y: 0.734}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape:
-      - - {x: 0, y: 21}
-        - {x: -11, y: 25}
-        - {x: -11, y: 32}
-        - {x: 11, y: 32}
-        - {x: 11, y: 25}
-      - - {x: -11, y: -32}
-        - {x: -11, y: -25}
-        - {x: 0, y: -21}
-        - {x: 11, y: -25}
-        - {x: 11, y: -32}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4130e329f2f46c748ad2bfbae622fc53
-      internalID: -95224139
+      spriteID: 43c95dc6363614e86b9ae8c1eefa58af
+      internalID: -10341337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Blast Door_topLeaf_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.734}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c94026e92382f4ee8a0019a0bfb6b280
+      internalID: 1051727341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Blast Door_topLeaf_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.734}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ecb50fba1ae0442ad9027e6ed7d7622d
+      internalID: -1815270653
       vertices: []
       indices: 
       edges: []
@@ -201,8 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      BlastDoor_0: 637016609
-      BlastDoor_1: -95224139
+      Blast Door_topLeaf_0: -1026431631
+      Blast Door_topLeaf_1: -10341337
+      Blast Door_topLeaf_2: 1051727341
+      Blast Door_topLeaf_3: -1815270653
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

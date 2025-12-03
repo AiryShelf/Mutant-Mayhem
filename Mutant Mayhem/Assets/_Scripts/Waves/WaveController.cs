@@ -12,9 +12,9 @@ public class WaveController : MonoBehaviour
     public WaveSpawnerRandom waveSpawner;
     public static event Action<int> OnWaveStarted;
     public static event Action<int> OnWaveEnded;
-    [SerializeField] string textFlyPoolName = "TextFlyPool";
-    [SerializeField] float textFlyMaxScale = 2f;
-    [SerializeField] Canvas gameplayCanvas;
+    public string textFlyPoolName = "TextFlyPool";
+    public float textFlyMaxScale = 2f;
+    public Canvas gameplayCanvas;
 
     [Header("UI Wave Info")]
     public FadeCanvasGroupsWave nextWaveFadeGroup;
@@ -317,7 +317,8 @@ public class WaveController : MonoBehaviour
             MessageBanner.PulseMessageLong($"You survived Night {currentWaveIndex + 1}!", Color.cyan);
             return;
         }
-        textFlyComp.Initialize($"Survived Night {currentWaveIndex + 1}! +{researchPointsGained} RP", Color.cyan, 1, Vector2.up, false, textFlyMaxScale);
+        textFlyComp.Initialize($"Survived Night {currentWaveIndex + 1}! +{researchPointsGained} RP", 
+                               Color.cyan, 1, Vector2.up, false, textFlyMaxScale);
         MessageBanner.PulseMessageLong($"You survived Night {currentWaveIndex + 1}! \n" +
             $"Gained {rpGainedCommas} Research Points! You now have {rpTotalCommas} RP!", Color.cyan);
 

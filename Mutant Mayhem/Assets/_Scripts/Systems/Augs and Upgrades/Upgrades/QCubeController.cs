@@ -32,17 +32,6 @@ public class QCubeController : MonoBehaviour
         }
     }
 
-    [Header("Upgrade Panels")]
-    public UiUpgradePanel lasersPanel;
-    public UiUpgradePanel bulletsPanel;
-    public UiUpgradePanel structuresPanel;
-    public UiUpgradePanel repairPanel;
-    public UiUpgradePanel explosivesPanel;
-    public UiUpgradePanel dronesPanel;
-   
-    [Header("Interaction")]
-    public RectTransform backPanel;
-
     void Awake()
     {
         if (Instance == null)

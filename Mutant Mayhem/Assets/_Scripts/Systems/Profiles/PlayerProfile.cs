@@ -9,6 +9,7 @@ public class PlayerProfile
     public string profileName;
     public int researchPoints;
     public List<string> completedPlanets = new List<string>();
+    public List<PlanetMissionsEntry> completedMissions = new List<PlanetMissionsEntry>();
     public List<PlanetIndexEntry> planetIndexReachedList = new List<PlanetIndexEntry>();
     [System.NonSerialized]
     public Dictionary<string, int> planetsMaxIndexReached;
@@ -46,9 +47,11 @@ public class PlayerProfile
 
     public bool IsProfileUpToDate()
     {
-        // Ensure list exists
+        // Ensure lists exist
         if (planetIndexReachedList == null)
             planetIndexReachedList = new List<PlanetIndexEntry>();
+        if (completedMissions == null)
+            completedMissions = new List<PlanetMissionsEntry>();
 
         bool upgraded = false;
 
@@ -119,4 +122,37 @@ public class PlayerProfile
             });
         }
     }
+
+    public bool AddCompletedMission(string planetName, string missionTitle, int researchPointsReward)
+    {
+        // Find or create new empty entry for planet
+        PlanetMissionsEntry planetEntry = completedMissions.Find(entry => entry.planetName == planetName);
+        if (planetEntry == null)
+        {
+            planetEntry = new PlanetMissionsEntry
+            {
+                planetName = planetName,
+                completedMissions = new List<string>()
+            };
+            completedMissions.Add(planetEntry);
+        }
+
+        // Add mission if not already completed
+        if (!planetEntry.completedMissions.Contains(missionTitle))
+        {
+            planetEntry.completedMissions.Add(missionTitle);
+            researchPoints += researchPointsReward;
+            ProfileManager.Instance.SaveCurrentProfile();
+            return true;
+        }
+
+        return false;
+    }
+}
+
+[System.Serializable]
+public class PlanetMissionsEntry
+{
+    public string planetName;
+    public List<string> completedMissions;
 }

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
   m_Name: StructureSO_BlastGate
   m_EditorClassIdentifier: 
-  uiImage: {fileID: 123672635, guid: f0cf62e85fca6dc469d22abad916bca4, type: 3}
+  uiImage: {fileID: 21300000, guid: 1b8e95c27719446548309babb11baa2a, type: 3}
   tileName: Blast Gate
-  description: A hefty automatic gate reinforced with steel and nanofibre composites. 
-    Still breakable though
+  description: A hefty automatic gate reinforced with titanium alloy and nanofibre
+    composites.  Still breakable though
   tileCost: 500
   maxHealth: 3000
   health: 3000
@@ -29,6 +29,9 @@ MonoBehaviour:
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}
-  panelToUnlock: 0
+  powerGenerated: 0
+  powerNeighborBonus: 0
+  powerCost: 0
+  supplyCost: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0

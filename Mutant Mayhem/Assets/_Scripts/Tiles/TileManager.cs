@@ -285,7 +285,7 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    Vector2 TileCellsCenterToWorld(Vector3Int rootPos)
+    public Vector2 TileCellsCenterToWorld(Vector3Int rootPos)
     {
         if (!_TileStatsDict.ContainsKey(rootPos))
         {
@@ -454,6 +454,7 @@ public class TileManager : MonoBehaviour
 
         RefreshSurroundingTiles(rootPos);
         damageTilemap.SetTile(rootPos, null);
+        ParticleManager.Instance.ClearBulletHolesInBounds(GetStrucutureWorldBounds(rootPos));
 
         //Debug.Log("DESTROYED A TILE");
     }
@@ -817,6 +818,14 @@ public class TileManager : MonoBehaviour
     #endregion
 
     #region Checks and Getters
+
+    public Bounds GetStrucutureWorldBounds(Vector3Int rootPos)
+    {
+        Vector2 center;
+        Vector2 size;
+        GetStructureWorldAABB(rootPos, out center, out size);
+        return new Bounds(center, size);
+    }
 
     /// <summary>
     /// Returns all grid cells (keys known to _TileStatsDict) whose world-space

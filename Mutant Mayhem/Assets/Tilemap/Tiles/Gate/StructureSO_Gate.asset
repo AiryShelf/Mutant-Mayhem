@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
   m_Name: StructureSO_Gate
   m_EditorClassIdentifier: 
-  uiImage: {fileID: 1963490882, guid: 88dd90e5ba0258645bd48e0d1621a5a0, type: 3}
+  uiImage: {fileID: 21300000, guid: d6d281b4bc8784e38ad0ccef35c53710, type: 3}
   tileName: Gate
   description: An automatic gate that opens only for you
   tileCost: 100
@@ -30,5 +30,7 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 0
   powerNeighborBonus: 0
+  powerCost: 0
+  supplyCost: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0

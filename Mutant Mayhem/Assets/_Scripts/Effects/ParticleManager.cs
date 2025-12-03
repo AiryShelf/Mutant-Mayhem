@@ -37,6 +37,8 @@ public class ParticleManager : MonoBehaviour
     [SerializeField] ParticleSystem clip_SMG;
     [SerializeField] ParticleSystem clip_Turret_Rifle;
 
+    ParticleSystem.Particle[] particlesBuffer;
+
     void Awake()
     {
         if (Instance == null)
@@ -72,6 +74,36 @@ public class ParticleManager : MonoBehaviour
         {
             ps.Clear();
         }
+    }
+
+    public void ClearBulletHolesInBounds(Bounds worldBounds)
+    {
+        if (bulletHole == null) return;
+
+        var main = bulletHole.main;
+        if (main.simulationSpace != ParticleSystemSimulationSpace.World)
+        {
+            Debug.LogWarning("BulletHoleManager: bulletHoleSystem should use World simulation space for ClearInBounds to work correctly.");
+        }
+
+        int max = main.maxParticles;
+        if (particlesBuffer == null || particlesBuffer.Length < max)
+            particlesBuffer = new ParticleSystem.Particle[max];
+
+        int count = bulletHole.GetParticles(particlesBuffer);
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 pos = particlesBuffer[i].position; // world-space if simulationSpace = World
+
+            if (worldBounds.Contains(pos))
+            {
+                // Kill particle
+                particlesBuffer[i].remainingLifetime = 0f;
+            }
+        }
+
+        bulletHole.SetParticles(particlesBuffer, count);
     }
 
     void SetPositionAndRotation(ParticleSystem ps, Vector2 pos, Vector2 hitDir)

@@ -9,4 +9,5 @@ public class MissionSO : ScriptableObject
     public string toPassText;
     public List<ObjectiveSO> objectives;
     public bool isTutorial = false;
+    public int researchPointsReward = 0;
 }

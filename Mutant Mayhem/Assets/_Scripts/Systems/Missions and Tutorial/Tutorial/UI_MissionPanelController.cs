@@ -147,9 +147,10 @@ public class UI_MissionPanelController : MonoBehaviour
         StartCoroutine(DisplayCompletedForTime());
     }
 
-    public void EndMission()
+    public void EndMission(bool showTextFly, string planetName, int researchPointsGained)
     {
-        // Should display a "Mission Completed" effect here, maybe with title text?
+        if (showTextFly)
+            ShowMissionCompletedTextFly(planetName, researchPointsGained);
         //ClearTasksGrid();
         Debug.Log("Ending Mission: " + missions[0]);
 
@@ -158,7 +159,6 @@ public class UI_MissionPanelController : MonoBehaviour
 
         if (missions.Count == 0)
         {
-            ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
             gameObject.SetActive(false);
             return;
         }
@@ -168,19 +168,63 @@ public class UI_MissionPanelController : MonoBehaviour
 
     IEnumerator DisplayCompletedForTime()
     {
+        bool firstTimeCompleted = false;
         completedStamp.alpha = 1;
         ShowMissionPanel(true);
+        PlayerProfile profile = ProfileManager.Instance.currentProfile;
+
+        if (profile.AddCompletedMission(PlanetManager.Instance.currentPlanet.bodyName, 
+                                        currentMission.missionTitle, 
+                                        currentMission.researchPointsReward))
+        {
+            firstTimeCompleted = true;
+            if (missions.Count == 1) // Last mission on planet
+            {
+                ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
+            }
+        }
+        else if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
+        {
+            MessageBanner.PulseMessage($"Tutorial mission completed!\n\nYou're ready for the real thing!", Color.cyan);
+        }
+        else
+        {
+            Debug.Log("Mission already completed previously, no research points awarded.");
+            MessageBanner.PulseMessage($"Mission completed again! No research points were awarded.\n\nTry another planet for new missions.", Color.yellow);
+        }
+        
         yield return new WaitForSeconds(timeToShowCompleted);
 
+        // Show next objective or end mission
         int nextObjectiveIndex = currentObjectiveIndex + 1;
-
         if (nextObjectiveIndex < currentMission.objectives.Count)
             DisplayObjective(nextObjectiveIndex);
         else 
         {
             completedStamp.alpha = 0;
-            EndMission();
+            EndMission(firstTimeCompleted, 
+                        PlanetManager.Instance.currentPlanet.bodyName, 
+                        currentMission.researchPointsReward);
         }
+    }
+
+    void ShowMissionCompletedTextFly(string planetName, int researchPointsGained)
+    {
+        // No text fly or RP for tutorial planet
+        if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
+            return;
+
+        GameObject textFlyObj = PoolManager.Instance.GetFromPool(WaveController.Instance.textFlyPoolName);
+        TextFly textFly = textFlyObj.GetComponent<TextFly>();
+        textFly.transform.SetParent(WaveController.Instance.gameplayCanvas.transform, false);
+        RectTransform rectTransform = textFly.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = Vector2.zero;
+
+        string rpGainedCommas = researchPointsGained.ToString("N0");
+        textFly.Initialize($"Planet {planetName} completed! +{rpGainedCommas} RP gained!\n\nNew Planet(s) unlocked!", 
+                            Color.cyan, 1, Vector2.down, false, WaveController.Instance.textFlyMaxScale);
+        
+        MessageBanner.PulseMessage($"Planet {planetName} completed!\n\nYou earned {researchPointsGained} research points and unlocked new planet(s)!", Color.green);
     }
 
     public void ShowObjectiveInfoPanel(bool show)

@@ -87,6 +87,7 @@ public class QCubeHealth : Health
     {
         cubeLight.intensity = Mathf.Clamp(lightStartIntensity * (health / maxHealth) + addValue,
                                           cubeLightMinIntensity, float.MaxValue);
+        cubeLight.color = Color.Lerp(cubeStartColor, Color.red, 1 - (health / maxHealth));
     }
 
     void PlayCubeDamageEffect()
