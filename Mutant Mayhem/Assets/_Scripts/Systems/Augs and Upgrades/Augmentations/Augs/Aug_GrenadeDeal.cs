@@ -10,7 +10,7 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
     public int perLvlStartAddIncrement = 2;
     public float perLvlStartNegIncrement = 1;
     public float perLvlPurchaseAddInc = 0.5f;
-    public float perLvlGrenadeCostMultInc = 0.5f;
+    public float perLvlGrenadeCostPositiveLevelInc = 0.1f;
     public float perLvlGrenadeCostNegInc = -0.5f;
 
     public override void ApplyAugmentation(AugManager augManager, int level)
@@ -51,7 +51,7 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
             player.stats.grenadeAmmo = grenadesAtStart + Mathf.FloorToInt(perLvlStartAddIncrement * level);
 
             augManager.grenadeAmmoMult = grenadesPerPurchaseDefault + Mathf.FloorToInt(perLvlPurchaseAddInc * level);
-            augManager.grenadeCostMult = 1 + perLvlGrenadeCostMultInc * level;
+            augManager.grenadeCostMult = grenadesPerPurchaseDefault * (1 - perLvlGrenadeCostPositiveLevelInc * level);
         }
 
         Debug.Log("Aug applied Grenade Deal.  Ammo mult: " + augManager.grenadeAmmoMult + ", Cost mult: " + augManager.grenadeCostMult);
@@ -61,9 +61,10 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
     {
         float totalGrenadesAtStart = grenadesAtStart + (perLvlStartAddIncrement * level);
         float totalGrenadesPerPurchase = grenadesPerPurchaseDefault + Mathf.FloorToInt(perLvlPurchaseAddInc * level);
-        float totalGrenadeCost = 1 + perLvlGrenadeCostMultInc * level;
-        string description = "Start with " + totalGrenadesAtStart + " grenades.  Plus each time you purchase grenades, " +
-                             "get " + totalGrenadesPerPurchase + " grenades for " + totalGrenadeCost + " times the cost of one";
+        float totalGrenadeCost = grenadesPerPurchaseDefault * (1 - perLvlGrenadeCostPositiveLevelInc * level);
+        string discountPercent = (1 - (totalGrenadeCost / grenadesPerPurchaseDefault)) * 100f + "%";
+        string description = "Start with " + totalGrenadesAtStart + " grenades.  Buy grenades in packs of " +
+                             totalGrenadesPerPurchase + ", at a " + discountPercent + " discount.";
         return description;
     }
 
@@ -81,13 +82,14 @@ public class Aug_GrenadeDeal : AugmentationBaseSO
             totalGrenadesPerPurchase = 0;
 
         float totalGrenadeCost = 1 + perLvlGrenadeCostNegInc * -level;
+        string costIncreasePercent = ((totalGrenadeCost - 1) * 100f) + "%";
 
         // Handle different text for not being able to buy any grenades
         string description;
         if (totalGrenadesPerPurchase > 0 )
         {
-            description = "Start with " + totalGrenadesAtStart + " grenades.  Plus each time you buy a grenade, " +
-                             "get " + totalGrenadesPerPurchase + " for " + totalGrenadeCost + " times the cost";
+            description = "Start with " + totalGrenadesAtStart + " grenades.  " +
+            "Grenades cost " + costIncreasePercent + " more.";
 
             return description;
         }

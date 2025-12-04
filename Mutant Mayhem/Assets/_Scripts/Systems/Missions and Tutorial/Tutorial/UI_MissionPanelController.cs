@@ -14,7 +14,6 @@ public class UI_MissionPanelController : MonoBehaviour
     [SerializeField] Transform objectivesGrid;
     [SerializeField] CanvasGroup completedStamp;
     [SerializeField] RectTransform backPanel;
-    [SerializeField] protected float timeToShowCompleted = 2f;
     [SerializeField] ObjectiveInfoPanel objectiveInfoPanel;
     public int currentObjectiveIndex;
 
@@ -34,6 +33,7 @@ public class UI_MissionPanelController : MonoBehaviour
     void Start()
     {
         ShowMissionPanel(false);
+        missionPanelOpenButton.gameObject.SetActive(false);
         completedStamp.alpha = 0;
         startColorOutline = panelOutline.color;
         startColorBackPanel = backPanelImage.color;
@@ -50,6 +50,7 @@ public class UI_MissionPanelController : MonoBehaviour
 
         AddMission(PlanetManager.Instance.currentPlanet.mission, false);
 
+        missionPanelOpenButton.gameObject.SetActive(true);
         ShowMissionPanel(true);
         StartMission();
     }
@@ -168,32 +169,13 @@ public class UI_MissionPanelController : MonoBehaviour
 
     IEnumerator DisplayCompletedForTime()
     {
-        bool firstTimeCompleted = false;
         completedStamp.alpha = 1;
         ShowMissionPanel(true);
-        PlayerProfile profile = ProfileManager.Instance.currentProfile;
 
-        if (profile.AddCompletedMission(PlanetManager.Instance.currentPlanet.bodyName, 
-                                        currentMission.missionTitle, 
-                                        currentMission.researchPointsReward))
-        {
-            firstTimeCompleted = true;
-            if (missions.Count == 1) // Last mission on planet
-            {
-                ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
-            }
-        }
-        else if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
-        {
-            MessageBanner.PulseMessage($"Tutorial mission completed!\n\nYou're ready for the real thing!", Color.cyan);
-        }
-        else
-        {
-            Debug.Log("Mission already completed previously, no research points awarded.");
-            MessageBanner.PulseMessage($"Mission completed again! No research points were awarded.\n\nTry another planet for new missions.", Color.yellow);
-        }
+        // Check mission completion status
+        (bool missionCompleted, bool firstTimeCompleted) = CheckMissionCompletionStatus();
         
-        yield return new WaitForSeconds(timeToShowCompleted);
+        yield return new WaitForSeconds(currentMission.objectives[currentObjectiveIndex].timeToShowCompletionUI);
 
         // Show next objective or end mission
         int nextObjectiveIndex = currentObjectiveIndex + 1;
@@ -206,6 +188,41 @@ public class UI_MissionPanelController : MonoBehaviour
                         PlanetManager.Instance.currentPlanet.bodyName, 
                         currentMission.researchPointsReward);
         }
+    }
+
+    /// <summary>
+    /// Checks if the current mission is completed and if it's the first time completion.
+    /// </summary>
+    /// <returns>(missionCompleted, firstTimeCompleted)</returns>
+    (bool, bool) CheckMissionCompletionStatus()
+    {
+        if (currentObjectiveIndex + 1 >= currentMission.objectives.Count)
+        {
+            PlayerProfile profile = ProfileManager.Instance.currentProfile;
+            if (profile.AddCompletedMission(PlanetManager.Instance.currentPlanet.bodyName, 
+                                            currentMission.missionTitle, 
+                                            currentMission.researchPointsReward))
+            {
+                if (missions.Count == 1) // Last mission on planet
+                {
+                    ProfileManager.Instance.SetPlanetCompleted(PlanetManager.Instance.currentPlanet.bodyName);
+                }
+                return (true, true);
+            }
+            else if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
+            {
+                MessageBanner.PulseMessage($"Tutorial mission completed!\n\nYou're ready for the real thing!", Color.cyan);
+                return (true, false);
+            }
+            else
+            {
+                Debug.Log("Mission already completed previously, no research points awarded.");
+                MessageBanner.PulseMessage($"Mission was previously completed! No research points are awarded.\n\n" +
+                                            "Try another planet for new missions.", Color.yellow);
+                return (true, false);
+            }
+        }
+        return (false, false);
     }
 
     void ShowMissionCompletedTextFly(string planetName, int researchPointsGained)

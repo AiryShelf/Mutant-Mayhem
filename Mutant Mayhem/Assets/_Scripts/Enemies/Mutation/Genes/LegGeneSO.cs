@@ -17,6 +17,7 @@ public class LegGeneSO : GeneSOBase
     [Header("Movement Settings")]
     public float moveSpeedBaseStart = 1f;
     public float rotateSpeedBaseStart = 1f;
+    public float freezeTime = 0.2f;
 
     [Header("Leg Animation Settings")]
     public float animSpeedFactor;

@@ -201,9 +201,29 @@ public class UIAugPanel : MonoBehaviour
         else
             costTextColor = Color.red;
 
-        raiseLevelCostText.text = "-" + raiseLvlCost + "\n" + "RP";
-        raiseLevelCostText.color = costTextColor;
-        lowerLevelCostText.text = "+" + lowerLvlCost + "\n" + "RP";
+        // If level is maxed, show MAX instead of cost
+        if (level >= aug.maxLvl)
+        {
+            raiseLevelCostText.text = "MAX";
+            raiseLevelCostText.color = Color.red;
+        }
+        else
+        {
+            raiseLevelCostText.text = "-" + raiseLvlCost + "\n" + "RP";
+            raiseLevelCostText.color = costTextColor;
+        }
+        
+        // If level is minned, show MIN instead of cost
+        if (level <= aug.minLvl)
+        {
+            lowerLevelCostText.text = "MIN";
+            lowerLevelCostText.color = Color.red;
+        }
+        else
+        {
+            lowerLevelCostText.text = "+" + lowerLvlCost + "\n" + "RP";
+            lowerLevelCostText.color = Color.yellow;
+        }
         
         // Buttons interactability
         if (level < aug.maxLvl)
@@ -260,32 +280,27 @@ public class UIAugPanel : MonoBehaviour
         // Handle maxAugs
         if (selectedUiAugmentation.augBaseSO is Aug_MaxAugs _maxAugs)
         {
-            if (!AugManager.selectedAugsWithLvls.ContainsKey(selectedUiAugmentation.augBaseSO))
-            {
-                Debug.LogError("Did not find Max Augs in dictionary");
-                return;
-            }
+            int level = AugManager.selectedAugsWithLvls[selectedUiAugmentation.augBaseSO];
+            int maxAugLevelsInc;
+            if (level > 0)
+                maxAugLevelsInc = _maxAugs.lvlAddIncrement;
+            else
+                maxAugLevelsInc = _maxAugs.lvlNegIncrement;
 
-            // Make sure removing maxAugs doesn't bring current count below max.
-            int currentLvl = AugManager.selectedAugsWithLvls[selectedUiAugmentation.augBaseSO];
-            if (augManager.GetCurrentLevelCount() - currentLvl <= augManager.maxAugs - augLvlsAdded)
+            if (augManager.GetCurrentLevelCount() <= augManager.maxAugs - maxAugLevelsInc)
             {
-                augManager.maxAugs -= augLvlsAdded;
-                augLvlsAdded = 0;
+                // Remove aug
+                augManager.currentResearchPoints -= selectedUiAugmentation.totalCost;
+                Debug.Log("Subtracted " + selectedUiAugmentation.totalCost + "from RP");
+                selectedUiAugmentation.totalCost = 0;
+                RemoveAug();
             }
             else
             {
-                Debug.Log("Could not remove MaxAugs.  Too many Aug levels selected");
                 MessageBanner.PulseMessage("Can't remove Max Augs.  Remove levels from other Augs first", Color.red);
                 return;
             }
         }
-
-        // Remove aug
-        augManager.currentResearchPoints -= selectedUiAugmentation.totalCost;
-        Debug.Log("Subtracted " + selectedUiAugmentation.totalCost + "from RP");
-        selectedUiAugmentation.totalCost = 0;
-        RemoveAug();
     }
 
     public void OnPlusLevelClicked()

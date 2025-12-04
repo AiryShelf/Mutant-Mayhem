@@ -148,7 +148,6 @@ public class PauseMenuController : MonoBehaviour
         AnalyticsManager.Instance.TrackSessionQuit();
         OpenPauseMenu(false);
         player.IsDead = true;
-        
     }
 
     public void ToggleOptionsMenu()

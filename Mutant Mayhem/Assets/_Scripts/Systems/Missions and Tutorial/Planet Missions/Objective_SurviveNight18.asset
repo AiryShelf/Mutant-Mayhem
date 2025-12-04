@@ -10,9 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ae421a5e734c6440b128cabf443e737, type: 3}
-  m_Name: Objective_SurviveNight15
+  m_Name: Objective_SurviveNight18
   m_EditorClassIdentifier: 
-  objectiveTitle: Survive Night 15
-  objectiveDescription: Survive to the end of night 15 conquer this planet
+  objectiveTitle: Survive Night 18
+  objectiveDescription: Survive to the end of night 18 to conquer this planet
   taskPrefabs:
-  - {fileID: 936962933341166503, guid: 3ce5e1e954965449e94046d6a576f1cd, type: 3}
+  - {fileID: 936962933341166503, guid: 5b3e3e5b74ce84b17844827f57504523, type: 3}
+  startConversation:
+    messages: []
+  endConversation:
+    messages: []
+  timeToShowCompletionUI: 6

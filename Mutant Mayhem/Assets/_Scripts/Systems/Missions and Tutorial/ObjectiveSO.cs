@@ -11,4 +11,5 @@ public class ObjectiveSO : ScriptableObject
     public List<GameObject> taskPrefabs = new List<GameObject>();
     public ConversationData startConversation;
     public ConversationData endConversation;
+    public float timeToShowCompletionUI = 3f;
 }

@@ -14,20 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   augmentationName: Grenade Deal
   uiImage: {fileID: 21300000, guid: 665cac2cc10c66948b634e123035ba85, type: 3}
-  cost: 100
+  cost: 200
   lvlCostIncrement: 50
-  lvlCostIncrementMult: 2
-  refund: 50
+  lvlCostIncrementPower: 1
+  refund: 150
   lvlRefundIncrement: 50
-  lvlRefundIncrementMult: 1.5
+  lvlRefundIncrementPower: 1
   maxLvl: 5
   minLvl: -4
-  family: 0
-  type: 0
   grenadesAtStart: 2
   grenadesPerPurchaseDefault: 1
   perLvlStartAddIncrement: 2
   perLvlStartNegIncrement: 0.5
   perLvlPurchaseAddInc: 1
-  perLvlGrenadeCostMultInc: 0.5
+  perLvlGrenadeCostPositiveLevelInc: 0.1
   perLvlGrenadeCostNegInc: 0.5

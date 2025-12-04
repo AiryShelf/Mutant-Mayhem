@@ -163,7 +163,7 @@ public class EnemyMutant : EnemyBase
         // Freeze time still based on body size only
         float baseScaleForFreeze = 9f;
         float sizeRatio = Mathf.Max(g.bodyGene.scale / baseScaleForFreeze, 0.1f);
-        unfreezeTime = g.bodyGene.freezeTime / sizeRatio;
+        unfreezeTime = g.legGene.freezeTime / sizeRatio;
     }
 
     void SetMeleeSettings(Genome g)

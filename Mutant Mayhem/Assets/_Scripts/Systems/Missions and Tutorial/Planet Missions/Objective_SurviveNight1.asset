@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: Objective_SurviveNight1
   m_EditorClassIdentifier: 
   objectiveTitle: Survive Night 1
-  objectiveDescription: Survive to the end of night 1 conquer this planet
+  objectiveDescription: Survive to the end of night 1 to conquer this planet
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 9caba66fed0dd4f0da329440d3342379, type: 3}
+  startConversation:
+    messages: []
+  endConversation:
+    messages: []
+  timeToShowCompletionUI: 3
