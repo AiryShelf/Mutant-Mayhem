@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,11 @@ using UnityEngine.Tilemaps;
 
 public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExplodable
 {
+    [SerializeField] float qGateDamage;
+    [Range(0f, 1f)]
+    [SerializeField] float damageVarianceFactor;
+    [SerializeField] float qGateKnockback;
+    [SerializeField] Collider2D damageCollider;
     [SerializeField] SpriteRenderer fieldSr;
     [SerializeField] SpriteRenderer waveSr;
     [SerializeField] List<Sprite> energyFieldDamageSprites;
@@ -17,6 +23,7 @@ public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExpl
     [SerializeField] List<Light2D> gateLights;
 
     public string explosionPoolName;
+    Collider2D[] hitColliders = new Collider2D[16];
 
     public void Explode()
     {
@@ -57,9 +64,36 @@ public class QGate : MonoBehaviour, ITileObject, IPowerConsumer, ITileObjectExpl
 
     public void UpdateHealthRatio(float healthRatio)
     {
-        this.healthRatio = healthRatio;
+        if (healthRatio < this.healthRatio)
+            DamageEnemies();
 
+        this.healthRatio = healthRatio;
         UpdateTile();
+    }
+
+    void DamageEnemies()
+    {
+        Array.Clear(hitColliders, 0, hitColliders.Length);
+
+        // Damage any enemies in layer 'Enemies' in the damage collider area
+        ContactFilter2D contactFilter = new ContactFilter2D();
+        contactFilter.SetLayerMask(LayerMask.GetMask("Enemies"));
+        Physics2D.OverlapCollider(damageCollider, contactFilter, hitColliders);
+        
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider != null)
+            {
+                IDamageable damageable = hitCollider.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    Vector2 hitDir = (hitCollider.transform.position - transform.position).normalized;
+                    float damage = qGateDamage * UnityEngine.Random.Range(1f - damageVarianceFactor, 1f + damageVarianceFactor);
+                    damageable.ModifyHealth(-damage, 1f, hitDir, gameObject);
+                    damageable.Knockback(hitDir, qGateKnockback);
+                }
+            }
+        }
     }
 
     void UpdateTile()

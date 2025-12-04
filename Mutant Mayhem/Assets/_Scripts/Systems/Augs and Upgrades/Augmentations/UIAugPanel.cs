@@ -272,7 +272,7 @@ public class UIAugPanel : MonoBehaviour
         // Check RP available to remove aug
         if (augManager.currentResearchPoints - selectedUiAugmentation.totalCost < 0)
         {
-            Debug.Log("Not enough RP to remove selected Aug");
+            //Debug.Log("Not enough RP to remove selected Aug");
             MessageBanner.PulseMessage("Can't remove Aug.  Not enough RP available!", Color.red);
             return;
         }
@@ -291,8 +291,9 @@ public class UIAugPanel : MonoBehaviour
             {
                 // Remove aug
                 augManager.currentResearchPoints -= selectedUiAugmentation.totalCost;
-                Debug.Log("Subtracted " + selectedUiAugmentation.totalCost + "from RP");
+                //Debug.Log("Subtracted " + selectedUiAugmentation.totalCost + "from RP");
                 selectedUiAugmentation.totalCost = 0;
+                augManager.maxAugs -= maxAugLevelsInc * level;
                 RemoveAug();
             }
             else
@@ -300,6 +301,14 @@ public class UIAugPanel : MonoBehaviour
                 MessageBanner.PulseMessage("Can't remove Max Augs.  Remove levels from other Augs first", Color.red);
                 return;
             }
+        }
+        else 
+        {
+            // Remove aug
+            augManager.currentResearchPoints -= selectedUiAugmentation.totalCost;
+            //Debug.Log("Subtracted " + selectedUiAugmentation.totalCost + "from RP");
+            selectedUiAugmentation.totalCost = 0;
+            RemoveAug();
         }
     }
 
@@ -322,14 +331,14 @@ public class UIAugPanel : MonoBehaviour
 
         if (level >= aug.maxLvl)
         {
-            Debug.Log("Max Aug lvl already reached");
+            //Debug.Log("Max Aug lvl already reached");
             MessageBanner.PulseMessage("Max Aug level already reached!", Color.red);
             return;
         }
 
         if (level >= 0 && currentLvlCount >= augManager.maxAugs && !(aug is Aug_MaxAugs))
         {
-            Debug.Log("Max Aug levels already selected");
+            //Debug.Log("Max Aug levels already selected");
             MessageBanner.PulseMessage("Max Aug levels already selected!", Color.red);
             return;
         }
@@ -337,7 +346,7 @@ public class UIAugPanel : MonoBehaviour
         int nextLevelCost = GetLevelCost(aug, level + 1, true);
         if (augManager.currentResearchPoints < nextLevelCost)
         {
-            Debug.Log("Not enough research points");
+            //Debug.Log("Not enough research points");
             MessageBanner.PulseMessage("Not enough research points!", Color.red);
             return;
         }
@@ -365,8 +374,8 @@ public class UIAugPanel : MonoBehaviour
             }
         }
 
-        Debug.Log("Current Level raised to: " + level + ". Subtracted " + nextLevelCost + " from currentResearchPoints");
-        Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost);
+        //Debug.Log("Current Level raised to: " + level + ". Subtracted " + nextLevelCost + " from currentResearchPoints");
+        //Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost);
             
         EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
 
@@ -393,14 +402,14 @@ public class UIAugPanel : MonoBehaviour
 
         if (level <= aug.minLvl)
         {
-            Debug.Log("Min Aug lvl already reached");
+            //Debug.Log("Min Aug lvl already reached");
             MessageBanner.PulseMessage(aug.augmentationName + " is maxed out!", Color.red);
             return;
         }
         
         if (level <= 0 && currentLvlCount + 1 > augManager.maxAugs && !(aug is Aug_MaxAugs))
         {
-            Debug.Log("Max Aug levels already selected");
+            //Debug.Log("Max Aug levels already selected");
             MessageBanner.PulseMessage("Max Aug levels already selected!", Color.red);
             return;
         }
@@ -421,7 +430,7 @@ public class UIAugPanel : MonoBehaviour
             }
             else
             {
-                Debug.Log("Can't lower MaxAugs without going over the level limit");
+                //Debug.Log("Can't lower MaxAugs without going over the level limit");
                 MessageBanner.PulseMessage("Can't lower " + _maxAugs.augmentationName + ".  Remove levels from other Augs first", Color.red);
                 return;
             }
@@ -436,8 +445,8 @@ public class UIAugPanel : MonoBehaviour
         augManager.currentResearchPoints += levelRefund;
         selectedUiAugmentation.totalCost += levelRefund;
 
-        Debug.Log("Current Level lowered to: " + level + ". Added " + levelRefund.ToString() + " to currentResearchPoints");
-        Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost.ToString());
+        //Debug.Log("Current Level lowered to: " + level + ". Added " + levelRefund.ToString() + " to currentResearchPoints");
+        //Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost.ToString());
 
         EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
 

@@ -11,6 +11,8 @@ public class AugManager : MonoBehaviour
     public static Dictionary<AugmentationBaseSO, int> selectedAugsWithLvls = new Dictionary<AugmentationBaseSO, int>();
     public static Dictionary<AugmentationBaseSO, int> selectedAugsTotalCosts = new Dictionary<AugmentationBaseSO, int>();
     public static string selectedAugsString = "";
+    public int maxAugsStart = 9;
+    public int maxAugsAddedPerPlanet = 3;
 
     [Header("Dynamic vars, don't set here")]
     public int maxAugs;
@@ -71,8 +73,13 @@ public class AugManager : MonoBehaviour
         if (profile == null)
             return;
 
-        maxAugs = profile.maxAugLevels;
+        RefreshMaxAugs();
         currentResearchPoints = ProfileManager.Instance.currentProfile.researchPoints;
+    }
+
+    public void RefreshMaxAugs()
+    {
+        maxAugs = maxAugsStart + ProfileManager.Instance.currentProfile.completedPlanets.Count * maxAugsAddedPerPlanet;
     }
 
     public void RefreshStats()
@@ -84,7 +91,7 @@ public class AugManager : MonoBehaviour
             currentResearchPoints += kvp.Value;
         }
 
-        maxAugs = ProfileManager.Instance.currentProfile.maxAugLevels;
+        RefreshMaxAugs();
     }
 
     public void ApplySelectedAugmentations()

@@ -9,17 +9,17 @@ using UnityEngine.UI;
 public class ProfileSelectionUI : MonoBehaviour
 {
     [Header("Current Profile")]
+    [SerializeField] TextMeshProUGUI profileNameTitleText;
     public TMP_Dropdown profileDropdown;
     [SerializeField] Button deleteButton;
     [SerializeField] TextMeshProUGUI researchPointsValueText;
-    [SerializeField] TextMeshProUGUI maxWaveReachedValueText;
-    [SerializeField] TextMeshProUGUI clonesUsedValueText;
+    [SerializeField] TextMeshProUGUI nightsSurvivedText;
+    [SerializeField] TextMeshProUGUI playthroughsText;
+    [SerializeField] TextMeshProUGUI planetsCompletedText;
     
     [Header("New Profile")]
-    [SerializeField] TextMeshProUGUI noProfilesText;
     public TMP_Dropdown chooseDifficultyDropdown;
     public TMP_InputField newProfileNameInput;
-    [SerializeField] string emptyProfileListWarning;
     [SerializeField] FadeCanvasGroupsWave areYouSureFadeGroup;
     [SerializeField] InputActionAsset inputAsset;
     
@@ -37,6 +37,22 @@ public class ProfileSelectionUI : MonoBehaviour
         enterKeyPressed.started += OnEnterKeyPressed;
 
         inputFieldPlaceholder = newProfileNameInput.placeholder.GetComponent<TextMeshProUGUI>();
+        StartCoroutine(InitWhenReady());
+    }
+
+    IEnumerator InitWhenReady()
+    {
+        Debug.Log("ProfileSelectionUI: InitWhenReady started");
+
+        // Wait until ProfileManager is alive and has its profiles list
+        while (ProfileManager.Instance == null || ProfileManager.Instance.profiles == null)
+        {
+            // Wait one frame (works even if Time.timeScale == 0)
+            yield return null;
+        }
+
+        Debug.Log("ProfileSelectionUI: ProfileManager is ready, calling UpdateProfilePanel");
+        UpdateProfilePanel();
     }
 
     void OnDisable()
@@ -51,18 +67,12 @@ public class ProfileSelectionUI : MonoBehaviour
         originalInputFieldPlaceholderColor = inputFieldPlaceholder.color;
 
         //ProfileManager.Instance.LoadAllProfiles();
-        UpdateProfilePanel();
-    }
-
-    public IEnumerator DelayUpdateProfilePanel()
-    {
-        yield return new WaitForFixedUpdate();
-        UpdateProfilePanel();
     }
 
     // Updates the dropdown with the current list of profiles, toggles delete button, sets other text
     public void UpdateProfilePanel()
     {
+        Debug.Log("ProfileSelectionUI: UpdateProfilePanel called.");
         if (ProfileManager.Instance == null)
         {
             Debug.LogError("ProfileManager.Instance is null!");
@@ -89,6 +99,14 @@ public class ProfileSelectionUI : MonoBehaviour
             Debug.LogWarning("Current profile is null.");
         }
 
+        // Set profile name title text
+        string nameText;
+        if (string.IsNullOrEmpty(ProfileManager.Instance.currentProfile.profileName))
+            nameText = "No Profile";
+        else
+            nameText = ProfileManager.Instance.currentProfile.profileName;
+        profileNameTitleText.text = nameText;
+
         // Clear and ensure that the lsit is not null
         profileDropdown.ClearOptions();
         List<string> profileNames = new List<string>();
@@ -97,10 +115,10 @@ public class ProfileSelectionUI : MonoBehaviour
         if (ProfileManager.Instance.profiles.Count < 1)
         {
             deleteButton.interactable = false;
-            noProfilesText.text = emptyProfileListWarning;
             researchPointsValueText.text = "N/A";
-            maxWaveReachedValueText.text = "N/A";
-            clonesUsedValueText.text = "N/A";
+            nightsSurvivedText.text = "N/A";
+            playthroughsText.text = "N/A";
+            planetsCompletedText.text = "N/A";
             ProfileManager.Instance.currentProfile = null;
             Debug.Log("ProfileSelectionUI did not find any profiles");
             return;
@@ -118,12 +136,11 @@ public class ProfileSelectionUI : MonoBehaviour
 
         // Update delete button, current profile and reasearch text
         deleteButton.interactable = true;
-        noProfilesText.text = "";
         researchPointsValueText.text = ProfileManager.Instance.currentProfile.researchPoints.ToString();
         int totalNightsSurvived = ProfileManager.Instance.currentProfile.totalNightsSurvived;
-        maxWaveReachedValueText.text = totalNightsSurvived.ToString();
-        clonesUsedValueText.text = ProfileManager.Instance.currentProfile.playthroughs.ToString();
-
+        nightsSurvivedText.text = totalNightsSurvived.ToString();
+        playthroughsText.text = ProfileManager.Instance.currentProfile.playthroughs.ToString();
+        planetsCompletedText.text = ProfileManager.Instance.currentProfile.completedPlanets.Count.ToString();
         
         SyncDropdownWithCurrentProfile();
     }

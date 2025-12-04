@@ -7,7 +7,7 @@ public interface IDamageable
     Health health { get; set; }
     bool isHit { get; set; }
 
-    void ModifyHealth(float amount, float damageScale, Vector2 hitDir, GameObject gameObject);
+    void ModifyHealth(float amount, float damageScale, Vector2 hitDir, GameObject damageDealer);
     void Knockback(Vector2 dir, float knockback);
     void Die();
 

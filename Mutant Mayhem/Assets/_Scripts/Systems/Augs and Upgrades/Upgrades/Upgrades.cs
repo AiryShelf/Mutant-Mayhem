@@ -229,7 +229,7 @@ public class KnockbackUpgrade : Upgrade
 {
     public KnockbackUpgrade() : base(PlayerStatsUpgrade.MeleeKnockback) { }
 
-    public static float UpgAmount = 2.5f;
+    public static float UpgAmount = 12f;
 
     public static float GetUpgAmount(UpgradeManager upgradeManager)
     {

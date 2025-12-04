@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
   m_Name: Enemy Death Blood
   m_EditorClassIdentifier: 
-  soundName: EnemyDeathBlood
   soundType: 1
   clips:
   - {fileID: 8300000, guid: aecea916ff23540efa9094d0e0385aa7, type: 3}
@@ -26,7 +25,7 @@ MonoBehaviour:
   loop: 0
   volume: 0.9
   pitch: 1
-  pitchRandRange: 0.2
+  pitchRandRange: 0.25
   spatialBlend: 1
   minDistance: 5
   maxDistance: 400

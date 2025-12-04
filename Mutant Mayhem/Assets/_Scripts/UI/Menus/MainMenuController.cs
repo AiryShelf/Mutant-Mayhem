@@ -72,7 +72,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (ProfileManager.Instance.currentProfile == null)
         {
-            ToggleProfiles();
+            ToggleNewProfilePanel();
             return;
         }
 
@@ -98,7 +98,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (ProfileManager.Instance.currentProfile == null)
         {
-            ToggleProfiles();
+            ToggleNewProfilePanel();
             return;
         }
 
@@ -196,7 +196,7 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    public void ToggleProfiles()
+    public void ToggleNewProfilePanel()
     {
         if (!isProfilesOpen)
         {
@@ -246,6 +246,6 @@ public class MainMenuController : MonoBehaviour
         else if (profileSelectionUI.isAreYouSurePanelOpen)
             profileSelectionUI.OnCancelDeleteProfile();
         else if (isProfilesOpen)
-            ToggleProfiles();
+            ToggleNewProfilePanel();
     }
 }

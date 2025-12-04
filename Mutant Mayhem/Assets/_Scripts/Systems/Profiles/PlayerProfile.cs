@@ -17,7 +17,7 @@ public class PlayerProfile
     public int playthroughs;
     public int totalNightsSurvived;
     public DifficultyLevel difficultyLevel;
-    public int maxAugLevels;
+    public bool completedTutorial = false;
 
     [Header("Options Settings")]
     public int qualityLevel;
@@ -36,7 +36,7 @@ public class PlayerProfile
         playthroughs = 0;
         qualityLevel = -1;
         difficultyLevel = difficulty;
-        maxAugLevels = 12;
+        completedTutorial = false;
         isStandardWASD = true;
         isSpacebarEnabled = true;
         isFastJoystickAimEnabled = false;
@@ -47,6 +47,15 @@ public class PlayerProfile
 
     public bool IsProfileUpToDate()
     {
+        // Check if tutorial completed, fix list
+        if (!completedTutorial)
+        {
+            if (completedPlanets.Contains("Tutorial"))
+                completedTutorial = true;
+
+            completedPlanets.Remove("Tutorial");
+        }
+        
         // Ensure lists exist
         if (planetIndexReachedList == null)
             planetIndexReachedList = new List<PlanetIndexEntry>();
@@ -54,16 +63,6 @@ public class PlayerProfile
             completedMissions = new List<PlanetMissionsEntry>();
 
         bool upgraded = false;
-
-        if (maxAugLevels == 0)
-        {
-            int augLevels = 12;
-            if (completedPlanets != null)
-                augLevels += completedPlanets.Count;
-
-            maxAugLevels = augLevels;
-            upgraded = true;
-        }
 
         return !upgraded;
     }

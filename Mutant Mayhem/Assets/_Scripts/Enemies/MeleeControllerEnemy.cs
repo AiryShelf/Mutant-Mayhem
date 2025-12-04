@@ -45,7 +45,7 @@ public class MeleeControllerEnemy : MonoBehaviour
         // Initialize ContactFilter2D
         contactFilter = new ContactFilter2D
         {
-            useTriggers = false
+            useTriggers = true
         };
 
         SetContactFilter(hitLayers);
@@ -224,7 +224,7 @@ public class MeleeControllerEnemy : MonoBehaviour
                 float distanceToCube = Vector2.Distance(transform.position, targetCollider.transform.position);
 
                 RaycastHit2D rayHit = Physics2D.Raycast(transform.position, directionToCube,
-                                                        distanceToCube, LayerMask.GetMask("Structures"));
+                                                        distanceToCube, LayerMask.GetMask("Structures", "QGate"));
                 if (rayHit.collider != null)
                 {
                     HitStructure(rayHit.point);
@@ -240,12 +240,14 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     int GetTargetPriority(Collider2D collider)
     {
+        if (collider.gameObject.layer == 12) // Structure
+            return 3;
         if (collider.CompareTag("Player") || collider.CompareTag("PlayerBody"))
             return 1;
-        if (collider.CompareTag("QCube"))
+        if (collider.CompareTag("QGate"))
             return 2;
-        if (collider.gameObject.layer == 12)
-            return 3;
+        if (collider.CompareTag("QCube"))
+            return 5;
         if (collider.CompareTag("Drone"))
             return 4;
 
@@ -254,21 +256,25 @@ public class MeleeControllerEnemy : MonoBehaviour
 
     void HandleMeleeCollision(Collider2D collider, Vector2 point)
     {
-        if (collider.CompareTag("Player") || collider.CompareTag("PlayerBody"))
+        if (collider.gameObject.layer == 12) // Structure
+        {
+            HitStructure(point);
+        }
+        else if (collider.CompareTag("Player") || collider.CompareTag("PlayerBody"))
         {
             Health health = collider.GetComponentInParent<Health>();
             if (health)
                 Hit(health, point);
+        }
+        else if (collider.CompareTag("QGate"))
+        {
+            HitStructure(point);
         }
         else if (collider.CompareTag("QCube"))
         {
             Health health = collider.GetComponent<Health>();
             if (health)
                 Hit(health, point);
-        }
-        else if (collider.gameObject.layer == 12) // Structure
-        {
-            HitStructure(point);
         }
         else if (collider.CompareTag("Drone"))
         {

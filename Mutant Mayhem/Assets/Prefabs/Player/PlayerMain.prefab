@@ -424,7 +424,7 @@ MonoBehaviour:
     staminaMax: 100
     staminaRegen: 15
     meleeDamage: 10
-    knockback: 50
+    knockback: 120
     playerShooter: {fileID: 4212811694825721047}
     reloadFactor: 1
     grenadeAmmo: 2
@@ -538,6 +538,7 @@ MonoBehaviour:
   flashlight1: {fileID: 2500059085168980692}
   bodyAnim: {fileID: 3219406156909584378}
   gunsAmmo: 0000000018000000000000000000000000000000
+  queuedShotWindow: 0.2
   canShoot: 1
   isShooting: 0
   isAiming: 0

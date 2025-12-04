@@ -48,7 +48,7 @@ public class MessagePortraitController : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(checkInterval);
+            yield return new WaitForSecondsRealtime(checkInterval);
 
             audioSource.GetOutputData(audioSamples, 0);
             float avgVolume = 0f;

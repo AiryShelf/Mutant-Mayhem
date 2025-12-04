@@ -322,22 +322,28 @@ public class ProfileManager : MonoBehaviour
 
     public void SetPlanetCompleted(string planetName)
     {
-        if (currentProfile.completedPlanets == null)
+        bool isTutorial = false;
+        if (planetName == "Tutorial")
+        {
+            currentProfile.completedTutorial = true;
+            isTutorial = true;
+        }
+
+        if (!isTutorial && currentProfile.completedPlanets == null)
             currentProfile.completedPlanets = new List<string>();
 
         if (currentProfile.completedPlanets.Contains(planetName))
         {
             Debug.Log($"ProfileManager: Planet {planetName} found and already set to completed!");
         }
-        else
+        else if (!isTutorial)
         {
             currentProfile.completedPlanets.Add(planetName);
-            currentProfile.maxAugLevels++;
+            AugManager.Instance.RefreshMaxAugs();
             Debug.Log($"ProfileManager: Planet {planetName} not found in Profile!  Added and set to completed!");
         }
 
         SaveCurrentProfile();
-        Debug.Log("Planet Completed: " + planetName);
     }
 
     public bool IsPlanetCompleted(PlanetSO planet)
