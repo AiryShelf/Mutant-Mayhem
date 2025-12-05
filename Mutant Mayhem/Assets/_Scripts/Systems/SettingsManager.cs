@@ -55,6 +55,11 @@ public class SettingsManager : MonoBehaviour
 
     void Start()
     {
+        if (ProfileManager.Instance.currentProfile == null)
+        {
+            Debug.Log("SettingsManager: No current profile found in ProfileManager on Start.");
+            return;
+        }
         if (!string.IsNullOrEmpty(ProfileManager.Instance.currentProfile.profileName))
             RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
     }

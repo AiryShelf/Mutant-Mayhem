@@ -14,7 +14,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] List<CanvasGroup> titleGroupsToHide;
     [SerializeField] OptionsPanel optionsPanel;
     [SerializeField] ControlSettingsPanel controlsPanel;
-    [SerializeField] FadeCanvasGroupsWave profileFadeGroup;
+    [SerializeField] FadeCanvasGroupsWave newProfileFadeGroup;
     [SerializeField] CreditsRoll creditsRoll;
     [SerializeField] InputActionAsset inputAsset;
     [SerializeField] ProfileSelectionUI profileSelectionUI;
@@ -26,6 +26,8 @@ public class MainMenuController : MonoBehaviour
     bool isControlsOpen;
     bool isCreditsOpen;
     LoadingPanel loadingPanel;
+    bool playPressedWithNoProfile;
+    bool tutorialPressedWithNoProfile;
 
     void OnEnable() 
     {
@@ -72,6 +74,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (ProfileManager.Instance.currentProfile == null)
         {
+            playPressedWithNoProfile = true;
             ToggleNewProfilePanel();
             return;
         }
@@ -98,6 +101,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (ProfileManager.Instance.currentProfile == null)
         {
+            tutorialPressedWithNoProfile = true;
             ToggleNewProfilePanel();
             return;
         }
@@ -201,15 +205,21 @@ public class MainMenuController : MonoBehaviour
         if (!isProfilesOpen)
         {
             // Open profiles panel
-            profileFadeGroup.isTriggered = true;
+            newProfileFadeGroup.isTriggered = true;
             isProfilesOpen = true;
+            profileSelectionUI.playPressedWithNoProfile = playPressedWithNoProfile;
+            profileSelectionUI.tutorialPressedWithNoProfile = tutorialPressedWithNoProfile;
             profileSelectionUI.UpdateProfilePanel();
             ScreenScaleChecker.InvokeAspectRatioChanged();
         }
         else
         {
             // Close profiles panel
-            profileFadeGroup.isTriggered = false;
+            playPressedWithNoProfile = false;
+            tutorialPressedWithNoProfile = false;
+            profileSelectionUI.playPressedWithNoProfile = false;
+            profileSelectionUI.tutorialPressedWithNoProfile = false;
+            newProfileFadeGroup.isTriggered = false;
             isProfilesOpen = false;
         }
     }

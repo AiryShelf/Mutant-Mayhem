@@ -25,6 +25,11 @@ public class PlanetManager : MonoBehaviour
 
     void Start()
     {
+        if (ProfileManager.Instance.currentProfile == null)
+        {
+            Debug.Log("PlanetManager: No current profile found in ProfileManager.");
+            return;
+        }
         SetCurrentPlanet(ProfileManager.Instance.currentProfile.lastPlanetVisited);
     }
 

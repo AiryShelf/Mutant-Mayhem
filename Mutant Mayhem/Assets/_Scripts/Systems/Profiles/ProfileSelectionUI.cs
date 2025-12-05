@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class ProfileSelectionUI : MonoBehaviour
 {
+    MainMenuController mainMenuController;
+
     [Header("Current Profile")]
     [SerializeField] TextMeshProUGUI profileNameTitleText;
     public TMP_Dropdown profileDropdown;
@@ -29,6 +31,8 @@ public class ProfileSelectionUI : MonoBehaviour
     Color originalInputFieldPlaceholderColor;
     bool isDropdownSyncing;
     public bool isAreYouSurePanelOpen;
+    public bool playPressedWithNoProfile = false;
+    public bool tutorialPressedWithNoProfile = false;
 
     void OnEnable()
     {
@@ -66,6 +70,11 @@ public class ProfileSelectionUI : MonoBehaviour
         originalInputFieldPlaceholderText = inputFieldPlaceholder.text;
         originalInputFieldPlaceholderColor = inputFieldPlaceholder.color;
 
+        mainMenuController = FindObjectOfType<MainMenuController>();
+        if (mainMenuController == null)
+        {
+            Debug.LogError("ProfileSelectionUI: MainMenuController not found in scene.");
+        }
         //ProfileManager.Instance.LoadAllProfiles();
     }
 
@@ -101,7 +110,7 @@ public class ProfileSelectionUI : MonoBehaviour
 
         // Set profile name title text
         string nameText;
-        if (string.IsNullOrEmpty(ProfileManager.Instance.currentProfile.profileName))
+        if (ProfileManager.Instance.currentProfile == null)
             nameText = "No Profile";
         else
             nameText = ProfileManager.Instance.currentProfile.profileName;
@@ -236,6 +245,18 @@ public class ProfileSelectionUI : MonoBehaviour
         // Refresh input field placehold in case of failed input entry
         inputFieldPlaceholder.text = originalInputFieldPlaceholderText;
         inputFieldPlaceholder.color = originalInputFieldPlaceholderColor; 
+
+        if (playPressedWithNoProfile)
+        {
+            // Close the profile selection UI and proceed to game
+            mainMenuController.OnStartGame();
+        }
+
+        if (tutorialPressedWithNoProfile)
+        {
+            // Close the profile selection UI and proceed to tutorial
+            mainMenuController.OnStartTutorial();
+        }
     }
 
     public void OnDeleteProfileClicked()
