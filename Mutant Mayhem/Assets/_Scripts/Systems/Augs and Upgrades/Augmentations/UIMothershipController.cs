@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -10,12 +11,29 @@ public class UIMothershipController : MonoBehaviour
     [SerializeField] FadeCanvasGroupsWave areYouSurePanel;
     [SerializeField] List<GraphicRaycaster> graphicRaycasters;
 
+    [Header("Conversations")]
+    [SerializeField] DialogueSO firstTimeDialogue;
+    [SerializeField] DialogueSO planetCompletedDialogue;
+
     UIAugPanel augPanel;
     LoadingPanel loadingPanel;
 
     void Start()
     {
         PlanetManager.Instance.SetCurrentPlanet(ProfileManager.Instance.currentProfile.lastPlanetVisited);
+
+        // First Time dialogue
+        if (firstTimeDialogue != null && ProfileManager.Instance.currentProfile.playthroughs == 0)
+        {
+            MessageManager.Instance.PlayConversation(firstTimeDialogue.startConversation);
+        }
+
+        // Planet Completed dialogue
+        if (planetCompletedDialogue != null && 
+            ProfileManager.Instance.currentProfile.completedPlanets.Contains(PlanetManager.Instance.currentPlanet.bodyName))
+        {
+            MessageManager.Instance.PlayConversation(planetCompletedDialogue.startConversation);
+        }
         
         CursorManager.Instance.inMenu = true;
         TouchManager.Instance.SetVirtualJoysticksActive(false);

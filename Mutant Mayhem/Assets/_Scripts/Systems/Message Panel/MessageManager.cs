@@ -17,7 +17,7 @@ public class MessageManager : MonoBehaviour
     public TextMeshProUGUI messageText;
     public GameObject messagePanel;
 
-    PlanetDialogueSO currentPlanetDialogue;
+    DialogueSO currentDialogue;
     ConversationData currentConversation;
     List<ConversationData> queuedConversations = new List<ConversationData>();
 
@@ -41,23 +41,23 @@ public class MessageManager : MonoBehaviour
 
     public void StartPlanetDialogue()
     {
-        currentPlanetDialogue = PlanetManager.Instance.currentPlanet.planetDialogue;
+        currentDialogue = PlanetManager.Instance.currentPlanet.planetDialogue;
 
         WaveController.OnWaveStarted -= OnWaveStarted;
         WaveController.OnWaveEnded -= OnWaveEnded;
         WaveController.OnWaveStarted += OnWaveStarted;
         WaveController.OnWaveEnded += OnWaveEnded;
 
-        if (currentPlanetDialogue == null)
+        if (currentDialogue == null)
         {
             Debug.LogError("MessageManager: PlanetDialogueSO is null.");
             return;
         }
 
-        if (currentPlanetDialogue.startConversation != null)
+        if (currentDialogue.startConversation != null)
         {
             Debug.Log("MessageManager: Playing planet " + PlanetManager.Instance.currentPlanet.bodyName + " dialogue with start conversation.");
-            PlayConversation(currentPlanetDialogue.startConversation);
+            PlayConversation(currentDialogue.startConversation);
         }
         else
         {
@@ -80,13 +80,13 @@ public class MessageManager : MonoBehaviour
     void PlayWaveConversation(int waveIndex, bool playOnWaveStart)
     {
         //Debug.Log("MessageManager: Attempting to play wave conversation for wave " + waveIndex + ", playOnWaveStart = " + playOnWaveStart);
-        if (currentPlanetDialogue == null)
+        if (currentDialogue == null)
         {
             Debug.LogWarning("MessageManager: PlanetDialogueSO is null when trying to play wave conversation.");
             return;
         }
 
-        foreach (WaveDialogue waveDialogue in currentPlanetDialogue.waveDialogues)
+        foreach (WaveDialogue waveDialogue in currentDialogue.waveDialogues)
         {
             if (waveDialogue.conversation != null &&
                 waveDialogue.waveIndex == waveIndex && waveDialogue.playOnWaveStart == playOnWaveStart)

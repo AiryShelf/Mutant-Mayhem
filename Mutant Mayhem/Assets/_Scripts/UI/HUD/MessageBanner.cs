@@ -51,7 +51,7 @@ public class MessageBanner : MonoBehaviour
     {
         if (Instance != null)
         {
-            Instance.DisplayAndPulse(message, pulseColor, Instance.timeToDisplay * 1.5f);
+            Instance.DisplayAndPulse(message, pulseColor, Instance.timeToDisplay * 2.5f);
         }
     }
 

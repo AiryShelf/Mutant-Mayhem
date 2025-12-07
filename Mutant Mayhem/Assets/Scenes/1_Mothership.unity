@@ -5423,6 +5423,8 @@ MonoBehaviour:
   - {fileID: 887124515}
   - {fileID: 2139997976}
   - {fileID: 391863290}
+  firstTimeDialogue: {fileID: 11400000, guid: f49bff1095b63452c823856848b73c4d, type: 2}
+  planetCompletedDialogue: {fileID: 11400000, guid: c2f79f3900cbd47afb11854078b13665, type: 2}
 --- !u!4 &1257614354
 Transform:
   m_ObjectHideFlags: 0
@@ -11660,6 +11662,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 70721411638041125}
     - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: mainMenuButton
+      value: 
+      objectReference: {fileID: 4655058871210613602}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: sendCloneButton
+      value: 
+      objectReference: {fileID: 3412143430799167166}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
       propertyPath: mapFadeRenderers
       value: 
       objectReference: {fileID: 2139997974}
@@ -11671,6 +11681,70 @@ PrefabInstance:
       propertyPath: highRezPlanetsGroup
       value: 
       objectReference: {fileID: 1090922122}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_NormalColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_NormalColor.b
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_NormalColor.g
+      value: 0.3921567
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_NormalColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_PressedColor.b
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_PressedColor.g
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_PressedColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_DisabledColor.a
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_SelectedColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_SelectedColor.b
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_SelectedColor.g
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_SelectedColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_HighlightedColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_HighlightedColor.b
+      value: 0.5849056
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_HighlightedColor.g
+      value: 0.5849056
+      objectReference: {fileID: 0}
+    - target: {fileID: 3082107812006606486, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
+      propertyPath: backToShipButtonColors.m_HighlightedColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5579269150072210659, guid: f43d6d964621144b29995316ce8a7c11, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

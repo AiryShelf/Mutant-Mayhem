@@ -228,6 +228,7 @@ public class CameraController : MonoBehaviour
             positionLerpCoroutine = GameTools.StartCoroutine(GameTools.LerpPosition(mouseLooker.transform, 
             mouseLooker.transform.position, targetTrans.position, duration));
         }
+        
         SetCameraDamping(dampingAmount, lockCameras);
  
         // Lerp ortho size (Zoom)

@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 139aacb5572024b789379a9996a761e6, type: 3}
-  m_Name: Message Tsorbia 5 - 1
+  m_Name: Mothership Planet Completed Message
   m_EditorClassIdentifier: 
   speakerName: Mothership AI
   speakerNameColor: {r: 0, g: 1, b: 0, a: 1}
   portraitAnimatorController: {fileID: 9100000, guid: 7af1ecc3765c141ad91d659fa60079c2, type: 2}
   backgroundAnimatorController: {fileID: 9100000, guid: e800c7dae2ada4d6f8204663fa6e964e, type: 2}
-  messageText: Some of the creatures appear to be mutating at an alarming rate! 
-    Watch out for those ones!
-  voiceClip: {fileID: 11400000, guid: 839909410352247db9d0488d409d1139, type: 2}
+  messageText: We've already completed the missions for this planet.  We can send
+    another clone, but we will not gain many Research Points.  Go to the System Map
+    to travel to another planet.
+  voiceClip: {fileID: 11400000, guid: 581d54194c87e45f39a5359d0f64dcde, type: 2}
   messageStartDelay: 0.5
   messageEndDelay: 3
   touchscreenOnly: 0

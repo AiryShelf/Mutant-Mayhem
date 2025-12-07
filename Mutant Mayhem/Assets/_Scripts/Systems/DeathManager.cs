@@ -174,7 +174,6 @@ public class DeathManager : MonoBehaviour
             return;
 
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
-        currentProfile.playthroughs++;
 
         // Ensure dictionary is built from the serialized list
         currentProfile.EnsurePlanetIndexLookup();

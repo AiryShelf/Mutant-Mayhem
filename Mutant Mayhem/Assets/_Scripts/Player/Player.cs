@@ -138,14 +138,11 @@ public class Player : MonoBehaviour
     int previousGunIndex;
 
     InputAction sprintAction;
-    InputActionMap playerActionMap;
-    InputAction interactAction;
     InputAction fireAction;
     InputAction throwAction;
     InputAction toolbarAction;
     InputActionMap uIActionMap;
     InputAction escapeAction;
-    bool wasRepairing = false;
     bool isInteracting = false;
 
     void Awake()
@@ -169,7 +166,6 @@ public class Player : MonoBehaviour
         // Inputs
         InputActionMap playerMap = inputAsset.FindActionMap("Player");
         sprintAction = playerMap.FindAction("Sprint");
-        interactAction = playerMap.FindAction("Interact");
         fireAction = playerMap.FindAction("Fire");
         throwAction = playerMap.FindAction("Throw");
         toolbarAction = playerMap.FindAction("Toolbar");
@@ -200,6 +196,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         systemsInitializer.InitializeLevelStart(this);
+        ProfileManager.Instance.currentProfile.playthroughs++;
+        ProfileManager.Instance.SaveCurrentProfile();
 
         StartCoroutine(Sprint(false));
         RefreshMoveForces();
@@ -296,8 +294,6 @@ public class Player : MonoBehaviour
     void EnterInteractMode()
     {
         //yield return new WaitForFixedUpdate();
-        
-        wasRepairing = stats.playerShooter.isRepairing;
         stats.playerShooter.isRepairing = false;
 
         if (InputManager.LastUsedDevice == Touchscreen.current)

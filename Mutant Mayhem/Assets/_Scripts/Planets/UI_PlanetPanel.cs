@@ -9,9 +9,10 @@ public class UI_PlanetPanel : MonoBehaviour
 {
     [SerializeField] Button mapButton;
     [SerializeField] TextMeshProUGUI mapButtonText;
-    [Header("Back To Ship Button Colors")]
+    [Header("Travel Button Colors")]
     [SerializeField] ColorBlock backToShipButtonColors;
     ColorBlock showMapButtonStartColors;
+    [Header("Planet Info Panel")]
     [Space][Space]
     [SerializeField] Transform highRezPlanetsGroup;
     [SerializeField] TextMeshProUGUI bodyTypeText;
@@ -28,6 +29,9 @@ public class UI_PlanetPanel : MonoBehaviour
     [SerializeField] FadeRenderers mainFadeRenderers;
     [SerializeField] ParticleSystemFader particleFader;
     [SerializeField] ParticleSystemTrailFader trailFader;
+    [SerializeField] Image planetCompletedImage;
+    [SerializeField] GameObject sendCloneButton;
+    [SerializeField] GameObject mainMenuButton;
 
     bool isMapOpen = false;
     Dictionary<PlanetSO, GameObject> _highRezPlanets = new Dictionary<PlanetSO, GameObject>();
@@ -63,6 +67,16 @@ public class UI_PlanetPanel : MonoBehaviour
     public void LoadPropertyCards(PlanetSO planet)
     {
         if (planet == null) return;
+
+        // Show completed image
+        if (ProfileManager.Instance.currentProfile.completedPlanets.Contains(planet.bodyName))
+        {
+            planetCompletedImage.gameObject.SetActive(true);
+        }
+        else
+        {
+            planetCompletedImage.gameObject.SetActive(false);
+        }
         
         ClearInfoPanel();
         bodyTypeText.text = planet.typeOfBody;
@@ -91,6 +105,8 @@ public class UI_PlanetPanel : MonoBehaviour
         if (isMapOpen)
         {
             // Close Map
+            mainMenuButton.SetActive(true);
+            sendCloneButton.SetActive(true);
             mainFadeRenderers.FadeIn();
             mainFadeGroup.isTriggered = true;
             mapFadeRenderers.FadeOut();
@@ -100,12 +116,16 @@ public class UI_PlanetPanel : MonoBehaviour
             isMapOpen = false;
             mapButtonText.text = "System Map";
             mapButton.colors = showMapButtonStartColors;
+            // Deselect any UI element
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 
             ShowHighRezPlanet(true);
         }
         else
         {
             // Open Map
+            mainMenuButton.SetActive(false);
+            sendCloneButton.SetActive(false);
             mainFadeRenderers.FadeOut();
             mainFadeGroup.isTriggered = false;
             mapFadeRenderers.FadeIn();
@@ -113,8 +133,9 @@ public class UI_PlanetPanel : MonoBehaviour
             particleFader.FadeInNewParticles();
             trailFader.FadeIn();
             isMapOpen = true;
-            mapButtonText.text = "Back to Ship";
+            mapButtonText.text = "Travel";
             mapButton.colors = backToShipButtonColors;
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 
             ShowHighRezPlanet(false);
         }
