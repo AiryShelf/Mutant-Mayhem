@@ -22,12 +22,11 @@ MonoBehaviour:
   terrainTile: {fileID: 11400000, guid: 5fef0d2be254641858541301792a3d7f, type: 2}
   mission: {fileID: 11400000, guid: 7fb026761eebc4073be042f225a6b178, type: 2}
   planetDialogue: {fileID: 0}
-  nightToSurvive: 15
+  nightToSurvive: 13
   highRezPlanetPrefab: {fileID: 6406680207806220279, guid: 1dc3fe7cfe47c41bd8b84deb654cd5f7, type: 3}
   prerequisitePlanets:
   - {fileID: 11400000, guid: b7efa2ea19572d24eb9c7f975ae2fc9f, type: 2}
   isTutorialPlanet: 0
-  basePoints: 125
   pointsPerWave: 22
   growthControlFactor: 0.22
   waveSOBase: {fileID: 11400000, guid: 2bdb8c36907e02e45946d223391c4fd2, type: 2}
@@ -39,7 +38,7 @@ MonoBehaviour:
   subwaveDelayMultStart: 1.1
   spawnRadiusBuffer: 40
   batchMultGrowthTime: 7
-  damageMultGrowthTime: 9
+  damageMultGrowthTime: 11
   attackDelayMultGrowthTime: 60
   healthMultGrowthTime: 20
   speedMultGrowthTime: 20

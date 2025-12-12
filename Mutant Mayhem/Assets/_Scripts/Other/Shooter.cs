@@ -251,7 +251,7 @@ public class Shooter : MonoBehaviour
             bullet.hitLayers = elevatedHitLayers;
         }
         
-        // Apply stats and effects
+        // Get damage with type multipliers
         float damage = currentGunSO.damage;
         switch (bullet.gunType)
         {
@@ -263,14 +263,18 @@ public class Shooter : MonoBehaviour
                 break;
         }
 
+        // Apply elevated damage multiplier and disable shadows
         float range = currentGunSO.bulletLifeTime;
         if (isElevated)
         {
             range *= isElevatedDamageMult;
-            damage *= isElevatedDamageMult;
+            if (currentGunSO.gunType != GunType.RepairGun)
+                damage *= isElevatedDamageMult;
             if (bullet.bulletLight != null)
                 bullet.bulletLight.shadowsEnabled = false;
         }
+
+        // Set bullet properties
         bullet.damage = damage;
         bullet.damageVarianceFactor = currentGunSO.damageVariance;
         bullet.origin = this.transform;
@@ -279,6 +283,7 @@ public class Shooter : MonoBehaviour
         bullet.objectPoolName = currentGunSO.bulletPoolName;
         bullet.criticalHit = criticalHit;
 
+        // Set bullet velocity with accuracy
         Vector2 dir;
         if (playerShooter)
         {
@@ -291,6 +296,8 @@ public class Shooter : MonoBehaviour
         else
             dir = ApplyAccuracy(muzzleTrans.right, currentGunSO.accuracy);
         bullet.velocity = dir * currentGunSO.bulletSpeed;
+
+        // Set bullet rotation to match velocity
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
 

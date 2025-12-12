@@ -27,7 +27,6 @@ MonoBehaviour:
   prerequisitePlanets:
   - {fileID: 11400000, guid: 9ecded26d5e074d71a1f9e9a417dd1d8, type: 2}
   isTutorialPlanet: 0
-  basePoints: 175
   pointsPerWave: 26
   growthControlFactor: 0.26
   waveSOBase: {fileID: 11400000, guid: fd60d16256f032942b461499664e92a0, type: 2}
@@ -39,7 +38,7 @@ MonoBehaviour:
   subwaveDelayMultStart: 0.9
   spawnRadiusBuffer: 40
   batchMultGrowthTime: 5
-  damageMultGrowthTime: 7
+  damageMultGrowthTime: 9
   attackDelayMultGrowthTime: 60
   healthMultGrowthTime: 20
   speedMultGrowthTime: 20

@@ -6,6 +6,7 @@ public class EnemyThrownObject : Bullet
 {
     Vector2 startScale;
     public float startDamage;
+    public float accuracyRadius = 0.6f;
 
     protected override void Awake()
     {
@@ -34,11 +35,20 @@ public class EnemyThrownObject : Bullet
             yield break;
         }
 
-        // CHANGE: optionally clamp endPos by maxRange along the start->end direction (previously only clamped duration).
-        // This keeps both the path and time consistent when a max range is enforced.
         Vector2 start2 = new Vector2(startPos.x, startPos.y);
+
+        // Apply accuracy spread (world units) before max-range clamping so the full path is consistent.
         Vector2 end2 = new Vector2(endPos.x, endPos.y);
+        if (accuracyRadius > 0f)
+        {
+            Vector2 offset = Random.insideUnitCircle * accuracyRadius;
+            end2 += offset;
+            endPos = new Vector3(end2.x, end2.y, endPos.z);
+        }
+
         Vector2 toEnd = end2 - start2;
+
+        // clamp by maxRange
         float straightDistSqr = toEnd.sqrMagnitude;
         if (straightDistSqr > maxRange * maxRange)
         {
@@ -49,10 +59,10 @@ public class EnemyThrownObject : Bullet
             endPos = new Vector3(end2.x, end2.y, endPos.z);
         }
 
-        // CHANGE: compute arc length of the *curved* path, not the straight chord
+        // Compute arc length of the *curved* path, not the straight chord
         float arcLength = GameTools.EstimateParabolaArcLength(start2, end2, curveHeight);
 
-        // CHANGE: duration from arc length
+        // Duration from arc length
         float travelDuration = arcLength / Mathf.Max(0.0001f, bulletSpeed);
 
         float dt = Time.fixedDeltaTime;
@@ -61,7 +71,7 @@ public class EnemyThrownObject : Bullet
 
         float z = transform.position.z;
 
-        // track previous position for rotation
+        // Track previous position for rotation
         Vector3 prevPos = startPos;
         Vector2 speed = Vector2.one;
 

@@ -22,7 +22,7 @@ public class Aug_CreditsMult : AugmentationBaseSO
         float creditsMult = 1;
         float totalCreditsMult = creditsMult + lvlMultIncrement * level;
         string percentage = GameTools.FactorToPercent(totalCreditsMult);
-        string description = "Boost Credits income by " + percentage + " - Recent insights into Mutant " +
+        string description = "Boost Credits income from pickupsby " + percentage + " - Recent insights into Mutant " +
                              "anatomy allows clones to identify prime tissue samples, which sell at a higher price";
         return description;
     }

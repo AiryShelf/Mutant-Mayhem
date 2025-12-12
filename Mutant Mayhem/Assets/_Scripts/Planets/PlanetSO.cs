@@ -19,7 +19,6 @@ public class PlanetSO : ScriptableObject
 
     [Header("Research Points:")]
     public bool isTutorialPlanet = false;
-    public int basePoints = 0;
     public int pointsPerWave = 20;
     public float growthControlFactor = 0.05f;
 
