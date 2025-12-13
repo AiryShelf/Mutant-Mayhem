@@ -551,8 +551,8 @@ public class TileManager : MonoBehaviour
         //}
         
         //Debug.Log("TILE HEALTH: " + _TileStatsDict[rootPos].health);
-        bool isException = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.Mine ||
-                           _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.RazorWire;
+        bool isRepairable = _TileStatsDict[rootPos].ruleTileStructure.structureSO.canBeRepaired;
+        bool isException = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == StructureType.Mine;
 
         float healthDifference = _TileStatsDict[rootPos].health - healthAtStart;
         Color color = textFlyHealthGainColor;
@@ -560,7 +560,7 @@ public class TileManager : MonoBehaviour
             return;
         else if (healthDifference < 0)
         {
-            if (!isException)
+            if (isRepairable)
                 ConstructionManager.Instance.AddRepairJob(new DroneJob(DroneJobType.Repair, GridCenterToWorld(rootPos)));
 
             color = textFlyHealthLossColor;
@@ -569,7 +569,10 @@ public class TileManager : MonoBehaviour
         }
         else if (healthDifference > 0)
         {
-            if (_TileStatsDict[rootPos].health >= maxHealth - 1)
+            if (!isRepairable)
+                _TileStatsDict[rootPos].health -= healthDifference; // Revert health increase if not repairable
+                
+            if (_TileStatsDict[rootPos].health >= maxHealth)
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
         }
 

@@ -84,8 +84,8 @@ public class RepairBullet : Bullet
                 tileManager.BuildBlueprintAt(target, -damage, 1.3f, hitDir);
             }
             
-            // Or, repair, but not Razor Wire
-            bool isRepairable = tileManager.GetStructureAt(target).structureType != StructureType.RazorWire;
+            // Or, repair structure
+            bool isRepairable = tileManager.GetStructureAt(target).canBeRepaired;
             if (!isBlueprint && isRepairable)
             {
                 float repairCost = tileManager.GetRepairCostAt(target, -damage);

@@ -34,6 +34,7 @@ public class Bullet : MonoBehaviour
 
     protected TileManager tileManager;
     Collider2D myCollider;
+    bool isDying;
 
     protected virtual void Awake()
     {
@@ -48,15 +49,32 @@ public class Bullet : MonoBehaviour
     {
         hitLayers = hitLayersStart;
         StopAllCoroutines();
+
+        // Reset pooled state
+        isDying = false;
+        if (myCollider != null)
+            myCollider.enabled = true;
+        if (rb != null)
+            rb.simulated = true;
     }
 
     protected virtual void FixedUpdate()
     {
+        if (isDying)
+            return;
+
         CheckCollisions();
     }
 
     public virtual void Fly()
     {
+        // Reset pooled state
+        isDying = false;
+        if (myCollider != null)
+            myCollider.enabled = true;
+        if (rb != null)
+            rb.simulated = true;
+
         AudioManager.Instance.PlaySoundFollow(shootSound, transform);
 
         // Check origin point for collision
@@ -73,10 +91,56 @@ public class Bullet : MonoBehaviour
 
     protected IEnumerator RepoolAfterSeconds()
     {
-        //Debug.Log("Destroying bullet after seconds: " + destroyTime);
-        yield return new WaitForSeconds(destroyTime);
+        // Align most of the lifetime to physics steps, but don't overshoot destroyTime.
+        float elapsed = 0f;
 
-        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+        while (elapsed + Time.fixedDeltaTime <= destroyTime)
+        {
+            yield return new WaitForFixedUpdate();
+            elapsed += Time.fixedDeltaTime;
+
+            if (isDying)
+                yield break;
+        }
+
+        // Cover any remaining fractional time.
+        float remaining = destroyTime - elapsed;
+        if (remaining > 0f && !isDying)
+        {
+            // Check current position first.
+            Collider2D other = Physics2D.OverlapBox(myCollider.bounds.center, myCollider.bounds.size, transform.eulerAngles.z, hitLayers);
+            if (other)
+            {
+                Hit(other, transform.position);
+                yield break;
+            }
+
+            // Raycast the remaining distance (speed * remaining).
+            Vector2 v = rb.velocity;
+            float dist = v.magnitude * remaining;
+            if (dist > 0f)
+            {
+                RaycastHit2D raycast = Physics2D.Raycast(transform.position, v, dist, hitLayers);
+                if (raycast.collider)
+                {
+                    // Preserve your existing "land inside collider" behavior by using the raycast point as-is
+                    // and letting Hit/your existing offset logic handle it where needed.
+                    Hit(raycast.collider, raycast.point + v / 32 * remaining);
+                    yield break;
+                }
+
+                // No hit: visually advance to max range for one render frame, without extending gameplay.
+                Vector2 finalPos = (Vector2)transform.position + (v * remaining);
+                isDying = true;
+                StopAllCoroutines();
+                StartCoroutine(ReturnToPoolAfterVisualFrame(finalPos));
+                yield break;
+            }
+        }
+
+        // No remaining fraction (or already dying): return normally.
+        if (!isDying && gameObject.activeInHierarchy)
+            PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 
     protected virtual void CheckCollisions()
@@ -136,6 +200,7 @@ public class Bullet : MonoBehaviour
             if (gameObject.CompareTag("PlayerBullet"))
             {
                 damageNew /= 3;
+                // Allows for scaling of textFly numbers
                 damageScale = damageNew / (damage / 3);
                 tileManager.ModifyHealthAt(point, -damageNew, damageScale, hitDir);
             }
@@ -178,8 +243,37 @@ public class Bullet : MonoBehaviour
         ParticleManager.Instance.PlayBulletHitEffect(gunType, point, hitDir);
         AudioManager.Instance.PlaySoundAt(hitSound, point);
 
-        // Return to pool
-        PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
+        // Linger visually for one rendered frame at the final hit point,
+        // without extending gameplay range/collisions.
+        if (isDying)
+            return;
+
+        isDying = true;
+        StopAllCoroutines();
+        StartCoroutine(ReturnToPoolAfterVisualFrame(point));
+    }
+
+    IEnumerator ReturnToPoolAfterVisualFrame(Vector2 finalPos)
+    {
+        // NOTE: Do not StopAllCoroutines() in here, or we'll cancel this coroutine before it can pool.
+
+        // Freeze gameplay + collisions immediately.
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            rb.simulated = false;
+        }
+        if (myCollider != null)
+            myCollider.enabled = false;
+
+        // Snap to final position so the bullet is drawn exactly where it ended.
+        transform.position = finalPos;
+
+        // Ensure the bullet gets rendered at its final position at least once.
+        yield return new WaitForEndOfFrame();
+
+        if (gameObject.activeInHierarchy)
+            PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
     }
 
     #endregion

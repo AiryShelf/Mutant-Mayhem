@@ -7,6 +7,7 @@ public class PickupsReceiver : PickupsContainerBase
     [SerializeField] Color creditsColor;
     [SerializeField] float textFlyAlphaMax;
     [SerializeField] float textPulseScaleMax = 1.5f;
+    [SerializeField] string creditsTextFlyPoolName = "TextFlyWorld_Credits";
 
     public override void AddToContainer(Pickup pickup)
     {
@@ -21,12 +22,12 @@ public class PickupsReceiver : PickupsContainerBase
         container.Remove(pickup);
 
         // Return pickup to pool
-        PoolManager.Instance.ReturnToPool("Pickup", pickup.gameObject);
+        PoolManager.Instance.ReturnToPool(pickup.poolName, pickup.gameObject);
     }
 
     void PlayCreditsEffects(int credits)
     {
-        GameObject textFly = PoolManager.Instance.GetFromPool("TextFlyWorld_Credits");
+        GameObject textFly = PoolManager.Instance.GetFromPool(creditsTextFlyPoolName);
         float angle = Random.Range(0f, Mathf.PI * 2);
         Vector2 flyDir = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));
         textFly.transform.position = transform.position;

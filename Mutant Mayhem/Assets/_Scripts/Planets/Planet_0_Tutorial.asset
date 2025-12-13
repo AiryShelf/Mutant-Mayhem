@@ -24,7 +24,6 @@ MonoBehaviour:
   highRezPlanetPrefab: {fileID: 9019925247547298173, guid: 8806b83f4eaf140598f4d9a0ca271f8a, type: 3}
   prerequisitePlanets: []
   isTutorialPlanet: 1
-  basePoints: 0
   pointsPerWave: 0
   growthControlFactor: 0
   waveSOBase: {fileID: 11400000, guid: bde7b66a9753e4d61a8080db9d623770, type: 2}
@@ -36,11 +35,11 @@ MonoBehaviour:
   subwaveDelayMultStart: 1.2
   spawnRadiusBuffer: 40
   batchMultGrowthTime: 8
-  damageMultGrowthTime: 10
+  damageMultGrowthTime: 20
   attackDelayMultGrowthTime: 60
   healthMultGrowthTime: 20
   speedMultGrowthTime: 20
-  sizeMultGrowthTime: 40
+  sizeMultGrowthTime: 20
   subwaveDelayMultGrowthTime: 40
   damageMultiplier: 1
   healthMultiplier: 1

@@ -247,7 +247,6 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         float areaScale = transform.localScale.x * transform.localScale.y;
 
         // Set these stats by areaScale to keep health and damage proportional to size
-        
         health.SetMaxHealth(areaScale * health.startMaxHealth * waveController.healthMultiplier);
         health.SetHealth(health.GetMaxHealth());
 

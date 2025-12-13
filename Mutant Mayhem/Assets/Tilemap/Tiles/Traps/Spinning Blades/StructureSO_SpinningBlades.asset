@@ -10,25 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
-  m_Name: StructureSO_RazorWire
+  m_Name: StructureSO_SpinningBlades
   m_EditorClassIdentifier: 
-  uiImage: {fileID: 21300000, guid: f434b3ebea4cd3941af829bfebff3f2c, type: 3}
-  tileName: Razor Wire
-  description: 'Coils of deadly razor wire.  This is sure to slow the Mutants while
-    dealing some damage
+  uiImage: {fileID: 21300000, guid: 96c8a6c4dc67542f997a96d5d484e988, type: 3}
+  tileName: Spinning Blades
+  description: 'Spinning blades of death.  Careful, they destroy tissue samples (pickups)
+    too
 
 
     Takes some damage with each hit.  Cannot be repaired'
-  tileCost: 20
-  maxHealth: 200
+  tileCost: 300
+  maxHealth: 300
   health: 200
   blueprintBuildAmount: 100
   canBeRepaired: 0
   cellPositions:
   - {x: 0, y: 0, z: 0}
-  ruleTileStructure: {fileID: 11400000, guid: 5a00642f59d17fc4594bb733c6879dfc, type: 2}
-  blueprintTile: {fileID: 11400000, guid: 62285aeb09dfe5144aa08bfbd512aade, type: 2}
-  structureType: 21
+  - {x: 1, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: -1, z: 0}
+  - {x: 2, y: -1, z: 0}
+  - {x: 0, y: -2, z: 0}
+  - {x: 1, y: -2, z: 0}
+  - {x: 2, y: -2, z: 0}
+  ruleTileStructure: {fileID: 11400000, guid: 1f1f00cd2a6304096842ee3b35d603f0, type: 2}
+  blueprintTile: {fileID: 11400000, guid: ea703e178702b4edd810f4ae70aa24af, type: 2}
+  structureType: 33
   isTurret: 0
   actionType: 1
   actionRange: {x: 6, y: 6}

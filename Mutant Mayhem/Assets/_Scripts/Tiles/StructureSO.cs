@@ -14,6 +14,7 @@ public class StructureSO : ScriptableObject
     public float maxHealth;
     public float health;
     public float blueprintBuildAmount = 100;
+    public bool canBeRepaired = true;
     public List<Vector3Int> cellPositions;
 
     [Header("Tile Type")]
@@ -68,6 +69,7 @@ public enum StructureType
     RepairBay,
     QuantumCube,
     SupplyDepot,
+    SpinningBlades,
     None
 }
 

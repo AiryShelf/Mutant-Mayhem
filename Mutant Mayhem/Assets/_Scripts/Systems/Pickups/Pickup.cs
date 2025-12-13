@@ -15,6 +15,7 @@ public class PickupData
 
 public class Pickup : MonoBehaviour
 {
+    public string poolName = "Pickup";
     public PickupData pickupData;
     [SerializeField] List<Sprite> sprites = new List<Sprite>();
     [SerializeField] SpriteRenderer SR;
@@ -55,6 +56,7 @@ public class Pickup : MonoBehaviour
             gridPos = tileManager.WorldToGrid(myPos);
             if (TileManager.StructureTilemap.GetTile(gridPos) &&
                 !tileManager.IsTileBlueprint(myPos) &&
+                tileManager.GetStructureAt(myPos).structureType != StructureType.ThreeByThreePlatform &&
                 tileManager.GetStructureAt(myPos).structureType != StructureType.RazorWire &&
                 tileManager.GetStructureAt(myPos).structureType != StructureType.Mine &&
                 !tileManager.CheckGridIsClear(gridPos, LayerMask.GetMask("Structures"), true))
