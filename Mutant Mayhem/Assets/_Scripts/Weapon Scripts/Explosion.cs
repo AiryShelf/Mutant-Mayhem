@@ -275,6 +275,22 @@ public class Explosion : MonoBehaviour
                     cubeHealth.ModifyHealth(-totalDamage, damageScale, hitDir, gameObject);
                     //Debug.Log($"QCube hit at {cubeHealth.transform.position} for {totalDamage} damage");
                     cubeWasHit = true;
+                    continue;
+                }
+
+                // Apply force to pickups
+                Pickup pickup = entity.GetComponent<Pickup>();
+                if (pickup != null)
+                {
+                    float distToPoint = Vector2.Distance(explosionPos, pickup.transform.position);
+
+                    // Apply force
+                    Rigidbody2D rb = pickup.GetComponent<Rigidbody2D>();
+                    Vector2 direction = pickup.transform.position - transform.position;
+                    float forceMagnitude = Mathf.Clamp(force / distToPoint, 0, force);
+                    forceMagnitude /= 6;
+                    rb.AddForce(direction.normalized * forceMagnitude, ForceMode2D.Impulse);
+                    continue;
                 }
             }
         }

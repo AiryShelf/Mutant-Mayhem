@@ -177,7 +177,7 @@ MonoBehaviour:
   - {x: -0.21528363, y: -0.14868794, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 262792
+  m_InstanceId: 208186
   m_LocalBounds:
     m_Center: {x: -0.07518342, y: 0.000651747, z: 0}
     m_Extent: {x: 0.26163375, y: 0.17178518, z: 0}
@@ -1173,10 +1173,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: []
   pickupEffect: {fileID: 274977680249729649}
-  pickupFxBurstCount: 10
+  pickupFxBurstCount: 15
   myGravity: {fileID: 3519508816875026959}
   unloadDelay: 0.1
-  unloadForce: 0.04
+  unloadForce: 40
 --- !u!114 &3519508816875026959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1190,7 +1190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attractionRadius: 2.5
-  attractionStrength: 15
+  attractionStrength: 15000
   affectedLayers:
     serializedVersion: 2
     m_Bits: 262144
@@ -7533,7 +7533,7 @@ MonoBehaviour:
   - {x: -0.21713921, y: -0.1723154, z: 0}
   m_ShapePathHash: 1677185479
   m_Mesh: {fileID: 0}
-  m_InstanceId: 262744
+  m_InstanceId: 208138
   m_LocalBounds:
     m_Center: {x: -0.076765835, y: -0.00025446713, z: 0}
     m_Extent: {x: 0.26141372, y: 0.17206094, z: 0}

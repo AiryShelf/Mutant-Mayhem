@@ -7,7 +7,6 @@ public class RepairBullet : Bullet
 {
     [Header("Repair Bullet Settings")]
     [SerializeField] protected float speed = 10;
-    [SerializeField] BulletEffectsHandler effectsHandler;
 
     protected Vector2 target;
     

@@ -77,29 +77,10 @@ public class EnemyShooter : MonoBehaviour
 
             bullet.Fly();
 
-            StartCoroutine(KeepBulletTrail(obj, currentGun.bulletLifeTime));
             StartCoroutine(MuzzleFlash());
 
             yield return new WaitForSeconds(currentGun.shootSpeed);
         }
-    }
-
-    // OLD CODE!  Use BulletEffectsHandler  
-    
-    IEnumerator KeepBulletTrail(GameObject bullet, float lifeTime)
-    {
-        yield return new WaitForSeconds(lifeTime);
-        yield return new WaitForEndOfFrame();
-        
-        if (bullet != null)
-        {
-            BulletEffectsHandler bulletFX = bullet.GetComponent<BulletEffectsHandler>();
-            if (bulletFX == null)
-                yield break;
-
-            bulletFX.transform.parent = null;
-            //bulletFX.DestroyAfterSeconds();
-        }  
     }
 
     Vector2 ApplyAccuracy(Vector2 dir)

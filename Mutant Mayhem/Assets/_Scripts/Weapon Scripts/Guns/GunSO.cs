@@ -8,6 +8,7 @@ public enum GunType
     Laser,
     Bullet,
     RepairGun = 10,
+    SpinningBlade
 }
 
 [CreateAssetMenu(menuName = "Game/Guns/GunSO", fileName = "NewGun")]

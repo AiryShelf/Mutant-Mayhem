@@ -254,13 +254,15 @@ public class TileManager : MonoBehaviour
         // Check instantiated object for ITileObjectExplodable
         GameObject tileObject = StructureTilemap.GetInstantiatedObject(rootPos);
         StructureType type = _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType;
+        Debug.Log("TileObject for " + type.ToString() + ": " + tileObject);
         if (tileObject != null)
         {
             var explodable = tileObject.GetComponentInChildren<MonoBehaviour>();
+            Debug.Log("Explodable for " + type.ToString() + ": " + explodable);
             if (explodable != null && explodable is ITileObjectExplodable tileObjectExplodable)
             {
                 tileObjectExplodable.Explode();
-                Debug.Log("Explodable explosion triggered for " + type.ToString());
+                Debug.Log("Explosion triggered for " + type.ToString());
             }
         }
 
@@ -1074,9 +1076,9 @@ public class TileManager : MonoBehaviour
             
             foreach (Collider2D col in hits)
             {
-                if (col.tag != "PickupTrigger")
+                if (col.tag != "PickupTrigger" && col.gameObject.layer != LayerMask.NameToLayer("FlyingEnemies"))
                 {
-                    Debug.Log("CheckGridIsClear found a collider at the checked position");
+                    //Debug.Log("CheckGridIsClear found a collider at the checked position");
                     return false;
                 }
             }
@@ -1110,7 +1112,7 @@ public class TileManager : MonoBehaviour
         
         foreach (Collider2D col in hits)
         {
-            if (col.tag != "PickupTrigger")
+            if (col.tag != "PickupTrigger" && col.gameObject.layer != LayerMask.NameToLayer("FlyingEnemies"))
             {
                 //Debug.Log("Collider detected on CheckGridIsClear");
                 return false;

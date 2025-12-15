@@ -18,12 +18,13 @@ MonoBehaviour:
     Slots
 
 
-    Unlocks more advanced structures including, Micro Reactor, Blast
+    Unlocks more advanced structures including the Micro Reactor, Blast
     Gate, Floodlight, and Land Mine'
   tileCost: 2000
   maxHealth: 1600
   health: 1600
   blueprintBuildAmount: 2000
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
@@ -50,4 +51,3 @@ MonoBehaviour:
   - {fileID: 11400000, guid: be57d7f42b2b34863bf9df509f6e6d1f, type: 2}
   - {fileID: 11400000, guid: a5868e627c1a479458a424fe31120e7c, type: 2}
   canBuildOnlyOne: 1
-  droneHangarRange: 12

@@ -47,7 +47,8 @@ public class Task : MonoBehaviour
         taskText.color = Color.grey;
         progressText.color = Color.white;
 
-        missionPanelController.CheckIfObjectiveComplete();
+        if (missionPanelController != null)
+            missionPanelController.CheckIfObjectiveComplete();
 
         Debug.Log("Task completed");
     }

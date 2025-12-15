@@ -113,6 +113,14 @@ public class EnemyMutant : EnemyBase
 
         SetCombinedPolygonCollider(g);
         SetMeleeSettings(g);
+        if (g.legGene.isFlying)
+        {
+            gameObject.layer = LayerMask.NameToLayer("FlyingEnemies");
+        }
+        else
+        {
+            gameObject.layer = LayerMask.NameToLayer("Enemies");
+        }
 
         // Set movement speed and a minimum based on mass
         moveSpeedBase *= rb.mass * waveController.speedMultiplier;

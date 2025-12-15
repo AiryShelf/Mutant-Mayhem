@@ -14,7 +14,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] protected SoundSO shootSound;
     [SerializeField] protected SoundSO hitSound;
 
-    [Header("Set by GunSO for Player, and manually here for Enemies' projectiles")]
+    [Header("Set by GunSO for Player, and manually here for other projectiles")]
     public string objectPoolName;
 
     [Header("Optional")]
@@ -75,7 +75,8 @@ public class Bullet : MonoBehaviour
         if (rb != null)
             rb.simulated = true;
 
-        AudioManager.Instance.PlaySoundFollow(shootSound, transform);
+        if (shootSound != null)
+            AudioManager.Instance.PlaySoundFollow(shootSound, transform);
 
         // Check origin point for collision
         Collider2D other = Physics2D.OverlapPoint(transform.position, hitLayers);

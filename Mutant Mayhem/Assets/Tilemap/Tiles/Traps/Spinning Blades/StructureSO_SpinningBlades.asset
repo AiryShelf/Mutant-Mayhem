@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782463506681f1c40b9376ee987ab1bc, type: 3}
   m_Name: StructureSO_SpinningBlades
   m_EditorClassIdentifier: 
-  uiImage: {fileID: 21300000, guid: 96c8a6c4dc67542f997a96d5d484e988, type: 3}
+  uiImage: {fileID: -197668940, guid: 5f2bc168f10e1472a955b60561873f7d, type: 3}
   tileName: Spinning Blades
-  description: 'Spinning blades of death.  Careful, they destroy tissue samples (pickups)
-    too
+  description: 'Spinning blades of death.
 
 
-    Takes some damage with each hit.  Cannot be repaired'
-  tileCost: 300
-  maxHealth: 300
-  health: 200
-  blueprintBuildAmount: 100
+    Takes some damage with each hit. 
+    Cannot be repaired'
+  tileCost: 400
+  maxHealth: 500
+  health: 500
+  blueprintBuildAmount: 1000
   canBeRepaired: 0
   cellPositions:
   - {x: 0, y: 0, z: 0}
@@ -42,7 +42,7 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 0
   powerNeighborBonus: 0
-  powerCost: 0
-  supplyCost: 0
+  powerCost: 5
+  supplyCost: 1
   structuresToUnlock: []
   canBuildOnlyOne: 0

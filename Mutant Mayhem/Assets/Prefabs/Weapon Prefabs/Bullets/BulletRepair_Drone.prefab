@@ -61,7 +61,7 @@ MonoBehaviour:
   AiTrggerPrefab: {fileID: 0}
   AITriggerSize: 0
   damage: 10
-  damageVariance: 0
+  damageVarianceFactor: 0
   knockback: 1
   destroyTime: 0
   velocity: {x: 0, y: 0}
@@ -70,7 +70,7 @@ MonoBehaviour:
   critChanceMult: 1
   critDamageMult: 1
   speed: 10
-  effectsHandler: {fileID: 809539151921915496}
+  effectsHandler: {fileID: 0}
 --- !u!50 &2082839547474369568
 Rigidbody2D:
   serializedVersion: 4
@@ -287,7 +287,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3776553701249907095}
-  - component: {fileID: 809539151921915496}
   m_Layer: 0
   m_Name: BulletEffects
   m_TagString: Untagged
@@ -311,23 +310,6 @@ Transform:
   - {fileID: 1926360873435879363}
   m_Father: {fileID: 2067620820671411928}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &809539151921915496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3027977284356930089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc902eb31ae847f49974f50051880a02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToDestroyParticleTrail: 0.3
-  timeToDestroyLineRenderer: 0
-  timeToDestroyAll: 0.3
-  particleTrail: {fileID: 420588502394216304}
-  trailRenderer: {fileID: 0}
 --- !u!1 &7443074916174976427
 GameObject:
   m_ObjectHideFlags: 0
