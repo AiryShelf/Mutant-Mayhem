@@ -6,40 +6,22 @@ using UnityEngine.Rendering.Universal;
 public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
 {
     [SerializeField] List<Sprite> damagedSprites;
-    [SerializeField] float rotationForce = 10000f;
-    [SerializeField] float maxAngularVelocity = 1000f;
-    [SerializeField] float minAngularVelocityToDamage = 100f;
-    [SerializeField] float damagePerAngularVel = 0.1f;
-    [SerializeField] float damageInterval = 0.5f;
-    [SerializeField] float selfDamagePerAngularVel = 0.01f;
-    [SerializeField] float flyingEnemyKnockbackPerAngularVel = 0.04f;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Light2D postLight;
 
     [SerializeField] bool hasPower = true;
-
-    [Header("Shard Explosion")]
-    [SerializeField] bool enableShardExplosion = true;
-    [SerializeField] string shardBulletPoolName = "BulletSpinningBlade_Shard";
-    [SerializeField, Min(1)] int shardCount = 6;
-    [SerializeField] float minAngularVelForShards = 250f;
-    [SerializeField] float shardMinSpeed = 8f;
-    [SerializeField] float shardMaxSpeed = 18f;
-    [SerializeField] float shardMinDamage = 5f;
-    [SerializeField] float shardMaxDamage = 20f;
-    [SerializeField] float shardLifeTime = 1.2f;
-    [SerializeField] float shardKnockback = 0.5f;
-    [SerializeField, Range(0f, 360f)] float shardStartAngleOffset = 0f;
-    [SerializeField, Range(0f, 30f)] float shardAngleJitter = 0f;
 
 
     List<Health> tempHits = new List<Health>();
     float previousAngularVelocity = 0f;
 
     public string explosionPoolName;
+    SpinningBladesManager bladesManager;
+    Vector2 centerPos = Vector2.zero;
 
     void Start()
     {
+        bladesManager = SpinningBladesManager.Instance;
         Daylight.OnSunrise += LightsOff;
         Daylight.OnSunset += LightsOn;
     }
@@ -62,13 +44,17 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
 
     public void Explode()
     {
+        Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
+        rootPos = TileManager.Instance.GridToRootPos(rootPos);
+        centerPos = TileManager.Instance.TileCellsCenterToWorld(rootPos);
+        Debug.Log($"[SpinningBlades] Explode: transformPos={transform.position} grid={TileManager.Instance.WorldToGrid(transform.position)} rootPos={rootPos} centerPos={centerPos} prevAngVel={previousAngularVelocity}");
+
         TrySpawnShardExplosion(previousAngularVelocity);
 
         if (!string.IsNullOrEmpty(explosionPoolName))
         {
             GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
-            Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
-            explosion.transform.position = TileManager.Instance.TileCellsCenterToWorld(rootPos);
+            explosion.transform.position = centerPos;
         }
     }
 
@@ -119,8 +105,8 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
     void FixedUpdate()
     {
         // Apply torque and limit angular velocity
-        if (hasPower && Mathf.Abs(rb.angularVelocity) < maxAngularVelocity)
-            rb.AddTorque(rotationForce * Time.fixedDeltaTime);
+        if (hasPower && Mathf.Abs(rb.angularVelocity) < bladesManager.maxAngularVelocity)
+            rb.AddTorque(bladesManager.rotationForce * Time.fixedDeltaTime);
 
         previousAngularVelocity = rb.angularVelocity;
     }
@@ -134,25 +120,25 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
                 return;
 
             // Target damage  
-            float damageToApply = damagePerAngularVel * Mathf.Abs(previousAngularVelocity);
+            float damageToApply = bladesManager.damagePerAngularVel * Mathf.Abs(previousAngularVelocity);
             // Get ratio of damage from min to max angular velocity for TextFly scaling
-            float damageScale = 1 + Mathf.Clamp01(Mathf.Abs(previousAngularVelocity) / maxAngularVelocity);
+            float damageScale = 1 + Mathf.Clamp01(Mathf.Abs(previousAngularVelocity) / bladesManager.maxAngularVelocity);
             Vector2 hitDir = otherCollider.transform.position - transform.position;
             health.ModifyHealth(-damageToApply, damageScale, hitDir, otherCollider.gameObject);
 
             // Self damage
-            float selfDamage = selfDamagePerAngularVel * Mathf.Abs(previousAngularVelocity);
-            TileManager.Instance.ModifyHealthAt(transform.position, -selfDamage, 1f, -hitDir);
+            float selfDamage = bladesManager.selfDamagePerAngularVel * Mathf.Abs(previousAngularVelocity);
+            TileManager.Instance.ModifyHealthAt(transform.position, -selfDamage, 1.5f, -hitDir);
 
             // Add to temp list to avoid multiple damage instances in short time
             tempHits.Add(health);
-            StartCoroutine(RemoveColliderFromTempList(health, damageInterval));
+            StartCoroutine(RemoveColliderFromTempList(health, bladesManager.damageInterval));
         }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (Mathf.Abs(previousAngularVelocity) < minAngularVelocityToDamage)
+        if (Mathf.Abs(previousAngularVelocity) < bladesManager.minAngularVelocityToDamage)
             return;
 
         // Damage health on collision
@@ -161,72 +147,32 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
         {
             ApplyDamage(otherCollider);
         }
-        // Handle pickup collisions
-        /*
-        else if (otherCollider.gameObject.layer == LayerMask.NameToLayer("Pickups"))
-        {
-            PoolManager.Instance.ReturnToPool("Pickup", otherCollider.gameObject);
-            return; 
-        }
-        */
-
-        //previousAngularVelocity = rb.angularVelocity;
-    }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        // Handle enemy melee collider collisions
-        if (collider.gameObject.layer == LayerMask.NameToLayer("EnemyMeleeTrigger"))
-        {
-            EnemyMutant mutant = collider.GetComponentInParent<EnemyMutant>();
-            if (mutant != null && mutant.individual.genome.legGene.isFlying)
-            {
-                Rigidbody2D mutantRb = mutant.GetComponent<Rigidbody2D>();
-                // Calculate knockback based on angular velocity
-                float knockbackForce = flyingEnemyKnockbackPerAngularVel * Mathf.Abs(previousAngularVelocity);
-                Vector2 knockbackDir = (mutant.transform.position - transform.position).normalized;
-                mutantRb.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
-
-                ApplyDamage(collider);
-                return;
-            }
-            EnemyBase enemy = collider.GetComponentInParent<EnemyBase>();
-            if (enemy != null && enemy.gameObject.layer == LayerMask.NameToLayer("FlyingEnemies"))
-            {
-                Rigidbody2D enemyRb = enemy.GetComponent<Rigidbody2D>();
-                // Calculate knockback based on angular velocity
-                float knockbackForce = flyingEnemyKnockbackPerAngularVel * Mathf.Abs(previousAngularVelocity);
-                Vector2 knockbackDir = (enemy.transform.position - transform.position).normalized;
-                enemyRb.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
-            }
-            
-
-
-            ApplyDamage(collider);
-        }
     }
 
     void TrySpawnShardExplosion(float angularVel)
     {
-        if (!enableShardExplosion)
+        Debug.Log($"[SpinningBlades] TrySpawnShardExplosion called. angularVel={angularVel} abs={Mathf.Abs(angularVel)} centerPos={centerPos} enable={bladesManager.enableShardExplosion} pool='{bladesManager.shardBulletPoolName}' count={bladesManager.shardCount}");
+
+        if (!bladesManager.enableShardExplosion)
             return;
 
         float absAngVel = Mathf.Abs(angularVel);
-        if (absAngVel < minAngularVelForShards)
+        if (absAngVel < bladesManager.minAngularVelForShards)
             return;
 
-        if (string.IsNullOrEmpty(shardBulletPoolName))
+        if (string.IsNullOrEmpty(bladesManager.shardBulletPoolName))
             return;
+
+        Debug.Log($"[SpinningBlades] Spawning shards: absAngVel={absAngVel}, count={bladesManager.shardCount}");
 
         // Map angular velocity into a 0..1 ratio using the same maxAngularVelocity clamp used for spinning.
-        float ratio = Mathf.InverseLerp(minAngularVelForShards, maxAngularVelocity, absAngVel);
-        float speed = Mathf.Lerp(shardMinSpeed, shardMaxSpeed, ratio);
+        float ratio = Mathf.InverseLerp(bladesManager.minAngularVelForShards, bladesManager.maxAngularVelocity, absAngVel);
+        float speed = Mathf.Lerp(bladesManager.shardMinSpeed, bladesManager.shardMaxSpeed, ratio);
 
         // Damage scales with speed relative to top speed.
-        float dmgT = (shardMaxSpeed <= 0.0001f) ? 0f : Mathf.Clamp01(speed / shardMaxSpeed);
-        float damage = Mathf.Lerp(shardMinDamage, shardMaxDamage, dmgT);
-
-        SpawnShards(shardCount, speed, damage);
+        float dmgT = (bladesManager.shardMaxSpeed <= 0.0001f) ? 0f : Mathf.Clamp01(speed / bladesManager.shardMaxSpeed);
+        float damage = Mathf.Lerp(bladesManager.shardMinDamage, bladesManager.shardMaxDamage, dmgT);
+        SpawnShards(bladesManager.shardCount, speed, damage);
     }
 
     void SpawnShards(int count, float speed, float damage)
@@ -234,42 +180,86 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
         if (count <= 0)
             return;
 
+        if (PoolManager.Instance == null)
+        {
+            Debug.LogError("[SpinningBlades] SpawnShards: PoolManager.Instance is null.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(bladesManager.shardBulletPoolName))
+        {
+            Debug.LogError("[SpinningBlades] SpawnShards: shardBulletPoolName is null/empty.");
+            return;
+        }
+
+        Debug.Log($"[SpinningBlades] SpawnShards starting. count={count} centerPos={centerPos} speed={speed} damage={damage} pool='{bladesManager.shardBulletPoolName}'");
+
+        // Spawn base/offset: if we spawn inside our own collider, shards can instantly collide and vanish.
+        Collider2D bladesCol = GetComponent<Collider2D>();
+        Vector2 spawnBase = centerPos;
+        float spawnRadius = 0.25f;
+        if (bladesCol != null)
+        {
+            spawnBase = bladesCol.bounds.center;
+            spawnRadius = Mathf.Max(bladesCol.bounds.extents.x, bladesCol.bounds.extents.y);
+        }
+
         // Randomize the initial angle within offset range
-        float baseOffset = Random.Range(0f, shardStartAngleOffset);
+        float angleOffset = Random.Range(0f, bladesManager.shardStartAngleRandomOffset);
         float step = 360f / count;
 
         for (int i = 0; i < count; i++)
         {
-            GameObject bulletObj = PoolManager.Instance.GetFromPool(shardBulletPoolName);
-            bulletObj.transform.position = transform.position;
+            GameObject bulletObj = PoolManager.Instance.GetFromPool(bladesManager.shardBulletPoolName);
+            if (bulletObj == null)
+            {
+                Debug.LogError($"[SpinningBlades] SpawnShards: GetFromPool returned null for pool '{bladesManager.shardBulletPoolName}' at i={i}.");
+                continue;
+            }
+
+            // Ensure pooled object is active before we configure and launch it.
+            if (!bulletObj.activeSelf)
+                bulletObj.SetActive(true);
+
+            // Position will be set after we compute the direction, so it spawns outside our collider.
+            bulletObj.transform.position = spawnBase;
 
             Bullet bullet = bulletObj.GetComponent<Bullet>();
             if (bullet == null)
             {
-                // If the pooled prefab is misconfigured, just skip safely.
-                PoolManager.Instance.ReturnToPool(shardBulletPoolName, bulletObj);
+                Debug.LogError($"[SpinningBlades] SpawnShards: Pooled shard prefab missing Bullet component. pool='{bladesManager.shardBulletPoolName}', obj='{bulletObj.name}'. Returning to pool.");
+                PoolManager.Instance.ReturnToPool(bladesManager.shardBulletPoolName, bulletObj);
                 continue;
             }
 
-            float angle = baseOffset + (step * i);
-            if (shardAngleJitter > 0f)
-                angle += Random.Range(-shardAngleJitter, shardAngleJitter);
+            float angle = angleOffset + (step * i);
+            if (bladesManager.shardAngleJitter > 0f)
+                angle += Random.Range(-bladesManager.shardAngleJitter, bladesManager.shardAngleJitter);
 
             float rad = angle * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+
+            // Spawn slightly outside our own collider along the firing direction.
+            bulletObj.transform.position = spawnBase + dir * spawnRadius;
+
+            // Get knockback based on speed
+            float knockback = bladesManager.shardKnockback;
+            knockback = speed / bladesManager.shardMaxSpeed * knockback;
 
             // Mirror the important bullet fields we rely on elsewhere.
             bullet.damage = damage;
             bullet.damageVarianceFactor = 0f;
             bullet.origin = this.transform;
-            bullet.knockback = shardKnockback;
-            bullet.destroyTime = shardLifeTime;
-            bullet.objectPoolName = shardBulletPoolName;
+            bullet.knockback = knockback;
+            bullet.destroyTime = bladesManager.shardLifeTime;
+            bullet.objectPoolName = bladesManager.shardBulletPoolName;
 
             bullet.velocity = dir * speed;
 
             // Rotate to match velocity.
             bulletObj.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+            Debug.Log($"[SpinningBlades] Shard i={i} angle={angle} dir={dir} speed={speed} vel={bullet.velocity} spawnBase={spawnBase} spawnRadius={spawnRadius} pos={bulletObj.transform.position} active={bulletObj.activeSelf}");
 
             bullet.Fly();
         }

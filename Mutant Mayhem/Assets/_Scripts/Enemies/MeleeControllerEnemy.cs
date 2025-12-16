@@ -258,6 +258,10 @@ public class MeleeControllerEnemy : MonoBehaviour
     {
         if (collider.gameObject.layer == 12) // Structure
         {
+            // Don't hit Spinning Blades with enemy melee
+            if (collider.gameObject.CompareTag("SpinningBlades"))
+                return;
+
             HitStructure(point);
         }
         else if (collider.CompareTag("Player") || collider.CompareTag("PlayerBody"))

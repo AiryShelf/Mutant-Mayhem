@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7596375971122040841}
   m_Layer: 12
   m_Name: Spinning Part
-  m_TagString: Untagged
+  m_TagString: SpinningBlades
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,7 +52,7 @@ MonoBehaviour:
   - {fileID: -956967192, guid: 5f2bc168f10e1472a955b60561873f7d, type: 3}
   - {fileID: 184191649, guid: 5f2bc168f10e1472a955b60561873f7d, type: 3}
   - {fileID: -298553359, guid: 5f2bc168f10e1472a955b60561873f7d, type: 3}
-  rotationForce: 25000
+  rotationForce: 37500
   maxAngularVelocity: 1200
   minAngularVelocityToDamage: 300
   damagePerAngularVel: 0.0833
@@ -87,7 +87,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 300
+  m_Mass: 450
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -371,7 +371,7 @@ MonoBehaviour:
   - {x: -0.1100682, y: -0.2978295, z: 0}
   m_ShapePathHash: -360891925
   m_Mesh: {fileID: 0}
-  m_InstanceId: 285924
+  m_InstanceId: 89614
   m_LocalBounds:
     m_Center: {x: 0.0155365765, y: -0.023069948, z: 0}
     m_Extent: {x: 0.2896739, y: 0.30105904, z: 0}

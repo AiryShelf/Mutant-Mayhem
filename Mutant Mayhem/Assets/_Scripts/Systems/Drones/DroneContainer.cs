@@ -317,7 +317,7 @@ public class DroneContainer : MonoBehaviour
         switch (droneType)
         {
             case DroneType.Builder:
-                DroneJob job = ConstructionManager.Instance.GetBuildJob();
+                DroneJob job = ConstructionManager.Instance.GetBuildJobInRange(transform.position, DroneManager.Instance.droneHangarRange);
                 if (job == null)
                     job = ConstructionManager.Instance.GetRepairJob();
 

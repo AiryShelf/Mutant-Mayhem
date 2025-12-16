@@ -29,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 4415535309081398380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -56,8 +56,10 @@ MonoBehaviour:
   moveSpeed: 0.5
   moveSpeedVariation: 0.7
   fadeDuration: 0
+  fadeDurationMax: 3
   fadeAlphaStart: 1
   fadeAlphaEnd: 0
+  workingScale: 1
   popGain: 0.5
   popExponent: 2
   popMax: 10

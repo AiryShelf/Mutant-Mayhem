@@ -24,7 +24,8 @@ public enum PlayerStatsUpgrade
     HealthMax,
     HealthRegen,
     CriticalHitChance_Deprecated,
-    CriticalHit
+    CriticalHit,
+    ArmorMult
 }
 
 public enum StructureStatsUpgrade
@@ -35,7 +36,8 @@ public enum StructureStatsUpgrade
     MaxTurrets_Deprecated,
     TurretRotSpeed_Deprecated,
     TurretTracking,
-    SupplyLimit
+    SupplyLimit,
+    SpinningBlades,
 }
 
 public enum ConsumablesUpgrade
@@ -351,6 +353,24 @@ public class CriticalHitUpgrade : Upgrade
             newCost = Mathf.CeilToInt(newCost * 1.35f);
         }
         return newCost;
+    }
+
+    public static float GetUpgAmount(UpgradeManager upgradeManager)
+    {
+        float upgAmount = UpgAmount * (upgradeManager.playerStatsUpgLevels[PlayerStatsUpgrade.CriticalHit] + 2);
+        return upgAmount;
+    }
+}
+
+public class ArmorMultUpgrade : Upgrade
+{
+    public ArmorMultUpgrade() : base(PlayerStatsUpgrade.ArmorMult) { }
+
+    public static float UpgAmount = 0.01f;
+
+    public override void Apply(PlayerStats playerStats, int level)
+    {
+        playerStats.playerHealthScript.armorMult -= UpgAmount;
     }
 }
 
@@ -678,7 +698,7 @@ public class StructureMaxHealthUpgrade : Upgrade
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
-            newCost = Mathf.CeilToInt(newCost * 1.4f);;
+            newCost = Mathf.CeilToInt(newCost * 1.3f);;
         }
         return newCost;
     }
@@ -733,6 +753,34 @@ public class SupplyLimitUpgrade : Upgrade
     public override int CalculateCost(Player player, int baseCost, int level)
     {
         // 1.5x the cost each level
+        int newCost = baseCost;
+        for (int i = 1; i < level; i++)
+        {
+            newCost = Mathf.CeilToInt(newCost * 1.5f);
+        }
+        return newCost;
+    }
+}
+
+public class SpinningBladesUpgrade : Upgrade
+{
+    public SpinningBladesUpgrade() : base(StructureStatsUpgrade.SpinningBlades) { }
+
+    public static float UpgAmount = 0.05f; // MUST BE SET by SpinningBladesManager
+
+    public static float GetUpgAmount()
+    {
+        return UpgAmount;
+    }
+
+    public override void Apply(StructureStats structureStats, int level)
+    {
+        SpinningBladesManager.Instance.UpgradeStats();
+    }
+
+    public override int CalculateCost(Player player, int baseCost, int level)
+    {
+        // Multiply the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {

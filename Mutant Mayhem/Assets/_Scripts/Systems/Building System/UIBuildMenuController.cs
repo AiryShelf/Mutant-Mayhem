@@ -11,12 +11,14 @@ public class UIBuildMenuController : MonoBehaviour
     public GridLayoutGroup buttonLayoutGrid;
     public GridLayoutGroup textLayoutGrid;
     [SerializeField] List<GameObject> structureButtonPrefabs;
+    [SerializeField] GameObject emptyTextPrefab;
     public List<UIStructure> uiStructureList;
     [SerializeField] ScrollRectController scrollRectController;
     [SerializeField] TextMeshProUGUI infoPanelHeader;
     [SerializeField] TextMeshProUGUI infoPanelDescription;
     [SerializeField] CanvasGroup myCanvasGroup;
     public FadeCanvasGroupsWave fadeCanvasGroups;
+    [SerializeField] ControlsPanel controlsPanel;
 
     public bool isTouchScrolling = false;
     public Vector2 touchStartPos;
@@ -26,6 +28,20 @@ public class UIBuildMenuController : MonoBehaviour
     InputAction scrollAction;
     InputAction swapWithDestroyAction;
     bool isMenuOpen = false;
+    bool wasControlsPanelOpen = false;
+
+    [System.Serializable]
+    private class BuildMenuEntry
+    {
+        public bool isHeader;
+        public int sectionIndex;
+        public int originalIndex;
+        public GameObject buttonGO;
+        public GameObject textGO;
+        public UIStructure uiStructure; // null for headers
+    }
+
+    private readonly List<BuildMenuEntry> _entries = new List<BuildMenuEntry>();
 
     void Awake()
     {
@@ -43,6 +59,11 @@ public class UIBuildMenuController : MonoBehaviour
         }
 
         buildingSystem = FindObjectOfType<BuildingSystem>();
+
+        uiStructureList.Clear();
+        _entries.Clear();
+        fadeCanvasGroups.individualElements.Clear();
+
         InitializeBuildList();
     }
     
@@ -66,7 +87,11 @@ public class UIBuildMenuController : MonoBehaviour
 
     void OnDisable()
     {
-        scrollAction.performed -= OnScroll;
+        if (scrollAction != null)
+            scrollAction.performed -= OnScroll;
+
+        if (swapWithDestroyAction != null && buildingSystem != null)
+            swapWithDestroyAction.performed -= buildingSystem.SwapWithDestroyTool;
     }
 
     void Start()
@@ -78,27 +103,65 @@ public class UIBuildMenuController : MonoBehaviour
     void InitializeBuildList()
     {
         uiStructureList.Clear();
-        int index = 0;
-        // Initialize structures list and fade groups list
-        foreach (GameObject obj in structureButtonPrefabs)
+        _entries.Clear();
+        fadeCanvasGroups.individualElements.Clear();
+
+        int originalIndex = 0;
+        int currentSection = 0;
+
+        // Build entries in the exact order of structureButtonPrefabs.
+        foreach (GameObject prefab in structureButtonPrefabs)
         {
-            // Create button in button layout group
-            GameObject newButton = Instantiate(obj, buttonLayoutGrid.transform);
+            GameObject newButton = Instantiate(prefab, buttonLayoutGrid.transform);
             UIStructure uiStructure = newButton.GetComponent<UIStructure>();
 
-            uiStructure.originalSiblingIndex = index;
-            index++;
+            // Header / separator item (no UIStructure attached)
+            if (uiStructure == null)
+            {
+                currentSection++;
 
+                GameObject newText = Instantiate(emptyTextPrefab, textLayoutGrid.transform);
+
+                _entries.Add(new BuildMenuEntry
+                {
+                    isHeader = true,
+                    sectionIndex = currentSection,
+                    originalIndex = originalIndex,
+                    buttonGO = newButton,
+                    textGO = newText,
+                    uiStructure = null
+                });
+
+                // Initialize FadeCanvasGroup list
+                fadeCanvasGroups.individualElements.Add(newText.GetComponent<CanvasGroup>());
+                fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
+
+                originalIndex++;
+                continue;
+            }
+
+            // Normal structure entry
+            uiStructure.originalSiblingIndex = originalIndex;
             uiStructure.Initialize(buildingSystem, scrollRectController);
             uiStructureList.Add(uiStructure);
 
-            // Create text in text layout group
-            uiStructure.textInstance = Instantiate(uiStructure.textPrefab, 
-                                                   textLayoutGrid.transform);
+            uiStructure.textInstance = Instantiate(uiStructure.textPrefab, textLayoutGrid.transform);
+
+            _entries.Add(new BuildMenuEntry
+            {
+                isHeader = false,
+                sectionIndex = currentSection,
+                originalIndex = originalIndex,
+                buttonGO = newButton,
+                textGO = uiStructure.textInstance,
+                uiStructure = uiStructure
+            });
 
             // Initialize FadeCanvasGroup list
             fadeCanvasGroups.individualElements.Add(uiStructure.textInstance.GetComponent<CanvasGroup>());
             fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
+
+            originalIndex++;
         }
 
         RefreshBuildList();
@@ -108,27 +171,64 @@ public class UIBuildMenuController : MonoBehaviour
 
     public void RefreshBuildList()
     {
-        foreach (UIStructure structure in uiStructureList)
+        // Update interactability based on unlock state
+        foreach (BuildMenuEntry entry in _entries)
         {
-            // Make unlocked structures interactable
-            if (BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
-                structure.MakeInteractable(true);
-            else
-                structure.MakeInteractable(false);
-            
+            if (entry.isHeader || entry.uiStructure == null)
+                continue;
+
+            bool unlocked = BuildingSystem._UnlockedStructuresDict[entry.uiStructure.structureSO.structureType];
+            entry.uiStructure.MakeInteractable(unlocked);
         }
 
-        uiStructureList = uiStructureList
-            .OrderByDescending(structure => BuildingSystem._UnlockedStructuresDict[structure.structureSO.structureType])
-            .ThenBy(structure => structure.originalSiblingIndex)
+        // Build a display list that preserves header positions and sorts structures within each section
+        List<BuildMenuEntry> ordered = new List<BuildMenuEntry>(_entries.Count);
+
+        // Determine all section indices in their natural order
+        int maxSection = 0;
+        for (int i = 0; i < _entries.Count; i++)
+            if (_entries[i].sectionIndex > maxSection)
+                maxSection = _entries[i].sectionIndex;
+
+        // Section 0 = items before the first header (if any)
+        for (int section = 0; section <= maxSection; section++)
+        {
+            // Add headers that belong to this section in original order
+            foreach (BuildMenuEntry e in _entries)
+            {
+                if (e.isHeader && e.sectionIndex == section)
+                    ordered.Add(e);
+            }
+
+            // Collect structure entries in this section
+            List<BuildMenuEntry> structuresInSection = new List<BuildMenuEntry>();
+            foreach (BuildMenuEntry e in _entries)
+            {
+                if (!e.isHeader && e.sectionIndex == section)
+                    structuresInSection.Add(e);
+            }
+
+            // Sort: unlocked first, then original order
+            structuresInSection = structuresInSection
+                .OrderByDescending(e => BuildingSystem._UnlockedStructuresDict[e.uiStructure.structureSO.structureType])
+                .ThenBy(e => e.originalIndex)
+                .ToList();
+
+            ordered.AddRange(structuresInSection);
+        }
+
+        // Apply the visual order to both layout groups
+        for (int i = 0; i < ordered.Count; i++)
+        {
+            ordered[i].buttonGO.transform.SetSiblingIndex(i);
+            ordered[i].textGO.transform.SetSiblingIndex(i);
+        }
+
+        // Rebuild uiStructureList to match visual order (excluding headers)
+        uiStructureList = ordered
+            .Where(e => !e.isHeader && e.uiStructure != null)
+            .Select(e => e.uiStructure)
             .ToList();
-
-        for (int i = 0; i < uiStructureList.Count; i++)
-        {
-            uiStructureList[i].transform.SetSiblingIndex(i);
-            uiStructureList[i].textInstance.transform.SetSiblingIndex(i);
-            
-        }
 
         SetMenuSelection(buildingSystem.structureInHand);
     }
@@ -137,6 +237,15 @@ public class UIBuildMenuController : MonoBehaviour
     {
         fadeCanvasGroups.isTriggered = !isMenuOpen;
         myCanvasGroup.blocksRaycasts = !isMenuOpen;
+
+        // Toggle Controls Panel
+        /*
+        if (!isMenuOpen)
+            wasControlsPanelOpen = controlsPanel.isOpen;
+        else if (wasControlsPanelOpen)
+            controlsPanel.TogglePanel();
+        */
+
         isMenuOpen = !isMenuOpen;
     }
 

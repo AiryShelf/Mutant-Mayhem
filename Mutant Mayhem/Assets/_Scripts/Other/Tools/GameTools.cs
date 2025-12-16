@@ -289,7 +289,6 @@ public static IEnumerator PulseScaleEffect(Transform transform, float pulseDurat
         yield break;
 
     // Force a clean start so there is no first-frame dip
-    Vector3 scaleStart = transform.localScale; // keep original for optional restore
     transform.localScale = initialScale;
 
     //Two-phase pulse: up fast, then down smooth. Peak early for a snappy pop.
@@ -298,7 +297,7 @@ public static IEnumerator PulseScaleEffect(Transform transform, float pulseDurat
 
     while (elapsed < pulseDuration)
     {
-        float t = Mathf.Clamp01(elapsed / pulseDuration);
+        float t = Mathf.Clamp01(elapsed / Mathf.Max(0.0001f, pulseDuration));
 
         Vector3 s;
         if (t <= peakFraction)
@@ -306,24 +305,25 @@ public static IEnumerator PulseScaleEffect(Transform transform, float pulseDurat
             // Up phase (0..peakFraction): ease-out cubic (quick pop)
             float upT = t / Mathf.Max(0.0001f, peakFraction);
             float easedUp = 1f - Mathf.Pow(1f - upT, 3f); // EaseOutCubic
-            s = Vector3.LerpUnclamped(initialScale, initialScale + pulseScaleMax, easedUp);
+            s = Vector3.LerpUnclamped(initialScale, pulseScaleMax, easedUp);
         }
         else
         {
             // Down phase (peakFraction..1): ease-in cubic back to initial (smooth settle)
             float downT = (t - peakFraction) / Mathf.Max(0.0001f, 1f - peakFraction);
             float easedDown = Mathf.Pow(downT, 3f); // EaseInCubic
-            s = Vector3.LerpUnclamped(initialScale + pulseScaleMax, initialScale, easedDown);
+            s = Vector3.LerpUnclamped(pulseScaleMax, initialScale, easedDown);
         }
 
+        Debug.Log("PulseScaleEffect: scale=" + s.ToString("F3"));
         transform.localScale = s;
         elapsed += Time.deltaTime;
         yield return null;
     }
 
-    // [UNCHANGED] Restore original scale after pulse finishes
+    // Restore the requested resting scale after pulse finishes
     if (transform)
-        transform.localScale = scaleStart;
+        transform.localScale = initialScale;
 }
 
     #endregion

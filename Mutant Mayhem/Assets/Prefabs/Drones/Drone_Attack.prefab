@@ -186,6 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startMaxHealth: 30
   maxHealth: 30
+  armorMult: 1
   deathTorque: 20
   painSound: {fileID: 0}
   painSoundCooldown: 0.3
@@ -214,6 +215,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gunListSource:
   - {fileID: 11400000, guid: 1faf041caa9594cc597a294d6d679700, type: 2}
+  _nextLevelGunListSource: []
+  nextLevelGunList: []
   gunTrans: {fileID: 3688259929015718581}
   muzzleTrans: {fileID: 3688259929015718581}
   casingEjectorTrans: {fileID: 3688259929015718581}
@@ -230,6 +233,7 @@ MonoBehaviour:
   TurretReloadTime: 2
   isReloading: 0
   isElevated: 0
+  isElevatedDamageMult: 1
   hasTarget: 0
   gunSights: {fileID: 0}
   currentAccuracy: 0
@@ -245,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  supplyConsumptionAmount: 5
+  supplyConsumptionAmount: 4
 --- !u!212 &3379014345932164951
 SpriteRenderer:
   m_ObjectHideFlags: 0

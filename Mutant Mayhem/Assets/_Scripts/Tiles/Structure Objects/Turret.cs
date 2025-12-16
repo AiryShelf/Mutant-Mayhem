@@ -25,6 +25,7 @@ public class Turret : MonoBehaviour, IPowerConsumer, ITileObjectExplodable
         {
             GameObject explosion = PoolManager.Instance.GetFromPool(explosionPoolName);
             Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
+            rootPos = TileManager.Instance.GridToRootPos(rootPos);
             explosion.transform.position = TileManager.Instance.TileCellsCenterToWorld(rootPos);
         }
     }

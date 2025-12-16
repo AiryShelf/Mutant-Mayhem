@@ -159,6 +159,55 @@ public class ConstructionManager : MonoBehaviour
         return job;
     }
 
+    // Range-aware build job selection (used by drone hangars so they only service jobs within their coverage)
+    public DroneBuildJob GetBuildJobInRange(Vector2 origin, float radius)
+    {
+        if (radius <= 0f || buildJobs == null || buildJobs.Count == 0)
+            return null;
+
+        float radiusSqr = radius * radius;
+
+        DroneBuildJob bestJob = null;
+        int leastDronesAssigned = int.MaxValue;
+        float bestDistSqr = float.PositiveInfinity;
+
+        for (int i = 0; i < buildJobs.Count; i++)
+        {
+            DroneBuildJob candidate = buildJobs[i].Key;
+            int dronesAssigned = buildJobs[i].Value;
+
+            if (candidate == null)
+                continue;
+
+            // Must be eligible for assignment
+            if (dronesAssigned >= maxDronesPerJob)
+                continue;
+
+            Vector2 delta = candidate.jobPosition - origin;
+            float distSqr = delta.sqrMagnitude;
+
+            // Must be in range
+            if (distSqr > radiusSqr)
+                continue;
+
+            // Prefer fewer drones assigned; if equal, prefer nearer
+            if (dronesAssigned < leastDronesAssigned ||
+                (dronesAssigned == leastDronesAssigned && distSqr < bestDistSqr))
+            {
+                bestJob = candidate;
+                leastDronesAssigned = dronesAssigned;
+                bestDistSqr = distSqr;
+            }
+        }
+
+        if (bestJob != null)
+        {
+            IncrementAssignedDrones(bestJob, 1);
+        }
+
+        return bestJob;
+    }
+
     public DroneBuildJob GetNextBuildJob(DroneBuildJob currentJob)
     {
         DroneBuildJob job = null;

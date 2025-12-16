@@ -7,6 +7,8 @@ public class PoolManager : MonoBehaviour
     
     // Dictionary to hold multiple pools, keyed by a unique string identifier
     private Dictionary<string, Queue<GameObject>> pools = new Dictionary<string, Queue<GameObject>>();
+    // Tracks which prefab to instantiate for each pool key
+    private Dictionary<string, GameObject> prefabByKey = new Dictionary<string, GameObject>();
     
     public Transform poolParent;
 
@@ -49,6 +51,7 @@ public class PoolManager : MonoBehaviour
 
         pools.Clear();
         totalsCreated.Clear();
+        prefabByKey.Clear();
     }
 
     void InitializePools()
@@ -73,6 +76,9 @@ public class PoolManager : MonoBehaviour
         {
             pools[poolKey] = new Queue<GameObject>();
 
+            // Remember which prefab belongs to this pool key
+            prefabByKey[poolKey] = prefab;
+
             for (int i = 0; i < initialSize; i++)
             {
                 AddToPool(poolKey, prefab);
@@ -80,7 +86,7 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-    void AddToPool(string poolKey, GameObject prefab)
+    void AddToPool(string poolKey, GameObject prefabToInstantiate)
     {
         if (!pools.ContainsKey(poolKey))
         {
@@ -88,7 +94,7 @@ public class PoolManager : MonoBehaviour
             return;
         }
 
-        GameObject obj = Instantiate(prefab);
+        GameObject obj = Instantiate(prefabToInstantiate);
         obj.SetActive(false);
         if (poolParent != null)
             obj.transform.SetParent(poolParent);
@@ -109,16 +115,22 @@ public class PoolManager : MonoBehaviour
             // If the pool is nearly empty, instantiate new objects
             if (pools[poolKey].Count == 1)
             {
-                // Create new copies
-                GameObject copyObj = pools[poolKey].Peek();
-                for (int i = 0; i < amountToAddWhenEmpty; i++)
+                if (!prefabByKey.TryGetValue(poolKey, out GameObject prefabToInstantiate) || prefabToInstantiate == null)
                 {
-                    AddToPool(poolKey, copyObj);
+                    Debug.LogError($"Pool '{poolKey}' is nearly empty but no prefab is registered for this key.");
                 }
+                else
+                {
+                    // Create new copies from the original prefab (not from an instance)
+                    for (int i = 0; i < amountToAddWhenEmpty; i++)
+                    {
+                        AddToPool(poolKey, prefabToInstantiate);
+                    }
 
-                Debug.LogWarning($"Added {amountToAddWhenEmpty} new objects to {poolKey}.  " +
-                          "It was nearly empty and now totals " +
-                          $"{totalsCreated[poolKey]} objects created.");
+                    Debug.LogWarning($"Added {amountToAddWhenEmpty} new objects to {poolKey}.  " +
+                                     "It was nearly empty and now totals " +
+                                     $"{totalsCreated[poolKey]} objects created.");
+                }
             }
             
             // If there are objects in the pool, dequeue one and activate it

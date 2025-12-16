@@ -43,6 +43,11 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.CriticalHit:
                 stat = player.stats.criticalHitDamageMult.ToString("#0.00");
                 return stat;
+            case PlayerStatsUpgrade.ArmorMult:
+                float armor = player.stats.playerHealthScript.armorMult;
+                armor = 1f - armor;
+                stat = armor.ToString("#0.00");
+                return stat;
         }
 
         return stat;
@@ -106,6 +111,9 @@ public static class UpgStatGetter
                 return stat;
             case StructureStatsUpgrade.SupplyLimit:
                 stat = SupplyManager.SupplyLimit.ToString("#0");
+                return stat;
+            case StructureStatsUpgrade.SpinningBlades:
+                stat = SpinningBladesManager.Instance.multTracker.ToString("#0.00");
                 return stat;
         }
 
@@ -226,6 +234,9 @@ public static class UpgStatGetter
             case PlayerStatsUpgrade.CriticalHit:
                 amount = "+" + CriticalHitUpgrade.UpgAmount.ToString("#0.00");
                 return amount;
+            case PlayerStatsUpgrade.ArmorMult:
+                amount = "+" + ArmorMultUpgrade.UpgAmount.ToString("#0.00");
+                return amount;
         }
 
         return amount;
@@ -291,6 +302,9 @@ public static class UpgStatGetter
                 return amount;
             case StructureStatsUpgrade.SupplyLimit:
                 amount = "+" + SupplyLimitUpgrade.UpgAmount.ToString("#0");
+                return amount;
+            case StructureStatsUpgrade.SpinningBlades:
+                amount = "x" + (1 + SpinningBladesManager.Instance.upgradeMultPerLevel).ToString("#0.00");
                 return amount;
         }
 

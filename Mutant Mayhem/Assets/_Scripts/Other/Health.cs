@@ -6,6 +6,7 @@ public class Health : MonoBehaviour
 {
     public float startMaxHealth;
     [SerializeField] protected float maxHealth = 100f;
+    public float armorMult = 1f;
     public float deathTorque = 20;
     public SoundSO painSound;
     [SerializeField] float painSoundCooldown = 0.3f;
@@ -53,6 +54,11 @@ public class Health : MonoBehaviour
     public virtual void ModifyHealth(float value, float textPulseScaleMax, Vector2 textDir, GameObject damageDealer)
     {
         //Debug.Log($"Modifying {health} health by {value}.  Max health: {maxHealth}");
+
+        // Apply armor multiplier
+        if (value < 0)
+            value *= armorMult;
+
         healthChange = value;
         float healthStart = health;
         health += value;

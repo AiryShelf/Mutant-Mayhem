@@ -177,12 +177,14 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthMax] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.HealthRegen] = 100;
         playerStatsUpgMaxLevels[PlayerStatsUpgrade.CriticalHit] = 100;
+        playerStatsUpgMaxLevels[PlayerStatsUpgrade.ArmorMult] = 50;
 
         // Structures
         structureStatsUpgMaxLevels[StructureStatsUpgrade.QCubeMaxHealth] = int.MaxValue;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.StructureMaxHealth] = int.MaxValue;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.TurretTracking] = 20;
         structureStatsUpgMaxLevels[StructureStatsUpgrade.SupplyLimit] = 50;
+        structureStatsUpgMaxLevels[StructureStatsUpgrade.SpinningBlades] = 20;
 
         //Consumables
         consumablesUpgMaxLevels[ConsumablesUpgrade.PlayerHeal] = int.MaxValue;
@@ -277,12 +279,14 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthMax] = 100;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHit] = 250;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.ArmorMult] = 200;
 
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.StructureMaxHealth] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.TurretTracking] = 500;
         structureStatsUpgBaseCosts[StructureStatsUpgrade.SupplyLimit] = 1000;
+        structureStatsUpgBaseCosts[StructureStatsUpgrade.SpinningBlades] = 500;
 
         // Consumables
         consumablesUpgBaseCosts[ConsumablesUpgrade.PlayerHeal] = 100;
@@ -391,6 +395,8 @@ public class UpgradeManager : MonoBehaviour
                 return new WeaponHandlingUpgrade();
             case PlayerStatsUpgrade.CriticalHit:
                 return new CriticalHitUpgrade();
+            case PlayerStatsUpgrade.ArmorMult:
+                return new ArmorMultUpgrade();
 
             default:
                 return null;
@@ -410,6 +416,8 @@ public class UpgradeManager : MonoBehaviour
                 return new TurretTrackingUpgrade();
             case StructureStatsUpgrade.SupplyLimit:
                 return new SupplyLimitUpgrade();
+            case StructureStatsUpgrade.SpinningBlades:
+                return new SpinningBladesUpgrade();
 
             default:
                 return null;      
