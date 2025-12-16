@@ -92,7 +92,6 @@ GameObject:
   m_Component:
   - component: {fileID: 382680437704054648}
   - component: {fileID: 4053431940069016120}
-  - component: {fileID: 4212721167435414638}
   - component: {fileID: 855978247374671851}
   - component: {fileID: 5800999061284143408}
   m_Layer: 16
@@ -161,7 +160,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1387485545
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: -1561074817, guid: a93be24f8fada4f69877d7da4589e7fe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -173,33 +172,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4212721167435414638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6032300958366406844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b341e3938f7846588e2319667847126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  engineeringBaySO: {fileID: 11400000, guid: 9b2206c2003c849aa91669d7de9dff43, type: 2}
-  powerOnDamageTiles:
-  - {fileID: 11400000, guid: bb8607f23d0554f0c85abb72316ca3bb, type: 2}
-  - {fileID: 11400000, guid: bf3683df9c18141d9bb1546f6aa398a0, type: 2}
-  - {fileID: 11400000, guid: 0e545d6bf1c784eb5bc171724db6884d, type: 2}
-  - {fileID: 11400000, guid: 560870dab465d4031beee36f2ca1c4d1, type: 2}
-  powerOffDamageTiles:
-  - {fileID: 11400000, guid: 659589ce3ff354d01acc154434563e13, type: 2}
-  - {fileID: 11400000, guid: 3ca76539180c24d3383e00a7bed914ff, type: 2}
-  - {fileID: 11400000, guid: 644be93ea3f884b3f89009da585121dc, type: 2}
-  - {fileID: 11400000, guid: 9a0a4f51cc88448fcba385b52cf18cf7, type: 2}
-  lights:
-  - {fileID: 7959460061468153531}
-  - {fileID: 8420563218990105793}
-  explosionPoolName: Explosion_Building_Dusty_Large
 --- !u!114 &855978247374671851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,19 +186,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   repairBaySO: {fileID: 11400000, guid: 9b2206c2003c849aa91669d7de9dff43, type: 2}
   powerOnDamageTiles:
-  - {fileID: 11400000, guid: 32b519a41031142819290024762c4949, type: 2}
-  - {fileID: 11400000, guid: ae2cf2706dcf74540a708849dbdc93c3, type: 2}
-  - {fileID: 11400000, guid: 69927a23ce52141029067baf0f2883f9, type: 2}
-  - {fileID: 11400000, guid: b67a5d6ca5d9045e890ae9f37c74544a, type: 2}
+  - {fileID: 11400000, guid: bb8607f23d0554f0c85abb72316ca3bb, type: 2}
+  - {fileID: 11400000, guid: bf3683df9c18141d9bb1546f6aa398a0, type: 2}
+  - {fileID: 11400000, guid: 0e545d6bf1c784eb5bc171724db6884d, type: 2}
+  - {fileID: 11400000, guid: 560870dab465d4031beee36f2ca1c4d1, type: 2}
   powerOffDamageTiles:
-  - {fileID: 11400000, guid: 6b1ab7156eef54708b3b40fb900d0491, type: 2}
-  - {fileID: 11400000, guid: 8b0723d4d74344070a1e98d8459867df, type: 2}
-  - {fileID: 11400000, guid: 7d8b5ce743fa6424ba89ef9e4ba8ae03, type: 2}
-  - {fileID: 11400000, guid: 4a799e6cd296f4116966e57acea3ffaa, type: 2}
+  - {fileID: 11400000, guid: 659589ce3ff354d01acc154434563e13, type: 2}
+  - {fileID: 11400000, guid: 3ca76539180c24d3383e00a7bed914ff, type: 2}
+  - {fileID: 11400000, guid: 644be93ea3f884b3f89009da585121dc, type: 2}
+  - {fileID: 11400000, guid: 9a0a4f51cc88448fcba385b52cf18cf7, type: 2}
   lights:
   - {fileID: 7959460061468153531}
   - {fileID: 8420563218990105793}
-  explosionPoolName: 
+  explosionPoolName: Explosion_Building_Dusty_Large
 --- !u!114 &5800999061284143408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,17 +445,9 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
-      propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 4212721167435414638}
-    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 6619104995600381743}
-    - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
-      propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 4212721167435414638}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: onPowerOff.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 

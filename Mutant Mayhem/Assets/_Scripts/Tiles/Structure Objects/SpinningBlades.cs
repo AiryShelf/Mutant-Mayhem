@@ -10,6 +10,7 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
     [SerializeField] Light2D postLight;
 
     [SerializeField] bool hasPower = true;
+    public bool canBeDamaged = true;
 
 
     List<Health> tempHits = new List<Health>();
@@ -107,6 +108,8 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
         // Apply torque and limit angular velocity
         if (hasPower && Mathf.Abs(rb.angularVelocity) < bladesManager.maxAngularVelocity)
             rb.AddTorque(bladesManager.rotationForce * Time.fixedDeltaTime);
+        
+        canBeDamaged = Mathf.Abs(rb.angularVelocity) < bladesManager.minAngularVelocityToDamage;
 
         previousAngularVelocity = rb.angularVelocity;
     }

@@ -148,7 +148,7 @@ public class Bullet : MonoBehaviour
     {
         // Check collider
         Collider2D other = Physics2D.OverlapBox(myCollider.bounds.center, myCollider.bounds.size, transform.eulerAngles.z, hitLayers);
-        if (other)
+        if (other && other.GetComponent<Bullet>() == null)
         {
             Hit(other, transform.position);
             return;

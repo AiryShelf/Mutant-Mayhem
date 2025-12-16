@@ -260,7 +260,14 @@ public class MeleeControllerEnemy : MonoBehaviour
         {
             // Don't hit Spinning Blades with enemy melee
             if (collider.gameObject.CompareTag("SpinningBlades"))
-                return;
+            {
+                // Check if blades are canBeDamaged
+                SpinningBlades blades = collider.GetComponent<SpinningBlades>();
+                if (blades != null && blades.canBeDamaged == true)
+                    HitStructure(point);
+                else
+                    return;
+            }
 
             HitStructure(point);
         }

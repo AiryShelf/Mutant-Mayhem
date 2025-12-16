@@ -682,7 +682,10 @@ public class UpgradeManager : MonoBehaviour
         }
 
         GunSO gun = playerShooter.gunList[gunIndex];
-        GunSO nextLevelGun = playerShooter.nextLevelGunList[gunIndex];
+        GunSO nextLevelGun = null;
+        if (gunIndex < playerShooter.nextLevelGunList.Count)
+            nextLevelGun = playerShooter.nextLevelGunList[gunIndex];
+            
         Dictionary<GunStatsUpgrade, int> gunUpgLevels;
         Dictionary<GunStatsUpgrade, int> gunUpgMaxLevels;
         Dictionary<GunStatsUpgrade, int> gunUpgCurrCosts;
@@ -731,7 +734,8 @@ public class UpgradeManager : MonoBehaviour
             gunUpgLevels[upgType]++;
 
             upgrade.Apply(gun, gunUpgLevels[upgType]);
-            upgrade.Apply(nextLevelGun, gunUpgLevels[upgType]);
+            if (nextLevelGun != null)
+                upgrade.Apply(nextLevelGun, gunUpgLevels[upgType]);
             upgradeEffects.PlayUpgradeButtonEffect();
 
             if (upgType == GunStatsUpgrade.GunRange && gunIndex == 4) // Repair gun

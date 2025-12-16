@@ -28,6 +28,11 @@ public class RepairBay : MonoBehaviour, IPowerConsumer, ITileObject, ITileObject
     int damageIndex;
     bool isPowerOn = false;
 
+    void Start()
+    {
+        UpdateHealthRatio(1f);
+    }
+
     void OnDestroy()
     {
         UpgradePanelManager.Instance.ClosePanel(StructureType.RepairBay);

@@ -542,6 +542,11 @@ public class TileManager : MonoBehaviour
         }
 
         Vector3Int rootPos = _TileStatsDict[gridPos].rootGridPos;
+        if (!_TileStatsDict.ContainsKey(rootPos))
+        {
+            Debug.LogError($"TileManager: No tile found at {point} to modify health");
+            return;
+        }
         float healthAtStart = _TileStatsDict[rootPos].health;
         float maxHealth = _TileStatsDict[rootPos].maxHealth;
 
@@ -1216,6 +1221,7 @@ public class TileManager : MonoBehaviour
                 }
             }
         }
+
         return true;
     }
 
@@ -1228,8 +1234,8 @@ public class TileManager : MonoBehaviour
             {
                 // Add to structures list
                 _StructurePositions.Add(rootPos);
-
                 float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthMult;
+
                 // Add to TileStats
                 _TileStatsDict.Add(rootPos, new TileStats
                 {
@@ -1268,6 +1274,7 @@ public class TileManager : MonoBehaviour
                 }
             }
         }
+
         return true;
     }
 
