@@ -120,12 +120,14 @@ public class EnemyShootIntermittentThrow : EnemyShootSOBase
         {
             // Modify thrown object based on mutant genome
             Genome g = enemyMutant.individual.genome;
-            thrownObject.damage = thrownObject.startDamage * g.headGene.scale * g.bodyGene.scale;
+            thrownObject.damage = thrownObject.startDamage * g.headGene.scale 
+                                  * g.bodyGene.scale * WaveController.Instance.damageMultiplier;
             // Debug.Log($"Mutant throwing object with damage: {thrownObject.damage}");
         }
         else
         {
-            thrownObject.damage = thrownObject.startDamage * enemyBase.transform.localScale.x * enemyBase.transform.localScale.y;
+            thrownObject.damage = thrownObject.startDamage * enemyBase.transform.localScale.x 
+                                  * enemyBase.transform.localScale.y * WaveController.Instance.damageMultiplier;
         }
 
         thrownObject.transform.position = enemyBase.meleeController.transform.position;

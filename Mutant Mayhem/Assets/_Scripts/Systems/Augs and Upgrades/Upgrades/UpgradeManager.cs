@@ -272,14 +272,14 @@ public class UpgradeManager : MonoBehaviour
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MoveSpeed] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.PlayerReloadSpeed] = 300;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.WeaponHandling] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 250;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeDamage] = 200;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.MeleeKnockback] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaMax] = 100;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaRegen] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.StaminaRegen] = 150;
         playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthMax] = 100;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 200;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHit] = 250;
-        playerStatsUpgBaseCosts[PlayerStatsUpgrade.ArmorMult] = 200;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.HealthRegen] = 150;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.CriticalHit] = 100;
+        playerStatsUpgBaseCosts[PlayerStatsUpgrade.ArmorMult] = 100;
 
         // StructureStats
         structureStatsUpgBaseCosts[StructureStatsUpgrade.QCubeMaxHealth] = 500;

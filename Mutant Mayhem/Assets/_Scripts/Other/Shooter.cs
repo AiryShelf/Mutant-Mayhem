@@ -41,12 +41,11 @@ public class Shooter : MonoBehaviour
     float fireTimer;
     protected float reloadTimer;
     Dictionary<int, Coroutine> chargeCoroutines = new Dictionary<int, Coroutine>();
-    float laserDamageMult = 1f;
-    float bulletDamageMult = 1f;
     protected CriticalHit criticalHit;
     public float currentAccuracy;
     protected PlayerShooter playerShooter;
     protected TurretShooter turretShooter;
+    protected Vector2 lastShootDir = Vector2.right;
     bool initialized;
 
     
@@ -75,6 +74,19 @@ public class Shooter : MonoBehaviour
 
     protected virtual void Update()
     {
+        // Safety: Laser guns should never be blocked by reload state.
+        // If something incorrectly sets isReloading=true (eg. pooled object state leak), force-clear it.
+        if (currentGunSO != null && currentGunSO.gunType == GunType.Laser && isReloading)
+        {
+            isReloading = false;
+            if (reloadRoutine != null)
+            {
+                StopCoroutine(reloadRoutine);
+                reloadRoutine = null;
+            }
+            reloadTimer = TurretReloadTime;
+        }
+
         // Reload Image
         if (reloadImageSr != null)
         {    
@@ -131,14 +143,18 @@ public class Shooter : MonoBehaviour
         // Initialize first gun
         SwitchGuns(0);
         gunsAmmoInClips[0] = 0;
-        isReloading = true;
+
+        // Lasers shouldn't reload; bullet turrets start empty and then reload/fill.
+        isReloading = currentGunSO != null && currentGunSO.gunType != GunType.Laser;
+        reloadRoutine = null;
+        reloadTimer = TurretReloadTime;
 
         criticalHit = GetComponent<CriticalHit>();
         StartChargingGuns();
         initialized = true;
     }
 
-    public void Initialize()
+    void Initialize()
     {
         CopyGunLists();
         ApplyPlanetProperties();
@@ -146,7 +162,11 @@ public class Shooter : MonoBehaviour
         // Initialize first gun
         SwitchGuns(0);
         gunsAmmoInClips[0] = 0;
-        isReloading = true;
+
+        // Lasers shouldn't reload; bullet turrets start empty and then reload/fill.
+        isReloading = currentGunSO != null && currentGunSO.gunType != GunType.Laser;
+        reloadRoutine = null;
+        reloadTimer = TurretReloadTime;
 
         criticalHit = GetComponent<CriticalHit>();
         StartChargingGuns();
@@ -182,6 +202,7 @@ public class Shooter : MonoBehaviour
 
     protected void ApplyPlanetProperties()
     {
+        Debug.Log("ApplyPlanetProperties called on " + gameObject.name);
         Dictionary<PlanetStatModifier, float> statMultipliers = PlanetManager.Instance.statMultipliers;
         foreach (GunSO gun in gunList)
         {
@@ -251,17 +272,8 @@ public class Shooter : MonoBehaviour
             bullet.hitLayers = elevatedHitLayers;
         }
         
-        // Get damage with type multipliers
+        // Get damage
         float damage = currentGunSO.damage;
-        switch (bullet.gunType)
-        {
-            case GunType.Laser:
-                damage *= laserDamageMult;
-                break;
-            case GunType.Bullet:
-                damage *= bulletDamageMult;
-                break;
-        }
 
         // Apply elevated damage multiplier and disable shadows
         float range = currentGunSO.bulletLifeTime;
@@ -296,6 +308,7 @@ public class Shooter : MonoBehaviour
         else
             dir = ApplyAccuracy(muzzleTrans.right, currentGunSO.accuracy);
         bullet.velocity = dir * currentGunSO.bulletSpeed;
+        lastShootDir = dir;
 
         // Set bullet rotation to match velocity
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;

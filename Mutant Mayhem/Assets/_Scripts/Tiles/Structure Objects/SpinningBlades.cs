@@ -23,6 +23,8 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
     void Start()
     {
         bladesManager = SpinningBladesManager.Instance;
+        if (Daylight.isDay)
+            LightsOff();
         Daylight.OnSunrise += LightsOff;
         Daylight.OnSunset += LightsOn;
     }
@@ -48,7 +50,7 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
         Vector3Int rootPos = TileManager.Instance.WorldToGrid(transform.position);
         rootPos = TileManager.Instance.GridToRootPos(rootPos);
         centerPos = TileManager.Instance.TileCellsCenterToWorld(rootPos);
-        Debug.Log($"[SpinningBlades] Explode: transformPos={transform.position} grid={TileManager.Instance.WorldToGrid(transform.position)} rootPos={rootPos} centerPos={centerPos} prevAngVel={previousAngularVelocity}");
+        //Debug.Log($"[SpinningBlades] Explode: transformPos={transform.position} grid={TileManager.Instance.WorldToGrid(transform.position)} rootPos={rootPos} centerPos={centerPos} prevAngVel={previousAngularVelocity}");
 
         TrySpawnShardExplosion(previousAngularVelocity);
 
@@ -154,7 +156,7 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
 
     void TrySpawnShardExplosion(float angularVel)
     {
-        Debug.Log($"[SpinningBlades] TrySpawnShardExplosion called. angularVel={angularVel} abs={Mathf.Abs(angularVel)} centerPos={centerPos} enable={bladesManager.enableShardExplosion} pool='{bladesManager.shardBulletPoolName}' count={bladesManager.shardCount}");
+        //Debug.Log($"[SpinningBlades] TrySpawnShardExplosion called. angularVel={angularVel} abs={Mathf.Abs(angularVel)} centerPos={centerPos} enable={bladesManager.enableShardExplosion} pool='{bladesManager.shardBulletPoolName}' count={bladesManager.shardCount}");
 
         if (!bladesManager.enableShardExplosion)
             return;
@@ -166,7 +168,7 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
         if (string.IsNullOrEmpty(bladesManager.shardBulletPoolName))
             return;
 
-        Debug.Log($"[SpinningBlades] Spawning shards: absAngVel={absAngVel}, count={bladesManager.shardCount}");
+        //Debug.Log($"[SpinningBlades] Spawning shards: absAngVel={absAngVel}, count={bladesManager.shardCount}");
 
         // Map angular velocity into a 0..1 ratio using the same maxAngularVelocity clamp used for spinning.
         float ratio = Mathf.InverseLerp(bladesManager.minAngularVelForShards, bladesManager.maxAngularVelocity, absAngVel);
@@ -195,7 +197,7 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
             return;
         }
 
-        Debug.Log($"[SpinningBlades] SpawnShards starting. count={count} centerPos={centerPos} speed={speed} damage={damage} pool='{bladesManager.shardBulletPoolName}'");
+        //Debug.Log($"[SpinningBlades] SpawnShards starting. count={count} centerPos={centerPos} speed={speed} damage={damage} pool='{bladesManager.shardBulletPoolName}'");
 
         // Spawn base/offset: if we spawn inside our own collider, shards can instantly collide and vanish.
         Collider2D bladesCol = GetComponent<Collider2D>();
@@ -262,7 +264,7 @@ public class SpinningBlades : MonoBehaviour, ITileObject, ITileObjectExplodable
             // Rotate to match velocity.
             bulletObj.transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-            Debug.Log($"[SpinningBlades] Shard i={i} angle={angle} dir={dir} speed={speed} vel={bullet.velocity} spawnBase={spawnBase} spawnRadius={spawnRadius} pos={bulletObj.transform.position} active={bulletObj.activeSelf}");
+            //Debug.Log($"[SpinningBlades] Shard i={i} angle={angle} dir={dir} speed={speed} vel={bullet.velocity} spawnBase={spawnBase} spawnRadius={spawnRadius} pos={bulletObj.transform.position} active={bulletObj.activeSelf}");
 
             bullet.Fly();
         }

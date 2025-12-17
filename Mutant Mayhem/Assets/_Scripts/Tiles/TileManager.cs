@@ -12,6 +12,8 @@ public class TileStats
     public Vector3Int rootGridPos;
     public bool isBlueprint = false;
     public float blueprintProgress = 0;
+    public int rotation;
+    public Matrix4x4 matrix;
 }
 
 public class TileManager : MonoBehaviour
@@ -119,8 +121,11 @@ public class TileManager : MonoBehaviour
         if (!buildingSystem.CheckSupplies(ruleTile.structureSO))
             return false;
 
-        StructureSO rotatedStructure = StructureRotator.RotateStructure(ruleTile.structureSO, rotation);
-        if (!AddNewTileToDict(gridPos, rotatedStructure))
+        Quaternion q = Quaternion.Euler(0, 0, rotation);
+        Matrix4x4 matrix = Matrix4x4.Rotate(q);
+        int storedRot = StructureRotator.GetRotationFromMatrix(matrix);
+
+        if (!AddNewTileToDict(gridPos, ruleTile.structureSO, storedRot, matrix))
         {
             MessageBanner.PulseMessage("Unable to build there.  It's blocked!", Color.red);
             Debug.LogWarning("Failed to add structure tiles to dict when placing blueprint");
@@ -156,9 +161,10 @@ public class TileManager : MonoBehaviour
         
         BlueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
 
-        Quaternion q = Quaternion.Euler(0, 0, rotation);
-        Matrix4x4 matrix = Matrix4x4.Rotate(q);
         BlueprintTilemap.SetTransformMatrix(gridPos, matrix);
+        // Persist intended rotation for this structure
+        _TileStatsDict[gridPos].rotation = storedRot;
+        _TileStatsDict[gridPos].matrix = matrix;
 
         StartCoroutine(RotateTileObject(BlueprintTilemap, gridPos, matrix));
         AddToPlacedCounter(ruleTile.structureSO.structureType);
@@ -178,6 +184,9 @@ public class TileManager : MonoBehaviour
         _TileStatsDict[rootPos].isBlueprint = false;
         _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
         Matrix4x4 matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
+        // Persist intended rotation for this structure (do not rely on tilemap transforms later)
+        _TileStatsDict[rootPos].matrix = matrix;
+        _TileStatsDict[rootPos].rotation = StructureRotator.GetRotationFromMatrix(matrix);        
         BlueprintTilemap.SetTile(rootPos, null);
         BlueprintTilemap.SetTransformMatrix(rootPos, matrix);
 
@@ -237,7 +246,7 @@ public class TileManager : MonoBehaviour
     public void SetRubbleTileAt(Vector3Int rootPos)
     {
         // Match rotation matrix from animated tilemap
-        Matrix4x4 matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+        Matrix4x4 matrix = _TileStatsDict[rootPos].matrix;
         // Get random destroyed tile
         int randomIndex = Random.Range(0, _TileStatsDict[rootPos].ruleTileStructure.destroyedTiles.Count);
         destroyedTilemap.SetTile(rootPos, _TileStatsDict[rootPos].ruleTileStructure.destroyedTiles[randomIndex]);
@@ -312,7 +321,7 @@ public class TileManager : MonoBehaviour
             tm = StructureTilemap;
 
         // Read rotation and rotate the source offsets back to world-facing orientation
-        int rotation = StructureRotator.GetRotationFromMatrix(tm.GetTransformMatrix(rootPos));
+        int rotation = _TileStatsDict[rootPos].rotation;
         List<Vector3Int> rotatedOffsets = StructureRotator.RotateCellPositionsBack(cellPositions, rotation);
 
         // Compute grid-space AABB over the absolute occupied cells
@@ -358,7 +367,7 @@ public class TileManager : MonoBehaviour
         else
             tm = StructureTilemap;
 
-        int rotation = StructureRotator.GetRotationFromMatrix(tm.GetTransformMatrix(rootPos));
+        int rotation = _TileStatsDict[rootPos].rotation;
         List<Vector3Int> rotatedOffsets = StructureRotator.RotateCellPositionsBack(cellPositions, rotation);
 
         int minX = int.MaxValue, minY = int.MaxValue;
@@ -414,7 +423,7 @@ public class TileManager : MonoBehaviour
         {
             tilemap = BlueprintTilemap;
             matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
-            tileRot = StructureRotator.GetRotationFromMatrix(BlueprintTilemap.GetTransformMatrix(rootPos));
+            tileRot = _TileStatsDict[rootPos].rotation;
             RemoveFromPlacedCounter(ruleTile.structureSO.structureType);
         }
         else
@@ -422,7 +431,7 @@ public class TileManager : MonoBehaviour
             tilemap = AnimatedTilemap;
             blueprintTile = AnimatedTilemap.GetTile(rootPos);
             matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
-            tileRot = StructureRotator.GetRotationFromMatrix(AnimatedTilemap.GetTransformMatrix(rootPos));
+            tileRot = _TileStatsDict[rootPos].rotation;
         }
         
         List<Vector3Int> sourcePositions = ruleTile.structureSO.cellPositions;
@@ -445,8 +454,10 @@ public class TileManager : MonoBehaviour
         {
             if (_StructurePositions.Contains(pos))
                 _StructurePositions.Remove(pos);
-            _TileStatsDict.Remove(rootPos + pos);
-            StructureTilemap.SetTile(rootPos + pos, null);           
+
+            Vector3Int abs = rootPos + pos;
+            _TileStatsDict.Remove(abs);
+            StructureTilemap.SetTile(abs, null);
         }
 
         if (shadowCaster2DTileMap != null)
@@ -677,7 +688,7 @@ public class TileManager : MonoBehaviour
             else
             {
                 // Keep original rotation for non-wall or corner tiles
-                matrix = AnimatedTilemap.GetTransformMatrix(rootPos);
+                matrix = _TileStatsDict[rootPos].matrix;
             }
 
             if (tempTilemap.GetTile(rootPos) != null)
@@ -1012,6 +1023,34 @@ public class TileManager : MonoBehaviour
         return _TileStatsDict[gridPos].rootGridPos;
     }
 
+    // Returns the stored rotation for the structure at this grid position (handles non-root cells).
+    public int GetStoredRotationAt(Vector3Int gridPos)
+    {
+        Vector3Int rootPos = GridToRootPos(gridPos);
+        if (_TileStatsDict.ContainsKey(rootPos))
+            return _TileStatsDict[rootPos].rotation;
+        return 0;
+    }
+
+    // Returns absolute grid cells occupied by the structure at this position, using stored rotation (not tilemap matrices).
+    public List<Vector3Int> GetStructurePositionsFromDict(Vector3Int gridPos)
+    {
+        Vector3Int rootPos = GridToRootPos(gridPos);
+        if (!_TileStatsDict.ContainsKey(rootPos))
+            return new List<Vector3Int>();
+
+        TileStats stats = _TileStatsDict[rootPos];
+        List<Vector3Int> src = stats.ruleTileStructure.structureSO.cellPositions;
+        if (src == null || src.Count == 0)
+            return new List<Vector3Int>();
+
+        List<Vector3Int> offsets = StructureRotator.RotateCellPositionsBack(src, stats.rotation);
+        List<Vector3Int> abs = new List<Vector3Int>(offsets.Count);
+        for (int i = 0; i < offsets.Count; i++)
+            abs.Add(rootPos + offsets[i]);
+        return abs;
+    }
+
     public Vector3Int WorldToGrid(Vector2 point)
     {
         Vector3Int gridPos = StructureTilemap.WorldToCell(point);
@@ -1277,6 +1316,68 @@ public class TileManager : MonoBehaviour
 
         return true;
     }
+
+bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure, int rotation, Matrix4x4 matrix)
+{
+    // Compute occupied offsets in world/grid orientation for this rotation
+    List<Vector3Int> sourcePositions = structure.cellPositions;
+    if (sourcePositions == null || sourcePositions.Count == 0)
+        return false;
+
+    List<Vector3Int> rotatedOffsets = StructureRotator.RotateCellPositionsBack(sourcePositions, rotation);
+
+    // Check grid clear using rotated offsets (dict + colliders)
+    for (int i = 0; i < rotatedOffsets.Count; i++)
+    {
+        Vector3Int abs = rootPos + rotatedOffsets[i];
+
+        if (_TileStatsDict.ContainsKey(abs))
+            return false;
+
+        Vector2 w = StructureTilemap.CellToWorld(abs);
+        Vector2 center = new Vector2(w.x + StructureTilemap.cellSize.x / 2f, w.y + StructureTilemap.cellSize.y / 2f);
+        Vector2 size = (Vector2)StructureTilemap.cellSize * 0.9f;
+
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0, buildingSystem.layersForBuildClearCheck);
+        for (int h = 0; h < hits.Length; h++)
+        {
+            Collider2D col = hits[h];
+            if (col.tag != "PickupTrigger" && col.gameObject.layer != LayerMask.NameToLayer("FlyingEnemies"))
+                return false;
+        }
+    }
+
+    // Add root
+    if (!_TileStatsDict.ContainsKey(rootPos))
+    {
+        _StructurePositions.Add(rootPos);
+        float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthMult;
+
+        _TileStatsDict.Add(rootPos, new TileStats
+        {
+            ruleTileStructure = structure.ruleTileStructure,
+            maxHealth = maxHP,
+            health = maxHP,
+            rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0),
+            isBlueprint = true,
+            rotation = rotation,
+            matrix = matrix,
+        });
+    }
+    else return false;
+
+    // Add other occupied cells as keys
+    for (int i = 1; i < rotatedOffsets.Count; i++)
+    {
+        Vector3Int abs = rootPos + rotatedOffsets[i];
+        if (!_TileStatsDict.ContainsKey(abs))
+            _TileStatsDict.Add(abs, _TileStatsDict[rootPos]);
+        else
+            return false;
+    }
+
+    return true;
+}
 
     #endregion
 

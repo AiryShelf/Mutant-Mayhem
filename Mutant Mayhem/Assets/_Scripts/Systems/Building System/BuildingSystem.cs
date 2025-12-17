@@ -535,15 +535,19 @@ public class BuildingSystem : MonoBehaviour
     {
         UpgradePanelManager.Instance.PowerOffUpgradePanel(rootStructure, playEffect);
 
-        if (structureInHand.structureType == rootStructure.structureType)
+        if (playEffect &&
+            structureInHand != null &&
+            structureInHand.canBuildOnlyOne && structureInHand.structureType == rootStructure.structureType)
         {
             buildMenuController.SetMenuSelection(AllStructureSOs[2]); // Set to destroy tool
-                ChangeStructureInHand(AllStructureSOs[2]);
+            ChangeStructureInHand(AllStructureSOs[2]);
         }
 
         foreach (var structure in rootStructure.structuresToUnlock)
         {
-            if (structure.structureType == structureInHand.structureType)
+            if (playEffect &&
+                structureInHand != null &&
+                structure.structureType == structureInHand.structureType)
             {
                 buildMenuController.SetMenuSelection(AllStructureSOs[2]); // Set to destroy tool
                 ChangeStructureInHand(AllStructureSOs[2]);
@@ -676,10 +680,14 @@ public class BuildingSystem : MonoBehaviour
             {
                 Vector3Int rootPos = tileManager.GridToRootPos(highlightedPos);
 
-                Matrix4x4 matrix = animatedTilemap.GetTransformMatrix(highlightedPos);
-                int rotation = StructureRotator.GetRotationFromMatrix(matrix);
-                TileBase tile = animatedTilemap.GetTile(highlightedPos);
-                    
+                // Use stored rotation (tilemap transform can be identity for invisible tiles like spinning blades)
+                int rotation = tileManager.GetStoredRotationAt(rootPos);
+
+                // Prefer the animated tile if present, otherwise fall back to blueprint tile for preview.
+                TileBase tile = animatedTilemap.GetTile(rootPos);
+                if (tile == null)
+                    tile = TileManager.BlueprintTilemap.GetTile(rootPos);
+
                 SetPreviewImageDestroy(rootPos, tile, new Color(1, 0, 0, 0.5f), -rotation);
             }
             lastHighlightedPos = highlightedPos;
@@ -785,11 +793,8 @@ public class BuildingSystem : MonoBehaviour
 
     void HighlightForDestroy(Vector3Int gridPos)
     {
-        // Find cells for destroying
-        if (animatedTilemap.GetTile(gridPos))
-            destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(animatedTilemap, gridPos));
-        else
-            destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositions(TileManager.BlueprintTilemap, gridPos));
+        // Find cells for destroying using dict (handles invisible tiles and avoids transform-matrix rotation loss)
+        destroyPositions = new List<Vector3Int>(tileManager.GetStructurePositionsFromDict(gridPos));
         if (destroyPositions.Count > 0)
         {
             foreach (Vector3Int pos in destroyPositions)

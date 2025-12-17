@@ -6,13 +6,14 @@ public class TurretShooter : Shooter
 {
     [HideInInspector] public Player player;
     [SerializeField] float recoilDistance = 0.1f;
-    Vector3 startingLocalPos;
+    Vector3 restLocalPos;
+    Coroutine recoilRoutine;
 
     protected override void Start()
     {
         turretShooter = this;
         base.Start();
-        startingLocalPos = transform.localPosition;
+        restLocalPos = transform.localPosition;
     }
 
     protected override void Fire()
@@ -20,14 +21,43 @@ public class TurretShooter : Shooter
         base.Fire();
 
         StatsCounterPlayer.ShotsFiredByTurrets++;
-        StartCoroutine(RecoilEffect());
+        if (recoilRoutine != null)
+        {
+            StopCoroutine(recoilRoutine);
+            recoilRoutine = null;
+            // Prevent drift when restarting recoil mid-kick.
+            transform.localPosition = restLocalPos;
+        }
+
+        recoilRoutine = StartCoroutine(RecoilEffect());
     }
     
     IEnumerator RecoilEffect()
     {
-        transform.localPosition -= muzzleTrans.right * recoilDistance;
+        // lastShootDir is typically world-space; localPosition is relative to the parent.
+        Vector3 worldShootDir = (Vector3)lastShootDir;
+        if (worldShootDir.sqrMagnitude < 0.0001f)
+        {
+            // Fallback if lastShootDir wasn't set for some reason
+            worldShootDir = transform.right;
+        }
+
+        Transform parent = transform.parent;
+        Vector3 localShootDir = parent != null
+            ? parent.InverseTransformDirection(worldShootDir)
+            : worldShootDir;
+
+        localShootDir.z = 0f;
+        if (localShootDir.sqrMagnitude > 0.0001f)
+            localShootDir.Normalize();
+
+        // Move opposite the shot direction
+        transform.localPosition = restLocalPos - localShootDir * recoilDistance;
+
         yield return new WaitForSeconds(0.05f);
-        transform.localPosition = startingLocalPos;
+
+        transform.localPosition = restLocalPos;
+        recoilRoutine = null;
     }
 
     protected override void Reload()

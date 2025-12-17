@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.096, y: -0.101, z: 0}
-  m_LocalScale: {x: 0.92, y: 0.92, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1387425890203280636}
@@ -52,28 +52,10 @@ MonoBehaviour:
   - {fileID: -956967192, guid: 5f2bc168f10e1472a955b60561873f7d, type: 3}
   - {fileID: 184191649, guid: 5f2bc168f10e1472a955b60561873f7d, type: 3}
   - {fileID: -298553359, guid: 5f2bc168f10e1472a955b60561873f7d, type: 3}
-  rotationForce: 37500
-  maxAngularVelocity: 1200
-  minAngularVelocityToDamage: 300
-  damagePerAngularVel: 0.0833
-  damageInterval: 0.5
-  selfDamagePerAngularVel: 0.01
-  flyingEnemyKnockbackPerAngularVel: 0.4
   rb: {fileID: 7355584622693917565}
   postLight: {fileID: 2707762079404036647}
   hasPower: 1
-  enableShardExplosion: 1
-  shardBulletPoolName: BulletSpinningBlade_Shard
-  shardCount: 6
-  minAngularVelForShards: 600
-  shardMinSpeed: 4
-  shardMaxSpeed: 12
-  shardMinDamage: 20
-  shardMaxDamage: 60
-  shardLifeTime: 0.8
-  shardKnockback: 50
-  shardStartAngleOffset: 90
-  shardAngleJitter: 10
+  canBeDamaged: 1
   explosionPoolName: Explosion_Building_Dusty_Large
 --- !u!50 &7355584622693917565
 Rigidbody2D:
@@ -371,7 +353,7 @@ MonoBehaviour:
   - {x: -0.1100682, y: -0.2978295, z: 0}
   m_ShapePathHash: -360891925
   m_Mesh: {fileID: 0}
-  m_InstanceId: 89614
+  m_InstanceId: 192382
   m_LocalBounds:
     m_Center: {x: 0.0155365765, y: -0.023069948, z: 0}
     m_Extent: {x: 0.2896739, y: 0.30105904, z: 0}
@@ -387,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  supplyConsumptionAmount: 1
+  supplyConsumptionAmount: 2
 --- !u!1001 &476476448280429640
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -442,7 +424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: powerConsumed
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5357433677731282673, guid: 96622e47b89094e448d7bc8dfa01ebc9, type: 3}
       propertyPath: onPowerOn.m_PersistentCalls.m_Calls.Array.size

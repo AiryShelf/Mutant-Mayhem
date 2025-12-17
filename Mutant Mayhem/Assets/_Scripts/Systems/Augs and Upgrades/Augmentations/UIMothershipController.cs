@@ -67,6 +67,8 @@ public class UIMothershipController : MonoBehaviour
 
     IEnumerator LaunchGameCoroutine()
     {
+        MessageManager.Instance.StopAllConversations();
+        
         if (loadingPanel == null)
         {
             loadingPanel = FindObjectOfType<LoadingPanel>();

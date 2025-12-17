@@ -340,19 +340,8 @@ public class CriticalHitUpgrade : Upgrade
 
     public override void Apply(PlayerStats playerStats, int level)
     {
-        playerStats.criticalHitChanceMult += UpgAmount;
+        playerStats.criticalHitChanceMult += UpgAmount * 1.5f;
         playerStats.criticalHitDamageMult += UpgAmount;
-    }
-
-    public override int CalculateCost(Player player, int baseCost, int level)
-    {
-        // Multiply the cost each level
-        int newCost = baseCost;
-        for (int i = 1; i < level; i++)
-        {
-            newCost = Mathf.CeilToInt(newCost * 1.35f);
-        }
-        return newCost;
     }
 
     public static float GetUpgAmount(UpgradeManager upgradeManager)
@@ -490,13 +479,13 @@ public class GrenadeBuyAmmoUpgrade : Upgrade
     public override int CalculateCost(Player player, int baseCost, int level)
     {
         // No extra cost for consumable
-        return Mathf.FloorToInt(baseCost * AugManager.Instance.grenadeCostMult);
+        return Mathf.FloorToInt(baseCost * AugManager.Instance.grenadeAmmoMult * AugManager.Instance.grenadeCostMult);
     }
 
     public static int GetCost(Player player, int baseCost)
     {
         
-        return Mathf.FloorToInt(baseCost * AugManager.Instance.grenadeCostMult);
+        return Mathf.FloorToInt(baseCost * AugManager.Instance.grenadeAmmoMult * AugManager.Instance.grenadeCostMult);
     }
 }
 
@@ -746,7 +735,7 @@ public class SupplyLimitUpgrade : Upgrade
 
     public override void Apply(StructureStats structureStats, int level)
     {
-        Debug.Log("SupplyLimitUpg applied");
+        //Debug.Log("SupplyLimitUpg applied");
         SupplyManager.SupplyLimit += UpgAmount;
     }
 
@@ -756,7 +745,7 @@ public class SupplyLimitUpgrade : Upgrade
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
-            newCost = Mathf.CeilToInt(newCost * 1.5f);
+            newCost = Mathf.CeilToInt(newCost * 1.3f);
         }
         return newCost;
     }
