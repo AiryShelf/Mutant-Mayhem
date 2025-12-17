@@ -10,31 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7439bc7875504601b5d38b365cc27d7, type: 3}
-  m_Name: PlanetProperty_HeavyGravity
+  m_Name: PlanetProperty_VeryThickFoliage
   m_EditorClassIdentifier: 
-  propertyName: Heavy Gravity
+  propertyName: Very Thick Foliage
   statModifierEntries:
-  - modifierUiName: -10% Player Speed
+  - modifierUiName: -30% Player Speed
     isDebuff: 1
     statModifier: 0
-    multiplier: 0.9
-  - modifierUiName: -5% Enemy Size
-    isDebuff: 0
-    statModifier: 14
-    multiplier: 0.95
-  - modifierUiName: -25% Bullet Range
-    isDebuff: 1
-    statModifier: 8
-    multiplier: 0.75
-  - modifierUiName: -15% Structure Integrity
+    multiplier: 0.7
+  - modifierUiName: -30% Structure Integrity
     isDebuff: 1
     statModifier: 15
-    multiplier: 0.85
-  - modifierUiName: +25% Structure Cost
+    multiplier: 0.7
+  - modifierUiName: +40% Structure Cost
     isDebuff: 1
     statModifier: 2
-    multiplier: 1.25
-  - modifierUiName: -20% Repair Speed
+    multiplier: 1.4
+  - modifierUiName: -40% Repair Speed
     isDebuff: 1
     statModifier: 6
-    multiplier: 0.8
+    multiplier: 0.6

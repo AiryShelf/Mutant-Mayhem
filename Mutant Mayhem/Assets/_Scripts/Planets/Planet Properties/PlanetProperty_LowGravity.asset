@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7439bc7875504601b5d38b365cc27d7, type: 3}
+  m_Name: PlanetProperty_LowGravity
+  m_EditorClassIdentifier: 
+  propertyName: Low Gravity
+  statModifierEntries:
+  - modifierUiName: +10% Player Speed
+    isDebuff: 0
+    statModifier: 0
+    multiplier: 1.1
+  - modifierUiName: +10% Enemy Size
+    isDebuff: 1
+    statModifier: 14
+    multiplier: 1.1
+  - modifierUiName: +25% Bullet Range
+    isDebuff: 0
+    statModifier: 8
+    multiplier: 1.25
+  - modifierUiName: +10% Structure Integrity
+    isDebuff: 0
+    statModifier: 15
+    multiplier: 1.1
+  - modifierUiName: -10% Structure Cost
+    isDebuff: 0
+    statModifier: 2
+    multiplier: 0.9
+  - modifierUiName: +10% Repair Speed
+    isDebuff: 0
+    statModifier: 6
+    multiplier: 1.1
