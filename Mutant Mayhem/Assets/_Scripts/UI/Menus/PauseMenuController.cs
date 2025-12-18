@@ -102,6 +102,10 @@ public class PauseMenuController : MonoBehaviour
             CursorManager.Instance.inMenu = true;
             TouchManager.Instance.SetVirtualJoysticksActive(false);
             InputManager.SetJoystickMouseControl(true);
+            if (InputManager.LastUsedDevice == Touchscreen.current)
+            {
+                CursorManager.Instance.SetCustomCursorVisible(false);
+            }
 
             wasRepairing = player.stats.playerShooter.isRepairing;
             player.stats.playerShooter.isRepairing = false;
@@ -118,6 +122,11 @@ public class PauseMenuController : MonoBehaviour
             CursorManager.Instance.inMenu = false;
             TouchManager.Instance.SetVirtualJoysticksActive(true);
             playerActionMap.Enable();
+            if (InputManager.LastUsedDevice == Touchscreen.current)
+            {
+                CursorManager.Instance.SetCustomCursorVisible(true);
+                CameraController.Instance.SetTouchscreenOffset(true);
+            }
 
             if (wasRepairing)
                 player.stats.playerShooter.isRepairing = true;

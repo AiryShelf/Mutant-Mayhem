@@ -34,7 +34,7 @@ public class SettingsManager : MonoBehaviour
    // bool spacebarThrowsGrenades = true;
     public float joystickCursorSpeed;
     public float joystickAccelSpeed;
-    bool isVirtualAimJoystickVisible = false;
+    public bool isVirtualAimJoystickVisible = true;
 
     WaveController waveController;  
     Player player;
@@ -85,7 +85,7 @@ public class SettingsManager : MonoBehaviour
             useInstantJoystickAim = false;
             joystickCursorSpeed = CursorManager.Instance.cursorSpeedSpeedBackup;
             joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedBackup;
-            isVirtualAimJoystickVisible = false;
+            isVirtualAimJoystickVisible = true;
             return;
         }
         Debug.Log($"Loading settings from profile: {currentProfile.profileName}");

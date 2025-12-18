@@ -11,6 +11,7 @@ public class ControlSettingsPanel : MonoBehaviour
     [SerializeField] Toggle fastJoystickAimToggle;
     [SerializeField] Slider joystickCursorSpeedSlider;
     [SerializeField] Slider cursorAccelerationSlider;
+    [SerializeField] Toggle virtualAimStickToggle;
     //[SerializeField] Toggle spacebarToggle;
 
     void OnEnable()
@@ -20,6 +21,7 @@ public class ControlSettingsPanel : MonoBehaviour
         fastJoystickAimToggle.onValueChanged.AddListener(FastJoystickAimToggle);
         joystickCursorSpeedSlider.onValueChanged.AddListener(JoystickCursorSpeedChanged);
         cursorAccelerationSlider.onValueChanged.AddListener(CursorAccelerationChanged);
+        virtualAimStickToggle.onValueChanged.AddListener(DisableVirtualAimJoystick);
         //spacebarToggle.onValueChanged.AddListener(ToggleSpacebar);
 
         //Initialize();
@@ -32,6 +34,7 @@ public class ControlSettingsPanel : MonoBehaviour
         fastJoystickAimToggle.onValueChanged.RemoveListener(FastJoystickAimToggle);
         joystickCursorSpeedSlider.onValueChanged.RemoveListener(JoystickCursorSpeedChanged);
         cursorAccelerationSlider.onValueChanged.RemoveListener(CursorAccelerationChanged);
+        virtualAimStickToggle.onValueChanged.RemoveListener(DisableVirtualAimJoystick);
         //spacebarToggle.onValueChanged.RemoveListener(ToggleSpacebar);
     }
 
@@ -50,6 +53,7 @@ public class ControlSettingsPanel : MonoBehaviour
             movementTypeDropdown.SetValueWithoutNotify(profile.isStandardWASD ? 1 : 0);
             //spacebarToggle.SetIsOnWithoutNotify(profile.isSpacebarEnabled);
             fastJoystickAimToggle.SetIsOnWithoutNotify(profile.isFastJoystickAimEnabled);
+            virtualAimStickToggle.SetIsOnWithoutNotify(profile.virtualAimJoystickDisabled);
 
             float sliderValue = Mathf.InverseLerp(
                 CursorManager.Instance.cursorSpeedMin,
@@ -72,6 +76,7 @@ public class ControlSettingsPanel : MonoBehaviour
             fastJoystickAimToggle.SetIsOnWithoutNotify(false);
             joystickCursorSpeedSlider.SetValueWithoutNotify(0.5f);
             cursorAccelerationSlider.SetValueWithoutNotify(0.5f);
+            virtualAimStickToggle.SetIsOnWithoutNotify(true);
         }
     }
 
@@ -109,6 +114,17 @@ public class ControlSettingsPanel : MonoBehaviour
         SettingsManager.Instance.RefreshSettingsFromProfile(profile);
 
         Debug.Log("useStandardWASD set to: " + value);
+    }
+
+    void DisableVirtualAimJoystick(bool disabled)
+    {
+        PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
+        if (currentProfile != null)
+        {
+            currentProfile.virtualAimJoystickDisabled = disabled;
+            ProfileManager.Instance.SaveCurrentProfile();
+            SettingsManager.Instance.RefreshSettingsFromProfile(currentProfile);
+        }
     }
 
     #endregion

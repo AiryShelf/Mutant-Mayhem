@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Instance { get; private set; }
+
     [SerializeField] CinemachineVirtualCamera playerCamera;
     [SerializeField] CinemachineVirtualCamera mouseLookerCamera;
     [SerializeField] CinemachineMixingCamera mixingCamera;
@@ -57,6 +59,16 @@ public class CameraController : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         playerFramingTransposer = playerCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         mouseFramingTransposer = mouseLookerCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
@@ -139,7 +151,8 @@ public class CameraController : MonoBehaviour
         {
             if (isOffset)
             {
-                if (InputManager.LastUsedDevice == Touchscreen.current)
+                // Only set offset if using touchscreen and virtual aim joystick is disabled
+                if (InputManager.LastUsedDevice == Touchscreen.current && SettingsManager.Instance.isVirtualAimJoystickVisible == false)
                     framingTransposer.m_TrackedObjectOffset.x = touchscreenXOffset;
             }
             else

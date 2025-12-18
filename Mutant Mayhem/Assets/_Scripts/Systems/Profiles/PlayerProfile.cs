@@ -42,7 +42,7 @@ public class PlayerProfile
         isFastJoystickAimEnabled = false;
         joystickCursorSpeed = 1500f;
         joystickAccelSpeed = 3000;
-        virtualAimJoystickDisabled = true;
+        virtualAimJoystickDisabled = false;
     }
 
     public bool IsProfileUpToDate()

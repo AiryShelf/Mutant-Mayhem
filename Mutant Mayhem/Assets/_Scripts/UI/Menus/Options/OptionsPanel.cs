@@ -12,7 +12,6 @@ public class OptionsPanel : MonoBehaviour
     //[SerializeField] TMP_Dropdown resolutionDropdown;
     [SerializeField] Toggle vSyncToggle;
     [SerializeField] Toggle analyticsToggle;
-    [SerializeField] Toggle virtualAimStickToggle;
 
     QualityManager qualityManager;
 
@@ -21,7 +20,6 @@ public class OptionsPanel : MonoBehaviour
         qualityDropdown.onValueChanged.AddListener(QualityValueChanged);
         vSyncToggle.onValueChanged.AddListener(ToggleVSync);
         analyticsToggle.onValueChanged.AddListener(ToggleAnalytics);
-        virtualAimStickToggle.onValueChanged.AddListener(DisableVirtualAimJoystick);
         //resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
 
         AnalyticsManager.OnConsentStatusChanged += HandleAnalyticsConsentChanged;
@@ -35,7 +33,6 @@ public class OptionsPanel : MonoBehaviour
         qualityDropdown.onValueChanged.RemoveListener(QualityValueChanged);
         vSyncToggle.onValueChanged.RemoveListener(ToggleVSync);
         analyticsToggle.onValueChanged.RemoveListener(ToggleAnalytics);
-        virtualAimStickToggle.onValueChanged.RemoveListener(DisableVirtualAimJoystick);
         //resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChanged);
 
         AnalyticsManager.OnConsentStatusChanged -= HandleAnalyticsConsentChanged;
@@ -61,12 +58,6 @@ public class OptionsPanel : MonoBehaviour
             qualityLevel = currentProfile.qualityLevel;
             if (qualityLevel == -1)
                 qualityLevel = QualitySettings.GetQualityLevel();
-
-            virtualAimStickToggle.SetIsOnWithoutNotify(currentProfile.virtualAimJoystickDisabled);
-        }
-        else
-        {
-            virtualAimStickToggle.SetIsOnWithoutNotify(true);
         }
 
         qualityDropdown.SetValueWithoutNotify(qualityLevel);
@@ -80,17 +71,6 @@ public class OptionsPanel : MonoBehaviour
         }
         
         //PopulateResolutionDropdown();
-    }
-
-    void DisableVirtualAimJoystick(bool disabled)
-    {
-        PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
-        if (currentProfile != null)
-        {
-            currentProfile.virtualAimJoystickDisabled = disabled;
-            ProfileManager.Instance.SaveCurrentProfile();
-            SettingsManager.Instance.RefreshSettingsFromProfile(currentProfile);
-        }
     }
 
     #region Graphics

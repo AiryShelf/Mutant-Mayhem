@@ -18,8 +18,20 @@ public class SystemsInitializer : MonoBehaviour
         CursorManager.Instance.inMenu = false;
         CursorManager.Instance.MoveCustomCursorWorldToUi(transform.position);
         CursorManager.Instance.SetGraphicRaycasters(player.graphicRaycasters);
+
         if (InputManager.LastUsedDevice == Touchscreen.current)
+        {
             TouchManager.Instance.SetVirtualJoysticksActive(true);
+
+            if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
+            {
+                // Force virtual aim joystick visible on tutorial planet
+                SettingsManager.Instance.isVirtualAimJoystickVisible = true;
+                TouchManager.Instance.SetVirtualAimJoystickVisible(true);
+                TouchManager.Instance.SetVirtualJoysticksActive(true);
+            }
+        }
+
         InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
         LinkVirtualJoysticks(player);
         player.aimDistance = CursorManager.Instance.aimDistance;

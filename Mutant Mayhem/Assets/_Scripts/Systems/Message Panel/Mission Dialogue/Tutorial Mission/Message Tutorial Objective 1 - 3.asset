@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 139aacb5572024b789379a9996a761e6, type: 3}
-  m_Name: Message Tutorial Objective 2 - 3
+  m_Name: Message Tutorial Objective 1 - 3
   m_EditorClassIdentifier: 
   speakerName: Mothership AI
   speakerNameColor: {r: 0, g: 1, b: 0, a: 1}
   portraitAnimatorController: {fileID: 9100000, guid: 7af1ecc3765c141ad91d659fa60079c2, type: 2}
   backgroundAnimatorController: {fileID: 9100000, guid: e800c7dae2ada4d6f8204663fa6e964e, type: 2}
-  messageText: To melee without the Aim Joystick, hold one finger down to aim, and
-    tap with 2 more fingers.  This allows you to quickly aim, shoot, and melee, if
-    your screen is big enough
-  voiceClip: {fileID: 11400000, guid: 11f3f254706294a2e8a86a8ebab26968, type: 2}
-  messageStartDelay: 5
-  messageEndDelay: 5
+  messageText: There are 2 ways to control the aimer on touchscreen.  You can tap
+    or drag anywhere, or use the aim joystick.
+  voiceClip: {fileID: 11400000, guid: 75124fe9a8a9f421cbdf4897fff7eec8, type: 2}
+  messageStartDelay: 1
+  messageEndDelay: 3
   touchscreenOnly: 1
