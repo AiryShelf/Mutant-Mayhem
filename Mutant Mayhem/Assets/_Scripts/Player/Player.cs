@@ -199,6 +199,8 @@ public class Player : MonoBehaviour
         ProfileManager.Instance.currentProfile.playthroughs++;
         ProfileManager.Instance.SaveCurrentProfile();
 
+        CursorManager.Instance.SetCustomCursorVisible(true);
+        CursorManager.Instance.MoveCustomCursorWorldToUi(Vector2.zero);
         StartCoroutine(Sprint(false));
         RefreshMoveForces();
     }

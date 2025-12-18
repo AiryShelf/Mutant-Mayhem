@@ -1017,7 +1017,7 @@ public class TileManager : MonoBehaviour
     {
         if (!_TileStatsDict.ContainsKey(gridPos))
         {
-            Debug.LogError("TileManager: GridToRootPos called on non-existent gridPos: " + gridPos);
+            //Debug.LogError("TileManager: GridToRootPos called on non-existent gridPos: " + gridPos);
             return Vector3Int.zero;
         }
         return _TileStatsDict[gridPos].rootGridPos;

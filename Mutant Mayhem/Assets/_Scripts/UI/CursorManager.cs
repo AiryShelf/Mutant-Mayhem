@@ -158,6 +158,7 @@ public class CursorManager : MonoBehaviour
             customCursorUI.enabled = false;
             if (currentHoveredObject != null)
             {
+                // Send pointer exit event to currently hovered object
                 PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
                 ExecuteEvents.Execute(currentHoveredObject, pointerEventData, 
                                       ExecuteEvents.pointerExitHandler);

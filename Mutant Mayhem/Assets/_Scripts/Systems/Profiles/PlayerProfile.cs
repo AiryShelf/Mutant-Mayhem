@@ -55,6 +55,18 @@ public class PlayerProfile
 
             completedPlanets.Remove("Tutorial");
         }
+
+        // Check cursor speed and accel is within range
+        if (joystickCursorSpeed < CursorManager.Instance.cursorSpeedMin ||
+            joystickCursorSpeed > CursorManager.Instance.cursorSpeedMax)
+        {
+            joystickCursorSpeed = 1500f;
+        }
+        if (joystickAccelSpeed < CursorManager.Instance.cursorAccelMin ||
+            joystickAccelSpeed > CursorManager.Instance.cursorAccelMax)
+        {
+            joystickAccelSpeed = 3000f;
+        }
         
         // Ensure lists exist
         if (planetIndexReachedList == null)

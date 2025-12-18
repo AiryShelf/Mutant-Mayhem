@@ -247,6 +247,7 @@ public class AnimationControllerPlayer : MonoBehaviour
             
         if (!playerShooter.isBuilding)
         {
+            player.ExitInteractMode();
             buildingSystemController.ToggleBuildMenu();
             playerShooter.isBuilding = true;
             bodyAnim.SetBool("isBuilding", true);

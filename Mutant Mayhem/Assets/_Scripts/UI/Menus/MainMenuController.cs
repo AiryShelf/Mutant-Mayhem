@@ -11,6 +11,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] CanvasGroup creditsCanvasGroup;
     [SerializeField] FadeCanvasGroupsWave mainMenuFadeGroup;
     [SerializeField] FadeCanvasGroupsWave musicPlayerFadeGroup;
+    [SerializeField] CanvasGroup fpsCounter;
     [SerializeField] List<CanvasGroup> titleGroupsToHide;
     [SerializeField] OptionsPanel optionsPanel;
     [SerializeField] ControlSettingsPanel controlsPanel;
@@ -45,6 +46,7 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        fpsCounter.alpha = 0f;
         foreach (var group in titleGroupsToHide)
         {
             group.alpha = 0f;
@@ -155,6 +157,12 @@ public class MainMenuController : MonoBehaviour
         {
             musicPlayerFadeGroup = UI_MusicPlayerPanel.Instance.GetComponent<FadeCanvasGroupsWave>();
         }
+
+        if (fpsCounter == null)
+        {
+            fpsCounter = FpsCounter.Instance.GetComponent<CanvasGroup>();
+        }
+        fpsCounter.alpha = 1f;
 
         foreach (var group in titleGroupsToHide)
         {

@@ -16,6 +16,7 @@ public class UiUpgradePanel : UI_PanelBase
     public GridLayoutGroup textGrid;
     public GridLayoutGroup buttonsGrid2;
     public GridLayoutGroup textGrid2;
+    [SerializeField] CanvasGroup closeButton;
     [SerializeField] protected CanvasGroup mainPanelCanvasGroup;
     [SerializeField] protected CanvasGroup poweredCanvasGroup;
     [SerializeField] protected CanvasGroup noPowerCanvasGroup;
@@ -109,6 +110,8 @@ public class UiUpgradePanel : UI_PanelBase
 
     void InitializeFadeGroups()
     {
+        closeButton.blocksRaycasts = false;
+        closeButton.interactable = false;
         RefreshUpgradesText(BuildingSystem.PlayerCredits);
         fadeCanvasGroups.InitializeToFadedOut();
     }
@@ -161,6 +164,8 @@ public class UiUpgradePanel : UI_PanelBase
 
     public virtual void OpenPanel(PanelInteract interactSource)
     {
+        closeButton.blocksRaycasts = true;
+        closeButton.interactable = true;
         fadeCanvasGroups.isTriggered = true;
         mainPanelCanvasGroup.alpha = 1;
         mainPanelCanvasGroup.blocksRaycasts = true;
@@ -177,6 +182,8 @@ public class UiUpgradePanel : UI_PanelBase
 
     public virtual void ClosePanel()
     {
+        closeButton.blocksRaycasts = false;
+        closeButton.interactable = false;
         fadeCanvasGroups.isTriggered = false;
         mainPanelCanvasGroup.alpha = 0;
         mainPanelCanvasGroup.blocksRaycasts = false;
