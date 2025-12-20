@@ -9,6 +9,7 @@ public class UIRaycastProbe : MonoBehaviour
     [SerializeField] private bool logWhenNotClicking = false;
     [SerializeField] private bool logResults = true;
 
+#if UNITY_EDITOR
     void Update()
     {
         if (EventSystem.current == null)
@@ -47,4 +48,5 @@ public class UIRaycastProbe : MonoBehaviour
         foreach (var r in results)
             Debug.Log($"{r.gameObject.name} | depth:{r.depth} | module:{r.module}");
     }
+#endif
 }

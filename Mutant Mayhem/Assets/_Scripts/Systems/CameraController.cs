@@ -217,19 +217,19 @@ public class CameraController : MonoBehaviour
         // Adjust weights based on focus parameters
         if (focusPlayer)
         {
-            weightLerpCoroutine1 = GameTools.StartCoroutine(LerpCameraWeight(1f, 0, duration)); // Focus on player camera
-            weightLerpCoroutine2 = GameTools.StartCoroutine(LerpCameraWeight(0f, 1, duration)); // Unfocus mouseLooker camera
+            weightLerpCoroutine1 = StartCoroutine(LerpCameraWeight(1f, 0, duration)); // Focus on player camera
+            weightLerpCoroutine2 = StartCoroutine(LerpCameraWeight(0f, 1, duration)); // Unfocus mouseLooker camera
         }
         else if (focusMouseLooker)
         {
-            weightLerpCoroutine1 = GameTools.StartCoroutine(LerpCameraWeight(0f, 0, duration)); // Unfocus player camera
-            weightLerpCoroutine2 = GameTools.StartCoroutine(LerpCameraWeight(1f, 1, duration)); // Focus on mouseLooker camera
+            weightLerpCoroutine1 = StartCoroutine(LerpCameraWeight(0f, 0, duration)); // Unfocus player camera
+            weightLerpCoroutine2 = StartCoroutine(LerpCameraWeight(1f, 1, duration)); // Focus on mouseLooker camera
         }
         else
         {
             // If both are false, restore default weights
-            weightLerpCoroutine1 = GameTools.StartCoroutine(LerpCameraWeight(playerMixWeight, 0, duration));
-            weightLerpCoroutine2 = GameTools.StartCoroutine(LerpCameraWeight(mouseMixWeight, 1, duration));
+            weightLerpCoroutine1 = StartCoroutine(LerpCameraWeight(playerMixWeight, 0, duration));
+            weightLerpCoroutine2 = StartCoroutine(LerpCameraWeight(mouseMixWeight, 1, duration));
         }
 
         // Lock camera to target, if a focus is chosen.
@@ -238,7 +238,7 @@ public class CameraController : MonoBehaviour
         if (focusMouseLooker)
         {
             // Lerp mouseLooker to target
-            positionLerpCoroutine = GameTools.StartCoroutine(GameTools.LerpPosition(mouseLooker.transform, 
+            positionLerpCoroutine = StartCoroutine(GameTools.LerpPosition(mouseLooker.transform,
             mouseLooker.transform.position, targetTrans.position, duration));
         }
         
@@ -249,7 +249,7 @@ public class CameraController : MonoBehaviour
             StopCoroutine(orthoSizeLerpCoroutine);
         
         float currentOrthoSize = playerCamera.m_Lens.OrthographicSize;
-        orthoSizeLerpCoroutine = GameTools.StartCoroutine(GameTools.LerpFloat(currentOrthoSize, 
+        orthoSizeLerpCoroutine = StartCoroutine(GameTools.LerpFloat(currentOrthoSize,
                                  playerCamOrthoSizeStart + orthoZoomAmount + zoomBias, duration, UpdateOrthoSize));
     }
 
@@ -268,25 +268,25 @@ public class CameraController : MonoBehaviour
 
         if (lockCameras)
         {
-            playerDampingCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_XDamping, 
+            playerDampingCoroutine1 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_XDamping,
                 dampingValue, 1f, value => playerFramingTransposer.m_XDamping = value));
-            playerDampingCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_YDamping, 
+            playerDampingCoroutine2 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_YDamping,
                 dampingValue, 1f, value => playerFramingTransposer.m_YDamping = value));
-            mouseDampingCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_XDamping, 
+            mouseDampingCoroutine1 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_XDamping,
                 dampingValue, 1f, value => mouseFramingTransposer.m_XDamping = value));
-            mouseDampingCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_YDamping, 
+            mouseDampingCoroutine2 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_YDamping,
                 dampingValue, 1f, value => mouseFramingTransposer.m_YDamping = value));
         }
         else
         {
             // Return to default
-            playerDampingCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_XDamping, 
+            playerDampingCoroutine1 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_XDamping,
                 playerXDamping, 1f, value => playerFramingTransposer.m_XDamping = value));
-            playerDampingCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_YDamping, 
+            playerDampingCoroutine2 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_YDamping,
                 playerYDamping, 1f, value => playerFramingTransposer.m_YDamping = value));
-            mouseDampingCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_XDamping, 
+            mouseDampingCoroutine1 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_XDamping,
                 mouseXDamping, 1f, value => mouseFramingTransposer.m_XDamping = value));
-            mouseDampingCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_YDamping, 
+            mouseDampingCoroutine2 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_YDamping,
                 mouseYDamping, 1f, value => mouseFramingTransposer.m_YDamping = value));
         }
     }
@@ -306,47 +306,47 @@ public class CameraController : MonoBehaviour
         // Apply Dead Zone and Soft Zone changes
         if (playerLock)
         {
-            playerDzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneWidth, 
+            playerDzCoroutine1 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneWidth,
                 0, 1f, value => playerFramingTransposer.m_DeadZoneWidth = value));
-            playerDzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneHeight, 
+            playerDzCoroutine2 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneHeight,
                 0, 1f, value => playerFramingTransposer.m_DeadZoneHeight = value));
-            playerSzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneWidth, 
+            playerSzCoroutine1 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneWidth,
                 0, 1f, value => playerFramingTransposer.m_SoftZoneWidth = value));
-            playerSzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneHeight, 
+            playerSzCoroutine2 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneHeight,
                 0, 1f, value => playerFramingTransposer.m_SoftZoneHeight = value));
         }
         else if (mouseLookerLock)
         {
-            mouseDzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneWidth, 
+            mouseDzCoroutine1 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneWidth,
                 0, 1f, value => mouseFramingTransposer.m_DeadZoneWidth = value));
-            mouseDzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneHeight, 
+            mouseDzCoroutine2 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneHeight,
                 0, 1f, value => mouseFramingTransposer.m_DeadZoneHeight = value));
-            mouseSzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneWidth, 
+            mouseSzCoroutine1 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneWidth,
                 0, 1f, value => mouseFramingTransposer.m_SoftZoneWidth = value));
-            mouseSzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneHeight, 
+            mouseSzCoroutine2 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneHeight,
                 0, 1f, value => mouseFramingTransposer.m_SoftZoneHeight = value));
         }
         else
         {
             // Return to default
             // Player zones
-            playerDzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneWidth, 
+            playerDzCoroutine1 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneWidth,
                 playerDZWidth, 1f, value => playerFramingTransposer.m_DeadZoneWidth = value));
-            playerDzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneHeight, 
+            playerDzCoroutine2 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_DeadZoneHeight,
                 playerDZHeight, 1f, value => playerFramingTransposer.m_DeadZoneHeight = value));
-            playerSzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneWidth, 
+            playerSzCoroutine1 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneWidth,
                 playerSZWidth, 1f, value => playerFramingTransposer.m_SoftZoneWidth = value));
-            playerSzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneHeight, 
+            playerSzCoroutine2 = StartCoroutine(GameTools.LerpFloat(playerFramingTransposer.m_SoftZoneHeight,
                 playerSZHeight, 1f, value => playerFramingTransposer.m_SoftZoneHeight = value));
 
             // MouseLooker zones
-            mouseDzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneWidth, 
+            mouseDzCoroutine1 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneWidth,
                 mouseDZWidth, 1f, value => mouseFramingTransposer.m_DeadZoneWidth = value));
-            mouseDzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneHeight, 
+            mouseDzCoroutine2 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_DeadZoneHeight,
                 mouseDZHeight, 1f, value => mouseFramingTransposer.m_DeadZoneHeight = value));
-            mouseSzCoroutine1 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneWidth, 
+            mouseSzCoroutine1 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneWidth,
                 mouseSZWidth, 1f, value => mouseFramingTransposer.m_SoftZoneWidth = value));
-            mouseSzCoroutine2 = GameTools.StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneHeight, 
+            mouseSzCoroutine2 = StartCoroutine(GameTools.LerpFloat(mouseFramingTransposer.m_SoftZoneHeight,
                 mouseSZHeight, 1f, value => mouseFramingTransposer.m_SoftZoneHeight = value));
         }
     }

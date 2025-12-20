@@ -83,7 +83,7 @@ public class CameraShake : MonoBehaviour
 
     private IEnumerator ShakeRoutine(float intensity, float duration)
     {
-        Debug.Log($"CameraShake: Starting shake with intensity {intensity} for {duration} seconds.");
+        //Debug.Log($"CameraShake: Starting shake with intensity {intensity} for {duration} seconds.");
         float elapsed = 0f;
 
         // Set starting shake

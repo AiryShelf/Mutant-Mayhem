@@ -59,7 +59,15 @@ public class DroneContainer : MonoBehaviour
                         continue;
 
                     if (drone.energy >= drone.energyMax)
+                    {
+                        if (droneBeingRecharged == drone)
+                        {
+                            drone.energy = drone.energyMax;
+                            drone.SetJobDone();
+                            droneBeingRecharged = null;
+                        }
                         continue;
+                    }
                         
                     drone.SetJob(new DroneJob(DroneJobType.Recharge, Vector2.zero));
                     droneBeingRecharged = drone;

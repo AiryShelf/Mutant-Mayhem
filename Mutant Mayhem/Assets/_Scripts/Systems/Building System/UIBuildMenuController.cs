@@ -17,7 +17,10 @@ public class UIBuildMenuController : MonoBehaviour
     [SerializeField] TextMeshProUGUI infoPanelHeader;
     [SerializeField] TextMeshProUGUI infoPanelDescription;
     [SerializeField] CanvasGroup myCanvasGroup;
-    public FadeCanvasGroupsWave fadeCanvasGroups;
+    public float menuFadeDuration = 0.1f;
+
+    Coroutine _fadeRoutine;
+
     [SerializeField] ControlsPanel controlsPanel;
 
     public bool isTouchScrolling = false;
@@ -62,9 +65,9 @@ public class UIBuildMenuController : MonoBehaviour
 
         uiStructureList.Clear();
         _entries.Clear();
-        fadeCanvasGroups.individualElements.Clear();
 
-        InitializeBuildList();
+        // Build the menu entries now that we have the references
+       InitializeBuildList();
     }
     
     void OnEnable()
@@ -96,15 +99,19 @@ public class UIBuildMenuController : MonoBehaviour
 
     void Start()
     {
-        fadeCanvasGroups.InitializeToFadedOut(); 
-        myCanvasGroup.blocksRaycasts = false; 
+        // Start hidden
+        if (myCanvasGroup != null)
+        {
+            myCanvasGroup.alpha = 0f;
+            myCanvasGroup.interactable = false;
+            myCanvasGroup.blocksRaycasts = false;
+        }
     }
 
     void InitializeBuildList()
     {
         uiStructureList.Clear();
         _entries.Clear();
-        fadeCanvasGroups.individualElements.Clear();
 
         int originalIndex = 0;
         int currentSection = 0;
@@ -132,10 +139,6 @@ public class UIBuildMenuController : MonoBehaviour
                     uiStructure = null
                 });
 
-                // Initialize FadeCanvasGroup list
-                fadeCanvasGroups.individualElements.Add(newText.GetComponent<CanvasGroup>());
-                fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
-
                 originalIndex++;
                 continue;
             }
@@ -156,10 +159,6 @@ public class UIBuildMenuController : MonoBehaviour
                 textGO = uiStructure.textInstance,
                 uiStructure = uiStructure
             });
-
-            // Initialize FadeCanvasGroup list
-            fadeCanvasGroups.individualElements.Add(uiStructure.textInstance.GetComponent<CanvasGroup>());
-            fadeCanvasGroups.individualElements.Add(newButton.GetComponent<CanvasGroup>());
 
             originalIndex++;
         }
@@ -235,16 +234,8 @@ public class UIBuildMenuController : MonoBehaviour
 
     public void ToggleBuildMenu()
     {
-        fadeCanvasGroups.isTriggered = !isMenuOpen;
-        myCanvasGroup.blocksRaycasts = !isMenuOpen;
-
-        // Toggle Controls Panel
-        /*
-        if (!isMenuOpen)
-            wasControlsPanelOpen = controlsPanel.isOpen;
-        else if (wasControlsPanelOpen)
-            controlsPanel.TogglePanel();
-        */
+        // Fade the entire menu as one CanvasGroup
+        StartMenuFade(!isMenuOpen);
 
         isMenuOpen = !isMenuOpen;
     }
@@ -347,4 +338,58 @@ public class UIBuildMenuController : MonoBehaviour
     }
 
     #endregion
+
+    void StartMenuFade(bool open)
+    {
+        if (myCanvasGroup == null)
+            return;
+
+        float target = open ? 1f : 0f;
+
+        // Enable interaction immediately when opening; disable after fade when closing
+        if (open)
+        {
+            myCanvasGroup.interactable = true;
+            myCanvasGroup.blocksRaycasts = true;
+        }
+
+        if (_fadeRoutine != null)
+            StopCoroutine(_fadeRoutine);
+
+        _fadeRoutine = StartCoroutine(FadeCanvasGroupTo(myCanvasGroup, target, menuFadeDuration, open));
+    }
+
+    IEnumerator FadeCanvasGroupTo(CanvasGroup cg, float targetAlpha, float duration, bool opening)
+    {
+        if (cg == null)
+            yield break;
+
+        float startAlpha = cg.alpha;
+
+        if (duration <= 0f)
+        {
+            cg.alpha = targetAlpha;
+        }
+        else
+        {
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                float u = Mathf.Clamp01(t / duration);
+                cg.alpha = Mathf.Lerp(startAlpha, targetAlpha, u);
+                yield return null;
+            }
+            cg.alpha = targetAlpha;
+        }
+
+        // After closing, disable interaction.
+        if (!opening)
+        {
+            cg.interactable = false;
+            cg.blocksRaycasts = false;
+        }
+
+        _fadeRoutine = null;
+    }
 }

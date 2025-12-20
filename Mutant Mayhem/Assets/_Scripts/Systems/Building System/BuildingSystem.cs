@@ -322,6 +322,7 @@ public class BuildingSystem : MonoBehaviour
 
         if (!isInBuildMode)
         {
+            // Open build menu
             UpgradePanelManager.Instance.CloseAllPanels();
             player.ExitInteractMode();
 
@@ -357,10 +358,11 @@ public class BuildingSystem : MonoBehaviour
                 structureInHand = AllStructureSOs[2]; // Destroy Tool as a safe fallback
             }
             
-            StartCoroutine(DelayMenuSelection()); // So that FadeCanvasGroupsWave can turn the elements on
+            buildMenuController.SetMenuSelection(lastStructureInHand);
         }
         else
         {
+            // Close build menu
             helpAction.Enable();
             toolbarAction.Enable();
 
@@ -382,12 +384,6 @@ public class BuildingSystem : MonoBehaviour
             isInBuildMode = false;
             player.playerShooter.isBuilding = false;
             buildMenuController.ToggleBuildMenu();
-            
-            float time = buildMenuController.fadeCanvasGroups.fadeOutAllTime;
-
-            if (clearStructureInHand != null)
-                StopCoroutine(clearStructureInHand);
-            clearStructureInHand = StartCoroutine(ClearSelection(time));
 
             RemoveBuildHighlight();
             lastStructureInHand = structureInHand;
@@ -476,21 +472,6 @@ public class BuildingSystem : MonoBehaviour
 
             yield return null;
         }
-    }
-
-    IEnumerator DelayMenuSelection()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        buildMenuController.SetMenuSelection(lastStructureInHand);
-    }
-
-    IEnumerator ClearSelection(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        RemoveBuildHighlight();
-        //structureInHand = AllStructureSOs[(int)Structure.SelectTool];
     }
 
     public void ChangeStructureInHand(StructureSO structure)
