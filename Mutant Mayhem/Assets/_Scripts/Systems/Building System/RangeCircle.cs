@@ -62,7 +62,7 @@ public class RangeCircle : MonoBehaviour
         if (isRepairRange && player != null)
         {
             if (player.stats.playerShooter.isElevated)
-                radius = radiusStart * 1.3f;
+                radius = radiusStart * player.stats.playerShooter.isElevatedDamageMult;
             else
                 radius = radiusStart;
         }

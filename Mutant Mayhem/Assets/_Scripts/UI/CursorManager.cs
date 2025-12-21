@@ -260,6 +260,8 @@ public class CursorManager : MonoBehaviour
             newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
             float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                           player.stats.playerShooter.currentGunSO.bulletSpeed;
+            if (player.stats.playerShooter.isElevated)
+                range *= player.stats.playerShooter.isElevatedDamageMult;
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, 
                                player.stats.playerShooter.muzzleTrans.position, range, screenBounds);
         } 
