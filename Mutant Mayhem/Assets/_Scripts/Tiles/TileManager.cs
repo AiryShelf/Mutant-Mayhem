@@ -831,7 +831,7 @@ public class TileManager : MonoBehaviour
         // Fallback for solo tiles: Ensure it updates even without neighbors
         if (!neighborExists)
         {
-            Debug.Log($"Solo tile refresh triggered at {gridPos}");
+            //Debug.Log($"Solo tile refresh triggered at {gridPos}");
             AnimatedTilemap.RefreshTile(gridPos);
         }
     }

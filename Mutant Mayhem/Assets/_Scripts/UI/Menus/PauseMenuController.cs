@@ -144,7 +144,7 @@ public class PauseMenuController : MonoBehaviour
         TimeControl.Instance.PauseGame(open);
         isPauseMenuOpen = open;
         
-        Debug.Log("Pause Menu open: " + open);
+        //Debug.Log("Pause Menu open: " + open);
     }
 
     public void Continue()

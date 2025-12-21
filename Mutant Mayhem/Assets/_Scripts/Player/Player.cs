@@ -272,7 +272,7 @@ public class Player : MonoBehaviour
 
     public void OnEscapePressed(InputAction.CallbackContext context)
     {
-        Debug.Log("OnEscapePressed called");
+        //Debug.Log("OnEscapePressed called");
         if (isInteracting)
         {
             CloseInteractPanel();

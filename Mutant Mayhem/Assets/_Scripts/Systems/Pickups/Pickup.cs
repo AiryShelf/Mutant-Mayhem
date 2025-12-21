@@ -56,9 +56,12 @@ public class Pickup : MonoBehaviour
             gridPos = tileManager.WorldToGrid(myPos);
             if (TileManager.StructureTilemap.GetTile(gridPos) &&
                 !tileManager.IsTileBlueprint(myPos) &&
-                tileManager.GetStructureAt(myPos).structureType != StructureType.ThreeByThreePlatform &&
+                tileManager.GetStructureAt(myPos).structureType != StructureType.ShootingPlatform &&
                 tileManager.GetStructureAt(myPos).structureType != StructureType.RazorWire &&
                 tileManager.GetStructureAt(myPos).structureType != StructureType.Mine &&
+                tileManager.GetStructureAt(myPos).structureType != StructureType.QGate &&
+                tileManager.GetStructureAt(myPos).structureType != StructureType.Gate &&
+                tileManager.GetStructureAt(myPos).structureType != StructureType.BlastGate &&
                 !tileManager.CheckGridIsClear(gridPos, LayerMask.GetMask("Structures"), true))
             {
                 Vector2 dir = myPos - tileManager.GridCenterToWorld(gridPos);

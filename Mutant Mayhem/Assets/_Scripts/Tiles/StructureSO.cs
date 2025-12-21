@@ -48,7 +48,7 @@ public enum StructureType
     SolarLight,
     Gate,
     BlastGate,
-    ThreeByThreePlatform,
+    ShootingPlatform,
     LaserTurret,
     GunTurret,
     LaserTurret2,

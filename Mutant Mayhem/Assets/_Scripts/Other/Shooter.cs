@@ -138,26 +138,7 @@ public class Shooter : MonoBehaviour
     {
         gunList.Clear();
         gunList.Add(gun);
-        ApplyPlanetProperties();
-
-        // Initialize first gun
-        SwitchGuns(0);
-        gunsAmmoInClips[0] = 0;
-
-        // Lasers shouldn't reload; bullet turrets start empty and then reload/fill.
-        isReloading = currentGunSO != null && currentGunSO.gunType != GunType.Laser;
-        reloadRoutine = null;
-        reloadTimer = TurretReloadTime;
-
-        criticalHit = GetComponent<CriticalHit>();
-        StartChargingGuns();
-        initialized = true;
-    }
-
-    void Initialize()
-    {
-        CopyGunLists();
-        ApplyPlanetProperties();
+        //ApplyPlanetProperties();
 
         // Initialize first gun
         SwitchGuns(0);
@@ -174,6 +155,25 @@ public class Shooter : MonoBehaviour
     }
 
     #region Initialize
+
+    void Initialize()
+    {
+        CopyGunLists();
+        //ApplyPlanetProperties();
+
+        // Initialize first gun
+        SwitchGuns(0);
+        gunsAmmoInClips[0] = 0;
+
+        // Lasers shouldn't reload; bullet turrets start empty and then reload/fill.
+        isReloading = currentGunSO != null && currentGunSO.gunType != GunType.Laser;
+        reloadRoutine = null;
+        reloadTimer = TurretReloadTime;
+
+        criticalHit = GetComponent<CriticalHit>();
+        StartChargingGuns();
+        initialized = true;
+    }
 
     protected void CopyGunLists()
     {
@@ -202,7 +202,7 @@ public class Shooter : MonoBehaviour
 
     protected void ApplyPlanetProperties()
     {
-        Debug.Log("ApplyPlanetProperties called on " + gameObject.name);
+        //Debug.Log("ApplyPlanetProperties called on " + gameObject.name);
         Dictionary<PlanetStatModifier, float> statMultipliers = PlanetManager.Instance.statMultipliers;
         foreach (GunSO gun in gunList)
         {
@@ -432,8 +432,6 @@ public class Shooter : MonoBehaviour
             obj.transform.position = clipEjectorTrans.position;
             obj.transform.rotation = gunTrans.rotation;
             obj.transform.parent = clipEjectorTrans;
-            //GameObject obj = Instantiate(currentGunSO.emptyClipPrefab, clipEjectorTrans.position,
-            //                            gunTrans.rotation, clipEjectorTrans);
             BulletCasingFly casingFly = obj.GetComponent<BulletCasingFly>();
             if (casingFly != null)
             {

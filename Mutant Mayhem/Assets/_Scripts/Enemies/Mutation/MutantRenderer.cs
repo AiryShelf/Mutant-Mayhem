@@ -48,6 +48,22 @@ public class MutantRenderer : MonoBehaviour
         animationControllerMutant.rightLegAnimator.runtimeAnimatorController = legGeneBase.rightLegAnimatorController;
         rightLegSR.color = g.legGene.color;
 
+        // Set sprite sorting layers
+        if (legGeneBase.isFlying)
+        {
+            bodySR.sortingLayerName = "FlyingEnemies";
+            headSR.sortingLayerName = "FlyingEnemies";
+            leftLegSR.sortingLayerName = "FlyingEnemies";
+            rightLegSR.sortingLayerName = "FlyingEnemies";
+        }
+        else
+        {
+            bodySR.sortingLayerName = "Enemies";
+            headSR.sortingLayerName = "Enemies";
+            leftLegSR.sortingLayerName = "Enemies";
+            rightLegSR.sortingLayerName = "Enemies";
+        }
+
         // Scale anim speeds with leg size with inverse relation, with a base of 8 scale
         animationControllerMutant.animSpeedFactor = legGeneBase.animSpeedFactor * (8 / g.legGene.scale);
         animationControllerMutant.switchToRunBuffer = legGeneBase.switchToRunBuffer * (8 / g.legGene.scale);

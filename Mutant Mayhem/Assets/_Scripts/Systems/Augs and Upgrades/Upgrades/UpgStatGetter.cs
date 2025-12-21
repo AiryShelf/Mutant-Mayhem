@@ -367,13 +367,13 @@ public static class UpgStatGetter
                 amount = "+" + DroneManager.Instance.droneEnergyUpgMult.ToString("#0.0");
                 return amount;
             case DroneStatsUpgrade.DroneHangarRange:
-                amount = "+" + DroneManager.Instance.droneHangarRangeUpgAmount.ToString("#0");
+                amount = "+" + DroneManager.Instance.droneHangarRangeUpgAmount.ToString("#0.0");
                 return amount;
             case DroneStatsUpgrade.DroneHangarRechargeSpeed:
-                amount = "+" + DroneManager.Instance.droneHangarRechargeSpeed.ToString("#0");
+                amount = "+" + DroneManager.Instance.droneHangarRechargeSpeedUpgAmount.ToString("#0");
                 return amount;
             case DroneStatsUpgrade.DroneHangarRepairSpeed:
-                amount = "+" + DroneManager.Instance.droneHangarRepairSpeed.ToString("#0");
+                amount = "+" + DroneManager.Instance.droneHangarRepairSpeedUpgAmount.ToString("#0");
                 return amount;
         }
 

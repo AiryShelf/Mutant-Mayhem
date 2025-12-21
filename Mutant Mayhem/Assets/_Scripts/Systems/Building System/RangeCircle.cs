@@ -88,7 +88,5 @@ public class RangeCircle : MonoBehaviour
         float textureRepeatCount = circumference / dotSize;  // Number of times the texture should repeat
         lineRenderer.material.mainTextureScale = new Vector2(textureRepeatCount, 1);
         //lineRenderer.enabled = false;
-    }
-
-    
+    } 
 }

@@ -19,6 +19,7 @@ MonoBehaviour:
   maxHealth: 1000
   health: 1000
   blueprintBuildAmount: 1000
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
@@ -33,6 +34,6 @@ MonoBehaviour:
   powerGenerated: 0
   powerNeighborBonus: 0
   powerCost: 5
-  supplyCost: 6
+  supplyCost: 5
   structuresToUnlock: []
   canBuildOnlyOne: 0

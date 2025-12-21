@@ -5,11 +5,11 @@ using UnityEngine.InputSystem;
 
 public class GunSights : MonoBehaviour
 {
-    public LineRenderer lineRendererCenter;
-    public LineRenderer lineRendererLeftEdge;
-    public LineRenderer lineRendererRightEdge;
+    [SerializeField] LineRenderer lineRendererCenter;
+    [SerializeField] LineRenderer lineRendererLeftEdge;
+    [SerializeField] LineRenderer lineRendererRightEdge;
     [SerializeField] float edgeLengthFactor = 0.7f;
-    [SerializeField] int playerGunIndex;
+    public int playerGunIndex;
     [SerializeField] bool repairGun = false;
     [SerializeField] LayerMask collisionMask;
 
@@ -17,7 +17,7 @@ public class GunSights : MonoBehaviour
     [SerializeField] float defaultDist = 5;
 
     public bool isElevated;
-    public float elevatedRangeMult = 1.3f;
+    public float elevatedRangeMult = 1.2f;
     Player player;
     PlayerShooter playerShooter;
     float maxLength;
@@ -28,14 +28,22 @@ public class GunSights : MonoBehaviour
         this.player = player;
         playerShooter = player.playerShooter;
         isElevated = playerShooter.isElevated;
-            
+        playerGunIndex = playerShooter.currentGunIndex;
+
         RefreshSettings();
     }
 
     void LateUpdate()
     {
+        // Keep these in sync in case the player switches or upgrades guns.
+        isElevated = playerShooter.isElevated;
+        if (!repairGun)
+            playerGunIndex = playerShooter.currentGunIndex;
+
+        RefreshSettings();
+
         float baseLength;
-        
+
         if (repairGun)
         {
             Vector3 target;
@@ -43,18 +51,19 @@ public class GunSights : MonoBehaviour
                 target = CursorManager.Instance.GetCustomCursorWorldPos();
             else
                 target = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+
             target.z = 0;
             baseLength = (target - transform.position).magnitude;
         }
         else
         {
-            baseLength = defaultDist;
+            // Non-repair guns should show the gun's max range (bullet lifetime * speed).
+            // If something is misconfigured and range is zero, fall back to a reasonable default.
+            baseLength = maxLength > 0f ? maxLength : defaultDist;
         }
 
         if (isElevated)
-        {
             baseLength *= elevatedRangeMult;
-        }
 
         baseLength = Mathf.Clamp(baseLength, 0, maxLength * (isElevated ? elevatedRangeMult : 1f));
 
@@ -64,7 +73,6 @@ public class GunSights : MonoBehaviour
                 ? RaycastLines(baseLength)
                 : (baseLength, baseLength, baseLength);
 
-        RefreshSettings();
         UpdateSights(centerLength, leftLength, rightLength);
     }
 
@@ -72,9 +80,9 @@ public class GunSights : MonoBehaviour
     {
         float centerLength = baseLength;
         RaycastHit2D centerHit = Physics2D.Raycast(
-            transform.position, 
-            transform.right, 
-            centerLength, 
+            transform.position,
+            transform.right,
+            centerLength,
             collisionMask
         );
 
@@ -87,9 +95,9 @@ public class GunSights : MonoBehaviour
         Vector2 leftDir = GameTools.RotateVector2(transform.right, accuracy);
 
         RaycastHit2D leftHit = Physics2D.Raycast(
-            transform.position, 
-            leftDir, 
-            leftLength, 
+            transform.position,
+            leftDir,
+            leftLength,
             collisionMask
         );
 
@@ -97,13 +105,14 @@ public class GunSights : MonoBehaviour
         {
             leftLength = leftHit.distance + 0.4f;
         }
+
         float rightLength = baseLength * edgeLengthFactor;
         Vector2 rightDir = GameTools.RotateVector2(transform.right, -accuracy);
 
         RaycastHit2D rightHit = Physics2D.Raycast(
-            transform.position, 
-            rightDir, 
-            rightLength, 
+            transform.position,
+            rightDir,
+            rightLength,
             collisionMask
         );
 
@@ -111,14 +120,26 @@ public class GunSights : MonoBehaviour
         {
             rightLength = rightHit.distance + 0.4f;
         }
-        
+
         return (centerLength, leftLength, rightLength);
     }
 
     public void RefreshSettings()
     {
-        maxLength = playerShooter.gunList[playerGunIndex].bulletLifeTime *
-                    playerShooter.gunList[playerGunIndex].bulletSpeed;
+        if (playerShooter == null)
+            return;
+
+        if (playerGunIndex < 0 || playerGunIndex >= playerShooter.gunList.Count)
+            return;
+
+        var gun = playerShooter.gunList[playerGunIndex];
+        if (gun == null)
+        {
+            maxLength = 0f;
+            return;
+        }
+
+        maxLength = gun.bulletLifeTime * gun.bulletSpeed;
     }
 
     public void SetAccuracy(float accuracy)

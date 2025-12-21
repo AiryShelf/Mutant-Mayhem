@@ -8,6 +8,7 @@ public class DroneManager : MonoBehaviour
     public static DroneManager Instance;
 
     public static Action<int> OnDroneCountChanged;
+    public static Action<float> OnHangarRangeUpgraded;
 
     [Header("Base Stats and Upgrade Multipliers:")]
     public float droneSpeedMult = 1;
@@ -48,6 +49,7 @@ public class DroneManager : MonoBehaviour
             return;
         }
 
+        // Make working copy of DroneGunSOs
         droneGunList.Clear();
         foreach(TurretGunSO gun in _droneGunListSource)
         {
@@ -58,9 +60,28 @@ public class DroneManager : MonoBehaviour
 
     void Start()
     {
-        // Apply planet stat modifiers
+        ApplyPlanetStatModifiers();
+    }
+
+    void ApplyPlanetStatModifiers()
+    {
         droneHangarRange *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
         droneHangarRangeUpgAmount *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
+        foreach(GunSO gun in droneGunList)
+        {
+            switch (gun.gunType)
+            {
+                case GunType.Laser:
+                    gun.damage *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                    break;
+                case GunType.Bullet:
+                    gun.damage *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                    break;
+                case GunType.RepairGun:
+                    gun.damage *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                    break;
+            }
+        }
     }
 
     public bool SpawnDroneInHangar(DroneType droneType, DroneContainer droneContainer)
@@ -133,7 +154,7 @@ public class DroneManager : MonoBehaviour
 
     #region Upgrades
 
-    public void UpgradeDroneGuns(GunType gunType, GunStatsUpgrade upgType, int level)
+    public void UpgradeDroneGunOfType(GunType gunType, GunStatsUpgrade upgType, int level)
     {
         //Debug.Log("UpgradeDroneGuns called");
         UpgradeDroneGunList(gunType, upgType, level);
@@ -151,17 +172,17 @@ public class DroneManager : MonoBehaviour
 
     void UpgradeDroneGun(TurretGunSO droneGun, GunStatsUpgrade upgType, int level)
     {
-        float damageAmount = 0;
+        float damageUpgAmount = 0;
         switch (droneGun.gunType)
         {
             case GunType.Laser:
-                damageAmount = droneGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                damageUpgAmount = droneGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
                 break;
             case GunType.Bullet:
-                damageAmount = droneGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                damageUpgAmount = droneGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
                 break;
             case GunType.RepairGun:
-                damageAmount = droneGun.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                damageUpgAmount = droneGun.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
                 break;
         }
 
@@ -169,7 +190,7 @@ public class DroneManager : MonoBehaviour
         switch (upgType)
         {
             case GunStatsUpgrade.GunDamage:
-                droneGun.damage += damageAmount;
+                droneGun.damage += damageUpgAmount;
                 break;
             case GunStatsUpgrade.GunKnockback:
                 droneGun.knockback += droneGun.knockbackUpgAmt;
@@ -229,6 +250,7 @@ public class DroneManager : MonoBehaviour
     public void UpgradeDroneHangarRange(int level)
     {
         droneHangarRange += droneHangarRangeUpgAmount;
+        OnHangarRangeUpgraded?.Invoke(droneHangarRange);
     }
 
     public void UpgradeDroneHangarRepairSpeed(int level)

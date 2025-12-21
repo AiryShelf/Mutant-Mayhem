@@ -628,11 +628,13 @@ public class UpgradeManager : MonoBehaviour
     private void CheckAndApplyConsumable(Upgrade upgrade, ConsumablesUpgrade upgType, int cost)
     {
         // Check max level
-        if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
+        if (upgType != ConsumablesUpgrade.BuyLaserRifle &&
+            upgType != ConsumablesUpgrade.BuyBulletRifle &&
+            consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
         {
             Debug.LogError("Consumable int maxed out: " + upgType);
             MessageBanner.PulseMessage("Reached max value for integers. You either bought this over " +
-                                      "2 billion times,or there is a bug!  Let me know!", Color.red);
+                                      "2 billion times, or there is a bug!  Let me know!", Color.red);
             return;
         }
 

@@ -221,9 +221,6 @@ public class UIUpgrade : MonoBehaviour
                         break;
                     }
             }
-
-            if (player.playerShooter.gunSights != null)
-                player.playerShooter.gunSights.RefreshSettings();
         }
         else if (upgradeFamily == UpgradeFamily.PlayerStats)
         {

@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7439bc7875504601b5d38b365cc27d7, type: 3}
-  m_Name: PlanetProperty_StrongEMField
+  m_Name: PlanetProperty_VeryStrongEMField
   m_EditorClassIdentifier: 
-  propertyName: Strong EM Field
+  propertyName: Very Strong EM Field
   statModifierEntries:
-  - modifierUiName: -30% Laser Damage
+  - modifierUiName: -50% Laser Damage
     isDebuff: 1
     statModifier: 3
-    multiplier: 0.7
-  - modifierUiName: -30% Laser Range
+    multiplier: 0.5
+  - modifierUiName: -50% Laser Range
     isDebuff: 1
     statModifier: 7
-    multiplier: 0.7
-  - modifierUiName: -30% Sensors Range
+    multiplier: 0.5
+  - modifierUiName: -50% Sensors Range
     isDebuff: 1
     statModifier: 11
-    multiplier: 0.7
-  - modifierUiName: -30% Repair Speed
+    multiplier: 0.5
+  - modifierUiName: -50% Repair Speed
     isDebuff: 1
     statModifier: 6
-    multiplier: 0.7
+    multiplier: 0.5

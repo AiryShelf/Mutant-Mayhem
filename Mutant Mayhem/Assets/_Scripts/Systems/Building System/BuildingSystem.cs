@@ -296,7 +296,7 @@ public class BuildingSystem : MonoBehaviour
                 // Select Destroy Tool
                 buildMenuController.SetMenuSelection(AllStructureSOs[2]);
                 ChangeStructureInHand(AllStructureSOs[2]);
-                Debug.Log("Switched to destroy tool");
+                //Debug.Log("Switched to destroy tool");
             }
             else
             {
@@ -307,7 +307,7 @@ public class BuildingSystem : MonoBehaviour
                 // Switch back to previously selected structure
                 buildMenuController.SetMenuSelection(lastStructureInHand);
                 ChangeStructureInHand(lastStructureInHand);
-                Debug.Log("Switched back from destroy tool");
+                //Debug.Log("Switched back from destroy tool");
             }
         }
     }

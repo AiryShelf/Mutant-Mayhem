@@ -132,7 +132,7 @@ public class DroneContainer : MonoBehaviour
 
     void LaunchDrone(Drone drone)
     {
-        Debug.Log("Drone Launch attempted");
+        //Debug.Log("Drone Launch attempted");
         if (dockedDrones.Contains(drone))
         {
             drone.Launch();
@@ -167,7 +167,7 @@ public class DroneContainer : MonoBehaviour
         drone.lights.SetActive(false);
         //drone.SetNewAction(drone.LandInHangar);
 
-        Debug.Log("DroneContainer: Landed drone of type: " + drone.droneType + ". Job type set to None.");
+        //Debug.Log("DroneContainer: Landed drone of type: " + drone.droneType + ". Job type set to None.");
     }
 
     public void RemoveDrone(Drone drone)
@@ -308,7 +308,7 @@ public class DroneContainer : MonoBehaviour
                 }
                 if (droneToAssign != null)
                 {
-                    Debug.Log("DroneContainer: Launching then assigning job of type: " + job.jobType + " to drone of type: " + droneToAssign.droneType);
+                    //Debug.Log("DroneContainer: Launching then assigning job of type: " + job.jobType + " to drone of type: " + droneToAssign.droneType);
                     LaunchDrone(droneToAssign);
                     droneToAssign.SetJob(job);
                 }
@@ -327,7 +327,7 @@ public class DroneContainer : MonoBehaviour
             case DroneType.Builder:
                 DroneJob job = ConstructionManager.Instance.GetBuildJobInRange(transform.position, DroneManager.Instance.droneHangarRange);
                 if (job == null)
-                    job = ConstructionManager.Instance.GetRepairJob();
+                    job = ConstructionManager.Instance.GetRepairJobInRange(transform.position, DroneManager.Instance.droneHangarRange);
 
                 if (job != null)
                     newJob = job;
@@ -338,7 +338,7 @@ public class DroneContainer : MonoBehaviour
                 break;
         }
 
-        Debug.Log("DroneContainer: GetDroneJob returning job of type: " + newJob.jobType + " for drone type: " + droneType);
+        //Debug.Log("DroneContainer: GetDroneJob returning job of type: " + newJob.jobType + " for drone type: " + droneType);
         return newJob;
     }
 

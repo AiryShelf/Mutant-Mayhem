@@ -275,7 +275,7 @@ public class Drone : MonoBehaviour
         actionCoroutine = StartCoroutine(coroutineMethod());
         
         currentAction = coroutineMethod.Method.Name;
-        Debug.Log("Drone: Set new action to " + coroutineMethod.Method.Name);
+        //Debug.Log("Drone: Set new action to " + coroutineMethod.Method.Name);
     }
 
     IEnumerator MoveToJob()
@@ -473,7 +473,7 @@ public class Drone : MonoBehaviour
             SetNewAction(MoveToJob);
         }
         
-        Debug.Log($"Drone: Job type set to: {job.jobType}");
+        //Debug.Log($"Drone: Job type set to: {job.jobType}");
     }
 
     void DoJob()

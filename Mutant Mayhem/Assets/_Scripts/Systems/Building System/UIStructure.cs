@@ -75,6 +75,8 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         this.scrollRectController = scrollRectController;
         this.buildingSystem = buildingSystem;
         BuildingSystem.OnPlayerCreditsChanged += SetText;
+        PowerManager.Instance.OnPowerChanged += OnPowerOrSupplyChanged;
+        SupplyManager.OnSupplyBalanceChanged += OnPowerOrSupplyChanged;
         player = FindObjectOfType<Player>();
     }
 
@@ -109,19 +111,17 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     {
         button.interactable = interactable;
 
-        if (interactable)
-        {
-            SetText(BuildingSystem.PlayerCredits);
-        }
-        else
-        {
-            SetText(BuildingSystem.PlayerCredits);
-        }
+        SetText(BuildingSystem.PlayerCredits);
     }
 
     #endregion
 
     #region Text
+
+    void OnPowerOrSupplyChanged(int balance)
+    {
+        SetText(BuildingSystem.PlayerCredits);
+    }
 
     void SetText(float playerCredits)
     {

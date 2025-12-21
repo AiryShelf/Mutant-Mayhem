@@ -81,6 +81,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gunListSource:
   - {fileID: 11400000, guid: 4100d66b747973748a29ebf4b477b635, type: 2}
+  _nextLevelGunListSource: []
+  nextLevelGunList: []
   gunTrans: {fileID: 162933518713735059}
   muzzleTrans: {fileID: 2653389950978701914}
   casingEjectorTrans: {fileID: 7936087428749737228}
@@ -115,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d920ce0343ccc4305aeed61c5e5071eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  supplyConsumptionAmount: 6
+  supplyConsumptionAmount: 5
 --- !u!212 &8929043040891403117
 SpriteRenderer:
   m_ObjectHideFlags: 0

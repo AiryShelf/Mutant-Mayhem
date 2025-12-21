@@ -177,7 +177,7 @@ MonoBehaviour:
   - {x: -0.21528363, y: -0.14868794, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 472600
+  m_InstanceId: 183504
   m_LocalBounds:
     m_Center: {x: -0.07518342, y: 0.000651747, z: 0}
     m_Extent: {x: 0.26163375, y: 0.17178518, z: 0}
@@ -423,7 +423,7 @@ MonoBehaviour:
     playerHealthScript: {fileID: 8105019590960648118}
     staminaMax: 100
     staminaRegen: 15
-    meleeDamage: 10
+    meleeDamage: 13
     knockback: 120
     playerShooter: {fileID: 4212811694825721047}
     reloadFactor: 1
@@ -662,7 +662,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startMaxHealth: 500
   maxHealth: 500
-  armor: 3
+  armorMult: 1
   deathTorque: 60
   painSound: {fileID: 11400000, guid: 25d601f8a9b80c34a9ad4369d683d6c3, type: 2}
   painSoundCooldown: 0.3
@@ -7534,7 +7534,7 @@ MonoBehaviour:
   - {x: -0.21713921, y: -0.1723154, z: 0}
   m_ShapePathHash: 1677185479
   m_Mesh: {fileID: 0}
-  m_InstanceId: 472552
+  m_InstanceId: 183456
   m_LocalBounds:
     m_Center: {x: -0.076765835, y: -0.00025446713, z: 0}
     m_Extent: {x: 0.26141372, y: 0.17206094, z: 0}

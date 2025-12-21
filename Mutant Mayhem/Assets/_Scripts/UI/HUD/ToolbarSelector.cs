@@ -22,9 +22,16 @@ public class ToolbarSelector : MonoBehaviour
 
         currentBox = boxImages[0];
         unselectedColor = currentBox.color;
-        SwitchBoxes(0);
 
         player.playerShooter.onPlayerGunSwitched += SwitchBoxes;
+
+        StartCoroutine(DelayInitialize(0));
+    }
+
+    IEnumerator DelayInitialize(int i)
+    {
+        yield return new WaitForEndOfFrame();
+        SwitchBoxes(i);
         UpdateTootips();
     }
 
@@ -35,6 +42,7 @@ public class ToolbarSelector : MonoBehaviour
 
     public void SwitchBoxes(int i)
     {
+        //Debug.Log("ToolbarSelector: Switching to box " + i);
         if (player.playerShooter.gunList[i] != null)
         {
             if (player.playerShooter.gunsUnlocked[i])

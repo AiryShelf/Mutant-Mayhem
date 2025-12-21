@@ -49,7 +49,7 @@ public class ConstructionManager : MonoBehaviour
         }
 
         buildJobs.Add(new KeyValuePair<DroneBuildJob, int>(buildJob, 0));
-        Debug.Log($"ConstructionManager: Added buildJob at: {buildJob.jobPosition}");
+        //Debug.Log($"ConstructionManager: Added buildJob at: {buildJob.jobPosition}");
     }
 
     public void AddRepairJob(DroneJob repairJob)
@@ -239,29 +239,78 @@ public class ConstructionManager : MonoBehaviour
 
     public DroneJob GetRepairJob()
     {
-        DroneJob job = new DroneJob(DroneJobType.None, Vector2.zero);
+        DroneJob bestJob = null;
         int leastDronesAssigned = int.MaxValue;
 
         foreach (var repairJob in repairJobs)
         {
+            DroneJob candidate = repairJob.Value.job;
             int dronesAssigned = repairJob.Value.count;
+
+            if (candidate == null)
+                continue;
 
             // Select the job with the fewest drones assigned
             if (dronesAssigned < leastDronesAssigned &&
                 dronesAssigned < maxDronesPerJob)
             {
-                job = repairJob.Value.job;
+                bestJob = candidate;
                 leastDronesAssigned = dronesAssigned;
             }
         }
 
         // Increment the assigned drones count for the selected job
-        if (job != null)
+        if (bestJob != null)
+            IncrementAssignedDrones(bestJob, 1);
+
+        return bestJob;
+    }
+
+    // Range-aware repair job selection (used by drone hangars so they only service jobs within their coverage)
+    public DroneJob GetRepairJobInRange(Vector2 origin, float radius)
+    {
+        if (radius <= 0f || repairJobs == null || repairJobs.Count == 0)
+            return null;
+
+        float radiusSqr = radius * radius;
+
+        DroneJob bestJob = null;
+        int leastDronesAssigned = int.MaxValue;
+        float bestDistSqr = float.PositiveInfinity;
+
+        foreach (var repairJob in repairJobs)
         {
-            IncrementAssignedDrones(job, 1);
+            DroneJob candidate = repairJob.Value.job;
+            int dronesAssigned = repairJob.Value.count;
+
+            if (candidate == null)
+                continue;
+
+            // Must be eligible for assignment
+            if (dronesAssigned >= maxDronesPerJob)
+                continue;
+
+            Vector2 delta = candidate.jobPosition - origin;
+            float distSqr = delta.sqrMagnitude;
+
+            // Must be in range
+            if (distSqr > radiusSqr)
+                continue;
+
+            // Prefer fewer drones assigned; if equal, prefer nearer
+            if (dronesAssigned < leastDronesAssigned ||
+                (dronesAssigned == leastDronesAssigned && distSqr < bestDistSqr))
+            {
+                bestJob = candidate;
+                leastDronesAssigned = dronesAssigned;
+                bestDistSqr = distSqr;
+            }
         }
 
-        return job;
+        if (bestJob != null)
+            IncrementAssignedDrones(bestJob, 1);
+
+        return bestJob;
     }
 
     public void IncrementAssignedDrones(DroneJob job, int value)
@@ -273,7 +322,7 @@ public class ConstructionManager : MonoBehaviour
                 if (buildJobs[i].Key == job)
                 {
                     buildJobs[i] = new KeyValuePair<DroneBuildJob, int>(buildJob, buildJobs[i].Value + value);
-                    Debug.Log("ConstructionManager: Incremented assigned drones for build job at: " + job.jobPosition + " to " + buildJobs[i].Value);
+                    //Debug.Log("ConstructionManager: Incremented assigned drones for build job at: " + job.jobPosition + " to " + buildJobs[i].Value);
                     break;
                 }
             }
@@ -283,7 +332,7 @@ public class ConstructionManager : MonoBehaviour
             if (repairJobs.ContainsKey(job.jobPosition))
             {
                 repairJobs[job.jobPosition] = (job, repairJobs[job.jobPosition].count + value);
-                Debug.Log("ConstructionManager: Incremented assigned drones for repair job at: " + job.jobPosition + " to " + repairJobs[job.jobPosition].count);
+                //Debug.Log("ConstructionManager: Incremented assigned drones for repair job at: " + job.jobPosition + " to " + repairJobs[job.jobPosition].count);
             }
         }
     }

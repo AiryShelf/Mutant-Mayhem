@@ -321,7 +321,7 @@ public class EnemyChaseSOBase : ScriptableObject
 
             // Check for obstacles at endPos
             gridPos = TileManager.Instance.WorldToGrid(endPos);
-            if (TileManager.Instance.ContainsTileKey(gridPos) && TileManager.Instance.GetStructureAt(endPos).structureType == StructureType.ThreeByThreePlatform)
+            if (TileManager.Instance.ContainsTileKey(gridPos) && TileManager.Instance.GetStructureAt(endPos).structureType == StructureType.ShootingPlatform)
             {
                 break;
             }

@@ -50,6 +50,7 @@ public class PlayerShooter : Shooter
         CopyGunLists();
         StartChargingGuns();
         SwitchGuns(0);
+        ApplyPlanetProperties();
     }
 
     protected override void Update()
@@ -162,6 +163,14 @@ public class PlayerShooter : Shooter
         muzzleLight.shadowsEnabled = !isElevated;
         muzzleFlash.SetActive(false);
 
+        // This could be removed and gunIndex used instead for animation transitions
+        bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
+        bodyAnim.SetBool(gunList[i].animatorHasString, true);
+
+        currentGunIndex = i;
+        currentGunSO = gunList[i];
+        currentAccuracy =  currentGunSO.accuracy;
+
         // Sights
         if (gunSights != null)
             Destroy(gunSights.gameObject);
@@ -170,14 +179,6 @@ public class PlayerShooter : Shooter
             gunSights = Instantiate(gunList[i].laserSight, muzzleTrans).GetComponent<GunSights>();
             gunSights.Initialize(player);
         }
-
-        // This could be removed and gunIndex used instead for animation transitions
-        bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
-        bodyAnim.SetBool(gunList[i].animatorHasString, true);
-
-        currentGunIndex = i;
-        currentGunSO = gunList[i];
-        currentAccuracy =  currentGunSO.accuracy;
 
         AudioManager.Instance.PlaySoundAt(currentGunSO.selectedSound, transform.position);
         //Debug.Log("Current gun damage: " + currentGunSO.damage); 
@@ -221,10 +222,11 @@ public class PlayerShooter : Shooter
         if (currentGunIndex == gunIndex)
             bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
 
+        // Replace gun with upgraded version
         gunList[gunIndex] = Instantiate(_nextLevelGunListSource[gunIndex]);
         toolbarSelector.ResetBoxImage(gunIndex, gunList[gunIndex]);
 
-        // Reapply animator bool for new gun
+        // Switch to upgraded gun if currently using same index
         if (currentGunIndex == gunIndex)
             player.animControllerPlayer.SwitchGunsStart(gunIndex, false);
     }

@@ -831,7 +831,7 @@ public class GunDamageUpgrade : Upgrade
                 break;
         }
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -860,7 +860,7 @@ public class GunKnockbackUpgrade : Upgrade
     {
         gunSO.knockback += gunSO.knockbackUpgAmt;
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -889,7 +889,7 @@ public class ShootSpeedUpgrade : Upgrade
     {
         gunSO.shootSpeed += gunSO.shootSpeedUpgNegAmt;
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -918,7 +918,7 @@ public class ClipSizeUpgrade : Upgrade
     {
         gunSO.clipSize += gunSO.clipSizeUpgAmt;
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -947,7 +947,7 @@ public class ChargeDelayUpgrade : Upgrade
     {
         gunSO.chargeDelay += gunSO.chargeSpeedUpgNegAmt;
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -976,7 +976,7 @@ public class GunAccuracyUpgrade : Upgrade
     {
         gunSO.accuracy += gunSO.accuracyUpgNegAmt;
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -1005,7 +1005,7 @@ public class RangeUpgrade : Upgrade
     {
         gunSO.bulletLifeTime += gunSO.bulletRangeUpgAmt;
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)
@@ -1063,7 +1063,7 @@ public class TurretReloadSpeedUpgrade : Upgrade
     public override void Apply(GunSO gunSO, int level)
     {
         TurretManager.Instance.UpgradeTurretGuns(gunSO.gunType, base.GunStatsUpgType, level);
-        DroneManager.Instance.UpgradeDroneGuns(gunSO.gunType, base.GunStatsUpgType, level);
+        DroneManager.Instance.UpgradeDroneGunOfType(gunSO.gunType, base.GunStatsUpgType, level);
     }
 
     public override int CalculateCost(Player player, int baseCost, int level)

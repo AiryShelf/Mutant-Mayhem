@@ -41,6 +41,49 @@ public class TurretManager : MonoBehaviour
             TurretGunSO g = Instantiate(gun);
             turretGunList.Add(g);
         }
+
+        ApplyPlanetProperties();
+    }
+
+    void ApplyPlanetProperties()
+    {
+        Dictionary<PlanetStatModifier, float> statMultipliers = PlanetManager.Instance.statMultipliers;
+        foreach (GunSO gun in turretGunList)
+        {
+            TurretGunSO turretGun = gun as TurretGunSO;
+            switch (gun.gunType)
+            {
+                case GunType.Laser:
+                    gun.damage *= statMultipliers[PlanetStatModifier.LaserDamage];
+                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.LaserRange];
+                    
+                    if (turretGun != null)
+                    {
+                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
+                    }
+                    break;
+                case GunType.Bullet:
+                    gun.damage *= statMultipliers[PlanetStatModifier.BulletDamage];
+                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.BulletRange];
+
+                    if (turretGun != null)
+                    {
+                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
+                    }
+                    break;
+                case GunType.RepairGun:
+                    gun.damage *= statMultipliers[PlanetStatModifier.RepairGunDamage];
+
+                    if (turretGun != null)
+                    {
+                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
+                    }
+                    break;
+            }
+        }
     }
 
     public void AddTurret(Vector3Int rootPos)
@@ -114,24 +157,24 @@ public class TurretManager : MonoBehaviour
     
     void UpgradeTurretGun(TurretGunSO turretGun, GunStatsUpgrade upgType, int level)
     {
-        float damageAmount = 0;
+        float damageUpgAmount = 0;
         switch (turretGun.gunType)
         {
             case GunType.Laser:
-                damageAmount = turretGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
+                damageUpgAmount = turretGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
                 break;
             case GunType.Bullet:
-                damageAmount = turretGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
+                damageUpgAmount = turretGun.damageUpgFactor * (level + 1) * PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
                 break;
             case GunType.RepairGun:
-                damageAmount = turretGun.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
+                damageUpgAmount = turretGun.damageUpgFactor * PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
                 break;
         }
 
         switch (upgType)
         {
             case GunStatsUpgrade.GunDamage:
-                turretGun.damage += damageAmount;
+                turretGun.damage += damageUpgAmount;
                 break;
             case GunStatsUpgrade.GunKnockback:
                 turretGun.knockback += turretGun.knockbackUpgAmt;
