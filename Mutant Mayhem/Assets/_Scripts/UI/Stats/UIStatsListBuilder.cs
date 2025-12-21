@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Pathfinding;
 
 public class UI_DeathStatsListBuilder : MonoBehaviour
 {

@@ -50,7 +50,7 @@ public class MessageManager : MonoBehaviour
 
         if (currentDialogue == null)
         {
-            Debug.LogError("MessageManager: PlanetDialogueSO is null.");
+            Debug.LogError("MessageManager: PlanetDialogueSO is null.  This should happen once per planet.");
             return;
         }
 

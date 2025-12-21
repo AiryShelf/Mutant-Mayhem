@@ -1529,7 +1529,7 @@ bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure, int rotation, M
                 StatsCounterPlayer.SupplyDepotsBuilt++;
                 break;
             default:
-                Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
+                //Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
                 break;
         }
     }
@@ -1578,7 +1578,7 @@ bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure, int rotation, M
                 StatsCounterPlayer.SupplyDepotsPlaced++;
                 break;
             default:
-                Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
+                //Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
                 break;
         }
     }
@@ -1627,7 +1627,7 @@ bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure, int rotation, M
                 StatsCounterPlayer.SupplyDepotsPlaced--;
                 break;
             default:
-                Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
+                //Debug.LogError("TileManager: Untracked structure type for stats: " + structureType);
                 break;
         }
     }

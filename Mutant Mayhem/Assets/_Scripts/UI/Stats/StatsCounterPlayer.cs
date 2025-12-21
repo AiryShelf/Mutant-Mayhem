@@ -242,8 +242,7 @@ public class StatsCounterPlayer : MonoBehaviour
             case StructureType.SupplyDepot:
                 return SupplyDepotsBuilt;
             default:
-                Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
-                                 ". Returning 0.  You may need to add this type to the switch statement.");
+                Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type + ". Returning 0.  You may need to add this type to the switch statement.");
                 return 0;
         }
     }
@@ -279,8 +278,7 @@ public class StatsCounterPlayer : MonoBehaviour
             case StructureType.SupplyDepot:
                 return SupplyDepotsPlaced;
             default:
-                Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type +
-                                 ". Returning 0.  You may need to add this type to the switch statement.");
+                Debug.LogError("StatsCounterPlayer: Untracked structure type for stats: " + type + ". Returning 0.  You may need to add this type to the switch statement.");
                 return 0;
         }
     }
