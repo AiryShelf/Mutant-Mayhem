@@ -52,8 +52,8 @@ public class ClassManager : MonoBehaviour
                 UpgradeManager.Instance.structureStatsCostMult -= 0.2f;
                 buildingSystem.structureCostMult -= 0.2f;
                 player.playerShooter.gunsUnlocked[4] = true; // Repair gun
-                player.playerShooter.gunList[4].damage *= 2;
-                DroneManager.Instance.droneGunList[0].damage *= 2; // Drone repair gun
+                player.playerShooter.gunList[4].damage *= 1.5f;
+                DroneManager.Instance.droneGunList[0].damage *= 1.5f; // Drone repair gun
                 break;
         }
 

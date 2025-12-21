@@ -112,6 +112,7 @@ public class PlanetManager : MonoBehaviour
 
         ApplyToPlayer();
         ApplyToBuildingSystem();
+        ApplyToDroneManager();
         ApplyToTurretManager(); 
         ApplyToWaveController();
         ApplyToBkgGenerator();
@@ -154,6 +155,23 @@ public class PlanetManager : MonoBehaviour
                     break;
             }
         }
+        foreach (GunSO gun in player.playerShooter.nextLevelGunList)
+        {
+            switch (gun.gunType)
+            {
+                case GunType.Laser:
+                    gun.damage *= statMultipliers[PlanetStatModifier.LaserDamage];
+                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.LaserRange];
+                    break;
+                case GunType.Bullet:
+                    gun.damage *= statMultipliers[PlanetStatModifier.BulletDamage];
+                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.BulletRange];
+                    break;
+                case GunType.RepairGun:
+                    gun.damage *= statMultipliers[PlanetStatModifier.RepairGunDamage];
+                    break;
+            }
+        }
     }
 
     void ApplyToBuildingSystem()
@@ -166,6 +184,29 @@ public class PlanetManager : MonoBehaviour
         }
 
         buildingSystem.structureCostMult *= statMultipliers[PlanetStatModifier.BuildCost];
+    }
+
+    void ApplyToDroneManager()
+    {
+        DroneManager.Instance.droneHangarRange *= statMultipliers[PlanetStatModifier.SensorsRange];
+        DroneManager.Instance.droneHangarRangeUpgAmount *= statMultipliers[PlanetStatModifier.SensorsRange];
+        foreach (GunSO gun in DroneManager.Instance.droneGunList)
+        {
+            switch (gun.gunType)
+            {
+                case GunType.Laser:
+                    gun.damage *= statMultipliers[PlanetStatModifier.LaserDamage];
+                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.LaserRange];
+                    break;
+                case GunType.Bullet:
+                    gun.damage *= statMultipliers[PlanetStatModifier.BulletDamage];
+                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.BulletRange];
+                    break;
+                case GunType.RepairGun:
+                    gun.damage *= statMultipliers[PlanetStatModifier.RepairGunDamage];
+                    break;
+            }
+        }
     }
 
     void ApplyToTurretManager()
@@ -206,7 +247,7 @@ public class PlanetManager : MonoBehaviour
 
         waveController.creditsPerWave = currentPlanet.creditsPerWave; // Additive bonus (waveIndex*creditsPerWave)
         waveController.timeBetweenWavesBase = currentPlanet.timeBetweenWavesBase;
-        waveController.ApplyTimeBetweenWaves();
+        waveController.ApplyDifficultyToTimeBetweenWaves();
         waveController.wavesTillAddIndex = currentPlanet.wavesTillAddIndex; // Affects max index to choose subwaves from
         waveController.subwaveDelayMultStart = currentPlanet.subwaveDelayMultStart;
         waveController.spawnRadiusBuffer = currentPlanet.spawnRadiusBuffer;

@@ -41,49 +41,6 @@ public class TurretManager : MonoBehaviour
             TurretGunSO g = Instantiate(gun);
             turretGunList.Add(g);
         }
-
-        ApplyPlanetProperties();
-    }
-
-    void ApplyPlanetProperties()
-    {
-        Dictionary<PlanetStatModifier, float> statMultipliers = PlanetManager.Instance.statMultipliers;
-        foreach (GunSO gun in turretGunList)
-        {
-            TurretGunSO turretGun = gun as TurretGunSO;
-            switch (gun.gunType)
-            {
-                case GunType.Laser:
-                    gun.damage *= statMultipliers[PlanetStatModifier.LaserDamage];
-                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.LaserRange];
-                    
-                    if (turretGun != null)
-                    {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
-                    }
-                    break;
-                case GunType.Bullet:
-                    gun.damage *= statMultipliers[PlanetStatModifier.BulletDamage];
-                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.BulletRange];
-
-                    if (turretGun != null)
-                    {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
-                    }
-                    break;
-                case GunType.RepairGun:
-                    gun.damage *= statMultipliers[PlanetStatModifier.RepairGunDamage];
-
-                    if (turretGun != null)
-                    {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
-                    }
-                    break;
-            }
-        }
     }
 
     public void AddTurret(Vector3Int rootPos)

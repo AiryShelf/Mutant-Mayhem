@@ -737,7 +737,9 @@ public class UpgradeManager : MonoBehaviour
 
             upgrade.Apply(gun, gunUpgLevels[upgType]);
             if (nextLevelGun != null)
+            {
                 upgrade.Apply(nextLevelGun, gunUpgLevels[upgType]);
+            }
             upgradeEffects.PlayUpgradeButtonEffect();
 
             if (upgType == GunStatsUpgrade.GunRange && gunIndex == 4) // Repair gun

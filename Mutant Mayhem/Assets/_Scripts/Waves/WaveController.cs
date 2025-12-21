@@ -84,7 +84,7 @@ public class WaveController : MonoBehaviour
         if (Instance == this) Instance = null;
     }
 
-    public void Initialize()
+    public void StartWaveSequence()
     {
         player = FindObjectOfType<Player>();
         playerActionMap = player.inputAsset.FindActionMap("Player");
@@ -329,7 +329,7 @@ public class WaveController : MonoBehaviour
 
     #region Wave Difficulty
 
-    public void ApplyTimeBetweenWaves()
+    public void ApplyDifficultyToTimeBetweenWaves()
     {
         switch (SettingsManager.Instance.difficultyLevel)
         {

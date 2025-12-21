@@ -48,22 +48,6 @@ public class Shooter : MonoBehaviour
     protected Vector2 lastShootDir = Vector2.right;
     bool initialized;
 
-    
-    protected virtual void Awake()
-    {
-        /*
-        CopyGunList();
-        ApplyPlanetProperties();
-
-        // Initialize first gun
-        SwitchGuns(0);
-        gunsAmmoInClips[0] = 0;
-        isReloading = true;
-
-        criticalHit = GetComponent<CriticalHit>();
-        */
-    }
-
     protected virtual void Start()
     {
         if (!initialized)
@@ -138,7 +122,6 @@ public class Shooter : MonoBehaviour
     {
         gunList.Clear();
         gunList.Add(gun);
-        //ApplyPlanetProperties();
 
         // Initialize first gun
         SwitchGuns(0);
@@ -159,7 +142,6 @@ public class Shooter : MonoBehaviour
     void Initialize()
     {
         CopyGunLists();
-        //ApplyPlanetProperties();
 
         // Initialize first gun
         SwitchGuns(0);
@@ -196,48 +178,6 @@ public class Shooter : MonoBehaviour
             {
                 GunSO g = Instantiate(gun);
                 nextLevelGunList.Add(g);
-            }
-        }
-    }
-
-    protected void ApplyPlanetProperties()
-    {
-        //Debug.Log("ApplyPlanetProperties called on " + gameObject.name);
-        Dictionary<PlanetStatModifier, float> statMultipliers = PlanetManager.Instance.statMultipliers;
-        foreach (GunSO gun in gunList)
-        {
-            TurretGunSO turretGun = gun as TurretGunSO;
-            switch (gun.gunType)
-            {
-                case GunType.Laser:
-                    gun.damage *= statMultipliers[PlanetStatModifier.LaserDamage];
-                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.LaserRange];
-                    
-                    if (turretGun != null)
-                    {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
-                    }
-                    break;
-                case GunType.Bullet:
-                    gun.damage *= statMultipliers[PlanetStatModifier.BulletDamage];
-                    gun.bulletLifeTime *= statMultipliers[PlanetStatModifier.BulletRange];
-
-                    if (turretGun != null)
-                    {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
-                    }
-                    break;
-                case GunType.RepairGun:
-                    gun.damage *= statMultipliers[PlanetStatModifier.RepairGunDamage];
-
-                    if (turretGun != null)
-                    {
-                        turretGun.detectRange *= statMultipliers[PlanetStatModifier.SensorsRange];
-                        turretGun.expansionDelay *= statMultipliers[PlanetStatModifier.SensorsRange];
-                    }
-                    break;
             }
         }
     }

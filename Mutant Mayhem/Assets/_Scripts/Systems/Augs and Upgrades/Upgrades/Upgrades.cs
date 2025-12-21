@@ -193,7 +193,7 @@ public class WeaponHandlingUpgrade : Upgrade
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
-            newCost = Mathf.CeilToInt(newCost * 1.35f);
+            newCost = Mathf.CeilToInt(newCost * 1.4f);
         }
         return newCost;
     }
@@ -741,7 +741,6 @@ public class SupplyLimitUpgrade : Upgrade
 
     public override int CalculateCost(Player player, int baseCost, int level)
     {
-        // 1.5x the cost each level
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
@@ -927,7 +926,7 @@ public class ClipSizeUpgrade : Upgrade
         int newCost = baseCost;
         for (int i = 1; i < level; i++)
         {
-            newCost = Mathf.CeilToInt(newCost * 1.8f);
+            newCost = Mathf.CeilToInt(newCost * 1.4f);
         }
         return newCost;
     }

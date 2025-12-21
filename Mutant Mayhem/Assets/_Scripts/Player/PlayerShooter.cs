@@ -36,7 +36,7 @@ public class PlayerShooter : Shooter
 
     public System.Action<int> onPlayerGunSwitched;
 
-    protected override void Awake() 
+    void Awake() 
     {
         criticalHit = GetComponent<CriticalHit>();
         player = GetComponent<Player>();
@@ -50,7 +50,6 @@ public class PlayerShooter : Shooter
         CopyGunLists();
         StartChargingGuns();
         SwitchGuns(0);
-        ApplyPlanetProperties();
     }
 
     protected override void Update()
@@ -223,7 +222,7 @@ public class PlayerShooter : Shooter
             bodyAnim.SetBool(gunList[currentGunIndex].animatorHasString, false);
 
         // Replace gun with upgraded version
-        gunList[gunIndex] = Instantiate(_nextLevelGunListSource[gunIndex]);
+        gunList[gunIndex] = Instantiate(nextLevelGunList[gunIndex]);
         toolbarSelector.ResetBoxImage(gunIndex, gunList[gunIndex]);
 
         // Switch to upgraded gun if currently using same index

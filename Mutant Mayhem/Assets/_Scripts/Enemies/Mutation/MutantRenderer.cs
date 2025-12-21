@@ -58,10 +58,10 @@ public class MutantRenderer : MonoBehaviour
         }
         else
         {
-            bodySR.sortingLayerName = "Enemies";
-            headSR.sortingLayerName = "Enemies";
-            leftLegSR.sortingLayerName = "Enemies";
-            rightLegSR.sortingLayerName = "Enemies";
+            bodySR.sortingLayerName = "Enemy";
+            headSR.sortingLayerName = "Enemy";
+            leftLegSR.sortingLayerName = "Enemy";
+            rightLegSR.sortingLayerName = "Enemy";
         }
 
         // Scale anim speeds with leg size with inverse relation, with a base of 8 scale

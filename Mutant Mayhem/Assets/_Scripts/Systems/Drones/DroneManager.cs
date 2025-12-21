@@ -56,32 +56,6 @@ public class DroneManager : MonoBehaviour
             TurretGunSO g = Instantiate(gun);
             droneGunList.Add(g);
         }
-    }  
-
-    void Start()
-    {
-        ApplyPlanetStatModifiers();
-    }
-
-    void ApplyPlanetStatModifiers()
-    {
-        droneHangarRange *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
-        droneHangarRangeUpgAmount *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.SensorsRange];
-        foreach(GunSO gun in droneGunList)
-        {
-            switch (gun.gunType)
-            {
-                case GunType.Laser:
-                    gun.damage *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.LaserDamage];
-                    break;
-                case GunType.Bullet:
-                    gun.damage *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.BulletDamage];
-                    break;
-                case GunType.RepairGun:
-                    gun.damage *= PlanetManager.Instance.statMultipliers[PlanetStatModifier.RepairGunDamage];
-                    break;
-            }
-        }
     }
 
     public bool SpawnDroneInHangar(DroneType droneType, DroneContainer droneContainer)

@@ -54,6 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db85efd627dd044198b098f243680c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TurretManagerGunIndex: 0
   rotationSpeed: 0
   expansionDelay: 0.1
   expansionDist: 0.5
@@ -80,6 +81,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gunListSource:
   - {fileID: 11400000, guid: c465c6743f9c00b498c59dbc30ee0336, type: 2}
+  _nextLevelGunListSource: []
+  nextLevelGunList: []
   gunTrans: {fileID: 162933518713735059}
   muzzleTrans: {fileID: 2653389950978701914}
   casingEjectorTrans: {fileID: 7936087428749737228}
@@ -5730,7 +5733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6657267675385680040, guid: acf14e3fca0435145add3fc5c0a5555b, type: 3}
       propertyPath: m_Name
-      value: Flashlight - Pass Enemies
+      value: Flashlight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
