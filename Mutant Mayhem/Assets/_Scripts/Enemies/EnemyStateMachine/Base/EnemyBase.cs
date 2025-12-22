@@ -232,7 +232,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 
     void RandomizeEnemyBaseStats()
     {
-        //Debug.Log($"Randomize stats started with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
+        //Debug.Log($"Randomize stats for {gameObject.name} started with {health.GetHealth()} health and {health.GetMaxHealth()} maxHealth");
         
         // Randomize speed
         moveSpeedBase *= Random.Range(1 - randSpeedRange, 1 + randSpeedRange);

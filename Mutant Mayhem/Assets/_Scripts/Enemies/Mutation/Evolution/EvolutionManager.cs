@@ -13,6 +13,7 @@ public class EvolutionManager : MonoBehaviour
     [SerializeField] GameObject enemyPrefab;  // the MutantShell prefab
 
     [Tooltip("Difficulty adds to the allowed total scale of parts for each generation.")]
+    [SerializeField] float difficultyScaleTotalStart = 6f;
     public float difficultyScaleTotal = 6;  // Increases with difficulty and is the total sum of body+head+leg scales allowed
     public float difficultyScalePerWave = 0.2f;
     public int minLifetimesToEvolve = 10;
@@ -54,6 +55,8 @@ public class EvolutionManager : MonoBehaviour
             return;
         }
         _waveSpawner = WaveController.Instance.waveSpawner;
+        difficultyScaleTotal = difficultyScaleTotalStart * WaveController.Instance.sizeMultiplier;
+        difficultyScalePerWave = difficultyScalePerWave * WaveController.Instance.sizeMultiplier;
     }
 
     void OnDestroy()
@@ -349,7 +352,7 @@ public class EvolutionManager : MonoBehaviour
 
     public void IncrementDifficultyScale()
     {
-        difficultyScaleTotal += difficultyScalePerWave;
+        difficultyScaleTotal += difficultyScalePerWave * WaveController.Instance.sizeMultiplier;
         //Debug.Log($"Difficulty scale increased to {difficultyScaleTotal}");
     }
     #endregion

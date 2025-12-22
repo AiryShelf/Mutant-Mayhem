@@ -350,21 +350,22 @@ public class WaveController : MonoBehaviour
 
     void IncrementWaveDifficulty()
     {
-        batchMultiplier = batchMultStart + (currentWaveIndex / batchMultGrowthTime *
+        float waveIndex = (float)currentWaveIndex;
+        batchMultiplier = batchMultStart + (waveIndex / batchMultGrowthTime *
                           SettingsManager.Instance.WaveDifficultyMult);
-        damageMultiplier = damageMultStart + (currentWaveIndex / damageMultGrowthTime *
+        damageMultiplier = damageMultStart + (waveIndex / damageMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult);
         // Doubles the attack speed in 30 waves
-        attackDelayMult = attackDelayStart - currentWaveIndex / attackDelayMultGrowthTime /
+        attackDelayMult = attackDelayStart - waveIndex / attackDelayMultGrowthTime /
                            SettingsManager.Instance.WaveDifficultyMult;
         attackDelayMult = Mathf.Clamp(attackDelayMult, 0.2f, float.MaxValue);
-        healthMultiplier = healthMultStart + currentWaveIndex / healthMultGrowthTime *
+        healthMultiplier = healthMultStart + waveIndex / healthMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult;
-        speedMultiplier = speedMultStart + currentWaveIndex / speedMultGrowthTime *
+        speedMultiplier = speedMultStart + waveIndex / speedMultGrowthTime *
                           SettingsManager.Instance.WaveDifficultyMult;
-        sizeMultiplier = sizeMultStart + currentWaveIndex / sizeMultGrowthTime *
+        sizeMultiplier = sizeMultStart + waveIndex / sizeMultGrowthTime *
                          SettingsManager.Instance.WaveDifficultyMult;
-        subwaveDelayMult = Mathf.Clamp(subwaveDelayMultStart - currentWaveIndex / subwaveDelayMultGrowthTime *
+        subwaveDelayMult = Mathf.Clamp(subwaveDelayMultStart - waveIndex / subwaveDelayMultGrowthTime *
                            SettingsManager.Instance.WaveDifficultyMult, 0.1f, 20);
     }
     
