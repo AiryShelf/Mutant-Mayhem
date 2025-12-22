@@ -12,7 +12,7 @@ public class AugManager : MonoBehaviour
     public static Dictionary<AugmentationBaseSO, int> selectedAugsTotalCosts = new Dictionary<AugmentationBaseSO, int>();
     public static string selectedAugsString = "";
     public int maxAugsStart = 9;
-    public int maxAugsAddedPerPlanet = 3;
+    public int maxAugsAddedPerPlanet = 2;
 
     [Header("Dynamic vars, don't set here")]
     public int maxAugs;

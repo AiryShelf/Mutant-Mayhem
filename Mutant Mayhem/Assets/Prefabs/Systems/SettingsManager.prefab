@@ -58,10 +58,13 @@ MonoBehaviour:
     profileName: 
     researchPoints: 0
     completedPlanets: []
+    completedMissions: []
+    planetIndexReachedList: []
     lastPlanetVisited: 0
     playthroughs: 0
-    maxWaveSurvived: 0
+    totalNightsSurvived: 0
     difficultyLevel: 0
+    completedTutorial: 0
     qualityLevel: 0
     isStandardWASD: 0
     isSpacebarEnabled: 0
@@ -84,13 +87,16 @@ MonoBehaviour:
   startingDifficulty: 1
   difficultyLevel: 1
   useStandardWASD: 1
-  useFastJoystickAim: 0
+  useInstantJoystickAim: 0
   WaveDifficultyMult: 1
   WavesTillAddWaveBaseDifficultyAdjust: 0
   SubwaveListGrowthFactor: 1
   SubwaveDelayMult: 1
   BatchSpawnMult: 1
   CreditsMult: 1
+  joystickCursorSpeed: 0
+  joystickAccelSpeed: 0
+  isVirtualAimJoystickVisible: 1
 --- !u!114 &8090136197738410126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +160,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30a82250db309334c990c5c27fbead12, type: 2}
   - {fileID: 11400000, guid: b7640d8dff9ebe642a68a622772f6b65, type: 2}
   - {fileID: 11400000, guid: 713a3f95429097642b435cf5c38cc5f4, type: 2}
-  maxAugmentationsStart: 12
+  maxAugsStart: 9
+  maxAugsAddedPerPlanet: 3
   maxAugs: 0
   currentResearchPoints: 0
   grenadeAmmoMult: 1
@@ -195,6 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d9677bb3f1bf40b597067d558c7cacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  consentPanel: {fileID: 0}
 --- !u!1 &5853297479244973275
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +275,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 721629121
-  m_SortingLayer: 11
+  m_SortingLayer: 12
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

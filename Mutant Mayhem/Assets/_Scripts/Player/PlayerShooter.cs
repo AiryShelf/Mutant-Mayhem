@@ -12,7 +12,10 @@ public class PlayerShooter : Shooter
     public Light2D flashlight1;
     [SerializeField] Animator bodyAnim;
     public int[] gunsAmmo;
-    Coroutine shootingCoroutine;
+    // Auto-fire is handled in LateUpdate so shots use the latest rotation/aim each frame
+    bool autoFireActive;
+    float autoFireTimer;
+
     bool waitToShoot;
     float reloadNotificationTimer = 0;
     [SerializeField] float queuedShotWindow = 0.2f;
@@ -56,6 +59,40 @@ public class PlayerShooter : Shooter
     {
         UpdateDynamicAccuracy();
         Shoot();
+    }
+
+    void LateUpdate()
+    {
+        if (!autoFireActive)
+            return;
+
+        // Stop if we ran out of ammo mid-burst
+        if (gunsAmmoInClips[currentGunIndex] < 1)
+        {
+            autoFireActive = false;
+            autoFireTimer = 0f;
+            return;
+        }
+
+        autoFireTimer -= Time.deltaTime;
+
+        float interval = Mathf.Max(0.0001f, currentGunSO.shootSpeed);
+
+        // Catch up if fire-rate is very high or FPS dips
+        while (autoFireTimer <= 0f)
+        {
+            Fire();
+
+            // If firing consumed the last ammo, stop immediately
+            if (gunsAmmoInClips[currentGunIndex] < 1)
+            {
+                autoFireActive = false;
+                autoFireTimer = 0f;
+                break;
+            }
+
+            autoFireTimer += interval;
+        }
     }
 
     public void SetElevated(bool elevated)
@@ -259,11 +296,10 @@ public class PlayerShooter : Shooter
                 }
             }
 
-            if (shootingCoroutine != null)
-            {
-                StopCoroutine(shootingCoroutine);
-                shootingCoroutine = null;
-            }
+            // Stop auto-fire immediately
+            autoFireActive = false;
+            autoFireTimer = 0f;
+            queuedShotTimer = 0f;
             return;
         }
 
@@ -287,29 +323,40 @@ public class PlayerShooter : Shooter
 
         if (currentGunSO.isAutomatic)
         {
+            // For automatic fire, we intentionally do NOT depend on waitToShoot (coroutine timing can desync aim).
+            bool coreReadyAuto =
+                isAiming &&
+                !isBuilding &&
+                !isReloading &&
+                !isSwitchingGuns;
+
             // Queue a shot if trigger pulled while not ready
-            if (triggerPulledThisFrame && !coreReady)
-            {
+            if (triggerPulledThisFrame && !coreReadyAuto)
                 queuedShotTimer = queuedShotWindow;
-            }
 
-            // Start auto-fire either on direct press or from a queued shot
-            bool wantToStartAuto =
-                (isShooting && shootingCoroutine == null) ||
-                (queuedShotTimer > 0f && shootingCoroutine == null);
+            // Auto-fire stays active while holding trigger, or while a queued shot is pending
+            bool wantsAuto = isShooting || queuedShotTimer > 0f;
 
-            if (wantToStartAuto && coreReady)
+            if (wantsAuto && coreReadyAuto)
             {
-                shootingCoroutine = StartCoroutine(ShootContinuously());
-                StartCoroutine(WaitToShoot());
-                waitToShoot = true;
+                autoFireActive = true;
+
+                // Fire as soon as possible once we become ready
+                if (autoFireTimer > 0f)
+                {
+                    // keep current timer
+                }
+                else
+                {
+                    autoFireTimer = 0f;
+                }
+
                 queuedShotTimer = 0f;
             }
-            else if (!isShooting && shootingCoroutine != null)
+            else
             {
-                // Stop auto-fire when trigger released
-                StopCoroutine(shootingCoroutine);
-                shootingCoroutine = null;
+                autoFireActive = false;
+                autoFireTimer = 0f;
             }
         }
         else
@@ -335,12 +382,9 @@ public class PlayerShooter : Shooter
                 queuedShotTimer = 0f;
             }
 
-            // Ensure no leftover coroutine from previous automatic gun
-            if (shootingCoroutine != null)
-            {
-                StopCoroutine(shootingCoroutine);
-                shootingCoroutine = null;
-            }
+            // Ensure auto-fire is off when using semi-auto
+            autoFireActive = false;
+            autoFireTimer = 0f;
         }
 
         // Track previous shooting state for edge detection
@@ -404,16 +448,6 @@ public class PlayerShooter : Shooter
     {
         yield return new WaitForSeconds(currentGunSO.shootSpeed);
         waitToShoot = false;
-    }
-
-    IEnumerator ShootContinuously()
-    {
-        while (true)
-        {
-            Fire();
-
-            yield return new WaitForSeconds(currentGunSO.shootSpeed);
-        }
     }
 
     #endregion
