@@ -1,4 +1,6 @@
 using System.Collections;
+using System.IO;
+using System;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
@@ -10,9 +12,18 @@ public class VideoPlayerManager : MonoBehaviour
     public static VideoPlayerManager Instance;
 
     public VideoPlayer videoPlayer;
+
+    [Header("Video Source")]
+    [Tooltip("Optional. If set, will be used on non-macOS platforms by default.")]
+    [SerializeField] private VideoClip tutorialVideoClip;
+
+    [Tooltip("Relative path inside StreamingAssets (case-sensitive on some systems). Example: Videos/In-Game Video.mp4")]
+    [SerializeField] private string streamingAssetsRelativePath = "Videos/In-Game Video.mp4";
+
     [SerializeField] GameObject rawImage;
     [SerializeField] InputActionAsset inputActions;
 
+    private bool _eventsHooked;
     int sceneToLoad = 0;
     InputActionMap uiActionMap = null;
     InputActionMap playerActionMap = null;
@@ -42,7 +53,37 @@ public class VideoPlayerManager : MonoBehaviour
 
     void Start()
     {
+        HookVideoEvents();
+    }
+
+    void HookVideoEvents()
+    {
+        if (_eventsHooked || videoPlayer == null)
+            return;
+
+        // Avoid hangs on macOS if decode fails
+        videoPlayer.waitForFirstFrame = false;
+
         videoPlayer.loopPointReached += VideoEnd;
+        videoPlayer.errorReceived += OnVideoError;
+        videoPlayer.prepareCompleted += OnVideoPrepared;
+
+        _eventsHooked = true;
+    }
+
+    void OnVideoPrepared(VideoPlayer vp)
+    {
+        // Only show the RawImage once we have something prepared
+        if (rawImage != null)
+            rawImage.SetActive(true);
+    }
+
+    void OnVideoError(VideoPlayer vp, string message)
+    {
+        Debug.LogError($"VideoPlayer error: {message} | source={vp.source} url={vp.url}");
+
+        // Fail safe: don't leave player stuck on a black screen
+        StopVideo();
     }
 
     void OnDestroy()
@@ -61,7 +102,9 @@ public class VideoPlayerManager : MonoBehaviour
         }
         if (videoPlayer != null)
         {
-            videoPlayer.loopPointReached -= VideoEnd; 
+            videoPlayer.loopPointReached -= VideoEnd;
+            videoPlayer.errorReceived -= OnVideoError;
+            videoPlayer.prepareCompleted -= OnVideoPrepared;
         }
     }
 
@@ -111,7 +154,13 @@ public class VideoPlayerManager : MonoBehaviour
 
     public void StopVideo()
     {
+        if (videoPlayer == null)
+            return;
+
         videoPlayer.Stop();
+        videoPlayer.clip = null;
+        videoPlayer.url = null;
+
         rawImage.SetActive(false);
         UI_MusicPlayerPanel.Instance.ShowPanel(true);
         if (mainMenuController == null)
@@ -131,13 +180,65 @@ public class VideoPlayerManager : MonoBehaviour
 
     IEnumerator PlayPreparedVideo()
     {
+        HookVideoEvents();
+
+        if (videoPlayer == null)
+            yield break;
+
+        // Always start clean
+        videoPlayer.Stop();
+        videoPlayer.clip = null;
+        videoPlayer.url = null;
+
+        // Prefer StreamingAssets URL on macOS (most reliable), otherwise prefer VideoClip if provided.
+        bool useUrl = Application.platform == RuntimePlatform.OSXPlayer;
+
+        if (!useUrl && tutorialVideoClip != null)
+        {
+            videoPlayer.source = VideoSource.VideoClip;
+            videoPlayer.clip = tutorialVideoClip;
+        }
+        else
+        {
+            videoPlayer.source = VideoSource.Url;
+
+            string fullPath = Path.Combine(Application.streamingAssetsPath, streamingAssetsRelativePath);
+
+            // Some platforms prefer a file:// URI
+            string url = fullPath;
+            try
+            {
+                url = new Uri(fullPath).AbsoluteUri;
+            }
+            catch { }
+
+            // Helpful diagnostics
+            bool exists = false;
+            try { exists = File.Exists(fullPath); } catch { }
+            Debug.Log($"Tutorial video URL mode. fullPath={fullPath} exists={exists} uri={url}");
+
+            videoPlayer.url = url;
+        }
+
+        // Prepare + timeout so we never hang forever on black
+        rawImage.SetActive(false);
         videoPlayer.Prepare();
+
+        float timeout = 8f;
+        float start = Time.realtimeSinceStartup;
 
         while (!videoPlayer.isPrepared)
         {
+            if (Time.realtimeSinceStartup - start > timeout)
+            {
+                Debug.LogError("VideoPlayer Prepare() timed out. Skipping video.");
+                StopVideo();
+                yield break;
+            }
             yield return null;
         }
 
+        // RawImage is enabled in OnVideoPrepared; ensure it's on regardless
         rawImage.SetActive(true);
         videoPlayer.Play();
     }
