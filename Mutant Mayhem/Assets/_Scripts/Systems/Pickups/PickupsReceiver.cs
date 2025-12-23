@@ -8,6 +8,7 @@ public class PickupsReceiver : PickupsContainerBase
     [SerializeField] float textFlyAlphaMax;
     [SerializeField] float textPulseScaleMax = 1.5f;
     [SerializeField] string creditsTextFlyPoolName = "TextFlyWorld_Credits";
+    [SerializeField] SoundSO creditsCashInSound;
 
     public override void AddToContainer(Pickup pickup)
     {
@@ -27,6 +28,9 @@ public class PickupsReceiver : PickupsContainerBase
 
     void PlayCreditsEffects(int credits)
     {
+        AudioManager.Instance.PlaySoundAt(creditsCashInSound, transform.position);
+
+        // Text fly
         GameObject textFly = PoolManager.Instance.GetFromPool(creditsTextFlyPoolName);
         float angle = Random.Range(0f, Mathf.PI * 2);
         Vector2 flyDir = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));

@@ -7,6 +7,15 @@ public class PickupsContainerPlayer : PickupsContainerBase
     [SerializeField] GravityField myGravity;
     [SerializeField] float unloadDelay;
     [SerializeField] float unloadForce;
+    [SerializeField] SoundSO pickupCollectSound;
+    [SerializeField] SoundSO pickupUnloadSound;
+
+    public override void AddToContainer(Pickup pickup)
+    {
+        base.AddToContainer(pickup);
+
+        AudioManager.Instance.PlaySoundAt(pickupCollectSound, transform.position);
+    }
 
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -67,6 +76,8 @@ public class PickupsContainerPlayer : PickupsContainerBase
                 pickup.GetComponent<Rigidbody2D>().AddForce(impulseDir * unloadForce, ForceMode2D.Impulse);
                 pickup.transform.SetParent(null);
                 container.RemoveAt(0);
+
+                AudioManager.Instance.PlaySoundAt(pickupUnloadSound, transform.position);
             }
 
             yield return new WaitForSeconds(unloadDelay);

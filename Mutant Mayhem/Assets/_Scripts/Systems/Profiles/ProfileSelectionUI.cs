@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class ProfileSelectionUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI profileNameTitleText;
     public TMP_Dropdown profileDropdown;
     [SerializeField] Button deleteButton;
+    [SerializeField] FadeCanvasGroupsWave areYouSureFadeGroup;
     [SerializeField] TextMeshProUGUI researchPointsValueText;
     [SerializeField] TextMeshProUGUI nightsSurvivedText;
     [SerializeField] TextMeshProUGUI playthroughsText;
@@ -21,7 +23,6 @@ public class ProfileSelectionUI : MonoBehaviour
     [Header("New Profile")]
     public TMP_Dropdown chooseDifficultyDropdown;
     public TMP_InputField newProfileNameInput;
-    [SerializeField] FadeCanvasGroupsWave areYouSureFadeGroup;
     [SerializeField] InputActionAsset inputAsset;
     
     InputAction enterKeyPressed;
@@ -75,6 +76,22 @@ public class ProfileSelectionUI : MonoBehaviour
             Debug.LogError("ProfileSelectionUI: MainMenuController not found in scene.");
         }
         //ProfileManager.Instance.LoadAllProfiles();
+    }
+
+    public void FocusNameInput()
+    {
+        if (!isActiveAndEnabled || newProfileNameInput == null)
+            return;
+
+        StartCoroutine(FocusInputDelay());
+    }
+
+    private IEnumerator FocusInputDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.5f); // important: wait for UI to be enabled/visible
+
+        EventSystem.current.SetSelectedGameObject(newProfileNameInput.gameObject);
+        newProfileNameInput.ActivateInputField();
     }
 
     // Updates the dropdown with the current list of profiles, toggles delete button, sets other text
@@ -244,6 +261,8 @@ public class ProfileSelectionUI : MonoBehaviour
         // Refresh input field placehold in case of failed input entry
         inputFieldPlaceholder.text = originalInputFieldPlaceholderText;
         inputFieldPlaceholder.color = originalInputFieldPlaceholderColor; 
+
+        mainMenuController.ToggleNewProfilePanel();
 
         if (playPressedWithNoProfile)
         {

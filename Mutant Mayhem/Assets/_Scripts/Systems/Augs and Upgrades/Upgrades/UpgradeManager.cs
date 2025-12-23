@@ -25,6 +25,7 @@ public class UpgradeManager : MonoBehaviour
     public float gunStatsCostMult = 1;
     public float droneStatsCostMult = 1;
     public UpgradeEffects upgradeEffects;    
+    [SerializeField] SoundSO upgradeAppliedSound;
 
     #region Upgrade Dicts
 
@@ -565,6 +566,7 @@ public class UpgradeManager : MonoBehaviour
             playerStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
                 playerStatsUpgBaseCosts[upgType], playerStatsUpgLevels[upgType] + 1);
 
+            AudioManager.Instance.PlaySoundAt(upgradeAppliedSound, player.transform.position);
             MessageBanner.PulseMessage("Exosuit stat upgraded to level " + 
                                      playerStatsUpgLevels[upgType], Color.cyan);
         }
@@ -597,6 +599,7 @@ public class UpgradeManager : MonoBehaviour
             structureStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player, 
                 structureStatsUpgBaseCosts[upgType], structureStatsUpgLevels[upgType] + 1);
 
+            AudioManager.Instance.PlaySoundAt(upgradeAppliedSound, player.transform.position);
             MessageBanner.PulseMessage("Structure stat upgraded to level " + 
                                      structureStatsUpgLevels[upgType], Color.cyan);
         }
@@ -657,6 +660,7 @@ public class UpgradeManager : MonoBehaviour
             upgradeEffects.PlayUpgradeButtonEffect();
 
             //Debug.Log("Consumable applied: " + upgType);
+            AudioManager.Instance.PlaySoundAt(upgradeAppliedSound, player.transform.position);
             MessageBanner.PulseMessage("Consumable applied!", Color.cyan);
         }
         else
@@ -723,7 +727,7 @@ public class UpgradeManager : MonoBehaviour
 
         if (gunUpgLevels[upgType] >= gunUpgMaxLevels[upgType])
         {
-            Debug.Log("Max level reached for: " + upgType);
+            //Debug.Log("Max level reached for: " + upgType);
             MessageBanner.PulseMessage("Max level reached!", Color.yellow);
             return;
         }
@@ -748,13 +752,14 @@ public class UpgradeManager : MonoBehaviour
             gunUpgCurrCosts[upgType] = upgrade.CalculateCost(player,
                                        gunUpgBaseCosts[upgType], gunUpgLevels[upgType] + 1);
 
-            Debug.Log("Gun upgrade applied: " + upgType);
+            AudioManager.Instance.PlaySoundAt(upgradeAppliedSound, player.transform.position);
+            //Debug.Log("Gun upgrade applied: " + upgType);
             MessageBanner.PulseMessage(gun.uiName + " stat upgraded to level " +
                                      gunUpgLevels[upgType], Color.cyan);
         }
         else
         {
-            Debug.Log("Not enough credits for: " + upgType);
+            //Debug.Log("Not enough credits for: " + upgType);
             MessageBanner.PulseMessage("Not enough Credits!", Color.red);
         }
     }
@@ -781,13 +786,14 @@ public class UpgradeManager : MonoBehaviour
             droneStatsUpgCurrCosts[upgType] = upgrade.CalculateCost(player,
                                        droneStatsUpgBaseCosts[upgType], droneStatsUpgLevels[upgType] + 1);
 
-            Debug.Log("Drone upgrade applied: " + upgType);
+            AudioManager.Instance.PlaySoundAt(upgradeAppliedSound, player.transform.position);
+            //Debug.Log("Drone upgrade applied: " + upgType);
             MessageBanner.PulseMessage("Drone stat upgraded to level " +
                                      droneStatsUpgLevels[upgType], Color.cyan);
         }
         else
         {
-            Debug.Log("Not enough credits for: " + upgType);
+            //Debug.Log("Not enough credits for: " + upgType);
             MessageBanner.PulseMessage("Not enough Credits!", Color.red);
         }
     }

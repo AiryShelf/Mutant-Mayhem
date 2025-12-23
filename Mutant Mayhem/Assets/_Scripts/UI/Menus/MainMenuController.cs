@@ -218,6 +218,7 @@ public class MainMenuController : MonoBehaviour
             profileSelectionUI.playPressedWithNoProfile = playPressedWithNoProfile;
             profileSelectionUI.tutorialPressedWithNoProfile = tutorialPressedWithNoProfile;
             profileSelectionUI.UpdateProfilePanel();
+            profileSelectionUI.FocusNameInput();
             ScreenScaleChecker.InvokeAspectRatioChanged();
         }
         else
