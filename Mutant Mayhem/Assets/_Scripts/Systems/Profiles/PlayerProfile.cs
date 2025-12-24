@@ -40,8 +40,16 @@ public class PlayerProfile
         isStandardWASD = true;
         isSpacebarEnabled = true;
         isFastJoystickAimEnabled = false;
-        joystickCursorSpeed = 1500f;
-        joystickAccelSpeed = 3000;
+        if (CursorManager.Instance != null)
+        {
+            joystickCursorSpeed = CursorManager.Instance.cursorSpeedDefault;
+            joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedDefault;
+        }
+        else
+        {
+            joystickCursorSpeed = 1500f;
+            joystickAccelSpeed = 3200f;
+        }
         virtualAimJoystickDisabled = false;
     }
 
@@ -60,12 +68,12 @@ public class PlayerProfile
         if (joystickCursorSpeed < CursorManager.Instance.cursorSpeedMin ||
             joystickCursorSpeed > CursorManager.Instance.cursorSpeedMax)
         {
-            joystickCursorSpeed = 1500f;
+            joystickCursorSpeed = CursorManager.Instance.cursorSpeedDefault;
         }
         if (joystickAccelSpeed < CursorManager.Instance.cursorAccelMin ||
             joystickAccelSpeed > CursorManager.Instance.cursorAccelMax)
         {
-            joystickAccelSpeed = 3000f;
+            joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedDefault;
         }
         
         // Ensure lists exist

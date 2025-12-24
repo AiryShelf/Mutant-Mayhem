@@ -83,8 +83,8 @@ public class SettingsManager : MonoBehaviour
             useStandardWASD = true;
             //spacebarThrowsGrenades = true;
             useInstantJoystickAim = false;
-            joystickCursorSpeed = CursorManager.Instance.cursorSpeedSpeedBackup;
-            joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedBackup;
+            joystickCursorSpeed = CursorManager.Instance.cursorSpeedDefault;
+            joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedDefault;
             isVirtualAimJoystickVisible = true;
             return;
         }
@@ -96,8 +96,8 @@ public class SettingsManager : MonoBehaviour
         useInstantJoystickAim = currentProfile.isFastJoystickAimEnabled;
         if (currentProfile.joystickCursorSpeed < CursorManager.Instance.cursorSpeedMin)
         {
-            currentProfile.joystickCursorSpeed = CursorManager.Instance.cursorSpeedSpeedBackup;
-            currentProfile.joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedBackup;
+            currentProfile.joystickCursorSpeed = CursorManager.Instance.cursorSpeedDefault;
+            currentProfile.joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedDefault;
             Debug.LogWarning($"Profile: {currentProfile} had an abnormally slow cursor speed, resetting to default");
             ProfileManager.Instance.SaveCurrentProfile();
         }

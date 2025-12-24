@@ -24,6 +24,8 @@ public class ProfileSelectionUI : MonoBehaviour
     public TMP_Dropdown chooseDifficultyDropdown;
     public TMP_InputField newProfileNameInput;
     [SerializeField] InputActionAsset inputAsset;
+    [SerializeField] float debounceTime = 0.5f;
+    public bool justClickedCreateProfile = false;
     
     InputAction enterKeyPressed;
     TextMeshProUGUI inputFieldPlaceholder;
@@ -78,6 +80,8 @@ public class ProfileSelectionUI : MonoBehaviour
         //ProfileManager.Instance.LoadAllProfiles();
     }
 
+    #region Text Focus
+
     public void FocusNameInput()
     {
         if (!isActiveAndEnabled || newProfileNameInput == null)
@@ -93,6 +97,10 @@ public class ProfileSelectionUI : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(newProfileNameInput.gameObject);
         newProfileNameInput.ActivateInputField();
     }
+
+    #endregion
+
+    #region Update / Sync
 
     // Updates the dropdown with the current list of profiles, toggles delete button, sets other text
     public void UpdateProfilePanel()
@@ -206,6 +214,10 @@ public class ProfileSelectionUI : MonoBehaviour
         isDropdownSyncing = false;
     }
 
+    #endregion
+
+    #region Input
+
     // Called when the player selects a profile from the dropdown
     public void SelectProfile()
     {
@@ -262,7 +274,9 @@ public class ProfileSelectionUI : MonoBehaviour
         inputFieldPlaceholder.text = originalInputFieldPlaceholderText;
         inputFieldPlaceholder.color = originalInputFieldPlaceholderColor; 
 
-        mainMenuController.ToggleNewProfilePanel();
+        //mainMenuController.ToggleNewProfilePanel();
+        //justClickedCreateProfile = true;
+        //StartCoroutine(ResetJustClickedCreateProfile());
 
         if (playPressedWithNoProfile)
         {
@@ -275,6 +289,12 @@ public class ProfileSelectionUI : MonoBehaviour
             // Close the profile selection UI and proceed to tutorial
             mainMenuController.OnStartTutorial();
         }
+    }
+
+    IEnumerator ResetJustClickedCreateProfile()
+    {
+        yield return new WaitForSecondsRealtime(debounceTime);
+        justClickedCreateProfile = false;
     }
 
     public void OnDeleteProfileClicked()
@@ -301,5 +321,8 @@ public class ProfileSelectionUI : MonoBehaviour
     void OnEnterKeyPressed(InputAction.CallbackContext context)
     {
         CreateNewProfile();
+        mainMenuController.ToggleNewProfilePanel();
     }
+
+    #endregion
 }

@@ -208,10 +208,20 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    // Also called by button press
     public void ToggleNewProfilePanel()
     {
+        Debug.Log("Toggle New Profile Panel");
+        if (profileSelectionUI.justClickedCreateProfile)
+        {
+            Debug.Log("Ignored Toggle New Profile Panel due to just clicked create profile");
+            profileSelectionUI.justClickedCreateProfile = false;
+            return;
+        }
+
         if (!isProfilesOpen)
         {
+            Debug.Log("New Profile Open Profiles Panel started");
             // Open profiles panel
             newProfileFadeGroup.isTriggered = true;
             isProfilesOpen = true;
@@ -220,9 +230,11 @@ public class MainMenuController : MonoBehaviour
             profileSelectionUI.UpdateProfilePanel();
             profileSelectionUI.FocusNameInput();
             ScreenScaleChecker.InvokeAspectRatioChanged();
+            Debug.Log("New Profile Open Profiles Panel finished");
         }
         else
         {
+            Debug.Log("New Profile Close Profiles Panel started");
             // Close profiles panel
             playPressedWithNoProfile = false;
             tutorialPressedWithNoProfile = false;
@@ -230,6 +242,7 @@ public class MainMenuController : MonoBehaviour
             profileSelectionUI.tutorialPressedWithNoProfile = false;
             newProfileFadeGroup.isTriggered = false;
             isProfilesOpen = false;
+            Debug.Log("New Profile Close Profiles Panel finished");
         }
     }
 
