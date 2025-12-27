@@ -9,7 +9,8 @@ public class OptionsPanel : MonoBehaviour
 {
     public FadeCanvasGroupsWave fadeGroup;
     [SerializeField] TMP_Dropdown qualityDropdown;
-    //[SerializeField] TMP_Dropdown resolutionDropdown;
+    [SerializeField] Slider zoomSlider;
+    [SerializeField] Toggle alwaysLockToPlayerToggle;
     [SerializeField] Toggle vSyncToggle;
     [SerializeField] Toggle analyticsToggle;
 
@@ -18,22 +19,22 @@ public class OptionsPanel : MonoBehaviour
     void OnEnable()
     {
         qualityDropdown.onValueChanged.AddListener(QualityValueChanged);
+        zoomSlider.onValueChanged.AddListener(ZoomBiasChanged);
+        alwaysLockToPlayerToggle.onValueChanged.AddListener(AlwaysLockToPlayerChanged);
         vSyncToggle.onValueChanged.AddListener(ToggleVSync);
         analyticsToggle.onValueChanged.AddListener(ToggleAnalytics);
-        //resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
 
         AnalyticsManager.OnConsentStatusChanged += HandleAnalyticsConsentChanged;
-
-        //Initialize();
     }
 
     void OnDisable()
     {
         // CHANGED: Remove listeners using the same method groups.
         qualityDropdown.onValueChanged.RemoveListener(QualityValueChanged);
+        zoomSlider.onValueChanged.RemoveListener(ZoomBiasChanged);
+        alwaysLockToPlayerToggle.onValueChanged.RemoveListener(AlwaysLockToPlayerChanged);
         vSyncToggle.onValueChanged.RemoveListener(ToggleVSync);
         analyticsToggle.onValueChanged.RemoveListener(ToggleAnalytics);
-        //resolutionDropdown.onValueChanged.RemoveListener(OnResolutionChanged);
 
         AnalyticsManager.OnConsentStatusChanged -= HandleAnalyticsConsentChanged;
     }
@@ -44,14 +45,13 @@ public class OptionsPanel : MonoBehaviour
         if (qualityManager == null)
             Debug.LogError("OptionsPanel: Could not find QualityManager on SettingsManager object");
 
-        Initialize();
+        InitializeUI();
     }
 
-    public void Initialize()
+    public void InitializeUI()
     {
         // Check if a current profile exists, then set option values
         int qualityLevel = QualitySettings.GetQualityLevel();
-
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
         if (currentProfile != null)
         {
@@ -60,7 +60,10 @@ public class OptionsPanel : MonoBehaviour
                 qualityLevel = QualitySettings.GetQualityLevel();
         }
 
+        // Populate UI elements
         qualityDropdown.SetValueWithoutNotify(qualityLevel);
+        zoomSlider.SetValueWithoutNotify(currentProfile != null ? currentProfile.zoomBias : 0f);
+        alwaysLockToPlayerToggle.SetIsOnWithoutNotify(currentProfile != null ? currentProfile.alwaysLockToPlayer : false);
         vSyncToggle.SetIsOnWithoutNotify(QualitySettings.vSyncCount > 0);
         analyticsToggle.SetIsOnWithoutNotify(AnalyticsManager.ConsentStatus == AnalyticsConsentStatus.Granted);
         
@@ -69,11 +72,9 @@ public class OptionsPanel : MonoBehaviour
             bool analyticsOn = (AnalyticsManager.ConsentStatus == AnalyticsConsentStatus.Granted) && AnalyticsManager.AnalyticsEnabled;
             analyticsToggle.SetIsOnWithoutNotify(analyticsOn);
         }
-        
-        //PopulateResolutionDropdown();
     }
 
-    #region Graphics
+    #region Input Callbacks
 
     void QualityValueChanged(int qualityLevel)
     {
@@ -83,7 +84,7 @@ public class OptionsPanel : MonoBehaviour
             ProfileManager.Instance.currentProfile.qualityLevel = qualityLevel;
             ProfileManager.Instance.SaveCurrentProfile();
         }
-        Initialize();
+        InitializeUI();
     }
 
     void ToggleVSync(bool isOn)
@@ -127,7 +128,27 @@ public class OptionsPanel : MonoBehaviour
         }
     }
 
-    #endregion
+    void ZoomBiasChanged(float sliderValue)
+    {
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            ProfileManager.Instance.currentProfile.zoomBias = sliderValue;
+            ProfileManager.Instance.SaveCurrentProfile();
+
+            SettingsManager.Instance.ApplyZoomBias();
+        }
+    }
+
+    void AlwaysLockToPlayerChanged(bool isOn)
+    {
+        if (ProfileManager.Instance.currentProfile != null)
+        {
+            ProfileManager.Instance.currentProfile.alwaysLockToPlayer = isOn;
+            ProfileManager.Instance.SaveCurrentProfile();
+
+            CameraController.Instance.alwaysLockToPlayer = isOn;
+        }
+    }
 
     void HandleAnalyticsConsentChanged(AnalyticsConsentStatus status)
     {
@@ -142,4 +163,6 @@ public class OptionsPanel : MonoBehaviour
             analyticsOn ? Color.green : Color.red
         );
     }
+
+    #endregion
 }

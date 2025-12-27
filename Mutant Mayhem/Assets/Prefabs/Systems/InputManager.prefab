@@ -66,7 +66,7 @@ MonoBehaviour:
   customCursorUI: {fileID: 0}
   aimDistance: 20
   aimMinDistance: 3
-  aimCursorTexture: {fileID: 2800000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
+  aimCursorTexture: {fileID: 2800000, guid: 55adf3a1f3cac544bbd4bb090cd35d81, type: 3}
   aimCursor: {fileID: 21300000, guid: 04b3ba978f3ee2c46b3875c8c2f3c0af, type: 3}
   aimCursorHotspot: {x: 16, y: 16}
   buildCursorTexture: {fileID: 2800000, guid: 93886451911a2d74e99fbf632ada6091, type: 3}
@@ -79,13 +79,16 @@ MonoBehaviour:
   aimJoystick: {fileID: 0}
   usingCustomCursor: 0
   inMenu: 0
-  cursorSpeedMin: 200
-  cursorSpeedMax: 1200
-  cursorSpeedFactor: 600
+  cursorSpeedDefault: 1500
+  joystickCursorSpeed: 1500
+  cursorSpeedMin: 500
+  cursorSpeedMax: 4800
   joystickDeadzone: 0.05
   cursorSpeedCurveMagnitude: 1
-  cursorAcceleration: 1200
-  rayDistance: 500
+  cursorAccelSpeedDefault: 5000
+  cursorAcceleration: 3200
+  cursorAccelMin: 3200
+  cursorAccelMax: 15000
   currentHoveredObject: {fileID: 0}
   persistentCanvasGR: {fileID: 0}
   graphicRaycasters:
@@ -107,10 +110,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveJoystick: {fileID: 0}
+  shootButtonLeft: {fileID: 0}
+  meleeButtonLeft: {fileID: 0}
   aimJoystick: {fileID: 0}
+  shootButtonRight: {fileID: 0}
+  meleeButtonRight: {fileID: 0}
   buildMenuController: {fileID: 0}
   buildPanelRect: {fileID: 0}
   player: {fileID: 0}
+  upgradePanelSwipeDistance: 200
+  buildPanelSwipeDistance: 80
 --- !u!114 &8722324806740529920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,3 +157,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df984e757a9319e4ebbd541702f3ee4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeBetweenChecks: 1

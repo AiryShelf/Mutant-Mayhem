@@ -54,7 +54,7 @@ MonoBehaviour:
   gameplaySnapshot: {fileID: -4763721442933824587, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   deathSnapshot: {fileID: 8472319254821508481, guid: 813c44c21cd3115438d93b0f21fcc618, type: 2}
   snapshotFadeTime: 4
-  poolSizeMusic: 2
+  poolSizeMusic: 5
   poolSizeSFX: 60
   poolSizeUI: 5
   poolSizeVoice: 5
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicStartDb: -15
-  sfxStartDb: -10
+  sfxStartDb: -7
   mainMenuPlaylists:
   - {fileID: 11400000, guid: 0c135731df88fd141be74695f93095f9, type: 2}
   mothershipPlaylists:
@@ -79,6 +79,12 @@ MonoBehaviour:
   gamePlaylists:
   - {fileID: 11400000, guid: b00c1aa9a3f8b804fb32fd9213b6b670, type: 2}
   - {fileID: 11400000, guid: b429c832daf8af8479483dcadd4496f7, type: 2}
+  - {fileID: 11400000, guid: d27902129de53ff459a3d09e872ca499, type: 2}
+  - {fileID: 11400000, guid: 22f6bd344bb52bc40ad93d7c83381955, type: 2}
+  dayPlaylists:
+  - {fileID: 11400000, guid: b429c832daf8af8479483dcadd4496f7, type: 2}
+  nightPlaylists:
+  - {fileID: 11400000, guid: b00c1aa9a3f8b804fb32fd9213b6b670, type: 2}
   - {fileID: 11400000, guid: d27902129de53ff459a3d09e872ca499, type: 2}
   - {fileID: 11400000, guid: 22f6bd344bb52bc40ad93d7c83381955, type: 2}
   deathPlaylists: []

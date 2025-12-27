@@ -27,6 +27,8 @@ public class PlayerProfile
     public float joystickCursorSpeed;
     public float joystickAccelSpeed;
     public bool virtualAimJoystickDisabled;
+    public float zoomBias;
+    public bool alwaysLockToPlayer;
 
     public PlayerProfile(string profileName, DifficultyLevel difficulty)
     {
@@ -51,16 +53,16 @@ public class PlayerProfile
             joystickAccelSpeed = 3200f;
         }
         virtualAimJoystickDisabled = false;
+        zoomBias = 0f;
+        alwaysLockToPlayer = false;
     }
 
     public bool IsProfileUpToDate()
     {
         // Check if tutorial completed, fix list
-        if (!completedTutorial)
+        if (!completedTutorial && completedPlanets.Contains("Tutorial"))
         {
-            if (completedPlanets.Contains("Tutorial"))
-                completedTutorial = true;
-
+            completedTutorial = true;
             completedPlanets.Remove("Tutorial");
         }
 
@@ -82,6 +84,7 @@ public class PlayerProfile
         if (completedMissions == null)
             completedMissions = new List<PlanetMissionsEntry>();
 
+        // Old profiles default to false anyways (boolean rule of zero)
         bool upgraded = false;
 
         return !upgraded;

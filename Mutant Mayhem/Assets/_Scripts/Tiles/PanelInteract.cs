@@ -17,6 +17,8 @@ public class PanelInteract : MonoBehaviour
         sqDistToPlayerWhoOpened = Vector3.SqrMagnitude(playerWhoOpened.transform.position - transform.position);
 
         StartCoroutine(CheckForClose());
+        
+        TouchManager.Instance.ShowLeftSideAttackButtons(false);
     }
 
     public virtual void ClosePanel()
@@ -28,6 +30,8 @@ public class PanelInteract : MonoBehaviour
         }
         UpgradePanelManager.Instance.ClosePanel(structureTypeForPanelInteract);
         StopAllCoroutines();
+
+        TouchManager.Instance.ShowLeftSideAttackButtons(true);
     }
 
     protected IEnumerator CheckForClose()

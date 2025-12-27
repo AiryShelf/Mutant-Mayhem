@@ -3,16 +3,20 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-using TMPro;
-using Unity.Burst.Intrinsics;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 public class TouchManager : MonoBehaviour
 {
     public static TouchManager Instance { get; private set; }
     
     public VirtualJoystick moveJoystick;
+    public Button shootButtonLeft;
+    public Button meleeButtonLeft;
+    public RectTransform moveJoystickDeadzoneRect;
     public VirtualJoystick aimJoystick;
+    public Button shootButtonRight;
+    public Button meleeButtonRight;
+    public RectTransform aimJoystickDeadzoneRect;
+    public RectTransform rightSideButtonsDeadzoneRect;
     public UIBuildMenuController buildMenuController;
     public RectTransform buildPanelRect;
     public Player player;
@@ -21,6 +25,9 @@ public class TouchManager : MonoBehaviour
     
 
     private Dictionary<int, TouchData> activeTouches = new Dictionary<int, TouchData>();
+    // Fingers that are allowed to control (or be promoted to) Look/aim.
+    // Interactive UI controls (Buttons, etc.) should NEVER be aim-eligible.
+    private HashSet<int> aimEligibleFingerIds = new HashSet<int>();
     Rect screenBounds = new Rect(0,0,0,0);
     bool virtualAimJoystickVisible;
 
@@ -125,28 +132,70 @@ public class TouchManager : MonoBehaviour
         return virtualAimJoystickVisible;
     }
 
-    public void SetVirtualJoysticksActive(bool active)
+    public void ShowVirtualAimJoysticks(bool show)
     {
         if (InputManager.LastUsedDevice == Touchscreen.current && !CursorManager.Instance.inMenu)
         {
-            moveJoystick.ActivateJoystick(active);
+            moveJoystick.ActivateJoystick(show);
+            ShowLeftSideAttackButtons(show);
+
             if (virtualAimJoystickVisible)
-                aimJoystick.ActivateJoystick(active);
+            {
+                aimJoystick.ActivateJoystick(show);
+                aimJoystickDeadzoneRect.gameObject.SetActive(show);
+
+                shootButtonRight.gameObject.SetActive(false);
+                meleeButtonRight.gameObject.SetActive(false);
+                rightSideButtonsDeadzoneRect.gameObject.SetActive(false);
+            }
+            else
+            {
+                // Show right-side attack buttons when aim joystick is hidden
+                aimJoystick.ActivateJoystick(false);
+                aimJoystickDeadzoneRect.gameObject.SetActive(false);
+
+                rightSideButtonsDeadzoneRect.gameObject.SetActive(show);
+                shootButtonRight.gameObject.SetActive(show);
+                meleeButtonRight.gameObject.SetActive(show);
+            }
+            
             moveJoystick.ResetJoystick();
             aimJoystick.ResetJoystick();
         }
         else 
         {
             moveJoystick.ActivateJoystick(false);
+            moveJoystickDeadzoneRect.gameObject.SetActive(false);
             aimJoystick.ActivateJoystick(false);
+            aimJoystickDeadzoneRect.gameObject.SetActive(false);
+            shootButtonRight.gameObject.SetActive(false);
+            meleeButtonRight.gameObject.SetActive(false);
+            rightSideButtonsDeadzoneRect.gameObject.SetActive(false);
+            shootButtonLeft.gameObject.SetActive(false);
+            meleeButtonLeft.gameObject.SetActive(false);
+
             moveJoystick.ResetJoystick();
             aimJoystick.ResetJoystick();
         }
 
         RefreshScreenBounds();
     }
-
-    //public void SetAimJoystickActive()
+    
+    public void ShowLeftSideAttackButtons(bool show)
+    {
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+        {
+            moveJoystickDeadzoneRect.gameObject.SetActive(show);
+            shootButtonLeft.gameObject.SetActive(show);
+            meleeButtonLeft.gameObject.SetActive(show);
+        }
+        else
+        {
+            moveJoystickDeadzoneRect.gameObject.SetActive(false);
+            shootButtonLeft.gameObject.SetActive(false);
+            meleeButtonLeft.gameObject.SetActive(false);
+        }
+    }
 
     public bool GetVirtualJoysticksActive()
     {
@@ -168,6 +217,34 @@ public class TouchManager : MonoBehaviour
         //Debug.Log($"TouchManager: Tap Position: {position}");
 
         // Raycast to see if it's over UI
+        // IMPORTANT: Interactive UI (Buttons, etc.) should NEVER be aim-eligible.
+        if (IsPointerOverInteractiveUI(position, out GameObject hitInteractiveUIObject))
+        {
+            // Ensure this finger can never become Look/aim.
+            aimEligibleFingerIds.Remove(fingerId);
+
+            // Still allow joysticks/build menu to be handled as before.
+            if (IsInRegion(position, moveJoystick.transform as RectTransform))
+            {
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
+            }
+            else if (IsInRegion(position, aimJoystick.transform as RectTransform))
+            {
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
+            }
+            else if (player != null && IsInRegion(position, buildPanelRect))
+            {
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.BuildMenu, position);
+                buildMenuController.isTouchScrolling = true;
+            }
+            else
+            {
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
+            }
+
+            return;
+        }
+
         if (IsPointerOverUI(position, out GameObject hitUIObject))
         {
             //Debug.Log($"Touch hit {hitUIObject.name}");
@@ -186,7 +263,13 @@ public class TouchManager : MonoBehaviour
                 // Build menu
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.BuildMenu, position);
                 buildMenuController.isTouchScrolling = true;
-                //CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
+            }
+            else if (IsInRegion(position, moveJoystickDeadzoneRect) || 
+                     IsInRegion(position, aimJoystickDeadzoneRect) || 
+                     IsInRegion(position, rightSideButtonsDeadzoneRect))
+            {
+                // Deadzone area for joysticks
+                activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
             }
             else
             {
@@ -203,14 +286,19 @@ public class TouchManager : MonoBehaviour
 
                 // other UI
                 if (isLooking)
+                {
+                    aimEligibleFingerIds.Add(fingerId);
                     AddShootTouch(wasExisting, fingerId, position);
+                }
                 else
+                {
                     activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
+                }
             }
-            
         }
         else
         {
+            aimEligibleFingerIds.Add(fingerId);
             AddShootTouch(wasExisting, fingerId, position);
         }
     }
@@ -335,6 +423,7 @@ public class TouchManager : MonoBehaviour
 
         TouchData data = activeTouches[fingerId];
         activeTouches.Remove(fingerId);
+        aimEligibleFingerIds.Remove(fingerId);
 
         switch (data.purpose)
         {
@@ -344,21 +433,33 @@ public class TouchManager : MonoBehaviour
                 //aimJoystick.OnTouchEnd(fingerId);
                 break;
             case TouchPurpose.Look:
-                // Assign a new Look touch if shooting/meleeing
+                // Assign a new Look touch if shooting/meleeing, but ONLY if that touch is aim-eligible.
+                // This prevents button touches (interactive UI) from stealing the cursor when the aim finger lifts.
                 foreach (var kvp in activeTouches)
                 {
-                    if (kvp.Value.purpose == TouchPurpose.Shoot)
+                    int otherId = kvp.Key;
+                    TouchData otherTouch = kvp.Value;
+
+                    // Only allow promotion if this finger was marked aim-eligible at touch begin.
+                    if (!aimEligibleFingerIds.Contains(otherId))
+                        continue;
+
+                    if (otherTouch.purpose == TouchPurpose.Shoot)
                     {
-                        kvp.Value.purpose = TouchPurpose.Look;
+                        otherTouch.purpose = TouchPurpose.Look;
+                        activeTouches[otherId] = otherTouch;
+
                         player.animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
-                        BeginTouch(kvp.Value.fingerId, kvp.Value.currentPosition, true);
+                        BeginTouch(otherId, otherTouch.currentPosition, true);
                         break;
                     }
-                    else if (kvp.Value.purpose == TouchPurpose.Melee)
+                    else if (otherTouch.purpose == TouchPurpose.Melee)
                     {
-                        kvp.Value.purpose = TouchPurpose.Look;
+                        otherTouch.purpose = TouchPurpose.Look;
+                        activeTouches[otherId] = otherTouch;
+
                         player.animControllerPlayer.MeleeInput_Cancelled(new InputAction.CallbackContext());
-                        BeginTouch(kvp.Value.fingerId, kvp.Value.currentPosition, true);
+                        BeginTouch(otherId, otherTouch.currentPosition, true);
                         break;
                     }
                 }
@@ -409,8 +510,11 @@ public class TouchManager : MonoBehaviour
             player.animControllerPlayer.MeleeInput_Cancelled(new InputAction.CallbackContext());
             player.animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
             
-            CursorManager.Instance.MoveCustomCursorTo(touchData.currentPosition, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
-            player.lastAimDir = Camera.main.ScreenToWorldPoint(touchData.currentPosition) - player.transform.position;
+            if (aimEligibleFingerIds.Contains(touchData.fingerId))
+            {
+                CursorManager.Instance.MoveCustomCursorTo(touchData.currentPosition, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
+                player.lastAimDir = Camera.main.ScreenToWorldPoint(touchData.currentPosition) - player.transform.position;
+            }
         }
     }
 
@@ -446,5 +550,34 @@ public class TouchManager : MonoBehaviour
         return rect.rect.Contains(localPoint);
     }
 
+    private bool IsPointerOverInteractiveUI(Vector2 screenPosition, out GameObject hitUIObject)
+    {
+        // UI Raycast
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = screenPosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        // Consider any Selectable (Button/Toggle/Slider/etc.) or ScrollRect as interactive.
+        // If any such control is in the raycast stack, treat this touch as NOT aim-eligible.
+        foreach (var r in results)
+        {
+            if (r.gameObject == null) continue;
+
+            if (r.gameObject.GetComponentInParent<Selectable>() != null ||
+                r.gameObject.GetComponentInParent<ScrollRect>() != null)
+            {
+                hitUIObject = r.gameObject;
+                return true;
+            }
+        }
+
+        hitUIObject = null;
+        return false;
+    }
+
     #endregion
 }
+
+    

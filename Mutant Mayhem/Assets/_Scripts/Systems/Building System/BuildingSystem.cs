@@ -396,16 +396,25 @@ public class BuildingSystem : MonoBehaviour
     {
         if (isLocked)
         {
-            if (InputManager.LastUsedDevice == Keyboard.current)
-                cameraController.ZoomAndFocus(player.transform, -2, 0.25f, buildCamLerpTime, true, false);
+                
+            if (SettingsManager.Instance.zoomBiasTouchscreen != 0)
+            {
+                if (SettingsManager.Instance.zoomBias > -4.1f)
+                    cameraController.ZoomAndFocus(player.transform, 0.8f, 0, buildCamLerpTime, true, false);
+                else if (SettingsManager.Instance.zoomBiasTouchscreen > -6.1f)
+                    cameraController.ZoomAndFocus(player.transform, 0.9f, 0, buildCamLerpTime, true, false);
+                else
+                    cameraController.ZoomAndFocus(player.transform, 1, 0, buildCamLerpTime, true, false);
+            }
             else
-                cameraController.ZoomAndFocus(player.transform, -4, 0.25f, buildCamLerpTime, true, false);
+                cameraController.ZoomAndFocus(player.transform, 0.8f, 0, buildCamLerpTime, true, false);
+                
             mouseLooker.lockedToPlayer = true;
             cameraController.SetTouchscreenOffset(false);
         }
         else
         {
-            cameraController.ZoomAndFocus(player.transform, 0, 1, buildCamLerpTime, false, false);
+            cameraController.ZoomAndFocus(player.transform, 1, 1, buildCamLerpTime, false, false);
             mouseLooker.lockedToPlayer = false;
             cameraController.SetTouchscreenOffset(true);
         }  

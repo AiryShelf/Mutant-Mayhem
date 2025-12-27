@@ -282,7 +282,15 @@ public class PlayerShooter : Shooter
         if (gunsAmmoInClips[currentGunIndex] < 1)
         {
             // Reload notification
-            if (currentGunSO.gunType == GunType.Bullet)
+            if (currentGunSO.gunType == GunType.Laser)
+            {
+                if (reloadNotificationTimer < 0)
+                {
+                    reloadNotificationTimer = MessageBanner.TimeToDisplay * 1.1f;
+                    MessageBanner.PulseMessage("Gun battery depleted!  Wait to recharge...", Color.yellow);
+                }
+            }
+            else if (currentGunSO.gunType == GunType.Bullet)
             {
                 if (reloadNotificationTimer < 0)
                 {

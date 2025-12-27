@@ -8,7 +8,6 @@ using UnityEngine;
 public class EnemyChaseDirectToTarget : EnemyChaseSOBase
 {
     [SerializeField] private float moveSpeedMult = 1.2f;
-    [SerializeField] float distToStopChase = 0.2f;
 
     public override void Initialize(GameObject gameObject, EnemyBase enemy)
     {

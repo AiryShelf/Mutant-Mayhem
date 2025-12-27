@@ -57,7 +57,7 @@ public class MainMenuController : MonoBehaviour
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        TouchManager.Instance.SetVirtualJoysticksActive(false);
+        TouchManager.Instance.ShowVirtualAimJoysticks(false);
         StartCoroutine(DelayStartActions());
     }
 
@@ -178,7 +178,7 @@ public class MainMenuController : MonoBehaviour
         {
             // Open options panel
             optionsPanel.fadeGroup.isTriggered = true;
-            optionsPanel.Initialize();
+            optionsPanel.InitializeUI();
             isOptionsOpen = true;
             ScreenScaleChecker.InvokeAspectRatioChanged();
         }

@@ -31,13 +31,14 @@ public class SettingsManager : MonoBehaviour
     public float CreditsMult = 1;
 
     [Header("Dynamic, dont't set here")]
-   // bool spacebarThrowsGrenades = true;
+    // bool spacebarThrowsGrenades = true;
+    public float zoomBias = 0f;
+    public float zoomBiasTouchscreen = 0f;
     public float joystickCursorSpeed;
     public float joystickAccelSpeed;
     public bool isVirtualAimJoystickVisible = true;
 
-    WaveController waveController;  
-    Player player;
+    WaveController waveController;
 
     void Awake()
     {
@@ -164,6 +165,18 @@ public class SettingsManager : MonoBehaviour
                 break;
         }
 
+        switch (InputManager.LastUsedDevice)
+        {
+            case Touchscreen device:
+                // On touchscreen, slow down enemy spawn rate.
+                SubwaveDelayMult *= 1.3f;
+                break;
+            case Gamepad device:
+                // On gamepad, slow down enemy spawn rate.
+                SubwaveDelayMult *= 1.15f;
+                break;
+        }
+
         //DeathManager deathManager = FindObjectOfType<DeathManager>();
 
         Debug.Log("Difficulty settings applied for " + difficultyLevel + " by Settings Manager");
@@ -192,47 +205,30 @@ public class SettingsManager : MonoBehaviour
 
     #region Controls
 
-    void ApplyControlSettings()
+    public void ApplyZoomBias()
     {
-        CursorManager.Instance.joystickCursorSpeed = joystickCursorSpeed;
-        CursorManager.Instance.cursorAcceleration = joystickAccelSpeed;
-        TouchManager.Instance.SetVirtualAimJoystickVisible(isVirtualAimJoystickVisible);
-
-        /*
-        player = FindObjectOfType<Player>();
-        if (player == null)
+        if (ProfileManager.Instance.currentProfile == null)
         {
-            //Debug.Log("Player not found by by SettingManager while applying control settings");
+            zoomBias = zoomBiasTouchscreen;
             return;
         }
 
-        InputAction throwAction = player.inputAsset.FindActionMap("Player").FindAction("Throw");
+        zoomBias = zoomBiasTouchscreen + ProfileManager.Instance.currentProfile.zoomBias;
 
-        if (spacebarThrowsGrenades)
+        if (CameraController.Instance != null)
         {
-            // Enable the spacebar
-            for (int i = 0; i < throwAction.bindings.Count; i++)
-            {
-                if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
-                {
-                    throwAction.RemoveBindingOverride(i);
-                    //Debug.Log("Spacebar enabled");
-                }
-            }
+            CameraController.Instance.mouseMixWeight = CameraController.Instance.mouseMixWeightStart - zoomBias * 0.05f;
+            CameraController.Instance.alwaysLockToPlayer = ProfileManager.Instance.currentProfile.alwaysLockToPlayer;
         }
-        else
-        {
-            // Disable the spacebar
-            for (int i = 0; i < throwAction.bindings.Count; i++)
-            {
-                if (throwAction.bindings[i].effectivePath == "<Keyboard>/space")
-                {
-                    throwAction.ApplyBindingOverride(i, new InputBinding { overridePath = "" });
-                    //Debug.Log("Spacebar disabled");
-                }
-            }
-        }
-        */
+    }
+
+    void ApplyControlSettings()
+    {
+        ApplyZoomBias();
+
+        CursorManager.Instance.joystickCursorSpeed = joystickCursorSpeed;
+        CursorManager.Instance.cursorAcceleration = joystickAccelSpeed;
+        TouchManager.Instance.SetVirtualAimJoystickVisible(isVirtualAimJoystickVisible);
     }
 
     #endregion

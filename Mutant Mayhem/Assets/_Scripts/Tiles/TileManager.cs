@@ -591,7 +591,10 @@ public class TileManager : MonoBehaviour
                 _TileStatsDict[rootPos].health -= healthDifference; // Revert health increase if not repairable
                 
             if (_TileStatsDict[rootPos].health >= maxHealth)
+            {
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
+                PlayBuildExplosionEffect(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
+            }
         }
 
         if (!isException)

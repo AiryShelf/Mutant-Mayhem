@@ -14,14 +14,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] Transform qCubeTrans;
     [SerializeField] float deathLerpTime = 2f;
-    [SerializeField] float wideTouchscreenZoomBias = -2f;
     [SerializeField] float touchscreenXOffset = 3;
-    float zoomBias = 0;
+    [SerializeField] float wideTouchscreenZoomBias = -2f;
 
     CinemachineFramingTransposer playerFramingTransposer;
     CinemachineFramingTransposer mouseFramingTransposer;
 
     float playerCamOrthoSizeStart;
+    float mouseLookerCamOrthoSizeStart;
     float playerDZWidth;
     float playerDZHeight;
     float mouseDZWidth;
@@ -35,12 +35,17 @@ public class CameraController : MonoBehaviour
     float mouseXDamping;
     float mouseYDamping;
     float playerMixWeight;
-    float mouseMixWeight;
+
+    [Header("Dynamic, don't set here")]
+    public float mouseMixWeight;
+    public float mouseMixWeightStart;
+    public bool alwaysLockToPlayer;
 
     Coroutine weightLerpCoroutine1;
     Coroutine weightLerpCoroutine2;
     Coroutine positionLerpCoroutine;
     Coroutine orthoSizeLerpCoroutine;
+    Coroutine orthoSizeLerpCoroutine2;
     Coroutine playerDampingCoroutine1;
     Coroutine playerDampingCoroutine2;
     Coroutine mouseDampingCoroutine1;
@@ -74,6 +79,7 @@ public class CameraController : MonoBehaviour
 
         // Store defaults
         playerCamOrthoSizeStart = playerCamera.m_Lens.OrthographicSize;
+        mouseLookerCamOrthoSizeStart = mouseLookerCamera.m_Lens.OrthographicSize;
 
         playerDZWidth = playerFramingTransposer.m_DeadZoneWidth;
         playerDZHeight = playerFramingTransposer.m_DeadZoneHeight;
@@ -92,6 +98,7 @@ public class CameraController : MonoBehaviour
 
         playerMixWeight = mixingCamera.GetWeight(0);
         mouseMixWeight = mixingCamera.GetWeight(1);
+        mouseMixWeightStart = mouseMixWeight;
     }
 
     void OnEnable()
@@ -108,7 +115,7 @@ public class CameraController : MonoBehaviour
         QCubeController.OnCubeDestroyed -= HandleCubeDeath;
     }
 
-    void Start()
+    public void Initialize()
     {
         TouchscreenAdjustments();
     }
@@ -123,25 +130,15 @@ public class CameraController : MonoBehaviour
         float aspectRatio = (float)Screen.width / Screen.height;
 
         if (aspectRatio >= 2.0f)
-        {
-            zoomBias = wideTouchscreenZoomBias;
-        }
+            SettingsManager.Instance.zoomBiasTouchscreen = wideTouchscreenZoomBias;
         else if (aspectRatio > 1.85f)
-        {
-            zoomBias = wideTouchscreenZoomBias;
-        }
+            SettingsManager.Instance.zoomBiasTouchscreen = wideTouchscreenZoomBias;
         else if (aspectRatio >= 1.77f)
-        {
-            zoomBias = 0;
-        }
-        else if (aspectRatio > 1.5f) 
-        {
-            zoomBias = 0;
-        }
+            SettingsManager.Instance.zoomBiasTouchscreen = wideTouchscreenZoomBias;
+        else if (aspectRatio >= 1.5f) 
+            SettingsManager.Instance.zoomBiasTouchscreen = wideTouchscreenZoomBias / 2f;
         else
-        {
-            zoomBias = 0;
-        }
+            SettingsManager.Instance.zoomBiasTouchscreen = 0;
     }
 
     public void SetTouchscreenOffset(bool isOffset)
@@ -189,7 +186,7 @@ public class CameraController : MonoBehaviour
     {
         if (isDestroyed && !deathZoomStarted)
         {
-            ZoomAndFocus(player.transform, -2f, 2f, deathLerpTime, true, false);
+            ZoomAndFocus(player.transform, 0.8f, 1f, deathLerpTime, true, false);
             deathZoomStarted = true;
             mouseLooker.deathTriggered = true;
         }
@@ -199,7 +196,7 @@ public class CameraController : MonoBehaviour
     {
         if (isDestroyed && !deathZoomStarted)
         {
-            ZoomAndFocus(qCubeTrans, 2f, 2f, deathLerpTime, false, true);
+            ZoomAndFocus(qCubeTrans, 0.8f, 1f, deathLerpTime, false, true);
             deathZoomStarted = true;
             mouseLooker.deathTriggered = true;
         }
@@ -209,10 +206,16 @@ public class CameraController : MonoBehaviour
 
     #region Zoom & Focus
 
-    public void ZoomAndFocus(Transform targetTrans, float orthoZoomAmount, float dampingAmount, 
+    public void ZoomAndFocus(Transform targetTrans, float orthoZoomFactor, float dampingAmount, 
                                               float duration, bool focusPlayer, bool focusMouseLooker)
     {
         StopAllTrackedCoroutines();
+
+        if (alwaysLockToPlayer)
+        {
+            focusPlayer = true;
+            dampingAmount = 0;
+        }
 
         // Adjust weights based on focus parameters
         if (focusPlayer)
@@ -247,15 +250,26 @@ public class CameraController : MonoBehaviour
         // Lerp ortho size (Zoom)
         if (orthoSizeLerpCoroutine != null)
             StopCoroutine(orthoSizeLerpCoroutine);
-        
-        float currentOrthoSize = playerCamera.m_Lens.OrthographicSize;
-        orthoSizeLerpCoroutine = StartCoroutine(GameTools.LerpFloat(currentOrthoSize,
-                                 playerCamOrthoSizeStart + orthoZoomAmount + zoomBias, duration, UpdateOrthoSize));
+        if (orthoSizeLerpCoroutine2 != null)
+            StopCoroutine(orthoSizeLerpCoroutine2);
+        float currentOrthoPlayer = playerCamera.m_Lens.OrthographicSize;
+        float currentOrthoMouse = mouseLookerCamera.m_Lens.OrthographicSize;
+        orthoSizeLerpCoroutine = StartCoroutine(GameTools.LerpFloat(currentOrthoPlayer,
+                                (playerCamOrthoSizeStart + SettingsManager.Instance.zoomBias) * 
+                                orthoZoomFactor, duration, UpdateOrthoSizePlayer));
+        orthoSizeLerpCoroutine2 = StartCoroutine(GameTools.LerpFloat(currentOrthoMouse,
+                                (mouseLookerCamOrthoSizeStart + SettingsManager.Instance.zoomBias) * 
+                                orthoZoomFactor, duration, UpdateOrthoSizeMouse));
     }
 
-    void UpdateOrthoSize(float newSize)
+    void UpdateOrthoSizePlayer(float newSize)
     {
         playerCamera.m_Lens.OrthographicSize = newSize;
+    }
+
+    void UpdateOrthoSizeMouse(float newSize)
+    {
+        mouseLookerCamera.m_Lens.OrthographicSize = newSize;
     }
 
     #endregion

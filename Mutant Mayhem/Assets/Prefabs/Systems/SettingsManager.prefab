@@ -72,6 +72,7 @@ MonoBehaviour:
     joystickCursorSpeed: 0
     joystickAccelSpeed: 0
     virtualAimJoystickDisabled: 0
+    zoomBias: 0
 --- !u!114 &6658943725255159057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,6 +95,8 @@ MonoBehaviour:
   SubwaveDelayMult: 1
   BatchSpawnMult: 1
   CreditsMult: 1
+  zoomBias: 0
+  zoomBiasTouchscreen: 0
   joystickCursorSpeed: 0
   joystickAccelSpeed: 0
   isVirtualAimJoystickVisible: 1

@@ -33,7 +33,6 @@ public class EvolutionManager : MonoBehaviour
     int _previousMaxIndex = 0;
     bool _genZeroBuilt = false;
     WaveSpawnerRandom _waveSpawner;
-    int _spawnIndex = 0;
     int _lastSpawnCycleIndex = 0;
 
     public static EvolutionManager Instance { get; private set; }

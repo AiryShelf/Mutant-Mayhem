@@ -136,7 +136,7 @@ public class DeathManager : MonoBehaviour
         MessageManager.Instance.StopAllConversations();
 
         CursorManager.Instance.inMenu = true;
-        TouchManager.Instance.SetVirtualJoysticksActive(false);
+        TouchManager.Instance.ShowVirtualAimJoysticks(false);
         InputManager.SetJoystickMouseControl(true);
 
         //SFXManager.Instance.FadeToDeathSnapshot();

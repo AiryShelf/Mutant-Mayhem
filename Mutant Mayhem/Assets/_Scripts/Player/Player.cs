@@ -83,7 +83,6 @@ public class Player : MonoBehaviour
     [SerializeField] SoundSO walkMetalSound;
 
     [Header("Other")]
-    [SerializeField] float interactRadius = 0.9f;
     public List<GraphicRaycaster> graphicRaycasters;
     public InputActionAsset inputAsset;
     [SerializeField] string grenadePoolName;
@@ -144,6 +143,7 @@ public class Player : MonoBehaviour
     InputActionMap uIActionMap;
     InputAction escapeAction;
     bool isInteracting = false;
+    PlayerUIButton[] uiButtons;
 
     void Awake()
     {
@@ -203,6 +203,41 @@ public class Player : MonoBehaviour
         CursorManager.Instance.MoveCustomCursorWorldToUi(Vector2.zero);
         StartCoroutine(Sprint(false));
         RefreshMoveForces();
+
+        // Set up UI attack buttons
+        uiButtons = FindObjectsOfType<PlayerUIButton>(true);
+        foreach (PlayerUIButton button in uiButtons)
+        {
+            switch (button.buttonType)
+            {
+                case PlayerUIButtonType.Shoot:
+                    button.onPressed.AddListener(OnShootPressed);
+                    button.onReleased.AddListener(OnShootReleased);
+                    break;
+                case PlayerUIButtonType.Melee:
+                    button.onPressed.AddListener(OnMeleePressed);
+                    button.onReleased.AddListener(OnMeleeReleased);
+                    break;
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        foreach (PlayerUIButton button in uiButtons)
+        {
+            switch (button.buttonType)
+            {
+                case PlayerUIButtonType.Shoot:
+                    button.onPressed.RemoveListener(OnShootPressed);
+                    button.onReleased.RemoveListener(OnShootReleased);
+                    break;
+                case PlayerUIButtonType.Melee:
+                    button.onPressed.RemoveListener(OnMeleePressed);
+                    button.onReleased.RemoveListener(OnMeleeReleased);
+                    break;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -244,6 +279,27 @@ public class Player : MonoBehaviour
     }
 
     #region Inputs
+
+    // These are used by the Touchscreen UI buttons
+    public void OnShootPressed()
+    {
+        animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
+    }
+
+    public void OnShootReleased()
+    {
+        animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
+    }
+
+    public void OnMeleePressed()
+    {
+        animControllerPlayer.MeleeInput_Performed(new InputAction.CallbackContext());
+    }
+
+    public void OnMeleeReleased()
+    {
+        animControllerPlayer.MeleeInput_Cancelled(new InputAction.CallbackContext());
+    }
 
     public void OnInteract()
     {
@@ -303,7 +359,7 @@ public class Player : MonoBehaviour
 
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
-        cameraController.ZoomAndFocus(transform, 0, 0.25f, 0.35f, true, false);
+        cameraController.ZoomAndFocus(transform, 1, 0f, 0.5f, true, false);
         cameraController.SetTouchscreenOffset(false);
 
         animControllerPlayer.FireInput_Cancelled(new InputAction.CallbackContext());
@@ -325,7 +381,7 @@ public class Player : MonoBehaviour
         CursorManager.Instance.inMenu = false;
         if (!stats.playerShooter.isBuilding && !stats.playerShooter.isRepairing)
         {
-            cameraController.ZoomAndFocus(transform, 0, 1, 1f, false, false);
+            cameraController.ZoomAndFocus(transform, 1, 1, 0.5f, false, false);
             cameraController.SetTouchscreenOffset(true);
         }
         else

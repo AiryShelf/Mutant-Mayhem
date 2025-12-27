@@ -12,15 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0c4e335180931409c72d44e8ff5437, type: 3}
   m_Name: Player-Laser-Hit
   m_EditorClassIdentifier: 
-  soundName: PlayerLaserHit
   soundType: 1
   clips:
   - {fileID: 8300000, guid: 117910d78aac5f54e8d897f9451b5c61, type: 3}
   - {fileID: 8300000, guid: 14a0e3dc144f49c41816a100285b45e9, type: 3}
   - {fileID: 8300000, guid: cd313fd5a66c14343872ae4841496e84, type: 3}
   loop: 0
-  volume: 0.9
-  pitch: 1
+  volume: 0.7
+  pitch: 1.1
   pitchRandRange: 0.2
   spatialBlend: 1
   minDistance: 5

@@ -121,7 +121,6 @@ public class InputManager : MonoBehaviour
         Vector2 mousePos = Vector2.zero;
         if (Mouse.current != null)
             mousePos = Mouse.current.position.ReadValue();
-        //Debug.Log($"Mouse Pos: {mousePos}");
 
         if (Keyboard.current != null && (Keyboard.current.anyKey.wasPressedThisFrame || mousePos != lastMousePos))
         {
@@ -130,7 +129,6 @@ public class InputManager : MonoBehaviour
             {
                 LastUsedDevice = Keyboard.current;
                 SetUpCurrentDevice();
-                //SetJoystickMouseControl(false);
             }
         }
         else if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
@@ -139,7 +137,6 @@ public class InputManager : MonoBehaviour
             {
                 LastUsedDevice = Touchscreen.current;
                 SetUpCurrentDevice();
-                //SetJoystickMouseControl(false);
             }
         }
         else if (Gamepad.current != null && Gamepad.current.allControls.Any(control => control.IsPressed()))
@@ -148,7 +145,6 @@ public class InputManager : MonoBehaviour
             {
                 LastUsedDevice = Gamepad.current;
                 SetUpCurrentDevice();
-                //SetJoystickMouseControl(true);
             }
         }
     }
@@ -161,21 +157,21 @@ public class InputManager : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(true);
                 CursorManager.Instance.SetUsingCustomCursor(false);
                 CursorManager.Instance.SetCustomCursorVisible(false);
-                TouchManager.Instance.SetVirtualJoysticksActive(false);
+                TouchManager.Instance.ShowVirtualAimJoysticks(false);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 break;
             case Touchscreen device:
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
-                TouchManager.Instance.SetVirtualJoysticksActive(true);
+                TouchManager.Instance.ShowVirtualAimJoysticks(true);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 break;
             case Gamepad device:
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
-                TouchManager.Instance.SetVirtualJoysticksActive(false);
+                TouchManager.Instance.ShowVirtualAimJoysticks(false);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 break;
         }

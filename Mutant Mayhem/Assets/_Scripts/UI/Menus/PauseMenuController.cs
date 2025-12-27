@@ -100,7 +100,7 @@ public class PauseMenuController : MonoBehaviour
         if (open)
         {
             CursorManager.Instance.inMenu = true;
-            TouchManager.Instance.SetVirtualJoysticksActive(false);
+            TouchManager.Instance.ShowVirtualAimJoysticks(false);
             InputManager.SetJoystickMouseControl(true);
             if (InputManager.LastUsedDevice == Touchscreen.current)
             {
@@ -120,7 +120,7 @@ public class PauseMenuController : MonoBehaviour
         else
         {
             CursorManager.Instance.inMenu = false;
-            TouchManager.Instance.SetVirtualJoysticksActive(true);
+            TouchManager.Instance.ShowVirtualAimJoysticks(true);
             playerActionMap.Enable();
             if (InputManager.LastUsedDevice == Touchscreen.current)
             {
@@ -129,9 +129,15 @@ public class PauseMenuController : MonoBehaviour
             }
 
             if (wasRepairing)
+            {
                 player.stats.playerShooter.isRepairing = true;
+                BuildingSystem.Instance.LockCameraToPlayer(true);
+            }
             else
+            {
                 InputManager.SetJoystickMouseControl(!SettingsManager.Instance.useInstantJoystickAim);
+                CameraController.Instance.ZoomAndFocus(transform, 1, 1f, 0.5f, false, false);
+            }
             
             MessageManager.Instance.UnPauseMessage();
             
@@ -164,7 +170,7 @@ public class PauseMenuController : MonoBehaviour
         if (!isOptionsOpen)
         {
             isOptionsOpen = true;
-            optionsPanel.Initialize();
+            optionsPanel.InitializeUI();
             optionsPanel.fadeGroup.isTriggered = true;
             Debug.Log("Opened options menu");
         }

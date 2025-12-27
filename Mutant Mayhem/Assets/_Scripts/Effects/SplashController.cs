@@ -21,15 +21,19 @@ public class SplashController : MonoBehaviour
 
     void Update()
     {
-        // Skip splash on any key press using new input system
+        // Skip splash on any input using the new Input System
         if (skipping) return;
 
-        // Detect any key, mouse click, touch, or controller input
-        if (Keyboard.current.anyKey.wasPressedThisFrame ||
-            Mouse.current.leftButton.wasPressedThisFrame ||
-            Mouse.current.rightButton.wasPressedThisFrame ||
-            (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame) ||
-            (Gamepad.current != null && Gamepad.current.allControls.Any(c => c.IsPressed())))
+        // Keyboard
+        bool keyboardSkip = (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame);
+
+        // Pointer (mouse/pen/touch). On iOS there is often no Mouse device, so avoid Mouse.current.
+        bool pointerSkip = (Pointer.current != null && Pointer.current.press.wasPressedThisFrame);
+
+        // Gamepad (any pressed control)
+        bool gamepadSkip = (Gamepad.current != null && Gamepad.current.allControls.Any(c => c.IsPressed()));
+
+        if (keyboardSkip || pointerSkip || gamepadSkip)
         {
             skipping = true;
             SceneManager.LoadScene(nextSceneName);

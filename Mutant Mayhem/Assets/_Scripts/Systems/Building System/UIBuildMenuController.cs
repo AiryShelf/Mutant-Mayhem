@@ -31,7 +31,6 @@ public class UIBuildMenuController : MonoBehaviour
     InputAction scrollAction;
     InputAction swapWithDestroyAction;
     bool isMenuOpen = false;
-    bool wasControlsPanelOpen = false;
 
     [System.Serializable]
     private class BuildMenuEntry
@@ -236,8 +235,9 @@ public class UIBuildMenuController : MonoBehaviour
     {
         // Fade the entire menu as one CanvasGroup
         StartMenuFade(!isMenuOpen);
-
+        
         isMenuOpen = !isMenuOpen;
+        TouchManager.Instance.ShowLeftSideAttackButtons(!isMenuOpen);
     }
 
     #endregion
