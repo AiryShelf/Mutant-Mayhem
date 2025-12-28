@@ -80,23 +80,26 @@ public class ControlSettingsPanel : MonoBehaviour
         }
     }
 
+    
+
     #region Control Options
 
     public void ToggleSpacebar(bool isOn)
     {
-        if (ProfileManager.Instance.currentProfile != null)
-        {
-            ProfileManager.Instance.currentProfile.isSpacebarEnabled = isOn;
-            ProfileManager.Instance.SaveCurrentProfile();
-        }
+        if (ProfileManager.Instance.currentProfile == null)
+            return;
 
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
+        ProfileManager.Instance.currentProfile.isSpacebarEnabled = isOn;
+        ProfileManager.Instance.DelaySaveProfile();
         Debug.Log("Spacebar throws grenades set to " + isOn);
     }
 
     void MoveTypeValueChanged(int value)
     {
         PlayerProfile profile = ProfileManager.Instance.currentProfile;
+        if (profile == null)
+            return;
+
         switch (value)
         {
             case 0:
@@ -110,9 +113,7 @@ public class ControlSettingsPanel : MonoBehaviour
                 break;
         }
 
-        ProfileManager.Instance.SaveCurrentProfile();
-        SettingsManager.Instance.RefreshSettingsFromProfile(profile);
-
+        ProfileManager.Instance.DelaySaveProfile();
         Debug.Log("useStandardWASD set to: " + value);
     }
 
@@ -122,8 +123,7 @@ public class ControlSettingsPanel : MonoBehaviour
         if (currentProfile != null)
         {
             currentProfile.virtualAimJoystickDisabled = disabled;
-            ProfileManager.Instance.SaveCurrentProfile();
-            SettingsManager.Instance.RefreshSettingsFromProfile(currentProfile);
+            ProfileManager.Instance.DelaySaveProfile();
         }
     }
 
@@ -138,10 +138,8 @@ public class ControlSettingsPanel : MonoBehaviour
         {
             value = Mathf.Lerp(CursorManager.Instance.cursorSpeedMin, CursorManager.Instance.cursorSpeedMax, sliderValue);
             ProfileManager.Instance.currentProfile.joystickCursorSpeed = value;
-            ProfileManager.Instance.SaveCurrentProfile();
+            ProfileManager.Instance.DelaySaveProfile();
         }
-
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         Debug.Log("Joystick Cursor Speed set to " + value);
     }
 
@@ -152,10 +150,8 @@ public class ControlSettingsPanel : MonoBehaviour
         {
             value = Mathf.Lerp(CursorManager.Instance.cursorAccelMin, CursorManager.Instance.cursorAccelMax, sliderValue);
             ProfileManager.Instance.currentProfile.joystickAccelSpeed = value;
-            ProfileManager.Instance.SaveCurrentProfile();
+            ProfileManager.Instance.DelaySaveProfile();
         }
-
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         Debug.Log("Cursor Acceleration set to " + value);
     }
 
@@ -165,10 +161,8 @@ public class ControlSettingsPanel : MonoBehaviour
         if (ProfileManager.Instance.currentProfile != null)
         {
             ProfileManager.Instance.currentProfile.isFastJoystickAimEnabled = isOn;
-            ProfileManager.Instance.SaveCurrentProfile();
+            ProfileManager.Instance.DelaySaveProfile();
         }
-
-        SettingsManager.Instance.RefreshSettingsFromProfile(ProfileManager.Instance.currentProfile);
         Debug.Log("Fast Joystick Aim set to " + isOn);
     }
 

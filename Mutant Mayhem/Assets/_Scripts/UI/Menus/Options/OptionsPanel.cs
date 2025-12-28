@@ -133,9 +133,7 @@ public class OptionsPanel : MonoBehaviour
         if (ProfileManager.Instance.currentProfile != null)
         {
             ProfileManager.Instance.currentProfile.zoomBias = sliderValue;
-            ProfileManager.Instance.SaveCurrentProfile();
-
-            SettingsManager.Instance.ApplyZoomBias();
+            ProfileManager.Instance.DelaySaveProfile();
         }
     }
 
