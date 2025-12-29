@@ -157,7 +157,7 @@ public class OptionsPanel : MonoBehaviour
         analyticsToggle.SetIsOnWithoutNotify(analyticsOn);
 
         MessageBanner.PulseMessage(
-            $"Analytics consent changed to {status}. Analytics is now {(analyticsOn ? "enabled" : "disabled")}.",
+            $"Analytics consent changed to {status}. \nAnalytics is now {(analyticsOn ? "enabled" : "disabled")}.",
             analyticsOn ? Color.green : Color.red
         );
     }
