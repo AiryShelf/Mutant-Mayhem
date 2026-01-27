@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,7 @@ public class ProfileManager : MonoBehaviour
 
     const string LastUsedProfileKey = "LastUsedProfile";
     string savePath => Path.Combine(Application.persistentDataPath, "profiles.json");
+    Coroutine delaySaveCoroutine;
 
     void Awake()
     {
@@ -224,6 +226,24 @@ public class ProfileManager : MonoBehaviour
         {
             Debug.LogError("No current profile set to save.");
         }
+    }
+
+    public void DelaySaveProfile()
+    {
+        if (delaySaveCoroutine != null)
+            StopCoroutine(delaySaveCoroutine);
+        delaySaveCoroutine = StartCoroutine(DelayProfileSave());
+    }
+
+    IEnumerator DelayProfileSave()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        if (currentProfile == null)
+            yield break;
+
+        SaveCurrentProfile();
+        SettingsManager.Instance.RefreshSettingsFromProfile(currentProfile);
     }
 
     #endregion Load, Set, Save

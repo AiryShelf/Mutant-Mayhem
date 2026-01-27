@@ -6,6 +6,7 @@ using UnityEngine.Video;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using UnityEngine.Networking;
 
 public class VideoPlayerManager : MonoBehaviour
 {
@@ -32,6 +33,11 @@ public class VideoPlayerManager : MonoBehaviour
     InputAction selectAction = null;
     public MainMenuController mainMenuController;
 
+    string _androidVideoUrl;
+    bool _androidUrlReady;
+    bool _androidUrlFailed;
+
+
     void OnSkipPerformed(InputAction.CallbackContext ctx)
     {
         StopVideo();
@@ -54,6 +60,24 @@ public class VideoPlayerManager : MonoBehaviour
     void Start()
     {
         HookVideoEvents();
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            StartCoroutine(GetAndroidPlayableUrl(streamingAssetsRelativePath, (url) =>
+            {
+                if (!string.IsNullOrEmpty(url))
+                {
+                    _androidVideoUrl = url;
+                    _androidUrlReady = true;
+                    Debug.Log($"Android tutorial video ready: {_androidVideoUrl}");
+                }
+                else
+                {
+                    _androidUrlFailed = true;
+                    Debug.LogError("Android tutorial video extraction failed.");
+                }
+            }));
+        }
     }
 
     void HookVideoEvents()
@@ -201,24 +225,12 @@ public class VideoPlayerManager : MonoBehaviour
         else
         {
             videoPlayer.source = VideoSource.Url;
-
             string fullPath = Path.Combine(Application.streamingAssetsPath, streamingAssetsRelativePath);
-
-            // Some platforms prefer a file:// URI
             string url = fullPath;
-            try
-            {
-                url = new Uri(fullPath).AbsoluteUri;
-            }
-            catch { }
-
-            // Helpful diagnostics
-            bool exists = false;
-            try { exists = File.Exists(fullPath); } catch { }
-            Debug.Log($"Tutorial video URL mode. fullPath={fullPath} exists={exists} uri={url}");
-
+            try { url = new Uri(fullPath).AbsoluteUri; } catch { }
             videoPlayer.url = url;
         }
+
 
         // Prepare + timeout so we never hang forever on black
         rawImage.SetActive(false);
@@ -242,4 +254,56 @@ public class VideoPlayerManager : MonoBehaviour
         rawImage.SetActive(true);
         videoPlayer.Play();
     }
+
+    private IEnumerator GetAndroidPlayableUrl(string relativePath, Action<string> onReady)
+    {
+        // Source inside APK (StreamingAssets)
+        // IMPORTANT: use forward slashes
+        string src = Application.streamingAssetsPath + "/" + relativePath;
+
+        // Destination on real disk
+        string dstPath = Path.Combine(Application.persistentDataPath, relativePath);
+        string dstDir = Path.GetDirectoryName(dstPath);
+        if (!string.IsNullOrEmpty(dstDir) && !Directory.Exists(dstDir))
+            Directory.CreateDirectory(dstDir);
+
+        // If already extracted, reuse it
+        if (File.Exists(dstPath))
+        {
+            onReady?.Invoke(new Uri(dstPath).AbsoluteUri);
+            yield break;
+        }
+
+        // Extract from APK using UnityWebRequest
+        using (var req = UnityWebRequest.Get(src))
+        {
+            req.timeout = 15;
+            yield return req.SendWebRequest();
+
+    #if UNITY_2020_2_OR_NEWER
+            if (req.result != UnityWebRequest.Result.Success)
+    #else
+            if (req.isNetworkError || req.isHttpError)
+    #endif
+            {
+                Debug.LogError($"Failed to extract video from StreamingAssets on Android. src={src} err={req.error}");
+                onReady?.Invoke(null);
+                yield break;
+            }
+
+            try
+            {
+                File.WriteAllBytes(dstPath, req.downloadHandler.data);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed writing extracted video to disk. dst={dstPath} ex={e}");
+                onReady?.Invoke(null);
+                yield break;
+            }
+        }
+
+        onReady?.Invoke(new Uri(dstPath).AbsoluteUri);
+    }
+
 }

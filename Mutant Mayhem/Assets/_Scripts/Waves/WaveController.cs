@@ -346,6 +346,10 @@ public class WaveController : MonoBehaviour
                 Debug.LogError("Unknown difficulty level set in SettingsManager");
                 return;
         }
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+        {
+            timeBetweenWaves *= 1.3f;
+        }
     }
 
     void IncrementWaveDifficulty()
