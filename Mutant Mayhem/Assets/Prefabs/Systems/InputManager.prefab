@@ -112,14 +112,18 @@ MonoBehaviour:
   moveJoystick: {fileID: 0}
   shootButtonLeft: {fileID: 0}
   meleeButtonLeft: {fileID: 0}
+  moveJoystickDeadzoneRect: {fileID: 0}
   aimJoystick: {fileID: 0}
   shootButtonRight: {fileID: 0}
   meleeButtonRight: {fileID: 0}
+  aimJoystickDeadzoneRect: {fileID: 0}
+  rightSideButtonsDeadzoneRect: {fileID: 0}
   buildMenuController: {fileID: 0}
   buildPanelRect: {fileID: 0}
   player: {fileID: 0}
   upgradePanelSwipeDistance: 200
   buildPanelSwipeDistance: 80
+  shootTapRadiusPixels: 90
 --- !u!114 &8722324806740529920
 MonoBehaviour:
   m_ObjectHideFlags: 0

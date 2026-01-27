@@ -60,7 +60,6 @@ public class CameraController : MonoBehaviour
     Coroutine mouseSzCoroutine2;
 
     bool deathZoomStarted;
-    bool isBuildZooming;
 
     void Awake()
     {
@@ -151,6 +150,8 @@ public class CameraController : MonoBehaviour
                 // Only set offset if using touchscreen and virtual aim joystick is disabled
                 if (InputManager.LastUsedDevice == Touchscreen.current && SettingsManager.Instance.isVirtualAimJoystickVisible == false)
                     framingTransposer.m_TrackedObjectOffset.x = touchscreenXOffset;
+                else
+                    framingTransposer.m_TrackedObjectOffset.x = 0;
             }
             else
             {

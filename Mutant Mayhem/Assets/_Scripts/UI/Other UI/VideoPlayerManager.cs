@@ -34,8 +34,6 @@ public class VideoPlayerManager : MonoBehaviour
     public MainMenuController mainMenuController;
 
     string _androidVideoUrl;
-    bool _androidUrlReady;
-    bool _androidUrlFailed;
 
 
     void OnSkipPerformed(InputAction.CallbackContext ctx)
@@ -68,12 +66,10 @@ public class VideoPlayerManager : MonoBehaviour
                 if (!string.IsNullOrEmpty(url))
                 {
                     _androidVideoUrl = url;
-                    _androidUrlReady = true;
                     Debug.Log($"Android tutorial video ready: {_androidVideoUrl}");
                 }
                 else
                 {
-                    _androidUrlFailed = true;
                     Debug.LogError("Android tutorial video extraction failed.");
                 }
             }));
