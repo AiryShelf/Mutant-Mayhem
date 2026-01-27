@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
@@ -53,6 +54,15 @@ public class UI_PlanetPanel : MonoBehaviour
                 obj.SetActive(false);
 
             _highRezPlanets.Add(planet, obj);
+        }
+    }
+
+    void Update()
+    {
+        // Check for escape key to close map
+        if (isMapOpen && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            OnShowMapPressed();
         }
     }
 

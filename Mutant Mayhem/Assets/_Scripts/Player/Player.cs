@@ -96,6 +96,18 @@ public class Player : MonoBehaviour
     [SerializeField] float throwAccuracyLoss = 6f;
     [SerializeField] CameraController cameraController;
     [SerializeField] float experimentRotationConstant; 
+
+    [Header("Weapon Scroll Switching")]
+    [Tooltip("Enables mouse wheel weapon switching (disabled while building/repairing or while menus/panels are open).")]
+    [SerializeField] private bool enableMouseWheelWeaponSwitch = true;
+
+    [Tooltip("Minimum absolute scroll delta (Mouse.scroll.y) required to trigger a weapon switch.")]
+    [SerializeField] private float mouseWheelSwitchThreshold = 0.1f;
+
+    [Tooltip("Cooldown (seconds) between scroll-triggered weapon switches.")]
+    [SerializeField] private float mouseWheelSwitchCooldown = 0.15f;
+
+    private float _lastMouseWheelSwitchTime = -999f;
     
     [Header("Dynamic Vars, Don't set here")]
     public Vector3 aimWorldPos = Vector3.zero;
@@ -251,6 +263,14 @@ public class Player : MonoBehaviour
         {
             playerShooter.isShooting = false; 
         }
+    }
+
+    void Update()
+    {
+        if (IsDead)
+            return;
+
+        TryHandleMouseWheelWeaponCycle();
     }
 
     void KillAllEnemies()
@@ -467,6 +487,47 @@ public class Player : MonoBehaviour
             {
                 animControllerPlayer.SwitchGunsStart(index);
             }
+        }
+    }
+
+    void TryHandleMouseWheelWeaponCycle()
+    {
+        if (Mouse.current == null)
+            return;
+
+        if (!enableMouseWheelWeaponSwitch)
+            return;
+
+        // Don’t allow weapon scrolling while building/repairing or while interacting with panels/menus.
+        if (playerShooter != null && playerShooter.isBuilding)
+            return;
+
+        //if (isInteracting)
+            //return;
+
+        if (PanelManager.NumPanelsOpen > 0)
+            return;
+
+        // Only treat meaningful scroll as an input (avoid tiny noise).
+        float scrollY = Mouse.current.scroll.ReadValue().y;
+        if (Mathf.Abs(scrollY) < mouseWheelSwitchThreshold)
+            return;
+
+        // Prevent rapid cycling when the wheel produces multiple events per notch.
+        if (Time.unscaledTime - _lastMouseWheelSwitchTime < mouseWheelSwitchCooldown)
+            return;
+
+        int direction = scrollY > 0 ? 1 : -1;
+
+        // Use the runtime shooter reference (assigned in Awake) as the source of truth.
+        if (playerShooter == null)
+            return;
+
+        int nextIndex = GetNextUnlockedGun(playerShooter.currentGunIndex, direction);
+        if (nextIndex != -1 && nextIndex != playerShooter.currentGunIndex)
+        {
+            if (animControllerPlayer.SwitchGunsStart(nextIndex))
+                _lastMouseWheelSwitchTime = Time.unscaledTime;
         }
     }
 

@@ -10,6 +10,7 @@ public class StructureSO : ScriptableObject
     public string tileName;
     [TextArea(3,10)]
     public string description;
+    public string unlockText;
     public float tileCost;
     public float maxHealth;
     public float health;

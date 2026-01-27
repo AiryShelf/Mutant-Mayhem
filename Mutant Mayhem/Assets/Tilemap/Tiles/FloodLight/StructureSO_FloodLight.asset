@@ -19,10 +19,12 @@ MonoBehaviour:
 
 
     Shines over walls and enemies'
+  unlockText: No Engineering Bay
   tileCost: 100
   maxHealth: 300
   health: 300
   blueprintBuildAmount: 500
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: 2ae9afbfec4e5404085041d7a302837f, type: 2}

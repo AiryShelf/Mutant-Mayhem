@@ -13,9 +13,16 @@ public class SwordController : MonoBehaviour
     [SerializeField] float baseTrailWidth;
     [SerializeField] float minTrailWidth;
 
-
     Vector2 previousHandlePos;
     Vector2 previousTipPos;
+    Vector2 handleWorldPos;
+    Vector2 tipWorldPos;
+    Vector2 meleeControllerWorldPos;
+    Vector2 handlePos;
+    Vector2 tipPos;
+    Vector2 meleeControllerPos;
+    Vector2 tipDirection;
+    RaycastHit2D hit;
 
     void OnEnable()
     {
@@ -30,6 +37,10 @@ public class SwordController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
+        // Dont hit ground enemies when elevated
+        if (meleeControllerPlayer.playerShooter.isElevated && other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
+            return;
+
         if (other.CompareTag("Enemy"))
         {
             meleeControllerPlayer.Hit(other, other.ClosestPoint(meleeControllerPlayer.transform.position));
@@ -38,19 +49,19 @@ public class SwordController : MonoBehaviour
 
     void DrawSwordCollider()
     {
-        Vector2 handleWorldPos = handleTrans.position;
-        Vector2 tipWorldPos = tipTrans.position;
-        Vector2 meleeControllerWorldPos = meleeControllerPlayer.transform.position;
+        handleWorldPos = handleTrans.position;
+        tipWorldPos = tipTrans.position;
+        meleeControllerWorldPos = meleeControllerPlayer.transform.position;
 
-        Vector2 handlePos = transform.InverseTransformPoint(handleWorldPos);
-        Vector2 tipPos = transform.InverseTransformPoint(tipWorldPos);
-        Vector2 meleeControllerPos = transform.InverseTransformPoint(meleeControllerWorldPos);
+        handlePos = transform.InverseTransformPoint(handleWorldPos);
+        tipPos = transform.InverseTransformPoint(tipWorldPos);
+        meleeControllerPos = transform.InverseTransformPoint(meleeControllerWorldPos);
 
         // Check for structures or obstacles
-        Vector2 tipDirection = tipWorldPos - meleeControllerWorldPos;
-        RaycastHit2D hit = Physics2D.Raycast(meleeControllerWorldPos, tipDirection, 
-                           Vector2.Distance(meleeControllerWorldPos, tipWorldPos), 
-                           LayerMask.GetMask("Structures"));
+        tipDirection = tipWorldPos - meleeControllerWorldPos;
+        hit = Physics2D.Raycast(meleeControllerWorldPos, tipDirection, 
+                   Vector2.Distance(meleeControllerWorldPos, tipWorldPos), 
+                   LayerMask.GetMask("Structures"));
         
         if (!meleeControllerPlayer.playerShooter.isElevated)
         {

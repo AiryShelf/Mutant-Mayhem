@@ -16,10 +16,12 @@ MonoBehaviour:
   tileName: Blast Gate
   description: A hefty automatic gate reinforced with titanium alloy and nanofibre
     composites.  Still breakable though
+  unlockText: No Engineering Bay
   tileCost: 500
   maxHealth: 3000
   health: 3000
   blueprintBuildAmount: 1200
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: -1, z: 0}

@@ -23,10 +23,12 @@ MonoBehaviour:
 
     Gains a bonus of 3<sprite=1> from each connected
     power source'
+  unlockText: No Engineering Bay
   tileCost: 2500
   maxHealth: 500
   health: 500
   blueprintBuildAmount: 1000
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: 56179db756770440fbbae84712338bdc, type: 2}

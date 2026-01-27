@@ -13,6 +13,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
     public GameObject textPrefab;
     [SerializeField] float textLockedAlpha = 0.3f;
     [HideInInspector] public GameObject textInstance;
+    TextMeshProUGUI myText;
     [SerializeField] RectTransform myRectTransform;
     ScrollRectController scrollRectController;
     BuildingSystem buildingSystem;
@@ -106,7 +107,7 @@ public class UIStructure : MonoBehaviour, ISelectHandler
             BuildingSystem.Instance.buildMenuController.SetMenuSelection(structureSO);
         return true;
     }
-    
+
     public void MakeInteractable(bool interactable)
     {
         button.interactable = interactable;
@@ -132,16 +133,18 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         // Set text for locked/unlock
 
         bool unlocked = BuildingSystem._UnlockedStructuresDict[structureSO.structureType];
-        TextMeshProUGUI text = textInstance.GetComponent<TextMeshProUGUI>();
+
+        if (myText == null)
+            myText = textInstance.GetComponent<TextMeshProUGUI>();
         if (unlocked)
-            text.alpha = 1;
+            myText.alpha = 1;
         else
-            text.alpha = textLockedAlpha;
+            myText.alpha = textLockedAlpha;
 
         // Set structure info text
         if (structureSO.actionType != ActionType.Build)
         {
-            textInstance.GetComponent<TextMeshProUGUI>().text = structureSO.tileName;
+            myText.text = structureSO.tileName;
             return;
         }
 
@@ -150,6 +153,13 @@ public class UIStructure : MonoBehaviour, ISelectHandler
 
     void CreateTextStrings(float playerCredits)
     {
+        // If the button is not interactable, show unlock info only
+        if (!button.interactable)
+        {
+            myText.text = $"{structureSO.tileName}\n{redColorTag}{structureSO.unlockText}{endColorTag}";
+            return;
+        }
+
         // Create string for power cost/gain
         string powerString = "";
         string powerCostColorTag;
@@ -194,14 +204,12 @@ public class UIStructure : MonoBehaviour, ISelectHandler
         int totalCost = Mathf.FloorToInt(structureSO.tileCost * buildingSystem.structureCostMult);
         if (playerCredits >= totalCost)
         {
-            textInstance.GetComponent<TextMeshProUGUI>().text =
-            structureSO.tileName + "\n" +
+            myText.text = structureSO.tileName + "\n" +
             yellowColorTag + "$" + totalCost + " " + endColorTag + powerString + supplyString;
         }
         else
         {
-            textInstance.GetComponent<TextMeshProUGUI>().text =
-            structureSO.tileName + "\n" +
+            myText.text = structureSO.tileName + "\n" +
             redColorTag + "$" + totalCost + " " + endColorTag + powerString + supplyString;
         }
     }
