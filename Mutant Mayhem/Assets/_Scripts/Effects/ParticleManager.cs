@@ -185,7 +185,14 @@ public class ParticleManager : MonoBehaviour
         SetPositionAndRotation(bulletHitWall, hitPos, hitDir);
         bulletHitWall.Emit(10);
 
-        SetPositionAndRotation(bulletHole, hitPos, hitDir);
+        PlayBulletHole(hitPos, hitDir);
+    }
+
+    public void PlayBulletHole(Vector2 hitPos, Vector2 hitDir)
+    {
+        // Randomize the hitPos along the hitDir slightly for bullet hole placement
+        float randomOffset = Random.Range(0, 0.1f);
+        SetPositionAndRotation(bulletHole, hitPos + hitDir * randomOffset, hitDir);
         bulletHole.Emit(1);
     }
 
@@ -312,6 +319,8 @@ public class ParticleManager : MonoBehaviour
     {
         SetPositionAndRotation(meleeHitWall, hitPos, hitDir);
         meleeHitWall.Emit(10);
+
+        PlayBulletHole(hitPos, hitDir);
     }
 
     public void PlayMeleeBlood(Vector2 hitPos, Vector2 hitDir)

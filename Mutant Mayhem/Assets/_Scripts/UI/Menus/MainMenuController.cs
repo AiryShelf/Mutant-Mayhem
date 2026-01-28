@@ -46,6 +46,8 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        MessageManager.Instance.StopAllConversations();
+        
         fpsCounter.alpha = 0f;
         foreach (var group in titleGroupsToHide)
         {

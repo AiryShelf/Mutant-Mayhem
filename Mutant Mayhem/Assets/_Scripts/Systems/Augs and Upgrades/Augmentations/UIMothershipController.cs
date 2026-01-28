@@ -114,6 +114,7 @@ public class UIMothershipController : MonoBehaviour
 
     public void OnReturnToMenu()
     {
+        MessageManager.Instance.StopAllConversations();
         SceneManager.LoadScene(1);
     }
 }

@@ -45,6 +45,12 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
         icon.sprite = augmentation.uiImage;
         nameText.text = augmentation.augmentationName;
 
+        // Hydrate cost from manager (prevents drift after scene reload)
+        if (AugManager.selectedAugsTotalCosts.TryGetValue(augBaseSO, out int savedCost))
+            totalCost = savedCost;
+        else
+            totalCost = 0;
+
         UpdateIconAndText();
     }
 
@@ -80,13 +86,6 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
             return false;
         } 
 
-        // Check for duplicates
-        if (AugManager.selectedAugsWithLvls.ContainsKey(augBaseSO))
-        {
-            Debug.LogError("UIAugmentation already exists in selected Augs, can't add");
-            return false;
-        }
-
         AugManager.selectedAugsWithLvls.Add(augBaseSO, level);
         Debug.Log("Added Augmentation: " + augBaseSO.augmentationName);
 
@@ -110,6 +109,12 @@ public class UIAugmentation : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     public void UpdateIconAndText()
     {
+        // Re-sync cost from the manager as the source of truth
+        if (augBaseSO != null && AugManager.selectedAugsTotalCosts.TryGetValue(augBaseSO, out int syncedCost))
+            totalCost = syncedCost;
+        else if (augBaseSO != null)
+            totalCost = 0;
+
         Color costColor;
 
         // Set Cost or Gain text

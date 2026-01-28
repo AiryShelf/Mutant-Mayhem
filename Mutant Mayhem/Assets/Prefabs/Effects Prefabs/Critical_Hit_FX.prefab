@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolName: Critical_Hit_FX
   critLight: {fileID: 3794176710733173226}
-  duration: 0.5
+  duration: 0.75
 --- !u!198 &3255967649044036637
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -133,8 +133,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
-      minScalar: 0.1
+      scalar: 0.5
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:

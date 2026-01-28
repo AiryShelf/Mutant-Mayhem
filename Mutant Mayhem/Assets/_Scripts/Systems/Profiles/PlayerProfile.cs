@@ -3,6 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
+public class PlanetMissionsEntry
+{
+    public string planetName;
+    public List<string> completedMissions;
+}
+
+[System.Serializable]
+    public class PlanetIndexEntry
+    {
+        public string planetName;
+        public int maxIndexReached;
+    }
+
+[System.Serializable]
 public class PlayerProfile
 {
     [Header("Profile Stats")]
@@ -11,6 +25,7 @@ public class PlayerProfile
     public List<string> completedPlanets = new List<string>();
     public List<PlanetMissionsEntry> completedMissions = new List<PlanetMissionsEntry>();
     public List<PlanetIndexEntry> planetIndexReachedList = new List<PlanetIndexEntry>();
+    // Runtime-only lookup for planet max index reached
     [System.NonSerialized]
     public Dictionary<string, int> planetsMaxIndexReached;
     public int lastPlanetVisited;
@@ -18,6 +33,15 @@ public class PlayerProfile
     public int totalNightsSurvived;
     public DifficultyLevel difficultyLevel;
     public bool completedTutorial = false;
+
+    // Persisted augmentation selections (JsonUtility-safe)
+    // Format (index-based): "i:lvl|i:lvl|..." and "i:cost|i:cost|..."
+    public string selectedAugsLevelsString = "";
+    public string selectedAugsCostsString = "";
+
+    // Runtime-only (Unity JsonUtility does NOT serialize Dictionary or ScriptableObject keys)
+    [System.NonSerialized] public Dictionary<AugmentationBaseSO, int> selectedAugsWithLvls = new Dictionary<AugmentationBaseSO, int>();
+    [System.NonSerialized] public Dictionary<AugmentationBaseSO, int> selectedAugsTotalCosts = new Dictionary<AugmentationBaseSO, int>();
 
     [Header("Options Settings")]
     public int qualityLevel;
@@ -87,14 +111,25 @@ public class PlayerProfile
         // Old profiles default to false anyways (boolean rule of zero)
         bool upgraded = false;
 
-        return !upgraded;
-    }
+        // Ensure persisted aug strings exist (null-safe for older profiles)
+        if (selectedAugsLevelsString == null)
+        {
+            selectedAugsLevelsString = "";
+            upgraded = true;
+        }
+        if (selectedAugsCostsString == null)
+        {
+            selectedAugsCostsString = "";
+            upgraded = true;
+        }
 
-    [System.Serializable]
-    public class PlanetIndexEntry
-    {
-        public string planetName;
-        public int maxIndexReached;
+        // Ensure runtime-only dictionaries exist (they are not deserialized by JsonUtility)
+        if (selectedAugsWithLvls == null)
+            selectedAugsWithLvls = new Dictionary<AugmentationBaseSO, int>();
+        if (selectedAugsTotalCosts == null)
+            selectedAugsTotalCosts = new Dictionary<AugmentationBaseSO, int>();
+
+        return !upgraded;
     }
 
     public void EnsurePlanetIndexLookup()
@@ -172,9 +207,3 @@ public class PlayerProfile
     }
 }
 
-[System.Serializable]
-public class PlanetMissionsEntry
-{
-    public string planetName;
-    public List<string> completedMissions;
-}

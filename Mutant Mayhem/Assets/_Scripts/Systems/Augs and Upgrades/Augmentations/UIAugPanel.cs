@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -265,6 +264,15 @@ public class UIAugPanel : MonoBehaviour
         UpdatePanelTextandButtons();
     }
 
+    void CommitSelectionState()
+    {
+        if (ProfileManager.Instance == null || ProfileManager.Instance.currentProfile == null)
+            return;
+
+        augManager.RebuildFromSelections(ProfileManager.Instance.currentProfile);
+        augManager.SaveChoicesToProfile();
+    }
+
     public void OnRemoveClicked()
     {
         if (selectedUiAugmentation == null) return;
@@ -277,39 +285,13 @@ public class UIAugPanel : MonoBehaviour
             return;
         }
 
-        // Handle maxAugs
-        if (selectedUiAugmentation.augBaseSO is Aug_MaxAugs _maxAugs)
-        {
-            int level = AugManager.selectedAugsWithLvls[selectedUiAugmentation.augBaseSO];
-            int maxAugLevelsInc;
-            if (level > 0)
-                maxAugLevelsInc = _maxAugs.lvlAddIncrement;
-            else
-                maxAugLevelsInc = _maxAugs.lvlNegIncrement;
+        // Remove aug deterministically (manager rebuild handles RP/maxAugs)
+        selectedUiAugmentation.totalCost = 0;
+        AugManager.selectedAugsTotalCosts.Remove(selectedUiAugmentation.augBaseSO);
+        RemoveAug();
 
-            if (augManager.GetCurrentLevelCount() <= augManager.maxAugs - maxAugLevelsInc)
-            {
-                // Remove aug
-                augManager.currentResearchPoints -= selectedUiAugmentation.totalCost;
-                //Debug.Log("Subtracted " + selectedUiAugmentation.totalCost + "from RP");
-                selectedUiAugmentation.totalCost = 0;
-                augManager.maxAugs -= maxAugLevelsInc * level;
-                RemoveAug();
-            }
-            else
-            {
-                MessageBanner.PulseMessage("Can't remove Max Augs.  Remove levels from other Augs first", Color.red);
-                return;
-            }
-        }
-        else 
-        {
-            // Remove aug
-            augManager.currentResearchPoints -= selectedUiAugmentation.totalCost;
-            //Debug.Log("Subtracted " + selectedUiAugmentation.totalCost + "from RP");
-            selectedUiAugmentation.totalCost = 0;
-            RemoveAug();
-        }
+        CommitSelectionState();
+        UpdatePanelTextandButtons();
     }
 
     public void OnPlusLevelClicked()
@@ -355,29 +337,13 @@ public class UIAugPanel : MonoBehaviour
         augManager.IncrementLevel(aug, true);
         level++;
 
-        // Apply cost
-        augManager.currentResearchPoints -= nextLevelCost;
+        // Apply cost to this augmentation's running total
         selectedUiAugmentation.totalCost -= nextLevelCost;
+        AugManager.selectedAugsTotalCosts[aug] = selectedUiAugmentation.totalCost;
 
-        // Handle maxAugs raised
-        if (aug is Aug_MaxAugs _maxAugs)
-        {
-            if (level <= 0)
-            {
-                augManager.maxAugs += _maxAugs.lvlNegIncrement;
-                augLvlsAdded += _maxAugs.lvlNegIncrement;
-            }
-            else
-            {
-                augManager.maxAugs += _maxAugs.lvlAddIncrement;
-                augLvlsAdded += _maxAugs.lvlAddIncrement;
-            }
-        }
-
-        //Debug.Log("Current Level raised to: " + level + ". Subtracted " + nextLevelCost + " from currentResearchPoints");
-        //Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost);
-            
         EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
+
+        CommitSelectionState();
 
         selectedUiAugmentation.UpdateIconAndText();
         UpdatePanelTextandButtons();
@@ -414,41 +380,22 @@ public class UIAugPanel : MonoBehaviour
             return;
         }
 
-        // Handle Max Augs lowered
-        if (aug is Aug_MaxAugs _maxAugs)
-        {
-            int maxAugLevelsInc;
-            if (level > 0)
-                maxAugLevelsInc = _maxAugs.lvlAddIncrement;
-            else
-                maxAugLevelsInc = _maxAugs.lvlNegIncrement;
-
-            if (augManager.GetCurrentLevelCount() <= augManager.maxAugs - maxAugLevelsInc)
-            {
-                augManager.maxAugs -= maxAugLevelsInc;
-                augLvlsAdded -= maxAugLevelsInc;
-            }
-            else
-            {
-                //Debug.Log("Can't lower MaxAugs without going over the level limit");
-                MessageBanner.PulseMessage("Can't lower " + _maxAugs.augmentationName + ".  Remove levels from other Augs first", Color.red);
-                return;
-            }
-        }
-
         // Subtract level
         augManager.IncrementLevel(aug, false);
         level--;
         
         // Apply Refund
         int levelRefund = GetLevelCost(aug, level, false);
-        augManager.currentResearchPoints += levelRefund;
         selectedUiAugmentation.totalCost += levelRefund;
 
-        //Debug.Log("Current Level lowered to: " + level + ". Added " + levelRefund.ToString() + " to currentResearchPoints");
-        //Debug.Log("Selected UIAug's total cost is " + selectedUiAugmentation.totalCost.ToString());
+        if (selectedUiAugmentation.totalCost == 0)
+            AugManager.selectedAugsTotalCosts.Remove(aug);
+        else
+            AugManager.selectedAugsTotalCosts[aug] = selectedUiAugmentation.totalCost;
 
         EventSystem.current.SetSelectedGameObject(selectedUiAugmentation.gameObject);
+
+        CommitSelectionState();
 
         selectedUiAugmentation.UpdateIconAndText();
         UpdatePanelTextandButtons();
