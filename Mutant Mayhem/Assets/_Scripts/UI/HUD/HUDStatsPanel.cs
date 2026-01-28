@@ -163,7 +163,7 @@ public class HUDStatsPanel : MonoBehaviour
     {
         playerStamina = playerStaminaScript.GetStamina();
         staminaSlider.value = playerStamina / playerStats.staminaMax;;
-        staminaValueText.text = "Energy: " + Mathf.CeilToInt(playerStamina).ToString();
+        staminaValueText.text = Mathf.CeilToInt(playerStamina).ToString();
     }
 
     void UpdateHealthStats(float playerHealth)
@@ -171,7 +171,7 @@ public class HUDStatsPanel : MonoBehaviour
         float playerMaxHealth = playerHealthScript.GetMaxHealth();
 
         healthSlider.value = playerHealth / playerMaxHealth;
-        healthValueText.text = "Health: " + Mathf.CeilToInt(playerHealth).ToString();
+        healthValueText.text = Mathf.CeilToInt(playerHealth).ToString();
 
         int healthChange = Mathf.CeilToInt(playerHealth - previousHealth);
         if (Mathf.Abs(healthChange) < 1)
@@ -189,7 +189,7 @@ public class HUDStatsPanel : MonoBehaviour
         //TextFlyCreditsChange(creditsChange);
 
         int credits = (int)BuildingSystem.PlayerCredits;
-        creditsText.text = "Credits: " + credits.ToString("N0");
+        creditsText.text = "$" + credits.ToString("N0");
         previousCredits = credits;
 
         initialized = true;
