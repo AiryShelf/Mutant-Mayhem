@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class DeviceRectAdjuster : MonoBehaviour
 {
@@ -24,6 +23,10 @@ public class DeviceRectAdjuster : MonoBehaviour
     [SerializeField] Vector2 widePositionOffest = Vector2.zero;
     [SerializeField] Vector2 defaultWidePositionOffest = Vector2.zero;
     [SerializeField] Vector2 narrowPositionOffset = Vector2.zero;
+
+    [Header("iOS Position Adjustment Addition")]
+    [SerializeField] bool iOSPosOffsetAdd = false;
+    [SerializeField] Vector2 iOSOffsetAddition = Vector2.zero;
 
     private void OnValidate()
     {
@@ -62,7 +65,7 @@ public class DeviceRectAdjuster : MonoBehaviour
 
     IEnumerator DelayStart()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         AspectRatioChanged(ScreenScaleChecker.CurrentAspectRatio);
     }
 
@@ -137,6 +140,11 @@ public class DeviceRectAdjuster : MonoBehaviour
         else
         {
             rectToScale.anchoredPosition = startAnchoredPos + narrowPositionOffset;
+        }
+
+        if (iOSPosOffsetAdd && Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            rectToScale.anchoredPosition += iOSOffsetAddition;
         }
     }
 
