@@ -26,6 +26,12 @@ public class TouchManager : MonoBehaviour
     [Header("Tap to Shoot Settings")]
     [SerializeField] float shootTapRadiusPixels = 90f;
 
+    [Header("Debounce Settings")]
+    private float _lastBeganTime = -999f;
+    private Vector2 _lastBeganPos;
+    private const float BeganDebounceSeconds = 0.05f;     // 50ms
+    private const float BeganDebouncePixels = 8f;         // small radius
+
     private Dictionary<int, TouchData> activeTouches = new Dictionary<int, TouchData>();
     // Fingers that are allowed to control (or be promoted to) Look/aim.
     // Interactive UI controls (Buttons, etc.) should NEVER be aim-eligible.
@@ -62,40 +68,19 @@ public class TouchManager : MonoBehaviour
             int fingerId = touchControl.touchId.ReadValue();
             if (fingerId < 0) continue;
 
-            currentFrameFingerIds.Add(fingerId);
-
-            if (!touchControl.press.isPressed) 
+            if (!touchControl.press.isPressed)
             {
-                // If the finger was previously tracked but now is lifted
-                if (activeTouches.ContainsKey(touchControl.touchId.ReadValue()))
-                    EndTouch(touchControl.touchId.ReadValue());
-                
-                // Not tracked, skip
+                if (activeTouches.ContainsKey(fingerId))
+                    EndTouch(fingerId);
                 continue;
             }
 
-            // There's a finger pressed
-            //int fingerId = touchControl.touchId.ReadValue();
+            // Only pressed touches make it into this set
+            currentFrameFingerIds.Add(fingerId);
+
             Vector2 touchPos = touchControl.position.ReadValue();
             var phase = touchControl.phase.ReadValue();
 
-            /*
-            if (!activeTouches.ContainsKey(fingerId))
-            {
-                BeginTouch(fingerId, touchPos, false);
-            }
-
-            if (phase == UnityEngine.InputSystem.TouchPhase.Moved)
-            {
-                MoveTouch(fingerId, touchPos);
-            }
-            else if (phase == UnityEngine.InputSystem.TouchPhase.Ended || phase == UnityEngine.InputSystem.TouchPhase.Canceled)
-            {
-                EndTouch(fingerId);
-            }
-            */
-
-            // If we missed it in active touches, still ensure the touch is tracked
             if (!activeTouches.ContainsKey(fingerId) && phase != UnityEngine.InputSystem.TouchPhase.Began)
             {
                 BeginTouch(fingerId, touchPos, false);
@@ -108,7 +93,6 @@ public class TouchManager : MonoBehaviour
                     BeginTouch(fingerId, touchPos, false);
                     break;
                 case UnityEngine.InputSystem.TouchPhase.Moved:
-                //case UnityEngine.InputSystem.TouchPhase.Stationary:
                     MoveTouch(fingerId, touchPos);
                     break;
                 case UnityEngine.InputSystem.TouchPhase.Ended:
@@ -117,6 +101,7 @@ public class TouchManager : MonoBehaviour
                     break;
             }
         }
+
 
         // Cleanup, for fast touch-releases being missed
         List<int> missingFingerIds = new List<int>();
@@ -224,19 +209,20 @@ public class TouchManager : MonoBehaviour
 
     private void BeginTouch(int fingerId, Vector2 position, bool wasExisting)
     {
-        //Debug.Log($"TouchManager: Screen Resolution: {Screen.width}x{Screen.height}");
-        //Debug.Log($"TouchManager: Native Resolution: {Screen.currentResolution.width}x{Screen.currentResolution.height}");
-        //Debug.Log($"TouchManager: Render Scale: {ScalableBufferManager.widthScaleFactor}x{ScalableBufferManager.heightScaleFactor}");
-        //Debug.Log($"TouchManager: Tap Position: {position}");
+        // If this finger is already tracked, don't re-begin it (prevents double begin reclassification)
+        if (activeTouches.ContainsKey(fingerId))
+            return;
 
-        // Raycast to see if it's over UI
+        // Snapshot the cursor position BEFORE any logic might move it this begin.
+        // This prevents Android double-began from making distToCursor suddenly become 0.
+        Vector2 cursorPosAtBegin = lastCursorScreenPos;
+
+        // Raycast to see if it's over INTERACTIVE UI
         // IMPORTANT: Interactive UI (Buttons, etc.) should NEVER be aim-eligible.
         if (IsPointerOverInteractiveUI(position, out GameObject hitInteractiveUIObject))
         {
-            // Ensure this finger can never become Look/aim.
             aimEligibleFingerIds.Remove(fingerId);
 
-            // Still allow joysticks/build menu to be handled as before.
             if (IsInRegion(position, moveJoystick.transform as RectTransform))
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
@@ -260,9 +246,6 @@ public class TouchManager : MonoBehaviour
 
         if (IsPointerOverUI(position, out GameObject hitUIObject))
         {
-            //Debug.Log($"Touch hit {hitUIObject.name}");
-
-            // Joysticks
             if (IsInRegion(position, moveJoystick.transform as RectTransform))
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
@@ -271,22 +254,19 @@ public class TouchManager : MonoBehaviour
             {
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.Joystick, position);
             }
-            else if (player != null && IsInRegion(position, buildPanelRect))   
+            else if (player != null && IsInRegion(position, buildPanelRect))
             {
-                // Build menu
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.BuildMenu, position);
                 buildMenuController.isTouchScrolling = true;
             }
-            else if (IsInRegion(position, moveJoystickDeadzoneRect) || 
-                     IsInRegion(position, aimJoystickDeadzoneRect) || 
-                     IsInRegion(position, rightSideButtonsDeadzoneRect))
+            else if (IsInRegion(position, moveJoystickDeadzoneRect) ||
+                    IsInRegion(position, aimJoystickDeadzoneRect) ||
+                    IsInRegion(position, rightSideButtonsDeadzoneRect))
             {
-                // Deadzone area for joysticks
                 activeTouches[fingerId] = new TouchData(fingerId, TouchPurpose.UI, position);
             }
             else
             {
-                // This prevents accidental taps over UI Elements in the heat of battle (like trying to tap the 3rd finger down)
                 bool isLooking = false;
                 foreach (var kvp in activeTouches)
                 {
@@ -297,11 +277,10 @@ public class TouchManager : MonoBehaviour
                     }
                 }
 
-                // other UI
                 if (isLooking)
                 {
                     aimEligibleFingerIds.Add(fingerId);
-                    AddCombatTouch(wasExisting, fingerId, position);
+                    AddCombatTouch(wasExisting, fingerId, position, cursorPosAtBegin);
                 }
                 else
                 {
@@ -312,11 +291,13 @@ public class TouchManager : MonoBehaviour
         else
         {
             aimEligibleFingerIds.Add(fingerId);
-            AddCombatTouch(wasExisting, fingerId, position);
+            AddCombatTouch(wasExisting, fingerId, position, cursorPosAtBegin);
         }
     }
 
-    void AddCombatTouch(bool wasExisting, int fingerId, Vector2 position)
+
+    void AddCombatTouch(bool wasExisting, int fingerId, Vector2 position, Vector2 cursorPosAtBegin)
+
     {
         if (player == null)
             return;
@@ -334,12 +315,17 @@ public class TouchManager : MonoBehaviour
             return;
         }
 
+        Debug.Log($"tap={position} lastCursor={lastCursorScreenPos} realCursor={CursorManager.Instance.GetCustomCursorScreenPos()} "
+        + $"distLast={Vector2.Distance(position,lastCursorScreenPos)} distReal={Vector2.Distance(position,CursorManager.Instance.GetCustomCursorScreenPos())}");
+
         // 1st finger: tap near cursor => start shooting immediately (do NOT move cursor)
-        float distToCursor = Vector2.Distance(position, lastCursorScreenPos);
+        float distToCursor = Vector2.Distance(position, cursorPosAtBegin);
+
         if (distToCursor <= shootTapRadiusPixels)
         {
             activeTouches[fingerId].purpose = TouchPurpose.Shoot;
             player.animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
+            Debug.Log("TouchManager: Tap to Shoot activated.");
             return;
         }
 
@@ -349,6 +335,7 @@ public class TouchManager : MonoBehaviour
         CursorManager.Instance.MoveCustomCursorTo(position, CursorRangeType.Bounds, Vector2.zero, 0, screenBounds);
         player.lastAimDir = Camera.main.ScreenToWorldPoint(position) - player.transform.position;
     }
+
 
     int CountCombatTouchesExcluding(int excludeFingerId)
     {

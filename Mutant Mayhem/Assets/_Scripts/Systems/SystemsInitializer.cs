@@ -36,6 +36,7 @@ public class SystemsInitializer : MonoBehaviour
                 SettingsManager.Instance.isVirtualAimJoystickVisible = true;
                 TouchManager.Instance.SetVirtualAimJoystickVisible(true);
                 TouchManager.Instance.ShowVirtualAimJoysticks(true);
+                CameraController.Instance.SetTouchscreenOffset(false);
             }
         }
 

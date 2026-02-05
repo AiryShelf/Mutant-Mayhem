@@ -38,6 +38,7 @@ public class CursorManager : MonoBehaviour
     public VirtualJoystick aimJoystick;
     public bool usingCustomCursor = false;
     public bool inMenu;
+    [SerializeField] RectTransform cursorRect;
 
     [Header("Cursor Speed")]
     public int cursorSpeedDefault = 1500; // Default set by PlayerProfile
@@ -143,6 +144,15 @@ public class CursorManager : MonoBehaviour
             updateCount = 0;
         }
     }
+
+    public Vector2 GetCustomCursorScreenPos()
+    {
+        if (cursorRect != null)
+            return RectTransformUtility.WorldToScreenPoint(null, cursorRect.position);
+
+        return Vector2.zero; // fallback
+    }
+
 
     public void SetCursorVisible(bool visible)
     {

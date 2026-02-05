@@ -117,6 +117,10 @@ public class ControlSettingsPanel : MonoBehaviour
         Debug.Log("useStandardWASD set to: " + value);
     }
 
+    #endregion
+
+    #region Joystick
+
     void DisableVirtualAimJoystick(bool disabled)
     {
         PlayerProfile currentProfile = ProfileManager.Instance.currentProfile;
@@ -126,10 +130,6 @@ public class ControlSettingsPanel : MonoBehaviour
             ProfileManager.Instance.DelaySaveProfile();
         }
     }
-
-    #endregion
-
-    #region Joystick
 
     void JoystickCursorSpeedChanged(float sliderValue)
     {

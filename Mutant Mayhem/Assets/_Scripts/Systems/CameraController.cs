@@ -143,22 +143,32 @@ public class CameraController : MonoBehaviour
     public void SetTouchscreenOffset(bool isOffset)
     {
         var framingTransposer = playerCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-        if (framingTransposer != null)
+        if (framingTransposer == null)
+            return;
+
+        if (!isOffset)
         {
-            if (isOffset)
-            {
-                // Only set offset if using touchscreen and virtual aim joystick is disabled
-                if (InputManager.LastUsedDevice == Touchscreen.current && SettingsManager.Instance.isVirtualAimJoystickVisible == false)
-                    framingTransposer.m_TrackedObjectOffset.x = touchscreenXOffset;
-                else
-                    framingTransposer.m_TrackedObjectOffset.x = 0;
-            }
-            else
-            {
-                framingTransposer.m_TrackedObjectOffset.x = 0;
-            }
+            framingTransposer.m_TrackedObjectOffset.x = 0;
+            return;
+        }
+
+        // Only set offset if using touchscreen and virtual aim joystick is disabled
+        if (InputManager.LastUsedDevice == Touchscreen.current &&
+            SettingsManager.Instance.isVirtualAimJoystickVisible == false)
+        {
+            float zoomBias = SettingsManager.Instance.zoomBias;
+
+            // Offset becomes smaller (closer to zero) when zoomed in
+            float adjustedOffset = touchscreenXOffset - (zoomBias / 2f);
+
+            framingTransposer.m_TrackedObjectOffset.x = adjustedOffset;
+        }
+        else
+        {
+            framingTransposer.m_TrackedObjectOffset.x = 0;
         }
     }
+
 
     #region Settings
 
