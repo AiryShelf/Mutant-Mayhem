@@ -20,7 +20,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Movement Settings")]
     public bool useStandardWASD = true;
-    public bool useInstantJoystickAim = false;
+    public bool useInstantJoystickAim = true;
 
     [Header("Difficulty Multipliers")]
     public float WaveDifficultyMult = 1; // Multiplies wave difficulty
@@ -83,7 +83,7 @@ public class SettingsManager : MonoBehaviour
             difficultyLevel = startingDifficulty;
             useStandardWASD = true;
             //spacebarThrowsGrenades = true;
-            useInstantJoystickAim = false;
+            useInstantJoystickAim = true;
             joystickCursorSpeed = CursorManager.Instance.cursorSpeedDefault;
             joystickAccelSpeed = CursorManager.Instance.cursorAccelSpeedDefault;
             isVirtualAimJoystickVisible = true;

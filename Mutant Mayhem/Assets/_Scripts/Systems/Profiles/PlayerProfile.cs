@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class PlanetMissionsEntry
@@ -65,7 +66,10 @@ public class PlayerProfile
         completedTutorial = false;
         isStandardWASD = true;
         isSpacebarEnabled = true;
-        isFastJoystickAimEnabled = false;
+        virtualAimJoystickDisabled = false;
+        zoomBias = 0f;
+
+        // Cursor settings
         if (CursorManager.Instance != null)
         {
             joystickCursorSpeed = CursorManager.Instance.cursorSpeedDefault;
@@ -76,9 +80,18 @@ public class PlayerProfile
             joystickCursorSpeed = 1500f;
             joystickAccelSpeed = 3200f;
         }
-        virtualAimJoystickDisabled = false;
-        zoomBias = 0f;
-        alwaysLockToPlayer = false;
+
+        // Touchscreen defaults to different control settings
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+        {
+            alwaysLockToPlayer = true;
+            isFastJoystickAimEnabled = true;
+        }
+        else
+        {
+            alwaysLockToPlayer = false;
+            isFastJoystickAimEnabled = false;
+        }
     }
 
     public bool IsProfileUpToDate()
