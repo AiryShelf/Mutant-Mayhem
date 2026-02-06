@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 6791506771164599335}
   - component: {fileID: 2424087441564961101}
   m_Layer: 0
-  m_Name: Task_BuySupplyLimitUpgrade x2
+  m_Name: Task_BuySupplyLimitUpgrade x1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,7 +134,7 @@ MonoBehaviour:
   progress: 0
   missionPanelController: {fileID: 0}
   structureStatsUpgrade: 6
-  levelToReach: 2
+  levelToReach: 1
 --- !u!1 &8264780875990421883
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +220,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1536037500454801282, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_text
-      value: Reach level 2 supply limit
+      value: Reach level 1 supply limit
       objectReference: {fileID: 0}
     - target: {fileID: 2033750006039475335, guid: 98275974b1052447899afa7eb6d7f0d9, type: 3}
       propertyPath: m_Pivot.x

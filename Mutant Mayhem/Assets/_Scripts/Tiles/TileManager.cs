@@ -594,6 +594,7 @@ public class TileManager : MonoBehaviour
             {
                 ConstructionManager.Instance.RemoveRepairJob(GridCenterToWorld(rootPos));
                 PlayBuildExplosionEffect(rootPos, _TileStatsDict[rootPos].ruleTileStructure);
+                ParticleManager.Instance.ClearBulletHolesInBounds(GetStrucutureWorldBounds(rootPos));
             }
         }
 
