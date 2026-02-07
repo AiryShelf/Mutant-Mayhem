@@ -37,11 +37,14 @@ public class SwordController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        // Dont hit ground enemies when elevated
-        if (meleeControllerPlayer.playerShooter.isElevated && other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-            return;
-
-        if (other.CompareTag("Enemy"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemies"))
+        {
+            // Elevated player can only hit elevated enemies, and non-elevated player can only hit non-elevated enemies
+            EnemyBase enemyBase = other.GetComponent<EnemyBase>();
+            if (enemyBase != null && enemyBase.isElevated == meleeControllerPlayer.playerShooter.isElevated)
+                meleeControllerPlayer.Hit(other, other.ClosestPoint(meleeControllerPlayer.transform.position));
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("FlyingEnemies"))
         {
             meleeControllerPlayer.Hit(other, other.ClosestPoint(meleeControllerPlayer.transform.position));
         }
@@ -90,11 +93,6 @@ public class SwordController : MonoBehaviour
                 trailRenderer.widthMultiplier = baseTrailWidth;
                 spriteTransform.localScale = new Vector2(1, 1);
             }
-        }
-        else
-        {
-            trailRenderer.widthMultiplier = baseTrailWidth;
-            spriteTransform.localScale = new Vector2(1, 1);
         }
 
         // Draw polygon collider

@@ -6,13 +6,14 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
 {
     [Header("Enemy Base")]
     public string objectPoolName;
+    public bool isMutant;
     public AnimationControllerEnemy animControllerEnemy;
     public MeleeControllerEnemy meleeController;
     public SpriteRenderer sr;
     public Rigidbody2D rb { get; set; }
     public Vector2 facingDirection { get; set; }
 
-    [Header("EnemyBase ONLY Melee Stat Setters")]
+    [Header("Melee Stat Setters (Not for Mutants)")]
     public float meleeDamageMaster = 1f;
     public float knockbackMaster = 1f;
 
@@ -21,6 +22,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     public Vector2 targetPos;
 
     [Header("Movement")]
+    public bool isElevated = false;
     public float moveSpeedBaseStart;
     public float moveSpeedBase = 1f;
     float slowFactor = 1;
@@ -29,8 +31,7 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
     float startAnimSpeedFactor;
     float startSwitchToRunBuffer;
 
-    [Header("Randomize")]
-    public bool isMutant;
+    [Header("Randomize (Not for Mutants)")]
     public float randSpeedRange = 0.1f;
     public Vector3 startLocalScale;
     public float minSize;
@@ -135,6 +136,10 @@ public class EnemyBase : MonoBehaviour, IDamageable, IFreezable, IEnemyMoveable,
         health.hasDied = false;
         health.SetMaxHealth(health.startMaxHealth);
         health.SetHealth(health.GetMaxHealth());
+        
+        animControllerEnemy.animSpeedFactor = startAnimSpeedFactor;
+        animControllerEnemy.switchToRunBuffer = startSwitchToRunBuffer;
+        isElevated = false;
 
         moveSpeedBase = moveSpeedBaseStart;
         rb.mass = startMass;

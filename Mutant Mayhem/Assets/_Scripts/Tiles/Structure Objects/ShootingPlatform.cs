@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class ShootingPlatform : MonoBehaviour, ITileObjectExplodable
 {
@@ -17,7 +16,7 @@ public class ShootingPlatform : MonoBehaviour, ITileObjectExplodable
             explosion.transform.position = TileManager.Instance.TileCellsCenterToWorld(rootPos);
         }
     }
-    
+
     PlayerShooter playerShooter;
 
     void Start()
@@ -32,6 +31,14 @@ public class ShootingPlatform : MonoBehaviour, ITileObjectExplodable
             //Debug.Log("Player entered platform");
             playerShooter.SetElevated(true);
         }
+        if (other.CompareTag("Enemy"))
+        {
+            EnemyBase enemyBase = other.GetComponent<EnemyBase>();
+            if (enemyBase != null)
+            {
+                enemyBase.isElevated = true;
+            }
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -40,6 +47,14 @@ public class ShootingPlatform : MonoBehaviour, ITileObjectExplodable
         {
             //Debug.Log("Player exitted platform");
             playerShooter.SetElevated(false);
+        }
+        if (other.CompareTag("Enemy"))        
+        {
+            EnemyBase enemyBase = other.GetComponent<EnemyBase>();
+            if (enemyBase != null)
+            {
+                enemyBase.isElevated = false;
+            }
         }
     }
 }

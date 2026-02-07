@@ -20,6 +20,11 @@ public class UIMothershipController : MonoBehaviour
 
     void Start()
     {
+        // Check last planet visitted for tutorial, and set to Tsorbia if it is
+        if (ProfileManager.Instance.currentProfile.lastPlanetVisited == 0) // 0 is Tutorial
+        {
+            ProfileManager.Instance.currentProfile.lastPlanetVisited = 1; // 1 is Tsorbia
+        }
         PlanetManager.Instance.SetCurrentPlanet(ProfileManager.Instance.currentProfile.lastPlanetVisited);
 
         // First Time dialogue
