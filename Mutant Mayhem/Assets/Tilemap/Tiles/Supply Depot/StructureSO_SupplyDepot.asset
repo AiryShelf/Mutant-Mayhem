@@ -15,10 +15,12 @@ MonoBehaviour:
   uiImage: {fileID: 21300000, guid: 37ea562479d2c4c5b9603ef25e9b03ae, type: 3}
   tileName: Supply Depot
   description: "Racks of supplies for Drones and Turrets.  \n\nAdds 8 supplies <sprite=2>"
+  unlockText: 
   tileCost: 800
   maxHealth: 400
   health: 400
-  blueprintBuildAmount: 800
+  buildTime: 8
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}

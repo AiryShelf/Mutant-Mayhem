@@ -12,6 +12,11 @@ public class TileStats
     public Vector3Int rootGridPos;
     public bool isBlueprint = false;
     public float blueprintProgress = 0;
+    public float blueprintBuildElapsed = 0f;
+    public float blueprintBuildGoal = 0f;
+    public GameObject blueprintProgressBarObj;
+    public Slider blueprintProgressBarSlider;
+    public float blueprintBlockedTextCooldownUntil = 0f;
     public int rotation;
     public Matrix4x4 matrix;
 }
@@ -39,12 +44,22 @@ public class TileManager : MonoBehaviour
     [SerializeField] Color textFlyHealthLossColor;
     [SerializeField] Color textFlyHealthGainColor;
     [SerializeField] float textFlyAlphaMax;
-    [SerializeField] Color buildBlueprintTextColor = Color.cyan;
     [SerializeField] string buildingBuiltSmallExplosionPoolName;
     [SerializeField] string buildingBuiltMediumExplosionPoolName;
     [SerializeField] string buildingBuiltLargeExplosionPoolName;
     [SerializeField] string damagingBuildingExplosionPoolName;
     [SerializeField] string aestheticBuildingExplosionPoolName;
+
+    [Header("Blueprint Build Timer")]
+    [SerializeField] GameObject overlayCanvas;
+    [SerializeField] float blueprintBlockedTextCooldown = 1f;
+    [SerializeField] float blueprintBuildTickSeconds = 0.1f;
+    public float blueprintBuildSpeedMultiplier = 1f;
+    [SerializeField] string blueprintProgressBarPoolName = "Blueprint_Progress_Bar";
+    [SerializeField] Vector3 blueprintProgressBarWorldOffset = new Vector3(0f, 0.6f, 0f);
+
+    private static readonly List<Vector3Int> _BlueprintRootPositions = new List<Vector3Int>();
+    private Coroutine _blueprintBuildCoroutine;
 
     public int numberOfTilesHit;
     public int numberofTilesMissed;
@@ -110,8 +125,36 @@ public class TileManager : MonoBehaviour
 
     void OnDisable()
     {
+        if (_blueprintBuildCoroutine != null)
+        {
+            StopCoroutine(_blueprintBuildCoroutine);
+            _blueprintBuildCoroutine = null;
+        }
+
+        _BlueprintRootPositions.Clear();
         _TileStatsDict.Clear();
         _wallDamageRotation.Clear();
+    }
+
+    void LateUpdate()
+    {
+        // Keep blueprint progress bars glued to their world positions every frame (smooth camera movement)
+        if (_BlueprintRootPositions.Count == 0)
+            return;
+
+        for (int i = _BlueprintRootPositions.Count - 1; i >= 0; i--)
+        {
+            Vector3Int rootPos = _BlueprintRootPositions[i];
+
+            if (!_TileStatsDict.ContainsKey(rootPos))
+                continue;
+
+            TileStats stats = _TileStatsDict[rootPos];
+            if (!stats.isBlueprint)
+                continue;
+
+            UpdateBlueprintProgressBarPosition(rootPos, stats);
+        }
     }
 
     #region Alter Tiles
@@ -132,14 +175,6 @@ public class TileManager : MonoBehaviour
             return false;
         }
 
-        DroneBuildJob buildJob = new DroneBuildJob(DroneJobType.Build, GridCenterToWorld(gridPos));
-        if (buildJob == null)
-        {
-            Debug.LogError("BuildingSystem: BuildJob creation failed");
-            MessageBanner.PulseMessage("An error occurued!  Sorry about that, let me know and I'll fix it", Color.red);
-            return false;
-        }
-
         if (ruleTile.structureSO.canBuildOnlyOne)
         {
             if (buildingSystem.buildOnlyOneList.Contains(ruleTile.structureSO))
@@ -155,8 +190,6 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        ConstructionManager.Instance.AddBuildJob(buildJob);
-
         _TileStatsDict[gridPos].health *= 0.99f;
         
         BlueprintTilemap.SetTile(gridPos, _TileStatsDict[gridPos].ruleTileStructure.buildUiTile);
@@ -165,6 +198,50 @@ public class TileManager : MonoBehaviour
         // Persist intended rotation for this structure
         _TileStatsDict[gridPos].rotation = storedRot;
         _TileStatsDict[gridPos].matrix = matrix;
+
+        // Initialize timed blueprint build
+        Vector3Int rootPos = GridToRootPos(gridPos);
+        TileStats stats = _TileStatsDict[rootPos];
+        stats.blueprintBuildElapsed = 0f;
+        stats.blueprintBuildGoal = Mathf.Max(0.01f, ruleTile.structureSO.buildTime);
+        stats.blueprintProgress = 0f;
+        stats.blueprintBlockedTextCooldownUntil = 0f;
+
+        // Spawn / attach a pooled progress bar (optional)
+        if (!string.IsNullOrEmpty(blueprintProgressBarPoolName))
+        {
+            GameObject barObj = PoolManager.Instance.GetFromPool(blueprintProgressBarPoolName);
+            if (barObj != null)
+            {
+                stats.blueprintProgressBarObj = barObj;
+                stats.blueprintProgressBarSlider = barObj.GetComponentInChildren<Slider>(true);
+
+                // Parent under overlay canvas first (screen-space UI expects pixel coordinates)
+                if (overlayCanvas != null)
+                {
+                    barObj.transform.SetParent(overlayCanvas.transform, false);
+                    barObj.transform.SetAsLastSibling();
+                }
+
+                // Position in screen space (Overlay canvas uses screen pixels)
+                UpdateBlueprintProgressBarPosition(rootPos, stats);
+
+                if (stats.blueprintProgressBarSlider != null)
+                {
+                    stats.blueprintProgressBarSlider.minValue = 0f;
+                    stats.blueprintProgressBarSlider.maxValue = 1f;
+                    stats.blueprintProgressBarSlider.value = 0f;
+                }
+            }
+        }
+
+        // Track this blueprint root
+        if (!_BlueprintRootPositions.Contains(rootPos))
+            _BlueprintRootPositions.Add(rootPos);
+
+        // Ensure the build coroutine is running
+        if (_blueprintBuildCoroutine == null)
+            _blueprintBuildCoroutine = StartCoroutine(BlueprintBuildTickLoop());
 
         StartCoroutine(RotateTileObject(BlueprintTilemap, gridPos, matrix));
         AddToPlacedCounter(ruleTile.structureSO.structureType);
@@ -182,6 +259,9 @@ public class TileManager : MonoBehaviour
         rootPos = GridToRootPos(rootPos);
 
         _TileStatsDict[rootPos].isBlueprint = false;
+        // Remove from blueprint build tracking / UI
+        _BlueprintRootPositions.Remove(rootPos);
+        CleanupBlueprintProgressBar(rootPos);
         _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
         Matrix4x4 matrix = BlueprintTilemap.GetTransformMatrix(rootPos);
         // Persist intended rotation for this structure (do not rely on tilemap transforms later)
@@ -395,6 +475,13 @@ public class TileManager : MonoBehaviour
         ConstructionManager.Instance.TileRemoved(GridCenterToWorld(gridPos));
         Vector3Int rootPos = GridToRootPos(gridPos);
 
+        // If this was a blueprint, remove it from timed-build tracking and cleanup UI
+        if (_TileStatsDict.ContainsKey(rootPos) && _TileStatsDict[rootPos].isBlueprint)
+        {
+            _BlueprintRootPositions.Remove(rootPos);
+            CleanupBlueprintProgressBar(rootPos);
+        }
+
         // Remove any stored wall-damage rotation for this root
         _wallDamageRotation.Remove(rootPos);
         
@@ -502,45 +589,21 @@ public class TileManager : MonoBehaviour
 
     public bool BuildBlueprintAt(Vector2 pos, float amount, float textPulseScaleMax, Vector2 hitDir)
     {
+        // Blueprints now complete via timed build. Return true so drones/repair-gun logic
+        // can stop trying to "build" this blueprint.
         Vector3Int gridPos = WorldToGrid(pos);
-        Vector3Int rootPos;
-        if (_TileStatsDict.ContainsKey(gridPos))
-        {
-            rootPos = GridToRootPos(gridPos);
-            //pos = GridCenterToWorld(rootPos);
-        }
-        else
-            return true;  // To stop building
-
-        if (!_TileStatsDict.ContainsKey(rootPos))
-        {
-            Debug.LogError($"TileManager: No blueprint fround at {pos} to build");
-            return true;  // To return the drone home for next task
-        }
-
-        _TileStatsDict[rootPos].blueprintProgress += amount;
-
-        if (_TileStatsDict[rootPos].blueprintProgress >= _TileStatsDict[rootPos].ruleTileStructure.structureSO.blueprintBuildAmount)
-        {
-            //StructureRotator.RotateTileAt(blueprintTilemap, rootPos, rotation);
-            if (!AddTileAt(rootPos, _TileStatsDict[rootPos].ruleTileStructure))
-            {
-                Debug.LogWarning("TileManager: Failed to add tile at blueprint completion, likely no supplies");
-                return false;
-            }
-            _TileStatsDict[rootPos].health = _TileStatsDict[rootPos].maxHealth;
-
-            ConstructionManager.Instance.RemoveBuildJob(GridCenterToWorld(rootPos));
-            //ConstructionManager.Instance.InsertRepairJob(new DroneJob(DroneJobType.Repair, pos));
+        if (!_TileStatsDict.ContainsKey(gridPos))
             return true;
-        }
 
-        TextFly textFly = PoolManager.Instance.GetFromPool(textFlyWorldPlayerPoolName).GetComponent<TextFly>();
-        textFly.transform.position = pos;
-        textFly.Initialize(Mathf.Abs(amount).ToString("#0"), buildBlueprintTextColor, 
-                           textFlyAlphaMax, hitDir.normalized, true, textPulseScaleMax);
+        Vector3Int rootPos = GridToRootPos(gridPos);
+        if (!_TileStatsDict.ContainsKey(rootPos))
+            return true;
 
-        return false;
+        // If it's not a blueprint, allow callers to stop building.
+        if (!_TileStatsDict[rootPos].isBlueprint)
+            return true;
+
+        return true;
     }
 
     public void ModifyHealthAt(Vector2 point, float value, float textPulseScaleMax, Vector2 hitDir)
@@ -1321,71 +1384,241 @@ public class TileManager : MonoBehaviour
         return true;
     }
 
-bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure, int rotation, Matrix4x4 matrix)
-{
-    // Compute occupied offsets in world/grid orientation for this rotation
-    List<Vector3Int> sourcePositions = structure.cellPositions;
-    if (sourcePositions == null || sourcePositions.Count == 0)
-        return false;
-
-    List<Vector3Int> rotatedOffsets = StructureRotator.RotateCellPositionsBack(sourcePositions, rotation);
-
-    // Check grid clear using rotated offsets (dict + colliders)
-    for (int i = 0; i < rotatedOffsets.Count; i++)
+    bool AddNewTileToDict(Vector3Int rootPos, StructureSO structure, int rotation, Matrix4x4 matrix)
     {
-        Vector3Int abs = rootPos + rotatedOffsets[i];
-
-        if (_TileStatsDict.ContainsKey(abs))
+        // Compute occupied offsets in world/grid orientation for this rotation
+        List<Vector3Int> sourcePositions = structure.cellPositions;
+        if (sourcePositions == null || sourcePositions.Count == 0)
             return false;
 
-        Vector2 w = StructureTilemap.CellToWorld(abs);
-        Vector2 center = new Vector2(w.x + StructureTilemap.cellSize.x / 2f, w.y + StructureTilemap.cellSize.y / 2f);
-        Vector2 size = (Vector2)StructureTilemap.cellSize * 0.9f;
+        List<Vector3Int> rotatedOffsets = StructureRotator.RotateCellPositionsBack(sourcePositions, rotation);
 
-        Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0, buildingSystem.layersForBuildClearCheck);
-        for (int h = 0; h < hits.Length; h++)
+        // Check grid clear using rotated offsets (dict + colliders)
+        for (int i = 0; i < rotatedOffsets.Count; i++)
         {
-            Collider2D col = hits[h];
-            if (col.tag != "PickupTrigger" && col.gameObject.layer != LayerMask.NameToLayer("FlyingEnemies"))
+            Vector3Int abs = rootPos + rotatedOffsets[i];
+
+            if (_TileStatsDict.ContainsKey(abs))
+                return false;
+
+            Vector2 w = StructureTilemap.CellToWorld(abs);
+            Vector2 center = new Vector2(w.x + StructureTilemap.cellSize.x / 2f, w.y + StructureTilemap.cellSize.y / 2f);
+            Vector2 size = (Vector2)StructureTilemap.cellSize * 0.9f;
+
+            Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0, buildingSystem.layersForBuildClearCheck);
+            for (int h = 0; h < hits.Length; h++)
+            {
+                Collider2D col = hits[h];
+                if (col.tag != "PickupTrigger" && col.gameObject.layer != LayerMask.NameToLayer("FlyingEnemies"))
+                    return false;
+            }
+        }
+
+        // Add root
+        if (!_TileStatsDict.ContainsKey(rootPos))
+        {
+            _StructurePositions.Add(rootPos);
+            float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthMult;
+
+            _TileStatsDict.Add(rootPos, new TileStats
+            {
+                ruleTileStructure = structure.ruleTileStructure,
+                maxHealth = maxHP,
+                health = maxHP,
+                rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0),
+                isBlueprint = true,
+                blueprintProgress = 0f,
+                blueprintBuildElapsed = 0f,
+                blueprintBuildGoal = 0f,
+                blueprintProgressBarObj = null,
+                blueprintProgressBarSlider = null,
+                blueprintBlockedTextCooldownUntil = 0f,
+                rotation = rotation,
+                matrix = matrix,
+            });
+        }
+        else return false;
+
+        // Add other occupied cells as keys
+        for (int i = 1; i < rotatedOffsets.Count; i++)
+        {
+            Vector3Int abs = rootPos + rotatedOffsets[i];
+            if (!_TileStatsDict.ContainsKey(abs))
+                _TileStatsDict.Add(abs, _TileStatsDict[rootPos]);
+            else
                 return false;
         }
+
+        return true;
     }
-
-    // Add root
-    if (!_TileStatsDict.ContainsKey(rootPos))
-    {
-        _StructurePositions.Add(rootPos);
-        float maxHP = structure.maxHealth * player.stats.structureStats.structureMaxHealthMult;
-
-        _TileStatsDict.Add(rootPos, new TileStats
-        {
-            ruleTileStructure = structure.ruleTileStructure,
-            maxHealth = maxHP,
-            health = maxHP,
-            rootGridPos = new Vector3Int(rootPos.x, rootPos.y, 0),
-            isBlueprint = true,
-            rotation = rotation,
-            matrix = matrix,
-        });
-    }
-    else return false;
-
-    // Add other occupied cells as keys
-    for (int i = 1; i < rotatedOffsets.Count; i++)
-    {
-        Vector3Int abs = rootPos + rotatedOffsets[i];
-        if (!_TileStatsDict.ContainsKey(abs))
-            _TileStatsDict.Add(abs, _TileStatsDict[rootPos]);
-        else
-            return false;
-    }
-
-    return true;
-}
 
     #endregion
 
     #region Tools
+
+    bool IsBlueprintBuildBlocked(Vector3Int rootPos, TileStats stats)
+    {
+        // Check colliders only (do not check dict). Any collider in the build-clear mask blocks completion.
+        // We check all occupied cells for this structure using stored rotation.
+        List<Vector3Int> occupied = GetStructurePositionsFromDict(rootPos);
+        if (occupied == null || occupied.Count == 0)
+            occupied = new List<Vector3Int> { rootPos };
+
+        for (int i = 0; i < occupied.Count; i++)
+        {
+            if (!CheckGridIsClear(occupied[i], buildingSystem.layersForBuildClearCheck, false))
+                return true;
+        }
+
+        return false;
+    }
+
+    void ShowBlueprintBlockedText(Vector3Int rootPos, TileStats stats)
+    {
+        // Cooldown so we don't spam each tick
+        if (stats != null && Time.time < stats.blueprintBlockedTextCooldownUntil)
+            return;
+
+        if (stats != null)
+            stats.blueprintBlockedTextCooldownUntil = Time.time + blueprintBlockedTextCooldown;
+
+        if (PoolManager.Instance == null)
+            return;
+
+        TextFly textFly = PoolManager.Instance.GetFromPool(textFlyWorldPlayerPoolName).GetComponent<TextFly>();
+        if (textFly == null)
+            return;
+
+        Vector2 pos = TileCellsCenterToWorld(rootPos);
+        textFly.transform.position = pos;
+
+        // Upward drift is fine here; no hit dir available
+        Vector2 dir = Vector2.up;
+
+        textFly.Initialize("Blocked!", Color.red,
+                           textFlyAlphaMax, dir.normalized, true, 1.15f);
+    }
+
+    void UpdateBlueprintProgressBarPosition(Vector3Int rootPos, TileStats stats)
+    {
+        if (stats == null || stats.blueprintProgressBarObj == null)
+            return;
+
+        if (overlayCanvas == null)
+            return;
+
+        RectTransform rt = stats.blueprintProgressBarObj.GetComponent<RectTransform>();
+        if (rt == null)
+            return;
+
+        Camera cam = Camera.main;
+        if (cam == null)
+            return;
+
+        Vector3 worldPos = (Vector3)TileCellsCenterToWorld(rootPos) + blueprintProgressBarWorldOffset;
+        Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+
+        // If behind the camera, hide to avoid weird flips
+        if (screenPos.z < 0f)
+        {
+            stats.blueprintProgressBarObj.SetActive(false);
+            return;
+        }
+
+        if (!stats.blueprintProgressBarObj.activeSelf)
+            stats.blueprintProgressBarObj.SetActive(true);
+
+        // Screen Space Overlay expects screen-pixel position
+        rt.position = screenPos;
+    }
+
+    IEnumerator BlueprintBuildTickLoop()
+    {
+        float waitTime = blueprintBuildTickSeconds;
+        yield return new WaitForSeconds(waitTime);
+
+        while (true)
+        {
+            // Stop if nothing to do
+            if (_BlueprintRootPositions.Count == 0)
+            {
+                _blueprintBuildCoroutine = null;
+                yield break;
+            }
+
+            // Iterate backwards so we can remove safely
+            for (int i = _BlueprintRootPositions.Count - 1; i >= 0; i--)
+            {
+                Vector3Int rootPos = _BlueprintRootPositions[i];
+
+                // Safety check - if rootPos was removed from dict, remove from blueprint list and skip
+                if (!_TileStatsDict.ContainsKey(rootPos))
+                {
+                    _BlueprintRootPositions.RemoveAt(i);
+                    continue;
+                }
+
+                TileStats stats = _TileStatsDict[rootPos];
+                if (!stats.isBlueprint)
+                {
+                    _BlueprintRootPositions.RemoveAt(i);
+                    continue;
+                }
+
+                float goal = Mathf.Max(0.01f, stats.blueprintBuildGoal);
+
+                // If something (player/enemy/etc.) is in the way, do not advance build.
+                if (IsBlueprintBuildBlocked(rootPos, stats))
+                {
+                    ShowBlueprintBlockedText(rootPos, stats);
+                    continue;
+                }
+
+                stats.blueprintBuildElapsed += waitTime * blueprintBuildSpeedMultiplier;
+
+                float progress = Mathf.Clamp01(stats.blueprintBuildElapsed / goal);
+                stats.blueprintProgress = progress;
+
+                // Update progress bar slider (if present)
+                if (stats.blueprintProgressBarSlider != null)
+                {
+                    stats.blueprintProgressBarSlider.value = progress;
+                }
+
+                // Complete build
+                if (progress >= 1f)
+                {
+                    // Note: AddTileAt will flip isBlueprint and perform cleanup.
+                    bool built = AddTileAt(rootPos, stats.ruleTileStructure);
+
+                    // If build failed (eg: supplies), keep trying in subsequent ticks.
+                    if (!built)
+                    {
+                        stats.blueprintBuildElapsed = Mathf.Min(stats.blueprintBuildElapsed, goal);
+                        stats.blueprintProgress = Mathf.Clamp01(stats.blueprintBuildElapsed / goal);
+                        if (stats.blueprintProgressBarSlider != null)
+                            stats.blueprintProgressBarSlider.value = stats.blueprintProgress;
+                    }
+                }
+            }
+        }
+    }
+
+    void CleanupBlueprintProgressBar(Vector3Int rootPos)
+    {
+        if (!_TileStatsDict.ContainsKey(rootPos))
+            return;
+
+        TileStats stats = _TileStatsDict[rootPos];
+        if (stats.blueprintProgressBarObj != null)
+        {
+            // We don't assume a specific return-to-pool API here.
+            // PoolManager.GetFromPool activates objects; deactivating should make it eligible for reuse.
+            stats.blueprintProgressBarObj.SetActive(false);
+            stats.blueprintProgressBarObj = null;
+            stats.blueprintProgressBarSlider = null;
+        }
+    }
     
     void PlayBuildExplosionEffect(Vector3Int rootPos, RuleTileStructure ruleTile)
     {

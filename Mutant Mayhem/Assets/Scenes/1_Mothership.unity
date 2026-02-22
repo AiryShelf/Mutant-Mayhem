@@ -5527,6 +5527,8 @@ MonoBehaviour:
   widePositionOffest: {x: -33, y: 0}
   defaultWidePositionOffest: {x: 0, y: -30}
   narrowPositionOffset: {x: 0, y: 0}
+  iOSPosOffsetAdd: 0
+  iOSOffsetAddition: {x: 0, y: 0}
 --- !u!1 &1268459403
 GameObject:
   m_ObjectHideFlags: 0
@@ -7103,6 +7105,8 @@ MonoBehaviour:
   widePositionOffest: {x: 0, y: 0}
   defaultWidePositionOffest: {x: 45, y: 0}
   narrowPositionOffset: {x: 0, y: 0}
+  iOSPosOffsetAdd: 0
+  iOSOffsetAddition: {x: 0, y: 0}
 --- !u!1 &1653493637
 GameObject:
   m_ObjectHideFlags: 0
@@ -7983,7 +7987,10 @@ MonoBehaviour:
     Weapon Tech upgrades cost
     20% less
 
-    Structures and Structure Tech upgrades cost 20% more'
+    Structures and Structure Tech upgrades cost 20% more
+
+    Build
+    and repair 25% slower'
   neutralDescription: A balanced build
   builderDescription: 'Exosuit upgrades cost 20% more
 
@@ -7992,8 +7999,8 @@ MonoBehaviour:
 
     Structures and Structure Tech upgrades cost 20% less
 
-    Repair
-    50% faster'
+    Build
+    and repair 50% faster'
 --- !u!114 &1901434547
 MonoBehaviour:
   m_ObjectHideFlags: 0

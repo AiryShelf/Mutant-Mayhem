@@ -15,10 +15,12 @@ MonoBehaviour:
   uiImage: {fileID: 21300000, guid: d6d281b4bc8784e38ad0ccef35c53710, type: 3}
   tileName: Gate
   description: An automatic gate that opens only for you
+  unlockText: 
   tileCost: 100
   maxHealth: 1500
   health: 1500
-  blueprintBuildAmount: 600
+  buildTime: 6
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: -1, z: 0}

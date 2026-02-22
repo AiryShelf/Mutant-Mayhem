@@ -19,10 +19,12 @@ MonoBehaviour:
 
     Very flimsy but
     hard to hit.  Shines over walls and enemies'
+  unlockText: 
   tileCost: 50
   maxHealth: 200
   health: 200
-  blueprintBuildAmount: 250
+  buildTime: 2.5
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   ruleTileStructure: {fileID: 11400000, guid: e5d724530abd869469b54a3d499e99bb, type: 2}
@@ -33,6 +35,7 @@ MonoBehaviour:
   actionRange: {x: 6, y: 6}
   powerGenerated: 0
   powerNeighborBonus: 0
-  panelToUnlock: 0
+  powerCost: 0
+  supplyCost: 0
   structuresToUnlock: []
   canBuildOnlyOne: 0

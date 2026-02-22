@@ -41,6 +41,10 @@ public class ClassManager : MonoBehaviour
                 UpgradeManager.Instance.gunStatsCostMult -= 0.2f;
                 UpgradeManager.Instance.structureStatsCostMult += 0.2f;
                 buildingSystem.structureCostMult += 0.2f;
+
+                TileManager.Instance.blueprintBuildSpeedMultiplier = 0.75f;
+                player.playerShooter.gunList[4].damage *= 0.75f;
+                DroneManager.Instance.droneGunList[0].damage *= 0.75f;
                 break;
 
             case PlayerClass.Neutral:
@@ -51,7 +55,8 @@ public class ClassManager : MonoBehaviour
                 UpgradeManager.Instance.gunStatsCostMult += 0.2f;
                 UpgradeManager.Instance.structureStatsCostMult -= 0.2f;
                 buildingSystem.structureCostMult -= 0.2f;
-                player.playerShooter.gunsUnlocked[4] = true; // Repair gun
+                
+                TileManager.Instance.blueprintBuildSpeedMultiplier = 1.5f;
                 player.playerShooter.gunList[4].damage *= 1.5f;
                 DroneManager.Instance.droneGunList[0].damage *= 1.5f; // Drone repair gun
                 break;

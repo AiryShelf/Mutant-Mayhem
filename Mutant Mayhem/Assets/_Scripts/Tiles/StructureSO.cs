@@ -14,7 +14,7 @@ public class StructureSO : ScriptableObject
     public float tileCost;
     public float maxHealth;
     public float health;
-    public float blueprintBuildAmount = 100;
+    public float buildTime = 1f;
     public bool canBeRepaired = true;
     public List<Vector3Int> cellPositions;
 

@@ -21,10 +21,12 @@ MonoBehaviour:
 
     Gains a bonus of 1<sprite=1> from each connected
     power source'
+  unlockText: 
   tileCost: 400
   maxHealth: 300
   health: 300
-  blueprintBuildAmount: 500
+  buildTime: 5
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}

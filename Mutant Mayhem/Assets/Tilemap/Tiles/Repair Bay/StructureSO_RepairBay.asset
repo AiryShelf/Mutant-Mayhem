@@ -15,10 +15,12 @@ MonoBehaviour:
   uiImage: {fileID: -1561074817, guid: a93be24f8fada4f69877d7da4589e7fe, type: 3}
   tileName: Repair Bay
   description: Interact with it to upgrade repair tech for Drones and Player
+  unlockText: 
   tileCost: 2000
   maxHealth: 1600
   health: 1600
-  blueprintBuildAmount: 2000
+  buildTime: 20
+  canBeRepaired: 1
   cellPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}

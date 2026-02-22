@@ -28,20 +28,6 @@ public static class StructureRotator
         // Create a new instance of StructureSO
         StructureSO rotatedStructure = ScriptableObject.CreateInstance<StructureSO>();
 
-        /* Copy properties
-        rotatedStructure.uiImage = source.uiImage;
-        rotatedStructure.tileName = source.tileName;
-        rotatedStructure.description = source.description;
-        rotatedStructure.tileCost = source.tileCost;
-        rotatedStructure.maxHealth = source.maxHealth;
-        rotatedStructure.health = source.health;
-        rotatedStructure.ruleTileStructure = source.ruleTileStructure;
-        rotatedStructure.structureType = source.structureType;
-        rotatedStructure.isTurret = source.isTurret;
-        rotatedStructure.actionType = source.actionType;
-        rotatedStructure.actionRange = source.actionRange;
-        */
-
         // Copy all fields
         FieldInfo[] fields = typeof(StructureSO).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (FieldInfo field in fields)

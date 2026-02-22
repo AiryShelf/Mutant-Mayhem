@@ -19,10 +19,11 @@ MonoBehaviour:
 
 
     Takes some damage with each hit.  Cannot be repaired'
+  unlockText: 
   tileCost: 20
   maxHealth: 200
   health: 200
-  blueprintBuildAmount: 100
+  buildTime: 1
   canBeRepaired: 0
   cellPositions:
   - {x: 0, y: 0, z: 0}
