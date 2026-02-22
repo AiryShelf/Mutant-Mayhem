@@ -101,7 +101,7 @@ public class SupplyManager : MonoBehaviour
     {
         if (_excessSupply <= 0 && SupplyProduced <= SupplyLimit) return;
 
-        // Adjust PowerBalance to not exceed SupplyLimit
+        // Calculate excess supply and adjust balance accordingly
         int excessSupply = SupplyProduced - SupplyLimit;
         _excessSupply = excessSupply;
 
@@ -110,9 +110,9 @@ public class SupplyManager : MonoBehaviour
             excessSupply = 0;
             _excessSupply = 0;
         }
-
         SupplyBalance = SupplyProduced - excessSupply - SupplyConsumption;
 
+        // Show message if we just hit the supply limit
         if (excessSupply > 0 && excessSupply != _previousExcessSupply)
         {
             SupplyLimitReachedMessage();

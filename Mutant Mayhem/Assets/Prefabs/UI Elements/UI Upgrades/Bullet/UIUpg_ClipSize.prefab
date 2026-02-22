@@ -58,10 +58,14 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 3
+  droneStatsUpgrade: 0
   buttonImage: {fileID: 8020982340338496380}
+  buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 9104952891514453374}
   unlocked: 1
   UiName: Clip Size
+  powerCost: 0
+  supplyCost: 0
   tooltipDescription: Nothing fancy.  Just a bigger clip
   showLevelsText: 1
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
@@ -129,7 +133,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a9b72b3090b65408cd83094b1f246d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolTipDelay: 0.5
   header: 
   content: 
 --- !u!1001 &5036063747999875038
@@ -225,13 +228,41 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1338899473489184148}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1338899473489184148}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InvokeOnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIUpgradeButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UIUpgradeButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 1338899473489184148}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UIUpgradeButton, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -697,6 +697,19 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    public void ApplyDamageToStructuresOfType(StructureType type, float damage)
+    {
+        foreach (Vector3Int rootPos in _StructurePositions)
+        {
+            if (_TileStatsDict.ContainsKey(rootPos) && 
+                _TileStatsDict[rootPos].ruleTileStructure.structureSO.structureType == type)
+            {
+                Vector2 worldPos = GridCenterToWorld(rootPos);
+                ModifyHealthAt(worldPos, -damage, 1f, Vector2.zero);
+            }
+        }
+    }
+
     #endregion
 
     #region Update Tiles
@@ -1601,6 +1614,8 @@ public class TileManager : MonoBehaviour
                     }
                 }
             }
+            // Wait for next tick
+            yield return new WaitForSeconds(waitTime);
         }
     }
 

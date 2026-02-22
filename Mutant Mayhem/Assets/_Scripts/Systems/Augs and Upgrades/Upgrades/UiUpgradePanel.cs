@@ -95,7 +95,7 @@ public class UiUpgradePanel : UI_PanelBase
         {
             // Create button, get text prefab
             GameObject buttonPrefab = Instantiate(upgrade, buttonsGroup.transform);
-            UIUpgrade uIUpgrade = buttonPrefab.GetComponent<UIUpgrade>();
+            UIUpgradeButton uIUpgrade = buttonPrefab.GetComponent<UIUpgradeButton>();
             GameObject textPrefab = uIUpgrade.upgradeTextPrefab;
 
             // Create text obj and give text instance to uIUpgrade
@@ -116,7 +116,7 @@ public class UiUpgradePanel : UI_PanelBase
         fadeCanvasGroups.InitializeToFadedOut();
     }
 
-    protected virtual void SetTextReference(UIUpgrade upg, GameObject obj)
+    protected virtual void SetTextReference(UIUpgradeButton upg, GameObject obj)
     {
         upg.upgradeText = obj.GetComponent<TextMeshProUGUI>();
         upg.Initialize();
@@ -127,7 +127,7 @@ public class UiUpgradePanel : UI_PanelBase
         //Debug.Log("Refreshing upgradesText with playerCredits: " + playerCredits);
         foreach (Transform child in buttonsGrid.transform)
         {
-            UIUpgrade upg = child.GetComponent<UIUpgrade>();
+            UIUpgradeButton upg = child.GetComponent<UIUpgradeButton>();
             if (upg != null)
             {
                 upg.Initialize();

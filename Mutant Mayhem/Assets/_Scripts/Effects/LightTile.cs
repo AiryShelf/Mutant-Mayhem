@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class Light : MonoBehaviour, ITileObjectExplodable
+public class LightTile : MonoBehaviour, ITileObjectExplodable
 {
     [SerializeField] protected List<Light2D> lights;
 

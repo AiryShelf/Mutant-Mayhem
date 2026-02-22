@@ -37,6 +37,7 @@ public class ConstructionManager : MonoBehaviour
 
     #region Add Job
 
+    // Deprecated: Auto Build happens in TileManager
     public void AddBuildJob(DroneBuildJob buildJob)
     {
         foreach (var kvp in buildJobs)

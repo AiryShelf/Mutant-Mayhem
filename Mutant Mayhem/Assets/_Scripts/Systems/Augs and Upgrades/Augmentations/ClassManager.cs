@@ -29,6 +29,13 @@ public class ClassManager : MonoBehaviour
         }
     }
 
+    public void SelectClass(PlayerClass playerClass)
+    {
+        selectedClass = playerClass;
+        ProfileManager.Instance.currentProfile.selectedClassName = playerClass.ToString();
+        Debug.Log("Selected class: " + selectedClass);
+        ProfileManager.Instance.SaveCurrentProfile();
+    }
 
     public void ApplyClassEffects(Player player)
     {

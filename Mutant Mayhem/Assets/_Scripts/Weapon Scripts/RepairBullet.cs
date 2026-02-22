@@ -62,12 +62,16 @@ public class RepairBullet : Bullet
         transform.position = target;
 
         // Build bluprint or repair structure at target
+        
         if (!tileManager.CheckTileFullHealth(transform.position))
         {
-            // Build bluprint
+            // Build bluprint DEPRECATED
             bool isBlueprint = false;
+            
             if (tileManager.IsTileBlueprint(target))
             {
+                // DEPRECATED: Auto Build happens in TileManager
+                /*
                 Vector3Int gridPos = tileManager.WorldToGrid(target);
                 if (!tileManager.CheckBlueprintCellsAreClear(gridPos))
                 {
@@ -79,11 +83,12 @@ public class RepairBullet : Bullet
                     PoolManager.Instance.ReturnToPool(objectPoolName, gameObject);
                     yield break;
                 }
-                isBlueprint = true;
                 tileManager.BuildBlueprintAt(target, -damage, 1.3f, hitDir);
+                */
+                isBlueprint = true;
             }
             
-            // Or, repair structure
+            // Repair structure
             bool isRepairable = tileManager.GetStructureAt(target).canBeRepaired;
             if (!isBlueprint && isRepairable)
             {
@@ -102,7 +107,7 @@ public class RepairBullet : Bullet
             }
 
             // Play effects and sound
-            if (isRepairable || isBlueprint) 
+            if (isRepairable && !isBlueprint) 
             {
                 ParticleManager.Instance.PlayRepairEffect(target, transform.right);
                 AudioManager.Instance.PlaySoundAt(hitSound, target);

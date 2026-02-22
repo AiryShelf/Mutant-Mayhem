@@ -12,6 +12,8 @@ public class Task_UseRepairGun : Task
         UpdateProgressText();
 
         amountRepairedAtStart = StatsCounterPlayer.AmountRepairedByPlayer;
+        TileManager.Instance.ApplyDamageToStructuresOfType(StructureType.OneByOneWall, 100); // Pre-damage the walls for the tutorial
+        TileManager.Instance.ApplyDamageToStructuresOfType(StructureType.OneByOneCorner, 50); // Pre-damage the walls for the tutorial
     }
 
     void FixedUpdate()

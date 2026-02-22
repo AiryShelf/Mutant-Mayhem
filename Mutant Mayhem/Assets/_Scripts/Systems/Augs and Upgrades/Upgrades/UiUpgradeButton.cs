@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIUpgrade : MonoBehaviour
+public class UIUpgradeButton : MonoBehaviour
 {
     public UpgradeFamily upgradeFamily;
     public PlayerStatsUpgrade playerStatsUpgrade;
@@ -15,6 +14,7 @@ public class UIUpgrade : MonoBehaviour
     public DroneStatsUpgrade droneStatsUpgrade;
 
     public Image buttonImage;
+    Image upgradeImage;
     [SerializeField] Color buttonImageHoverColor;
     Color buttonImageStartColor;
     public Button clickableAreaButton;
@@ -31,6 +31,16 @@ public class UIUpgrade : MonoBehaviour
 
     [Header("For Gun Upgrades:")]
     [SerializeField] int playerGunIndex;
+
+    [Header("Unlock Requirements (for locked upgrades)")]
+    public UpgradeFamily requiredUpgradeFamily;
+    public PlayerStatsUpgrade requiredPlayerStatsUpgrade;
+    public StructureStatsUpgrade requiredStructureStatsUpgrade;
+    public ConsumablesUpgrade requiredConsumablesUpgrade;
+    public GunStatsUpgrade requiredGunStatsUpgrade;
+    public int requiredGunStatsUpgradeGunIndex;
+    public DroneStatsUpgrade requiredDroneStatsUpgrade;
+    public int requiredUpgradeLevel;
 
     [HideInInspector] public TextMeshProUGUI upgradeText;
     UpgradeManager upgradeManager;
@@ -49,6 +59,11 @@ public class UIUpgrade : MonoBehaviour
         BuildingSystem.OnPlayerCreditsChanged += UpdateTextCredits;
         DroneManager.OnDroneCountChanged += UpdateTextDrones;
         
+        // Initialize the upgrade OnClick event
+        clickableAreaButton.onClick.RemoveAllListeners();
+        clickableAreaButton.onClick.AddListener(InvokeOnClick);
+
+        upgradeImage = GetComponentInChildren<Image>();
 
         if (initialized)
             UpdateTextCredits(BuildingSystem.PlayerCredits);
@@ -62,16 +77,35 @@ public class UIUpgrade : MonoBehaviour
         StopAllCoroutines();
     }
 
+    public void MakeNonInteractable()
+    {
+        buttonImage.enabled = false;
+        upgradeImage.color = Color.grey;
+        clickableAreaButton.interactable = false;
+        if (upgradeText != null)
+            upgradeText.color = Color.grey;
+    }
+
+    public void MakeInteractable()
+    {
+        buttonImage.enabled = true;
+        upgradeImage.color = Color.white;
+        clickableAreaButton.interactable = true;
+        if (upgradeText != null)
+            upgradeText.color = Color.white;
+    }
+
     public void Initialize()
     {
-        //buttonImage = GetComponentInChildren<Image>();
+        upgradeManager = UpgradeManager.Instance;
+        player = FindObjectOfType<Player>();
+
+        CheckIfUnlocked();
+
         if (unlocked)
             buttonImage.enabled = true;
         else
             buttonImage.enabled = false;
-            
-        upgradeManager = UpgradeManager.Instance;
-        player = FindObjectOfType<Player>();
 
         cyanColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.cyan) + ">";
         greenColorTag = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.green) + ">";
@@ -87,7 +121,7 @@ public class UIUpgrade : MonoBehaviour
     }
 
     // This allows the enum to be referenced via UI button OnClick
-    public void InvokeOnClick(UIUpgrade myUpg)
+    public void InvokeOnClick()
     {
         if (!buttonImage.enabled)
         {
@@ -105,22 +139,22 @@ public class UIUpgrade : MonoBehaviour
         switch (upgradeFamily)
         {
             case UpgradeFamily.PlayerStats:
-                upgradeManager.OnUpgradeButtonClicked(playerStatsUpgrade);
+                upgradeManager.OnUpgradeButtonClicked(playerStatsUpgrade, this);
                 break;
             case UpgradeFamily.StructureStats:
-                upgradeManager.OnUpgradeButtonClicked(structureStatsUpgrade);
+                upgradeManager.OnUpgradeButtonClicked(structureStatsUpgrade, this);
                 break;
             case UpgradeFamily.Consumables:
-                upgradeManager.OnUpgradeButtonClicked(consumablesUpgrade);
+                upgradeManager.OnUpgradeButtonClicked(consumablesUpgrade, this);
                 break;
             case UpgradeFamily.GunStats:
-                upgradeManager.OnUpgradeButtonClicked(gunStatsUpgrade, playerGunIndex);
+                upgradeManager.OnUpgradeButtonClicked(gunStatsUpgrade, playerGunIndex, this);
                 break;
             case UpgradeFamily.DroneStats:
-                upgradeManager.OnUpgradeButtonClicked(droneStatsUpgrade);
+                upgradeManager.OnUpgradeButtonClicked(droneStatsUpgrade, this);
                 break;
             default:
-                Debug.LogWarning("Unhandled upgrade family: " + upgradeFamily);
+                Debug.LogError("Unhandled upgrade family: " + upgradeFamily);
                 break;
         }
         
@@ -154,6 +188,58 @@ public class UIUpgrade : MonoBehaviour
         buttonImage.color = buttonImageHoverColor;
     }
 
+    void CheckIfUnlocked()
+    {
+        // Check level vs required level
+        if (requiredUpgradeLevel > 0)
+        {
+            int upgradeLevel = 0;
+            switch (requiredUpgradeFamily)
+            {
+                case UpgradeFamily.PlayerStats:
+                    upgradeLevel = upgradeManager.playerStatsUpgLevels[requiredPlayerStatsUpgrade];
+                    break;
+                case UpgradeFamily.StructureStats:
+                    upgradeLevel = upgradeManager.structureStatsUpgLevels[requiredStructureStatsUpgrade];
+                    break;
+                case UpgradeFamily.Consumables:
+                    upgradeLevel = upgradeManager.consumablesUpgLevels[requiredConsumablesUpgrade];
+                    break;
+                case UpgradeFamily.GunStats:
+                    switch (requiredGunStatsUpgradeGunIndex)
+                    {
+                        case 0:
+                            upgradeLevel = upgradeManager.laserUpgLevels[requiredGunStatsUpgrade];
+                            break;
+                        case 1:
+                            upgradeLevel = upgradeManager.bulletUpgLevels[requiredGunStatsUpgrade];
+                            break;
+                        case 4:
+                            upgradeLevel = upgradeManager.repairGunUpgLevels[requiredGunStatsUpgrade];
+                            break;
+                        default:
+                            Debug.LogError("Invalid gun index for required Gun Stats Upgrade: " + requiredGunStatsUpgradeGunIndex);
+                            break;
+                    }
+                    break;
+                case UpgradeFamily.DroneStats:
+                    upgradeLevel = upgradeManager.droneStatsUpgLevels[requiredDroneStatsUpgrade];
+                    break;
+            }
+
+            if (upgradeLevel >= requiredUpgradeLevel)
+            {
+                unlocked = true;
+                MakeInteractable();
+            }
+            else
+            {
+                unlocked = false;
+                MakeNonInteractable();
+            }
+        }
+    }
+
     #region Update Text
 
     public void UpdateText(float playerCredits)
@@ -184,6 +270,7 @@ public class UIUpgrade : MonoBehaviour
         {
             // Consumables
             upgLvl = upgradeManager.consumablesUpgLevels[consumablesUpgrade];
+            maxLvl = upgradeManager.consumablesUpgMaxLevels[consumablesUpgrade];
             upgCost = UpgStatGetter.GetUpgCost(player, consumablesUpgrade, upgradeManager);
             statValueString = UpgStatGetter.GetStatValue(player, consumablesUpgrade);
             upgAmountString = UpgStatGetter.GetUpgAmount(player, consumablesUpgrade);
@@ -262,47 +349,58 @@ public class UIUpgrade : MonoBehaviour
 
         // Create string for power cost/gain
         string powerString = "";
-        string powerCostColorTag;
-        if (powerCost > 0)
+        if (upgLvl < maxLvl && unlocked)
         {
-            if (powerCost <= PowerManager.Instance.powerBalance)
+            string powerCostColorTag;
+            if (powerCost > 0)
             {
-                powerCostColorTag = yellowColorTag;
-                powerString = $"{powerCostColorTag}<sprite=1>-{powerCost}{endColorTag}";
+                if (powerCost <= PowerManager.Instance.powerBalance)
+                {
+                    powerCostColorTag = yellowColorTag;
+                    powerString = $"{powerCostColorTag}<sprite=1>-{powerCost}{endColorTag}";
+                }
+                else
+                {
+                    powerCostColorTag = redColorTag;
+                    powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}";
+                }
             }
-            else
+            else if (powerCost < 0)
             {
-                powerCostColorTag = redColorTag;
-                powerString = $"{powerCostColorTag}<sprite=0>-{powerCost}{endColorTag}";
+                powerCostColorTag = greenColorTag;
+                powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(powerCost)}{endColorTag}";
             }
-        }
-        else if (powerCost < 0)
-        {
-            powerCostColorTag = greenColorTag;
-            powerString = $"{powerCostColorTag}<sprite=1>+{Mathf.Abs(powerCost)}{endColorTag}";
         }
         
         string supplyString = "";
-        string supplyCostColorTag;
-        if (supplyCost > 0)
+        if (upgLvl < maxLvl && unlocked)
         {
-            if (supplyCost <= SupplyManager.SupplyBalance)
+            string supplyCostColorTag;
+            if (supplyCost > 0)
             {
-                supplyCostColorTag = yellowColorTag;
-                supplyString = $"{supplyCostColorTag}<sprite=2>-{supplyCost}{endColorTag}";
+                if (supplyCost <= SupplyManager.SupplyBalance)
+                {
+                    supplyCostColorTag = yellowColorTag;
+                    supplyString = $"{supplyCostColorTag}<sprite=2>-{supplyCost}{endColorTag}";
+                }
+                else
+                {
+                    supplyCostColorTag = redColorTag;
+                    supplyString = $"{supplyCostColorTag}<sprite=3>-{supplyCost}{endColorTag}";
+                }
             }
-            else
+            else if (supplyCost < 0)
             {
-                supplyCostColorTag = redColorTag;
-                supplyString = $"{supplyCostColorTag}<sprite=3>-{supplyCost}{endColorTag}";
+                supplyCostColorTag = greenColorTag;
+                supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(supplyCost)}{endColorTag}";
             }
-        }
-        else if (supplyCost < 0)
-        {
-            supplyCostColorTag = greenColorTag;
-            supplyString = $"{supplyCostColorTag}<sprite=2>+{Mathf.Abs(supplyCost)}{endColorTag}";
         }
         // Upgrade buttons text
+        if (!unlocked)
+        {
+            upgradeText.text = $"{UiName}: \n {redColorTag}Locked{endColorTag}";
+            return;
+        }
         if (showLevelsText)
         {
             // Levels text

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class FloodLight : Light, ITileObject, IPowerConsumer
+public class FloodLight : LightTile, ITileObject, IPowerConsumer
 {
     [SerializeField] SpriteRenderer headSR;
     [SerializeField] List<Sprite> headOnDamageSprites;

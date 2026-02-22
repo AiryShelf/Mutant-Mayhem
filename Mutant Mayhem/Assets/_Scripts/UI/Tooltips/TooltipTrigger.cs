@@ -24,7 +24,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     void Start()
     {
         
-        UIUpgrade uIUpgrade = GetComponent<UIUpgrade>();
+        UIUpgradeButton uIUpgrade = GetComponent<UIUpgradeButton>();
         UIStructure uIStructure = GetComponent<UIStructure>();
 
         // UIUpgrade descriptions

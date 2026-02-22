@@ -134,10 +134,14 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 0
+  droneStatsUpgrade: 0
   buttonImage: {fileID: 5041906229208309945}
+  buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 6121370028175961787}
   unlocked: 1
   UiName: Bullet Damage
+  powerCost: 0
+  supplyCost: 0
   tooltipDescription: Neutronium infused slugs.  Yep, in the future you can buy insanely
     tiny pieces of neutron stars!  The first company to sell them was a well-meant
     jewelry store.  The idea was to buy one for your loved one so they could carrry
@@ -208,7 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a9b72b3090b65408cd83094b1f246d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolTipDelay: 0.5
   header: 
   content: 
 --- !u!1001 &8019647298760207387
@@ -309,12 +312,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7176913671989316482}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -328,13 +339,25 @@ PrefabInstance:
       value: InvokeOnClick
       objectReference: {fileID: 0}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIUpgradeButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: UIUpgrade, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 7176913671989316482}
+    - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4303465566437589664, guid: c68b552e96894a148a099deb438bfcca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UIUpgrade, Assembly-CSharp

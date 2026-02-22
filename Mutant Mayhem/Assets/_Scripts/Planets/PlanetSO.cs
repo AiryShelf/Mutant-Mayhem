@@ -11,11 +11,14 @@ public class PlanetSO : ScriptableObject
     public string description;
     public List<PlanetPropertySO> properties;
     public Tile terrainTile;
+    public List<PlanetSO> prerequisitePlanets;
     public MissionSO mission;
     public DialogueSO planetDialogue;
     public int nightToSurvive = 10;
+    public Color globalLightColor = Color.white;
+    public float globalLightIntensity = 0.02f;
     public GameObject highRezPlanetPrefab;
-    public List<PlanetSO> prerequisitePlanets;
+    
 
     [Header("Research Points:")]
     public bool isTutorialPlanet = false;

@@ -594,10 +594,17 @@ public class BuildingSystem : MonoBehaviour
     {
         if (structure.supplyCost > 0)
         {
-            if (SupplyManager.SupplyBalance - structure.supplyCost < 0)
+            // Check for needing Supply Limit upgrade
+            if (SupplyManager.SupplyProduced > SupplyManager.SupplyLimit && SupplyManager.SupplyBalance - structure.supplyCost < 0)
             {
-                MessageBanner.Instance.DelayMessage("Not enough Supplies<sprite=2> to build " +
-                                      structure.tileName + "!  Build Supply Depots!", Color.red, 0.1f);
+                MessageBanner.PulseMessage("Supply<sprite=2> Limit reached!  \nUpgrade Supply Limit at the Engineering Bay!", Color.red);
+                return false;
+            }
+            // Check for needing more depots
+            else if (SupplyManager.SupplyBalance - structure.supplyCost < 0)
+            {
+                MessageBanner.PulseMessage("Not enough Supplies<sprite=2> to build " +
+                                      structure.tileName + "!  \nBuild Supply Depots!", Color.red);
                 return false;
             }
         }
@@ -606,7 +613,7 @@ public class BuildingSystem : MonoBehaviour
             // Check Supply Limit
             if (SupplyManager.SupplyProduced + structure.supplyCost > SupplyManager.SupplyLimit)
             {
-                MessageBanner.Instance.DelayMessage("Supply<sprite=2> Limit reached!  Build more Supply Depots!", Color.red, 0.1f);
+                MessageBanner.PulseMessage("Supply<sprite=2> Limit reached!  Build more Supply Depots!", Color.red);
                 return false;
             }
         }

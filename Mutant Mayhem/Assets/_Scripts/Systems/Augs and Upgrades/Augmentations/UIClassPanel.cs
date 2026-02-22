@@ -20,24 +20,33 @@ public class UIClassPanel : MonoBehaviour
 
     void Start()
     {
+        // Load selected class from profile
+        if (ProfileManager.Instance.currentProfile.selectedClassName != "")
+        {
+            PlayerClass savedClass = (PlayerClass)System.Enum.Parse(typeof(PlayerClass), ProfileManager.Instance.currentProfile.selectedClassName);
+            // Ensure saved class is valid (in case of changes to PlayerClass enum)
+            if (System.Enum.IsDefined(typeof(PlayerClass), savedClass))
+                ClassManager.Instance.SelectClass(savedClass);
+        }
+        
         UpdateButtonsAndText();
     }
 
     public void OnFighterClicked()
     {
-        ClassManager.Instance.selectedClass = PlayerClass.Fighter;
+        ClassManager.Instance.SelectClass(PlayerClass.Fighter);
         UpdateButtonsAndText();
     }
 
     public void OnNeutralClicked()
     {
-        ClassManager.Instance.selectedClass = PlayerClass.Neutral;
+        ClassManager.Instance.SelectClass(PlayerClass.Neutral);
         UpdateButtonsAndText();
     }
 
     public void OnBuilderClicked()
     {
-        ClassManager.Instance.selectedClass = PlayerClass.Builder;
+        ClassManager.Instance.SelectClass(PlayerClass.Builder);
         UpdateButtonsAndText();
     }
 

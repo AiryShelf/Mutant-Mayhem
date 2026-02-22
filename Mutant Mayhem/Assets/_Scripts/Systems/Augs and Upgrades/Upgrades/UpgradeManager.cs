@@ -513,46 +513,118 @@ public class UpgradeManager : MonoBehaviour
 
     #region Apply Upg
 
-    public void OnUpgradeButtonClicked(PlayerStatsUpgrade upgType)
+    public void OnUpgradeButtonClicked(PlayerStatsUpgrade upgType, UIUpgradeButton uIUpgradeButton)
     {
+        // Check if max level is already reached
+        if (playerStatsUpgLevels[upgType] >= playerStatsUpgMaxLevels[upgType])
+        {
+            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
+            uIUpgradeButton.MakeNonInteractable();
+            return;
+        }
         Upgrade upgrade = CreateUpgrade(upgType);
         ApplyPlayerUpgrade(upgrade, upgType);
     }
 
-    public void OnUpgradeButtonClicked(StructureStatsUpgrade upgType)
+    public void OnUpgradeButtonClicked(StructureStatsUpgrade upgType, UIUpgradeButton uIUpgradeButton)
     {
+        // Check if max level is already reached
+        if (structureStatsUpgLevels[upgType] >= structureStatsUpgMaxLevels[upgType])
+        {
+            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
+            uIUpgradeButton.MakeNonInteractable();
+            return;
+        }
         Upgrade upgrade = CreateUpgrade(upgType);
         ApplyStructureUpgrade(upgrade, upgType);
+
+        // Check again for max level
+        if (structureStatsUpgLevels[upgType] >= structureStatsUpgMaxLevels[upgType])
+        {
+            uIUpgradeButton.MakeNonInteractable();
+        }
     }
 
-    public void OnUpgradeButtonClicked(ConsumablesUpgrade upgType)
+    public void OnUpgradeButtonClicked(ConsumablesUpgrade upgType, UIUpgradeButton uIUpgradeButton)
     {
+        // Check if max level is already reached
+        if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
+        {
+            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
+            uIUpgradeButton.MakeNonInteractable();
+            return;
+        }
         Upgrade upgrade = CreateUpgrade(upgType);
         ApplyConsumableUpgrade(upgrade, upgType);
+
+        // Check again for max level
+        if (consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
+        {
+            uIUpgradeButton.MakeNonInteractable();
+        }
     }
 
-    public void OnUpgradeButtonClicked(GunStatsUpgrade upgType, int gunIndex)
+    public void OnUpgradeButtonClicked(GunStatsUpgrade upgType, int gunIndex, UIUpgradeButton uIUpgradeButton)
     {
+        // Check if max level is already reached
+        Dictionary<GunStatsUpgrade, int> upgLevelsDict = gunIndex switch
+        {   
+            0 => laserUpgLevels,
+            1 => bulletUpgLevels,
+            4 => repairGunUpgLevels,
+            _ => null
+        };
+        Dictionary<GunStatsUpgrade, int> upgMaxLevelsDict = gunIndex switch
+        {
+            0 => laserUpgMaxLevels,
+            1 => bulletUpgMaxLevels,
+            4 => repairGunUpgMaxLevels,
+            _ => null
+        };
+        if (upgLevelsDict == null || upgMaxLevelsDict == null)
+        {
+            Debug.LogError("Invalid gun index: " + gunIndex);
+            return;
+        }
+        if (upgLevelsDict[upgType] >= upgMaxLevelsDict[upgType])
+        {
+            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
+            uIUpgradeButton.MakeNonInteractable();
+            return;
+        }
+
         Upgrade upgrade = CreateUpgrade(upgType);
         ApplyGunUpgrade(upgrade, upgType, gunIndex);
+
+        // Check again for max level
+        if (upgLevelsDict[upgType] >= upgMaxLevelsDict[upgType])
+        {            
+            uIUpgradeButton.MakeNonInteractable();
+        }   
     }
 
-    public void OnUpgradeButtonClicked(DroneStatsUpgrade upgType)
+    public void OnUpgradeButtonClicked(DroneStatsUpgrade upgType, UIUpgradeButton uIUpgradeButton)
     {
+        // Check if max level is already reached
+        if (droneStatsUpgLevels[upgType] >= droneStatsUpgMaxLevels[upgType])
+        {
+            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
+            uIUpgradeButton.MakeNonInteractable();
+            return;
+        }
         Upgrade upgrade = CreateUpgrade(upgType);
         ApplyDroneUpgrade(upgrade, upgType);
+
+        // Check again for max level
+        if (droneStatsUpgLevels[upgType] >= droneStatsUpgMaxLevels[upgType])
+        {
+            uIUpgradeButton.MakeNonInteractable();
+        }
     }
 
     // PlayerStats
     private void ApplyPlayerUpgrade(Upgrade upgrade, PlayerStatsUpgrade upgType)
     {
-        // Check max level
-        if (playerStatsUpgLevels[upgType] >= playerStatsUpgMaxLevels[upgType])
-        {
-            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
-            return;
-        }
-
         // Buy and apply
         int cost = Mathf.FloorToInt(playerStatsCostMult * playerStatsUpgCurrCosts[upgType]);
         if (BuildingSystem.PlayerCredits >= cost)
@@ -579,13 +651,6 @@ public class UpgradeManager : MonoBehaviour
     // StructureStats
     private void ApplyStructureUpgrade(Upgrade upgrade, StructureStatsUpgrade upgType)
     {
-        // Check max level
-        if (structureStatsUpgLevels[upgType] >= structureStatsUpgMaxLevels[upgType])
-        {
-            MessageBanner.PulseMessage("Max level reached!", Color.yellow);
-            return;
-        }
-
         // Buy and apply
         int cost = Mathf.FloorToInt(structureStatsCostMult * structureStatsUpgCurrCosts[upgType]);
         if (BuildingSystem.PlayerCredits >= cost)
@@ -630,17 +695,6 @@ public class UpgradeManager : MonoBehaviour
 
     private void CheckAndApplyConsumable(Upgrade upgrade, ConsumablesUpgrade upgType, int cost)
     {
-        // Check max level
-        if (upgType != ConsumablesUpgrade.BuyLaserRifle &&
-            upgType != ConsumablesUpgrade.BuyBulletRifle &&
-            consumablesUpgLevels[upgType] >= consumablesUpgMaxLevels[upgType])
-        {
-            Debug.LogError("Consumable int maxed out: " + upgType);
-            MessageBanner.PulseMessage("Reached max value for integers. You either bought this over " +
-                                      "2 billion times, or there is a bug!  Let me know!", Color.red);
-            return;
-        }
-
         /*  // Class discount deprecated
         if ((ClassManager.Instance.selectedClass == PlayerClass.Fighter && 
             upgType == ConsumablesUpgrade.BuyAttackDrone) ||

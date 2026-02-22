@@ -183,7 +183,7 @@ public class PlanetManager : MonoBehaviour
             return;
         }
 
-        buildingSystem.structureCostMult *= statMultipliers[PlanetStatModifier.BuildCost];
+        buildingSystem.structureCostMult *= statMultipliers[PlanetStatModifier.BuildCost]; 
     }
 
     void ApplyToDroneManager()

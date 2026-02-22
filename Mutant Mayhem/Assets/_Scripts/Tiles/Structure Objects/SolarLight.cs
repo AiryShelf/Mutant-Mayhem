@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SolarLight : Light
+public class SolarLight : LightTile
 {
     [SerializeField] SpriteRenderer mySR;
     [SerializeField] Sprite onSprite;

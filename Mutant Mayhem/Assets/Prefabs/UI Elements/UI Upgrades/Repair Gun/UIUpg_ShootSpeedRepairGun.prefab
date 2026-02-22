@@ -59,13 +59,14 @@ MonoBehaviour:
   structureStatsUpgrade: 0
   consumablesUpgrade: 0
   gunStatsUpgrade: 2
+  droneStatsUpgrade: 0
   buttonImage: {fileID: 8504848174612327447}
   buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 7425381085691339285}
   unlocked: 1
-  UiName: Fire Rate
+  UiName: Auto Fire Rate
   powerCost: 0
-  productionCost: 0
+  supplyCost: 0
   tooltipDescription: Upgrades to the main capacitors and charging mechanism allow
     for less time between bursts
   showLevelsText: 1
@@ -134,7 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a9b72b3090b65408cd83094b1f246d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolTipDelay: 0.5
   header: 
   content: 
 --- !u!1 &7048168703965982096

@@ -35,6 +35,7 @@ public class PlayerProfile
     public DifficultyLevel difficultyLevel;
     public bool completedTutorial = false;
 
+    public string selectedClassName = "";
     // Persisted augmentation selections (JsonUtility-safe)
     // Format (index-based): "i:lvl|i:lvl|..." and "i:cost|i:cost|..."
     public string selectedAugsLevelsString = "";
