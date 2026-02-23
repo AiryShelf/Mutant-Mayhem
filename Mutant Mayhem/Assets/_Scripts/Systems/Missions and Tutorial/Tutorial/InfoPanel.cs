@@ -72,6 +72,7 @@ public class InfoPanel : MonoBehaviour
             TimeControl.Instance.PauseGame(false);
         
         gameObject.SetActive(false);
+        TouchManager.Instance.ShowVirtualJoysticks(true);
     }
 
     IEnumerator WaitToStoreSelection()
