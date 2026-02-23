@@ -1,80 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1281121623127094900
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3266013558241140477}
-  - component: {fileID: 6401084218743081238}
-  - component: {fileID: 1143275933254199575}
-  m_Layer: 0
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3266013558241140477
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281121623127094900}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 160619586715440088}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 40, y: 40}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &6401084218743081238
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281121623127094900}
-  m_CullTransparentMesh: 1
---- !u!114 &1143275933254199575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281121623127094900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 592501727d9d44aafa7e9a839a1e7926, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5696621846081790354
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,7 +15,7 @@ GameObject:
   - component: {fileID: 2513696149766030651}
   - component: {fileID: 674232655064454115}
   m_Layer: 0
-  m_Name: UIUpg_SellConstructionDrone
+  m_Name: UIUpg_BuyRepairDrone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,7 +34,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7276794350410392468}
-  - {fileID: 3266013558241140477}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -132,21 +56,28 @@ MonoBehaviour:
   upgradeFamily: 2
   playerStatsUpgrade: 0
   structureStatsUpgrade: 0
-  consumablesUpgrade: 6
+  consumablesUpgrade: 4
   gunStatsUpgrade: 0
   droneStatsUpgrade: 0
   buttonImage: {fileID: 1680538786241877614}
   buttonImageHoverColor: {r: 0, g: 0, b: 0, a: 0}
   clickableAreaButton: {fileID: 6087908181822164550}
   unlocked: 1
-  UiName: Sell Construction Drone
+  UiName: Buy Repair Drone
   powerCost: 0
-  supplyCost: -2
-  tooltipDescription: Sells one Construction Drone from the hangar.  Drone must be
-    docked to be sold
+  supplyCost: 2
+  tooltipDescription: Adds one Repair Drone to the hangar
   showLevelsText: 0
   upgradeTextPrefab: {fileID: 975921204391627443, guid: f694a7c7f509d804abb6f0e06f1330d7, type: 3}
   playerGunIndex: 0
+  requiredUpgradeFamily: 0
+  requiredPlayerStatsUpgrade: 0
+  requiredStructureStatsUpgrade: 0
+  requiredConsumablesUpgrade: 0
+  requiredGunStatsUpgrade: 0
+  requiredGunStatsUpgradeGunIndex: 0
+  requiredDroneStatsUpgrade: 0
+  requiredUpgradeLevel: 0
   upgradeText: {fileID: 0}
 --- !u!222 &4710285486625712721
 CanvasRenderer:

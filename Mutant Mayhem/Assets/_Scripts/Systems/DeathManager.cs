@@ -69,18 +69,21 @@ public class DeathManager : MonoBehaviour
     public void ReloadScene()
     {
         GameTools.StartCoroutine(LerpSFXVolume(storedSFXVolume, deathSFXFadeTime));
+        TimeControl.Instance.ResetTimeScale();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void MainMenu()
     {
         GameTools.StartCoroutine(LerpSFXVolume(storedSFXVolume, deathSFXFadeTime));
+        TimeControl.Instance.ResetTimeScale();
         SceneManager.LoadScene(1);
     }
 
     public void BackToShip()
     {
         GameTools.StartCoroutine(LerpSFXVolume(storedSFXVolume, deathSFXFadeTime));
+        TimeControl.Instance.ResetTimeScale();
         SceneManager.LoadScene(2);
     }
 
@@ -136,7 +139,7 @@ public class DeathManager : MonoBehaviour
         MessageManager.Instance.StopAllConversations();
 
         CursorManager.Instance.inMenu = true;
-        TouchManager.Instance.ShowVirtualAimJoysticks(false);
+        TouchManager.Instance.ShowVirtualJoysticks(false);
         InputManager.SetJoystickMouseControl(true);
 
         //SFXManager.Instance.FadeToDeathSnapshot();

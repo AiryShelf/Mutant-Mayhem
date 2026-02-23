@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: Objective_BuildDefences
   m_EditorClassIdentifier: 
   objectiveTitle: Build Defences
-  objectiveDescription: 'Open the build menu with ''B''
-
-
-    Select structures in
-    the build menu with the mouse wheel
-
-
-    Rotate with ''Q'' and ''E'' before
-    placing
-
-
-    Place with ''Left Click''
-
-
-    Close the build menu with either
-    ''B'', ''TAB'', or ''Right Click'''
+  autoShowInfoPanel: 1
+  infoImageSprite: {fileID: 21300000, guid: e2992e69198b94893a0ded74cb97f5d3, type: 3}
+  inforImageSprite2: {fileID: 0}
+  objectiveDescription: "1. Open the build menu with 'B'\n2. Select structures with
+    the mouse wheel\n3. Rotate with 'Q' and 'E' before placing\n4. Place with 'Left
+    Click'\n5. Close the build menu with either 'B', 'TAB', or 'Right Click'\n\n*TIP*
+    \nSurround the cube will walls and doors for easy access"
+  objectiveDescriptionGamepad: "1. Open the build menu with 'B'\n2. Select structures
+    the D-Pad\n3. Rotate with 'Bumpers' before placing\n4. Place with 'A' or 'Right-Trigger\n5.
+    Close the build menu with either 'B' or 'Melee'\n\n*TIP* \nSurround the cube
+    with walls and doors for easy access"
+  objectiveDescriptionMobile: "1. Tap the build button in the top left corner\n2.
+    Swipe or tap the menu to select a structure\n3. Rotate with the 'L' and 'R' buttons
+    next to menu\n4. Place with the 'Place' button\n5. Close the menu with the 'Close'
+    button or melee attack\n\n*TIP* \nSurround the cube will walls and doors for
+    easy access"
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 56fb759dad897cb4db4dad46a426c13c, type: 3}
   - {fileID: 936962933341166503, guid: fd1be177425f3a148a0c10c088a6549f, type: 3}
@@ -42,3 +42,4 @@ MonoBehaviour:
     - {fileID: 11400000, guid: c2d7f33416c0b4a93ab4bc499125389a, type: 2}
   endConversation:
     messages: []
+  timeToShowCompletionUI: 3

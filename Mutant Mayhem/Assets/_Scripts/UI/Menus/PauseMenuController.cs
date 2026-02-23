@@ -100,7 +100,7 @@ public class PauseMenuController : MonoBehaviour
         if (open)
         {
             CursorManager.Instance.inMenu = true;
-            TouchManager.Instance.ShowVirtualAimJoysticks(false);
+            TouchManager.Instance.ShowVirtualJoysticks(false);
             InputManager.SetJoystickMouseControl(true);
             if (InputManager.LastUsedDevice == Touchscreen.current)
             {
@@ -120,7 +120,7 @@ public class PauseMenuController : MonoBehaviour
         else
         {
             CursorManager.Instance.inMenu = false;
-            TouchManager.Instance.ShowVirtualAimJoysticks(true);
+            TouchManager.Instance.ShowVirtualJoysticks(true);
             playerActionMap.Enable();
             if (InputManager.LastUsedDevice == Touchscreen.current)
             {

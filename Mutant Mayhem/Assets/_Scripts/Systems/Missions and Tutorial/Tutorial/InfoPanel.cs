@@ -10,6 +10,9 @@ using UnityEngine.UI;
 public class InfoPanel : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
+    public HorizontalLayoutGroup imagesLayoutGroup;
+    public Image infoImage;
+    public Image infoImage2;
     public TextMeshProUGUI descriptionText;
     [SerializeField] InputActionAsset inputAsset;
     public bool pauseOnOpen;

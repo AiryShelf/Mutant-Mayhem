@@ -244,6 +244,8 @@ public class UIUpgradeButton : MonoBehaviour
 
     public void UpdateText(float playerCredits)
     {
+        CheckIfUnlocked();
+        
         if (upgradeText == null)
         {
             //Debug.LogError("UiUpgrade could not find it's upgradeText");

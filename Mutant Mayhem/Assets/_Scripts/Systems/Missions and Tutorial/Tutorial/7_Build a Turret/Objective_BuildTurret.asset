@@ -13,13 +13,18 @@ MonoBehaviour:
   m_Name: Objective_BuildTurret
   m_EditorClassIdentifier: 
   objectiveTitle: Build 2 Turrets
-  objectiveDescription: 'Unlocking Turret Tech or Bullet Tech also unlocks a turret
-    of that type in the build menu
-
-
-    Unlocking Structure Tech also adds 1 turret
-    slot.  You can buy more turret slots in the Structure Tech upgrade panel after
-    it''s unlocked.'
+  autoShowInfoPanel: 0
+  infoImageSprite: {fileID: 0}
+  inforImageSprite2: {fileID: 0}
+  objectiveDescription: "Unlocking Laser Tech or Bullet Tech also unlocks a turret
+    of that type in the build menu. \n\nWatch your Power and Supply, as Turrets can
+    be expensive!"
+  objectiveDescriptionGamepad: "Unlocking Laser Tech or Bullet Tech also unlocks
+    a turret of that type in the build menu. \n\nWatch your Power and Supply, as
+    Turrets can be expensive!"
+  objectiveDescriptionMobile: "Unlocking Laser Tech or Bullet Tech also unlocks a
+    turret of that type in the build menu. \n\nWatch your Power and Supply, as Turrets
+    can be expensive!"
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 5d74bfc2b4a9042d7bc328fc16707145, type: 3}
   - {fileID: 936962933341166503, guid: c9b32ab2577ef4f5c93b0f57dc95eeb4, type: 3}

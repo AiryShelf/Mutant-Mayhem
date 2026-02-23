@@ -28,14 +28,14 @@ public class SystemsInitializer : MonoBehaviour
         // Virtual Joysticks
         if (InputManager.LastUsedDevice == Touchscreen.current)
         {
-            TouchManager.Instance.ShowVirtualAimJoysticks(true);
+            TouchManager.Instance.ShowVirtualJoysticks(true);
 
             if (PlanetManager.Instance.currentPlanet.isTutorialPlanet)
             {
                 // Force virtual aim joystick visible on tutorial planet
                 SettingsManager.Instance.isVirtualAimJoystickVisible = true;
                 TouchManager.Instance.SetVirtualAimJoystickVisible(true);
-                TouchManager.Instance.ShowVirtualAimJoysticks(true);
+                TouchManager.Instance.ShowVirtualJoysticks(true);
                 CameraController.Instance.SetTouchscreenOffset(false);
             }
         }

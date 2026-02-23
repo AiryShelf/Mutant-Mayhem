@@ -13,8 +13,17 @@ MonoBehaviour:
   m_Name: Objective_SkipDay
   m_EditorClassIdentifier: 
   objectiveTitle: Skip the Day
+  autoShowInfoPanel: 0
+  infoImageSprite: {fileID: 0}
+  inforImageSprite2: {fileID: 0}
   objectiveDescription: Notice the slowly pulsing banner at the top of the screen. 
     It tells you how to skip the day, and go straight to the night.
+  objectiveDescriptionGamepad: Notice the slowly pulsing banner at the top of the
+    screen, it has instructions to skip to the night for your device, this saves
+    waiting around.
+  objectiveDescriptionMobile: Notice the slowly pulsing banner at the top of the
+    screen, it has instructions to skip to the night for your device, this saves
+    waiting around.
   taskPrefabs:
   - {fileID: 1578812020269692424, guid: d440e1c10f3954e4f906b5c3bf40377e, type: 3}
   startConversation:
@@ -22,3 +31,4 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 53474b23a3f0a4448acec8ded719ef2a, type: 2}
   endConversation:
     messages: []
+  timeToShowCompletionUI: 3

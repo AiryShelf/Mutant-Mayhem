@@ -13,17 +13,39 @@ MonoBehaviour:
   m_Name: Objective_RepairStructure
   m_EditorClassIdentifier: 
   objectiveTitle: Build/Repair Structures
-  objectiveDescription: 'Quick switch to the Repair Gun with ''C'' on keyboard, ''D-Pad
-    Up'' on controller, or by tapping it''s image on the toolbar with touchscreen
+  autoShowInfoPanel: 0
+  infoImageSprite: {fileID: 0}
+  inforImageSprite2: {fileID: 0}
+  objectiveDescription: 'Quick switch to the Repair Gun with ''C'', or use number
+    buttons or mouse wheel to select it
 
 
-    The
-    Repair Gun has a short range.  Hover the cursor over a wall or door and shoot
-    at it with the Repair Gun to build or repair it
+    The Repair Gun has a short range. 
+    Hover the cursor over a damaged structure and shoot at it to repair it
 
 
-    Switch back to your previous
-    weapon with the same button you used to switch to the Repair Gun'
+    Quickly
+    switch back to your previous weapon with ''C'''
+  objectiveDescriptionGamepad: 'Quick switch to the Repair Gun ''D-Pad Up'', or us
+    D-Pad Left/Right to select it
+
+
+    The Repair Gun has a short range.  Hover
+    the cursor over a damaged structure and shoot at it to repair it
+
+
+    Quickly
+    switch back to your previous weapon with ''D-Pad Up'''
+  objectiveDescriptionMobile: 'Switch to the Repair Gun by tapping it''s image in
+    the toolbar
+
+
+    The Repair Gun has a short range.  Hover the cursor over a
+    damaged structure and shoot at it to repair it
+
+
+    Switch back to your Laser
+    Pistol by tapping it''s image in the toolbar'
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 556380baad436534cbf2dd500adeb757, type: 3}
   - {fileID: 936962933341166503, guid: 6b04be376f0255549bd235805d33fb31, type: 3}

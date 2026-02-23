@@ -13,13 +13,60 @@ MonoBehaviour:
   m_Name: Objective_DefendTheCube
   m_EditorClassIdentifier: 
   objectiveTitle: Defend the Cube
-  objectiveDescription: "Use 'Left Click' to fire your gun\n'Right Click' swings
-    your laser sword\n'Middle Click' or 'Spacebar' will throw to the mouse position\n\nCollect
-    samples from dead mutants\nSell samples by standing next to the Cube\n\n** TOUCHSCREEN
-    CONTROL **\n- Tap and hold to aim  \n- Second finger down anywhere to shoot\n-
-    Second + third fingers down anywhere to melee\n- Spread fingers to see more easily\n-
-    Alternatively, you can activate another joystick in the options menu and use
-    that to aim, shoot, and melee. \n- Master your \"Finger Jui Jitsu\""
+  autoShowInfoPanel: 0
+  infoImageSprite: {fileID: 0}
+  inforImageSprite2: {fileID: 0}
+  objectiveDescription: 'Use ''Left Click'' to fire your gun
+
+
+    ''Right Click''
+    swings your laser sword
+
+
+    ''Middle Click'' will throw to the mouse position
+
+
+    Collect
+    samples from dead mutants
+
+    Sell samples by standing next to the Cube
+
+'
+  objectiveDescriptionGamepad: 'Use ''Right Trigger'' to fire your gun
+
+
+    ''Left
+    Trigger'' swings your laser sword
+
+
+    Press the Right Thumbstick down to throw
+    to the cursor
+
+
+    Collect samples from dead mutants
+
+    Sell samples by standing
+    next to the Cube
+
+'
+  objectiveDescriptionMobile: '- Tap or drag anywhere to aim
+
+
+    - Tapping near
+    the cursor will trigger a shot
+
+
+    - Tapping with two fingers triggers a melee
+
+
+    -
+    Master your "Finger Jui Jitsu"
+
+
+    Collect samples from dead mutants
+
+    Sell
+    samples by standing next to the Cube'
   taskPrefabs:
   - {fileID: 936962933341166503, guid: c073817d20af6a848b18f867a8726407, type: 3}
   - {fileID: 936962933341166503, guid: cd7eab6f71433b248a1719f4a51bbc96, type: 3}
@@ -33,3 +80,4 @@ MonoBehaviour:
     - {fileID: 11400000, guid: a0492fe14f98f4b5ca6bdd896b521d16, type: 2}
   endConversation:
     messages: []
+  timeToShowCompletionUI: 3

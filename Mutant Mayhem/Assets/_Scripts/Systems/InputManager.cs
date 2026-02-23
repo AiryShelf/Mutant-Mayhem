@@ -157,21 +157,21 @@ public class InputManager : MonoBehaviour
                 CursorManager.Instance.SetCursorVisible(true);
                 CursorManager.Instance.SetUsingCustomCursor(false);
                 CursorManager.Instance.SetCustomCursorVisible(false);
-                TouchManager.Instance.ShowVirtualAimJoysticks(false);
+                TouchManager.Instance.ShowVirtualJoysticks(false);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 break;
             case Touchscreen device:
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
-                TouchManager.Instance.ShowVirtualAimJoysticks(true);
+                TouchManager.Instance.ShowVirtualJoysticks(true);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 break;
             case Gamepad device:
                 CursorManager.Instance.SetCursorVisible(false);
                 CursorManager.Instance.SetUsingCustomCursor(true);
                 CursorManager.Instance.SetCustomCursorVisible(true);
-                TouchManager.Instance.ShowVirtualAimJoysticks(false);
+                TouchManager.Instance.ShowVirtualJoysticks(false);
                 LastUsedDeviceChanged?.Invoke(LastUsedDevice);
                 break;
         }

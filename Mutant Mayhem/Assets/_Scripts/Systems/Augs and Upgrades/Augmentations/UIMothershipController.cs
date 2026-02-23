@@ -41,7 +41,7 @@ public class UIMothershipController : MonoBehaviour
         }
         
         CursorManager.Instance.inMenu = true;
-        TouchManager.Instance.ShowVirtualAimJoysticks(false);
+        TouchManager.Instance.ShowVirtualJoysticks(false);
         AugManager.Instance.Initialize();
         AugManager.Instance.RefreshStats();
 

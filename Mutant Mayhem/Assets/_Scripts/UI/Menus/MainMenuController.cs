@@ -59,7 +59,7 @@ public class MainMenuController : MonoBehaviour
         InputManager.SetJoystickMouseControl(true);
         CursorManager.Instance.inMenu = true;
         CursorManager.Instance.SetGraphicRaycasters(graphicRaycasters);
-        TouchManager.Instance.ShowVirtualAimJoysticks(false);
+        TouchManager.Instance.ShowVirtualJoysticks(false);
         StartCoroutine(DelayStartActions());
     }
 

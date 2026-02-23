@@ -119,17 +119,34 @@ public class TouchManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Use to change the setting of whether the aim joystick should be shown at all on touch devices.
+    /// If false, the right-side attack buttons will show instead when using touch controls. 
+    /// This is for players who prefer not to use the aim joystick and want bigger buttons instead, 
+    /// and also prevents the aim joystick from covering up the screen when not wanted.
+    /// </summary>
+    /// <param name="visible"></param>
     public void SetVirtualAimJoystickVisible(bool visible)
     {
         virtualAimJoystickVisible = visible;
     }
 
+
+    /// <summary>
+    /// Returns whether the aim joystick should be shown at all on touch devices, as set by SetVirtualAimJoystickVisible.
+    /// </summary>
+    /// <returns></returns>
     public bool GetVirtualAimJoystickVisible()
     {
         return virtualAimJoystickVisible;
     }
 
-    public void ShowVirtualAimJoysticks(bool show)
+    /// <summary>
+    /// Shows or hides the virtual joysticks and related UI based on the "show" parameter, 
+    /// but only if the last used input device was a touchscreen and we're not in a menu.
+    /// </summary>
+    /// <param name="show"></param>
+    public void ShowVirtualJoysticks(bool show)
     {
         if (InputManager.LastUsedDevice == Touchscreen.current && !CursorManager.Instance.inMenu)
         {

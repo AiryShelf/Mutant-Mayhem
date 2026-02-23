@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UI_MissionPanelController : MonoBehaviour
@@ -139,6 +140,9 @@ public class UI_MissionPanelController : MonoBehaviour
             }
         }
         ShowMissionPanel(isPanelOpen);
+
+        if (currentMission.objectives[index].autoShowInfoPanel)
+            StartCoroutine(DelayedShowObjectiveInfoPanel(3f));
     }
 
     void ObjectiveComplete()
@@ -244,11 +248,49 @@ public class UI_MissionPanelController : MonoBehaviour
         MessageBanner.PulseMessage($"Planet {planetName} completed!\n\nYou earned {researchPointsGained} research points and unlocked new planet(s)!", Color.green);
     }
 
+    IEnumerator DelayedShowObjectiveInfoPanel(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShowObjectiveInfoPanel(true);
+    }
+
     public void ShowObjectiveInfoPanel(bool show)
     {
         objectiveInfoPanel.gameObject.SetActive(show);
+        TouchManager.Instance.ShowVirtualJoysticks(!show);
+
+        // Set image
+        Sprite infoSprite = currentMission.objectives[currentObjectiveIndex].infoImageSprite;
+        Sprite infoSprite2 = currentMission.objectives[currentObjectiveIndex].inforImageSprite2;
+        objectiveInfoPanel.infoImage.sprite = infoSprite;
+        objectiveInfoPanel.infoImage2.sprite = infoSprite2;
+        if (objectiveInfoPanel.infoImage.sprite == null)
+            objectiveInfoPanel.infoImage.gameObject.SetActive(false);
+        else
+            objectiveInfoPanel.infoImage.gameObject.SetActive(true);
+
+        if (objectiveInfoPanel.infoImage2.sprite == null)
+            objectiveInfoPanel.infoImage2.gameObject.SetActive(false);
+        else
+            objectiveInfoPanel.infoImage2.gameObject.SetActive(true);
+
+        if (infoSprite == null && infoSprite2 == null)
+        {
+            objectiveInfoPanel.imagesLayoutGroup.gameObject.SetActive(false);
+        }
+        else
+        {
+            objectiveInfoPanel.imagesLayoutGroup.gameObject.SetActive(true);
+        }
+
+        // Set text based on input device
         objectiveInfoPanel.titleText.text = currentMission.objectives[currentObjectiveIndex].objectiveTitle;
-        objectiveInfoPanel.descriptionText.text = currentMission.objectives[currentObjectiveIndex].objectiveDescription;
+        if (InputManager.LastUsedDevice == Touchscreen.current)
+            objectiveInfoPanel.descriptionText.text = currentMission.objectives[currentObjectiveIndex].objectiveDescriptionMobile;
+        else if (InputManager.LastUsedDevice == Gamepad.current)
+            objectiveInfoPanel.descriptionText.text = currentMission.objectives[currentObjectiveIndex].objectiveDescriptionGamepad;
+        else
+            objectiveInfoPanel.descriptionText.text = currentMission.objectives[currentObjectiveIndex].objectiveDescription;
     }
 
     void ClearTasksGrid()

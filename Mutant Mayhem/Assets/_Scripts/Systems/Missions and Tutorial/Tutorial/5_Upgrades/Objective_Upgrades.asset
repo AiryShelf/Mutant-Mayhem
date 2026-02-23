@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Objective_Upgrades
   m_EditorClassIdentifier: 
   objectiveTitle: Upgrades and Cube Repair
+  autoShowInfoPanel: 0
+  infoImageSprite: {fileID: 0}
+  inforImageSprite2: {fileID: 0}
   objectiveDescription: 'Stand next to the Cube and press ''Interact'' to open the
     upgrades panel
 
@@ -26,6 +29,32 @@ MonoBehaviour:
 
     Close the upgrades
     panel with either ''Interact'', ''Melee'', or by walking away'
+  objectiveDescriptionGamepad: 'Stand next to the Cube and press ''Interact'' to
+    open the upgrades panel
+
+
+    Consumables allow you to heal and repair
+
+
+    Exosuit
+    Upgrades allows you to increase you max health, stamina, and more
+
+
+    Close
+    the upgrades panel with either ''Interact'', ''Melee'', or by walking away'
+  objectiveDescriptionMobile: 'Stand next to the Cube and press ''Interact'' to open
+    the upgrades panel
+
+
+    Consumables allow you to heal and repair
+
+
+    Exosuit
+    Upgrades allows you to increase you max health, stamina, and more
+
+
+    Close
+    the upgrades panel with either ''Interact'', ''Melee'', or by walking away'
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 94efa88867271884a85dfeabfcf121f0, type: 3}
   - {fileID: 936962933341166503, guid: 4c43c06ff9af20d4d8d22d8b04c46747, type: 3}
@@ -36,3 +65,4 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 212dfc68c2b454f85b24dce749f9c4f7, type: 2}
   endConversation:
     messages: []
+  timeToShowCompletionUI: 3
