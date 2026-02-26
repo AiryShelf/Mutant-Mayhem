@@ -303,6 +303,7 @@ public class Player : MonoBehaviour
     // These are used by the Touchscreen UI buttons
     public void OnShootPressed()
     {
+        Debug.Log("OnShootPressed called");
         animControllerPlayer.FireInput_Performed(new InputAction.CallbackContext());
     }
 

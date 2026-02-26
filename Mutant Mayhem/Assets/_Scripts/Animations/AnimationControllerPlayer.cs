@@ -396,8 +396,10 @@ public class AnimationControllerPlayer : MonoBehaviour
 
     public void FireInput_Performed(InputAction.CallbackContext context)
     {
+        Debug.Log("FireInput_Performed called, context: " + context);
         if (!fireAction.enabled) return;
         
+        Debug.Log("FireInput_Performed setting animator");
         bodyAnim.SetBool("isAiming", true);
         isFireInput = true;
     }

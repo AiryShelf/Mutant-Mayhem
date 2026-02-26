@@ -370,7 +370,7 @@ public class PlayerShooter : Shooter
         else
         {
             // SEMI-AUTO
-
+            Debug.Log("shooting semi-auto, triggerPulledThisFrame: " + triggerPulledThisFrame + " coreReady: " + coreReady);
             // Queue shot if trigger pulled while not ready
             if (triggerPulledThisFrame && !coreReady)
             {
@@ -384,6 +384,7 @@ public class PlayerShooter : Shooter
 
             if (shouldFireNow)
             {
+                Debug.Log("shooting calling Fire()");
                 Fire();
                 StartCoroutine(WaitToShoot());
                 waitToShoot = true;

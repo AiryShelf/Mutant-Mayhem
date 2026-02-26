@@ -66,6 +66,12 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
             return;
         }
 
+        StartCoroutine(WaitToStoreYPos());
+    }
+
+    IEnumerator WaitToStoreYPos()
+    {
+        yield return new WaitForSeconds(0.1f);
         missionPanelStartYPos = missionPanelRect.anchoredPosition.y;
     }
 
@@ -114,14 +120,14 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (player != null)
-            player.stats.playerShooter.canShoot = false;
+        //if (player != null)
+            //player.stats.playerShooter.canShoot = false;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (player != null)
-            player.stats.playerShooter.canShoot = true;
+        //if (player != null)
+            //player.stats.playerShooter.canShoot = true;
     }
 
     public void OnMuteSFXButton()
