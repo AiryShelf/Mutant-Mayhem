@@ -4,11 +4,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public static UI_MusicPlayerPanel Instance;
+
+    [SerializeField] GameObject mainPanel;
+    [SerializeField] GameObject musicPanelButton;
+    [SerializeField] RectTransform missionPanelRect;
+    float missionPanelStartYPos;
+    [SerializeField] float missionPanelYOffset;
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI artistText;
     [SerializeField] TMP_Dropdown playlistsDropdown;
@@ -34,12 +41,13 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
     [SerializeField] TextMeshProUGUI shuffleButtonText;
     [SerializeField] Color buttonDisabledColor = new Color(0.75f, 0.75f, 0.75f);
     [SerializeField] float sliderDecibelsMin = -24f;
-    [SerializeField] GameObject mainPanel;
+    
     public GameObject persistentCanvas;
 
     public AudioMixer mainMixer;
     bool sfxMuted;
     bool musicMuted;
+    bool isHidden;
 
     [HideInInspector] public Player player;
 
@@ -57,6 +65,36 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
             Destroy(gameObject);
             return;
         }
+
+        missionPanelStartYPos = missionPanelRect.anchoredPosition.y;
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        StartCoroutine(DelayMissionPanelOffset());
+    }
+
+    void ApplyMissionPanelOffset(bool show)
+    {
+        var pos = missionPanelRect.anchoredPosition;
+        pos.y = show ? missionPanelStartYPos : (missionPanelStartYPos + missionPanelYOffset);
+        missionPanelRect.anchoredPosition = pos;
+    }
+
+    IEnumerator DelayMissionPanelOffset()
+    {
+        yield return new WaitForSeconds(0.1f);
+        ApplyMissionPanelOffset(!isHidden);
     }
 
     void Start()
@@ -239,16 +277,30 @@ public class UI_MusicPlayerPanel : MonoBehaviour, IPointerEnterHandler, IPointer
 
     #region Update UI
 
-    public void ShowPanel(bool show)
+    public void ShowMainPanel(bool show)
     {
-        if (show)
+        mainPanel.SetActive(show);
+        musicPanelButton.SetActive(!show);
+        isHidden = !show;
+
+        ApplyMissionPanelOffset(show);
+
+        // optional, helps if a rebuild happens immediately after:
+        Canvas.ForceUpdateCanvases();
+    }
+
+    public void EnableMusicPlayer(bool enable)
+    {
+        if (enable)
         {
-            mainPanel.SetActive(true);
+            mainPanel.SetActive(!isHidden);
+            musicPanelButton.SetActive(isHidden);
             OnPlayButton();
         }
         else
         {
             mainPanel.SetActive(false);
+            musicPanelButton.SetActive(false);
             OnStopButton();
         }
     }

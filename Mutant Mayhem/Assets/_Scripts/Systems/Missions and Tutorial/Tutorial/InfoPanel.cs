@@ -45,6 +45,9 @@ public class InfoPanel : MonoBehaviour
 
         if (escapeAction != null)
             escapeAction.started -= OnEscapePressed;
+
+        if (pauseOnOpen)
+            TimeControl.Instance.PauseGame(false);
     }
 
     void OnEscapePressed(InputAction.CallbackContext context)

@@ -169,7 +169,10 @@ public class VideoPlayerManager : MonoBehaviour
 
         this.sceneToLoad = sceneToLoad;
         StartCoroutine(PlayPreparedVideo());
-        UI_MusicPlayerPanel.Instance.ShowPanel(false);
+
+        // Hide other UI
+        UI_MusicPlayerPanel.Instance.EnableMusicPlayer(false);
+        UI_MissionPanelController.Instance.EnableMissionPanel(false);
     }
 
     public void StopVideo()
@@ -182,7 +185,7 @@ public class VideoPlayerManager : MonoBehaviour
         videoPlayer.url = null;
 
         rawImage.SetActive(false);
-        UI_MusicPlayerPanel.Instance.ShowPanel(true);
+        UI_MusicPlayerPanel.Instance.EnableMusicPlayer(true);
         if (mainMenuController == null)
         {
             mainMenuController = FindObjectOfType<MainMenuController>();

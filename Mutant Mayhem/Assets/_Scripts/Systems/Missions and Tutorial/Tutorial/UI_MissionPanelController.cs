@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_MissionPanelController : MonoBehaviour
 {
+    public static UI_MissionPanelController Instance;
+
     public List<MissionSO> missions;
     [SerializeField] MissionSO currentMission;
     List<Task> _tasks = new List<Task>();
@@ -29,7 +32,28 @@ public class UI_MissionPanelController : MonoBehaviour
     [SerializeField] Color flashColorOutline;
     Color startColorOutline;
     Color startColorBackPanel;
-    bool isPanelOpen = false;
+    bool isHidden = false;
+    Coroutine panelOpenEffectCoroutine;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+            Destroy(gameObject);
+
+        // Clear mission list and tasks at start, in case there are any set in inspector
+        missions.Clear();
+        foreach (Transform child in objectivesGrid)
+        {
+            _tasks.Add(child.GetComponent<Task>());
+            //Debug.Log("Added task at start");
+        }
+        ClearTasksGrid();
+    }
 
     void Start()
     {
@@ -38,40 +62,14 @@ public class UI_MissionPanelController : MonoBehaviour
         completedStamp.alpha = 0;
         startColorOutline = panelOutline.color;
         startColorBackPanel = backPanelImage.color;
-        StartCoroutine(PanelOpenEffect());
     }
 
-    void Initialize()
+    public void StartPanelOpenEffect()
     {
-        foreach (Transform child in objectivesGrid)
-        {
-            _tasks.Add(child.GetComponent<Task>());
-            //Debug.Log("Added task at start");
-        }
+        if (panelOpenEffectCoroutine != null)
+            StopCoroutine(panelOpenEffectCoroutine);
 
-        AddMission(PlanetManager.Instance.currentPlanet.mission, false);
-
-        missionPanelOpenButton.gameObject.SetActive(true);
-        ShowMissionPanel(true);
-        StartMission();
-    }
-
-    public void ShowMissionPanel(bool show)
-    {
-        isPanelOpen = show;
-
-        if (show)
-        {
-            missionPanelGroup.alpha = 1;
-            missionPanelGroup.blocksRaycasts = true;
-            missionPanelOpenButton.gameObject.SetActive(false);
-        }
-        else
-        {
-            missionPanelGroup.alpha = 0;
-            missionPanelGroup.blocksRaycasts = false;
-            missionPanelOpenButton.gameObject.SetActive(true);
-        }
+        panelOpenEffectCoroutine = StartCoroutine(PanelOpenEffect());
     }
 
     IEnumerator PanelOpenEffect()
@@ -79,8 +77,61 @@ public class UI_MissionPanelController : MonoBehaviour
         yield return new WaitForSecondsRealtime(delayOpenTime);
 
         Initialize();
+        Debug.Log("Mission panel initialized.");
         StartCoroutine(GameTools.FlashImage(backPanelImage, panelFlashTime, panelFlashDelay, flashColorOutline, startColorBackPanel));
         StartCoroutine(GameTools.FlashImage(panelOutline, panelFlashTime, panelFlashDelay, flashColorOutline, startColorOutline));  
+    }
+
+    void Initialize()
+    {
+        AddMission(PlanetManager.Instance.currentPlanet.mission, false);
+
+        missionPanelOpenButton.gameObject.SetActive(true);
+        ShowMissionPanel(true);
+        StartMission();
+    }
+
+    public void EnableMissionPanel(bool enable)
+    {
+        if (enable)
+        {
+            ShowMissionPanel(!isHidden);
+            missionPanelOpenButton.gameObject.SetActive(isHidden);
+        }
+        else
+        {
+            ShowMissionPanel(false);
+            missionPanelOpenButton.gameObject.SetActive(false);
+        }
+
+        completedStamp.alpha = 0;
+    }
+
+    public void ShowMissionPanel(bool show)
+    {
+        if (show)
+        {
+            missionPanelGroup.alpha = 1;
+            missionPanelGroup.blocksRaycasts = true;
+            missionPanelOpenButton.gameObject.SetActive(false);
+            isHidden = false;
+        }
+        else
+        {
+            missionPanelGroup.alpha = 0;
+            missionPanelGroup.blocksRaycasts = false;
+            missionPanelOpenButton.gameObject.SetActive(true);
+            isHidden = true;
+        }
+    }
+
+    public void StopMissionPanelOpenEffect()
+    {
+        if (panelOpenEffectCoroutine != null)
+            StopCoroutine(panelOpenEffectCoroutine);
+
+        panelOutline.color = startColorOutline;
+        backPanelImage.color = startColorBackPanel;
     }
 
     public void AddMission(MissionSO mission, bool setAsCurrentMission)
@@ -139,7 +190,7 @@ public class UI_MissionPanelController : MonoBehaviour
                 backPanel.sizeDelta = new Vector2(backPanel.sizeDelta.x, newHeight);
             }
         }
-        ShowMissionPanel(isPanelOpen);
+        ShowMissionPanel(true);
 
         if (currentMission.objectives[index].autoShowInfoPanel)
             StartCoroutine(DelayedShowObjectiveInfoPanel(3f));

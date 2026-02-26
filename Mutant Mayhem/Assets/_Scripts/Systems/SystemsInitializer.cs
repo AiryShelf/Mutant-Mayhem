@@ -70,6 +70,8 @@ public class SystemsInitializer : MonoBehaviour
         ScreenScaleChecker.InvokeAspectRatioChanged();
         MessageManager.Instance.StartPlanetDialogue();
 
+        UI_MissionPanelController.Instance.StartPanelOpenEffect();
+
         // Track session_start
         FpsCounter.Instance?.ResetSnapshot();
         AnalyticsManager.Instance.TrackSessionStart();

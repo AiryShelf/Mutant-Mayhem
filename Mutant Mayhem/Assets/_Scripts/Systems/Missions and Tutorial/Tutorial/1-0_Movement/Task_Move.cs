@@ -20,7 +20,7 @@ public class Task_Move : Task
         if (isComplete) 
             return;
 
-        if (player.rawInput.magnitude > 0)
+        if (player != null && player.rawInput.magnitude > 0)
         {
             moveTimer -= Time.fixedDeltaTime;
             moveTimer = Mathf.Clamp(moveTimer, 0, float.MaxValue);

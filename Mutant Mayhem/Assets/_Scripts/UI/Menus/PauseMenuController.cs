@@ -99,6 +99,7 @@ public class PauseMenuController : MonoBehaviour
     {
         if (open)
         {
+            UI_MissionPanelController.Instance.EnableMissionPanel(false);
             CursorManager.Instance.inMenu = true;
             TouchManager.Instance.ShowVirtualJoysticks(false);
             InputManager.SetJoystickMouseControl(true);
@@ -119,6 +120,7 @@ public class PauseMenuController : MonoBehaviour
         }
         else
         {
+            UI_MissionPanelController.Instance.EnableMissionPanel(true);
             CursorManager.Instance.inMenu = false;
             TouchManager.Instance.ShowVirtualJoysticks(true);
             playerActionMap.Enable();

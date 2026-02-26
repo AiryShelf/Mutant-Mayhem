@@ -171,7 +171,8 @@ public class MainMenuController : MonoBehaviour
             group.alpha = 1f;
         }
 
-        musicPlayerFadeGroup.isTriggered = true;
+        if (musicPlayerFadeGroup != null)
+            musicPlayerFadeGroup.isTriggered = true;
     }
 
     public void ToggleOptions()

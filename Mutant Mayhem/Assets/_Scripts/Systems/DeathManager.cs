@@ -125,6 +125,9 @@ public class DeathManager : MonoBehaviour
 
     void TransitionToPanel()
     {
+        UI_MissionPanelController.Instance.EnableMissionPanel(false);
+        UI_MissionPanelController.Instance.StopMissionPanelOpenEffect();
+        
         // Hide 'Back to Ship' button if this was a tutorial mission
         if (PlanetManager.Instance.currentPlanet.mission.isTutorial)
         {
