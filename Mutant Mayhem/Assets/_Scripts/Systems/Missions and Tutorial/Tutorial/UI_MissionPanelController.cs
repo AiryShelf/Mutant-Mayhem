@@ -33,6 +33,7 @@ public class UI_MissionPanelController : MonoBehaviour
     Color startColorOutline;
     Color startColorBackPanel;
     bool isHidden = false;
+    bool isInfoPanelOpen = false;
     Coroutine panelOpenEffectCoroutine;
 
     void Awake()
@@ -146,7 +147,7 @@ public class UI_MissionPanelController : MonoBehaviour
 
     public void OnShowInfoClicked()
     {
-        ShowObjectiveInfoPanel(true);
+        ShowObjectiveInfoPanel(!isInfoPanelOpen);
     }
 
     IEnumerator DelayedShowObjectiveInfoPanel(float delay)
@@ -158,6 +159,7 @@ public class UI_MissionPanelController : MonoBehaviour
 
     public void ShowObjectiveInfoPanel(bool show)
     {
+        isInfoPanelOpen = show;
         objectiveInfoPanel.gameObject.SetActive(show);
         TouchManager.Instance.ShowVirtualJoysticks(!show);
 

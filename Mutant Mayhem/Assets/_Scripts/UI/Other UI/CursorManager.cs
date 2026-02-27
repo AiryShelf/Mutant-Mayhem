@@ -260,14 +260,14 @@ public class CursorManager : MonoBehaviour
 
         if (player != null && player.stats.playerShooter.isBuilding)
         {
-            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
+            newCursorPos = GetCustomCursorUiPos() + newAimDir;
             
             MoveCustomCursorTo(newCursorPos, CursorRangeType.Radius, player.transform.position, 
                                BuildingSystem.buildRange, screenBounds);
         }
         else if (player != null && player.stats.playerShooter.isRepairing)
         {
-            newCursorPos = GetCustomCursorUiPos() + newAimDir / 2;
+            newCursorPos = GetCustomCursorUiPos() + newAimDir;
             float range = player.stats.playerShooter.currentGunSO.bulletLifeTime * 
                           player.stats.playerShooter.currentGunSO.bulletSpeed;
             if (player.stats.playerShooter.isElevated)

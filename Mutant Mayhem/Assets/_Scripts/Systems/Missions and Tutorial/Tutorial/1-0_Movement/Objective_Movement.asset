@@ -13,15 +13,24 @@ MonoBehaviour:
   m_Name: Objective_Movement
   m_EditorClassIdentifier: 
   objectiveTitle: Move Around
-  autoShowInfoPanel: 0
+  autoShowInfoPanel: 1
   infoImageSprite: {fileID: 0}
   inforImageSprite2: {fileID: 0}
-  objectiveDescription: Use the controls list in the bottom left to complete the
-    tasks.
-  objectiveDescriptionGamepad: Use the controls list in the bottom left to complete
-    the tasks.
-  objectiveDescriptionMobile: Use the controls list in the bottom left to complete
-    the tasks.
+  objectiveDescription: "Complete the tasks in the Mission Panel, located on the
+    right of the screen.  \n\nThis 'Help & Tips' window has new info for each objective,
+    you can check it often in the Mission Panel.\n\nThe controls list is located
+    at the bottom left of the screen.\n\n\n\nSome things like the controls list,
+    mission panel, and music player, can be minimized."
+  objectiveDescriptionGamepad: "This 'Help & Tips' window has new info for each objective,
+    you can check it often in the Mission Panel.\n\nThe controls list is located
+    at the bottom left of the screen.\n\nComplete the tasks in the mission panel,
+    located on the right of the screen.  \n\nSome things like the controls list,
+    mission panel, and music player, can be minimized."
+  objectiveDescriptionMobile: "This 'Help & Tips' window has new info for each objective,
+    you can check it often in the Mission Panel.\n\nThe controls list is located
+    at the bottom left of the screen.\n\nComplete the tasks in the mission panel,
+    located on the right of the screen.  \n\nSome things like the controls list,
+    mission panel, and music player, can be minimized."
   taskPrefabs:
   - {fileID: 936962933341166503, guid: 3226943c06d19412a865480f0cd67322, type: 3}
   - {fileID: 5576950254171366818, guid: 9f28ce56148c38943a3c3a19d0db93af, type: 3}
