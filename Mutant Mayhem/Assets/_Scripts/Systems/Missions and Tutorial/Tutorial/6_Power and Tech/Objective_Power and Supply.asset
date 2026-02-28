@@ -16,51 +16,24 @@ MonoBehaviour:
   autoShowInfoPanel: 1
   infoImageSprite: {fileID: 21300000, guid: 858b433afa7e346f7aac282f896452a4, type: 3}
   inforImageSprite2: {fileID: 21300000, guid: 467c187c797fc45baa4924df7034a618, type: 3}
-  objectiveDescription: 'Place 3 Solar Panels next to each other and notice the adjacency
-    bonuses from the connectors.  You can also join different types of power producers. 
-    You''ll also need a Supply Depot
+  objectiveDescription: 'Power producers gain a bonus when next to each other.  Power
+    is transmitted automatically at any distance
 
 
-    Power is transmitted automatically at
-    any distance
-
-
-    Certain buildings, like the Photonics Bay, are interactable. 
-    Press ''Interact'' near them to access their panels
+    Build the Photonics Bay and
+    access it''s panel to proceed'
+  objectiveDescriptionGamepad: 'Power producers gain a bonus when next to each other. 
+    Power is transmitted automatically at any distance
 
 
     Build the Photonics
     Bay and access it''s panel to proceed'
-  objectiveDescriptionGamepad: 'Place 3 Solar Panels next to each other and notice
-    the adjacency bonuses from the connectors.  You can also join different types
-    of power producers.  You''ll also need a Supply Depot
+  objectiveDescriptionMobile: 'Power producers gain a bonus when next to each other. 
+    Power is transmitted automatically at any distance
 
 
-    Power is transmitted
-    automatically at any distance
-
-
-    Certain buildings, like the Photonics Bay,
-    are interactable.  Press ''Interact'' near them to access their panels
-
-
-    Build
-    the Photonics Bay and access it''s panel to proceed'
-  objectiveDescriptionMobile: 'Place 3 Solar Panels next to each other and notice
-    the adjacency bonuses from the connectors.  You can also join different types
-    of power producers.  You''ll also need a Supply Depot
-
-
-    Power is transmitted
-    automatically at any distance
-
-
-    Certain buildings, like the Photonics Bay,
-    are interactable.  Press ''Interact'' near them to access their panels
-
-
-    Build
-    the Photonics Bay and access it''s panel to proceed'
+    Build the Photonics
+    Bay and access it''s panel to proceed'
   taskPrefabs:
   - {fileID: 936962933341166503, guid: c4755fc95afde4a7daba83fc24af0a59, type: 3}
   - {fileID: 936962933341166503, guid: 4c621f512432f4ceb8c42256b08bcd50, type: 3}
