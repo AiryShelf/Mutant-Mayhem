@@ -442,6 +442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3458928221112978256}
   - component: {fileID: 5422591254970403954}
+  - component: {fileID: 9048780422134077585}
   m_Layer: 5
   m_Name: ObjectiveInfoPanel
   m_TagString: Untagged
@@ -490,6 +491,32 @@ MonoBehaviour:
   descriptionText: {fileID: 8967683745733546166}
   inputAsset: {fileID: -944628639613478452, guid: 15f2b7952ea2d9a41b24cf638e09e0f0, type: 3}
   pauseOnOpen: 1
+--- !u!114 &9048780422134077585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210924270539170313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91640ab9ac3286942a523f7cad078535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectToScale: {fileID: 0}
+  touchScreenOnly: 1
+  wideScale: 1
+  midWideScale: 1
+  default16x9Scale: 1
+  midNarrowScale: 0.9
+  narrowScale: 0.8
+  useCustomPivot: 0
+  cutomScalePivot: {x: 0.5, y: 0.5}
+  widePositionOffest: {x: 0, y: 0}
+  defaultWidePositionOffest: {x: 0, y: 0}
+  narrowPositionOffset: {x: 0, y: 0}
+  iOSPosOffsetAdd: 0
+  iOSOffsetAddition: {x: 0, y: 0}
 --- !u!1 &5827513711327066173
 GameObject:
   m_ObjectHideFlags: 0

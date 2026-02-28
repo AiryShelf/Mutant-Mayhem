@@ -814,6 +814,37 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5895461627503810510, guid: 115484994e813a84cb28092116652528, type: 3}
   m_PrefabInstance: {fileID: 1230808024938235543}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &408786609 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8149168612616808644, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+  m_PrefabInstance: {fileID: 1974667918714960961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &408786611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408786609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91640ab9ac3286942a523f7cad078535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectToScale: {fileID: 0}
+  touchScreenOnly: 1
+  wideScale: 1.2
+  midWideScale: 1.1
+  default16x9Scale: 1
+  midNarrowScale: 0.9
+  narrowScale: 0.8
+  useCustomPivot: 0
+  cutomScalePivot: {x: 0.5, y: 0.5}
+  widePositionOffest: {x: 0, y: 0}
+  defaultWidePositionOffest: {x: 0, y: 0}
+  narrowPositionOffset: {x: 0, y: 0}
+  iOSPosOffsetAdd: 0
+  iOSOffsetAddition: {x: 0, y: 0}
 --- !u!1 &438457879
 GameObject:
   m_ObjectHideFlags: 0
@@ -7134,12 +7165,24 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 152729151092223117, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 312467183980018294, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 228
+      objectReference: {fileID: 0}
     - target: {fileID: 2627689051518756606, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2627689051518756606, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2783683449221992404, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3378141277723388513, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
@@ -7286,6 +7329,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8767575393650075553, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8767575393650075553, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9145718512779279473, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7316,9 +7367,16 @@ PrefabInstance:
     - {fileID: 6652572639190557165, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
     - {fileID: 1992886619606879668, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
     - {fileID: 5528301138057154776, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
-    m_RemovedGameObjects: []
+    - {fileID: 2783683449221992404, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+    - {fileID: 152729151092223117, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+    - {fileID: 3046296310294150893, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 200370080600167539, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8149168612616808644, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 408786611}
   m_SourcePrefab: {fileID: 100100000, guid: 769b215d755d4054184e5c79750d91ed, type: 3}
 --- !u!114 &1974667918714960962 stripped
 MonoBehaviour:

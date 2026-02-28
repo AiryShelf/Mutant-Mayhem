@@ -13,16 +13,18 @@ MonoBehaviour:
   m_Name: DestroyTool
   m_EditorClassIdentifier: 
   uiImage: {fileID: 21300000, guid: 0a48672cf36271144af9672d0fd91e32, type: 3}
-  tileName: Destroy Tool
+  tileName: Dismantle
   description: 'Used to remove structures.  Refund per integrity remaining, up to
     75% refund
 
 
     Blueprints get full refund before completed'
+  unlockText: 
   tileCost: 0
   maxHealth: 0
   health: 0
-  blueprintBuildAmount: 100
+  buildTime: 1
+  canBeRepaired: 1
   cellPositions: []
   ruleTileStructure: {fileID: 11400000, guid: a0aa3d6d096d8414bb7d2f28cf2d2c51, type: 2}
   blueprintTile: {fileID: 0}
